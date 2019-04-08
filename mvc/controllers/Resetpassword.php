@@ -17,10 +17,7 @@ class Resetpassword extends Admin_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model("resetpassword_m");
-		$this->load->model('usertype_m');
-		$this->load->model("student_m");
-		$this->load->model("teacher_m");
-		$this->load->model("parents_m");
+		$this->load->model('usertype_m');		
 		$this->load->model("user_m");
 		$this->load->model("systemadmin_m");
 		$language = $this->session->userdata('lang');
@@ -87,16 +84,7 @@ class Resetpassword extends Admin_Controller {
 			if($userID == 1) {
 				$table = 'systemadmin';
 				$tableID = 'systemadminID';
-			} elseif($userID == 2) {
-				$table = 'teacher';
-				$tableID = 'teacherID';
-			} elseif($userID == 3) {
-				$table = 'student';
-				$tableID = 'studentID';
-			} elseif($userID == 4) { 
-				$table = 'parents';
-				$tableID = 'parentsID';
-			} else {
+			}  else {
 				$table = 'user';
 				$tableID = 'userID';
 			}
