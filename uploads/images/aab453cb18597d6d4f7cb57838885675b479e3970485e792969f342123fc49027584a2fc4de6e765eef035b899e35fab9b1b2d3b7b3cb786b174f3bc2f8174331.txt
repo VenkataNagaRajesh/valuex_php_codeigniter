@@ -1,0 +1,9 @@
+1025 record delete
+
+select * from imagedata;
+select * from user;
+
+select recNo,recId,appCode from system4 where fileId=25 and userId=3 and recNo=1025;
+
+delete from system4 where fileId=25 and userId=3 and recId=2525;
+
