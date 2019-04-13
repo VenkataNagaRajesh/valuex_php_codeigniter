@@ -201,12 +201,12 @@
                                 <div class="input-group">
                                     <?php
                                         $array[0] = $this->lang->line('user_select_usertype');
-                                        $blockuser = array(1, 2, 3, 4);
+                                       // $blockuser = array(1, 2, 3, 4);
                                         if(count($usertypes)) {
                                             foreach ($usertypes as $key => $usertype) {
-                                                if(!in_array($usertype->usertypeID, $blockuser)) {
+                                               // if(!in_array($usertype->usertypeID, $blockuser)) {
                                                     $array[$usertype->usertypeID] = $usertype->usertype;
-                                                }
+                                              //  }
                                             }
                                         }
                                         echo form_dropdown("usertypeID", $array,
@@ -225,12 +225,12 @@
                             <div class="col-sm-6">
                                 <?php
                                     $array[0] = $this->lang->line('user_select_usertype');
-                                    $blockuser = array(1, 2, 3, 4);
+                                    //$blockuser = array(1, 2, 3, 4);
                                     if(count($usertypes)) {
                                         foreach ($usertypes as $key => $usertype) {
-                                            if(!in_array($usertype->usertypeID, $blockuser)) {
+                                            //if(!in_array($usertype->usertypeID, $blockuser)) {
                                                 $array[$usertype->usertypeID] = $usertype->usertype;
-                                            }
+                                           // }
                                         }
                                     }
                                     echo form_dropdown("usertypeID", $array,

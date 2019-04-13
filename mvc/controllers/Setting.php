@@ -17,8 +17,8 @@ Class setting extends Admin_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model("setting_m");
-		$this->load->model("markpercentage_m");
-		$this->load->model("schoolyear_m");
+		//$this->load->model("markpercentage_m");
+		//$this->load->model("schoolyear_m");
 		$this->load->model("idmanager_m");
 		$this->load->model('themes_m');
 		$language = $this->session->userdata('lang');
@@ -199,11 +199,11 @@ Class setting extends Admin_Controller {
 		$this->data['setting'] = $this->setting_m->get_setting(1);
 
 		$this->data['settingarray'] = $this->setting_m->get_setting_array();
-		$this->data['markpercentages'] = $this->markpercentage_m->get_markpercentage();
+		//$this->data['markpercentages'] = $this->markpercentage_m->get_markpercentage();
 		
-		$this->data['schoolyears'] = $this->schoolyear_m->get_order_by_schoolyear(array('schooltype' => $this->data['setting']->school_type));
+		//$this->data['schoolyears'] = $this->schoolyear_m->get_order_by_schoolyear(array('schooltype' => $this->data['setting']->school_type));
 
-		$this->data['idmanagers'] = $this->idmanager_m->get_order_by_idmanager(array('schooltype' => $this->data['setting']->school_type));
+		//$this->data['idmanagers'] = $this->idmanager_m->get_order_by_idmanager(array('schooltype' => $this->data['setting']->school_type));
 
 		$this->data['themes'] = $this->themes_m->get_order_by_themes(array('backend' => 1));
 

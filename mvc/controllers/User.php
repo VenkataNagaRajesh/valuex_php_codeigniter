@@ -1,19 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class User extends Admin_Controller {
-/*
-| -----------------------------------------------------
-| PRODUCT NAME: 	INILABS SCHOOL MANAGEMENT SYSTEM
-| -----------------------------------------------------
-| AUTHOR:			INILABS TEAM
-| -----------------------------------------------------
-| EMAIL:			info@inilabs.net
-| -----------------------------------------------------
-| COPYRIGHT:		RESERVED BY INILABS IT
-| -----------------------------------------------------
-| WEBSITE:			http://inilabs.net
-| -----------------------------------------------------
-*/
+
 	function __construct() {
 		parent::__construct();
 		$this->load->model("user_m");
@@ -193,11 +181,11 @@ class User extends Admin_Controller {
 			$this->form_validation->set_message("unique_usertypeID", "The %s field is required ");
 			return FALSE;
 		} else {
-			$blockuser = array(1, 2, 3, 4);
+			/* $blockuser = array(1, 2, 3, 4);
 			if(in_array($this->input->post('usertypeID'), $blockuser)) {
 				$this->form_validation->set_message("unique_usertypeID", "The %s field is required.");
 				return FALSE;
-			}
+			} */
 			return TRUE;
 		}
 	}
@@ -314,6 +302,7 @@ class User extends Admin_Controller {
 			$this->load->view('_layout_main', $this->data);
 		}
 	}
+	
 	public function send_mail() {
 		$id = $this->input->post('id');
 		if ((int)$id) {
@@ -340,7 +329,7 @@ class User extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$user_info = $this->user_m->get_single_user(array('userID' => $id));
-			$tables = array('student' => 'student', 'parents' => 'parents', 'teacher' => 'teacher', 'user' => 'user', 'systemadmin' => 'systemadmin');
+			$tables = array('user' => 'user', 'systemadmin' => 'systemadmin');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $tablekey => $table) {
@@ -359,7 +348,7 @@ class User extends Admin_Controller {
 				return TRUE;
 			}
 		} else {
-			$tables = array('student' => 'student', 'parents' => 'parents', 'teacher' => 'teacher', 'user' => 'user', 'systemadmin' => 'systemadmin');
+			$tables = array('user' => 'user', 'systemadmin' => 'systemadmin');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $table) {
@@ -403,7 +392,7 @@ class User extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$user_info = $this->user_m->get_single_user(array('userID' => $id));
-			$tables = array('student' => 'student', 'parents' => 'parents', 'teacher' => 'teacher', 'user' => 'user', 'systemadmin' => 'systemadmin');
+			$tables = array('user' => 'user');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $table) {
@@ -422,7 +411,7 @@ class User extends Admin_Controller {
 				return TRUE;
 			}
 		} else {
-			$tables = array('student' => 'student', 'parents' => 'parents', 'teacher' => 'teacher', 'user' => 'user', 'systemadmin' => 'systemadmin');
+			$tables = array('user' => 'user');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $table) {
@@ -471,5 +460,4 @@ class User extends Admin_Controller {
 	}
 }
 
-/* End of file user.php */
-/* Location: .//D/xampp/htdocs/school/mvc/controllers/user.php */
+

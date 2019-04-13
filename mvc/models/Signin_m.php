@@ -13,8 +13,8 @@ class signin_m extends MY_Model {
 			'return' => FALSE,
 			'message' => ''
 		);
-		$tables = array('user' => 'user', 'systemadmin' => 'systemadmin');
-
+		//$tables = array('user' => 'user');
+          
 		$settings = $this->setting_m->get_setting(1);
 		$lang = $settings->language;
 		$defaultschoolyearID = $settings->school_year;
@@ -23,7 +23,8 @@ class signin_m extends MY_Model {
 		$username = $this->input->post('username');
 		$password = $this->hash($this->input->post('password'));
 		$userdata = '';
-		foreach ($tables as $table) {
+		//foreach ($tables as $table) {
+			$table = 'user';
 			$user = $this->db->get_where($table, array("username" => $username, "password" => $password));
 			$alluserdata = $user->row();
 			if(count($alluserdata)) {
@@ -34,7 +35,7 @@ class signin_m extends MY_Model {
 				$array['permition'][$i] = 'no';
 			}
 			$i++;
-		}
+		//}
 
 		if(isset($settings->captcha_status) && $settings->captcha_status == 0) {
 			$captchaResponse = $this->recaptcha->verifyResponse($this->input->post('g-recaptcha-response'));
@@ -48,7 +49,7 @@ class signin_m extends MY_Model {
 				if(count($usertype)) {
 					if($userdata->active == 1) {
 						$data = array(
-							"loginuserID" => isset($userdata->$array['usercolname']) && !is_null($userdata->$array['usercolname']) ? $userdata->$array['usercolname'] : 0,
+							"loginuserID" => isset($userdata->userID) && !is_null($userdata->userID) ? $userdata->userID : 0,
 							"name" => $userdata->name,
 							"email" => $userdata->email,
 							"usertypeID" => $userdata->usertypeID,
@@ -59,6 +60,7 @@ class signin_m extends MY_Model {
 							"defaultschoolyearID" => $defaultschoolyearID,
 							"loggedin" => TRUE
 						);
+						//print_r($data); exit;
 						$browser = $this->getBrowser();
 
 						$getPreviusData = $this->loginlog_m->get_single_loginlog(array('userID' => $userdata->$array['usercolname'], 'usertypeID' => $userdata->usertypeID, 'ip' => $this->getUserIP(), 'browser' => $browser['name'], 'logout' => NULL));
@@ -209,7 +211,7 @@ class signin_m extends MY_Model {
 
 	function change_password() {
 
-		$tables = array('user' => 'user', 'systemadmin' => 'systemadmin');
+		$tables = array('user' => 'user');
 
 		$username = $this->session->userdata("username");
 		$old_password = $this->hash($this->input->post('old_password'));

@@ -152,4 +152,8 @@ $lang['menu_asset_assignment'] = 'Asset Assignment';
 $lang['menu_purchase'] = 'Purchase';
 
 
+
+$lang['menu_airports_master'] = 'Airports Master';
+
+
 /* End Update Menu */

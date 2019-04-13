@@ -1,0 +1,10 @@
+delete from permissions where permissionID >=502 AND permissionID <= 516;
+delete from permissions where permissionID >=522 AND permissionID <= 553;
+delete from permissions where permissionID >=557 AND permissionID <= 578;
+delete from permissions where permissionID >=586 AND permissionID <= 589;
+delete from permissions where permissionID >=593 AND permissionID <= 630;
+delete from permissions where permissionID >=644 AND permissionID <= 646;
+delete from permissions where permissionID >=653 AND permissionID <= 661;
+delete from permissions where permissionID >=666 AND permissionID <= 669;
+delete from permissions where permissionID >=720 AND permissionID <= 764;
+delete from permissions where permissionID >=766 AND permissionID <= 796;

@@ -41,5 +41,3 @@ class usertype_m extends MY_Model {
 	}
 }
 
-/* End of file category_m.php */
-/* Location: .//D/xampp/htdocs/school/mvc/models/category_m.php */

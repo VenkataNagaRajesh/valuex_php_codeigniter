@@ -1,25 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Resetpassword extends Admin_Controller {
-/*
-| -----------------------------------------------------
-| PRODUCT NAME: 	INILABS SCHOOL MANAGEMENT SYSTEM
-| -----------------------------------------------------
-| AUTHOR:			INILABS TEAM
-| -----------------------------------------------------
-| EMAIL:			info@inilabs.net
-| -----------------------------------------------------
-| COPYRIGHT:		RESERVED BY INILABS IT
-| -----------------------------------------------------
-| WEBSITE:			http://inilabs.net
-| -----------------------------------------------------
-*/
+
 	function __construct() {
 		parent::__construct();
 		$this->load->model("resetpassword_m");
 		$this->load->model('usertype_m');		
-		$this->load->model("user_m");
-		$this->load->model("systemadmin_m");
+		$this->load->model("user_m");		
 		$language = $this->session->userdata('lang');
 		$this->lang->load('resetpassword', $language);	
 	}
@@ -120,25 +107,9 @@ class Resetpassword extends Admin_Controller {
 	public function userscall() {
 		$userID = $this->input->post('users');
 		if($userID) {
-			$table = '';
-			$tableID = '';
-			if($userID == 1) {
-				$table = 'systemadmin';
-				$tableID = 'systemadminID';
-			} elseif($userID == 2) {
-				$table = 'teacher';
-				$tableID = 'teacherID';
-			} elseif($userID == 3) {
-				$table = 'student';
-				$tableID = 'studentID';
-			} elseif($userID == 4) { 
-				$table = 'parents';
-				$tableID = 'parentsID';
-			} else {
-				$table = 'user';
-				$tableID = 'userID';
-			}
-
+			$table = 'user';
+			$tableID = 'userID';
+			
 
 			$get_users = $this->resetpassword_m->get_username($table, array('usertypeID' => $userID));
 			
@@ -161,5 +132,3 @@ class Resetpassword extends Admin_Controller {
 
 }
 
-/* End of file class.php */
-/* Location: .//D/xampp/htdocs/school/mvc/controllers/class.php */
