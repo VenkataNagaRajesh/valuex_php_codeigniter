@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-sm-12">              
                     <h5 class="page-header">
-                        <a href="<?php echo base_url('usertype/add') ?>" >
+                        <a href="<?php echo base_url('airports_master/add') ?>" >
                             <i class="fa fa-plus"></i> 
                             <?=$this->lang->line('add_title')?>
                         </a> 
@@ -28,14 +28,15 @@
                     <table id="master" class="table table-striped table-bordered table-hover dataTable no-footer">
                         <thead>
                             <tr>
-                                <th class="col-lg-2"><?=$this->lang->line('slno')?></th>
-                                <th class="col-lg-8"><?=$this->lang->line('master_airport')?></th>
-								<th class="col-lg-8"><?=$this->lang->line('master_country')?></th>
-								<th class="col-lg-8"><?=$this->lang->line('master_state')?></th>
-								<th class="col-lg-8"><?=$this->lang->line('master_region')?></th>
-								<th class="col-lg-8"><?=$this->lang->line('master_area')?></th>
+                                <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+                                <th class="col-lg-2"><?=$this->lang->line('master_airport')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('master_country')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('master_state')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('master_region')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('master_area')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('master_active')?></th>
                                 <?php if(permissionChecker('airports_master_edit') || permissionChecker('airports_master_delete')) { ?>
-                                <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
                             </tr>
                         </thead>
@@ -55,15 +56,7 @@
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('airports_master/server_processing'); ?>",
-	  /* "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
-              aoData.push({"name": "usertypeID","value": $("#usertypeID").val()}) //pushing custom parameters
-                oSettings.jqXHR = $.ajax( {
-                    "dataType": 'json',
-                    "type": "GET",
-                    "url": sSource,
-                    "data": aoData,
-                    "success": fnCallback
-			 } ); }, */
+	 
       "columns": [{"data": "vx_amdID" },
                   {"data": "airport" },
 				  {"data": "country" },

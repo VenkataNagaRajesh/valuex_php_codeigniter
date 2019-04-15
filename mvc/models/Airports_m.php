@@ -65,6 +65,13 @@ class Airports_m extends MY_Model {
 	     return FALSE; 
 	  }
   }
+  
+  public function getDefns(){
+	  $this->db->select('vx_aln_data_defnsID,aln_data_typeID,aln_data_value')->from('vx_aln_data_defns'); 
+	  $this->db->where('aln_data_typeID !=',1);
+	  $query = $this->db->get();
+	  return $query->result();
+  }
 	
 }
 

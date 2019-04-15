@@ -37,5 +37,10 @@ class Install_m extends CI_Model{
 		$link = @mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $this->db->database);		
 		mysqli_multi_query($link, $sql);		
 	}
+	
+	public function run_query($query){
+		$q = $this->db->query($query);
+        return $q->result();
+	}
 }	
 ?>
