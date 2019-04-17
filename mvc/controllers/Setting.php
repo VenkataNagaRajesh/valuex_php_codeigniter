@@ -1,24 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 Class setting extends Admin_Controller {
-/*
-| -----------------------------------------------------
-| PRODUCT NAME: 	INILABS SCHOOL MANAGEMENT SYSTEM
-| -----------------------------------------------------
-| AUTHOR:			INILABS TEAM
-| -----------------------------------------------------
-| EMAIL:			info@inilabs.net
-| -----------------------------------------------------
-| COPYRIGHT:		RESERVED BY INILABS IT
-| -----------------------------------------------------
-| WEBSITE:			http://inilabs.net
-| -----------------------------------------------------
-*/
+
 	function __construct() {
 		parent::__construct();
-		$this->load->model("setting_m");
-		//$this->load->model("markpercentage_m");
-		//$this->load->model("schoolyear_m");
+		$this->load->model("setting_m");		
 		$this->load->model("idmanager_m");
 		$this->load->model('themes_m');
 		$language = $this->session->userdata('lang');
@@ -86,17 +72,7 @@ Class setting extends Admin_Controller {
 				'field' => 'language',
 				'label' => $this->lang->line("setting_school_lang"),
 				'rules' => 'trim|required|xss_clean'
-			),
-			array(
-				'field' => 'attendance',
-				'label' => $this->lang->line("setting_school_attendance"),
-				'rules' => 'trim|required|xss_clean|callback_unique_attendance'
-			),
-			array(
-				'field' => 'school_year',
-				'label' => $this->lang->line("setting_school_default_school_year"),
-				'rules' => 'trim|required|xss_clean|callback_unique_schoolyear'
-			),
+			),			
 			array(
 				'field' => 'photo',
 				'label' => $this->lang->line("setting_school_photo"),
@@ -113,18 +89,7 @@ Class setting extends Admin_Controller {
 				'rules' => 'trim|xss_clean'
 			),
 		);
-
-		$markpercentages = $this->markpercentage_m->get_markpercentage();
-		if(count($markpercentages)) {
-		    foreach ($markpercentages as $key => $markpercentage) {
-		        $rules[] = array(
-	        		'field' => 'mark_'. str_replace(' ', '',$markpercentage->markpercentageID),
-	        		'label' => $markpercentage->markpercentagetype,
-	        		'rules' => 'trim|xss_clean|max_length[11]'
-
-	        	);
-		    }
-		}
+		
 
 		if($this->input->post('captcha_status') == FALSE) {
 			$rules[] = array(
@@ -240,11 +205,7 @@ Class setting extends Admin_Controller {
 						$this->session->set_userdata('lang',$array['language']);
 					}
 
-
-					if(isset($array['school_year'])) {
-						$this->session->set_userdata('defaultschoolyearID',$array['school_year']);
-					}
-
+					
 					$array['photo'] = $this->upload_data['file']['file_name'];
 					$this->setting_m->insertorupdate($array);
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));

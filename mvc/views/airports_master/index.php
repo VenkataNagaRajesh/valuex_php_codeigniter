@@ -12,11 +12,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">              
-                    <h5 class="page-header">
-                        <a href="<?php echo base_url('airports_master/add') ?>" >
-                            <i class="fa fa-plus"></i> 
-                            <?=$this->lang->line('add_title')?>
-                        </a> 
+                    <h5 class="page-header">                        
 						<?php if(permissionChecker('airports_master_upload')) { ?>
                         <a href="<?php echo base_url('airports_master/upload') ?>">
                             <i class="fa fa-upload"></i>
@@ -25,44 +21,43 @@
 					 <?php } ?>
                     </h5>
             <div id="hide-table">
-                    <table id="master" class="table table-striped table-bordered table-hover dataTable no-footer">
-                        <thead>
-                            <tr>
-                                <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-                                <th class="col-lg-2"><?=$this->lang->line('master_airport')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('master_country')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('master_state')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('master_region')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('master_area')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('master_active')?></th>
-                                <?php if(permissionChecker('airports_master_edit') || permissionChecker('airports_master_delete')) { ?>
-                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
-                                <?php } ?>
-                            </tr>
-                        </thead>
-                        <tbody>
-                           
-                        </tbody>
-                    </table>
-                </div>
-
+               <table id="master" class="table table-striped table-bordered table-hover dataTable no-footer">
+                 <thead>
+                    <tr>
+                        <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+                        <th class="col-lg-2"><?=$this->lang->line('master_airport')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('master_country')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('master_state')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('master_region')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('master_area')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('master_code')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('master_active')?></th>
+                        <?php if(permissionChecker('airports_master_edit') || permissionChecker('airports_master_delete')) { ?>
+                        <th class="col-lg-1"><?=$this->lang->line('action')?></th>
+                        <?php } ?>
+                    </tr>
+                 </thead>
+                 <tbody>                          
+                 </tbody>
+              </table>
             </div>
-        </div>
-    </div>
+          </div>
+       </div>
+   </div>
 </div>
 <script>
  $(document).ready(function() {
     $('#master').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
-      "sAjaxSource": "<?php echo base_url('airports_master/server_processing'); ?>",
-	 
+      "sAjaxSource": "<?php echo base_url('airports_master/server_processing'); ?>",	 
       "columns": [{"data": "vx_amdID" },
                   {"data": "airport" },
 				  {"data": "country" },
 				  {"data": "state" },
 				  {"data": "region" },
-                  {"data": "area"},				 
+                  {"data": "area"},
+                  {"data": "code"},				  
                   {"data": "active"},
                   {"data": "action"}
 				  ],			   

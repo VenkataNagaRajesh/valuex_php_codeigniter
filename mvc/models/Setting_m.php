@@ -39,7 +39,9 @@ class Setting_m extends MY_Model {
 	function insertorupdate($arrays) {
 		foreach ($arrays as $key => $array) {
 			$this->db->query("INSERT INTO setting (fieldoption, value) VALUES ('".$key."', '".$array."') ON DUPLICATE KEY UPDATE fieldoption='".$key."' , value='".$array."'");
+		
 		}
+		
 		return TRUE;
 	}
 

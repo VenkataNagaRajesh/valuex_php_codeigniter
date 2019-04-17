@@ -46,7 +46,7 @@ $userArray = array(
   '1' => array(
         'event'     => $dashboardWidget['events'],
         'issue'     => $dashboardWidget['issues'],
-        'holiday'   => $dashboardWidget['holidays'],
+        'airports_master'   => $dashboardWidget['airports'],
         'invoice'   => $dashboardWidget['invoices']
   )
 );
@@ -102,7 +102,7 @@ if($counter < 4) {
       }
   }
 }
-
+//print_r($generateBoxArray); exit;
 if(count($generateBoxArray)) {
     foreach ($generateBoxArray as $generateBoxArrayKey => $generateBoxValue) {
 ?>
@@ -117,7 +117,7 @@ if(count($generateBoxArray)) {
                       <?=$generateBoxValue['count']?>
                   </h3 class="text-white">
                   <p class="text-white">
-                      <?=$this->lang->line('menu_'.$generateBoxValue['menu'])?>
+                      <?php echo $generateBoxValue['menu']; ?>
                   </p>
               </div>
           </a>

@@ -215,66 +215,7 @@
                         <span class="col-sm-4 control-label">
                             <?php echo form_error('lang'); ?>
                         </span>
-                    </div>
-
-                    <?php
-                        if(form_error('attendance'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="attendance" class="col-sm-2 control-label">
-                            <?=$this->lang->line("setting_school_default_attendance")?>
-                            &nbsp;<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Select school default attendance system"></i>
-                        </label>
-                        <div class="col-sm-6">
-                            <?php
-                                $array = array("0" => $this->lang->line("setting_school_select_attendance"),
-                                          "day" => $this->lang->line("setting_school_select_day_attendance"),
-                                          "subject" => $this->lang->line("setting_school_select_subject_attendance")
-                                );
-                                echo form_dropdown("attendance", $array, set_value("attendance",$setting->attendance), "id='attendance' class='form-control select2'");
-                            ?>
-
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('attendance'); ?>
-                        </span>
-                    </div>
-
-                    <?php
-                        if(form_error('school_year'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="school_year" class="col-sm-2 control-label">
-                            <?=$this->lang->line("setting_school_default_school_year")?>
-                            &nbsp;<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Select school running academic year"></i>
-                        </label>
-                        <div class="col-sm-6">
-                            <?php
-                                $array = array("0" => $this->lang->line("setting_school_select_school_year")  
-                                );
-
-                                if(count($schoolyears)) {
-                                    foreach ($schoolyears as $key => $schoolyear) {
-                                        if($schoolyear->schooltype == 'semesterbase') {
-                                            $array[$schoolyear->schoolyearID] = $schoolyear->schoolyeartitle.' ('.$schoolyear->schoolyear.')'; 
-                                        } else {
-                                            $array[$schoolyear->schoolyearID] = $schoolyear->schoolyear;    
-                                        }
-                                    }
-                                     
-                                }
-
-                                echo form_dropdown("school_year", $array, set_value("school_year",$setting->school_year), "id='school_year' class='form-control select2'");
-                            ?>
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('school_year'); ?>
-                        </span>
-                    </div>
+                    </div>                   
 
                     <?php
                         if(form_error('note'))
