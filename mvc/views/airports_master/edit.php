@@ -23,7 +23,7 @@
                     </div>
 					
 					<div class='form-group'>
-                        <label for="usertype" class="col-sm-2 control-label">
+                        <label for="countryID" class="col-sm-2 control-label">
                             <?=$this->lang->line("master_country")?><span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
@@ -34,63 +34,109 @@
 							
 						   echo form_dropdown("countryID", $clist,set_value("countryID", $airport->countryID), "id='countryID' class='form-control hide-dropdown-icon select2'"); 
 						   ?>
-                        </div>                        
+                        </div>   
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('countryID'); ?>
+                        </span>						
                     </div>
 					
-					<div class='form-group'>
-					   <label for="district" class="col-sm-2 control-label">
-                            <?=$this->lang->line("master_state")?><span class="text-red">*</span>
-                       </label>
+					<?php
+                        if(form_error('stateID'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="stateID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("master_state")?>
+                        </label>
                         <div class="col-sm-6">
-                            <select name="stateID" id="stateID" class="form-control">
-							  
-							</select>
+						     
+                             <select name="stateID" id="stateID" class="form-control">
+							
+							 </select>
                         </div>
-                    </div>
-					
-					<div class='form-group'>
-					   <label for="district" class="col-sm-2 control-label">
-                            <?=$this->lang->line("master_region")?><span class="text-red">*</span>
-                       </label>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('stateID'); ?>
+                        </span>
+                     </div>
+					 
+					  <?php
+                        if(form_error('regionID'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="regionID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("master_region")?>
+                        </label>
                         <div class="col-sm-6">
-                            <select name="regionID" id="regionID" class="form-control">
-							  
-							</select>
+						     
+                             <select name="regionID" id="regionID" class="form-control">
+							
+							 </select>
                         </div>
-                    </div>
-					
-					<div class='form-group'>
-					   <label for="district" class="col-sm-2 control-label">
-                            <?=$this->lang->line("master_area")?><span class="text-red">*</span>
-                       </label>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('regionID'); ?>
+                        </span>
+                     </div>
+					 
+					  <?php
+                        if(form_error('areaID'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="areaID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("master_area")?>
+                        </label>
                         <div class="col-sm-6">
-                            <select name="areaID" id="areaID" class="form-control ">
-							  
-							</select>
+						     
+                             <select name="areaID" id="areaID" class="form-control">
+							
+							 </select>
                         </div>
-                    </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('areaID'); ?>
+                        </span>
+                     </div>						
 					
-					<div class='form-group' >
-                        <label for="usertype" class="col-sm-2 control-label">
+					<?php
+                        if(form_error('latitude'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="latitude" class="col-sm-2 control-label">
                             <?=$this->lang->line("master_latitude")?>
                         </label>
                         <div class="col-sm-6">
                             <input type="text" class="form-control" id="latitude" name="latitude" value="<?=set_value('latitude', $airport->lat)?>">
-                        </div>                        
+                        </div> 
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('latitude'); ?>
+                        </span>						
                     </div>
 					
-					<div class='form-group' >
+					<?php
+                        if(form_error('longitude'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
                         <label for="usertype" class="col-sm-2 control-label">
                             <?=$this->lang->line("master_longitude")?>
                         </label>
                         <div class="col-sm-6">
                             <input type="text" class="form-control" id="longitude" name="longitude" value="<?=set_value('longitude', $airport->lng)?>">
-                        </div>                        
+                        </div> 
+                         <span class="col-sm-4 control-label">
+                            <?php echo form_error('longitude'); ?>
+                        </span>						
                     </div>
 					
 					<div class='form-group'>
 					   <label for="district" class="col-sm-2 control-label">
-                            <?=$this->lang->line("master_area")?><span class="text-red">*</span>
+                            <?=$this->lang->line("master_active")?><span class="text-red">*</span>
                        </label>
                         <div class="col-sm-6">
                             <?php 
@@ -115,6 +161,7 @@
 
 <script>
 $( ".select2" ).select2();
+
 $(document).ready(function (){	
 	 var countryID = $('#countryID').val();
 	 var stateID = <?php echo $airport->stateID; ?>;	
@@ -151,7 +198,7 @@ $(document).ready(function (){
 	}
 	
 	if(regionID === null || areaID == null) {
-        $('#stateID').val(0);
+        $('#areaID').val(0);
     } else {
         $.ajax({
             async: false,
@@ -166,7 +213,7 @@ $(document).ready(function (){
 	}
 });
 
-$('#countryID').change(function(event) {
+$('#countryID').on('change',function(event) {
    var countryID = $(this).val();
  if(countryID == null) {
         $('#stateID').val(0);
@@ -205,7 +252,6 @@ $('#stateID').on('change',function(e) {
 
 $('#regionID').on('change', function(event) {
    var regionID = $(this).val();
-
 	if(regionID === null) {
         $('#areaID').val(0);
     } else { console.log(regionID);   
@@ -213,7 +259,7 @@ $('#regionID').on('change', function(event) {
             async: false,
             type: 'POST',
             url: "<?=base_url('general/getAirportAreas')?>",          
-		   data: {"regionID" :regionID , "areaID": areaID},
+		   data: {"regionID" :regionID},
             dataType: "html",			
             success: function(data) {
                $('#areaID').html(data);

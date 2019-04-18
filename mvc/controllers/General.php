@@ -11,7 +11,9 @@ class General extends Admin_Controller {
 	
 	public function getAirportStates(){
 		$countryID = $this->input->post('countryID');
-		$stateID = $this->input->post('stateID');	
+		if(!empty($this->input->post('stateID'))){
+		  $stateID = $this->input->post('stateID');
+		}
 	    if($countryID){
 		   $states = $this->airports_m->getDefns(3,$countryID);		
 			echo '<option value="0">Select State</option>';
@@ -19,12 +21,10 @@ class General extends Admin_Controller {
 				if($state->vx_aln_data_defnsID == $stateID){
 					echo '<option value="'.$state->vx_aln_data_defnsID.'" selected>'.$state->aln_data_value.'</option>';
 				}else{
-				   echo '<option value="'.$state->vx_aln_data_defnsID.'" selected>'.$state->aln_data_value.'</option>';
+				   echo '<option value="'.$state->vx_aln_data_defnsID.'" >'.$state->aln_data_value.'</option>';
 				}
 			}
-		}
-		/* $this->output->set_content_type('application/json');		
-		$this->output->set_output(json_encode($json)); */
+		}		
 	}
 	
 	public function getAirportRegions(){
@@ -32,7 +32,7 @@ class General extends Admin_Controller {
 		$stateID = $this->input->post('stateID');	
 	    if($stateID){
 		   $regions = $this->airports_m->getDefns(4,$stateID);		
-			echo '<option value=\"0\">Select Region</option>';
+			echo '<option value="0">Select Region</option>';
 			foreach ($regions as $region) {
 				if($region->vx_aln_data_defnsID == $regionID){
 					echo '<option value="'.$region->vx_aln_data_defnsID.'" selected>'.$region->aln_data_value.'</option>';
@@ -40,9 +40,7 @@ class General extends Admin_Controller {
 				    echo '<option value="'.$region->vx_aln_data_defnsID.'">'.$region->aln_data_value.'</option>';
 				}
 			}
-		}
-		/* $this->output->set_content_type('application/json');		
-		$this->output->set_output(json_encode($json)); */
+		}		 
 	}
 	
 	public function getAirportAreas(){
@@ -58,9 +56,20 @@ class General extends Admin_Controller {
 				   echo '<option value="'.$area->vx_aln_data_defnsID.'">'.$area->aln_data_value.'</option>';
 				}
 			}
-		}
-		/* $this->output->set_content_type('application/json');		
-		$this->output->set_output(json_encode($json)); */
+		}		 
+	}
+	
+	public function getParentlist(){
+		$type = $this->input->post('type');		
+	    if($type ){
+		   echo '<option value="0">Select Parent</option>';	
+		   if($type != 1 && $type != 2){
+		   $parentlist = $this->airports_m->getDefns($type-1);          	   
+			foreach ($parentlist as $parent) {
+				 echo '<option value="'.$parent->vx_aln_data_defnsID.'">'.$parent->aln_data_value.'</option>';
+			 }
+		   }
+		}		 
 	}
 
 }

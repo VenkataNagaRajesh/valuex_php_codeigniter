@@ -9,8 +9,91 @@ class Airports_master extends Admin_Controller {
 		$language = $this->session->userdata('lang');
 		$this->lang->load('airports', $language);	
 	}	
+	
+	protected function rules() {
+		$rules = array(
+		   array(
+				'field' => 'stateID', 
+				'label' => $this->lang->line("master_state"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_state'
+			),
+			array(
+				'field' => 'regionID', 
+				'label' => $this->lang->line("master_region"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_region'
+			),
+			array(
+				'field' => 'areaID', 
+				'label' => $this->lang->line("master_area"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_area'
+			),
+			array(
+				'field' => 'latitude', 
+				'label' => $this->lang->line("master_latitude"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]'
+			),
+			array(
+				'field' => 'longitude', 
+				'label' => $this->lang->line("master_longitude"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]'
+			)
+			
+		);
+		return $rules;
+	}
+	
+	function state($post_string){		
+	  if($post_string == '0'){
+		 $this->form_validation->set_message("state", "%s is required");
+		  return FALSE;
+	   }else{
+		  return TRUE;
+	   }
+	}
+	
+	function region($post_string){		
+	  if($post_string == '0'){
+		 $this->form_validation->set_message("region", "%s is required");
+		  return FALSE;
+	   }else{
+		  return TRUE;
+	   }
+	}
+	
+	function area($post_string){		
+	  if($post_string == '0'){
+		 $this->form_validation->set_message("area", "%s is required");
+		  return FALSE;
+	   }else{
+		  return TRUE;
+	   }
+	}
 
 	public function index() {
+		$this->data['countrylist'] = $this->airports_m->getDefns(2);
+		
+		if(!empty($this->input->post('countryID'))){
+		  $this->data['countryID'] = $this->input->post('countryID');
+		} else {
+		  $this->data['countryID'] = 0;
+		}
+		if(!empty($this->input->post('stateID'))){		
+        	$this->data['stateID'] = $this->input->post('stateID');
+		} else {
+		  $this->data['stateID'] = 0;
+		}
+		if(!empty($this->input->post('regionID'))){	
+		   $this->data['regionID'] = $this->input->post('regionID');
+		} else {
+		  $this->data['regionID'] = 0;
+		}
+		if(!empty($this->input->post('areaID'))){	
+	    	$this->data['areaID'] = $this->input->post('areaID');
+		} else {
+		    $this->data['areaID'] = 0;
+		}
+		
+		//print_r( $this->data['stateID']); exit;
 		$this->data["subview"] = "airports_master/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -31,7 +114,13 @@ class Airports_master extends Admin_Controller {
 			$this->data['countrylist'] = $this->airports_m->getDefns(2);
 			//print_r($this->input->post('airport')); exit;
 			if($this->data['airport']) {
-				if($_POST) {										
+				if($_POST) {	
+                   $rules = $this->rules();
+				   $this->form_validation->set_rules($rules);
+				   if ($this->form_validation->run() == FALSE) { 
+				   	$this->data["subview"] = "airports_master/edit";
+				   	$this->load->view('_layout_main', $this->data);			
+				   } else {				
 						$data['countryID'] = $this->input->post('countryID');
 						$data['stateID'] = $this->input->post('stateID');
 						$data['regionID'] = $this->input->post('regionID');
@@ -43,7 +132,8 @@ class Airports_master extends Admin_Controller {
 						$data['modify_userID'] = $this->session->userdata('loginuserID'); 
 						$this->airports_m->update_master_data($data,$id); 						
 						$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-						redirect(base_url("airports_master/index"));					
+						redirect(base_url("airports_master/index"));	
+                   }						
 				} else {
 					$this->data["subview"] = "airports_master/edit";
 					$this->load->view('_layout_main', $this->data);
@@ -71,8 +161,7 @@ class Airports_master extends Admin_Controller {
 			}
 		} else {
 			redirect(base_url("airports_master/index"));
-		}	
-
+		}
 	}
 	
 	public function view() {
@@ -246,11 +335,11 @@ echo '--------------------------------------------------------------------------
       }
     }   
 
-   function server_processing(){		
+    function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
 		$usertypeID = $this->session->userdata('usertypeID');	  
 		
-	    $aColumns = array('m.vx_amdID','ma.aln_data_value','mc.aln_data_value','ms.aln_data_value','mr.aln_data_value','mar.aln_data_value');
+	    $aColumns = array('m.vx_amdID','ma.aln_data_value','mc.aln_data_value','ms.aln_data_value','mr.aln_data_value','mar.aln_data_value','ma.code','ma.active');
 	
 		$sLimit = "";
 		
@@ -308,6 +397,23 @@ echo '--------------------------------------------------------------------------
 					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
 				}
 			}
+			
+			if(!empty($this->input->get('countryID'))){
+		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              $sWhere .= 'm.countryID = '.$this->input->get('countryID');		 
+	        }			
+			if(!empty($this->input->get('stateID'))){
+		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              $sWhere .= 'm.stateID = '.$this->input->get('stateID');		 
+	        }
+			if(!empty($this->input->get('regionID'))){
+		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              $sWhere .= 'm.regionID = '.$this->input->get('regionID');		 
+	        }
+			if(!empty($this->input->get('areaID'))){
+		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              $sWhere .= 'm.areaID = '.$this->input->get('areaID');		 
+	        }
 		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.vx_amdID,ma.aln_data_value airport,mc.aln_data_value country,ms.aln_data_value state,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active from vx_aln_master_data m left join vx_aln_data_defns ma ON ma.vx_aln_data_defnsID = m.airportID left join vx_aln_data_defns ms ON ms.vx_aln_data_defnsID = m.stateID left join vx_aln_data_defns mc ON mc.vx_aln_data_defnsID = m.countryID left join vx_aln_data_defns mr ON mr.vx_aln_data_defnsID = m.regionID left join vx_aln_data_defns mar ON mar.vx_aln_data_defnsID = m.areaID	
 		$sWhere			
 		$sOrder
@@ -349,5 +455,32 @@ echo '--------------------------------------------------------------------------
 		echo json_encode( $output );
 	}
 	
+    function active() {
+		if(permissionChecker('airports_master_edit')) {
+			$id = $this->input->post('id');
+			$status = $this->input->post('status');
+			if($id != '' && $status != '') {
+				$data['modify_userID'] = $this->session->userdata('loginuserID');
+				$data['modify_date'] = time();
+				if($status == 'chacked') {
+					$data['active'] = 1 ;
+					$this->airports_m->update_master_data($data, $id);
+					echo 'Success';
+				} elseif($status == 'unchacked') {
+					$data['active'] = 0 ;
+					$this->airports_m->update_master_data($data, $id);
+					echo 'Success';
+				} else {
+					echo "Error";
+				}
+			} else {
+				echo "Error";
+			}
+		} else {
+			echo "Error";
+		}
+	}
+	
+   
 }
 
