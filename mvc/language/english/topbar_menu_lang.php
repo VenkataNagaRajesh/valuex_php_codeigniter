@@ -156,5 +156,6 @@ $lang['menu_purchase'] = 'Purchase';
 $lang['menu_airports_master'] = 'Airports Master';
 $lang['menu_airport'] = 'Airport';
 $lang['menu_defdata'] = 'Definition Data';
+$lang['menu_marketzone'] = 'Marketzones';
 
 /* End Update Menu */
