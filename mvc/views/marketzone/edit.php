@@ -13,7 +13,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-10">
-                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+                <form class="form-horizontal" role="form" method="post" id='edit_mktzone' enctype="multipart/form-data">
 
                     <?php
                         if(form_error('market_name'))
@@ -186,6 +186,15 @@ var js_incl = [<?php echo $marketzone->amz_incl_name ?>];
 $('#amz_incl_value').val(js_incl).trigger('change');
 var js_excl = [<?php echo $marketzone->amz_excl_name ?>];
 $('#amz_excl_value').val(js_excl).trigger('change');
+
+  var form_data = $('#edit_mktzone').serialize();
+  $('#edit_mktzone').submit(function () {
+      if ( form_data == $(this).serialize() ) {
+	event.preventDefault();
+	window.location.replace('<?=base_url('marketzone/index')?>');
+      }
+   });
+
 });
 
 

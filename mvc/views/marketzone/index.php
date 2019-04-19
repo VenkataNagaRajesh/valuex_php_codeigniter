@@ -14,13 +14,21 @@
         <div class="row">
             <div class="col-sm-12">
                 <?php 
-                    if(permissionChecker('user_add')) {
+                    if(permissionChecker('marketzone_add')) {
                 ?>
                     <h5 class="page-header">
                         <a href="<?php echo base_url('marketzone/add') ?>">
                             <i class="fa fa-plus"></i> 
                             <?=$this->lang->line('add_title')?>
                         </a>
+			&nbsp;&nbsp;
+			 <?php if( isset ($reconfigure)) {?>
+				<a href="<?php echo base_url('trigger') ?>">
+                        	    <i class="fa fa-plus"></i> 
+                	            <?=$this->lang->line('generate_map_table')?>
+                        	</a>
+			<?php } ?>
+			
                     </h5>
                 <?php } ?>
 
@@ -39,7 +47,7 @@
                                 <?php if(permissionChecker('marketzone_edit')) { ?>
                                 <th class="col-lg-1"><?=$this->lang->line('marketzone_status')?></th>
                                 <?php } ?>
-                                <?php if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_delete')) { ?>
+                                <?php if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_delete') || permissionChecker('marketzone_view')) { ?>
                                 <th class="col-lg-2"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
                             </tr>
@@ -90,6 +98,7 @@
                                     <td data-title="<?=$this->lang->line('action')?>">
                                         <?php echo btn_edit('marketzone/edit/'.$marketzone->market_id, $this->lang->line('edit')); ?>
                                         <?php echo btn_delete('marketzone/delete/'.$marketzone->market_id, $this->lang->line('delete')); ?>
+					<?php echo btn_view('marketzone/view/'.$marketzone->market_id, $this->lang->line('view')); ?>
                                     </td>
                                     <?php } ?>
                                 </tr>

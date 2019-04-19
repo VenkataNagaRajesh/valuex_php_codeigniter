@@ -13,7 +13,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-10">
-                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+                <form class="form-horizontal" role="form" method="post" id="add_mktzone" enctype="multipart/form-data">
 
                     <?php
                         if(form_error('market_name'))
@@ -169,6 +169,8 @@
 </div>
 
 <script type="text/javascript">
+
+
 $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: "Select a value"});
 
@@ -210,6 +212,7 @@ $("#checkbox_excl").click(function(){
 
 
 $('#amz_level_id').change(function(event) {    
+	$('#amz_level_value').val(null).trigger('change')
   var level_id = $(this).val();                 
 $.ajax({     async: false,            
 	     type: 'POST',            
@@ -222,6 +225,7 @@ $.ajax({     async: false,
 });
 
 $('#amz_incl_id').change(function(event) {    
+	$('#amz_incl_value').val(null).trigger('change');
   var incl_id = $(this).val();                 
 $.ajax({     async: false,            
              type: 'POST',            
@@ -236,6 +240,7 @@ $.ajax({     async: false,
 
 
 $('#amz_excl_id').change(function(event) {    
+	$('#amz_excl_value').val(null).trigger('change')
   var excl_id = $(this).val();                 
 $.ajax({     async: false,            
              type: 'POST',            
@@ -246,6 +251,7 @@ $.ajax({     async: false,
              $('#amz_excl_value').html(data); }        
       });       
 });
+
 
 
 </script>

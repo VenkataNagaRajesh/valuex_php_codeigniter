@@ -21,6 +21,15 @@ class user_m extends MY_Model {
 		return $query->row();
 	}
 
+
+	function get_username_byid($id){
+		$this->db->select('name');
+		$this->db->from('user');
+		$this->db->where(array('userID' => $id));
+		$query = $this->db->get();
+		$result = $query->row();
+		return $result->name;
+	}
 	function get_user_by_usertype($userID = null) {
 		$this->db->select('*');
 		$this->db->from('user');
