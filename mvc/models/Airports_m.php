@@ -182,5 +182,10 @@ class Airports_m extends MY_Model {
 	  return $query->result();
   }
   
+  public function getDataTypeByParent($parent){
+	  $query = $this->db->get_where('vx_aln_data_types',array('parent_typeID' => $parent))->result();
+	  return $query;
+  }
+  
 }
 

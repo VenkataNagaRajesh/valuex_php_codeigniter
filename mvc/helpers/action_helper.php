@@ -36,7 +36,7 @@ function btn_add_show($uri, $name) {
 
 function btn_view($uri, $name) {
     if(visibleButton($uri)) {
-        return anchor($uri, "<i class='fa fa-check-square-o'></i>", "class='btn btn-success btn-xs mrg' data-placement='top' data-toggle='tooltip' data-original-title='".$name."'");
+        return anchor($uri, "<i class='fa fa-eye'></i>", "class='btn btn-success btn-xs mrg' data-placement='top' data-toggle='tooltip' data-original-title='".$name."'");
     }
 
     return '';

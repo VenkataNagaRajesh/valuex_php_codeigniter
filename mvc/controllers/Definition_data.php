@@ -4,8 +4,7 @@ class Definition_data extends Admin_Controller {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model("airports_m");
-		$this->load->model('install_m');
+		$this->load->model("airports_m");		
 		$language = $this->session->userdata('lang');
 		$this->lang->load('definitiondata', $language);	
 	}
