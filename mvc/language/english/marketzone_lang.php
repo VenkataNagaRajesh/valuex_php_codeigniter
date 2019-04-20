@@ -4,7 +4,8 @@
 $lang['panel_title'] = "Marketzones";
 $lang['add_title'] = "Add a marketzone";
 $lang['slno'] = "#";
-$lang['market_name'] = "MarketZone Name";
+$lang['market_id'] = 'Marketzone ID';
+$lang['market_name'] = "Marketzone Name";
 $lang['level_type'] = "Level type";
 $lang['amz_level_value'] = "Level value";
 $lang['amz_incl_type'] = "Inclusion type";
@@ -19,11 +20,17 @@ $lang['delete'] = 'Delete';
 $lang['pdf_preview'] = 'PDF Preview';
 $lang['print'] = 'Print';
 $lang["mail"] = "Send Pdf to Mail";
-
+$lang['marketzone_create_user'] = 'Created By';
+$lang['marketzone_modify_user'] = 'Modified By';
+$lang['marketzone_create_date'] = 'Created Time';
+$lang['marketzone_modify_date'] = 'Modified Time';
+$lang['marketzone_information'] = 'Marketzone Information';
 /* Add Language */
 $lang['add_marketzone'] = 'Add Marketzone';
 $lang['update_marketzone'] = 'Update marketzone';
 
+
+$lang['generate_map_table'] = "Reconfigure";
 $lang['to'] = 'To';
 $lang['subject'] = 'Subject';
 $lang['message'] = 'Message';

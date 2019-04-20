@@ -11,13 +11,9 @@ class Marketzone_m extends MY_Model {
 		parent::__construct();
 	}
 
-	function get_marketzonename($table, $data=NULL) {
-		$query = $this->db->get_where($table, $data);
-		return $query->result();
-	}
 
-	function get_marketzonename_row($table, $data=NULL) {
-		$query = $this->db->get_where($table, $data);
+	function get_marketzonename($id) {
+		$query = $this->db->get_where('VX_aln_market_zone',array('market_id'=>$id));
 		return $query->row();
 	}
 
@@ -54,6 +50,29 @@ class Marketzone_m extends MY_Model {
 		
 	}
 
+	function getAlnDataTYpes(){
+	        $this->db->select('vx_aln_data_typeID,name');
+                $this->db->from('vx_aln_data_types');
+		$query = $this->db->get();
+		$result = $query->result();
+                foreach($result  as $type) {
+                        $datatypes[$type->vx_aln_data_typeID]  = $type->name;
+                }
+        	return $datatypes;
+	}
+
+
+
+
+	function getMarketzones_for_triggerrun($timestamp) {
+		$sql = "SELECT * FROM VX_aln_market_zone
+                              WHERE modify_date >= ".$timestamp;
+		$marketzones = $this->install_m->run_query($sql);
+                return $marketzones;
+	}
+
+
+
 	function getALndataTypeValues($list){
 		$query = "SELECT aln_data_value FROM  vx_aln_data_defns WHERE vx_aln_data_defnsID in (". $list . ")";
                 $result = $this->install_m->run_query($query);
@@ -61,6 +80,26 @@ class Marketzone_m extends MY_Model {
 		return implode('<br>+',array_column($result, 'aln_data_value'));
 	}
 	
+	function getSubDataDefns($id){
+		  
+		 $this->db->select('vx_aln_data_defnsID, aln_data_value')->from('vx_aln_data_defns');
+         	 $this->db->where('aln_data_typeID',$id);
+         	$query = $this->db->get();
+         	$result =  $query->result();
+		return $result;
+	}
+
+
+	function getAirportsList($parentID){
+		 $query = "select vx_aln_data_defnsID FROM 
+					( SELECT * from 
+					( SELECT * from vx_aln_data_defns  order by parentID, vx_aln_data_defnsID) 
+					  vx_aln_data_defns, (select @pv := ".$parentID.") 
+                                          initialisation where find_in_set(parentID, @pv) > 0 and 
+					  @pv := concat(@pv, ',', vx_aln_data_defnsID ) ) as subresult where aln_data_typeID = 1";
+		$result = $this->install_m->run_query($query);
+		return array_column($result,'vx_aln_data_defnsID');
+	}
 
 	function update_marketzone($data, $id = NULL) {
 		parent::update($data, $id);

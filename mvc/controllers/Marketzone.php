@@ -17,7 +17,8 @@ class Marketzone extends Admin_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model("marketzone_m");
-		$this->load->model('usertype_m');
+		$this->load->model("trigger_m");
+		$this->load->model('user_m');
 		$this->load->model('install_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('marketzone', $language);
@@ -72,7 +73,9 @@ class Marketzone extends Admin_Controller {
 	public function index() {
 
 		$this->data['marketzones'] = $this->marketzone_m->get_marketzones();
+		
 		$this->data["subview"] = "marketzone/index";
+		$this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_market_zone');
 		$this->load->view('_layout_main', $this->data);
 
 	}
@@ -92,9 +95,8 @@ class Marketzone extends Admin_Controller {
                 );
 
 
-	    $this->data['aln_datatypes'] = $this->getAlnDataTYpes();
+	    $this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
 
-		$this->data['usertypes'] = $this->usertype_m->get_usertype();
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -102,6 +104,7 @@ class Marketzone extends Admin_Controller {
 				$this->data["subview"] = "marketzone/add";
 				$this->load->view('_layout_main', $this->data);
 			} else {
+				$date_now = time(); 
 				$array["market_name"] = $this->input->post("market_name");
 				$array["amz_level_id"] = $this->input->post("amz_level_id");
 				$array["amz_level_name"] = implode(',',$this->input->post("amz_level_value"));
@@ -109,12 +112,22 @@ class Marketzone extends Admin_Controller {
 				$array["amz_incl_name"] = implode(',',$this->input->post("amz_incl_value"));
 				$array["amz_excl_id"] = $this->input->post("amz_excl_id");
 				$array["amz_excl_name"] = implode(',',$this->input->post("amz_excl_value"));
-				$array["create_date"] = date("Y-m-d h:i:s");
-				$array["modify_date"] = date("Y-m-d h:i:s");
+				$array["create_date"] = $date_now;
+				$array["modify_date"] = $date_now;
 				$array["create_userID"] = $this->session->userdata('loginuserID');
 			        $array["modify_userID"] = $this->session->userdata('loginuserID');
 				$array["active"] = 1;
 				$this->marketzone_m->insert_marketzone($array);
+				
+			      // insert entry in trigger table for mapping table generation
+		
+				$tarray['table_name'] = 'VX_aln_market_zone';
+				$tarray['table_last_changed'] = $date_now;
+				$tarray['create_userID'] = $this->session->userdata('loginuserID');
+				$tarray['isReconfigured'] = '1';
+				$tarray['is_run'] = '0';	
+			
+			        $this->trigger_m->insert_trigger($tarray);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("marketzone/index"));
 			}
@@ -129,15 +142,13 @@ class Marketzone extends Admin_Controller {
 		 $this->data['headerassets'] = array(
                         'css' => array(
                                 'assets/select2/css/select2.css',
-                                'assets/select2/css/select2-bootstrap.css',
-				'assets/fselect/fSelect.css'
+                                'assets/select2/css/select2-bootstrap.css'
                         ),
                         'js' => array(
-                                'assets/select2/select2.js',
-				'assets/fselect/fSelect.js',
+                                'assets/select2/select2.js'
                         )
                 );
-		$this->data['aln_datatypes'] = $this->getAlnDataTYpes();
+		$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
 		 $id = htmlentities(escapeString($this->uri->segment(3)));
         if((int)$id) {
             $this->data['marketzone'] = $this->marketzone_m->get_single_marketzone(array('market_id' => $id));
@@ -149,21 +160,30 @@ class Marketzone extends Admin_Controller {
                         $this->data["subview"] = "/marketzone/edit";
                         $this->load->view('_layout_main', $this->data);
                     } else { 
-
+			   $date_now = time();	
 			    $array["market_name"] = $this->input->post("market_name");
                             $array["amz_level_id"] = $this->input->post("amz_level_id");
-                            //$array["amz_level_name"] = $this->data['marketzone']->amz_level_name . ',' .  implode(',',$this->input->post("amz_level_value"));
 			    $array["amz_level_name"] =  implode(',',$this->input->post("amz_level_value"));
                             $array["amz_incl_id"] = $this->input->post("amz_incl_id");
-                            //$array["amz_incl_name"] = $this->data['marketzone']->amz_incl_name . ',' . implode(',',$this->input->post("amz_incl_value"));
-			     $array["amz_incl_name"] = implode(',',$this->input->post("amz_incl_value"));
+			    $array["amz_incl_name"] = implode(',',$this->input->post("amz_incl_value"));
                             $array["amz_excl_id"] = $this->input->post("amz_excl_id");
-                            //$array["amz_excl_name"] = $this->data['marketzone']->amz_excl_name . ',' . implode(',',$this->input->post("amz_excl_value"));
-			   $array["amz_excl_name"] =  implode(',',$this->input->post("amz_excl_value"));
-                            $array["modify_date"] = date("Y-m-d h:i:s");
-			   $array["modify_userID"] = $this->session->userdata('loginuserID');
+			    $array["amz_excl_name"] =  implode(',',$this->input->post("amz_excl_value"));
+                            $array["modify_date"] = $date_now;
+			    $array["modify_userID"] = $this->session->userdata('loginuserID');
 
                             $this->marketzone_m->update_marketzone($array, $id);
+
+
+			        $tarray['table_name'] = 'VX_aln_market_zone';
+                                $tarray['table_last_changed'] = $date_now;
+                                $tarray['create_userID'] = $this->session->userdata('loginuserID');
+                                $tarray['isReconfigured'] = '1';
+                                $tarray['is_run'] = '0';
+
+                                $this->trigger_m->insert_trigger($tarray);
+
+
+
                             $this->session->set_flashdata('success', $this->lang->line('menu_success'));
                             redirect(base_url("marketzone/index"));
                     }
@@ -186,7 +206,7 @@ class Marketzone extends Admin_Controller {
 	public function delete() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
-			$this->data['marketzone'] = $this->marketzone_m->get_marketzonename_row('VX_aln_market_zone',array('market_id'=> $id));
+			$this->data['marketzone'] = $this->marketzone_m->get_marketzonename($id);
 			if($this->data['marketzone']) {
 				$this->marketzone_m->update_marketzone(array('active' => 0), $id);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
@@ -200,14 +220,6 @@ class Marketzone extends Admin_Controller {
 	}
 
 
-   public function getAlnDataTYpes(){
-	$query = "SELECT vx_aln_data_typeID, name FROM  vx_aln_data_types ";
-	$result = $this->install_m->run_query($query);
-		foreach($result as $type) {
-			$datatypes[$type->vx_aln_data_typeID]  = $type->name;
-	        }
-	return $datatypes;
-   }
 
 
    public function getSubdataTypes(){
@@ -219,24 +231,16 @@ class Marketzone extends Admin_Controller {
          }else{
              $sub_id = null;
         }
-	//$sub_id = "5,6";
-	//$id = 2;
 	if ( isset($id)){
-	 $this->db->select('vx_aln_data_defnsID, aln_data_value')->from('vx_aln_data_defns');
-         $this->db->where('aln_data_typeID',$id);
-	  /*if ( $sub_id != null ) {
-		$qq = ' data_defns_id NOT IN (' . $sub_id . ')';
-		$this->db->where($qq); 
-	}*/
-         $query = $this->db->get();
-         $result =  $query->result();
-	$list = explode(',',$sub_id);
+		$result = $this->marketzone_m->getSubDataDefns($id);
+	        $list = explode(',',$sub_id);
 //	 echo "<option value='0'>", SELECT,"</option>";
                         foreach ($result as $defns) {                               
                                 echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->aln_data_value,"</option>";
                         }  
 	}
    }
+
 
 	 function active() {
                 if(permissionChecker('marketzone_edit')) {
@@ -264,12 +268,32 @@ class Marketzone extends Admin_Controller {
                 }
         }
 
+
+
+	public function view() {
+                $id = htmlentities(escapeString($this->uri->segment(3)));
+                if ((int)$id) {
+                        $this->data["marketzone"] = $this->marketzone_m->get_marketzonename($id);
+                        if($this->data["marketzone"]) {
+                                $this->data["subview"] = "marketzone/view";
+                                $this->load->view('_layout_main', $this->data);
+                        } else {
+                                $this->data["subview"] = "error";
+                                $this->load->view('_layout_main', $this->data);
+                        }
+                } else {
+                        $this->data["subview"] = "error";
+                        $this->load->view('_layout_main', $this->data);
+                }
+        }
+
+
 	function deleteAlnDataDefVal(){
 		 $type_id = htmlentities(escapeString($this->uri->segment(5)));
                 $market_id = htmlentities(escapeString($this->uri->segment(4)));
 		$aln_type_val = htmlentities(escapeString($this->uri->segment(3)));
 	//	 $type_id = 1;$market_id = 1; $aln_type_val = 5;
-		$result = $this->marketzone_m->get_marketzonename_row('VX_aln_market_zone',array('market_id'=> $market_id));
+		$result = $this->marketzone_m->get_marketzonename($market_id);
 		if ($type_id == 1){
 		   	$cur_level_value = explode(',',$result->amz_level_name);
 			$field = "amz_level_name";
