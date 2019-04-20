@@ -158,4 +158,6 @@ $lang['menu_airport'] = 'Airport';
 $lang['menu_defdata'] = 'Definition Data';
 $lang['menu_marketzone'] = 'Marketzones';
 
+$lang['menu_preference'] = 'Preference';
+
 /* End Update Menu */

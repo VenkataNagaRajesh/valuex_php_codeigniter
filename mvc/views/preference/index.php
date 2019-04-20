@@ -2,58 +2,63 @@
 <div class="box">
     <div class="box-header">
         <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
-
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li class="active"><?=$this->lang->line('menu_defdata')?></li>
+            <li class="active"><?=$this->lang->line('menu_preference')?></li>
         </ol>
     </div><!-- /.box-header -->
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">              
-              <h5 class="page-header">                        
-					<?php if(permissionChecker('definition_data_add')) { ?>
-                  <a href="<?php echo base_url('definition_data/add') ?>">
-                      <i class="fa fa-plus"></i>
-                      <?=$this->lang->line('add_defdata')?>
-                  </a>
-				 <?php } ?>
-              </h5>			 				
-            <div id="hide-table">
-               <table id="defdata" class="table table-striped table-bordered table-hover dataTable no-footer">
-                 <thead>
-                    <tr>
-                        <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('defdata_type')?></th>
-						<th class="col-lg-2"><?=$this->lang->line('defdata_value')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('defdata_parent')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('defdata_code')?></th>				
-						<th class="col-lg-1"><?=$this->lang->line('defdata_active')?></th>
-                        <?php if(permissionChecker('definition_data_edit') || permissionChecker('definition_data_delete')) { ?>
-                        <th class="col-lg-1"><?=$this->lang->line('action')?></th>
-                        <?php } ?>
-                    </tr>
-                 </thead>
-                 <tbody>                          
-                 </tbody>
-              </table>
+            <div class="col-sm-12">
+                <?php if(permissionChecker('preference_add')) {  ?>
+                    <h5 class="page-header">
+                        <a href="<?php echo base_url('preference/add') ?>">
+                            <i class="fa fa-plus"></i> 
+                            <?=$this->lang->line('add_title')?>
+                        </a>
+                    </h5>
+                <?php } ?>
+                <div id="hide-table">
+                    <table id="preftable" class="table table-striped table-bordered table-hover dataTable no-footer">
+                        <thead>
+                            <tr>
+                                <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+                                <th class="col-lg-1"><?=$this->lang->line('preference_category')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('preference_type')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('preference_code')?></th>
+								<th class="col-lg-2"><?=$this->lang->line('preference_display_name')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('preference_value')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('preference_get_value_type')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('preference_get_value')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('preference_active')?></th>	
+                                <?php if(permissionChecker('preference_edit') || permissionChecker('preference_delete')) { ?>
+                                <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+                                <?php } ?>
+                            </tr>
+                        </thead> 
+                        <tbody>
+                        </tbody>						
+                    </table>
+                </div>
             </div>
-          </div>
-       </div>
-   </div>
+        </div>
+    </div>
 </div>
 <script>
- $(document).ready(function() {	 
-    $('#defdata').DataTable( {
+$(document).ready(function() {	 
+    $('#preftable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
-      "sAjaxSource": "<?php echo base_url('definition_data/server_processing'); ?>",      	  
-      "columns": [{"data": "vx_aln_data_defnsID" },
-                  {"data": "datatype" },
-				  {"data": "aln_data_value" },
-				  {"data": "parent" },
-				  {"data": "code" },                 			  
+      "sAjaxSource": "<?php echo base_url('preference/server_processing'); ?>",      	  
+      "columns": [{"data": "VX_aln_preferenceID" },
+                  {"data": "category" },
+				  {"data": "type" },
+				  {"data": "pref_code" },
+				  {"data": "pref_display_name" },  
+                  {"data": "pref_value" },
+				  {"data": "valuetype" },
+				  {"data": "value" },				  
                   {"data": "active"},
                   {"data": "action"}
 				  ],			     
@@ -62,7 +67,7 @@
     });
   }); 
   
-   $('#defdata tbody').on('mouseover', 'tr', function () {
+   $('#preftable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
         html: true
@@ -71,7 +76,7 @@
   
   var status = '';
   var id = 0;
- $('#defdata tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
+ $('#preftable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");
@@ -83,7 +88,7 @@
       if((status != '' || status != null) && (id !='')) {
           $.ajax({
               type: 'POST',
-              url: "<?=base_url('definition_data/active')?>",
+              url: "<?=base_url('preference/active')?>",
               data: "id=" + id + "&status=" + status,
               dataType: "html",
               success: function(data) {
@@ -129,5 +134,6 @@
               }
           });
       }
-  }); 
+  });
+  
 </script>

@@ -7,7 +7,7 @@ class Admin_Controller extends MY_Controller {
 
 	function __construct () {
 		parent::__construct();
-
+        $this->load->model("install_m");
 		$this->load->model("signin_m");
 		$this->load->model("permission_m");
 		$this->load->model("message_m");
