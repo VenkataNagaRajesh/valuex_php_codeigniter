@@ -125,7 +125,6 @@ class Marketzone extends Admin_Controller {
 				$tarray['table_last_changed'] = $date_now;
 				$tarray['create_userID'] = $this->session->userdata('loginuserID');
 				$tarray['isReconfigured'] = '1';
-				$tarray['is_run'] = '0';	
 			
 			        $this->trigger_m->insert_trigger($tarray);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
@@ -178,7 +177,6 @@ class Marketzone extends Admin_Controller {
                                 $tarray['table_last_changed'] = $date_now;
                                 $tarray['create_userID'] = $this->session->userdata('loginuserID');
                                 $tarray['isReconfigured'] = '1';
-                                $tarray['is_run'] = '0';
 
                                 $this->trigger_m->insert_trigger($tarray);
 
