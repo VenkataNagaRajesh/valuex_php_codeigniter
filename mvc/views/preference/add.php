@@ -185,6 +185,9 @@
     </div>
 </div>
 <script>
+$( ".select2" ).select2({closeOnSelect:false,
+		         placeholder: "Select Level value"});
+				 
 $('#pref_get_value_type').change( function(e){
 	var type = $(this).val();
 	if(type == 0){

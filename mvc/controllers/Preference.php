@@ -122,9 +122,21 @@ class Preference extends Admin_Controller {
 	}
 
 	public function add() {	
+	  $this->data['headerassets'] = array(
+                'css' => array(
+                        'assets/select2/css/select2.css',
+                        'assets/select2/css/select2-bootstrap.css',
+                        'assets/fselect/fSelect.css'
+                ),
+                'js' => array(
+                        'assets/select2/select2.js',
+                        'assets/fselect/fSelect.js',
+                )
+        );
       $this->data['catlist'] = $this->airports_m->getDefns(6);
       $this->data['pref_types'] = $this->airports_m->getDefns(7);
-      $this->data['valuetypes'] = $this->airports_m->getDataTypeByParent(8);	  
+      $this->data['valuetypes'] = $this->airports_m->getDefdataTypes(null,array('8','9','10'));	 
+     //  print_r( $this->data['valuetypes']); exit;	  
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -155,14 +167,25 @@ class Preference extends Admin_Controller {
 		}
 	}
 
-	public function edit() {		
+	public function edit() {
+        $this->data['headerassets'] = array(
+                'css' => array(
+                        'assets/select2/css/select2.css',
+                        'assets/select2/css/select2-bootstrap.css',
+                        'assets/fselect/fSelect.css'
+                ),
+                'js' => array(
+                        'assets/select2/select2.js',
+                        'assets/fselect/fSelect.js',
+                )
+        );		
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$this->data['preference'] = $this->preference_m->get_preference(array('VX_aln_preferenceID'=>$id));
 			 if($this->data['preference']) {
 			  $this->data['catlist'] = $this->airports_m->getDefns(6);
 			  $this->data['pref_types'] = $this->airports_m->getDefns(7);
-			  $this->data['valuetypes'] = $this->airports_m->getDataTypeByParent(8);	  
+			  $this->data['valuetypes'] = $this->airports_m->getDefdataTypes(null,array('8','9','10'));	 	  
 				if($_POST) {
 					$rules = $this->rules();
 					$this->form_validation->set_rules($rules);
@@ -362,10 +385,14 @@ class Preference extends Admin_Controller {
 	}
 
 	public function pref_get_value(){
-		$parenttype = $this->input->post('type');
+		$type = $this->input->post('type');
 		$get_value = $this->input->post('get_value');
-		if($parenttype){
-			$list = $this->airports_m->getDataTypeByParent($parenttype);		
+		if($type){
+		  if($type == 10){
+			$list = $this->airports_m->getDefdataTypes(null,array('1','2','3','4','5'));		
+		  } else {
+			$list = $this->airports_m->getDefdataTypes(null,array($type));	
+		  }
 			echo '<option value="0">Select Value</option>';
 			foreach ($list as $li) {
 				 if($li->vx_aln_data_typeID == $get_value){

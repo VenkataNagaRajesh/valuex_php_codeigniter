@@ -185,6 +185,9 @@
     </div>
 </div>
 <script>
+$( ".select2" ).select2({closeOnSelect:false,
+		         placeholder: "Select a value"});
+				 
 $(document).ready(function (){
 	var get_val_type = $('#pref_get_value_type').val();
 	var get_val = <?=$preference->pref_get_value?>;

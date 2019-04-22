@@ -174,18 +174,17 @@ class Airports_m extends MY_Model {
 	  }
   }
   
-  public function getDefdataTypes($excludetype=null){
-	  if($excludetype != null){
-		  $this->db->where('vx_aln_data_typeID !=',$excludetype);
+  public function getDefdataTypes($excludetype=array(),$includetype=array()){
+	 $this->db->select('*')->from('vx_aln_data_types');
+	  if(!empty($excludetype)){
+		  $this->db->where_not_in('vx_aln_data_typeID',$excludetype);
 	  }
-	  $query = $this->db->get('vx_aln_data_types');
+	  if(!empty($includetype)){
+		  $this->db->where_in('vx_aln_data_typeID',$includetype);
+	  } 	
+	  $query = $this->db->get();	 
 	  return $query->result();
   }
-  
-  public function getDataTypeByParent($parent){
-	  $query = $this->db->get_where('vx_aln_data_types',array('parent_typeID' => $parent))->result();
-	  return $query;
-  }
-  
+      
 }
 

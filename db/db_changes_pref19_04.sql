@@ -33,3 +33,10 @@ insert into permissions (description,name,active) values ('Preference Edit','pre
 insert into permissions (description,name,active) values ('Preference Delete','preference_delete','yes');
 insert into permissions (description,name,active) values ('Preference View','preference_view','yes');
 
+
+insert into vx_aln_data_types (name,create_userID,modify_userID,active,create_date,modify_date) values('pref_category',1,1,1,1554788423,1554788423);
+insert into vx_aln_data_types (name,create_userID,modify_userID,active,create_date,modify_date) values('pref_type',1,1,1,1554788423,1554788423);
+insert into vx_aln_data_types (name,create_userID,modify_userID,active,create_date,modify_date) values('pref_bolean',1,1,1,1554788423,1554788423);
+into vx_aln_data_types (name,create_userID,modify_userID,active,create_date,modify_date) values('pref_text',1,1,1,1554788423,1554788423);
+insert into vx_aln_data_types (name,create_userID,modify_userID,active,create_date,modify_date) values('pref_list',1,1,1,1554788423,1554788423);
+

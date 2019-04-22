@@ -61,7 +61,7 @@
                             <?=$this->lang->line("defdata_parent")?>
                         </label>
                         <div class="col-sm-6">
-                            <select name="parentID" id="parentID" class="form-control">
+                            <select name="parentID" id="parentID" class="form-control select2">
                             </select>							
                         </div>
                         <span class="col-sm-4 control-label">
@@ -118,6 +118,9 @@
     </div>
 </div>
 <script>
+$( ".select2" ).select2({closeOnSelect:false,
+		         placeholder: "Select a value"});
+				 
 $('#aln_data_typeID').change( function(e){
 	var type = $(this).val();
 	if(type != 0) {    

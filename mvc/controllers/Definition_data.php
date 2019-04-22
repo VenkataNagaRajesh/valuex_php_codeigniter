@@ -133,7 +133,18 @@ class Definition_data extends Admin_Controller {
 	}
 	
 	public function add() {
-        $this->data['types'] = $this->airports_m->getDefdataTypes(1);	
+		$this->data['headerassets'] = array(
+                'css' => array(
+                        'assets/select2/css/select2.css',
+                        'assets/select2/css/select2-bootstrap.css',
+                        'assets/fselect/fSelect.css'
+                ),
+                'js' => array(
+                        'assets/select2/select2.js',
+                        'assets/fselect/fSelect.js',
+                )
+        );	
+        $this->data['types'] = $this->airports_m->getDefdataTypes(array('1','6','7','8','9','10'));	
 		if($_POST) {
 			$rules = $this->addrules();
 			$this->form_validation->set_rules($rules);
@@ -167,6 +178,17 @@ class Definition_data extends Admin_Controller {
 	}
 
 	public function edit() {
+		$this->data['headerassets'] = array(
+                'css' => array(
+                        'assets/select2/css/select2.css',
+                        'assets/select2/css/select2-bootstrap.css',
+                        'assets/fselect/fSelect.css'
+                ),
+                'js' => array(
+                        'assets/select2/select2.js',
+                        'assets/fselect/fSelect.js',
+                )
+        );	
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$this->data['defdata'] = $this->airports_m->get_definition_data($id);

@@ -157,6 +157,7 @@ $lang['menu_airports_master'] = 'Airports Master';
 $lang['menu_airport'] = 'Airport';
 $lang['menu_defdata'] = 'Definition Data';
 $lang['menu_marketzone'] = 'Marketzones';
+$lang['menu_season'] = 'Seasons';
 
 $lang['menu_preference'] = 'Preference';
 
