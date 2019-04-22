@@ -50,7 +50,7 @@
                             <?php
 							 $typelist[0]=$this->lang->line("preference_select_type");
 						     foreach($pref_types as $type){
-								 $typelist[$type->vx_aln_data_defnsID] = $type->aln_data_value;
+								 $typelist[$type->vx_aln_data_typeID] = $type->name;
 							 }							
 						   echo form_dropdown("pref_type", $typelist,set_value("pref_type"), "id='pref_type' class='form-control hide-dropdown-icon select2'"); 
 						   ?>

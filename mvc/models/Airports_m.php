@@ -78,7 +78,7 @@ class Airports_m extends MY_Model {
 		$this->db->where('parentID',$parent);
 	  }
 	  $query = $this->db->get();
-      $this->mydebug->debug($this->db->last_query());	  
+      //$this->mydebug->debug($this->db->last_query());	  
 	  return $query->result();
   }
   

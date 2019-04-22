@@ -17,6 +17,7 @@
 				 <div class="profile-view-tab"> 
 					 <p><span><?=$this->lang->line("preference_id")?> </span>: <?=$preference->VX_aln_preferenceID?></p>
 					 <p><span><?=$this->lang->line("preference_category")?> </span>: <?=$preference->category?></p>
+					 <p><span><?=$this->lang->line("preference_type")?> </span>: <?=$preference->type?></p>
 					 <p><span><?=$this->lang->line("preference_code")?> </span>: <?=$preference->pref_code?></p>
 					 <p><span><?=$this->lang->line("preference_display_name")?> </span>: <?=$preference->pref_display_name?></p>
 					 <p><span><?=$this->lang->line("preference_value")?> </span>: <?=$preference->pref_value?></p>

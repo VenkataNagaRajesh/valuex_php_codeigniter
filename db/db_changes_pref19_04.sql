@@ -27,6 +27,7 @@ CREATE TABLE `VX_aln_preference` (
 );
 
 insert into menu (menuName,link,icon,status,parentID,priority) values ('Preference','preference','fa-cogs','1','0','500');
+insert into menu (menuName,link,icon,status,parentID,priority) values ('Preference Settings','pref_setting','fa-cogs','1','0','500');
 insert into permissions (description,name,active) values ('Preference','preference','yes');
 insert into permissions (description,name,active) values ('Preference Add','preference_add','yes');
 insert into permissions (description,name,active) values ('Preference Edit','preference_edit','yes');
@@ -34,9 +35,10 @@ insert into permissions (description,name,active) values ('Preference Delete','p
 insert into permissions (description,name,active) values ('Preference View','preference_view','yes');
 
 
-insert into vx_aln_data_types (name,create_userID,modify_userID,active,create_date,modify_date) values('pref_category',1,1,1,1554788423,1554788423);
-insert into vx_aln_data_types (name,create_userID,modify_userID,active,create_date,modify_date) values('pref_type',1,1,1,1554788423,1554788423);
-insert into vx_aln_data_types (name,create_userID,modify_userID,active,create_date,modify_date) values('pref_bolean',1,1,1,1554788423,1554788423);
-into vx_aln_data_types (name,create_userID,modify_userID,active,create_date,modify_date) values('pref_text',1,1,1,1554788423,1554788423);
-insert into vx_aln_data_types (name,create_userID,modify_userID,active,create_date,modify_date) values('pref_list',1,1,1,1554788423,1554788423);
+insert into menu (menuName,link,icon,status,parentID,priority) values ('Preference Settings','pref_setting','fa-cogs','1','21','500');
+insert into permissions (description,name,active) values ('Preference Setting','pref_setting','yes');
+
+
+
+
 

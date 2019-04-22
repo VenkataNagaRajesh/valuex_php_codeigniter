@@ -134,8 +134,8 @@ class Preference extends Admin_Controller {
                 )
         );
       $this->data['catlist'] = $this->airports_m->getDefns(6);
-      $this->data['pref_types'] = $this->airports_m->getDefns(7);
-      $this->data['valuetypes'] = $this->airports_m->getDefdataTypes(null,array('8','9','10'));	 
+      $this->data['pref_types'] = $this->airports_m->getDefdataTypes(null,array('7','8'));
+      $this->data['valuetypes'] = $this->airports_m->getDefdataTypes(null,array('9','10','11'));	 
      //  print_r( $this->data['valuetypes']); exit;	  
 		if($_POST) {
 			$rules = $this->rules();
@@ -184,8 +184,8 @@ class Preference extends Admin_Controller {
 			$this->data['preference'] = $this->preference_m->get_preference(array('VX_aln_preferenceID'=>$id));
 			 if($this->data['preference']) {
 			  $this->data['catlist'] = $this->airports_m->getDefns(6);
-			  $this->data['pref_types'] = $this->airports_m->getDefns(7);
-			  $this->data['valuetypes'] = $this->airports_m->getDefdataTypes(null,array('8','9','10'));	 	  
+			  $this->data['pref_types'] = $this->airports_m->getDefdataTypes(null,array('7','8'));
+			  $this->data['valuetypes'] = $this->airports_m->getDefdataTypes(null,array('9','10','11'));	 	  
 				if($_POST) {
 					$rules = $this->rules();
 					$this->form_validation->set_rules($rules);
@@ -343,7 +343,7 @@ class Preference extends Admin_Controller {
 			}
 			
 			
-		$sQuery = "SELECT p.*,dd.aln_data_value category,dd1.aln_data_value type,dt1.name valuetype,dt2.name value FROM VX_aln_preference p LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = p.categoryID LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = p.pref_type LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = p.pref_get_value_type LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = p.pref_get_value
+		$sQuery = "SELECT p.*,dd.aln_data_value category,dd1.name type,dt1.name valuetype,dt2.name value FROM VX_aln_preference p LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = p.categoryID LEFT JOIN vx_aln_data_types dd1 ON dd1.vx_aln_data_typeID = p.pref_type LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = p.pref_get_value_type LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = p.pref_get_value
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
@@ -388,7 +388,7 @@ class Preference extends Admin_Controller {
 		$type = $this->input->post('type');
 		$get_value = $this->input->post('get_value');
 		if($type){
-		  if($type == 10){
+		  if($type == 11){
 			$list = $this->airports_m->getDefdataTypes(null,array('1','2','3','4','5'));		
 		  } else {
 			$list = $this->airports_m->getDefdataTypes(null,array($type));	
