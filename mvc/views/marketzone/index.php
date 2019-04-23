@@ -1,122 +1,116 @@
 
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa fa-users"></i> <?=$this->lang->line('panel_title')?></h3>
-
-       
+        <h3 class="box-title"><i class="fa fa-sitemap"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li class="active"><?=$this->lang->line('menu_marketzone')?></li>
+           
+            <li class="active"><?=$this->lang->line('menu_marketzone')?></li>           
         </ol>
     </div><!-- /.box-header -->
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">
-                <?php 
+            <div class="col-sm-12">			
+			  <div class="nav-tabs-custom">
+               <ul class="nav nav-tabs">
+                  <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
+               </ul>
+
+                    <h5 class="page-header">
+
+		<?php
                     if(permissionChecker('marketzone_add')) {
                 ?>
-                    <h5 class="page-header">
                         <a href="<?php echo base_url('marketzone/add') ?>">
-                            <i class="fa fa-plus"></i> 
+                            <i class="fa fa-plus"></i>
                             <?=$this->lang->line('add_title')?>
                         </a>
-			&nbsp;&nbsp;
-			 <?php if( isset ($reconfigure)) {?>
-				<a href="<?php echo base_url('trigger') ?>">
-                        	    <i class="fa fa-plus"></i> 
-                	            <?=$this->lang->line('generate_map_table')?>
-                        	</a>
-			<?php } ?>
-			
-                    </h5>
-                <?php } ?>
+	
+		<?php } ?>
 
-                <div id="hide-table">
-                    <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
-                        <thead>
+                        &nbsp;&nbsp;
+                         <?php if( isset ($reconfigure)) {?>
+                                <a href="<?php echo base_url('trigger') ?>">
+                                    <i class="fa fa-plus"></i>
+                                    <?=$this->lang->line('generate_map_table')?>
+                                </a>
+                        <?php } ?>
+
+                    </h5>
+
+
+	       <div class="tab-content">
+                <div id="all" class="tab-pane active">
+                  <div id="hide-table">
+                    <table id="tztable" class="table table-striped table-bordered table-hover dataTable no-footer">
+                       <thead>
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('market_name')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('market_name')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('level_type')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('amz_level_value')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('amz_level_value')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('amz_incl_type')?></th>
-				<th class="col-lg-1"><?=$this->lang->line('amz_incl_value')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('amz_excl_type')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('amz_excl_value')?></th>
-                                <?php if(permissionChecker('marketzone_edit')) { ?>
-                                <th class="col-lg-1"><?=$this->lang->line('marketzone_status')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('amz_incl_value')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('amz_excl_type')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('amz_excl_value')?></th>
+								 <?php if(permissionChecker('marketzone_edit')) { ?>
+                        				        <th class="col-lg-1"><?=$this->lang->line('marketzone_status')?></th>
                                 <?php } ?>
-                                <?php if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_delete') || permissionChecker('marketzone_view')) { ?>
-                                <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+                             
+                                 <?php if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_view') ||  permissionChecker('marketzone_detete')) { ?>
+                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
                             </tr>
                         </thead>
-                        <tbody>
-                            <?php if(count($marketzones)) {$i = 1; foreach($marketzones as $marketzone) { ?>
-                                <tr>
-                                    <td data-title="<?=$this->lang->line('slno')?>">
-                                        <?php echo $i; ?>
-                                    </td>
-                                    <td data-title="<?=$this->lang->line('market_name')?>">
-                                        <?php echo $marketzone->market_name; ?>
-                                    </td>
-                                    <td data-title="<?=$this->lang->line('level_type')?>">
-                                        <?php echo $this->marketzone_m->getAlndataType($marketzone->amz_level_id); ?>
-                                    </td>
-                                    <td data-title="<?=$this->lang->line('amz_level_value')?>">
-                                        <?php echo $this->marketzone_m->getALndataTypeValues($marketzone->amz_level_name);?>
-                                    </td>
-
-				    <td data-title="<?=$this->lang->line('amz_incl_type')?>">
-                                        <?php echo $this->marketzone_m->getAlndataType($marketzone->amz_incl_id); ?>
-                                    </td>
-                                    <td data-title="<?=$this->lang->line('amz_incl_value')?>">
-                                        <?php echo $this->marketzone_m->getALndataTypeValues($marketzone->amz_incl_name);?>
-                                    </td>
-
-				    <td data-title="<?=$this->lang->line('amz_excl_type')?>">
-                                        <?php echo $this->marketzone_m->getAlndataType($marketzone->amz_excl_id); ?>
-                                    </td>
-                                    <td data-title="<?=$this->lang->line('amz_excl_value')?>">
-                                        <?php echo $this->marketzone_m->getALndataTypeValues($marketzone->amz_excl_name);?>
-                                    </td>
-
-
-                                    <?php if(permissionChecker('marketzone_edit')) { ?>
-                                    <td data-title="<?=$this->lang->line('marketzone_status')?>">
-                                      <div class="onoffswitch-small" id="<?=$marketzone->market_id?>">
-                                          <input type="checkbox" id="myonoffswitch<?=$marketzone->market_id?>" class="onoffswitch-small-checkbox" name="paypal_demo" <?php if($marketzone->active === '1') echo "checked='checked'"; ?>>
-                                          <label for="myonoffswitch<?=$marketzone->market_id?>" class="onoffswitch-small-label">
-                                              <span class="onoffswitch-small-inner"></span>
-                                              <span class="onoffswitch-small-switch"></span>
-                                          </label>
-                                      </div>           
-                                    </td>
-                                    <?php } ?>
-                                    <?php if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_delete')) { ?>
-                                    <td data-title="<?=$this->lang->line('action')?>">
-                                        <?php echo btn_edit('marketzone/edit/'.$marketzone->market_id, $this->lang->line('edit')); ?>
-                                        <?php echo btn_delete('marketzone/delete/'.$marketzone->market_id, $this->lang->line('delete')); ?>
-					<?php echo btn_view('marketzone/view/'.$marketzone->market_id, $this->lang->line('view')); ?>
-                                    </td>
-                                    <?php } ?>
-                                </tr>
-                            <?php $i++; }} ?>
+						<tbody>                           
                         </tbody>
-                    </table>
+                    <tbody>
+					</tbody>
+					</table>
+				  </div>
                 </div>
+              </div>
+            </div>
+		  </div>
+        </div>
+    </div>
+</div>
 
 
-            </div> <!-- col-sm-12 -->
-        </div><!-- row -->
-    </div><!-- Body -->
-</div><!-- /.box -->
-
-<script>
-  var status = '';
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#tztable').DataTable( {
+      "bProcessing": true,
+      "bServerSide": true,
+      "sAjaxSource": "<?php echo base_url('marketzone/server_processing'); ?>",	  
+      "columns": [{"data": "market_id" },
+		  {"data": "market_name"},
+                  {"data": "lname" },
+				  {"data": "levelname" },
+				  {"data": "iname" },
+				  {"data": "inclname" },
+                  {"data": "ename"},
+				  {"data": "exclname"},
+		  {"data": "active"},
+                  {"data": "action"}
+				  ],			   
+	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
+	dom: 'B<"clear">lfrtip',
+    buttons: [ 'copy', 'csv', 'excel','pdf' ]
+    });
+  });
+  
+   $('#tztable tbody').on('mouseover', 'tr', function () {
+    $('[data-toggle="tooltip"]').tooltip({
+        trigger: 'hover',
+        html: true
+    });
+  });
+  
+ var status = '';
   var id = 0;
-  $('.onoffswitch-small-checkbox').click(function() {
+ $('#tztable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");
@@ -156,7 +150,6 @@
                       toastr.options = {
                         "closeButton": true,
                         "debug": false,
-                        "newestOnTop": false,
                         "progressBar": false,
                         "positionClass": "toast-top-right",
                         "preventDuplicates": false,
@@ -175,4 +168,7 @@
           });
       }
   }); 
+
+
+  
 </script>

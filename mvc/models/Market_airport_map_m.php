@@ -32,7 +32,20 @@ class Market_airport_map_m extends MY_Model {
 		$this->db->where(array('market_id' => $id));
                 $this->db->delete('VX_market_airport_map');
                 return true;
+	}
 
+	function remove_old_entriesbyid($market_id,$list){
+		$query = "DELETE FROM VX_market_airport_map WHERE market_id = ".$market_id." AND airport_id IN (".implode(',',$list).")";
+		$this->db->query($query);
+                return true;
+	}
+	function get_market_airport_mapdata($id) {
+
+		$this->db->select('airport_id')->from('VX_market_airport_map');
+		$this->db->where(array('market_id'=>$id));
+		$query = $this->db->get();
+		$result = $query->result();
+		return array_column($result,'airport_id');
 		
 	}
 

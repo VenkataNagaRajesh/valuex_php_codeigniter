@@ -27,7 +27,13 @@ class Marketzone_m extends MY_Model {
 		$query = parent::get_order_by($array);
 		return $query;
 	}
+	
+        function get_marketzones_count() {
+		$this->db->select('count(*) as cnt')->from('VX_aln_market_zone');
+                $query = $this->db->get();
+                return $query->row('cnt');
 
+	}
 	 function get_marketzones() {
                 $this->db->select('*');
                 $this->db->from('VX_aln_market_zone');
@@ -99,6 +105,26 @@ class Marketzone_m extends MY_Model {
 					  @pv := concat(@pv, ',', vx_aln_data_defnsID ) ) as subresult where aln_data_typeID = 1";
 		$result = $this->install_m->run_query($query);
 		return array_column($result,'vx_aln_data_defnsID');
+	}
+
+	function getParentsofAirport($airportID) {
+		$query = "SELECT T2.vx_aln_data_defnsID 
+		          FROM (
+    				SELECT
+        				@r AS _id,
+        				(SELECT @r := parentID FROM vx_aln_data_defns WHERE vx_aln_data_defnsID = _id) AS parentID,
+        				@l := @l + 1 AS lvl
+    				FROM
+        				(SELECT @r := ".$airportID.", @l := 0) vars,
+        			    	vx_aln_data_defns m
+    					WHERE @r <> 0) T1
+				JOIN vx_aln_data_defns T2
+					ON T1._id = T2.vx_aln_data_defnsID
+				ORDER BY T1.lvl DESC";
+
+		$result = $this->install_m->run_query($query);
+		return array_column($result,'vx_aln_data_defnsID');
+
 	}
 
 	function update_marketzone($data, $id = NULL) {
