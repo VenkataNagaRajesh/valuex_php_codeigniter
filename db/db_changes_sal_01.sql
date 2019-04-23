@@ -1,17 +1,17 @@
 CREATE TABLE `VX_aln_market_zone` (
   `market_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `market_name` varchar(60) NOT NULL,
-  `amz_level_id` int(11) NOT NULL,
-  `amz_level_name` varchar(100) NOT NULL,
-  `amz_incl_id` int(11) NOT NULL,
-  `amz_incl_name` varchar(100) NOT NULL,
-  `amz_excl_id` int(11) NOT NULL,
-  `amz_excl_name` varchar(60) NOT NULL,
-  `create_date` datetime NOT NULL,
-  `modify_date` datetime NOT NULL,
+  `amz_level_id` int(11) DEFAULT NULL,
+  `amz_level_name` varchar(100) DEFAULT NULL,
+  `amz_incl_id` int(11) DEFAULT NULL,
+  `amz_incl_name` varchar(100) DEFAULT NULL,
+  `amz_excl_id` int(11) DEFAULT NULL,
+  `amz_excl_name` varchar(100) DEFAULT NULL,
+  `create_date` int(11) NOT NULL,
+  `modify_date` int(11) NOT NULL,
   `create_userID` int(11) NOT NULL,
   `modify_userID` int(11) NOT NULL,
-   `active` int(11) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`market_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
