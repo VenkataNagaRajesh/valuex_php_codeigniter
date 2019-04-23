@@ -1,5 +1,5 @@
- ALTER table VX_aln_market_zone MODIFY COLUMN  create_date init(11) NOT NULL;
- ALTER table VX_aln_market_zone MODIFY COLUMN  modify_date init(11) NOT NULL;
+ ALTER table VX_aln_market_zone MODIFY COLUMN  create_date int(11) NOT NULL;
+ ALTER table VX_aln_market_zone MODIFY COLUMN  modify_date int(11) NOT NULL;
 
 
 CREATE TABLE `VX_trigger_table` (

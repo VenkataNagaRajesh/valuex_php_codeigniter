@@ -33,7 +33,7 @@ class Marketzone extends Admin_Controller {
 			),
 			array(
 				'field' => 'amz_level_id',
-				'label' => $this->lang->line("amz_level_type"),
+				'label' => $this->lang->line("level_type"),
 				'rules' => 'trim|required|max_length[200]|xss_clean'
 			),
    		       array(
@@ -45,25 +45,25 @@ class Marketzone extends Admin_Controller {
 	                array(
                                'field' => 'amz_incl_id',
                                 'label' => $this->lang->line("amz_incl_type"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                                'rules' => 'trim|max_length[200]|xss_clean'
                         ),
 
 
 			array(
                                 'field' => 'amz_incl_value[]',
                                 'label' => $this->lang->line("amz_incl_value"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                                'rules' => 'trim|max_length[200]|xss_clean'
                         ),
 
 			array(
                                 'field' => 'amz_excl_id',
                                 'label' => $this->lang->line("amz_excl_type"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                                'rules' => 'trim|max_length[200]|xss_clean'
                         ),
 			array(
                                 'field' => 'amz_excl_value[]',
                                 'label' => $this->lang->line("amz_excl_value"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                                'rules' => 'trim|max_length[200]|xss_clean'
                         )
 		);
 		return $rules;
@@ -316,6 +316,168 @@ class Marketzone extends Admin_Controller {
                 redirect(base_url("marketzone/edit/".$market_id));
 
 	}
+
+  function server_processing(){
+
+	    $aColumns =  array('MainSet.market_id','MainSet.market_name','MainSet.lname','MainSet.iname', 'MainSet.ename','SubSet.inclname','SubSet.exclname', 'SubSet.levelname');
+                $sLimit = "";
+
+                        if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
+                        {
+                          $sLimit = "LIMIT ".$_GET['iDisplayStart'].",".$_GET['iDisplayLength'];
+                        }
+                        if ( isset( $_GET['iSortCol_0'] ) )
+                        {
+                                $sOrder = "ORDER BY  "; 
+                                for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ) ; $i++ )
+                                {
+                                        if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
+                                        {
+                                                if($_GET['iSortCol_0'] == 8){
+                                                        $sOrder .= " (s.order_no*-1) DESC ,";
+                                                } else { 
+                                                 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
+                                                        ".$_GET['sSortDir_'.$i] .", ";
+                                                }
+                                        }
+                                }                               
+                                  $sOrder = substr_replace( $sOrder, "", -2 );
+
+                                if ( $sOrder == "ORDER BY" )
+                                {
+                                        $sOrder = "";
+                                }
+                        }
+                        $sWhere = "";
+                        if ( $_GET['sSearch'] != "" )
+                        {
+                                $sWhere = "WHERE (";
+                                for ( $i=0 ; $i<count($aColumns) ; $i++ )
+                                {
+                                        $sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch']."%' OR ";
+                                }
+                                $sWhere = substr_replace( $sWhere, "", -3 );
+                                $sWhere .= ')';
+                        }
+                        /* Individual column filtering */
+                        for ( $i=0 ; $i<count($aColumns) ; $i++ )
+                        {
+                                if ( $_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )
+                                {
+                                        if ( $sWhere == "" )
+                                        {
+                                                $sWhere = "WHERE ";
+                                        }
+                                        else
+                                        {
+                                                $sWhere .= " AND ";
+                                        }
+                                        $sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
+                                }
+                        }
+
+
+$sQuery = "
+SELECT MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active 
+FROM
+(
+              select  mz.market_id, mz.market_name ,dtl.name as lname,dti.name as iname, dte.name as ename , mz.active as active
+	      from VX_aln_market_zone mz 
+	      LEFT JOIN vx_aln_data_types dtl on (dtl.vx_aln_data_typeID = mz.amz_level_id) 
+	      LEFT JOIN vx_aln_data_types dti on (dti.vx_aln_data_typeID = mz.amz_incl_id)  
+              LEFT JOIN vx_aln_data_types dte on (dte.vx_aln_data_typeID = mz.amz_excl_id)
+) as MainSet
+
+LEFT JOIN (
+
+
+select
+    FirstSet.market_id,
+    FirstSet.level as levelname,
+    SecondSet.excl as exclname,
+    ThirdSet.incl as inclname
+from 
+(          SELECT
+                m.market_id as market_id,
+                group_concat(c.aln_data_value) as level
+           from
+                VX_aln_market_zone m
+           join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, m.amz_level_name)
+           group by
+           m.market_id	
+ 	   
+) as FirstSet  
+LEFT join 
+
+(          SELECT
+                m.market_id as market_id,
+                group_concat(c.aln_data_value) as excl
+           from
+                VX_aln_market_zone m
+           join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, m.amz_excl_name)
+           group by
+           m.market_id
+) as SecondSet
+on FirstSet.market_id = SecondSet.market_id
+LEFT JOIN 
+(
+	SELECT
+  		m.market_id as market_id,
+    		group_concat(c.aln_data_value) as incl
+	   from
+    		VX_aln_market_zone m 
+           JOIN vx_aln_data_defns c ON find_in_set(c.vx_aln_data_defnsID, m.amz_incl_name)
+           group by
+           m.market_id
+) as ThirdSet
+
+on ThirdSet.market_id = FirstSet.market_id
+
+) as SubSet
+on MainSet.market_id = SubSet.market_id
+ $sWhere $sOrder $sLimit";
+                $rResult = $this->install_m->run_query($sQuery);
+                $sQuery = "SELECT FOUND_ROWS() as total";
+                $rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;
+                $marketzonescount = $this->marketzone_m->get_marketzones_count();
+
+                $output = array(
+                "sEcho" => intval($_GET['sEcho']),
+                "iTotalRecords" => $customerscount,
+                "iTotalDisplayRecords" => $rResultFilterTotal,
+                "aaData" => array()
+            );
+
+                foreach($rResult as $marketzone){
+                        if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_view') || permissionChecker('marketzone_delete') ) {                                        				
+			 $marketzone->action .= btn_edit('marketzone/edit/'.$marketzone->market_id, $this->lang->line('edit'));
+                         $marketzone->action .= btn_view('marketzone/view/'.$marketzone->market_id, $this->lang->line('view'));
+			 $marketzone->action .= btn_delete('marketzone/delete/'.$marketzone->market_id, $this->lang->line('delete'));
+}
+
+
+			$status = $marketzone->active;
+			
+                        $marketzone->active = "<div class='onoffswitch-small' id='".$marketzone->market_id."'>";
+            $marketzone->active .= "<input type='checkbox' id='myonoffswitch".$marketzone->market_id."' class='onoffswitch-small-checkbox' name='paypal_demo'";
+                        if($status){
+                           $marketzone->active .= "checked='checked' >";
+                        } else {
+                           $marketzone->active .= ">";
+                        }
+                        $marketzone->active .= "<label for='myonoffswitch".$marketzone->market_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
+
+
+
+                        $output['aaData'][] = $marketzone;
+
+                }
+                echo json_encode( $output );
+        }
+
+
+	
+
 
 }
 

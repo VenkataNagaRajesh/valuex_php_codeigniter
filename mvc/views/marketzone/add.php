@@ -13,7 +13,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-10">
-                <form class="form-horizontal" role="form" method="post" id="add_mktzone" enctype="multipart/form-data">
+                <form class="form-horizontal" role="form" method="post"  enctype="multipart/form-data">
 
                     <?php
                         if(form_error('market_name'))
@@ -33,22 +33,23 @@
                         </span>
                     </div>
 
-                    <?php
+                     <?php 
+			$aln_datatypes['0'] = "SELECT TYPE";
+                        ksort($aln_datatypes);
+                      ?>
+		 <?php
                         if(form_error('amz_level_id'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
                         <label for="amz_level_id" class="col-sm-2 control-label">
-                            <?=$this->lang->line("level_type");?> <span class="text-red">*</span>
+                            <?=$this->lang->line("level_type")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
-			<?php
-			 $aln_datatypes[-1] = "SELECT";
-                        ksort($aln_datatypes);
-
-				echo form_dropdown("amz_level_id", $aln_datatypes, set_value("amz_level_id"), "id='amz_level_id' class='form-control select2'");
-			?>
+                        <?php
+                        echo form_dropdown("amz_level_id", $aln_datatypes, set_value("amz_level_id"), "id='amz_level_id' class='form-control select2'");
+                        ?>
                         </div>
                         <span class="col-sm-4 control-label">
                             <?php echo form_error('amz_level_id'); ?>
@@ -82,7 +83,7 @@
                             echo "<div class='form-group' >";
                     ?>
                         <label for="amz_incl_id" class="col-sm-2 control-label">
-                            <?=$this->lang->line("amz_incl_type")?> <span class="text-red">*</span>
+                            <?=$this->lang->line("amz_incl_type")?> 
                         </label>
                         <div class="col-sm-6">
 			<?php
@@ -101,7 +102,7 @@
                             echo "<div class='form-group' >";
                     ?>
                         <label for="amz_incl_value" class="col-sm-2 control-label">
-                            <?=$this->lang->line("amz_incl_value");?> <span class="text-red">*</span>
+                            <?=$this->lang->line("amz_incl_value");?> 
                         </label>
                         <div class="col-sm-6">
 			  <select  name="amz_incl_value[]"  id="amz_incl_value" class="form-control select2" multiple="multiple">
@@ -121,7 +122,7 @@
                             echo "<div class='form-group' >";
                     ?>
                         <label for="amz_excl_id" class="col-sm-2 control-label">
-                            <?=$this->lang->line("amz_excl_type");?> <span class="text-red">*</span>
+                            <?=$this->lang->line("amz_excl_type");?> 
                         </label>
                         <div class="col-sm-6">
 			
@@ -142,7 +143,7 @@
                             echo "<div class='form-group' >";
                     ?>
                         <label for="amz_excl_value" class="col-sm-2 control-label">
-                            <?=$this->lang->line("amz_excl_value");?> <span class="text-red">*</span>
+                            <?=$this->lang->line("amz_excl_value");?> 
                         </label>
                         <div class="col-sm-6">
 			 <select  name="amz_excl_value[]"  id="amz_excl_value" class="form-control select2" multiple="multiple">
@@ -169,10 +170,14 @@
 </div>
 
 <script type="text/javascript">
+$(document).ready(function(){
+$('#amz_incl_id').trigger('change');
+$('#amz_excl_id').trigger('change');
+$('#amz_level_id').trigger('change');
+});
 
-
-$( ".select2" ).select2({closeOnSelect:false,
-		         placeholder: "Select a value"});
+$( ".select2" ).select2({closeOnSelect:false
+		         });
 
 $("#checkbox_level").click(function(){
     if($("#checkbox_level").is(':checked') ){
