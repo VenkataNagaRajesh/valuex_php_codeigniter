@@ -34,12 +34,12 @@ class Marketzone extends Admin_Controller {
 			array(
 				'field' => 'amz_level_id',
 				'label' => $this->lang->line("level_type"),
-				'rules' => 'trim|required|max_length[200]|xss_clean'
+				'rules' => 'trim|required|max_length[200]|xss_clean|callback_valLevelType'
 			),
    		       array(
                                 'field' => 'amz_level_value[]',
                                 'label' => $this->lang->line("amz_level_value"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valLevelValue'
                         ),
 
 	                array(
@@ -69,6 +69,25 @@ class Marketzone extends Admin_Controller {
 		return $rules;
 	}
 
+
+
+   function valLevelType($post_string){
+          if($post_string == '0'){
+                 $this->form_validation->set_message("valLevelType", "%s is required");
+                  return FALSE;
+           }else{
+                  return TRUE;
+           }
+        }
+
+        function valLevelValue($post_array){
+          if(count($post_array) < 1){
+                 $this->form_validation->set_message("valLevelValue", "%s is required");
+                  return FALSE;
+           }else{
+                  return TRUE;
+           }
+        }
 
 	public function index() {
 
@@ -513,7 +532,7 @@ on MainSet.market_id = SubSet.market_id
 
                 $output = array(
                 "sEcho" => intval($_GET['sEcho']),
-                "iTotalRecords" => $customerscount,
+                "iTotalRecords" => $marketzonescount,
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
             );

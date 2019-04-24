@@ -27,7 +27,18 @@ class Market_airport_map_m extends MY_Model {
 		return TRUE;
 	}
 
+	function get_market_airport_mapid_count(){
+		 $this->db->select('count(*) as cnt')->from('VX_market_airport_map');
+                $query = $this->db->get();
+                return $query->row('cnt');
 
+	}
+	function get_mapidlist() {
+		$this->db->select('*')->from('VX_market_airport_map');
+		$query = $this->db->get();
+		$result = $query->result();
+		return $result;
+	}
 	function remove_old_mappingentries($id) {
 		$this->db->where(array('market_id' => $id));
                 $this->db->delete('VX_market_airport_map');
@@ -39,6 +50,7 @@ class Market_airport_map_m extends MY_Model {
 		$this->db->query($query);
                 return true;
 	}
+
 	function get_market_airport_mapdata($id) {
 
 		$this->db->select('airport_id')->from('VX_market_airport_map');
