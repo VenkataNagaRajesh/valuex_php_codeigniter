@@ -23,7 +23,7 @@ class Market_airport_map_m extends MY_Model {
 	}
 
 	function insert_marketairport_mapid($array) {
-		$error = parent::insert($array);
+		$id = parent::insert($array);
 		return TRUE;
 	}
 

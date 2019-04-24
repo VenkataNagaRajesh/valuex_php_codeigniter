@@ -18,14 +18,14 @@ class Trigger_m extends MY_Model {
  	
 	function get_trigger_time($table) {
 
-	 	$this->db->select('table_last_changed');
+	 	$this->db->select('create_date');
                 $this->db->from('VX_trigger_table');
                 $this->db->where(array('isReconfigured' => 1, 'table_name' => $table));
-		$this->db->order_by("table_last_changed",'ASC');
+		$this->db->order_by("create_date",'ASC');
 		$this->db->limit(1);
                 $query = $this->db->get();
                 $type = $query->row();
-                return $type->table_last_changed;
+                return $type->create_date;
 
         }
 
@@ -41,7 +41,7 @@ class Trigger_m extends MY_Model {
 
 	function update_trigger($data){
 	          $this->db->where('isReconfigured','1');
-		  $this->db->where('trigger_last_run_time','0');
+		  $this->db->where('modify_date','0');
            	$this->db->update('VX_trigger_table',$data);
 
         	  if ($this->db->affected_rows() > 0){

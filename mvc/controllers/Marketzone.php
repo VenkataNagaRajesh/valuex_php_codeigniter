@@ -72,8 +72,49 @@ class Marketzone extends Admin_Controller {
 
 	public function index() {
 
+		 $this->data['headerassets'] = array(
+                        'css' => array(
+                                'assets/select2/css/select2.css',
+                                'assets/select2/css/select2-bootstrap.css',
+                                'assets/fselect/fSelect.css'
+                        ),
+                        'js' => array(
+                                'assets/select2/select2.js',
+                                'assets/fselect/fSelect.js',
+                        )
+                );
+
+
+	        if(!empty($this->input->post('market_id'))){
+                  $this->data['marketID'] = $this->input->post('market_id');
+                } else {
+                  $this->data['marketID'] = 0;
+                }
+                if(!empty($this->input->post('amz_level_id'))){
+                $this->data['levelID'] = $this->input->post('amz_level_id');
+                } else {
+                  $this->data['levelID'] = 0;
+                }
+                if(!empty($this->input->post('amz_incl_id'))){
+                   $this->data['inclID'] = $this->input->post('amz_incl_id');
+                } else {
+                  $this->data['inclID'] = 0;
+                }
+                if(!empty($this->input->post('amz_excl_id'))){
+                $this->data['exclID'] = $this->input->post('amz_excl_id');
+                } else {
+                    $this->data['exclID'] = 0;
+                }
+
+		if(!empty($this->input->post('active'))){
+                $this->data['active'] = $this->input->post('active');
+                } else {
+                    $this->data['active'] = '1';
+                }
+
+
 		$this->data['marketzones'] = $this->marketzone_m->get_marketzones();
-		
+		$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
 		$this->data["subview"] = "marketzone/index";
 		$this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_market_zone');
 		$this->load->view('_layout_main', $this->data);
@@ -122,8 +163,9 @@ class Marketzone extends Admin_Controller {
 			      // insert entry in trigger table for mapping table generation
 		
 				$tarray['table_name'] = 'VX_aln_market_zone';
-				$tarray['table_last_changed'] = $date_now;
+				$tarray['create_date'] = $date_now;
 				$tarray['create_userID'] = $this->session->userdata('loginuserID');
+				$tarray['modify_userID'] = $this->session->userdata('loginuserID');
 				$tarray['isReconfigured'] = '1';
 			
 			        $this->trigger_m->insert_trigger($tarray);
@@ -174,9 +216,10 @@ class Marketzone extends Admin_Controller {
 
 
 			        $tarray['table_name'] = 'VX_aln_market_zone';
-                                $tarray['table_last_changed'] = $date_now;
+                                $tarray['create_date'] = $date_now;
                                 $tarray['create_userID'] = $this->session->userdata('loginuserID');
                                 $tarray['isReconfigured'] = '1';
+				$tarray['modify_userID'] = $this->session->userdata('loginuserID');
 
                                 $this->trigger_m->insert_trigger($tarray);
 
@@ -376,12 +419,42 @@ class Marketzone extends Admin_Controller {
                                 }
                         }
 
+                        if(!empty($this->input->get('marketID'))){
+                     		 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              			$sWhere .= 'MainSet.market_id = '.$this->input->get('marketID');
+                	}
+                        if(!empty($this->input->get('levelID'))){
+                      		$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              			$sWhere .= 'MainSet.level_id = '.$this->input->get('levelID');
+                	}
+
+                        if(!empty($this->input->get('inclID'))){
+	                      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+        		      $sWhere .= 'MainSet.incl_id = '.$this->input->get('inclID');
+               		 }
+                        if(!empty($this->input->get('exclID'))){
+                      		$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              			$sWhere .= 'MainSet.excl_id = '.$this->input->get('exclID');
+                	}
+
+			if(!empty($this->input->get('active')) && $this->input->get('active') != '-1'){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.active = '.$this->input->get('active');
+                        }else if ($this->input->get('active') == '0') {
+				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.active = '.$this->input->get('active');
+			}
+
+
+
+
 
 $sQuery = "
-SELECT MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active 
+SELECT MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active ,MainSet.level_id, MainSet.incl_id, MainSet.excl_id
 FROM
 (
-              select  mz.market_id, mz.market_name ,dtl.name as lname,dti.name as iname, dte.name as ename , mz.active as active
+              select  mz.market_id, mz.market_name ,dtl.name as lname,dti.name as iname, dte.name as ename , mz.active as active, 
+			mz.amz_level_id as level_id, mz.amz_incl_id as incl_id, mz.amz_excl_id as excl_id 
 	      from VX_aln_market_zone mz 
 	      LEFT JOIN vx_aln_data_types dtl on (dtl.vx_aln_data_typeID = mz.amz_level_id) 
 	      LEFT JOIN vx_aln_data_types dti on (dti.vx_aln_data_typeID = mz.amz_incl_id)  
@@ -391,47 +464,44 @@ FROM
 LEFT JOIN (
 
 
-select
-    FirstSet.market_id,
-    FirstSet.level as levelname,
-    SecondSet.excl as exclname,
-    ThirdSet.incl as inclname
-from 
-(          SELECT
-                m.market_id as market_id,
-                group_concat(c.aln_data_value) as level
-           from
-                VX_aln_market_zone m
-           join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, m.amz_level_name)
-           group by
-           m.market_id	
+		select
+    			FirstSet.market_id, FirstSet.level as levelname, SecondSet.excl as exclname, ThirdSet.incl as inclname
+		from 
+			(          SELECT
+                			m.market_id as market_id,
+                			group_concat(c.aln_data_value) as level
+           			   from
+                			VX_aln_market_zone m
+           				join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, m.amz_level_name)
+           				group by
+           				m.market_id	
  	   
-) as FirstSet  
-LEFT join 
+			) as FirstSet  
+		LEFT join 
 
-(          SELECT
-                m.market_id as market_id,
-                group_concat(c.aln_data_value) as excl
-           from
-                VX_aln_market_zone m
-           join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, m.amz_excl_name)
-           group by
-           m.market_id
-) as SecondSet
-on FirstSet.market_id = SecondSet.market_id
-LEFT JOIN 
-(
-	SELECT
-  		m.market_id as market_id,
-    		group_concat(c.aln_data_value) as incl
-	   from
-    		VX_aln_market_zone m 
-           JOIN vx_aln_data_defns c ON find_in_set(c.vx_aln_data_defnsID, m.amz_incl_name)
-           group by
-           m.market_id
-) as ThirdSet
+			(          SELECT
+                		   m.market_id as market_id,
+                		   group_concat(c.aln_data_value) as excl
+           			   from
+                			VX_aln_market_zone m
+           				join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, m.amz_excl_name)
+           				group by
+          				 m.market_id
+			) as SecondSet
+			on FirstSet.market_id = SecondSet.market_id
+		LEFT JOIN 
+			(
+				SELECT
+  					m.market_id as market_id,
+    					group_concat(c.aln_data_value) as incl
+	   			from
+    					VX_aln_market_zone m 
+           			JOIN vx_aln_data_defns c ON find_in_set(c.vx_aln_data_defnsID, m.amz_incl_name)
+           			group by
+           				m.market_id
+			) as ThirdSet
 
-on ThirdSet.market_id = FirstSet.market_id
+			on ThirdSet.market_id = FirstSet.market_id
 
 ) as SubSet
 on MainSet.market_id = SubSet.market_id
@@ -449,11 +519,17 @@ on MainSet.market_id = SubSet.market_id
             );
 
                 foreach($rResult as $marketzone){
-                        if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_view') || permissionChecker('marketzone_delete') ) {                                        				
-			 $marketzone->action .= btn_edit('marketzone/edit/'.$marketzone->market_id, $this->lang->line('edit'));
-                         $marketzone->action .= btn_view('marketzone/view/'.$marketzone->market_id, $this->lang->line('view'));
+                        if(permissionChecker('marketzone_edit') ) {
+				$marketzone->action .= btn_edit('marketzone/edit/'.$marketzone->market_id, $this->lang->line('edit'));
+			}
+			
+			if (permissionChecker('marketzone_view') ) {
+			       $marketzone->action .= btn_view('marketzone/view/'.$marketzone->market_id, $this->lang->line('view'));	
+			}
+
+			if (permissionChecker('marketzone_delete') ) {                                        				
 			 $marketzone->action .= btn_delete('marketzone/delete/'.$marketzone->market_id, $this->lang->line('delete'));
-}
+			}
 
 
 			$status = $marketzone->active;
