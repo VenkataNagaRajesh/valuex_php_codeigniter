@@ -359,7 +359,7 @@ class Season extends Admin_Controller {
 			}
 			
 			
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dt1.name orig_level,dt2.name dest_level from vx_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_orig_levelID
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dt1.name orig_level,dt2.name dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_orig_levelID
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
