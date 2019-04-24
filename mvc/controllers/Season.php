@@ -6,6 +6,7 @@ class Season extends Admin_Controller {
 		parent::__construct();
 		$this->load->model("season_m");
 		$this->load->model("airports_m");
+		$this->load->model("trigger_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('season', $language);	
 	}
@@ -102,7 +103,8 @@ class Season extends Admin_Controller {
 	   }
 	}
 	
-	public function index() {		
+	public function index() {
+        $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');		
 		$this->data["subview"] = "season/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
@@ -147,12 +149,12 @@ class Season extends Admin_Controller {
 				
 			      // insert entry in trigger table for mapping table generation
 		
-				/* $tarray['table_name'] = 'VX_aln_season';
+				$tarray['table_name'] = 'VX_aln_season';
 				$tarray['table_last_changed'] = time();
 				$tarray['create_userID'] = $this->session->userdata('loginuserID');
 				$tarray['isReconfigured'] = '1';
 			
-			        $this->trigger_m->insert_trigger($tarray);	 */		
+			    $this->trigger_m->insert_trigger($tarray);		
 				
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("season/index"));
@@ -204,12 +206,12 @@ class Season extends Admin_Controller {
 						
 						  // insert entry in trigger table for mapping table generation
 				
-						/* $tarray['table_name'] = 'VX_aln_season';
+						$tarray['table_name'] = 'VX_aln_season';
 						$tarray['table_last_changed'] = time();
 						$tarray['create_userID'] = $this->session->userdata('loginuserID');
 						$tarray['isReconfigured'] = '1';
 					
-							$this->trigger_m->insert_trigger($tarray);	 */		
+					    $this->trigger_m->insert_trigger($tarray);	 	
 						
 						$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 						redirect(base_url("season/index"));
