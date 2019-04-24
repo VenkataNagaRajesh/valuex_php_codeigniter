@@ -82,6 +82,13 @@ class Airports_m extends MY_Model {
 	  return $query->result();
   }
   
+  public function getDefinitionList($wherein){
+	  $this->db->select('aln_data_value')->from('vx_aln_data_defns');
+	  $this->db->where_in('vx_aln_data_defnsID',$wherein);
+	  $query = $this->db->get();
+	  return $query->result();
+  }
+  
   
   public function get_airportmaster($id){
 	  $query = $this->db->get_where('vx_aln_master_data',array('vx_amdID'=>$id))->row();
