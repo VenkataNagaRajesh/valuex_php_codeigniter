@@ -196,7 +196,7 @@ class Season extends Admin_Controller {
 						$array["ams_dest_levelID"] = $this->input->post("ams_dest_levelID");
 						$array["ams_dest_level_value"] = implode(',',$this->input->post("ams_dest_level_value"));
 						$array["ams_season_start_date"] = strtotime($this->input->post("ams_season_start_date"));
-						$array["ams_season_end_date"] = strtotime($this->input->post("amz_excl_value"));
+						$array["ams_season_end_date"] = strtotime($this->input->post("ams_season_end_date"));
 						$array['is_return_inclusive'] = $this->input->post("is_return_inclusive");
 						$array['season_color'] = $this->input->post("season_color");
 						$array["active"] = $this->input->post("active");						
