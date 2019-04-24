@@ -1,6 +1,6 @@
 ALTER TABLE  VX_trigger_table CHANGE table_last_changed create_date int(11) NOT NULL;
 ALTER TABLE  VX_trigger_table CHANGE trigger_last_run_time modify_date int(11) DEFAULT 0;;
-ALTER TABLE VX_market_airport_map ADD COLUMN modify_userID int(11) NOT NULL;
+ALTER TABLE VX_trigger_table ADD COLUMN modify_userID int(11) NOT NULL;
 
 ALTER TABLE  VX_trigger_table DROP INDEX table_last_changed_index;
 ALTER TABLE  VX_trigger_table DROP INDEX trigger_last_run_time_index;
