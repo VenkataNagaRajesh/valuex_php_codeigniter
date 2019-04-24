@@ -39,7 +39,60 @@
 
                     </h5>
 
+       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+                      <div class='form-group'>
+                           <div class="col-sm-2">
+               <?php $marketlist = array("0" => "Select Marketzone");
+                   foreach($marketzones as $marketzone){
+                                                                 $marketlist[$marketzone->market_id] = $marketzone->market_name;
+                                                         }
+                                   echo form_dropdown("market_id", $marketlist,set_value("market_id",$marketID), "id='market_id' class='form-control hide-dropdown-icon select2'");    ?>
+                </div>
+                 <div class="col-sm-2">
+		<?php 
+			$aln_datatypes['0'] = "Select Level Type";
+                        ksort($aln_datatypes);
+			echo form_dropdown("amz_level_id", $aln_datatypes,set_value("amz_level_id",$levelID), "id='amz_level_id' class='form-control hide-dropdown-icon select2'");    ?>
 
+                 </div>
+                             <div class="col-sm-2">
+
+			  <?php
+                        $aln_datatypes['0'] = "Select Inclusion Type ";
+                        ksort($aln_datatypes);
+                        echo form_dropdown("amz_incl_id", $aln_datatypes,set_value("amz_incl_id",$inclID), "id='amz_incl_id' class='form-control hide-dropdown-icon select2'");    ?>
+
+
+                 </div>
+                 <div class="col-sm-2">
+
+			<?php
+                        $aln_datatypes['0'] = "Select Exclusion Type ";
+                        ksort($aln_datatypes);
+                        echo form_dropdown("amz_excl_id", $aln_datatypes,set_value("amz_excl_id",$exclID), "id='amz_excl_id' class='form-control hide-dropdown-icon select2'");    ?>
+
+
+                 </div>
+
+		<div class="col-sm-2">
+
+                        <?php
+			$mkt_status['-1'] = 'Select Status';
+			$mkt_status['1'] = 'Active';
+			$mkt_status['0'] = 'In Active';
+                        echo form_dropdown("active", $mkt_status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
+
+
+                 </div>
+
+                <div class="col-sm-2">
+                  <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
+                </div>
+                          </div>
+                         </form>
+
+		
+		
 	       <div class="tab-content">
                 <div id="all" class="tab-pane active">
                   <div id="hide-table">
@@ -80,10 +133,26 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+
+  $( ".select2" ).select2();
+
     $('#tztable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('marketzone/server_processing'); ?>",	  
+      "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
+       aoData.push({"name": "marketID","value": $("#market_id").val()},
+		   {"name": "levelID","value": $("#amz_level_id").val()},
+		   {"name": "inclID","value": $("#amz_incl_id").val()},
+		   {"name": "exclID","value": $("#amz_excl_id").val()},
+		   {"name": "active","value": $("#active").val()}) //pushing custom parameters
+                oSettings.jqXHR = $.ajax( {
+                    "dataType": 'json',
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+                         } ); },      
       "columns": [{"data": "market_id" },
 		  {"data": "market_name"},
                   {"data": "lname" },

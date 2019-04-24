@@ -42,7 +42,7 @@ class Marketzone_m extends MY_Model {
         }
 
 	function insert_marketzone($array) {
-		$error = parent::insert($array);
+		$id = parent::insert($array);
 		return TRUE;
 	}
 
@@ -72,7 +72,7 @@ class Marketzone_m extends MY_Model {
 
 	function getMarketzones_for_triggerrun($timestamp) {
 		$sql = "SELECT * FROM VX_aln_market_zone
-                              WHERE modify_date >= ".$timestamp;
+                              WHERE modify_date >= ".$timestamp." AND active = 1 ";
 		$marketzones = $this->install_m->run_query($sql);
                 return $marketzones;
 	}

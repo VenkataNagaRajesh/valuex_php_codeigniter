@@ -133,8 +133,9 @@ class Trigger extends Admin_Controller {
 			//update trigger table 
 
 
-			$tarray['trigger_last_run_time'] = time();
+			$tarray['modify_date'] = time();
 			$tarray['isReconfigured'] = '0';
+			$tarray['modify_userID'] = $this->session->userdata('loginuserID');
 			$this->trigger_m->update_trigger($tarray);
 
 		}
