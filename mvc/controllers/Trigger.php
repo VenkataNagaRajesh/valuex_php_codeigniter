@@ -225,7 +225,7 @@ class Trigger extends Admin_Controller {
                    $this->season_airport_map_m->insert_destseason_airport_mapid($darray);
 				}
 			}
-			$tarray['trigger_last_run_time'] = time();
+			$tarray['modify_date'] = time();
 			$tarray['isReconfigured'] = '0';
 			$this->trigger_m->update_trigger($tarray);
 		} 

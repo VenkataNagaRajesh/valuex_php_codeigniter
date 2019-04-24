@@ -150,8 +150,9 @@ class Season extends Admin_Controller {
 			      // insert entry in trigger table for mapping table generation
 		
 				$tarray['table_name'] = 'VX_aln_season';
-				$tarray['table_last_changed'] = time();
+				$tarray['create_date'] = time();
 				$tarray['create_userID'] = $this->session->userdata('loginuserID');
+				$tarray['modify_userID'] = $this->session->userdata('loginuserID');
 				$tarray['isReconfigured'] = '1';
 			
 			    $this->trigger_m->insert_trigger($tarray);		
@@ -207,8 +208,9 @@ class Season extends Admin_Controller {
 						  // insert entry in trigger table for mapping table generation
 				
 						$tarray['table_name'] = 'VX_aln_season';
-						$tarray['table_last_changed'] = time();
+						$tarray['create_date'] = time();
 						$tarray['create_userID'] = $this->session->userdata('loginuserID');
+						$tarray['modify_userID'] = $this->session->userdata('loginuserID');
 						$tarray['isReconfigured'] = '1';
 					
 					    $this->trigger_m->insert_trigger($tarray);	 	
