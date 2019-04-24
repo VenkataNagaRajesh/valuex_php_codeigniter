@@ -9,15 +9,24 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">
-                <?php  if(permissionChecker('season_add')) {  ?>
+            <div class="col-sm-12">               
                     <h5 class="page-header">
+					    <?php  if(permissionChecker('season_add')) {  ?>
                         <a href="<?php echo base_url('season/add') ?>">
                             <i class="fa fa-plus"></i> 
                             <?=$this->lang->line('add_title')?>
                         </a>
+						 <?php } ?>
+						 
+						 &nbsp;&nbsp;
+                         <?php if( isset ($reconfigure) && permissionChecker('season_reconfigure')) {?>
+                                <a href="<?php echo base_url('trigger/season_trigger') ?>">
+                                    <i class="fa fa-plus"></i>
+                                    <?=$this->lang->line('generate_map_table')?>
+                                </a>
+                        <?php } ?>
                     </h5>
-                <?php } ?>
+               
                 <div id="hide-table">
                     <table id="seasonslist" class="table table-striped table-bordered table-hover dataTable no-footer">
                         <thead>

@@ -6,6 +6,7 @@ class Season extends Admin_Controller {
 		parent::__construct();
 		$this->load->model("season_m");
 		$this->load->model("airports_m");
+		$this->load->model("trigger_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('season', $language);	
 	}
@@ -102,7 +103,8 @@ class Season extends Admin_Controller {
 	   }
 	}
 	
-	public function index() {		
+	public function index() {
+        $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');		
 		$this->data["subview"] = "season/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
@@ -147,12 +149,13 @@ class Season extends Admin_Controller {
 				
 			      // insert entry in trigger table for mapping table generation
 		
-				/* $tarray['table_name'] = 'VX_aln_season';
-				$tarray['table_last_changed'] = time();
+				$tarray['table_name'] = 'VX_aln_season';
+				$tarray['create_date'] = time();
 				$tarray['create_userID'] = $this->session->userdata('loginuserID');
+				$tarray['modify_userID'] = $this->session->userdata('loginuserID');
 				$tarray['isReconfigured'] = '1';
 			
-			        $this->trigger_m->insert_trigger($tarray);	 */		
+			    $this->trigger_m->insert_trigger($tarray);		
 				
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("season/index"));
@@ -193,7 +196,7 @@ class Season extends Admin_Controller {
 						$array["ams_dest_levelID"] = $this->input->post("ams_dest_levelID");
 						$array["ams_dest_level_value"] = implode(',',$this->input->post("ams_dest_level_value"));
 						$array["ams_season_start_date"] = strtotime($this->input->post("ams_season_start_date"));
-						$array["ams_season_end_date"] = strtotime($this->input->post("amz_excl_value"));
+						$array["ams_season_end_date"] = strtotime($this->input->post("ams_season_end_date"));
 						$array['is_return_inclusive'] = $this->input->post("is_return_inclusive");
 						$array['season_color'] = $this->input->post("season_color");
 						$array["active"] = $this->input->post("active");						
@@ -204,12 +207,13 @@ class Season extends Admin_Controller {
 						
 						  // insert entry in trigger table for mapping table generation
 				
-						/* $tarray['table_name'] = 'VX_aln_season';
-						$tarray['table_last_changed'] = time();
+						$tarray['table_name'] = 'VX_aln_season';
+						$tarray['create_date'] = time();
 						$tarray['create_userID'] = $this->session->userdata('loginuserID');
+						$tarray['modify_userID'] = $this->session->userdata('loginuserID');
 						$tarray['isReconfigured'] = '1';
 					
-							$this->trigger_m->insert_trigger($tarray);	 */		
+					    $this->trigger_m->insert_trigger($tarray);	 	
 						
 						$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 						redirect(base_url("season/index"));
@@ -355,7 +359,7 @@ class Season extends Admin_Controller {
 			}
 			
 			
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dt1.name orig_level,dt2.name dest_level from vx_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_orig_levelID
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dt1.name orig_level,dt2.name dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_orig_levelID
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

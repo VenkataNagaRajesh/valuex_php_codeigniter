@@ -237,7 +237,11 @@ echo '--------------------------------------------------------------------------
 							  $data['areaID'] = $this->airports_m->checkData($area,5,$data['regionID']); */  
 							  // print_r($defnData);
 							  // echo "---------------------------------------------------------------------------";
-							  foreach($defnData as $aln_data){ //Total Execution Time: 0.45060066779455 Mins
+							  $countryID = 0;
+							  $stateID = 0;
+							  $regionID = 0;
+							  $areaID = 0;
+							   foreach($defnData as $aln_data){ //Total Execution Time: 0.45060066779455 Mins
 								 if($aln_data->aln_data_typeID == 2 && $aln_data->aln_data_value == $country){
 								 	$countryID = $aln_data->vx_aln_data_defnsID;
 								 }
@@ -247,10 +251,10 @@ echo '--------------------------------------------------------------------------
 								 if($aln_data->aln_data_typeID == 4 && $aln_data->aln_data_value == $region){
 								 	$regionID = $aln_data->vx_aln_data_defnsID;
 								 }
-								 if($aln_data->aln_data_typeID == 5 && $aln_data->aln_data_value == $area){
+								 if($aln_data->aln_data_typeID == 5 && $aln_data->aln_data_value == $area){	
 								 	$areaID = $aln_data->vx_aln_data_defnsID;
 								 }
-							  }		
+							  } 	
 							  if(!empty($countryID)){
 							  	$data['countryID'] = $countryID;
 							  } else {								 
@@ -285,7 +289,7 @@ echo '--------------------------------------------------------------------------
 							  }
 							  
 							   if(!empty($areaID)){
-							  	$data['areaID'] = $areaID;
+							  	$data['areaID'] = $areaID;								
 							  } else {
 							  	$data['areaID'] =  $this->airports_m->checkData($area,5,$data['regionID']);
                                 $aobj->vx_aln_data_defnsID = $data['areaID'];
@@ -295,7 +299,7 @@ echo '--------------------------------------------------------------------------
 								unset($aobj);
 							  } 
 						     $data['airportID'] = $this->airports_m->addAirport($airport, $data['areaID'],$Row[1]);
-
+                             
 							if ($data['airportID']) {
 							    $parentSet  = $this->marketzone_m->getParentsofAirport($data['airportID']);
 							    $marketzones = $this->marketzone_m->get_marketzones();

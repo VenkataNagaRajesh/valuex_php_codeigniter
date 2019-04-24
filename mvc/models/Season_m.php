@@ -15,6 +15,12 @@ class season_m extends MY_Model {
 		$query = parent::get($array, $signal);
 		return $query;
 	}	
+	
+	function getSeasons_for_triggerrun($timestamp) {
+		$sql = "SELECT * FROM VX_aln_season WHERE modify_date >= ".$timestamp;
+		$seasons = $this->install_m->run_query($sql);
+        return $seasons;
+	}
 
 	function get_single_season($array=NULL) {
 		$query = parent::get_single($array);
