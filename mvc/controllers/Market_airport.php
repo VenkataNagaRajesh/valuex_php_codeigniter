@@ -1,19 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Market_airport extends Admin_Controller {
-/*
-| -----------------------------------------------------
-| PRODUCT NAME: 	INILABS SCHOOL MANAGEMENT SYSTEM
-| -----------------------------------------------------
-| AUTHOR:			INILABS TEAM
-| -----------------------------------------------------
-| EMAIL:			info@inilabs.net
-| -----------------------------------------------------
-| COPYRIGHT:		RESERVED BY INILABS IT
-| -----------------------------------------------------
-| WEBSITE:			http://inilabs.net
-| -----------------------------------------------------
-*/
 	function __construct() {
 		parent::__construct();
 		$this->load->model("marketzone_m");
@@ -64,7 +51,8 @@ class Market_airport extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('mz.market_name,airport,country,state,region,area');
+	    $aColumns =  array('mz.market_name','ma.aln_data_value','mc.aln_data_value','ms.aln_data_value',
+            'mr.aln_data_value' ,'mar.aln_data_value' ,'ma.code','m.active');
                 $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
