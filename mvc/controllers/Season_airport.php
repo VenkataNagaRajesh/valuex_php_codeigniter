@@ -44,7 +44,7 @@ class Season_airport extends Admin_Controller {
     function server_processing(){
 	   
 		
-	    $aColumns = array('s.season_name,ma.aln_data_value,mc.aln_data_value,ms.aln_data_value, mr.aln_data_value,mar.aln_data_value,ma.code,m.active');
+	    $aColumns = array('s.season_name','ma.aln_data_value','mc.aln_data_value','ms.aln_data_value','mr.aln_data_value','mar.aln_data_value','ma.code','m.active');
         $sLimit = "";
                
            if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -74,16 +74,16 @@ class Season_airport extends Admin_Controller {
                    }
            }
            $sWhere = "";
-           if ( $_GET['sSearch'] != "" )
-           {
-                   $sWhere = "WHERE (";
-                   for ( $i=0 ; $i<count($aColumns) ; $i++ )
-                   {
-                           $sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch']."%' OR ";
-                   }
-                   $sWhere = substr_replace( $sWhere, "", -3 );
-                   $sWhere .= ')';
-           }
+          if ( $_GET['sSearch'] != "" )
+			{
+				$sWhere = "WHERE (";
+				for ( $i=0 ; $i<count($aColumns) ; $i++ )
+				{
+					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch']."%' OR ";
+				}
+				$sWhere = substr_replace( $sWhere, "", -3 );
+				$sWhere .= ')';
+			}
            /* Individual column filtering */
            for ( $i=0 ; $i<count($aColumns) ; $i++ )
            {
