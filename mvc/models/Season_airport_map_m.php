@@ -23,6 +23,18 @@ class Season_airport_map_m extends MY_Model {
        	return 1;
        }
 	}
+	
+	function getcount_season_airport_orig(){
+		 $this->db->select('count(*) as cnt')->from('VX_season_airport_origin_map');
+         $query = $this->db->get();
+         return $query->row('cnt');
+	}
+	
+	function getcount_season_airport_dest(){
+		 $this->db->select('count(*) as cnt')->from('VX_season_airport_dest_map');
+         $query = $this->db->get();
+         return $query->row('cnt');
+	}
 
     /* function remove_old_dest_entriesbyid($seasonID,$list){
 		$query = "DELETE FROM VX_season_airport_dest_map WHERE seasonID = ".$seasonID." AND dest_airportID IN (".implode(',',$list).")";
