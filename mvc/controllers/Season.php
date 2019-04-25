@@ -104,7 +104,29 @@ class Season extends Admin_Controller {
 	}
 	
 	public function index() {
-        $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');		
+		if(!empty($this->input->post('seasonID'))){
+          $this->data['seasonID'] = $this->input->post('seasonID');
+        } else {
+          $this->data['seasonID'] = 0;
+        }
+        if(!empty($this->input->post('origID'))){
+          $this->data['origID'] = $this->input->post('origID');
+        } else {
+          $this->data['origID'] = 0;
+        }
+        if(!empty($this->input->post('destID'))){
+          $this->data['destID'] = $this->input->post('destID');
+        } else {
+          $this->data['destID'] = 0;
+        }
+        if(!empty($this->input->post('active'))){
+        $this->data['active'] = $this->input->post('active');
+        } else {
+            $this->data['active'] = 1;
+        }
+        $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');	
+        $this->data['seasonslist'] = $this->season_m->get_seasons(); 
+		$this->data['types'] = $this->airports_m->getDefdataTypes(array('7','8','9','10','11','6'));
 		$this->data["subview"] = "season/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
@@ -122,7 +144,7 @@ class Season extends Admin_Controller {
                 )
         );	
 	
-	   $this->data['types'] = $this->airports_m->getDefdataTypes(array('1','7','8','9','10','11','6'));
+	   $this->data['types'] = $this->airports_m->getDefdataTypes(array('7','8','9','10','11','6'));
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -182,7 +204,7 @@ class Season extends Admin_Controller {
 		if((int)$id) {
 			$this->data['season'] = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
 			if($this->data['season']) {
-			 $this->data['types'] = $this->airports_m->getDefdataTypes(array('1','7','8','9','10','11','6'));
+			 $this->data['types'] = $this->airports_m->getDefdataTypes(array('7','8','9','10','11','6'));
 				if($_POST) {
 					$rules = $this->rules();
 					$this->form_validation->set_rules($rules);
@@ -357,13 +379,29 @@ class Season extends Admin_Controller {
 					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
 				}
 			}
-			
+		
+        if(!empty($this->input->get('seasonID'))){
+		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+           $sWhere .= 's.VX_aln_seasonID = '.$this->input->get('seasonID');		 
+	     }			
+		if(!empty($this->input->get('origID'))){
+		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+           $sWhere .= 's.ams_orig_levelID = '.$this->input->get('origID');		 
+	     }
+		if(!empty($this->input->get('destID'))){
+		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+           $sWhere .= 's.ams_dest_levelID = '.$this->input->get('destID');		 
+	     }
+		if($this->input->get('active') != NULL){
+		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+           $sWhere .= 's.active = '.$this->input->get('active');		 
+	     }		
 			
 		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dt1.name orig_level,dt2.name dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_orig_levelID
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
-	
+	//print_r($sQuery); exit;
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
 	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	

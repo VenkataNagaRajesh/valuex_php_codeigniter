@@ -26,6 +26,38 @@
                                 </a>
                         <?php } ?>
                     </h5>
+			<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
+				<div class='form-group'>			 
+				   <div class="col-sm-2">			   
+				    <?php $slist = array("0" => "Select Season");               
+					   foreach($seasonslist as $season){
+						  $slist[$season->VX_aln_seasonID] = $season->season_name;
+						}							
+					   echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
+					</div>
+					 <div class="col-sm-2">			   
+					   <?php $olist = array("0" => "Select Origin Level");               
+					   foreach($types as $type){
+						  $olist[$type->vx_aln_data_typeID] = $type->name;
+						}							
+					   echo form_dropdown("origID", $olist,set_value("origID",$origID), "id='origID' class='form-control hide-dropdown-icon select2'");    ?>
+					 </div>                				
+					 <div class="col-sm-2">
+						<?php $dlist = array("0" => "Select Destination");               
+					    foreach($types as $type){
+						  $dlist[$type->vx_aln_data_typeID] = $type->name;
+						}							
+					   echo form_dropdown("destID", $dlist,set_value("destID",$destID), "id='destID' class='form-control hide-dropdown-icon select2'");    ?>
+					 </div>
+					 <div class="col-sm-2">
+						<?php $activestatus[1]="Active";	$activestatus[0]="In Active";				
+					   echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
+					 </div>
+					<div class="col-sm-2">
+					  <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Search</button>
+					</div>	             				
+				  </div>
+			 </form>
                
                 <div id="hide-table">
                     <table id="seasonslist" class="table table-striped table-bordered table-hover dataTable no-footer">
@@ -60,7 +92,20 @@ $(document).ready(function() {
     $('#seasonslist').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
-      "sAjaxSource": "<?php echo base_url('season/server_processing'); ?>",      	  
+      "sAjaxSource": "<?php echo base_url('season/server_processing'); ?>", 
+	  "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) { 
+      aoData.push(
+	  {"name": "seasonID","value": $("#seasonID").val()},
+	  {"name": "origID","value": $("#origID").val()},
+      {"name": "active","value": $("#active").val()},	  
+	  {"name": "destID","value": $("#destID").val()}) //pushing custom parameters
+                oSettings.jqXHR = $.ajax( {
+                    "dataType": 'json',
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+			 } ); },	  
       "columns": [{"data": "VX_aln_seasonID" },
                   {"data": "season_name" },
 				  {"data": "orig_level" },
