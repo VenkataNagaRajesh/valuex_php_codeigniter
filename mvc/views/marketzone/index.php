@@ -30,12 +30,13 @@
 		<?php } ?>
 
                         &nbsp;&nbsp;
-                         <?php if( isset ($reconfigure)) {?>
+                         <?php if(permissionChecker('marketzone_reconfigure')) {
+					 if( isset ($reconfigure)) {?>
                                 <a href="<?php echo base_url('trigger') ?>">
                                     <i class="fa fa-plus"></i>
                                     <?=$this->lang->line('generate_map_table')?>
                                 </a>
-                        <?php } ?>
+                        <?php } }?>
 
                     </h5>
 
