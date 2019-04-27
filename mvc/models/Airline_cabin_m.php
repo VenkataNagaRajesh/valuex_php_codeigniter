@@ -26,6 +26,12 @@ class Airline_cabin_m extends MY_Model {
 
 	}
 
+
+	function get_order_by_airlinecabin($array=NULL) {
+                $query = parent::get_order_by($array);
+                return $query;
+        }
+
         function get_airline_cabin_map_count() {
 		$this->db->select('count(*) as cnt')->from('VX_aln_airline_cabin_map');
                 $query = $this->db->get();
