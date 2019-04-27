@@ -41,9 +41,7 @@ class Season_airport extends Admin_Controller {
 		$this->load->view('_layout_main', $this->data);
 	}
 
-    function server_processing(){
-	   
-		
+    function server_processing(){	
 	    $aColumns = array('s.season_name','ma.aln_data_value','mc.aln_data_value','ms.aln_data_value','mr.aln_data_value','mar.aln_data_value','ma.code','m.active');
         $sLimit = "";
                

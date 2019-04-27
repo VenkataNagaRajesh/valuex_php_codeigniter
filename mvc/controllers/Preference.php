@@ -109,7 +109,11 @@ class Preference extends Admin_Controller {
 	public function uniquecode($post_string) {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
-		
+		    $preference = $this->preference_m->get_preference(array('pref_code'=>$post_string,'VX_aln_preferenceID !='=>$id));
+			if(count($preference)) {
+				$this->form_validation->set_message("uniquecode", "%s already exists");
+				return FALSE;
+			}
 			return TRUE;
 		} else {
 			$preference = $this->preference_m->get_preference(array('pref_code'=>$post_string));
