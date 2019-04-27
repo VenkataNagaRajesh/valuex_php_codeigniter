@@ -274,9 +274,9 @@ class Client extends Admin_Controller {
 	public function view() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if ((int)$id) {
-			$this->data["user"] = $this->user_m->get_user_by_usertype($id);
-			if($this->data["user"]) {
-				$this->data["subview"] = "user/view";
+			$this->data["client"] = $this->client_m->get_single_client(array("VX_aln_clientID" => $id));
+			if($this->data["client"]) {
+				$this->data["subview"] = "client/view";
 				$this->load->view('_layout_main', $this->data);
 			} else {
 				$this->data["subview"] = "error";
