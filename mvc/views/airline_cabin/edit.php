@@ -109,16 +109,22 @@
                     ?>
                         <label for="video" class="col-sm-2 control-label">
                             <?=$this->lang->line("airline_video")?> <span class="text-red">*</span>
-                        </label>
+                        </label> <span class="btn btn-success mrg fa fa-plus" id='add_box'></span>
+                                 <span class="btn btn-success mrg fa fa-minus" id='remove_box'></span>
+
+
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="video" name="video" value="<?=set_value('video',$airline->video_links)?>" >
+                            <input type="text" class="form-control" id="video" name="video[]" value="<?=set_value('video')?>" >
+			 <div class="appending_div">
+                                <div>
+
                         </div>
                         <span class="col-sm-4 control-label">
 
                             <?php echo form_error('video'); ?>
                         </span>
                     </div>
-
+			<br>
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
@@ -143,6 +149,28 @@ $( ".select2" ).select2();
 	window.location.replace('<?=base_url('airline_cabin/index')?>');
       }
    });
+var i = 1;
+  $('#add_box').on('click', function() {
+	var field = '<br><div><input type="text" id="video'+i+'" class="form-control" name="video[]"> </div>';
+    $('.appending_div').append(field);
+        i = i+1;
+
+  })
+
+$('#remove_box').on('click', function() {
+        $(".appending_div").children().last().remove();
+        $(".appending_div").children().last().remove();
+  })
+var jQueryArray = <?php echo json_encode(explode(',',$airline->video_links)); ?>;
+        $.each(jQueryArray, function(index, value){
+		if ( index == '0' ) {
+			$('#video').val(value);;
+		} else {
+			var field = '<br><div><input type="text" id="video'+index+'" class="form-control" name="video[]"> </div>';
+    			$('.appending_div').append(field);
+			$('#video'+index).val(value);
+		}
+        });
 
 });
 

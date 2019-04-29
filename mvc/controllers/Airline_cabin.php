@@ -16,7 +16,7 @@ class Airline_cabin extends Admin_Controller {
                         array(
                                 'field' => 'name',
                                 'label' => $this->lang->line("name"),
-                                'rules' => 'trim|required|xss_clean|max_length[60]'
+                                'rules' => 'trim|required|xss_clean|max_length[60]|callback_unique_name'
                         ),
 
 			array(
@@ -49,6 +49,24 @@ class Airline_cabin extends Admin_Controller {
 		return $rules;
 	}
 
+ public function unique_name() {
+                $id = htmlentities(escapeString($this->uri->segment(3)));
+                if((int)$id) {
+                        $cabin = $this->airline_cabin_m->get_order_by_airlinecabin(array("name" => $this->input->post("name"), "cabin_map_id !=" => $id));
+                        if(count($cabin)) {
+                                $this->form_validation->set_message("unique_name", "%s already exists");
+                                return FALSE;
+                        }
+                        return TRUE;
+                } else {
+                        $cabin = $this->airline_cabin_m->get_order_by_airlinecabin(array("name" => $this->input->post("name")));
+                        if(count($cabin)) {
+                                $this->form_validation->set_message("unique_name", "%s already exists");
+                                return FALSE;
+                        }
+                        return TRUE;
+                }
+        }
 
 
    function valLevelType($post_string){
@@ -175,7 +193,6 @@ class Airline_cabin extends Admin_Controller {
 
 	    $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
 	    $this->data['airlineclass'] = $this->airline_cabin_m->getAirlineClasses();
-
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -194,7 +211,7 @@ class Airline_cabin extends Admin_Controller {
 				$array["name"] = $this->input->post("name");
 				$array["active"] = 1;
 				//$array['photo'] = $this->upload_data['file']['file_name'];
-				$array['video_links'] = $this->input->post("video");
+				$array['video_links'] = implode(',',$this->input->post("video"));
 				$this->airline_cabin_m->insert_airline_cabin($array);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("airline_cabin/index"));
@@ -237,7 +254,7 @@ class Airline_cabin extends Admin_Controller {
 			    $array["airline_cabin"] =  implode(',',$this->input->post("airline_cabin"));
                             $array["modify_date"] = time();
 			    $array["modify_userID"] = $this->session->userdata('loginuserID');
-			    $array["video_links"] = $this->input->post("video");
+			    $array["video_links"] = implode(',',$this->input->post("video"));
 			    $array["name"] = $this->input->post("name");
 			
 
@@ -568,8 +585,12 @@ $sQuery = " SELECT cabin_map_id,name,airline_code,airline_class,airline_cabin, v
                         $list->active .= "<label for='myonoffswitch".$list->cabin_map_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
 
 		if ( !empty($list->video_links) ){
-		$list->video_links = '<a target="_new" href="'.$list->video_links.'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs">Video</a>';
-
+		  $links = explode(',', $list->video_links );
+			$list->video_links = '';
+			foreach ($links as $k=>$link) {
+				$num = $k + 1;
+				$list->video_links .= '<a target="_new" href="'.$link.'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs">Link'.$num.'</a> &nbsp;';
+			}
 		}
                         $output['aaData'][] = $list;
 

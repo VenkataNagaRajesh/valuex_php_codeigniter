@@ -16,7 +16,7 @@ class Marketzone extends Admin_Controller {
 			array(
 				'field' => 'market_name',
 				'label' => $this->lang->line("market_name"),
-				'rules' => 'trim|required|xss_clean|max_length[60]'
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_unique_marketzonename'
 			),
 			array(
 				'field' => 'amz_level_id',
@@ -55,6 +55,26 @@ class Marketzone extends Admin_Controller {
 		);
 		return $rules;
 	}
+
+  public function unique_marketzonename() {
+                $id = htmlentities(escapeString($this->uri->segment(3)));
+                if((int)$id) {
+                        $marketzone = $this->marketzone_m->get_order_by_marketzone(array("market_name" => $this->input->post("market_name"), "market_id !=" => $id));
+                        if(count($marketzone)) {
+                                $this->form_validation->set_message("unique_marketzonename", "%s already exists");
+                                return FALSE;
+                        }
+                        return TRUE;
+                } else {
+                        $marketzone = $this->marketzone_m->get_order_by_marketzone(array("market_name" => $this->input->post("market_name")));
+
+                        if(count($marketzone)) {
+                                $this->form_validation->set_message("unique_marketzonename", "%s already exists");
+                                return FALSE;
+                        }
+                        return TRUE;
+                }
+        }
 
 
 

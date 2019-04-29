@@ -27,9 +27,11 @@
                                                 <?=$airlineclass[$airline_cabin->airline_class];?></p>
 					<p><span><?=$this->lang->line("airline_video")?> </span>:
 <?php	
-						 if ( !empty($airline_cabin->video_links) ){?>
-                                <a target="_new" href="<?=$airline_cabin->video_links;?>" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs">Video</a>
-               <?php  } ?>
+						 if ( !empty($airline_cabin->video_links) ){
+					 $links = explode(',', $airline_cabin->video_links );
+                        			foreach ($links as $k=>$link) {?>
+                                <a target="_new" href="<?=$link;?>" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs">link<?=$k+1?></a>&nbsp;&nbsp;
+               <?php } } ?>
 
 
 					 <p><span><?=$this->lang->line("airline_cabin_create_user")?> </span>: 

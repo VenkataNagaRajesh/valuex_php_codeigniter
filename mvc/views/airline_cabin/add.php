@@ -96,24 +96,30 @@
                     </div>
 
 
-                    <?php
+
+
+	<?php
                         if(form_error('video'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
                         <label for="video" class="col-sm-2 control-label">
-                            <?=$this->lang->line("airline_video")?>
-                        </label>
+                            <?=$this->lang->line("airline_video")?> <span class="text-red">*</span>
+                        </label> <span class="btn btn-success mrg fa fa-plus" id='add_box'></span>
+				 <span class="btn btn-success mrg fa fa-minus" id='remove_box'></span>
+				 
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="video" name="video" value="<?=set_value('video')?>" >
+				<input type="text" class="form-control" id="video" name="video[]" value="<?=set_value('video')?>" >
+				<div class="appending_div">
+      				<div>
                         </div>
                         <span class="col-sm-4 control-label">
-
                             <?php echo form_error('video'); ?>
                         </span>
                     </div>
 
+		<br>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
                             <input type="submit" class="btn btn-success" value="<?=$this->lang->line("add_airline_cabin")?>" >
@@ -131,6 +137,19 @@ $(document).ready(function(){
 
 $( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Cabin'
 		         });
+var i = 1;
+  $('#add_box').on('click', function() {
+    var field = '<br><div><input type="text" id="video'+i+'" class="form-control" name="video[]"> </div>';
+    $('.appending_div').append(field);
+	i = i+1;
+  })
+
+$('#remove_box').on('click', function() {
+	$(".appending_div").children().last().remove();
+	$(".appending_div").children().last().remove();
+  })
+
+
 });
 
 $(document).on('click', '#close-preview', function(){
