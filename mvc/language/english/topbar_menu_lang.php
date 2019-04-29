@@ -165,4 +165,6 @@ $lang['menu_season_airport'] = 'Season Airport Map';
 $lang['menu_preference'] = 'Preference';
 $lang['menu_airline_client'] = 'Airline Client';
 
+$lang['menu_rules'] = 'Eligibility Exclusion Rules';
+
 /* End Update Menu */
