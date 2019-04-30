@@ -52,6 +52,7 @@
 			<?php
 			
                         $airlineclass['0'] = "Select Class";
+			ksort($airlineclass);
                         echo form_dropdown("airline_class", $airlineclass,set_value("airline_class",$classID), "id='airline_class' class='form-control hide-dropdown-icon select2'");    ?>
 
 

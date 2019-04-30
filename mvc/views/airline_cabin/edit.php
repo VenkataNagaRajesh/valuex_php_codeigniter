@@ -68,6 +68,7 @@
                         <div class="col-sm-6">
 				
 <?php		        	$airlineclass['0'] = 'Select Class';       
+				ksort($airlineclass);
 			echo form_dropdown("airline_class", $airlineclass, set_value("airline_class",$airline->airline_class), "id='airline_code' class='form-control select2'");
 ?>
                         </div>

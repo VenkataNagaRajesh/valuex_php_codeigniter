@@ -166,4 +166,6 @@ $lang['menu_airline'] = "Airlines";
 $lang['menu_preference'] = 'Preference';
 $lang['menu_airline_client'] = 'Airline Client';
 
+$lang['menu_eligibility_exclusion'] = 'Eligibility Exclusion Rules';
+
 /* End Update Menu */

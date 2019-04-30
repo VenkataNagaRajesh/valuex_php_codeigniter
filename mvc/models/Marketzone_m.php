@@ -56,6 +56,20 @@ class Marketzone_m extends MY_Model {
 		
 	}
 
+	function getMarketzones() {
+		$this->db->select('market_id,market_name');
+		$this->db->from('VX_aln_market_zone');
+		$this->db->where('active','1');
+		$query = $this->db->get();
+		 $result = $query->result();
+
+                foreach($result  as $zone) {
+                        $marketzones[$zone->market_id]  = $zone->market_name;
+                }
+                return $marketzones;
+        }
+		
+		
 	function getAlnDataTYpes(){
 	        $this->db->select('vx_aln_data_typeID,name');
                 $this->db->from('vx_aln_data_types');
