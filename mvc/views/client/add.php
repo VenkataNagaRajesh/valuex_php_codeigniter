@@ -126,11 +126,11 @@
                         <div class="col-sm-6">
                             <?php 
                               $airlines[0]=$this->lang->line("client_select_airline");
-							  $airlines[1] = "AIR FRANCE";
-							  $airlines[2] = "AIR INDIA LTD.";
-							 /*  foreach($airlinelist as $airline){
+							 /*  $airlines[1] = "AIR FRANCE";
+							  $airlines[2] = "AIR INDIA LTD."; */
+							   foreach($airlinelist as $airline){
 								  $airlines[$airline->VX_aln_airlineID] = $airline->name;
-							  } */
+							  } 
 							  echo form_dropdown("airlineID", $airlines,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'");
 							?>
                         </div>

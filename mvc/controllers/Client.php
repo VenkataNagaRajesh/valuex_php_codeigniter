@@ -7,6 +7,7 @@ class Client extends Admin_Controller {
 		$this->load->model("client_m");
 		$this->load->model("user_m");
 		$this->load->model('usertype_m');
+		$this->load->model('airline_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('client', $language);
 		$usertype = 2;
@@ -137,7 +138,8 @@ class Client extends Admin_Controller {
                         'assets/select2/select2.js',  					
                 )
         );
-        $usertype = 2;		
+        $usertype = 2;
+        $this->data['airlinelist'] = $this->airline_m->getAirlinesData();		
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -203,6 +205,7 @@ class Client extends Admin_Controller {
 		if((int)$id) {
 			$this->data['client'] = $this->client_m->get_single_client(array('VX_aln_clientID' => $id));	
 			if($this->data['client']) {
+				$this->data['airlinelist'] = $this->airline_m->getAirlinesData();	
 				$rules = $this->rules();
 				unset($rules[7]);
 				$this->form_validation->set_rules($rules);
