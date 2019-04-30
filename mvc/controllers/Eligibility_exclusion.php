@@ -181,6 +181,26 @@ class Eligibility_exclusion extends Admin_Controller {
                          $this->data['future_use'] = 1;
                 }
 
+
+		if(!empty($this->input->post('flight_nbr_start'))){
+                          $this->data['nbr_start'] = $this->input->post('flight_nbr_start');
+                }
+
+
+		if(!empty($this->input->post('flight_efec_date'))){
+                          $this->data['efec_date'] = $this->input->post('flight_efec_date');
+                }
+
+	
+		if(!empty($this->input->post('flight_disc_date'))){
+                          $this->data['disc_date'] = date('d-m-Y',$this->input->post('flight_disc_date'));
+                }
+
+		if(!empty($this->input->post('flight_nbr_end'))){
+                          $this->data['nbr_end'] = date('d-m-Y',$this->input->post('flight_nbr_end'));
+                }
+
+
 		if(!empty($this->input->post('day'))){
                           $this->data['day'] = $this->input->post('day');
                 } else {
@@ -199,6 +219,10 @@ class Eligibility_exclusion extends Admin_Controller {
 		$this->data['marketzones'] = $this->marketzone_m->getMarketzones();
 		 $this->data['days_of_week'] = $this->airports_m->getDefns('14'); // days of week
 		$this->data['class_type'] = $this->airports_m->getDefns('13');
+		  $this->data['hrs'] = $this->eligibility_exclusion_m->time_dropdown('24');
+           $this->data['mins'] = $this->eligibility_exclusion_m->time_dropdown('60');
+
+
 		$this->data["subview"] = "eligibility_exclusion/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
@@ -414,7 +438,8 @@ function time_dropdown($val) {
 	    $aColumns = array('MainSet.eexcl_id','MainSet.excl_reason_desc' ,'MainSet.orig_mkt_name', 'MainSet.dest_mkt_name', 
         'MainSet.flight_efec_date', 'MainSet.flight_disc_date', 'MainSet.flight_dep_start', 'MainSet.flight_dep_end', 
         'MainSet.flight_nbr', 'MainSet.from_class', 'MainSet.to_class', 'Subset.frequency', 'MainSet.future_use', 'MainSet.active',
-        'MainSet.orig_market_id', 'MainSet.dest_market_id','MainSet.upgrade_from_class_type', 'MainSet.upgrade_to_class_type');
+        'MainSet.orig_market_id', 'MainSet.dest_market_id','MainSet.upgrade_from_class_type', 'MainSet.upgrade_to_class_type',
+	'MainSet.flight_nbr_start','MainSet.flight_nbr_end');
 	
 		$sLimit = "";
 		
@@ -507,6 +532,50 @@ function time_dropdown($val) {
                         }
 
 
+		        if(!empty($this->input->get('nbrStart'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.flight_nbr_start = '.$this->input->get('nbrStart');
+                        }
+
+
+			if(!empty($this->input->get('nbrEnd'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.flight_nbr_end = '.$this->input->get('nbrEnd');
+                        }
+
+
+                       if(!empty($this->input->get('efecDate'))){
+                               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.flight_efec_date = '.strtotime($this->input->get('efecDate'));
+                        }
+
+
+                        if(!empty($this->input->get('discDate'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.flight_disc_date = '.strtotime($this->input->get('discDate'));
+                        }
+
+
+
+			if(!empty($this->input->get('startHrs')) && !empty($this->input->get('startMins')) 
+					&& $this->input->get('startHrs') != '-1' && $this->input->get('startMins') != '-1'){
+                               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.flight_dep_start = "'.$this->input->get('startHrs').':'.$this->input->get('startMins').'"';
+                        }
+
+
+			 if(!empty($this->input->get('endHrs')) && !empty($this->input->get('endMins'))
+				&& $this->input->get('endHrs') != '-1' && $this->input->get('endMins') != '-1'){
+                               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.flight_dep_end = "'.$this->input->get('endHrs').':'.$this->input->get('endMins').'"';
+                        }
+
+
+                        if(!empty($this->input->get('discDate'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.flight_disc_date = '.strtotime($this->input->get('discDate'));
+                        }
+
 
 			if(!empty($this->input->get('day') )){
 				$days = explode(',',$this->input->get('day'));
@@ -523,14 +592,15 @@ function time_dropdown($val) {
 SELECT  MainSet.eexcl_id,MainSet.excl_reason_desc ,MainSet.orig_mkt_name, MainSet.dest_mkt_name, 
         MainSet.flight_efec_date, MainSet.flight_disc_date, MainSet.flight_dep_start, MainSet.flight_dep_end, 
         MainSet.flight_nbr, MainSet.from_class, MainSet.to_class, Subset.frequency, MainSet.future_use, MainSet.active,
-        MainSet.orig_market_id, MainSet.dest_market_id , Subset.dayslist , MainSet.upgrade_from_class_type, MainSet.upgrade_to_class_type 
+        MainSet.orig_market_id, MainSet.dest_market_id , Subset.dayslist , MainSet.upgrade_from_class_type, MainSet.upgrade_to_class_type,
+        MainSet.flight_nbr_start, MainSet.flight_nbr_end 
 
 FROM (     
 
               select eexcl_id,excl_reason_desc, ex.orig_market_id , ex.dest_market_id ,oz.market_name as orig_mkt_name, dz.market_name as dest_mkt_name, 
               flight_efec_date, flight_disc_date, flight_dep_start, flight_dep_end, CONCAT(flight_nbr_start,'-',flight_nbr_end) 
               as flight_nbr,fc.aln_data_value as from_class , tc.aln_data_value as to_class, future_use, ex.active , 
-              ex.upgrade_from_class_type, ex.upgrade_to_class_type  
+              ex.upgrade_from_class_type, ex.upgrade_to_class_type  ,ex.flight_nbr_start, ex.flight_nbr_end
               from VX_aln_eligibility_excl_rules ex 
 
               LEFT JOIN VX_aln_market_zone oz on (oz.market_id = ex.orig_market_id) 

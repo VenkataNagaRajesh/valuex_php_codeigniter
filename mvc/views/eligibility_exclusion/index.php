@@ -9,7 +9,7 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">               
+            <div class="col-sm-2">               
                     <h5 class="page-header">
 					    <?php  if(permissionChecker('eligibility_exclusion_add')) {  ?>
                         <a href="<?php echo base_url('eligibility_exclusion/add') ?>">
@@ -20,10 +20,11 @@
 						 
                     </h5>
 
-               </h5>
-
+	  </div>
+	<div class="col-sm-12">
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
+		<div class="col-sm-12">
                            <div class="col-sm-2">
                <?php 
 			$marketzones['0'] = 'Select Origin Market';
@@ -39,6 +40,65 @@
                                    echo form_dropdown("dest_market_id", $marketzones,set_value("dest_market_id",$destmarketID), "id='dest_market_id' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
+
+		                <div class="col-sm-2">
+                        <input type="text" class="form-control" id="flight_nbr_start" name="flight_nbr_start"  placeholder='Select flight nbr start' value="<?=set_value('flight_nbr_start',$nbr_start)?>" >
+                </div>
+
+
+
+                <div class="col-sm-2">
+                        <input type="text" class="form-control" id="flight_nbr_end" name="flight_nbr_end"  placeholder='Select flight nbr end' value="<?=set_value('flight_nbr_end',$nbr_end)?>" >
+                </div>
+
+
+                           <div class="col-sm-2">
+                        <input type="text" class="form-control" id="flight_efec_date" name="flight_efec_date"  placeholder='Select flight Effective Date' value="<?=set_value('flight_efec_date',$efec_date)?>" >
+                </div>
+
+
+
+                <div class="col-sm-2">
+                        <input type="text" class="form-control" id="flight_disc_date" name="flight_disc_date"  placeholder='Select flight discontinue Date' value="<?=set_value('flight_disc_date',$disc_date)?>" >
+                </div>
+</div></div>
+<br> 
+<div class='form-group'>
+<div class='col-sm-12'>
+  <div class="col-sm-2">
+                           <?php
+				$hrs['-1'] = 'Select Departure Start Hrs';
+				ksort($hrs);
+
+                                    echo form_dropdown("flight_dep_start_hrs", $hrs,set_value("flight_dep_start_hrs"), "id='flight_dep_start_hrs' class='form-control hide-dropdown-icon select2'");
+                                 ?>
+                                </div>
+                                <div class="col-sm-2">
+                <?php
+				$mins['-1'] = 'Select Departure start Mins';
+				ksort($mins);
+                                                    echo form_dropdown("flight_dep_start_mins", $mins,set_value("flight_dep_start_mins"), "id='flight_dep_start_mins' class='form-control hide-dropdown-icon select2'");
+
+                ?>
+                                </div>
+  <div class="col-sm-2">
+                           <?php
+		 $hrs['-1'] = 'Select Departure End Hrs';
+                                ksort($hrs);
+
+                                    echo form_dropdown("flight_dep_end_hrs", $hrs,set_value("flight_dep_end_hrs"), "id='flight_dep_end_hrs' class='form-control hide-dropdown-icon select2'");
+                                 ?>
+                                </div>
+                                <div class="col-sm-2">
+                <?php
+
+			 $mins['-1'] = 'Select Departure End Mins';
+                                ksort($mins);
+                                                    echo form_dropdown("flight_dep_end_mins", $mins,set_value("flight_dep_end_mins"), "id='flight_dep_end_mins' class='form-control hide-dropdown-icon select2'");
+
+                ?>
+                                </div>
+
 
 	   <div class="col-sm-2">
                <?php
@@ -62,6 +122,22 @@
                                    echo form_dropdown("to_class", $class_list,set_value("to_class",$toclass), "id='to_class' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
+</div></div>
+<br>
+<div class='form-group'>
+<div class="col-sm-12">
+
+		 <div class="col-sm-2">
+
+                        <?php
+                 foreach($days_of_week as $day ) {
+                                $days[$day->vx_aln_data_defnsID] = $day->aln_data_value;
+                        }
+                 echo form_multiselect("day[]", $days, set_value("day"), "id='day' class='form-control select2'");
+
+                        ?>
+
+                 </div>
 
 
 
@@ -87,24 +163,18 @@
                         </div>
                                   
 
-		<div class="col-sm-2">
-
-                        <?php
-		 foreach($days_of_week as $day ) {
-                                $days[$day->vx_aln_data_defnsID] = $day->aln_data_value;
-                        }
-                 echo form_multiselect("day[]", $days, set_value("day"), "id='day' class='form-control select2'");
-
-			?>
-
-                 </div>
                 <div class="col-sm-2">
                   <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
                 </div>
+
+</div>
                           </div>
+
+
                          </form>
 
-
+</div>
+<br> <br>
 
                 <div id="hide-table">
                     <table id="ruleslist" class="table table-striped table-bordered table-hover dataTable no-footer">
@@ -148,7 +218,16 @@ $(document).ready(function() {
 		   {"name": "day","value": $("#day").val()},
 		   {"name": "fromClass","value": $("#from_class").val()},
 		   {"name": "toClass","value": $("#to_class").val()},
+		    {"name": "nbrStart","value": $("#flight_nbr_start").val()},
+                   {"name": "nbrEnd","value": $("#flight_nbr_end").val()},
+		   {"name": "efecDate","value": $("#flight_efec_date").val()},
+                   {"name": "discDate","value": $("#flight_disc_date").val()},
 		   {"name": "futureuse","value": $("#future_use").val()},
+
+		   {"name": "startHrs","value": $("#flight_dep_start_hrs").val()},
+                   {"name": "startMins","value": $("#flight_dep_start_mins").val()},
+		 {"name": "endHrs","value": $("#flight_dep_end_hrs").val()},
+                   {"name": "endMins","value": $("#flight_dep_end_mins").val()},
                    {"name": "active","value": $("#active").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -251,5 +330,8 @@ $(document).ready(function() {
   }); 
 $( ".select2" ).select2({closeOnSelect:false,
                          placeholder: "Select Frequency"});
+
+$("#flight_efec_date").datepicker();
+$("#flight_disc_date").datepicker();
 
 </script>

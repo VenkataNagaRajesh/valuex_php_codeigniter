@@ -47,7 +47,7 @@ class Eligibility_exclusion_m extends MY_Model {
 		return $id;
 	}
 
-	public function delete_eligibiltiy_rule($id){
+	public function delete_eligibility_rule($id){
 		parent::delete($id);
 	}
 }
