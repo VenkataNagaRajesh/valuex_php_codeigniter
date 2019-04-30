@@ -12,19 +12,30 @@ class Airline_cabin_m extends MY_Model {
 	}
 
 	function getAirlines(){
-		$arr = array('1' => 'singapore airlines',
-			     '2' => 'Airindia Airlines',
-			     '3' => 'Malyasia Airlines',
-			      '4' => 'kingfisher Airlines');
+		$this->db->select('vx_aln_data_defnsID, aln_data_value');	
+		$this->db->from('vx_aln_data_defns');
+		$this->db->where('aln_data_typeID','12');
+		$query = $this->db->get();
+                 $result = $query->result();
+			foreach($result as $k) {
+				$arr[$k->vx_aln_data_defnsID] = $k->aln_data_value;
+			}
 		return $arr;
 	}
 
 	function getAirlineClasses(){
-		$arr = array('0' => 'ECO', '1' => 'PEY', '2' => 'BIZ', '3' => 'FIRST');
-		return $arr;
-				
 
-	}
+		$this->db->select('vx_aln_data_defnsID, aln_data_value');
+                $this->db->from('vx_aln_data_defns');
+                $this->db->where('aln_data_typeID','13');
+                $query = $this->db->get();
+                 $result = $query->result();
+                        foreach($result as $k) {
+                                $arr[$k->vx_aln_data_defnsID] = $k->aln_data_value;
+                        }
+                return $arr;
+        }
+
 
 
 	function get_order_by_airlinecabin($array=NULL) {
