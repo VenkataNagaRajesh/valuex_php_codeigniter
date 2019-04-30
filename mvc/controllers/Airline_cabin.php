@@ -508,17 +508,21 @@ class Airline_cabin extends Admin_Controller {
 
                        if(!empty($this->input->get('active')) && $this->input->get('active') != '-1'){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'active = '.$this->input->get('active');
+                                $sWhere .= 'cm.active = '.$this->input->get('active');
                         }else if ($this->input->get('active') == '0') {
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'active = '.$this->input->get('active');
+                                $sWhere .= 'cm.active = '.$this->input->get('active');
                         }
 
 
 
 
 
-$sQuery = " SELECT cabin_map_id,name,airline_code,airline_class,airline_cabin, video_links, active  from VX_aln_airline_cabin_map
+$sQuery = " SELECT cabin_map_id,name, airline_cabin,  ac.aln_data_value as airline_code , 
+        acl.aln_data_value as airline_class, video_links, cm.active  
+        from VX_aln_airline_cabin_map cm 
+        LEFT JOIN vx_aln_data_defns ac on (ac.vx_aln_data_defnsID = cm.airline_code) 
+        LEFT JOIN  vx_aln_data_defns acl on (acl.vx_aln_data_defnsID = cm.airline_class)
  $sWhere $sOrder $sLimit";
                 $rResult = $this->install_m->run_query($sQuery);
                 $sQuery = "SELECT FOUND_ROWS() as total";
@@ -540,8 +544,6 @@ $sQuery = " SELECT cabin_map_id,name,airline_code,airline_class,airline_cabin, v
 
 
                 foreach($rResult as $list){
-			$list->airline_code = $airlinesdata[$list->airline_code];
-			$list->airline_class = $airlineclass[$list->airline_class];
 
 			$keys = explode(',',$list->airline_cabin);
 			$list->airline_cabin = array_map(function($x) use ($alphas) { return $alphas[$x]; }, $keys);
@@ -559,7 +561,7 @@ $sQuery = " SELECT cabin_map_id,name,airline_code,airline_class,airline_cabin, v
 
 			}
 
-			if ( permissionChecker('airline_cabin_gallery') ) {
+		/*	if ( permissionChecker('airline_cabin_gallery') ) {
 			$list->action .= '<a href="'.base_url("airline_cabin/airlinesgallery/".$list->cabin_map_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Add Gallery/Brands/Brochures"> <i class="fa fa-file-image-o"></i></a>';
 
 			}
@@ -572,7 +574,7 @@ $sQuery = " SELECT cabin_map_id,name,airline_code,airline_class,airline_cabin, v
 
                                             );
                                $list->photo =  img($array);
-
+*/
 			$status = $list->active;
 			
                         $list->active = "<div class='onoffswitch-small' id='".$list->cabin_map_id."'>";
