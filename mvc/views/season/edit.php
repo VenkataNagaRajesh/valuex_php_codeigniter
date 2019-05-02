@@ -31,6 +31,29 @@
                     </div>
 					
 					<?php 
+                        if(form_error('airlineID')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group'>";
+                    ?>
+                        <label for="airlineID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("season_airline")?>
+                        </label>
+                        <div class="col-sm-6">
+                           <?php
+							 $airlinelist[0]=$this->lang->line("season_select_airline");
+						     foreach($airlines as $airline){
+								 $airlinelist[$airline->VX_aln_airlineID] = $airline->airline_name;
+							 }							
+						   echo form_dropdown("airlineID", $airlinelist,set_value("airlineID",$season->airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'"); 
+						   ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('airlineID'); ?>
+                        </span>
+                    </div>
+					
+					<?php 
                         if(form_error('ams_orig_levelID')) 
                             echo "<div class='form-group has-error' >";
                         else     
@@ -221,6 +244,7 @@
     </div>
 </div>
 <script>
+$('#season_color').colorpicker({});
 $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: "Select a value"});
 				

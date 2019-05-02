@@ -6,6 +6,7 @@ class Season extends Admin_Controller {
 		parent::__construct();
 		$this->load->model("season_m");
 		$this->load->model("airports_m");
+		$this->load->model("airline_m");
 		$this->load->model("trigger_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('season', $language);	
@@ -22,6 +23,11 @@ class Season extends Admin_Controller {
 				'field' => 'ams_orig_levelID',
 				'label' => $this->lang->line("orig_level"),
 				'rules' => 'trim|required|max_length[200]|xss_clean|callback_valOrigLevel'
+			),
+			array(
+				'field' => 'airlineID',
+				'label' => $this->lang->line("season_airline"),
+				'rules' => 'trim|required|max_length[200]|xss_clean|callback_valAirline'
 			),
    		    array(
                 'field' => 'ams_orig_level_value[]',
@@ -65,6 +71,15 @@ class Season extends Admin_Controller {
             )
 		);
 		return $rules;
+	}
+	
+	function valAirline($post_string){		
+	  if($post_string == '0'){
+		 $this->form_validation->set_message("valAirline", "%s is required");
+		  return FALSE;
+	   }else{
+		  return TRUE;
+	   }
 	}
 	
 	function valOrigLevel($post_string){		
@@ -144,8 +159,14 @@ class Season extends Admin_Controller {
                 )
         );	
 	
-	  // $this->data['types'] = $this->airports_m->getDefdataTypes(array('7','8','9','10','11','6'));
-	   $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
+	    $usertypeID = $this->session->userdata('usertypeID');
+		$userID = $this->session->userdata('loginuserID');
+	   $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5));
+	   if($usertypeID == 2){
+	      $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+	   } else {
+		   $this->data['airlines'] = $this->airline_m->getAirlinesData();
+	   }
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -154,6 +175,7 @@ class Season extends Admin_Controller {
 				$this->load->view('_layout_main', $this->data);			
 			} else {
 				$array["season_name"] = $this->input->post("season_name");
+				$array["airlineID"] = $this->input->post("airlineID");
 				$array["ams_orig_levelID"] = $this->input->post("ams_orig_levelID");
 				$array["ams_orig_level_value"] = implode(',',$this->input->post("ams_orig_level_value"));
 				$array["ams_dest_levelID"] = $this->input->post("ams_dest_levelID");
@@ -200,12 +222,18 @@ class Season extends Admin_Controller {
                         'assets/select2/select2.js',
                         'assets/datepicker/datepicker.css'
                 )
-        );		
+        );
+        $usertypeID = $this->session->userdata('usertypeID');
+		$userID = $this->session->userdata('loginuserID');		
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$this->data['season'] = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
 			if($this->data['season']) {
-			 //$this->data['types'] = $this->airports_m->getDefdataTypes(array('7','8','9','10','11','6'));
+			   if($usertypeID == 2){
+				  $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+			   } else {
+				   $this->data['airlines'] = $this->airline_m->getAirlinesData();
+			   }
 			 $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
 				if($_POST) {
 					$rules = $this->rules();
@@ -215,6 +243,7 @@ class Season extends Admin_Controller {
 						$this->load->view('_layout_main', $this->data);			
 					} else {
 						$array["season_name"] = $this->input->post("season_name");
+						$array["airlineID"] = $this->input->post("airlineID");
 						$array["ams_orig_levelID"] = $this->input->post("ams_orig_levelID");
 						$array["ams_orig_level_value"] = implode(',',$this->input->post("ams_orig_level_value"));
 						$array["ams_dest_levelID"] = $this->input->post("ams_dest_levelID");
@@ -323,7 +352,7 @@ class Season extends Admin_Controller {
 		$userID = $this->session->userdata('loginuserID');
 		$usertypeID = $this->session->userdata('usertypeID');	  
 				
-	    $aColumns = array('s.VX_aln_seasonID','s.season_name','dt1.name','s.ams_orig_level_value','dt2.name','s.ams_dest_level_value','s.ams_season_start_date','s.ams_season_end_date','s.is_return_inclusive','s.season_color','s.active');
+	    $aColumns = array('s.VX_aln_seasonID','s.season_name','dd.aln_data_value','dt1.name','s.ams_orig_level_value','dt2.name','s.ams_dest_level_value','s.ams_season_start_date','s.ams_season_end_date','s.is_return_inclusive','s.season_color','s.active');
 	
 		$sLimit = "";
 		
@@ -399,7 +428,7 @@ class Season extends Admin_Controller {
            $sWhere .= 's.active = '.$this->input->get('active');		 
 	     }		
 			
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dt1.alias orig_level,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_orig_levelID
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dt1.alias orig_level,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN VX_aln_airline a ON a.VX_aln_airlineID = s.airlineID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = a.airlineID
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

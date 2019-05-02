@@ -58,7 +58,7 @@
 				  {"data": "name" },
 				  {"data": "email" },
 				  {"data": "phone" }, 
-                  {"data": "airline"},
+                  {"data": "airline_name"},
 				  {"data": "active"},
                   {"data": "action"}
 				  ],			     

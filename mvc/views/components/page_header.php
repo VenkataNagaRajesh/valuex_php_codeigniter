@@ -16,7 +16,8 @@
 
         <script type="text/javascript" src="<?php echo base_url('assets/toastr/toastr.min.js'); ?>"></script>
 		
-		
+		 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/js/bootstrap-colorpicker.min.js"></script> 
 		
         <link href="<?php echo base_url('assets/bootstrap/bootstrap.min.css'); ?>" rel="stylesheet">
 
@@ -67,6 +68,8 @@
             $(".se-pre-con").fadeOut("slow");;
           });
         </script>
+		
+		
     </head>
     <body class="skin-blue fuelux">
         <div class="se-pre-con"></div>

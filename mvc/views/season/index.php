@@ -65,6 +65,7 @@
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('orig_level_value')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('dest_level')?></th>
@@ -108,6 +109,7 @@ $(document).ready(function() {
 			 } ); },	  
       "columns": [{"data": "VX_aln_seasonID" },
                   {"data": "season_name" },
+				  {"data": "airline_name" },
 				  {"data": "orig_level" },
 				  {"data": "orig_level_values" },
 				  {"data": "dest_level" }, 

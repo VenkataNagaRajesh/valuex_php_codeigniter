@@ -478,7 +478,7 @@ class Client extends Admin_Controller {
 				}
 			}
 		
-		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.* FROM VX_aln_client c 
+		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,dd.aln_data_value airline_name FROM VX_aln_client c LEFT JOIN VX_aln_airline a ON a.VX_aln_airlineID = c.airlineID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = a.airlineID
 			$sWhere			
 			$sOrder
 			$sLimit	"; 
@@ -514,8 +514,7 @@ class Client extends Admin_Controller {
 			}	
 			
 			$client->active .= "<label for='myonoffswitch".$client->VX_aln_clientID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
-			$client->airline = $client->airlineID;
-			
+						
 			 $array = array(
                "src" => base_url('uploads/images/'.$client->image),
                'width' => '35px',
