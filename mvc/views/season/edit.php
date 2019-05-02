@@ -43,7 +43,7 @@
                            <?php
 							 $orglevels[0]=$this->lang->line("season_orig_level_select");
 						     foreach($types as $level){
-								 $orglevels[$level->vx_aln_data_typeID] = $level->name;
+								 $orglevels[$level->vx_aln_data_typeID] = $level->alias;
 							 }							
 						   echo form_dropdown("ams_orig_levelID", $orglevels,set_value("ams_orig_levelID",$season->ams_orig_levelID), "id='ams_orig_levelID' class='form-control hide-dropdown-icon select2'"); 
 						   ?>
@@ -87,7 +87,7 @@
                            <?php
 							 $destlevels[0]=$this->lang->line("season_dest_level_select");
 						     foreach($types as $level){
-								 $destlevels[$level->vx_aln_data_typeID] = $level->name;
+								 $destlevels[$level->vx_aln_data_typeID] = $level->alias;
 							 }							
 						   echo form_dropdown("ams_dest_levelID", $destlevels,set_value("ams_dest_levelID",$season->ams_dest_levelID), "id='ams_dest_levelID' class='form-control hide-dropdown-icon select2'"); 
 						   ?>

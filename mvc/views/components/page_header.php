@@ -15,8 +15,9 @@
         <!-- <script type="text/javascript" src="<?php echo base_url('assets/slimScroll/jquery.slimscroll.min.js'); ?>"></script> -->
 
         <script type="text/javascript" src="<?php echo base_url('assets/toastr/toastr.min.js'); ?>"></script>
-
-
+		
+		
+		
         <link href="<?php echo base_url('assets/bootstrap/bootstrap.min.css'); ?>" rel="stylesheet">
 
         <link href="<?php echo base_url('assets/fonts/font-awesome.css'); ?>" rel="stylesheet">
@@ -24,8 +25,8 @@
         <link href="<?php echo base_url('assets/fonts/icomoon.css'); ?>" rel="stylesheet">
 
         <link href="<?php echo base_url('assets/datatables/dataTables.bootstrap.css'); ?>" rel="stylesheet">
-
-        <link id="headStyleCSSLink" href="<?php echo base_url($backendThemePath.'/style.css'); ?>" rel="stylesheet">
+        
+		<link id="headStyleCSSLink" href="<?php echo base_url($backendThemePath.'/style.css'); ?>" rel="stylesheet">
 
         <link href="<?php echo base_url('assets/inilabs/hidetable.css'); ?>" rel="stylesheet">
 

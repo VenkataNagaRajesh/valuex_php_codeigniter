@@ -138,8 +138,8 @@ class Preference extends Admin_Controller {
                 )
         );
       $this->data['catlist'] = $this->airports_m->getDefns(6);
-      $this->data['pref_types'] = $this->airports_m->getDefdataTypes(null,array('7','8'));
-      $this->data['valuetypes'] = $this->airports_m->getDefdataTypes(null,array('9','10','11'));	 
+      $this->data['pref_types'] = $this->airports_m->getDefdataTypes(null,array(7,8));
+      $this->data['valuetypes'] = $this->airports_m->getDefdataTypes(null,array(9,10,11));	 
      //  print_r( $this->data['valuetypes']); exit;	  
 		if($_POST) {
 			$rules = $this->rules();
@@ -347,7 +347,7 @@ class Preference extends Admin_Controller {
 			}
 			
 			
-		$sQuery = "SELECT p.*,dd.aln_data_value category,dd1.name type,dt1.name valuetype,dt2.name value FROM VX_aln_preference p LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = p.categoryID LEFT JOIN vx_aln_data_types dd1 ON dd1.vx_aln_data_typeID = p.pref_type LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = p.pref_get_value_type LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = p.pref_get_value
+		$sQuery = "SELECT p.*,dd.aln_data_value category,dd1.alias type,dt1.alias valuetype,dt2.alias value FROM VX_aln_preference p LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = p.categoryID LEFT JOIN vx_aln_data_types dd1 ON dd1.vx_aln_data_typeID = p.pref_type LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = p.pref_get_value_type LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = p.pref_get_value
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
@@ -400,9 +400,9 @@ class Preference extends Admin_Controller {
 			echo '<option value="0">Select Value</option>';
 			foreach ($list as $li) {
 				 if($li->vx_aln_data_typeID == $get_value){
-					echo '<option value="'.$li->vx_aln_data_typeID.'" selected>'.$li->name.'</option>';
+					echo '<option value="'.$li->vx_aln_data_typeID.'" selected>'.$li->alias.'</option>';
 				}else{ 
-				    echo '<option value="'.$li->vx_aln_data_typeID.'">'.$li->name.'</option>';
+				    echo '<option value="'.$li->vx_aln_data_typeID.'">'.$li->alias.'</option>';
 				}
 			}
 		} else {

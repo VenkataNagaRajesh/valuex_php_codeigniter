@@ -126,7 +126,7 @@ class Season extends Admin_Controller {
         }
         $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');	
         $this->data['seasonslist'] = $this->season_m->get_seasons(); 
-		$this->data['types'] = $this->airports_m->getDefdataTypes(array('7','8','9','10','11','6'));
+		$this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
 		$this->data["subview"] = "season/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
@@ -144,7 +144,8 @@ class Season extends Admin_Controller {
                 )
         );	
 	
-	   $this->data['types'] = $this->airports_m->getDefdataTypes(array('7','8','9','10','11','6'));
+	  // $this->data['types'] = $this->airports_m->getDefdataTypes(array('7','8','9','10','11','6'));
+	   $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -204,7 +205,8 @@ class Season extends Admin_Controller {
 		if((int)$id) {
 			$this->data['season'] = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
 			if($this->data['season']) {
-			 $this->data['types'] = $this->airports_m->getDefdataTypes(array('7','8','9','10','11','6'));
+			 //$this->data['types'] = $this->airports_m->getDefdataTypes(array('7','8','9','10','11','6'));
+			 $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
 				if($_POST) {
 					$rules = $this->rules();
 					$this->form_validation->set_rules($rules);
@@ -397,7 +399,7 @@ class Season extends Admin_Controller {
            $sWhere .= 's.active = '.$this->input->get('active');		 
 	     }		
 			
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dt1.name orig_level,dt2.name dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_orig_levelID
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dt1.alias orig_level,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_orig_levelID
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

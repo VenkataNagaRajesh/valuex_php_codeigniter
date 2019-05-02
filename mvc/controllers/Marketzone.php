@@ -5,7 +5,7 @@ class Marketzone extends Admin_Controller {
 		parent::__construct();
 		$this->load->model("marketzone_m");
 		$this->load->model("trigger_m");
-		$this->load->model('user_m');
+		$this->load->model('airports_m');
 		$this->load->model('install_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('marketzone', $language);
@@ -140,7 +140,11 @@ class Marketzone extends Admin_Controller {
 
 
 		$this->data['marketzones'] = $this->marketzone_m->get_marketzones();
-		$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
+		//$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
+		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
+		  foreach($types as $type){
+			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
+		  }
 		$this->data["subview"] = "marketzone/index";
 		$this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_market_zone');
 		$this->load->view('_layout_main', $this->data);
@@ -162,8 +166,11 @@ class Marketzone extends Admin_Controller {
                 );
 
 
-	    $this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
-
+	    //$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
+          $types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
+		  foreach($types as $type){
+			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
+		  }
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -215,7 +222,11 @@ class Marketzone extends Admin_Controller {
                                 'assets/select2/select2.js'
                         )
                 );
-		$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
+		//$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
+		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
+		  foreach($types as $type){
+			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
+		  }
 		 $id = htmlentities(escapeString($this->uri->segment(3)));
         if((int)$id) {
             $this->data['marketzone'] = $this->marketzone_m->get_single_marketzone(array('market_id' => $id));
@@ -479,7 +490,7 @@ $sQuery = "
 SELECT MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active ,MainSet.level_id, MainSet.incl_id, MainSet.excl_id
 FROM
 (
-              select  mz.market_id, mz.market_name ,dtl.name as lname,dti.name as iname, dte.name as ename , mz.active as active, 
+              select  mz.market_id, mz.market_name ,dtl.alias as lname,dti.alias as iname, dte.alias as ename , mz.active as active, 
 			mz.amz_level_id as level_id, mz.amz_incl_id as incl_id, mz.amz_excl_id as excl_id 
 	      from VX_aln_market_zone mz 
 	      LEFT JOIN vx_aln_data_types dtl on (dtl.vx_aln_data_typeID = mz.amz_level_id) 

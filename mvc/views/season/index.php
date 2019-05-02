@@ -38,14 +38,14 @@
 					 <div class="col-sm-2">			   
 					   <?php $olist = array("0" => "Select Origin Level");               
 					   foreach($types as $type){
-						  $olist[$type->vx_aln_data_typeID] = $type->name;
+						  $olist[$type->vx_aln_data_typeID] = $type->alias;
 						}							
 					   echo form_dropdown("origID", $olist,set_value("origID",$origID), "id='origID' class='form-control hide-dropdown-icon select2'");    ?>
 					 </div>                				
 					 <div class="col-sm-2">
 						<?php $dlist = array("0" => "Select Destination");               
 					    foreach($types as $type){
-						  $dlist[$type->vx_aln_data_typeID] = $type->name;
+						  $dlist[$type->vx_aln_data_typeID] = $type->alias;
 						}							
 					   echo form_dropdown("destID", $dlist,set_value("destID",$destID), "id='destID' class='form-control hide-dropdown-icon select2'");    ?>
 					 </div>

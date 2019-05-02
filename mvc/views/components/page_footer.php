@@ -37,6 +37,19 @@
               search: false
           } );
         } );
+	 /* $('.dataTable').DataTable( {
+		 buttons: [{
+		  extend: 'collection',
+		  className: 'exportButton',
+		  text: 'Data Export',
+		  buttons: ['copy','excel','csv','pdf','print'],
+		  exportOptions: {
+			modifer: {
+			  page: 'all',
+			  search: 'none' }
+		  }
+		}]
+	 }); */
         </script>
         <!-- dataTable with buttons end -->
 

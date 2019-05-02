@@ -144,7 +144,7 @@ class Definition_data extends Admin_Controller {
                         'assets/fselect/fSelect.js',
                 )
         );	
-        $this->data['types'] = $this->airports_m->getDefdataTypes(array('7','8','9','10','11'));	
+        $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));	
 		if($_POST) {
 			$rules = $this->addrules();
 			$this->form_validation->set_rules($rules);
@@ -350,7 +350,7 @@ class Definition_data extends Admin_Controller {
 			}
 			
 			
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS dd.*,t.name datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

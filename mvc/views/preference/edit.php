@@ -50,7 +50,7 @@
                             <?php
 							 $typelist[0]=$this->lang->line("preference_select_type");
 						     foreach($pref_types as $type){
-								 $typelist[$type->vx_aln_data_typeID] = $type->name;
+								 $typelist[$type->vx_aln_data_typeID] = $type->alias;
 							 }							
 						   echo form_dropdown("pref_type", $typelist,set_value("pref_type",$preference->pref_type), "id='pref_type' class='form-control hide-dropdown-icon select2'"); 
 						   ?>
@@ -124,7 +124,7 @@
                             <?php
 							 $valuetypelist[0]=$this->lang->line("preference_select_value_type");
 						     foreach($valuetypes as $vtype){
-								 $valuetypelist[$vtype->vx_aln_data_typeID] = $vtype->name;
+								 $valuetypelist[$vtype->vx_aln_data_typeID] = $vtype->alias;
 							 }							
 						   echo form_dropdown("pref_get_value_type", $valuetypelist,set_value("pref_get_value_type",$preference->pref_get_value_type), "id='pref_get_value_type' class='form-control hide-dropdown-icon select2'"); 
 						   ?>
