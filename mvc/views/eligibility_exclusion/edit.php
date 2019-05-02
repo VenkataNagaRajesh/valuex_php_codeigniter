@@ -229,7 +229,7 @@
 
      ?>                   </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('frequency'); ?>
+                            <?php echo form_error('frequency[]'); ?>
                         </span>
                     </div>
 

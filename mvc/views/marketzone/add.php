@@ -70,7 +70,7 @@
 				</select> 
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('amz_level_value'); ?>
+                            <?php echo form_error('amz_level_value[]'); ?>
                         </span>
 			<span> <input type="checkbox" id="checkbox_level" >Select All
 			</span>
@@ -110,7 +110,7 @@
 
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('amz_incl_value'); ?>
+                            <?php echo form_error('amz_incl_value[]'); ?>
                         </span>
 			<span> <input type="checkbox" id="checkbox_incl" >Select All</span>
                     </div>
@@ -151,7 +151,7 @@
 
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('amz_excl_value'); ?>
+                            <?php echo form_error('amz_excl_value[]'); ?>
                         </span>
 			<span> <input type="checkbox" id="checkbox_excl" >Select All</span>
                     </div>
