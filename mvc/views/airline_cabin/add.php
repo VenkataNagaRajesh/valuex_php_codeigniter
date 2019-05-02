@@ -92,7 +92,7 @@
 			?>
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('airline_cabin'); ?>
+                            <?php echo form_error('airline_cabin[]'); ?>
                         </span>
                     </div>
 

@@ -101,12 +101,10 @@ class Marketzone extends Admin_Controller {
 		 $this->data['headerassets'] = array(
                         'css' => array(
                                 'assets/select2/css/select2.css',
-                                'assets/select2/css/select2-bootstrap.css',
-                                'assets/fselect/fSelect.css'
+                                'assets/select2/css/select2-bootstrap.css'
                         ),
                         'js' => array(
-                                'assets/select2/select2.js',
-                                'assets/fselect/fSelect.js',
+                                'assets/select2/select2.js'
                         )
                 );
 

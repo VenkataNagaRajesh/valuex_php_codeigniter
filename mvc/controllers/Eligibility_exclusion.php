@@ -31,12 +31,12 @@ class Eligibility_exclusion extends Admin_Controller {
 			array(
                  		'field' => 'flight_nbr_start',
                  		'label' => $this->lang->line("flight_nbr_start"),
-                 		'rules' => 'trim|required|max_length[200]|xss_clean'
+                 		'rules' => 'trim|required|integer|max_length[200]|xss_clean'
             		),
 			array(
           		       'field' => 'flight_nbr_end',
                  		'label' => $this->lang->line("flight_nbr_end"),
-                 		'rules' => 'trim|required|max_length[200]|xss_clean'
+                 		'rules' => 'trim|required|integer|max_length[200]|xss_clean'
             		),
 			array(
                  		'field' => 'frequency[]',
