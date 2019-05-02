@@ -25,6 +25,8 @@ $lang['marketzone_modify_user'] = 'Modified By';
 $lang['marketzone_create_date'] = 'Created Time';
 $lang['marketzone_modify_date'] = 'Modified Time';
 $lang['marketzone_information'] = 'Marketzone Information';
+$lang['desc'] = 'Description';
+$lang['airline_code'] = 'Airline Client';
 /* Add Language */
 $lang['add_marketzone'] = 'Add Marketzone';
 $lang['update_marketzone'] = 'Update marketzone';

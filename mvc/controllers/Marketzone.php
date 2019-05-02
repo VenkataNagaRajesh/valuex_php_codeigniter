@@ -7,6 +7,8 @@ class Marketzone extends Admin_Controller {
 		$this->load->model("trigger_m");
 		$this->load->model('airports_m');
 		$this->load->model('install_m');
+		$this->load->model('client_m');
+		$this->load->model('airline_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('marketzone', $language);
 	}
@@ -18,6 +20,20 @@ class Marketzone extends Admin_Controller {
 				'label' => $this->lang->line("market_name"),
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_unique_marketzonename'
 			),
+
+
+			array(
+                                'field' => 'desc',
+                                'label' => $this->lang->line("desc"),
+                                'rules' => 'trim|xss_clean|max_length[200]'
+                        ),
+
+			array(
+                                'field' => 'airline_id',
+                                'label' => $this->lang->line("airline_id"),
+                                'rules' => 'trim|required|xss_clean|max_length[60]|callback_valLevelType'
+                        ),
+
 			array(
 				'field' => 'amz_level_id',
 				'label' => $this->lang->line("level_type"),
@@ -137,6 +153,18 @@ class Marketzone extends Admin_Controller {
                 }
 
 
+		$userTypeID = $this->session->userdata('usertype');
+                $userID = $this->session->userdata('loginuserID');
+
+
+
+		if($userTypeID == 2){
+                        $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+                           } else {
+                   $this->data['airlines'] = $this->airline_m->getAirlinesData();
+                }
+
+
 		$this->data['marketzones'] = $this->marketzone_m->get_marketzones();
 		//$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
 		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
@@ -162,13 +190,22 @@ class Marketzone extends Admin_Controller {
                                 'assets/fselect/fSelect.js',
                         )
                 );
-
+		$userTypeID = $this->session->userdata('usertype');
+		$userID = $this->session->userdata('loginuserID');
 
 	    //$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
           $types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
 		  foreach($types as $type){
 			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
 		  }
+
+
+		 if($userTypeID == 2){
+              		$this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+		           } else {
+                   $this->data['airlines'] = $this->airline_m->getAirlinesData();
+           	}
+
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -178,6 +215,7 @@ class Marketzone extends Admin_Controller {
 			} else {
 				$date_now = time(); 
 				$array["market_name"] = $this->input->post("market_name");
+				$array['description'] = $this->input->post("desc");
 				$array["amz_level_id"] = $this->input->post("amz_level_id");
 				$array["amz_level_name"] = implode(',',$this->input->post("amz_level_value"));
 				$array["amz_incl_id"] = $this->input->post("amz_incl_id");
@@ -188,6 +226,7 @@ class Marketzone extends Admin_Controller {
 				$array["modify_date"] = $date_now;
 				$array["create_userID"] = $this->session->userdata('loginuserID');
 			        $array["modify_userID"] = $this->session->userdata('loginuserID');
+				$array['airline_id'] = $this->input->post("airline_id");
 				$array["active"] = 1;
 				$this->marketzone_m->insert_marketzone($array);
 				
@@ -220,11 +259,23 @@ class Marketzone extends Admin_Controller {
                                 'assets/select2/select2.js'
                         )
                 );
+
+
+		$userTypeID = $this->session->userdata('usertype');
+                $userID = $this->session->userdata('loginuserID');
+
 		//$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
 		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
 		  foreach($types as $type){
 			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
 		  }
+
+                 if($userTypeID == 2){
+                       $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+                 } else {
+                   $this->data['airlines'] = $this->airline_m->getAirlinesData();
+                  }
+
 		 $id = htmlentities(escapeString($this->uri->segment(3)));
         if((int)$id) {
             $this->data['marketzone'] = $this->marketzone_m->get_single_marketzone(array('market_id' => $id));
@@ -238,12 +289,15 @@ class Marketzone extends Admin_Controller {
                     } else { 
 			   $date_now = time();	
 			    $array["market_name"] = $this->input->post("market_name");
+			    $array['description'] = $this->input->post("desc");
                             $array["amz_level_id"] = $this->input->post("amz_level_id");
 			    $array["amz_level_name"] =  implode(',',$this->input->post("amz_level_value"));
                             $array["amz_incl_id"] = $this->input->post("amz_incl_id");
 			    $array["amz_incl_name"] = implode(',',$this->input->post("amz_incl_value"));
                             $array["amz_excl_id"] = $this->input->post("amz_excl_id");
 			    $array["amz_excl_name"] =  implode(',',$this->input->post("amz_excl_value"));
+				$array['airline_id'] =  $this->input->post("airline_id");
+
                             $array["modify_date"] = $date_now;
 			    $array["modify_userID"] = $this->session->userdata('loginuserID');
 
@@ -397,7 +451,7 @@ class Marketzone extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('MainSet.market_id','MainSet.market_name','MainSet.lname','MainSet.iname', 'MainSet.ename','SubSet.inclname','SubSet.exclname', 'SubSet.levelname');
+	    $aColumns =  array('MainSet.market_id','MainSet.market_name','MainSet.lname','MainSet.iname', 'MainSet.ename','SubSet.inclname','SubSet.exclname', 'SubSet.levelname', 'MainSet.airline_name', 'MainSet.airlineID');
                 $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -480,20 +534,26 @@ class Marketzone extends Admin_Controller {
                                 $sWhere .= 'MainSet.active = '.$this->input->get('active');
 			}
 
+		 	if(!empty($this->input->get('airlineID'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.airlineID = '.$this->input->get('airlineID');
+                        }
 
 
 
 
 $sQuery = "
-SELECT MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active ,MainSet.level_id, MainSet.incl_id, MainSet.excl_id
+SELECT MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active ,MainSet.level_id, MainSet.incl_id, MainSet.excl_id,MainSet.airline_name, MainSet.airlineID
 FROM
 (
               select  mz.market_id, mz.market_name ,dtl.alias as lname,dti.alias as iname, dte.alias as ename , mz.active as active, 
-			mz.amz_level_id as level_id, mz.amz_incl_id as incl_id, mz.amz_excl_id as excl_id 
+			mz.amz_level_id as level_id, mz.amz_incl_id as incl_id, mz.amz_excl_id as excl_id , dd.aln_data_value as airline_name,
+			mz.airline_id as airlineID
 	      from VX_aln_market_zone mz 
 	      LEFT JOIN vx_aln_data_types dtl on (dtl.vx_aln_data_typeID = mz.amz_level_id) 
 	      LEFT JOIN vx_aln_data_types dti on (dti.vx_aln_data_typeID = mz.amz_incl_id)  
               LEFT JOIN vx_aln_data_types dte on (dte.vx_aln_data_typeID = mz.amz_excl_id)
+	      LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = mz.airline_id
 ) as MainSet
 
 LEFT JOIN (
@@ -541,6 +601,8 @@ LEFT JOIN (
 ) as SubSet
 on MainSet.market_id = SubSet.market_id
  $sWhere $sOrder $sLimit";
+
+//print_r($sQuery);exit;
                 $rResult = $this->install_m->run_query($sQuery);
                 $sQuery = "SELECT FOUND_ROWS() as total";
                 $rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;

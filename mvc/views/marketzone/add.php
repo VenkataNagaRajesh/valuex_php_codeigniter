@@ -33,6 +33,52 @@
                         </span>
                     </div>
 
+			<?php
+                        if(form_error('desc'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="desc" class="col-sm-2 control-label">
+                            <?=$this->lang->line("desc")?> 
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="desc" name="desc" value="<?=set_value('market_name')?>" >
+                        </div>
+                        <span class="col-sm-4 control-label">
+
+                            <?php echo form_error('desc'); ?>
+                        </span>
+                    </div>
+
+
+
+	                 <?php
+                        if(form_error('airline_id'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group'>";
+                    ?>
+                        <label for="airline_id" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_code")?>
+                        </label>
+                        <div class="col-sm-6">
+                           <?php
+                                                         $airlinelist[0]= 'Select Airline For marketzone';
+                                                     foreach($airlines as $airline){
+                                                                 $airlinelist[$airline->airlineID] = $airline->airline_name;
+                                                         }
+                                                   echo form_dropdown("airline_id", $airlinelist,set_value("airline_id"), "id='airline_id' class='form-control hide-dropdown-icon select2'");
+                                                   ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('airlineID'); ?>
+                        </span>
+                    </div>
+
+
+
+		
                      <?php 
 			$aln_datatypes['0'] = "SELECT TYPE";
                         ksort($aln_datatypes);

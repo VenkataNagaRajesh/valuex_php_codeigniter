@@ -33,6 +33,31 @@
                         </span>
                     </div>
 
+                                        <?php
+                        if(form_error('airline_id'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group'>";
+                    ?>
+                        <label for="airline_id" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_code")?>
+                        </label>
+                        <div class="col-sm-6">
+                           <?php
+                                                         $airlinelist[0]='Select Airline for Market Zone';
+                                                     foreach($airlines as $airline){
+                                                                 $airlinelist[$airline->airlineID] = $airline->airline_name;
+                                                         }
+                                                   echo form_dropdown("airline_id", $airlinelist,set_value("airline_id",$marketzone->airline_id), "id='airlineID' class='form-control hide-dropdown-icon select2'");
+                                                   ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('airline_id'); ?>
+                        </span>
+                    </div>
+
+
+
                     <?php
                         if(form_error('amz_level_id'))
                             echo "<div class='form-group has-error' >";

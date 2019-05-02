@@ -75,6 +75,17 @@
 
                  </div>
 
+		  <div class="col-sm-2">
+                           <?php
+                        $airlinelist[0]= 'Select Airline For marketzone';
+                        foreach($airlines as $airline){
+                                $airlinelist[$airline->airlineID] = $airline->airline_name;
+                        }
+                        echo form_dropdown("airline_id", $airlinelist,set_value("airline_id"), "id='airline_id' class='form-control hide-dropdown-icon select2'");?>
+                                                   
+                        </div>
+
+
 		<div class="col-sm-2">
 
                         <?php
@@ -102,6 +113,7 @@
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('market_name')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('level_type')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('amz_level_value')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('amz_incl_type')?></th>
@@ -146,6 +158,7 @@
 		   {"name": "levelID","value": $("#amz_level_id").val()},
 		   {"name": "inclID","value": $("#amz_incl_id").val()},
 		   {"name": "exclID","value": $("#amz_excl_id").val()},
+		   {"name": "airlineID","value": $("#airline_id").val()},
 		   {"name": "active","value": $("#active").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -156,6 +169,7 @@
                          } ); },      
       "columns": [{"data": "market_id" },
 		  {"data": "market_name"},
+		  {"data": "airline_name"},
                   {"data": "lname" },
 				  {"data": "levelname" },
 				  {"data": "iname" },
