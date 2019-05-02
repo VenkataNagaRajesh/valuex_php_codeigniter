@@ -38,6 +38,20 @@ class Airline_cabin_m extends MY_Model {
 
 
 
+	function getAirlineClassByName($name) {
+
+		$this->db->select('vx_aln_data_defnsID');
+		$this->db->from('vx_aln_data_defns');
+		$this->db->where('aln_data_typeID','13');
+		$this->db->where('aln_data_value',$name);
+
+		$this->db->limit(1);
+                $query = $this->db->get();
+                $class = $query->row();
+                return $class->vx_aln_data_defnsID;
+	}
+
+
 	function get_order_by_airlinecabin($array=NULL) {
                 $query = parent::get_order_by($array);
                 return $query;
