@@ -62,7 +62,7 @@ class Rafeed extends Admin_Controller {
 		$this->data['country'] = $this->rafeed_m->getCodesByType('2');
 		$this->data['airlines'] = $this->airline_cabin_m->getAirlines();;
 		$this->data['city'] = $this->rafeed_m->getCodesByType('3');
-		$this->data['class'] = $this->airline_cabin_m->getAirlineClasses();
+		$this->data['class'] = $this->airline_cabin_m->getAirlineCabins();
 
 		$this->data["subview"] = "rafeed/index";
 		$this->load->view('_layout_main', $this->data);

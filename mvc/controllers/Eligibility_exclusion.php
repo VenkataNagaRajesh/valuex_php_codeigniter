@@ -589,7 +589,7 @@ function time_dropdown($val) {
 
 		$sQuery = "
 
-SELECT  MainSet.eexcl_id,MainSet.excl_reason_desc ,MainSet.orig_mkt_name, MainSet.dest_mkt_name, 
+SELECT  SQL_CALC_FOUND_ROWS MainSet.eexcl_id,MainSet.excl_reason_desc ,MainSet.orig_mkt_name, MainSet.dest_mkt_name, 
         MainSet.flight_efec_date, MainSet.flight_disc_date, MainSet.flight_dep_start, MainSet.flight_dep_end, 
         MainSet.flight_nbr, MainSet.from_class, MainSet.to_class, Subset.frequency, MainSet.future_use, MainSet.active,
         MainSet.orig_market_id, MainSet.dest_market_id , Subset.dayslist , MainSet.upgrade_from_class_type, MainSet.upgrade_to_class_type,

@@ -168,4 +168,5 @@ $lang['menu_airline_client'] = 'Airline Client';
 
 $lang['menu_eligibility_exclusion'] = 'Eligibility Exclusion Rules';
 $lang['menu_rafeed'] = 'Revenue Accouting Feed';
+$lang['menu_invfeed'] = 'INV feed';
 /* End Update Menu */

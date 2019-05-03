@@ -180,12 +180,10 @@ class Marketzone extends Admin_Controller {
 	   $this->data['headerassets'] = array(
                         'css' => array(
                                 'assets/select2/css/select2.css',
-                                'assets/select2/css/select2-bootstrap.css',
-                                'assets/fselect/fSelect.css'
+                                'assets/select2/css/select2-bootstrap.css'
                         ),
                         'js' => array(
-                                'assets/select2/select2.js',
-                                'assets/fselect/fSelect.js',
+                                'assets/select2/select2.js'
                         )
                 );
 		$userTypeID = $this->session->userdata('usertype');
@@ -547,7 +545,7 @@ class Marketzone extends Admin_Controller {
                 } 
 
 $sQuery = "
-SELECT MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active ,MainSet.level_id, MainSet.incl_id, MainSet.excl_id,MainSet.airline_name, MainSet.airlineID
+SELECT SQL_CALC_FOUND_ROWS MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active ,MainSet.level_id, MainSet.incl_id, MainSet.excl_id,MainSet.airline_name, MainSet.airlineID
 FROM
 (
               select  mz.market_id, mz.market_name ,dtl.alias as lname,dti.alias as iname, dte.alias as ename , mz.active as active, 

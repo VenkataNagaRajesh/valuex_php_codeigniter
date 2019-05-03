@@ -540,7 +540,7 @@ class Airline_cabin extends Admin_Controller {
 
 
 
-$sQuery = " SELECT cabin_map_id,name, airline_class,  ac.aln_data_value as airline_code , 
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,name, airline_class,  ac.aln_data_value as airline_code , 
         acl.aln_data_value as airline_cabin, video_links, cm.active , cr.aln_data_value as aircraft_name
         from VX_aln_airline_cabin_map cm 
         LEFT JOIN vx_aln_data_defns ac on (ac.vx_aln_data_defnsID = cm.airline_code) 
