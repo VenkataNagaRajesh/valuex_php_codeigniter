@@ -156,8 +156,6 @@ class Marketzone extends Admin_Controller {
 		$userTypeID = $this->session->userdata('usertype');
                 $userID = $this->session->userdata('loginuserID');
 
-
-
 		if($userTypeID == 2){
                         $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
                            } else {
@@ -539,8 +537,14 @@ class Marketzone extends Admin_Controller {
                                 $sWhere .= 'MainSet.airlineID = '.$this->input->get('airlineID');
                         }
 
-
-
+                $userTypeID = $this->session->userdata('usertype');
+                $userID = $this->session->userdata('loginuserID');
+		if($userTypeID == 2){
+                      $airlines= $this->airline_m->getClientAirline($userID, 1);
+			 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                         $sWhere .= 'MainSet.airlineID = '.$airlines->airlineID;
+				
+                } 
 
 $sQuery = "
 SELECT MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active ,MainSet.level_id, MainSet.incl_id, MainSet.excl_id,MainSet.airline_name, MainSet.airlineID
