@@ -20,11 +20,13 @@
 					 <p><span><?=$this->lang->line("name")?> </span>: 
 								<?=$airline_cabin->name?></p>
 					 <p><span><?=$this->lang->line("airline_name")?> </span>: 
-						<?=$airlinesdata[$airline_cabin->airline_code];?></p>
-					 <p><span><?=$this->lang->line("airline_class")?> </span>: 
-						<?=$airlineclass[$airline_cabin->airline_class];?></p>
-					<p><span><?=$this->lang->line("airline_cabin")?> </span>:  
-                                                <?=$airlineclass[$airline_cabin->airline_class];?></p>
+						<?=$airline_cabin->airline;?></p>
+					 <p><span><?=$this->lang->line("airline_aircraft")?> </span>:
+						<?=$airline_cabin->aircraft_name;?></p>
+					 <p><span><?=$this->lang->line("airline_cabin")?> </span>: 
+						<?=$airline_cabin->cabin?></p>
+					<p><span><?=$this->lang->line("airline_class")?> </span>:  
+                                                <?=$airline_cabin->airline_class;?></p>
 					<p><span><?=$this->lang->line("airline_video")?> </span>:
 <?php	
 						 if ( !empty($airline_cabin->video_links) ){

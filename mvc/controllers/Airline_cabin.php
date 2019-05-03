@@ -440,11 +440,9 @@ class Airline_cabin extends Admin_Controller {
 
 	public function view() {
                 $id = htmlentities(escapeString($this->uri->segment(3)));
-		  $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
-            $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
 		
                 if ((int)$id) {
-                        $this->data["airline_cabin"] = $this->airline_cabin_m->getAirlineCabin($id);
+                        $this->data["airline_cabin"] = $this->airline_cabin_m->getAirLineCabinDataByID($id);
 			$this->data['airline_cabin']->gallery = $this->airline_cabin_m->getAirlineCabinImages($id,'gallery');
 
                         if($this->data["airline_cabin"]) {
