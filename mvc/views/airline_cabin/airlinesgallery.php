@@ -27,6 +27,8 @@
                         </label>
                         <div class="col-sm-6">
                         <?php
+			$airline_cabins_list['0'] = 'Select Cabin Map Name';
+			ksort($airline_cabins_list);
                         echo form_dropdown("airline_cabinID", $airline_cabins_list, set_value("airline_cabinID",$airline_cabinID), "id='airline_cabinID' class='form-control select2'");
                         ?>
                         </div>

@@ -23,7 +23,7 @@ class Airline_cabin_m extends MY_Model {
 		return $arr;
 	}
 
-	function getAirlineClasses(){
+	function getAirlineCabins(){
 
 		$this->db->select('vx_aln_data_defnsID, aln_data_value');
                 $this->db->from('vx_aln_data_defns');

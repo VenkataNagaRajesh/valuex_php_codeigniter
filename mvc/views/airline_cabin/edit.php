@@ -56,27 +56,27 @@
                     </div>
 
 
-                    <?php
-                        if(form_error('airline_class'))
+		                       <?php
+                        if(form_error('airline_aircraft'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="airline_class" class="col-sm-2 control-label">
-                            <?=$this->lang->line("airline_class")?>
+                        <label for="airline_aircraft" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_aircraft")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
-				
-<?php		        	$airlineclass['0'] = 'Select Class';       
-				ksort($airlineclass);
-			echo form_dropdown("airline_class", $airlineclass, set_value("airline_class",$airline->airline_class), "id='airline_code' class='form-control select2'");
-?>
+
+                         <select  name="airline_aircraft"  id="airline_aircraft" class="form-control select2" >
+                                <option value="0">Select Aircraft</option>
+                                </select>
+
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('airline_class'); ?>
+                            <?php echo form_error('airline_aircraft'); ?>
                         </span>
-
                     </div>
+
 
                     <?php
                         if(form_error('airline_cabin'))
@@ -85,19 +85,43 @@
                             echo "<div class='form-group' >";
                     ?>
                         <label for="airline_cabin" class="col-sm-2 control-label">
-				<?=$this->lang->line("airline_cabin")?>
+                            <?=$this->lang->line("airline_cabin")?>
+                        </label>
+                        <div class="col-sm-6">
+				
+<?php		        	$airlinecabins['0'] = 'Select cabin';       
+				ksort($airlinecabins);
+			echo form_dropdown("airline_cabin", $airlinecabins, set_value("airline_cabin",$airline->airline_cabin), "id='airline_cabin' class='form-control select2'");
+?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('airline_cabin'); ?>
+                        </span>
+
+                    </div>
+
+                    <?php
+                        if(form_error('airline_class'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="airline_class" class="col-sm-2 control-label">
+				<?=$this->lang->line("airline_class")?>
                         </label>
                         <div class="col-sm-6">
 			<?php
-   $alphas = range('A', 'Z');
+   				$alphas = range('A', 'Z');
+			
                                 ksort($alphas);
-			$cabins = explode(',',$airline->airline_cabin);
-                 echo form_multiselect("airline_cabin[]", $alphas, set_value("airline_cabin[]",$cabins), "id='airline_cabin' class='form-control select2'");
+			$cabins = explode(',',$airline->airline_class);
+			$list = array_keys(array_intersect($alphas,$cabins));
+                 echo form_multiselect("airline_class[]", $alphas, set_value("airline_class[]",$list), "id='airline_class' class='form-control select2'");
 
 			?>
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('airline_cabin[]'); ?>
+                            <?php echo form_error('airline_class[]'); ?>
                         </span>
                     </div>
 
@@ -142,7 +166,28 @@
 <script type="text/javascript">
 
 $( ".select2" ).select2();
+$('#airline_code').change(function(event) {    
+        $('#airline_aircraft').val(null).trigger('change');
+  var airline_id = $(this).val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('airline_cabin/getAircrafts')?>",            
+             data: "id=" + airline_id,            
+             dataType: "html",                                  
+             success: function(data) {               
+             $('#airline_aircraft').html(data); }        
+      });       
+});
+
+
  $(document).ready(function(){
+
+$('#airline_code').trigger('change');
+var aircraftID = '<?=$airline->aircraft_id?>';
+$('#airline_aircraft').val(aircraftID).trigger('change');
+
+
+
   var form_data = $('#edit_airline_cabin').serialize();
   $('#edit_airline_cabin').submit(function () {
       if ( form_data == $(this).serialize() ) {
@@ -150,6 +195,8 @@ $( ".select2" ).select2();
 	window.location.replace('<?=base_url('airline_cabin/index')?>');
       }
    });
+
+
 var i = 1;
   $('#add_box').on('click', function() {
 	var field = '<br><div><input type="text" id="video'+i+'" class="form-control" name="video[]"> </div>';

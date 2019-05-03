@@ -51,9 +51,9 @@
 
 			<?php
 			
-                        $airlineclass['0'] = "Select Class";
-			ksort($airlineclass);
-                        echo form_dropdown("airline_class", $airlineclass,set_value("airline_class",$classID), "id='airline_class' class='form-control hide-dropdown-icon select2'");    ?>
+                        $airlinecabins['0'] = "Select Cabin";
+			ksort($airlinecabins);
+                        echo form_dropdown("airline_cabin", $airlinecabins,set_value("airline_cabin",$cabinID), "id='airline_cabin' class='form-control hide-dropdown-icon select2'");    ?>
 
 
                  </div>
@@ -87,8 +87,9 @@
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('name')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('airline_name')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('airline_class')?></th>
-				<th class="col-lg-1"><?=$this->lang->line('airline_cabin')?></th>
+					<th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
+                                <th class="col-lg-1"><?=$this->lang->line('airline_cabin')?></th>
+				<th class="col-lg-1"><?=$this->lang->line('airline_class')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_video')?></th>
                                 <?php if(permissionChecker('airline_cabin_edit')) { ?>
                                         <th class="col-lg-1"><?=$this->lang->line('airline_cabin_status')?></th>
@@ -127,7 +128,7 @@
       "sAjaxSource": "<?php echo base_url('airline_cabin/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "airlineID","value": $("#airline_code").val()},
-		   {"name": "classID","value": $("#airline_class").val()},
+		   {"name": "cabinID","value": $("#airline_cabin").val()},
 			{"name": "active","value": $("#active").val()})
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -138,9 +139,10 @@
                          } ); },      
       "columns": [{"data": "cabin_map_id" },
 		  {"data": "name"},
-		  {"data": "airline_code"},
+		   {"data": "airline_code"},
+		  {"data": "aircraft_name"},
+		  {"data": "airline_cabin"},
                   {"data": "airline_class" },
-		  {"data": "airline_cabin" },
 		  {"data": "video_links" },
 		  {"data": "active"},
                   {"data": "action"}

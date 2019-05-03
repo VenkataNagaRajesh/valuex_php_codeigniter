@@ -5,6 +5,7 @@ class Airline_cabin extends Admin_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model('airline_cabin_m');
+		$this->load->model('airports_m');
 		$this->load->model('user_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('airline_cabin', $language);
@@ -24,15 +25,23 @@ class Airline_cabin extends Admin_Controller {
 				'label' => $this->lang->line("airline_name"),
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_valLevelType'
 			),
+		
+			 array(
+                                'field' => 'airline_aircraft',
+                                'label' => $this->lang->line("airline_aircraft"),
+                                'rules' => 'trim|required|xss_clean|max_length[60]|callback_valLevelType'
+                        ),
+
+
 			array(
-				'field' => 'airline_class',
+				'field' => 'airline_class[]',
 				'label' => $this->lang->line("airline_class"),
-				'rules' => 'trim|required|max_length[200]|xss_clean|callback_valLevelType'
+				'rules' => 'trim|required|max_length[200]|xss_clean|callback_valLevelValue'
 			),
    		       array(
-                                'field' => 'airline_cabin[]',
+                                'field' => 'airline_cabin',
                                 'label' => $this->lang->line("airline_cabin"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valLevelValue'
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valLevelType'
                         ),
 			array(
                                 'field' => 'photo',
@@ -154,6 +163,14 @@ class Airline_cabin extends Admin_Controller {
                 } else {
                   $this->data['airlineID'] = 0;
                 }
+
+
+		if(!empty($this->input->post('airline_aircraft'))){
+                  $this->data['aircraftID'] = $this->input->post('airline_aircraft');
+                } else {
+                  $this->data['aircraftID'] = 0;
+                }
+
                 if(!empty($this->input->post('airline_class'))){
                 $this->data['classID'] = $this->input->post('airline_class');
                 } else {
@@ -169,7 +186,7 @@ class Airline_cabin extends Admin_Controller {
 
 	//	$this->data['airline_cabin'] = $this->airline_cabin_m->get_AirlineCabinsMapList();
             $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
-            $this->data['airlineclass'] = $this->airline_cabin_m->getAirlineClasses();
+            $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
 
 		$this->data["subview"] = "airline_cabin/index";
 		$this->load->view('_layout_main', $this->data);
@@ -192,7 +209,7 @@ class Airline_cabin extends Admin_Controller {
 
 
 	    $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
-	    $this->data['airlineclass'] = $this->airline_cabin_m->getAirlineClasses();
+	    $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -201,9 +218,13 @@ class Airline_cabin extends Admin_Controller {
 				$this->load->view('_layout_main', $this->data);
 			} else {
 				$date_now = time(); 
+
 				$array["airline_code"] = $this->input->post("airline_code");
-				$array["airline_class"] = $this->input->post("airline_class");
-				$array["airline_cabin"] = implode(',',$this->input->post("airline_cabin"));
+ 				$alphas = range('A', 'Z');
+                                $arr = $this->input->post("airline_class");
+				$array["airline_class"] = implode(',', array_map(function($x) use ($alphas) { return $alphas[$x]; }, $arr));
+				$array['aircraft_id'] = $this->input->post("airline_aircraft");
+				$array["airline_cabin"] = $this->input->post("airline_cabin");
 				$array["create_date"] = $date_now;
 				$array["modify_date"] = $date_now;
 				$array["create_userID"] = $this->session->userdata('loginuserID');
@@ -235,7 +256,7 @@ class Airline_cabin extends Admin_Controller {
                 );
 		
             $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
-            $this->data['airlineclass'] = $this->airline_cabin_m->getAirlineClasses();
+            $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
 
 
 		 $id = htmlentities(escapeString($this->uri->segment(3)));
@@ -250,8 +271,11 @@ class Airline_cabin extends Admin_Controller {
                         $this->load->view('_layout_main', $this->data);
                     } else { 
 			    $array["airline_code"] = $this->input->post("airline_code");
-                            $array["airline_class"] = $this->input->post("airline_class");
-			    $array["airline_cabin"] =  implode(',',$this->input->post("airline_cabin"));
+			     $array['aircraft_id'] = $this->input->post("airline_aircraft");
+			    $alphas = range('A', 'Z');
+                            $arr = $this->input->post("airline_class");
+                            $array["airline_class"] = implode(',', array_map(function($x) use ($alphas) { return $alphas[$x]; }, $arr));
+			    $array["airline_cabin"] =  $this->input->post("airline_cabin");
                             $array["modify_date"] = time();
 			    $array["modify_userID"] = $this->session->userdata('loginuserID');
 			    $array["video_links"] = implode(',',$this->input->post("video"));
@@ -417,7 +441,7 @@ class Airline_cabin extends Admin_Controller {
 	public function view() {
                 $id = htmlentities(escapeString($this->uri->segment(3)));
 		  $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
-            $this->data['airlineclass'] = $this->airline_cabin_m->getAirlineClasses();
+            $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
 		
                 if ((int)$id) {
                         $this->data["airline_cabin"] = $this->airline_cabin_m->getAirlineCabin($id);
@@ -501,9 +525,9 @@ class Airline_cabin extends Admin_Controller {
                      		 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
               			$sWhere .= 'airline_code = '.$this->input->get('airlineID');
                 	}
-                        if(!empty($this->input->get('classID'))){
+                        if(!empty($this->input->get('cabinID'))){
                       		$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              			$sWhere .= 'airline_class = '.$this->input->get('classID');
+              			$sWhere .= 'airline_cabin = '.$this->input->get('cabinID');
                 	}
 
                        if(!empty($this->input->get('active')) && $this->input->get('active') != '-1'){
@@ -518,11 +542,12 @@ class Airline_cabin extends Admin_Controller {
 
 
 
-$sQuery = " SELECT cabin_map_id,name, airline_cabin,  ac.aln_data_value as airline_code , 
-        acl.aln_data_value as airline_class, video_links, cm.active  
+$sQuery = " SELECT cabin_map_id,name, airline_class,  ac.aln_data_value as airline_code , 
+        acl.aln_data_value as airline_cabin, video_links, cm.active , cr.aln_data_value as aircraft_name
         from VX_aln_airline_cabin_map cm 
         LEFT JOIN vx_aln_data_defns ac on (ac.vx_aln_data_defnsID = cm.airline_code) 
-        LEFT JOIN  vx_aln_data_defns acl on (acl.vx_aln_data_defnsID = cm.airline_class)
+        LEFT JOIN  vx_aln_data_defns acl on (acl.vx_aln_data_defnsID = cm.airline_cabin)
+        LEFT JOIN  vx_aln_data_defns cr on (cr.vx_aln_data_defnsID = cm.aircraft_id)
  $sWhere $sOrder $sLimit";
                 $rResult = $this->install_m->run_query($sQuery);
                 $sQuery = "SELECT FOUND_ROWS() as total";
@@ -536,17 +561,9 @@ $sQuery = " SELECT cabin_map_id,name, airline_cabin,  ac.aln_data_value as airli
                 "aaData" => array()
             );
 
-          $airlinesdata = $this->airline_cabin_m->getAirlines();
-            $airlineclass = $this->airline_cabin_m->getAirlineClasses();
 		
-		$alphas = range('A', 'Z');
-
-
 
                 foreach($rResult as $list){
-
-			$keys = explode(',',$list->airline_cabin);
-			$list->airline_cabin = array_map(function($x) use ($alphas) { return $alphas[$x]; }, $keys);
 
                         if(permissionChecker('airline_cabin_edit') ) {
 				$list->action = btn_edit('airline_cabin/edit/'.$list->cabin_map_id, $this->lang->line('edit'));
@@ -612,6 +629,16 @@ $sQuery = " SELECT cabin_map_id,name, airline_cabin,  ac.aln_data_value as airli
         }
 
 	
+   public function getAircrafts(){
+        $id = $this->input->post('id');
+        if ( isset($id)){
+                $result = $this->airports_m->getDefns('16',$id);
+                        foreach ($result as $defns) {
+                                echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->aln_data_value,"</option>";
+                        }
+        }
+   }
+
 
 
 }
