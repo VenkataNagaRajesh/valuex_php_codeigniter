@@ -150,20 +150,7 @@
                   {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',	
-    // buttons: [ 'copy', 'csv', 'excel','pdf' ]	
-      buttons: [{
-		  extend: 'collection',
-		  className: 'exportButton',
-		  text: 'Data Export',
-		  buttons: ['copy','excel','csv','pdf'],
-		  modifier : {
-                        // DataTables core
-                        order : 'current',  // 'current', 'applied', 'index',  'original'
-                        page : 'all',      // 'all',     'current'
-                        search : 'applied'     // 'none',    'applied', 'removed'
-                    }
-		}]
-		
+     buttons: [ 'copy', 'csv', 'excel','pdf' ]	
     }); 	
   });
  

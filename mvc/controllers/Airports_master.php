@@ -7,6 +7,8 @@ class Airports_master extends Admin_Controller {
 		$this->load->model("airports_m");		
 		$this->load->model("marketzone_m");
 		$this->load->model("market_airport_map_m");
+		$this->load->model("season_m");
+		$this->load->model("season_airport_map_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('airports', $language);	
 	}	
@@ -94,7 +96,7 @@ class Airports_master extends Admin_Controller {
 		    $this->data['areaID'] = 0;
 		}
 		
-		//print_r( $this->data['stateID']); exit;
+		//print_r( $this->data['regionID']); exit;
 		$this->data["subview"] = "airports_master/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -351,6 +353,30 @@ echo '--------------------------------------------------------------------------
                                                                          }
 								}
 								}
+								
+								//Updating seasons maping data
+							    $seasons = $this->season_m->get_seasons();
+								foreach($seasons as $season){
+								   $origlist = explode(',',$season->ams_orig_level_value);
+								   $distlist = explode(',',$season->ams_dest_level_value);
+								   if(!empty($origlist)){
+								     if(!empty(array_intersect($parentSet,$origlist))){
+									   $oarray["seasonID"] = $season->VX_aln_seasonID;
+									   $oarray["orig_airportID"] = $data['airportID']; 
+									   $this->season_airport_map_m->insert_origseason_airport_mapid($oarray); 
+								     }
+								   }
+								   
+								   if(!empty($distlist)){
+								     if(!empty(array_intersect($parentSet,$distlist))){
+									    $darray["seasonID"] = $season->VX_aln_seasonID;
+                                        $darray["dest_airportID"] = $data['airportID'];
+                                        $this->season_airport_map_m->insert_destseason_airport_mapid($darray); 
+								     }
+								   }
+								   
+								}
+								
 							 }
 								
 
@@ -360,7 +386,10 @@ echo '--------------------------------------------------------------------------
 							  $data['modify_date'] = time();
 							  $data['create_userID'] = $this->session->userdata('loginuserID');
 							  $data['modify_userID'] = $this->session->userdata('loginuserID'); 			
-                              $this->airports_m->addMasterData($data);								   
+                              $this->airports_m->addMasterData($data);	
+                       //Updating seasons maping data
+					     
+                  							  
 							} else {
 								//echo "Airport :".$airport." already  existed";								 
 							}
@@ -458,19 +487,19 @@ echo '--------------------------------------------------------------------------
 				}
 			}
 			
-			if(!empty($this->input->get('countryID'))){
+			if($this->input->get('countryID') > 0){
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
               $sWhere .= 'm.countryID = '.$this->input->get('countryID');		 
 	        }			
-			if(!empty($this->input->get('stateID'))){
+			if($this->input->get('stateID') > 0){
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
               $sWhere .= 'm.stateID = '.$this->input->get('stateID');		 
 	        }
-			if(!empty($this->input->get('regionID'))){
+			if($this->input->get('regionID') > 0){
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
               $sWhere .= 'm.regionID = '.$this->input->get('regionID');		 
 	        }
-			if(!empty($this->input->get('areaID'))){
+			if($this->input->get('areaID') > 0 ){
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
               $sWhere .= 'm.areaID = '.$this->input->get('areaID');		 
 	        }
@@ -482,7 +511,7 @@ echo '--------------------------------------------------------------------------
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
 	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
-			
+		
 		$output = array(
 		"sEcho" => intval($_GET['sEcho']),
 		"iTotalRecords" => $rResultFilterTotal,

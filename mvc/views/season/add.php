@@ -43,7 +43,7 @@
                            <?php
 							 $airlinelist[0]=$this->lang->line("season_select_airline");
 						     foreach($airlines as $airline){
-								 $airlinelist[$airline->VX_aln_airlineID] = $airline->airline_name;
+								 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->airline_name;
 							 }							
 						   echo form_dropdown("airlineID", $airlinelist,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'"); 
 						   ?>
@@ -244,6 +244,7 @@
     </div>
 </div>
 <script>
+ 
  $('#season_color').colorpicker({});
 
 $( ".select2" ).select2({closeOnSelect:false,
@@ -251,6 +252,15 @@ $( ".select2" ).select2({closeOnSelect:false,
 				
 $("#ams_season_start_date").datepicker();
 $("#ams_season_end_date").datepicker();
+
+$(document).ready(function(){
+	$('#ams_orig_levelID').trigger('change');
+    $('#ams_dest_levelID').trigger('change');	
+	var orig_level = [<?php echo implode(',',$this->input->post("ams_orig_level_value")); ?>];
+	$('#ams_orig_level_value').val(orig_level).trigger('change');
+	var dest_level = [<?php echo implode(',',$this->input->post("ams_dest_level_value")); ?>];
+	$('#ams_dest_level_value').val(dest_level).trigger('change');  
+});
 
 $('#ams_orig_levelID').change(function(e){
 	$('#ams_orig_level_value').val(null).trigger('change')

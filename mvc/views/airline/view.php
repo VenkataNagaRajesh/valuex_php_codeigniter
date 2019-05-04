@@ -15,8 +15,8 @@
 			<h1><?=$this->lang->line("airline_information")?></h1>
 			<div class="row">				
 				 <div class="profile-view-tab"> 
-				     <p><span><?=$this->lang->line("airline_id")?> </span>: <?=$airline->VX_aln_airlineID?></p>
-					 <p><span><?=$this->lang->line("airline_name")?> </span>: <?=$airline->name?></p>
+				     <p><span><?=$this->lang->line("airline_id")?> </span>: <?=$airline->vx_aln_data_defnsID?></p>
+					 <p><span><?=$this->lang->line("airline_name")?> </span>: <?=$airline->airline_name?></p>
 					 <p><span><?=$this->lang->line("airline_code")?> </span>: <?=$airline->code?></p>
 					 <p><span><?=$this->lang->line("airline_active")?> </span>: <?=$airline->active?></p>
 					 <p><span><?=$this->lang->line("airline_created_user")?> </span>: <?=$airline->modify_by?></p>

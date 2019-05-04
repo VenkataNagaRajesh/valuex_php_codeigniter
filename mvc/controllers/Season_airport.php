@@ -11,7 +11,6 @@ class Season_airport extends Admin_Controller {
 		$this->lang->load('season_airport', $language);
 	}
 
-
 	public function index() {
 	  $this->data['headerassets'] = array(
             'css' => array(
@@ -142,9 +141,5 @@ class Season_airport extends Admin_Controller {
                 echo json_encode( $output );
         }
 	
-
-
 }
 
-/* End of file user.php */
-/* Location: .//D/xampp/htdocs/school/mvc/controllers/user.php */

@@ -34,6 +34,13 @@ class client_m extends MY_Model {
 	function delete_client($id){
 		parent::delete($id);
 	}
-
+	
+    function getClientData($id){
+		$this->db->select('c.*,d.aln_data_value airline')->from('VX_aln_client c');
+		$this->db->join('vx_aln_data_defns d','d.vx_aln_data_defnsID = c.airlineID','LEFT');
+		$this->db->where('c.VX_aln_clientID',$id);
+		$query = $this->db->get();
+		return $query->row();
+	}
 		
 }

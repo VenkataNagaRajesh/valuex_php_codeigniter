@@ -56,7 +56,7 @@
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
                         <th class="col-lg-2"><?=$this->lang->line('airline_name')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('airline_flights')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('airline_flights_ids')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('airline_active')?></th>
                         <?php if(permissionChecker('airline_edit') || permissionChecker('airline_delete')) { ?>
                         <th class="col-lg-1"><?=$this->lang->line('action')?></th>
@@ -78,8 +78,8 @@
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('airline/server_processing'); ?>",
-      "columns": [{"data": "VX_aln_airlineID" },
-                  {"data": "name" },
+      "columns": [{"data": "vx_aln_data_defnsID" },
+                  {"data": "aln_data_value" },
 				  {"data": "code" },
 				  {"data": "flights" },
 				  {"data": "active"},

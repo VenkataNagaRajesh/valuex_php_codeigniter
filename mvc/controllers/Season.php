@@ -8,6 +8,7 @@ class Season extends Admin_Controller {
 		$this->load->model("airports_m");
 		$this->load->model("airline_m");
 		$this->load->model("trigger_m");
+		$this->load->model("marketzone_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('season', $language);	
 	}
@@ -17,7 +18,7 @@ class Season extends Admin_Controller {
 			array(
 				'field' => 'season_name',
 				'label' => $this->lang->line("season_name"),
-				'rules' => 'trim|required|xss_clean|max_length[60]'
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_unique_name'
 			),
 			array(
 				'field' => 'ams_orig_levelID',
@@ -72,6 +73,26 @@ class Season extends Admin_Controller {
 		);
 		return $rules;
 	}
+	
+	public function unique_name($post_string) {
+      $id = htmlentities(escapeString($this->uri->segment(3)));
+      if((int)$id) {
+             $season =  $this->season_m->get_single_season(array('VX_aln_seasonID !='=>$id,'season_name'=>$post_string));
+              if(count($season)) {
+                      $this->form_validation->set_message("unique_name", "%s already exists");
+                      return FALSE;
+              }
+              return TRUE;
+      } else {
+              $season =  $this->season_m->get_single_season(array('season_name'=>$post_string));
+            
+              if(count($season)) {
+                      $this->form_validation->set_message("unique_name", "%s already exists");
+                      return FALSE;
+              }
+              return TRUE;
+      }
+    }
 	
 	function valAirline($post_string){		
 	  if($post_string == '0'){
@@ -161,7 +182,7 @@ class Season extends Admin_Controller {
 	
 	    $usertypeID = $this->session->userdata('usertypeID');
 		$userID = $this->session->userdata('loginuserID');
-	   $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5));
+	   $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 	   if($usertypeID == 2){
 	      $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
 	   } else {
@@ -234,7 +255,7 @@ class Season extends Admin_Controller {
 			   } else {
 				   $this->data['airlines'] = $this->airline_m->getAirlinesData();
 			   }
-			 $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
+			 $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 				if($_POST) {
 					$rules = $this->rules();
 					$this->form_validation->set_rules($rules);
@@ -302,6 +323,17 @@ class Season extends Admin_Controller {
 	}
 	
 	public function view() {
+		$this->data['headerassets'] = array(
+                'css' => array(
+                        'assets/select2/css/select2.css',
+                        'assets/select2/css/select2-bootstrap.css',                       
+						'assets/datepicker/datepicker.css'
+                ),
+                'js' => array(
+                        'assets/select2/select2.js',                       
+						'assets/datepicker/datepicker.js'
+                )
+        );	
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if ((int)$id) {
 			$this->data['season'] = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
@@ -318,7 +350,7 @@ class Season extends Admin_Controller {
 		}
 	}
   
-   function active() {
+    function active() {
 		if(permissionChecker('season_edit')) {
 			$id = $this->input->post('id');
 			$status = $this->input->post('status');
@@ -410,6 +442,13 @@ class Season extends Admin_Controller {
 					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
 				}
 			}
+			
+			$usertypeID = $this->session->userdata('usertypeID');
+			$userID = $this->session->userdata('loginuserID');
+			if($usertypeID == 2){
+				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                $sWhere .= 'c.userID = '.$userID;	
+			}
 		
         if(!empty($this->input->get('seasonID'))){
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
@@ -428,7 +467,7 @@ class Season extends Admin_Controller {
            $sWhere .= 's.active = '.$this->input->get('active');		 
 	     }		
 			
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dt1.alias orig_level,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN VX_aln_airline a ON a.VX_aln_airlineID = s.airlineID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = a.airlineID
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = s.airlineID LEFT JOIN VX_aln_client c ON c.airlineID = s.airlineID 
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
@@ -471,12 +510,22 @@ class Season extends Admin_Controller {
 			
             $orig_where = explode(',',$season->ams_orig_level_value);
 			$dest_where = explode(',',$season->ams_dest_level_value);
+			if($season->orig_type == 17){
+			   $orig_values = $this->marketzone_m->get_marketzones($orig_where); 
+               $orig_level_values = implode(',',array_map(function ($object) { return $object->market_name; }, $orig_values));			   
+			} else {
+               $orig_values = $this->airports_m->getDefinitionList($orig_where);
+			   $orig_level_values = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $orig_values));
+			}
+			if($season->dest_type == 17){
+			  $dest_values = $this->marketzone_m->get_marketzones($dest_where);
+			  $dest_level_values = implode(',',array_map(function ($object) { return $object->market_name; }, $dest_values));
+			} else {
+              $dest_values = $this->airports_m->getDefinitionList($dest_where);
+              $dest_level_values = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $dest_values));			  
+			}
+           
 			
-            $orig_values = $this->airports_m->getDefinitionList($orig_where);
-            $dest_values = $this->airports_m->getDefinitionList($dest_where); 
-			
-            $orig_level_values = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $orig_values));
-			$dest_level_values = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $dest_values));
 			
            $season->orig_level_values = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$orig_level_values.'"><i class="fa fa-list"></i></a>';
 		   $season->dest_level_values = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$dest_level_values.'"><i class="fa fa-list"></i></a>';

@@ -34,9 +34,12 @@ class Marketzone_m extends MY_Model {
                 return $query->row('cnt');
 
 	}
-	 function get_marketzones() {
+	 function get_marketzones($wherein = null) {
                 $this->db->select('*');
                 $this->db->from('VX_aln_market_zone');
+				if(!empty($wherein)){
+					$this->db->where_in('market_id',$wherein);
+				}
                         $query = $this->db->get();
                         return $query->result();
         }

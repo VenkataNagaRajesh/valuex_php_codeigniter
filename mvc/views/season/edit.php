@@ -43,7 +43,7 @@
                            <?php
 							 $airlinelist[0]=$this->lang->line("season_select_airline");
 						     foreach($airlines as $airline){
-								 $airlinelist[$airline->VX_aln_airlineID] = $airline->airline_name;
+								 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->airline_name;
 							 }							
 						   echo form_dropdown("airlineID", $airlinelist,set_value("airlineID",$season->airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'"); 
 						   ?>

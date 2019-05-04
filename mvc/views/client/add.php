@@ -13,7 +13,29 @@
         <div class="row">
             <div class="col-sm-10">
                 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
-
+                      <?php 
+                        if(form_error('airlineID')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+					   <label for="airlineID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("client_airline")?><span class="text-red">*</span>
+                       </label>
+                        <div class="col-sm-6">
+                            <?php 
+                              $airlines[0]=$this->lang->line("client_select_airline");					
+							   foreach($airlinelist as $airline){
+								  $airlines[$airline->vx_aln_data_defnsID] = $airline->airline_name;
+							  } 
+							  echo form_dropdown("airlineID", $airlines,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'");
+							?>
+                        </div>
+						<span class="col-sm-4 control-label">
+                            <?php echo form_error('airlineID'); ?>
+                        </span>
+                    </div>
+					
                     <?php
                         if(form_error('name'))
                             echo "<div class='form-group has-error' >";
@@ -114,30 +136,7 @@
                         </span>
                     </div>
 					
-					<?php 
-                        if(form_error('airlineID')) 
-                            echo "<div class='form-group has-error' >";
-                        else     
-                            echo "<div class='form-group' >";
-                    ?>
-					   <label for="airlineID" class="col-sm-2 control-label">
-                            <?=$this->lang->line("client_airline")?><span class="text-red">*</span>
-                       </label>
-                        <div class="col-sm-6">
-                            <?php 
-                              $airlines[0]=$this->lang->line("client_select_airline");
-							 /*  $airlines[1] = "AIR FRANCE";
-							  $airlines[2] = "AIR INDIA LTD."; */
-							   foreach($airlinelist as $airline){
-								  $airlines[$airline->VX_aln_airlineID] = $airline->airline_name;
-							  } 
-							  echo form_dropdown("airlineID", $airlines,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'");
-							?>
-                        </div>
-						<span class="col-sm-4 control-label">
-                            <?php echo form_error('airlineID'); ?>
-                        </span>
-                    </div>
+					
 
                     <?php
                         if(form_error('username'))

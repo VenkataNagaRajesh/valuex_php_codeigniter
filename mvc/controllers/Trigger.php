@@ -163,6 +163,11 @@ class Trigger extends Admin_Controller {
 				if ( $season->ams_orig_levelID != -1 && count($orig_arr)>0){ 
 					if ($season->ams_orig_levelID == 1 ) {
 						$orig_list = $orig_arr; 
+					} else if ($season->ams_orig_levelID == 17){
+						$this->mydebug->debug("market type orig");
+						$olist = $this->market_airport_map_m->getAirportsByMarketzones($orig_arr); 
+						$this->mydebug->debug($olist);
+					    $orig_list = array_merge($orig_list,$olist);
 					} else { 
 						foreach ( $orig_arr as $level_id ) {
 							if (!empty($level_id)) {	
@@ -176,6 +181,11 @@ class Trigger extends Admin_Controller {
 				if ( $season->ams_dest_levelID != -1 && count($dest_arr)>0){ 
 					if ($season->ams_dest_levelID == 1 ) {
 						$dest_list = $dest_arr;
+					} else if ($season->ams_dest_levelID == 17){
+						$this->mydebug->debug("market type dest");
+						$dlist = $this->market_airport_map_m->getAirportsByMarketzones($dest_arr); 
+						$this->mydebug->debug($dlist);
+					    $dest_list = array_merge($dest_list,$dlist);
 					} else {
 						foreach ( $dest_arr as $level_id ) {
 							if (!empty($level_id)) {	

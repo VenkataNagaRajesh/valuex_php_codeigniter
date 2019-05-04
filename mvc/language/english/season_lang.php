@@ -23,7 +23,8 @@ $lang['season_end_date'] = "End Date";
 $lang['is_return_inclusive'] = "Return inclisive";
 $lang['season_color'] = "Color";
 $lang['season_active'] = "Active";
-$lang['season_airline'] = "Airline";
+$lang['season_airline'] = "Carrier";
+$lang['season_airline_code'] = 'Carrier Code';
 
 $lang['season_orig_level_select'] = "Select Origin Level";
 $lang['season_orig_level_value_select'] = "Select Origin Level Value";

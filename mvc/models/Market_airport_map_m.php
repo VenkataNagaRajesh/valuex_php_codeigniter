@@ -52,7 +52,6 @@ class Market_airport_map_m extends MY_Model {
 	}
 
 	function get_market_airport_mapdata($id) {
-
 		$this->db->select('airport_id')->from('VX_market_airport_map');
 		$this->db->where(array('market_id'=>$id));
 		$query = $this->db->get();
@@ -67,6 +66,14 @@ class Market_airport_map_m extends MY_Model {
 
 	function hash($string) {
 		return parent::hash($string);
+	}
+
+    function getAirportsByMarketzones($wherein){
+		$this->db->select('airport_id')->from('VX_market_airport_map');
+		$this->db->where_in('market_id',$wherein);
+		$query = $this->db->get();
+		$result = $query->result();
+		return array_column($result,'airport_id');
 	}	
 }
 

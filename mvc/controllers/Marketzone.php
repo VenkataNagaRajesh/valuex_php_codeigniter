@@ -358,15 +358,21 @@ class Marketzone extends Admin_Controller {
              $sub_id = null;
         }
 	if ( isset($id)){
-		$result = $this->marketzone_m->getSubDataDefns($id);
-	        $list = explode(',',$sub_id);
-//	 echo "<option value='0'>", SELECT,"</option>";
-                        foreach ($result as $defns) {                               
-                                echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->aln_data_value,"</option>";
-                        }  
-	}
+		if($id == 17){
+		   $result = $this->marketzone_m->get_marketzones();
+		   foreach ($result as $market) {                               
+               echo "<option value=\"$market->market_id\">",$market->market_name,"</option>";
+            }
+		} else {
+		  $result = $this->marketzone_m->getSubDataDefns($id);
+	      $list = explode(',',$sub_id);
+          // echo "<option value='0'>", SELECT,"</option>";
+            foreach ($result as $defns) {                               
+               echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->aln_data_value,"</option>";
+            }
+	    }
+     }
    }
-
 
 	 function active() {
                 if(permissionChecker('marketzone_edit')) {

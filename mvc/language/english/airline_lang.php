@@ -27,4 +27,5 @@ $lang['airport_information'] = 'Airline Information';
 $lang['airline_created_user'] = 'Created By';
 $lang['airline_created_date'] = 'Create Date';
 $lang['airline_flights'] = 'Flight Numbers';
-$lang['airline_id'] = 'Airlin ID';
+$lang['airline_id'] = 'Airline ID';
+$lang['airline_flights_ids'] = "Flights ID's";

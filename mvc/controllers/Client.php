@@ -277,7 +277,7 @@ class Client extends Admin_Controller {
 	public function view() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if ((int)$id) {
-			$this->data["client"] = $this->client_m->get_single_client(array("VX_aln_clientID" => $id));
+			$this->data["client"] = $this->client_m->getClientData($id);
 			if($this->data["client"]) {
 				$this->data["subview"] = "client/view";
 				$this->load->view('_layout_main', $this->data);
@@ -478,7 +478,7 @@ class Client extends Admin_Controller {
 				}
 			}
 		
-		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,dd.aln_data_value airline_name FROM VX_aln_client c LEFT JOIN VX_aln_airline a ON a.VX_aln_airlineID = c.airlineID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = a.airlineID
+		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,dd.aln_data_value airline_name FROM VX_aln_client c LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = c.airlineID
 			$sWhere			
 			$sOrder
 			$sLimit	"; 

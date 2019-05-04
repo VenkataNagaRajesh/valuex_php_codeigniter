@@ -13,103 +13,38 @@
         <div class="row">
             <div class="col-sm-8">
                 <form class="form-horizontal" role="form" method="post">
-                   <div class='form-group' >
+                  <?php 
+                        if(form_error('airline')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
                         <label for="airline" class="col-sm-2 control-label">
                             <?=$this->lang->line("airline_name")?>
                         </label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="airline" name="airline" value="<?=set_value('airline', $airline->airline)?>" readonly>
+                            <input type="text" class="form-control" id="airline" name="airline" value="<?=set_value('airline', $airline->aln_data_value)?>" >
                         </div>                        
+                       <span class="col-sm-4 control-label">
+                            <?php echo form_error('airline'); ?>
+                        </span>
                     </div>
 					
-					<div class='form-group'>
-                        <label for="countryID" class="col-sm-2 control-label">
-                            <?=$this->lang->line("airline_country")?><span class="text-red">*</span>
-                        </label>
-                        <div class="col-sm-6">
-                           <?php
-						     foreach($countrylist as $country){
-								 $clist[$country->vx_aln_data_defnsID] = $country->aln_data_value;
-							 }
-							
-						   echo form_dropdown("countryID", $clist,set_value("countryID", $airport->countryID), "id='countryID' class='form-control hide-dropdown-icon select2'"); 
-						   ?>
-                        </div>   
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('countryID'); ?>
-                        </span>						
-                    </div>
-					
-					<?php
-                        if(form_error('stateID'))
+					<?php 
+                        if(form_error('code')) 
                             echo "<div class='form-group has-error' >";
-                        else
+                        else     
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="stateID" class="col-sm-2 control-label">
-                            <?=$this->lang->line("airline_state")?>
+                        <label for="code" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_code")?>
                         </label>
                         <div class="col-sm-6">
-						     
-                             <select name="stateID" id="stateID" class="form-control">
-							
-							 </select>
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('stateID'); ?>
+                            <input type="text" class="form-control" id="code" name="code" value="<?=set_value('code', $airline->code)?>">
+                        </div>                        
+                       <span class="col-sm-4 control-label">
+                            <?php echo form_error('code'); ?>
                         </span>
-                     </div>
-					 
-					  <?php
-                        if(form_error('regionID'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="regionID" class="col-sm-2 control-label">
-                            <?=$this->lang->line("airline_region")?>
-                        </label>
-                        <div class="col-sm-6">
-						     
-                             <select name="regionID" id="regionID" class="form-control">
-							
-							 </select>
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('regionID'); ?>
-                        </span>
-                     </div>
-					 
-					  <?php
-                        if(form_error('areaID'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="areaID" class="col-sm-2 control-label">
-                            <?=$this->lang->line("airline_area")?>
-                        </label>
-                        <div class="col-sm-6">
-						     
-                             <select name="areaID" id="areaID" class="form-control">
-							
-							 </select>
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('areaID'); ?>
-                        </span>
-                     </div>						
-					
-					<div class='form-group'>
-					   <label for="district" class="col-sm-2 control-label">
-                            <?=$this->lang->line("airline_active")?><span class="text-red">*</span>
-                       </label>
-                        <div class="col-sm-6">
-                            <?php 
-							  $status = array('Disable','Enable');
-							  echo form_dropdown("active", $status,set_value("active", $airport->active), "id='active' class='form-control hide-dropdown-icon'");
-							?>
-                        </div>
                     </div>
 					
                     <div class="form-group">
