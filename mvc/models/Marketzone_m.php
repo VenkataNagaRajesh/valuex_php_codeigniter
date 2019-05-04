@@ -18,6 +18,74 @@ class Marketzone_m extends MY_Model {
 	}
 
 
+
+	function getMarketZoneById($id) {
+	$query = "SELECT MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active ,MainSet.level_id, MainSet.incl_id, MainSet.excl_id,MainSet.airline_name, MainSet.airlineID, MainSet.create_date, MainSet.modify_date, MainSet.create_userID, MainSet.modify_userID
+FROM
+(
+              select  mz.market_id, mz.market_name ,dtl.alias as lname,dti.alias as iname, dte.alias as ename , mz.active as active, 
+                        mz.amz_level_id as level_id, mz.amz_incl_id as incl_id, mz.amz_excl_id as excl_id , dd.aln_data_value as airline_name,
+                        mz.airline_id as airlineID, mz.create_date, mz.modify_date, mz.create_userID, mz.modify_userID 
+              from VX_aln_market_zone mz 
+              LEFT JOIN vx_aln_data_types dtl on (dtl.vx_aln_data_typeID = mz.amz_level_id) 
+              LEFT JOIN vx_aln_data_types dti on (dti.vx_aln_data_typeID = mz.amz_incl_id)  
+              LEFT JOIN vx_aln_data_types dte on (dte.vx_aln_data_typeID = mz.amz_excl_id)
+              LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = mz.airline_id
+) as MainSet
+
+LEFT JOIN (
+
+
+                select
+                        FirstSet.market_id, FirstSet.level as levelname, SecondSet.excl as exclname, ThirdSet.incl as inclname
+                from 
+                        (          SELECT
+                                        m.market_id as market_id,
+                                        group_concat(c.aln_data_value) as level
+                                   from
+                                        VX_aln_market_zone m
+                                        join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, m.amz_level_name)
+                                        group by
+                                        m.market_id     
+           
+                        ) as FirstSet  
+                LEFT join 
+
+                        (          SELECT
+                                   m.market_id as market_id,
+                                   group_concat(c.aln_data_value) as excl
+                                   from
+                                        VX_aln_market_zone m
+                                        join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, m.amz_excl_name)
+                                        group by
+                                         m.market_id
+                        ) as SecondSet
+                        on FirstSet.market_id = SecondSet.market_id
+                LEFT JOIN 
+                        (
+                                SELECT
+                                        m.market_id as market_id,
+                                        group_concat(c.aln_data_value) as incl
+                                from
+                                        VX_aln_market_zone m 
+                                JOIN vx_aln_data_defns c ON find_in_set(c.vx_aln_data_defnsID, m.amz_incl_name)
+                                group by
+                                        m.market_id
+                        ) as ThirdSet
+
+                        on ThirdSet.market_id = FirstSet.market_id
+
+) as SubSet
+on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
+
+          $marketzones = $this->install_m->run_query($query);
+                return $marketzones;
+
+
+
+
+	}
+
 	function get_single_marketzone($array) {
 	        $query = parent::get_single($array);
         	return $query;

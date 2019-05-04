@@ -16,31 +16,31 @@
 			<div class="row">				
 				 <div class="profile-view-tab"> 
 					 <p><span><?=$this->lang->line("market_id")?> </span>: 
-								<?=$marketzone->market_id?></p>
+								<?=$marketzone[0]->market_id?></p>
 					 <p><span><?=$this->lang->line("market_name")?> </span>: 
-								<?=$marketzone->market_name?></p>
+								<?=$marketzone[0]->market_name?></p>
 					 <p><span><?=$this->lang->line("level_type")?> </span>: 
-						<?php echo $this->marketzone_m->getAlndataType($marketzone->amz_level_id);?></p>
+						<?=$marketzone[0]->lname?></p>
 					 <p><span><?=$this->lang->line("amz_level_value")?> </span>: 
-						<?php echo $this->marketzone_m->getALndataTypeValues($marketzone->amz_level_name);?></p>
+						<?=$marketzone[0]->levelname?></p>
 					 <p><span><?=$this->lang->line("amz_incl_type")?> </span>: 
-						<?php echo $this->marketzone_m->getAlndataType($marketzone->amz_incl_id)?></p>
+						<?=$marketzone[0]->iname?></p>
 					 <p><span><?=$this->lang->line("amz_incl_value")?> </span>: 
-						<?php echo $this->marketzone_m->getALndataTypeValues($marketzone->amz_incl_name);?></p>
+						<?=$marketzone[0]->inclname;?></p>
 					 <p><span><?=$this->lang->line("amz_excl_type")?> </span>: 
-						<?php echo $this->marketzone_m->getAlndataType($marketzone->amz_excl_id);?></p>
+						<?=$marketzone[0]->ename;?></p>
 					 <p><span><?=$this->lang->line("amz_excl_value")?> </span>: 
-						<?php echo $this->marketzone_m->getALndataTypeValues($marketzone->amz_excl_name);?></p>
+						<?=$marketzone[0]->exclname?></p>
 					 <p><span><?=$this->lang->line("marketzone_create_user")?> </span>: 
-							<?php echo $this->user_m->get_username_byid($marketzone->create_userID)?></p>
+							<?php echo $this->user_m->get_username_byid($marketzone[0]->create_userID)?></p>
 					 <p><span><?=$this->lang->line("marketzone_modify_user")?> </span>:
-                                                        <?php echo $this->user_m->get_username_byid($marketzone->modify_userID)?></p>
+                                                        <?php echo $this->user_m->get_username_byid($marketzone[0]->modify_userID)?></p>
 
 					 <p><span><?=$this->lang->line("marketzone_create_date")?> </span>:
-							 <?=date('d/m/Y',$marketzone->create_date)?></p>
+							 <?=date('d/m/Y',$marketzone[0]->create_date)?></p>
 
 					<p><span><?=$this->lang->line("marketzone_modify_date")?> </span>:
-                                                         <?=date('d/m/Y',$marketzone->modify_date)?></p>
+                                                         <?=date('d/m/Y',$marketzone[0]->modify_date)?></p>
 
 
 					 
