@@ -9,6 +9,7 @@ class Marketzone extends Admin_Controller {
 		$this->load->model('install_m');
 		$this->load->model('client_m');
 		$this->load->model('airline_m');
+		$this->load->model('user_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('marketzone', $language);
 	}
@@ -405,7 +406,8 @@ class Marketzone extends Admin_Controller {
 	public function view() {
                 $id = htmlentities(escapeString($this->uri->segment(3)));
                 if ((int)$id) {
-                        $this->data["marketzone"] = $this->marketzone_m->get_marketzonename($id);
+			$this->data['marketzone'] = $this->marketzone_m->getMarketZoneById($id);
+                        //$this->data["marketzone"] = $this->marketzone_m->get_marketzonename($id);
                         if($this->data["marketzone"]) {
                                 $this->data["subview"] = "marketzone/view";
                                 $this->load->view('_layout_main', $this->data);
