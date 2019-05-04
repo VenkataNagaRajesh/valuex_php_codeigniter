@@ -35,6 +35,9 @@
 						}							
 					   echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
+					<div class="col-sm-2">			   
+				      <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>
+					</div>
 					 <div class="col-sm-2">			   
 					   <?php $olist = array("0" => "Select Origin Level");               
 					   foreach($types as $type){
@@ -66,6 +69,7 @@
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>
+								<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('orig_level_value')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('dest_level')?></th>
@@ -99,7 +103,9 @@ $(document).ready(function() {
 	  {"name": "seasonID","value": $("#seasonID").val()},
 	  {"name": "origID","value": $("#origID").val()},
       {"name": "active","value": $("#active").val()},	  
-	  {"name": "destID","value": $("#destID").val()}) //pushing custom parameters
+	  {"name": "destID","value": $("#destID").val()},
+	  {"name": "airlinecode","value": $("#airlinecode").val()}),     
+	  //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
                     "type": "GET",
@@ -110,6 +116,7 @@ $(document).ready(function() {
       "columns": [{"data": "VX_aln_seasonID" },
                   {"data": "season_name" },
 				  {"data": "airline_name" },
+				  {"data": "airline_code" },
 				  {"data": "orig_level" },
 				  {"data": "orig_level_values" },
 				  {"data": "dest_level" }, 
