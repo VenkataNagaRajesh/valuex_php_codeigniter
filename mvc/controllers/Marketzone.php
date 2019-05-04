@@ -187,7 +187,7 @@ class Marketzone extends Admin_Controller {
                                 'assets/select2/select2.js'
                         )
                 );
-		$userTypeID = $this->session->userdata('usertype');
+		$userTypeID = $this->session->userdata('usertypeID');
 		$userID = $this->session->userdata('loginuserID');
 
 	    //$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
@@ -197,12 +197,12 @@ class Marketzone extends Admin_Controller {
 		  }
 
 
-		 if($userTypeID == 2){
+		 if($userTypeID == 2){ 
               		$this->data['airlines'] = $this->airline_m->getClientAirline($userID);
 		           } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
            	}
-
+            // print_r($this->data['airlines']); exit;
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);

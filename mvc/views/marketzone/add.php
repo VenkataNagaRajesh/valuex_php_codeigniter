@@ -66,7 +66,7 @@
                            <?php
                                                          $airlinelist[0]= 'Select Airline For marketzone';
                                                      foreach($airlines as $airline){
-                                                                 $airlinelist[$airline->airlineID] = $airline->airline_name;
+                                                                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->airline_name;
                                                          }
                                                    echo form_dropdown("airline_id", $airlinelist,set_value("airline_id"), "id='airline_id' class='form-control hide-dropdown-icon select2'");
                                                    ?>
