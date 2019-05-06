@@ -576,11 +576,11 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,name, airline_class,  ac.aln
 
 			}
 
-		/*	if ( permissionChecker('airline_cabin_gallery') ) {
+			if ( permissionChecker('airline_cabin_gallery') ) {
 			$list->action .= '<a href="'.base_url("airline_cabin/airlinesgallery/".$list->cabin_map_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Add Gallery/Brands/Brochures"> <i class="fa fa-file-image-o"></i></a>';
 
 			}
-
+/*
 				 $array = array(
                                                 "src" => base_url('uploads/images/'.$list->photo),
                                                 'width' => '35px',
