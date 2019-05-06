@@ -40,5 +40,17 @@ class season_m extends MY_Model {
 	public function delete_season($id){
 		parent::delete($id);
 	}
+	
+	public function searchAirlineCode($string){
+		$query = "SELECT CONCAT(`code`, '_', `aln_data_value`) search from vx_aln_data_defns where aln_data_typeID = 12 AND CONCAT(`code`, '_', `aln_data_value`) like '%".$string."%';";
+		/* $this->db->select("CONCAT(`aln_data_value`, '_', `code`) search")->from('vx_aln_data_defns');
+		$this->db->where('aln_data_typeID',12);
+		$this->db->like("CONCAT(aln_data_value, '_', code)",$string);
+		$query = $this->db->get(); */
+		$query = $this->db->query($query);
+		//print_r($this->db->last_query()); 
+		
+		return $query->result();
+	}
 }
 

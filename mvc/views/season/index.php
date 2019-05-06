@@ -201,4 +201,31 @@ $(document).ready(function() {
           });
       }
   }); 
+  
+  $("#airlinecode").autocomplete({
+	   source : function( request, response ) {
+                $.ajax({
+                    url: "<?=base_url('season/searchAirlineCode')?>",
+                    dataType: "json",
+					type: 'GET',
+                    data: {
+                        search: request.term
+                    },
+                    success: function (data) {                    
+					   response( $.map( data, function( item ) {						   
+							  return {								
+								label: item['search']  						       
+							  }					  
+					  })); 
+                    }
+                });
+            },
+    minLength: 0,
+	'select': function(event, ui) {
+       $('#airlinecode').val(ui.item.label);
+        
+        return false; // Prevent the widget from inserting the value.
+    }
+	
+   });
 </script>

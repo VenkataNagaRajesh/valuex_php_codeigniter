@@ -544,6 +544,14 @@ class Season extends Admin_Controller {
 		}
 		echo json_encode( $output );
 	}
-
+   
+    public function searchAirlineCode(){
+	  if(!empty($_GET['search'])){
+		 $search_info = $this->season_m->searchAirlineCode($_GET['search']);        			 
+		} else {
+			$search_info = array();
+		}		
+		echo json_encode($search_info);
+    }
 
 }
