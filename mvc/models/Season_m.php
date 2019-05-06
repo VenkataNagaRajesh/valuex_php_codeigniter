@@ -21,6 +21,12 @@ class season_m extends MY_Model {
 		$seasons = $this->install_m->run_query($sql);
         return $seasons;
 	}
+	
+	function getMarketSeasons_for_triggerrun() {
+		$sql = "SELECT * FROM VX_aln_season WHERE ( ams_orig_levelID = 17 OR ams_dest_levelID = 17)";
+		$seasons = $this->install_m->run_query($sql);
+        return $seasons;
+	}
 
 	function get_single_season($array=NULL) {
 		$query = parent::get_single($array);

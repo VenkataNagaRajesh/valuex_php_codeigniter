@@ -128,11 +128,9 @@ class Trigger extends Admin_Controller {
 
 
 		        }
-
-
+            //update market type seasons
+			$this->update_market_seasons();
 			//update trigger table 
-
-
 			$tarray['modify_date'] = time();
 			$tarray['isReconfigured'] = '0';
 			$tarray['modify_userID'] = $this->session->userdata('loginuserID');
@@ -164,7 +162,7 @@ class Trigger extends Admin_Controller {
 					if ($season->ams_orig_levelID == 1 ) {
 						$orig_list = $orig_arr; 
 					} else if ($season->ams_orig_levelID == 17){
-						$this->mydebug->debug("market type orig");
+						//$this->mydebug->debug("market type orig");
 						$olist = $this->market_airport_map_m->getAirportsByMarketzones($orig_arr); 
 						$this->mydebug->debug($olist);
 					    $orig_list = array_merge($orig_list,$olist);
@@ -182,7 +180,7 @@ class Trigger extends Admin_Controller {
 					if ($season->ams_dest_levelID == 1 ) {
 						$dest_list = $dest_arr;
 					} else if ($season->ams_dest_levelID == 17){
-						$this->mydebug->debug("market type dest");
+						//$this->mydebug->debug("market type dest");
 						$dlist = $this->market_airport_map_m->getAirportsByMarketzones($dest_arr); 
 						$this->mydebug->debug($dlist);
 					    $dest_list = array_merge($dest_list,$dlist);
@@ -240,6 +238,49 @@ class Trigger extends Admin_Controller {
 			$this->trigger_m->update_trigger($tarray);
 		} 
 		redirect(base_url("season/index"));
+	}
+	
+	public function update_market_seasons(){
+		$timestamp = $this->trigger_m->get_trigger_time('VX_aln_market_zone');
+		if (isset($timestamp)) {
+		   $marketzones = $this->marketzone_m->getMarkets_for_triggerrun($timestamp);
+		   print_r($marketzones);
+		   $marketseasons = $this->season_m->getMarketSeasons_for_triggerrun();
+		   foreach($marketseasons as $season){
+			   $orig_list = []; $dest_list = [];
+			 if($season->ams_orig_levelID == 17){
+			   $orig_arr = explode(',',$season->ams_orig_level_value);
+			   $final_orig = array_intersect($orig_arr,$marketzones);
+			   if(!empty($final_orig)){
+			    $olist = $this->market_airport_map_m->getAirportsByMarketzones($orig_arr); 			
+			    $orig_list = array_merge($orig_list,$olist);
+				$this->season_airport_map_m->delete_old_orig_entries($season->VX_aln_seasonID);
+			   }
+			    foreach($orig_list as $orig_airport) {
+			   	   $oarray["seasonID"] = $season->VX_aln_seasonID;
+                   $oarray["orig_airportID"] = $orig_airport; 
+                   $this->season_airport_map_m->insert_origseason_airport_mapid($oarray); 
+				}
+			  //
+			 // print_r($orig_list);
+			 }			 
+			 if($season->ams_dest_levelID == 17){
+			   $dest_arr = explode(',',$season->ams_dest_level_value);
+			   $final_dest = array_intersect($dest_arr,$marketzones);
+			   if(!empty($final_orig)){
+			     $dlist = $this->market_airport_map_m->getAirportsByMarketzones($dest_arr); 			
+			     $dest_list = array_merge($dest_list,$dlist);
+				 $this->season_airport_map_m->delete_old_dest_entries($season->VX_aln_seasonID);
+			   }
+			   foreach($dest_list as $dest_airport) {
+			   	   $darray["seasonID"] = $season->VX_aln_seasonID;
+                   $darray["dest_airportID"] = $dest_airport;
+                   $this->season_airport_map_m->insert_destseason_airport_mapid($darray);
+				}
+			   // print_r($dest_list);
+			 }			
+		   }
+		}
 	}
 }
 

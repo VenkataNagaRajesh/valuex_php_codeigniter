@@ -96,7 +96,7 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 		return $query;
 	}
 	
-        function get_marketzones_count() {
+    function get_marketzones_count() {
 		$this->db->select('count(*) as cnt')->from('VX_aln_market_zone');
                 $query = $this->db->get();
                 return $query->row('cnt');
@@ -160,6 +160,12 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
                               WHERE modify_date >= ".$timestamp." AND active = 1 ";
 		$marketzones = $this->install_m->run_query($sql);
                 return $marketzones;
+	}
+	
+	function getMarkets_for_triggerrun($timestamp) {
+		$sql = "SELECT market_id FROM VX_aln_market_zone WHERE modify_date >= ".$timestamp." AND active = 1 ";
+		$marketzones = $this->install_m->run_query($sql);
+        return array_column($marketzones,'market_id');
 	}
 
 
