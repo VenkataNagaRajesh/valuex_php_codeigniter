@@ -42,27 +42,27 @@
 
     <div class="col-sm-2">
                <?php
-                        $country['0'] = 'Select Boarding Point';
-                        ksort($country);
+                        $airport['0'] = 'Select Boarding Point';
+                        ksort($airport);
 
-                                   echo form_dropdown("boarding_point", $country,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("boarding_point", $airport,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
 
 
     <div class="col-sm-2">
                <?php
-                        $country['0'] = 'Select Off Point';
-                        ksort($country);
+                        $airport['0'] = 'Select Off Point';
+                        ksort($airport);
 
-                                   echo form_dropdown("off_point", $country,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("off_point", $airport,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
 
 
 <div class="col-sm-2">
                <?php
-                        $airlines['0'] = 'Select Airlines';
+                        $airlines['0'] = 'Select Carrier';
                         ksort($airlines);
 
                                    echo form_dropdown("airline_code", $airlines,set_value("airline_code",$airline_code), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
@@ -72,10 +72,10 @@
 
     <div class="col-sm-2">
                <?php
-                        $class['0'] = 'Select Class';
-                        ksort($class);
+                        $cabin['0'] = 'Select Cabin';
+                        ksort($cabin);
 
-                                   echo form_dropdown("class", $class,set_value("class",$cla), "id='class' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("class", $cabin,set_value("class",$cla), "id='class' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
 
@@ -90,31 +90,33 @@
                     <tr>
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
                         <th class="col-lg-2"><?=$this->lang->line('ticket_number')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('coupon_number')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('coupon_value')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('booking_country')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('booking_city')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
-						 <th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
-                                                <th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
-                                                <th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('coupon_number')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('booking_country')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('booking_city')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('issuance_country')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('issuance_city')?></th>
+			 <th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
+                         <th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('prorated_price')?></th>
+			 <th class="col-lg-1"><?=$this->lang->line('cabin')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('class')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('booking_date')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
 
-						 <th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
-                                                <th class="col-lg-1"><?=$this->lang->line('cabin')?></th>
-                                                <th class="col-lg-1"><?=$this->lang->line('class')?></th>
-
-                                                <th class="col-lg-1"><?=$this->lang->line('flight_date')?></th>
-
-                                                 <th class="col-lg-1"><?=$this->lang->line('fare_basis')?></th>
-                                                <th class="col-lg-1"><?=$this->lang->line('office_id')?></th>
-                                                <th class="col-lg-1"><?=$this->lang->line('channel')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('pax_type')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('day_of_week')?></th>
+                         <th class="col-lg-1"><?=$this->lang->line('days_to_departure')?></th>
+			 <th class="col-lg-1"><?=$this->lang->line('operating_airline_code')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('marketing_airline_code')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
+                         <th class="col-lg-1"><?=$this->lang->line('office_id')?></th>
+                         <th class="col-lg-1"><?=$this->lang->line('channel')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('pax_type')?></th>
 			
-						
-						 <th class="col-lg-1"><?=$this->lang->line('active')?></th>
+			
+		 <th class="col-lg-1"><?=$this->lang->line('active')?></th>
 
-						<?php if(permissionChecker('rafeed_delete') || permissionChecker('rafeed_view')){?>
-                                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
+	<?php if(permissionChecker('rafeed_delete') || permissionChecker('rafeed_view')){?>
+                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
 						<?php }?>
                     </tr>
                  </thead>
@@ -151,20 +153,25 @@
 
       "columns": [{"data": "rafeed_id" },
                   {"data": "ticket_number" },
-				  {"data": "cpn_number" },
-				  {"data": "cpn_value" },
+				  {"data": "coupon_number" },
 				  {"data": "booking_country"},
                                   {"data": "booking_city" },
-				 {"data": "carrier" },
-                                  {"data": "flight_number" },
-                                  {"data": "airline_code"},
+				{"data": "issuance_country"},
+                                  {"data": "issuance_city" },
+                                {"data": "boarding_point"},
+                                 {"data": "off_point" },
+				{"data": "prorated_price" },
+				{"data": "cabin" },
+                                {"data": "class" },
+				 {"data": "booking_date" },
+				{"data": "departure_date" },
+				
+                                  {"data": "day_of_week" },
+                                  {"data": "days_to_departure"},
 
-                                  {"data": "boarding_point"},
-				 {"data": "off_point" },
-                                  {"data": "cabin" },
-                                  {"data": "class"},
-				 {"data": "flight_date" },
-                                  {"data": "fare_basis" },
+                                  {"data": "operating_airline_code"},
+				 {"data": "marketing_airline_code" },
+				 {"data": "flight_number" },
                                   {"data": "office_id"},
 				    {"data": "channel" },
                                   {"data": "pax_type"},
