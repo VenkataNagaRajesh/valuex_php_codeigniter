@@ -170,4 +170,5 @@ $lang['menu_eligibility_exclusion'] = 'Eligibility Exclusion Rules';
 $lang['menu_rafeed'] = 'Revenue Accouting Feed';
 $lang['menu_invfeed'] = 'INV feed';
 $lang['menu_airline_cabin_class'] = 'Carrier Cabin Class Mapping'; 
+$lang['menu_paxfeed'] = 'Daily Tkt Pax Feed';
 /* End Update Menu */
