@@ -3606,3 +3606,13 @@ fieldset[disabled] .btn-vk.active {
   margin-left: 220px;
   z-index: 820;
 }
+
+#season_calendar {
+    margin-top: 40px;
+}
+    
+.event a {
+    background-color: #42B373 !important;
+    background-image :none !important;
+    color: #ffffff !important;
+}

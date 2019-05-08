@@ -70,6 +70,27 @@ class Airline_m extends MY_Model {
 			return $query->result();
 		}
 	}
+
+
+
+
+	public function getClientAirlineArr($userID){
+                $this->db->select('dd.*,dd.aln_data_value airline_name')->from('VX_aln_client c');
+                //$this->db->join('VX_aln_airline a','a.VX_aln_airlineID = c.airlineID','LEFT');
+                $this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = c.airlineID','LEFT');
+                $this->db->where('c.userID',$userID);
+                $query = $this->db->get();
+
+		$result = $query->result();
+		foreach($result as $v) {
+			$arr[$v->vx_aln_data_defnsID] = $v->airline_name;
+		}
+
+		return $arr;
+        }
+
+
+
 	
 	public function checkAirline($airline){
 		$check = $this->db->get_where('vx_aln_data_defns',array('aln_data_typeID' => 12,'aln_data_value' => $airline['name']))->row();

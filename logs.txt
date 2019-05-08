@@ -1,0 +1,14 @@
+market type orig
+Array
+(
+    [0] => 1119
+    [1] => 1120
+)
+
+market type dest
+Array
+(
+    [0] => 1119
+    [1] => 1120
+)
+
