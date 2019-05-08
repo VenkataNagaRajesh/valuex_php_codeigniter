@@ -38,6 +38,30 @@ class season_m extends MY_Model {
 		return TRUE;
 	}
 
+	function getSeasonForDateANDAirlineID($date , $carrierID ) {
+		$this->db->select('VX_aln_seasonID')->from('VX_aln_season');
+		$this->db->where('ams_season_start_date <= ' , $date );
+		$this->db->where('ams_season_end_date >= ' , $date);
+		$this->db->where('airlineID' , $carrierID);
+	
+		 $this->db->limit(1);
+                $query = $this->db->get();
+                $arr = $query->row();
+		return $arr->VX_aln_seasonID;
+
+
+	}
+
+
+	function getSeasonNameByID($id) {
+
+		$this->db->select('season_name')->from('VX_aln_season');
+		$this->db->where('VX_aln_seasonID',$id);
+		$query = $this->db->get();
+		$arr = $query->row();
+                return $arr->season_name;
+	}
+
 	function update_season($data, $id = NULL) {
 		parent::update($data, $id);
 		return $id;

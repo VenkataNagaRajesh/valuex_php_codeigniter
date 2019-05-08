@@ -94,7 +94,6 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-$("#carrier").prop("disabled", true);
 $( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Class'
 		         });
 

@@ -50,6 +50,19 @@ class Rafeed_m extends MY_Model {
         }
 
 
+	function getDefIdByTypeAndName($name ,$type) {
+
+		$this->db->select('vx_aln_data_defnsID');
+                $this->db->from('vx_aln_data_defns');
+                $this->db->where('aln_data_typeID',$type);
+                $this->db->where('aln_data_value',$name);
+                $this->db->limit(1);
+                $query = $this->db->get();
+                $name = $query->row();
+
+                return $name->vx_aln_data_defnsID;
+
+	}
 	function getCodesByType($type) {
 		$this->db->select('vx_aln_data_defnsID, code');
                 $this->db->from('vx_aln_data_defns');
@@ -63,6 +76,22 @@ class Rafeed_m extends MY_Model {
 		
 		return $arr;
 	}
+
+
+	function getNamesByType($type) {
+                $this->db->select('vx_aln_data_defnsID, aln_data_value');
+                $this->db->from('vx_aln_data_defns');
+                $this->db->where('aln_data_typeID',$type);
+                $this->db->where('aln_data_value !=',NULL);
+                $query = $this->db->get();
+                $result = $query->result();
+                foreach ($result as $k) {
+                        $arr[$k->vx_aln_data_defnsID] = $k->aln_data_value;
+                }
+
+                return $arr;
+        }
+
 
 	function insert_rafeed($array) {// echo "check"; exit;
 		$error = parent::insert($array);

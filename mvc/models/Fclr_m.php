@@ -1,0 +1,49 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+class Fclr_m extends MY_Model {
+
+	protected $_table_name = 'VX_aln_fclr';
+	protected $_primary_key = 'fclr_id';
+	protected $_primary_filter = 'intval';
+	protected $_order_by = "fclr_id desc";
+
+	function __construct() {
+		parent::__construct();
+	}
+
+
+        function getFareDataForGivenID($cabin) {
+	$query = "
+SELECT  prorated_price  FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = rf.booking_country)  LEFT JOIN vx_aln_data_defns dci on  (dci.vx_aln_data_defnsID = rf.booking_city) LEFT JOIN vx_aln_data_defns dico on (dico.vx_aln_data_defnsID = rf.issuance_country)  LEFT JOIN vx_aln_data_defns dici on  (dici.vx_aln_data_defnsID = rf.issuance_city) LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.operating_airline_code)  LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = rf.boarding_point) LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = rf.off_point) LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) where dcla.code = '".$cabin."' AND flight_number = 123 AND day_of_week = 5 AND dbp.code='HKG' AND dop.code='UQE'";
+
+
+	$result = $this->install_m->run_query($query);
+			return array_column($result,'prorated_price');
+		
+
+	}
+
+function Stand_Deviation($arr) 
+    { 
+        $num_of_elements = count($arr); 
+          
+        $variance = 0.0; 
+          
+                // calculating mean using array_sum() method 
+        $average = array_sum($arr)/$num_of_elements; 
+          
+        foreach($arr as $i) 
+        { 
+            // sum of squares of differences between  
+                        // all numbers and means. 
+            $variance += pow(($i - $average), 2); 
+        } 
+          
+        return (float)sqrt($variance/$num_of_elements); 
+    } 
+
+
+
+	
+}
+
