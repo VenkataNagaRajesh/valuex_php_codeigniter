@@ -216,10 +216,20 @@
 </div>
 
 <script type="text/javascript">
+
 $(document).ready(function(){
 $('#amz_incl_id').trigger('change');
 $('#amz_excl_id').trigger('change');
 $('#amz_level_id').trigger('change');
+        var level = [<?php echo implode(',',$this->input->post("amz_level_value")); ?>];
+        $('#amz_level_value').val(level).trigger('change');
+
+	var incl = [<?php echo implode(',',$this->input->post("amz_incl_value")); ?>];
+        $('#amz_incl_value').val(incl).trigger('change');
+
+	var excl = [<?php echo implode(',',$this->input->post("amz_excl_value")); ?>];
+        $('#amz_excl_value').val(excl).trigger('change');
+
 });
 
 $( ".select2" ).select2({closeOnSelect:false
