@@ -90,7 +90,9 @@ function getAirlinesToMap($array) {
                 $this->db->select('vx_aln_data_defnsID, aln_data_value');
                 $this->db->from('vx_aln_data_defns');
                 $this->db->where('aln_data_typeID','12');
+		if(count($array) > 0) {
 		$this->db->where_not_in('vx_aln_data_defnsID',$array);
+		}
                 $query = $this->db->get();
                  $result = $query->result();
                         foreach($result as $k) {
