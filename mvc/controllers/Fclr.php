@@ -211,30 +211,59 @@ SELECT  boarding_point, off_point, season_id,flight_number, day_of_week , source
 				$str = explode(' ' , $f);
 				$cabins[$str[0]] = explode(',',$str[1]);
 			}
-	
+			
+		// from economy to business (Y->C) 
+                  $fromCabin = $cabins['Y'];
+                  $toCabin = $cabins['C'];
 
-                             $fromCabin = $cabins['Y'];
-                             $toCabin = $cabins['C'];
+			if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
+				$data = $this->calculate_Min_Max($fromCabin, $toCabin );
+				$feed->average = $data->average;
+				$feed->min = $data->min;
+				$feed->max = $data->max;
+				$feed->from_cabin = 'Y';
+				$feed->to_cabin = 'C';
+				$output['aaData'][] = $feed;
+			 }
+			// from economy to pre-eco
 
-		if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
+			$fromCabin =  $cabins['Y'];
+			$toCabin = $cabins['W'];
 
-                $fromCabinAvg = array_sum($fromCabin)/count($fromCabin);
-                $toCabinAvg = array_sum($toCabin)/count($toCabin);
-                $fromCabinSD = $this->fclr_m->Stand_Deviation($fromCabin);
-                $toCabinSD = $this->fclr_m->Stand_Deviation($toCabin);
-                $bidAvg = ($fromCabinAvg + $toCabinAvg)/2;
-                $bidSD =  sqrt(pow($fromCabinSD,2) + pow($toCabinSD,2));
-                $max = $bidAvg + (3 * $bidSD);
-                $min = $bidAvg - (3 * $bidSD);
-                $feed->average = $bidAvg;
-                $feed->min = $min;
-                $feed->max = $max;
-			$feed->from_cabin = 'Y';
-			$feed->to_cabin = 'C';
-			$output['aaData'][] = $feed;
-			}
+			if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
+                                $feed = $this->calculate_Min_Max($fromCabin, $toCabin );
+				$feed->average = $data->average;
+                                $feed->min = $data->min;
+                                $feed->max = $data->max;
+                                $feed->from_cabin = 'Y';
+                                $feed->to_cabin = 'W';
+                                $output['aaData'][] = $feed;
+                         }
+
+
+
+			// from economy to pre-eco
+
+                        $fromCabin =  $cabins['W'];
+                        $toCabin = $cabins['C'];
+
+                        if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
+                                $feed = $this->calculate_Min_Max($fromCabin, $toCabin );
+
+				$feed->average = $data->average;
+                                $feed->min = $data->min;
+                                $feed->max = $data->max;
+
+                                $feed->from_cabin = 'W';
+                                $feed->to_cabin = 'C';
+                                $output['aaData'][] = $feed;
+                         }
+
+
 
 		}
+
+		
 
  		
 
@@ -242,6 +271,24 @@ SELECT  boarding_point, off_point, season_id,flight_number, day_of_week , source
 	}
 	
 
+
+	function calculate_Min_Max($fromCabin ,$toCabin ) {
+
+		 $fromCabinAvg = array_sum($fromCabin)/count($fromCabin);
+                $toCabinAvg = array_sum($toCabin)/count($toCabin);
+                $fromCabinSD = $this->fclr_m->Stand_Deviation($fromCabin);
+                $toCabinSD = $this->fclr_m->Stand_Deviation($toCabin);
+                $bidAvg = ($fromCabinAvg + $toCabinAvg)/2;
+                $bidSD =  sqrt(pow($fromCabinSD,2) + pow($toCabinSD,2));
+                $max = $bidAvg + (3 * $bidSD);
+                $min = $bidAvg - (3 * $bidSD);
+
+                $feed->average = $bidAvg;
+                $feed->min = $min;
+                $feed->max = $max;
+		 return  $feed;
+
+ 	}
    function generatedata() {
 		$fromCabin = $this->fclr_m->getFareDataForGivenID('Y');
 	
