@@ -301,7 +301,7 @@ $.ajax({     async: false,
 
 
 $('#amz_excl_id').change(function(event) {    
-	$('#amz_excl_value').val(null).trigger('change')
+	$('#amz_excl_value').val(null).trigger('change');
   var excl_id = $(this).val();                 
 $.ajax({     async: false,            
              type: 'POST',            

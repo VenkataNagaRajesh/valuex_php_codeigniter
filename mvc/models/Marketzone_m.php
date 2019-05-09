@@ -35,46 +35,49 @@ FROM
 
 LEFT JOIN (
 
-
-                select
-                        FirstSet.market_id, FirstSet.level as levelname, SecondSet.excl as exclname, ThirdSet.incl as inclname
+ select
+                        FirstSet.market_id, FirstSet.level as levelname, ThirdSet.excl as exclname, SecondSet.incl as inclname
                 from 
-                        (          SELECT
-                                        m.market_id as market_id,
-                                        group_concat(c.aln_data_value) as level
-                                   from
-                                        VX_aln_market_zone m
-                                        join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, m.amz_level_name)
-                                        group by
-                                        m.market_id     
+                        (         
+
+                                 SELECT        m.market_id  as market_id  , 
+                                                COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS level 
+                                                FROM VX_aln_market_zone m 
+                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                (find_in_set(c.vx_aln_data_defnsID, m.amz_level_name) AND m.amz_level_id in (1,2,3,4,5)) 
+                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                ON (find_in_set(mm.market_id, m.amz_level_name) AND m.amz_level_id = 17) group by m.market_id
            
                         ) as FirstSet  
                 LEFT join 
 
-                        (          SELECT
-                                   m.market_id as market_id,
-                                   group_concat(c.aln_data_value) as excl
-                                   from
-                                        VX_aln_market_zone m
-                                        join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, m.amz_excl_name)
-                                        group by
-                                         m.market_id
+                        (          
+                                 SELECT        m.market_id  as market_id  , 
+                                                COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS incl
+                                                FROM VX_aln_market_zone m 
+                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                (find_in_set(c.vx_aln_data_defnsID, m.amz_incl_name) AND m.amz_incl_id in (1,2,3,4,5)) 
+                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                ON (find_in_set(mm.market_id, m.amz_incl_name) AND m.amz_incl_id = 17) group by m.market_id
+
                         ) as SecondSet
                         on FirstSet.market_id = SecondSet.market_id
                 LEFT JOIN 
                         (
-                                SELECT
-                                        m.market_id as market_id,
-                                        group_concat(c.aln_data_value) as incl
-                                from
-                                        VX_aln_market_zone m 
-                                JOIN vx_aln_data_defns c ON find_in_set(c.vx_aln_data_defnsID, m.amz_incl_name)
-                                group by
-                                        m.market_id
+
+                                  SELECT        m.market_id  as market_id  , 
+                                                COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS excl 
+                                                FROM VX_aln_market_zone m 
+                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                (find_in_set(c.vx_aln_data_defnsID, m.amz_excl_name) AND m.amz_excl_id in (1,2,3,4,5)) 
+                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                ON (find_in_set(mm.market_id, m.amz_excl_name) AND m.amz_excl_id = 17) group by m.market_id
+
+
                         ) as ThirdSet
 
                         on ThirdSet.market_id = FirstSet.market_id
-
+                                                                   
 ) as SubSet
 on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 
@@ -159,7 +162,35 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 		$sql = "SELECT * FROM VX_aln_market_zone
                               WHERE modify_date >= ".$timestamp." AND active = 1 ";
 		$marketzones = $this->install_m->run_query($sql);
-                return $marketzones;
+
+		  $list = array_column($marketzones,'market_id');
+                $matchset = [];
+                foreach ($list as $id ) {
+
+                        $sql = "SELECT market_id FROM VX_aln_market_zone WHERE active = 1 AND
+                                amz_level_id = 17 AND FIND_IN_SET(".$id.",amz_level_name) OR
+                                amz_incl_id  = 17 AND FIND_IN_SET(".$id.",amz_incl_name) OR
+                                amz_excl_id  = 17 AND FIND_IN_SET(".$id.",amz_excl_name)";
+                        $newlist = $this->install_m->run_query($sql);
+
+                        $matchset = array_merge($matchset,array_column($newlist,'market_id'));
+                }
+
+
+                 $this->db->select('*')->from('VX_aln_market_zone');
+                 $this->db->where_in('market_id',$list);
+
+                if (count($matchset) > 0 ) {
+                        $this->db->or_where_in('market_id',$matchset);
+                }
+
+                $query = $this->db->get();
+                $result =  $query->result();
+
+                //      print_r($this->db->last_query()); exit;
+                //      var_dump($result);exit;
+                return $result;
+
 	}
 	
 	function getMarkets_for_triggerrun($timestamp) {

@@ -33,12 +33,17 @@ class Trigger extends Admin_Controller {
 				if ($marketzone->amz_level_id == 1 ) {
 					$level_list = $level_arr;
 				} else {
-					foreach ( $level_arr as $level_id ) {
-					    if (!empty($level_id)) {	
-			     	       		$llist = $this->marketzone_m->getAirportsList($level_id);
-						$level_list = array_merge($level_list,$llist);
-					    }
-				        }
+					 if ($marketzone->amz_level_id == 17 ) {
+							$level_list =	$this->market_airport_map_m->getAirportsByMarketzones($level_arr);
+
+					   } else {
+							foreach ( $level_arr as $level_id ) {
+					    		if (!empty($level_id)) {	
+			     	       				$llist = $this->marketzone_m->getAirportsList($level_id);
+								$level_list = array_merge($level_list,$llist);
+					    		}
+				        	  }
+					}
 
 				}
 			    }	
@@ -53,12 +58,17 @@ class Trigger extends Admin_Controller {
 				if($marketzone->amz_incl_id == 1) {
 					$incl_list = $incl_arr;
 				} else {
+					 if ($marketzone->amz_incl_id == 17 ) {
+                                                        $incl_list =   $this->market_airport_map_m->getAirportsByMarketzones($incl_arr);
+
+                                           } else {
 					foreach($incl_arr as $incl_id) {
 					     if(!empty($incl_id)) {
 						$ilist = $this->marketzone_m->getAirportsList($incl_id);
 						$incl_list = array_merge($incl_list,$ilist);
 					      }
 				         }
+					}
 				}
                             }
 
@@ -74,6 +84,10 @@ class Trigger extends Admin_Controller {
 				if ( $marketzone->amz_excl_id == 1){
 					$excl_list = $excl_arr;
 				} else {
+					 if ($marketzone->amz_excl_id == 17 ) {
+                                                        $excl_list =   $this->market_airport_map_m->getAirportsByMarketzones($excl_arr);
+
+                                           } else {
 
 	                                foreach($excl_arr as $excl_id) {
 					   if(!empty($excl_id)){
@@ -81,6 +95,7 @@ class Trigger extends Admin_Controller {
                 	                        $excl_list = array_merge($excl_list,$elist);
 					   }
                         	        }       
+					}
 				}
 			    }
 				

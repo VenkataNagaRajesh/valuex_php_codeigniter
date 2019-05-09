@@ -166,7 +166,7 @@ class Marketzone extends Admin_Controller {
 
 		$this->data['marketzones'] = $this->marketzone_m->get_marketzones();
 		//$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
-		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
+		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 		  foreach($types as $type){
 			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
 		  }
@@ -191,7 +191,7 @@ class Marketzone extends Admin_Controller {
 		$userID = $this->session->userdata('loginuserID');
 
 	    //$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
-          $types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
+          $types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 		  foreach($types as $type){
 			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
 		  }
@@ -262,7 +262,7 @@ class Marketzone extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
 
 		//$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
-		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
+		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 		  foreach($types as $type){
 			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
 		  }
@@ -567,43 +567,45 @@ FROM
 ) as MainSet
 
 LEFT JOIN (
-
-
 		select
-    			FirstSet.market_id, FirstSet.level as levelname, SecondSet.excl as exclname, ThirdSet.incl as inclname
+    			FirstSet.market_id, FirstSet.level as levelname, ThirdSet.excl as exclname, SecondSet.incl as inclname
 		from 
-			(          SELECT
-                			m.market_id as market_id,
-                			group_concat(c.aln_data_value) as level
-           			   from
-                			VX_aln_market_zone m
-           				join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, m.amz_level_name)
-           				group by
-           				m.market_id	
+			(         
+
+				 SELECT        m.market_id  as market_id  , 
+						COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS level 
+						FROM VX_aln_market_zone m 
+						LEFT OUTER JOIN  vx_aln_data_defns c ON 
+						(find_in_set(c.vx_aln_data_defnsID, m.amz_level_name) AND m.amz_level_id in (1,2,3,4,5)) 
+						LEFT OUTER JOIN  VX_aln_market_zone mm  
+						ON (find_in_set(mm.market_id, m.amz_level_name) AND m.amz_level_id = 17) group by m.market_id
  	   
 			) as FirstSet  
 		LEFT join 
 
-			(          SELECT
-                		   m.market_id as market_id,
-                		   group_concat(c.aln_data_value) as excl
-           			   from
-                			VX_aln_market_zone m
-           				join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, m.amz_excl_name)
-           				group by
-          				 m.market_id
+			(          
+				 SELECT        m.market_id  as market_id  , 
+                                                COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS incl
+                                                FROM VX_aln_market_zone m 
+                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                (find_in_set(c.vx_aln_data_defnsID, m.amz_incl_name) AND m.amz_incl_id in (1,2,3,4,5)) 
+                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                ON (find_in_set(mm.market_id, m.amz_incl_name) AND m.amz_incl_id = 17) group by m.market_id
+
 			) as SecondSet
 			on FirstSet.market_id = SecondSet.market_id
 		LEFT JOIN 
 			(
-				SELECT
-  					m.market_id as market_id,
-    					group_concat(c.aln_data_value) as incl
-	   			from
-    					VX_aln_market_zone m 
-           			JOIN vx_aln_data_defns c ON find_in_set(c.vx_aln_data_defnsID, m.amz_incl_name)
-           			group by
-           				m.market_id
+
+				  SELECT        m.market_id  as market_id  , 
+                                                COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS excl 
+                                                FROM VX_aln_market_zone m 
+                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                (find_in_set(c.vx_aln_data_defnsID, m.amz_excl_name) AND m.amz_excl_id in (1,2,3,4,5)) 
+                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                ON (find_in_set(mm.market_id, m.amz_excl_name) AND m.amz_excl_id = 17) group by m.market_id
+
+
 			) as ThirdSet
 
 			on ThirdSet.market_id = FirstSet.market_id

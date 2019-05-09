@@ -260,6 +260,7 @@ $("#checkbox_excl").click(function(){
 
 $('#amz_level_id').change(function(event) {    
   var level_id = $(this).val();
+$('#amz_level_value').val(null).trigger('change');
       var type_id = '<?php echo $marketzone->amz_level_name; ?>';
 $.ajax({     async: false,            
 	     type: 'POST',            
@@ -272,6 +273,7 @@ $.ajax({     async: false,
 });
 $('#amz_incl_id').change(function(event) {    
   var incl_id = $(this).val();                 
+$('#amz_incl_value').val(null).trigger('change');
 $.ajax({     async: false,            
              type: 'POST',            
              url: "<?=base_url('marketzone/getSubdataTypes')?>",            
@@ -286,6 +288,7 @@ $.ajax({     async: false,
 
 $('#amz_excl_id').change(function(event) {    
   var excl_id = $(this).val();                 
+$('#amz_excl_value').val(null).trigger('change');
 $.ajax({     async: false,            
              type: 'POST',            
              url: "<?=base_url('marketzone/getSubdataTypes')?>",            
