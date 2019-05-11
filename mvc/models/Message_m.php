@@ -11,7 +11,7 @@ class message_m extends MY_Model {
 		parent::__construct();
 	}
 
-	function get_message($array=NULL, $signal=FALSE) {
+	/* function get_message($array=NULL, $signal=FALSE) {
 		$query = parent::get($array, $signal);
 		return $query;
 	}
@@ -55,7 +55,7 @@ class message_m extends MY_Model {
 	{
 		$query = $this->db->get_where($this->_table_name, $array);
 		return count($query->result());
-	}
+	} */
 }
 
 /* End of file message_m.php */

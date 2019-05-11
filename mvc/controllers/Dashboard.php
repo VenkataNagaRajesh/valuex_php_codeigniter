@@ -9,8 +9,8 @@ class Dashboard extends Admin_Controller {
 		$this->load->model("setting_m");
 		$this->load->model("notice_m");
 		$this->load->model("user_m");		
-		$this->load->model("feetypes_m");
-		$this->load->model("invoice_m");		
+		//$this->load->model("feetypes_m");
+		//$this->load->model("invoice_m");		
 		$this->load->model("payment_m");		
 		$this->load->model("airports_m");	
 		$language = $this->session->userdata('lang');
@@ -31,16 +31,16 @@ class Dashboard extends Admin_Controller {
 
 		$schoolyearID = $this->session->userdata('defaultschoolyearID');
 		
-		$feetypes	= $this->feetypes_m->get_feetypes();	
+		//$feetypes	= $this->feetypes_m->get_feetypes();	
 		
 		$allmenu 	= pluck($this->menu_m->get_order_by_menu(), 'icon', 'link');
 		$allmenulang = pluck($this->menu_m->get_order_by_menu(), 'menuName', 'link');		
-		$invoices	= $this->invoice_m->get_invoice();	
+		//$invoices	= $this->invoice_m->get_invoice();	
         $airports = $this->airports_m->TotalAirports();
 		$deshboardTopWidgetUserTypeOrder = $this->session->userdata('master_permission_set');
 		
-		$this->data['dashboardWidget']['feetypes'] 	= count($feetypes);		
-		$this->data['dashboardWidget']['invoices'] 	= count($invoices);	
+		//$this->data['dashboardWidget']['feetypes'] 	= count($feetypes);		
+		//$this->data['dashboardWidget']['invoices'] 	= count($invoices);	
 		$this->data['dashboardWidget']['airports'] 	= $airports;	        		
 		$this->data['dashboardWidget']['allmenu'] 	= $allmenu;
 		$this->data['dashboardWidget']['allmenulang'] 	= $allmenulang;
@@ -69,10 +69,10 @@ class Dashboard extends Admin_Controller {
 		$this->data['usertype'] = $this->session->userdata('usertype');
 
 		if($userTypeID == 1) {
-			$this->data['user'] = $this->systemadmin_m->get_single_systemadmin(array('username'  => $userName));
+			$this->data['user'] = $this->user_m->get_single_user(array('username'  => $userName));
 		}
 
-		$this->data['notices'] = $this->notice_m->get_order_by_notice(array('schoolyearID' => $schoolyearID));
+		//$this->data['notices'] = $this->notice_m->get_order_by_notice(array('schoolyearID' => $schoolyearID));
 		
 		$this->data["subview"] = "dashboard/index";
 		$this->load->view('_layout_main', $this->data);

@@ -11,11 +11,11 @@ class feetypes_m extends MY_Model {
 		parent::__construct();
 	}
 
-	function get_feetypes($array=NULL, $signal=FALSE) {
+	/* function get_feetypes($array=NULL, $signal=FALSE) {
 		//$query = parent::get($array, $signal);
 		$query = $this->db->get('feetypes')->result();
 		return $query;
-	}
+	} */
 
 	function get_order_by_feetypes($array=NULL) {
 		$query = parent::get_order_by($array);

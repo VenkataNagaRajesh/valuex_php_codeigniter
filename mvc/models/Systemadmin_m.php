@@ -11,7 +11,7 @@ class systemadmin_m extends MY_Model {
 		parent::__construct();
 	}
 
-	function get_systemadmin_by_usertype($systemadminID = null) {
+	/* function get_systemadmin_by_usertype($systemadminID = null) {
 		$this->db->select('*');
 		$this->db->from('systemadmin');
 		$this->db->join('usertype', 'usertype.usertypeID = systemadmin.usertypeID', 'LEFT');
@@ -61,7 +61,7 @@ class systemadmin_m extends MY_Model {
 
 	function hash($string) {
 		return parent::hash($string);
-	}	
+	} */	
 }
 
 /* End of file systemadmin_m.php */

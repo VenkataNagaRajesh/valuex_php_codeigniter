@@ -11,7 +11,7 @@ class Notice_m extends MY_Model {
 		parent::__construct();
 	}
 
-	function get_notice($array=NULL, $signal=FALSE) {
+	/* function get_notice($array=NULL, $signal=FALSE) {
 		$query = parent::get($array, $signal);
 		return $query;
 	}
@@ -38,7 +38,7 @@ class Notice_m extends MY_Model {
 
 	public function delete_notice($id){
 		parent::delete($id);
-	}
+	} */
 }
 
 /* End of file notice_m.php */

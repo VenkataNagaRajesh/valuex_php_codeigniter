@@ -12,7 +12,7 @@ class Invoice_m extends MY_Model {
 		parent::__construct();
 	}
 
-	function get_invoice_with_studentrelation() {
+	/* function get_invoice_with_studentrelation() {
 		$this->db->select('*');
 		$this->db->from('invoice');
 		$this->db->join('studentrelation', 'studentrelation.srstudentID = invoice.studentID AND studentrelation.srclassesID = invoice.classesID AND studentrelation.srschoolyearID = invoice.schoolyearID', 'LEFT');
@@ -68,7 +68,7 @@ class Invoice_m extends MY_Model {
 
 	public function delete_invoice($id){
 		parent::delete($id);
-	}
+	} */
 }
 
 /* End of file invoice_m.php */

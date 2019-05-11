@@ -61,7 +61,7 @@ class Admin_Controller extends MY_Controller {
 		/*message counter*/
 		$email = $this->session->userdata('email');
 		$usertype = $this->session->userdata('usertype');
-		$this->data['unread'] = $this->message_m->get_order_by_message(array('email' => $email, 'receiverType' => $usertype, 'to_status' => 0, 'read_status' => 0));
+		//$this->data['unread'] = $this->message_m->get_order_by_message(array('email' => $email, 'receiverType' => $usertype, 'to_status' => 0, 'read_status' => 0));
 		/*message counter end*/
 
 		$language = $this->session->userdata('lang');
