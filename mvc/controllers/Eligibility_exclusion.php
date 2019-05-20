@@ -188,7 +188,7 @@ class Eligibility_exclusion extends Admin_Controller {
 
 
 		if(!empty($this->input->post('flight_efec_date'))){
-                          $this->data['efec_date'] = $this->input->post('flight_efec_date');
+                          $this->data['efec_date'] =  date('d-m-Y',$this->input->post('flight_efec_date'));
                 }
 
 	
@@ -197,7 +197,7 @@ class Eligibility_exclusion extends Admin_Controller {
                 }
 
 		if(!empty($this->input->post('flight_nbr_end'))){
-                          $this->data['nbr_end'] = date('d-m-Y',$this->input->post('flight_nbr_end'));
+                          $this->data['nbr_end'] = $this->input->post('flight_nbr_end');
                 }
 
 

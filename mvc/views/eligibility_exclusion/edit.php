@@ -315,6 +315,11 @@
 $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: "Select Frequency"});
 				
+                                
+$("#flight_efec_date").datepicker();
+$("#flight_disc_date").datepicker();
+                                
+
 $(document).ready(function(){
  var freq = [<?php echo $e_rule->frequency;?>];
 $('#frequency').val(freq).trigger('change');
