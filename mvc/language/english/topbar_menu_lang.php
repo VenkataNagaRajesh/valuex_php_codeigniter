@@ -173,4 +173,5 @@ $lang['menu_datatype'] = 'Datatype';
 $lang['menu_airline_cabin_class'] = 'Carrier Cabin Class Mapping'; 
 $lang['menu_paxfeed'] = 'Daily Tkt Pax Feed';
 $lang['menu_fclr'] = 'Fare Control Range';
+$lang['menu_acsr'] = 'Auto Confirm SetUp Rule';
 /* End Update Menu */
