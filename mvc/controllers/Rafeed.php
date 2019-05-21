@@ -321,7 +321,7 @@ class Rafeed extends Admin_Controller {
 			   dci.code as  booking_city, dico.code as issuance_country, dici.code as issuance_city,
 			    dai.code as operating_airline_code, dam.code as marketing_airline_code, flight_number, dbp.code as boarding_point, 
                            dop.code as off_point,  dcla.code as cabin , booking_date, departure_date, prorated_price, class,
-                           office_id, channel, pax_type ,rf.active  
+                           office_id, channel, dpax.code as pax_type ,rf.active 
                            FROM VX_aln_ra_feed rf  
                           LEFT JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = rf.booking_country) 
                           LEFT JOIN vx_aln_data_defns dci on  (dci.vx_aln_data_defnsID = rf.booking_city) 
@@ -332,6 +332,7 @@ class Rafeed extends Admin_Controller {
                           LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = rf.boarding_point)  
                           LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = rf.off_point) 
                            LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) 
+			   LEFT JOIN vx_aln_data_defns dpax on (dpax.vx_aln_data_defnsID = rf.pax_type) 
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

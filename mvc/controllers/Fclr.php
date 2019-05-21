@@ -183,7 +183,7 @@ $sWhere $sOrder $sLimit";
 		"aaData" => array()
 	  );
 		foreach ($rResult as $feed ) {
-			$feed->season_id = $this->season_m->getSeasonNameByID($feed->season_id);
+			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default season";
 			$feed->departure_date = date('d-m-Y',$feed->departure_date);
                                 $output['aaData'][] = $feed;
 
