@@ -74,9 +74,12 @@
                <table id="rafeedtable" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>
                     <tr>
+			 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('season')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('from_cabin')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('to_cabin')?></th>
@@ -84,6 +87,7 @@
                         <th class="col-lg-1"><?=$this->lang->line('avg')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('min')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('max')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('slider_start')?></th>
                     </tr>
                  </thead>
                  <tbody>                          
@@ -120,16 +124,20 @@ $("#dep_to_date").datepicker();
                     "success": fnCallback
                          } ); }, 
 
-      "columns": [ {"data": "season_id" },
+      "columns": [ {"data": "fclr_id" },
+		   {"data": "season_id" },
 		   {"data": "source_point" },
-			{"data": "dest_point" },
-		  {"data": "flight_number" },
-		 {"data": "from_cabin" },
-		{"data": "to_cabin" },
-		{"data": "day_of_week" },
-		{"data": "average" },
-                  {"data": "min" },
-				  {"data": "max" }
+	           {"data": "dest_point" },
+		   {"data": "departure_date" },
+		   {"data": "carrier_code" },
+		   {"data": "flight_number" },
+		   {"data": "from_cabin" },
+		   {"data": "to_cabin" },
+		   {"data": "day_of_week" },
+		   {"data": "average" },
+                   {"data": "min" },
+		  {"data": "max" },
+		 {"data": "slider_start" }
 				  ],			     
      dom: 'B<"clear">lfrtip',
      buttons: [ 'copy', 'csv', 'excel','pdf' ]	  

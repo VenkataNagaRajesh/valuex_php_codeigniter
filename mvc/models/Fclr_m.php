@@ -2,15 +2,56 @@
 
 class Fclr_m extends MY_Model {
 
-	protected $_table_name = 'VX_aln_fclr';
+	protected $_table_name = 'VX_aln_fare_control_range';
 	protected $_primary_key = 'fclr_id';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "fclr_id desc";
 
-	function __construct() {
-		parent::__construct();
-	}
+        function __construct() {
+                parent::__construct();
+        }
 
+        function get_fclr($array=NULL, $signal=FALSE) {
+                $query = parent::get($array, $signal);
+                return $query;
+        }
+
+
+        function get_single_fclr($array=NULL) {
+                $query = parent::get_single($array);
+                return $query;
+        }
+
+        function insert_fclr($array) {
+                $error = parent::insert($array);
+                return TRUE;
+        }
+
+	  function update_fclr($data, $id = NULL) {
+                parent::update($data, $id);
+                return $id;
+        }
+
+	function checkFCLREntry($array){
+                $this->db->select('fclr_id');
+                $this->db->from('VX_aln_fare_control_range');
+                $this->db->where($array);
+                $this->db->limit(1);
+                $query = $this->db->get();
+                $check = $query->row();
+                if($check->fclr_id) {
+                    return false ;
+                } else {
+                  return true;
+                }
+
+
+        }
+
+
+        public function delete_fclr($id){
+                parent::delete($id);
+        }
 
         function getFareDataForGivenID($cabin) {
 	$query = "
