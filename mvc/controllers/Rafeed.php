@@ -160,7 +160,7 @@ class Rafeed extends Admin_Controller {
 							 $rafeed['class'] = $Row[9];
 							$rafeed['booking_date'] = strtotime(str_replace('-','/',$Row[10]));
 							$rafeed['departure_date'] = strtotime(str_replace('-','/',$Row[11]));
-							$rafeed['day_of_week'] = date('w', $rafeed['departure_date']);
+							$rafeed['day_of_week'] = $this->rafeed_m->getDefIdByTypeAndCode(date('w', $rafeed['departure_date']),'14');
 							$rafeed['days_to_departure'] =  floor(($rafeed['departure_date'] - $rafeed['booking_date']) / (60*60*24) );
 
 							$rafeed['marketing_airline_code'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[13],'12');
@@ -317,7 +317,7 @@ class Rafeed extends Admin_Controller {
 
 			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS rafeed_id,ticket_number, coupon_number, dc.code as booking_country , 
-				day_of_week, days_to_departure, 
+				CONCAT(dfre.aln_data_value,'(',dfre.code,')' ) as day_of_week, days_to_departure, 
 			   dci.code as  booking_city, dico.code as issuance_country, dici.code as issuance_city,
 			    dai.code as operating_airline_code, dam.code as marketing_airline_code, flight_number, dbp.code as boarding_point, 
                            dop.code as off_point,  dcla.code as cabin , booking_date, departure_date, prorated_price, class,
@@ -333,6 +333,7 @@ class Rafeed extends Admin_Controller {
                           LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = rf.off_point) 
                            LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) 
 			   LEFT JOIN vx_aln_data_defns dpax on (dpax.vx_aln_data_defnsID = rf.pax_type) 
+			  LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = rf.day_of_week) 
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

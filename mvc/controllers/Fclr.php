@@ -41,11 +41,38 @@ class Fclr extends Admin_Controller {
 		    $this->data['off_point'] = 0;
 		}
 
-                if(!empty($this->input->post('class'))){
-                $this->data['cla'] = $this->input->post('class');
-                } else {
-                    $this->data['cla'] = 0;
+               if(!empty($this->input->post('flight_number'))){       
+                 $this->data['flight_number'] = $this->input->post('flight_number');
+                } 
+
+                if(!empty($this->input->post('end_flight_number'))){    
+                $this->data['end_flight_number'] = $this->input->post('end_flight_number');
                 }
+
+		if(!empty($this->input->post('dep_from_date'))){
+                          $this->data['dep_from_date'] = date('d-m-Y',$this->input->post('dep_from_date'));
+                }
+
+
+                if(!empty($this->input->post('dep_to_date'))){
+                          $this->data['dep_to_date'] = date('d-m-Y',$this->input->post('dep_to_date'));
+                }
+
+
+		if(!empty($this->input->post('from_cabin'))){       
+                   $this->data['from_cabin'] = $this->input->post('from_cabin');
+                } else {
+                  $this->data['from_cabin'] = 0;
+                }
+
+
+                if(!empty($this->input->post('to_cabin'))){    
+                $this->data['to_cabin'] = $this->input->post('to_cabin');
+                } else {
+                    $this->data['to_cabin'] = 0;
+                }
+
+
 		
 
 		$this->data['country'] = $this->rafeed_m->getCodesByType('2');
@@ -159,16 +186,31 @@ class Fclr extends Admin_Controller {
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'departure_date <= '.  strtotime($this->input->get('depEndDate'));
                         }
+			if(!empty($this->input->get('fromCabin'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'from_cabin = '. $this->input->get('fromCabin');
+                        }
+                        if(!empty($this->input->get('toCabin'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'to_cabin = '.  $this->input->get('toCabin');
+                        }
+
+
 			
 
 
-$sQuery = " SELECT fclr_id,boarding_point, dai.code as carrier_code , off_point, season_id,flight_number, 
-		frequency as day_of_week ,departure_date, min,max,average,slider_start,from_cabin, to_cabin,
+$sQuery = " SELECT fclr_id,boarding_point, dai.code as carrier_code , off_point, season_id,flight_number, fca.code as fcabin, 
+            tca.code as tcabin, CONCAT(dfre.aln_data_value,'(',dfre.code,')') as day_of_week ,
+            departure_date, min,max,average,slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point
                     FROM VX_aln_fare_control_range  fc
                      LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = fc.boarding_point) 
 		     LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = fc.off_point)    
 		     LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = fc.carrier_code)
+		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency)
+		     LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin)
+                     LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin)
+
 $sWhere $sOrder $sLimit";
 
 //print_r($sQuery);exit;
@@ -223,9 +265,9 @@ SELECT  boarding_point, carrier_code,off_point, season_id,flight_number, day_of_
 
 $sQuery = " 
 SELECT  boarding_point, carrier_code,operating_airline_code,off_point, season_id,flight_number, 
-        day_of_week ,departure_date,  group_concat(code,' ' , price SEPARATOR ';') as code_price  
+        day_of_week ,departure_date,  group_concat(code,' ', cabin , ' ' , price SEPARATOR ';') as code_price  
         FROM (
-               SELECT dcla.code ,operating_airline_code,season_id, departure_date ,day_of_week ,flight_number, 
+               SELECT dcla.code ,operating_airline_code,season_id, cabin ,departure_date ,day_of_week ,flight_number, 
                       boarding_point,off_point , 
                       group_concat(prorated_price)  as price,dai.code as carrier_code   
                FROM VX_aln_ra_feed rf  
@@ -235,7 +277,7 @@ SELECT  boarding_point, carrier_code,operating_airline_code,off_point, season_id
                LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.operating_airline_code 
 							AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) 
 		where acc.order > 1   
-		group by dcla.code, day_of_week,flight_number, boarding_point,off_point,season_id,departure_date,operating_airline_code  
+		group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,season_id,departure_date,operating_airline_code  
 		order by flight_number )  as MainSet 
 		group by  boarding_point, off_point, day_of_week, season_id, flight_number, departure_date,operating_airline_code
 ";
@@ -257,16 +299,17 @@ SELECT  boarding_point, carrier_code,operating_airline_code,off_point, season_id
                         $cabins['Y'] = array();
                         foreach($arr as $f ) {
                                 $str = explode(' ' , $f);
-                                $cabins[$str[0]] = explode(',',$str[1]);
+                                $cabins[$str[0]][0] = explode(',',$str[2]);
+				$cabins[$str[0]][1] = $str[1];
                         }
 
                 // from economy to business (Y->C) 
-                  $fromCabin = $cabins['Y'];
-                  $toCabin = $cabins['C'];
+                  $fromCabin = $cabins['Y'][0]; 
+                  $toCabin = $cabins['C'][0];
 
                         if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
-				$array['from_cabin'] = 'Y';
-				$array['to_cabin'] = 'C';
+				$array['from_cabin'] = $cabins['Y'][1];
+				$array['to_cabin'] = $cabins['C'][1];
                                 $data = $this->calculate_Min_Max($fromCabin, $toCabin );
                                 $array['average'] = $data->average;
                                 $array['min'] = $data->min;
@@ -283,12 +326,12 @@ SELECT  boarding_point, carrier_code,operating_airline_code,off_point, season_id
                          }
                         // from economy to pre-eco
 
-                        $fromCabin =  $cabins['Y'];
-                        $toCabin = $cabins['W'];
+                        $fromCabin =  $cabins['Y'][0];
+                        $toCabin = $cabins['W'][0];
 
                         if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
-				 $array['from_cabin'] = 'Y';
-                                $array['to_cabin'] = 'W';
+				 $array['from_cabin'] = $cabins['Y'][1];
+                                $array['to_cabin'] = $cabins['W'][1];
                                 $feed = $this->calculate_Min_Max($fromCabin, $toCabin );
 				$array['average'] = $data->average;
                                 $array['min'] = $data->min;
@@ -307,12 +350,12 @@ SELECT  boarding_point, carrier_code,operating_airline_code,off_point, season_id
                          }
                         // from economy to pre-eco
 
-                        $fromCabin =  $cabins['W'];
-                        $toCabin = $cabins['C'];
+                        $fromCabin =  $cabins['W'][0];
+                        $toCabin = $cabins['C'][0];
 
                         if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
-				 $array['from_cabin'] = 'W';
-                                 $array['to_cabin'] = 'C';
+				 $array['from_cabin'] = $cabins['W'][1];
+                                 $array['to_cabin'] = $cabins['C'][1];
 
                                 $feed = $this->calculate_Min_Max($fromCabin, $toCabin );
 

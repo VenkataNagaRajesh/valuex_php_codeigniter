@@ -44,22 +44,42 @@
 
 </div>
 
+<div class="col-sm-2">
+               <?php
+                        $cabin['0'] = 'Select From Cabin';
+                        ksort($cabin);
+
+                                   echo form_dropdown("from_cabin", $cabin,set_value("from_cabin",$from_cabin), "id='from_cabin' class='form-control hide-dropdown-icon select2'");    ?>
+
+                </div>
+
+
+
+<div class="col-sm-2">
+               <?php
+                        $cabin['0'] = 'Select To cabin';
+                        ksort($cabin);
+
+                                   echo form_dropdown("to_cabin", $cabin,set_value("to_cabin",$to_cabin), "id='to_cabin' class='form-control hide-dropdown-icon select2'");    ?>
+
+                </div>
+
 
 
     <div class="col-sm-2">
-<input type="text" class="form-control" placeholder="Enter Start range Flight Number" id="flight_number" name="flight_number" value="<?=set_value('flight_number')?>" >
+<input type="text" class="form-control" placeholder="Enter Start range Flight Number" id="flight_number" name="flight_number" value="<?=set_value('flight_number',$flight_number)?>" >
                 </div>
 <div class="col-sm-2">
-<input type="text" class="form-control" placeholder="Enter End range Flight number" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number')?>" >
+<input type="text" class="form-control" placeholder="Enter End range Flight number" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
                 </div>
 
  <div class="col-sm-2">
-                            <input type="text" class="form-control" placeholder="Enter Dep From date" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date')?>" >
+                            <input type="text" class="form-control" placeholder="Enter Dep From date" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
                         </div>
 
 	
  <div class="col-sm-2">
-                            <input type="text" class="form-control" placeholder="Enter Dep To date" id="dep_to_date" name="dep_to_date" value="<?=set_value('dep_to_date')?>" >
+                            <input type="text" class="form-control" placeholder="Enter Dep To date" id="dep_to_date" name="dep_to_date" value="<?=set_value('dep_to_date',$dep_to_date)?>" >
                         </div>
 
 
@@ -115,6 +135,9 @@ $("#dep_to_date").datepicker();
                    {"name": "offPoint","value": $("#off_point").val()},
 		    {"name": "depStartDate","value": $("#dep_from_date").val()},
                    {"name": "depEndDate","value": $("#dep_to_date").val()},
+		  {"name": "fromCabin","value": $("#from_cabin").val()},
+                   {"name": "toCabin","value": $("#to_cabin").val()},
+                  
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -131,8 +154,8 @@ $("#dep_to_date").datepicker();
 		   {"data": "departure_date" },
 		   {"data": "carrier_code" },
 		   {"data": "flight_number" },
-		   {"data": "from_cabin" },
-		   {"data": "to_cabin" },
+		   {"data": "fcabin" },
+		   {"data": "tcabin" },
 		   {"data": "day_of_week" },
 		   {"data": "average" },
                    {"data": "min" },
