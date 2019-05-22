@@ -8,6 +8,7 @@ class Fclr extends Admin_Controller {
 		$this->load->model("airline_cabin_m");
 		$this->load->model("fclr_m");
 		$this->load->model("season_m");
+		$this->load->model("marketzone_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('fclr', $language);	
 	}	
@@ -225,6 +226,11 @@ $sWhere $sOrder $sLimit";
 		"aaData" => array()
 	  );
 		foreach ($rResult as $feed ) {
+			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
+			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
+			 $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
+                        $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
+
 			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default season";
 			$feed->departure_date = date('d-m-Y',$feed->departure_date);
                                 $output['aaData'][] = $feed;
