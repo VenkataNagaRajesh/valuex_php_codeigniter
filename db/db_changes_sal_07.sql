@@ -71,13 +71,6 @@ insert into vx_aln_data_defns (aln_data_typeID,aln_data_value,create_userID,modi
 insert into vx_aln_data_types (name,create_userID,modify_userID,active,create_date,modify_date) values   ('time_24_hr_format',1,1,1,1554788423,1554788423);
 
 
-insert into vx_aln_data_defns (aln_data_typeID,aln_data_value,create_userID,modify_userID,create_date,modify_date) values ('14','01','1','1','1554788423','1554788423');
-insert into vx_aln_data_defns (aln_data_typeID,aln_data_value,create_userID,modify_userID,create_date,modify_date) values ('14','Tuesday','1','1','1554788423','1554788423');
-insert into vx_aln_data_defns (aln_data_typeID,aln_data_value,create_userID,modify_userID,create_date,modify_date) values ('14','Wednesday','1','1','1554788423','1554788423');
-insert into vx_aln_data_defns (aln_data_typeID,aln_data_value,create_userID,modify_userID,create_date,modify_date) values ('14','Thursday','1','1','1554788423','1554788423');
-insert into vx_aln_data_defns (aln_data_typeID,aln_data_value,create_userID,modify_userID,create_date,modify_date) values ('14','Friday','1','1','1554788423','1554788423');
-insert into vx_aln_data_defns (aln_data_typeID,aln_data_value,create_userID,modify_userID,create_date,modify_date) values ('14','Saturday','1','1','1554788423','1554788423');
-insert into vx_aln_data_defns (aln_data_typeID,aln_data_value,create_userID,modify_userID,create_date,modify_date) values ('14','Sunday','1','1','1554788423','1554788423');
 
 
 insert into menu (menuName,link,icon,status,parentID,priority) values ('eligibility_exclusion','eligibility_exclusion','icon-template','1','0','1000');
