@@ -236,12 +236,12 @@
 
 
                      <?php
-                        if(form_error('upgrade_from_class_type'))
+                        if(form_error('upgrade_from_cabin_type'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="upgrade_from_class_type" class="col-sm-2 control-label">
+                        <label for="upgrade_from_cabin_type" class="col-sm-2 control-label">
                             <?=$this->lang->line('upgrade_from');?>
                         </label>
                         <div class="col-sm-6">
@@ -251,31 +251,31 @@
 			foreach ($class_type as $class) {
 				$class_list[$class->vx_aln_data_defnsID] = $class->aln_data_value;
 			}
-                         echo form_dropdown("upgrade_from_class_type", $class_list,set_value("upgrade_from_class_type",$e_rule->upgrade_from_class_type), "id='upgrade_from_class_type' class='form-control hide-dropdown-icon select2'");
+                         echo form_dropdown("upgrade_from_cabin_type", $class_list,set_value("upgrade_from_cabin_type",$e_rule->upgrade_from_cabin_type), "id='upgrade_from_cabin_type' class='form-control hide-dropdown-icon select2'");
 
      ?>                   </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('upgrade_from_class_type'); ?>
+                            <?php echo form_error('upgrade_from_cabin_type'); ?>
                         </span>
                     </div>
 
 
                      <?php
-                        if(form_error('upgrade_to_class_type'))
+                        if(form_error('upgrade_to_cabin_type'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="upgrade_to_class_type" class="col-sm-2 control-label">
+                        <label for="upgrade_to_cabin_type" class="col-sm-2 control-label">
                             <?=$this->lang->line('upgrade_to');?>
                         </label>
                         <div class="col-sm-6">
 <?php
-                         echo form_dropdown("upgrade_to_class_type", $class_list,set_value("upgrade_to_class_type",$e_rule->upgrade_to_class_type), "id='upgrade_to_class_type' class='form-control hide-dropdown-icon select2'");
+                         echo form_dropdown("upgrade_to_cabin_type", $class_list,set_value("upgrade_to_cabin_type",$e_rule->upgrade_to_cabin_type), "id='upgrade_to_cabin_type' class='form-control hide-dropdown-icon select2'");
 
      ?>                   </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('upgrade_to_class_type'); ?>
+                            <?php echo form_error('upgrade_to_cabin_type'); ?>
                         </span>
                     </div>
 

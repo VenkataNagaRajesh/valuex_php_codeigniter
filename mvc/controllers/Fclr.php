@@ -200,7 +200,7 @@ class Fclr extends Admin_Controller {
 			
 
 
-$sQuery = " SELECT fclr_id,boarding_point, dai.code as carrier_code , off_point, season_id,flight_number, fca.code as fcabin, 
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS fclr_id,boarding_point, dai.code as carrier_code , off_point, season_id,flight_number, fca.code as fcabin, 
             tca.code as tcabin, CONCAT(dfre.aln_data_value,'(',dfre.code,')') as day_of_week ,
             departure_date, min,max,average,slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point

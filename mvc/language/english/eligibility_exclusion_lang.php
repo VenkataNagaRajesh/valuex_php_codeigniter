@@ -17,8 +17,8 @@ $lang['flight_dep_start'] = 'Departure Start Time';
 $lang['flight_dep_end'] = 'Departure End Time';
 $lang['flight_nbr_range'] = 'Flight Number Range';
 $lang['frequency'] = 'Frequency';
-$lang['upgrade_from'] = 'Upgrade From Class';
-$lang['upgrade_to'] = 'Upgrade To Class';
+$lang['upgrade_from'] = 'Upgrade From Cabin';
+$lang['upgrade_to'] = 'Upgrade To Cabin';
 $lang['future_use'] = 'Future Use';
 $lang['rule_status'] = "Active";
 

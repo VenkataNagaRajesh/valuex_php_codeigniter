@@ -113,6 +113,19 @@ function getAirlinesToMap($array) {
 	function hash($string) {
 		return parent::hash($string);
 	}	
+
+
+	function getCabinFromClassForCarrier($carrier_id , $class ) {
+		$this->db->select('airline_cabin as cabin_id , aca.code as cabin_code')->from('VX_aln_airline_cabin_class acc');	
+		$this->db->join('vx_aln_data_defns aca', 'aca.vx_aln_data_defnsID = acc.airline_cabin','LEFT');
+		$this->db->where('carrier', $carrier_id);
+		$this->db->where('airline_class',$class);
+		 $this->db->limit(1);
+		$query = $this->db->get();
+		$result = $query->row();
+                return $result; 
+
+	}
 }
 
 /* End of file user_m.php */

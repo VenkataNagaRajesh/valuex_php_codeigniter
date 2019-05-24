@@ -41,6 +41,17 @@ class Eligibility_exclusion_m extends MY_Model {
         }
 
 
+	function apply_exclusion_rules($array) {
+		$query = "select distinct eexcl_id, ex.*, dair.airport_id as dest_point, sair.airport_id as src_point  
+				 from VX_aln_eligibility_excl_rules ex  
+				LEFT JOIN VX_market_airport_map dair on (dair.market_id = dest_market_id)   
+				LEFT JOIN VX_market_airport_map sair on  (sair.market_id = orig_market_id) 
+				where sair.airport_id = " . $array['from_city'] . " AND dair.airport_id = ". $array['to_city'] . 
+				" and flight_nbr_start <= ". $array['flight_number'] . " and flight_nbr_end >= " . $array['flight_number'] . 
+				"  and 	flight_efec_date <= ".$array['dep_date']." and flight_disc_date >= ".$array['dep_date'];
+		$result = $this->install_m->run_query($query);
+		return $result;
+	}
 
 	function update_eligibility_rule($data, $id = NULL) {
 		parent::update($data, $id);

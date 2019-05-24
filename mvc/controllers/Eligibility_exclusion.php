@@ -78,12 +78,12 @@ class Eligibility_exclusion extends Admin_Controller {
 
 
 			 array(
-                                'field' => 'upgrade_from_class_type',
+                                'field' => 'upgrade_from_cabin_type',
                                 'label' => $this->lang->line("upgrade_from"),
                                 'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
                         ),
                        array(
-                                'field' => 'upgrade_to_class_type',
+                                'field' => 'upgrade_to_cabin_type',
                                 'label' => $this->lang->line("upgrade_to"),
                                 'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
                        ),
@@ -263,8 +263,8 @@ class Eligibility_exclusion extends Admin_Controller {
 				$array['flight_dep_start'] = $this->input->post("flight_dep_start_hrs").':'.$this->input->post("flight_dep_start_mins");
 				  $array['flight_dep_end'] = $this->input->post("flight_dep_end_hrs").':'.$this->input->post("flight_dep_end_mins");
 				$array['frequency'] = implode(',',$this->input->post("frequency"));
-				$array['upgrade_from_class_type'] = $this->input->post("upgrade_from_class_type");
-				$array['upgrade_to_class_type'] = $this->input->post("upgrade_to_class_type");
+				$array['upgrade_from_cabin_type'] = $this->input->post("upgrade_from_cabin_type");
+				$array['upgrade_to_cabin_type'] = $this->input->post("upgrade_to_cabin_type");
 				$array["future_use"] = $this->input->post("future_use");
 				$array["create_date"] = time();
 				$array["modify_date"] = time();
@@ -327,8 +327,8 @@ class Eligibility_exclusion extends Admin_Controller {
                                 $array['flight_dep_start'] = $this->input->post("flight_dep_start_hrs").':'.$this->input->post("flight_dep_start_mins");
                                   $array['flight_dep_end'] = $this->input->post("flight_dep_end_hrs").':'.$this->input->post("flight_dep_end_mins");
                                 $array['frequency'] = implode(',',$this->input->post("frequency"));
-                                $array['upgrade_from_class_type'] = $this->input->post("upgrade_from_class_type");
-                                $array['upgrade_to_class_type'] = $this->input->post("upgrade_to_class_type");
+                                $array['upgrade_from_cabin_type'] = $this->input->post("upgrade_from_cabin_type");
+                                $array['upgrade_to_cabin_type'] = $this->input->post("upgrade_to_cabin_type");
                                 $array["future_use"] = $this->input->post("future_use");
                                 $array["create_date"] = time();
                                 $array["modify_date"] = time();
@@ -438,7 +438,7 @@ function time_dropdown($val) {
 	    $aColumns = array('MainSet.eexcl_id','MainSet.excl_reason_desc' ,'MainSet.orig_mkt_name', 'MainSet.dest_mkt_name', 
         'MainSet.flight_efec_date', 'MainSet.flight_disc_date', 'MainSet.flight_dep_start', 'MainSet.flight_dep_end', 
         'MainSet.flight_nbr', 'MainSet.from_class', 'MainSet.to_class', 'Subset.frequency', 'MainSet.future_use', 'MainSet.active',
-        'MainSet.orig_market_id', 'MainSet.dest_market_id','MainSet.upgrade_from_class_type', 'MainSet.upgrade_to_class_type',
+        'MainSet.orig_market_id', 'MainSet.dest_market_id','MainSet.upgrade_from_cabin_type', 'MainSet.upgrade_to_cabin_type',
 	'MainSet.flight_nbr_start','MainSet.flight_nbr_end');
 	
 		$sLimit = "";
@@ -519,11 +519,11 @@ function time_dropdown($val) {
 			
 			if(!empty($this->input->get('fromClass'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.upgrade_from_class_type = '.$this->input->get('fromClass');
+                                $sWhere .= 'MainSet.upgrade_from_cabin_type = '.$this->input->get('fromClass');
                         }
                         if(!empty($this->input->get('toClass'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.upgrade_to_class_type = '.$this->input->get('toClass');
+                                $sWhere .= 'MainSet.upgrade_to_cabin_type = '.$this->input->get('toClass');
                         }
 
 			if(!empty($this->input->get('futureuse'))){
@@ -592,7 +592,7 @@ function time_dropdown($val) {
 SELECT  SQL_CALC_FOUND_ROWS MainSet.eexcl_id,MainSet.excl_reason_desc ,MainSet.orig_mkt_name, MainSet.dest_mkt_name, 
         MainSet.flight_efec_date, MainSet.flight_disc_date, MainSet.flight_dep_start, MainSet.flight_dep_end, 
         MainSet.flight_nbr, MainSet.from_class, MainSet.to_class, Subset.frequency, MainSet.future_use, MainSet.active,
-        MainSet.orig_market_id, MainSet.dest_market_id , Subset.dayslist , MainSet.upgrade_from_class_type, MainSet.upgrade_to_class_type,
+        MainSet.orig_market_id, MainSet.dest_market_id , Subset.dayslist , MainSet.upgrade_from_cabin_type, MainSet.upgrade_to_cabin_type,
         MainSet.flight_nbr_start, MainSet.flight_nbr_end 
 
 FROM (     
@@ -600,13 +600,13 @@ FROM (
               select eexcl_id,excl_reason_desc, ex.orig_market_id , ex.dest_market_id ,oz.market_name as orig_mkt_name, dz.market_name as dest_mkt_name, 
               flight_efec_date, flight_disc_date, flight_dep_start, flight_dep_end, CONCAT(flight_nbr_start,'-',flight_nbr_end) 
               as flight_nbr,fc.aln_data_value as from_class , tc.aln_data_value as to_class, future_use, ex.active , 
-              ex.upgrade_from_class_type, ex.upgrade_to_class_type  ,ex.flight_nbr_start, ex.flight_nbr_end
+              ex.upgrade_from_cabin_type, ex.upgrade_to_cabin_type  ,ex.flight_nbr_start, ex.flight_nbr_end
               from VX_aln_eligibility_excl_rules ex 
 
               LEFT JOIN VX_aln_market_zone oz on (oz.market_id = ex.orig_market_id) 
               LEFT JOIN VX_aln_market_zone dz on (dz.market_id = ex.dest_market_id)  
-              LEFT JOIN  vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = ex.upgrade_from_class_type ) 
-              LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID  = ex.upgrade_to_class_type)) as MainSet 
+              LEFT JOIN  vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type ) 
+              LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID  = ex.upgrade_to_cabin_type)) as MainSet 
 LEFT JOIN (
               select
                         FirstSet.frequency,FirstSet.eexcl_id, FirstSet.dayslist

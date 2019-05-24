@@ -5,6 +5,7 @@ class Paxfeed extends Admin_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model("paxfeed_m");
+		$this->load->model('paxfeedraw_m');
 		$this->load->model('rafeed_m');
 		$this->load->model("airline_cabin_m");
 		$language = $this->session->userdata('lang');
@@ -124,7 +125,38 @@ class Paxfeed extends Admin_Controller {
                                         } else {
                                            if($flag == 1){                                                                                      
 					   	 if(count($Row) == 20){ //print_r($Row); exit;						
-	 						$paxfeed['airline_code'] =  $this->rafeed_m->getDefIdByTypeAndCode($Row[0],'12'); 
+
+							$paxfeedraw['airline_code'] =  $Row[0];
+                                                         $paxfeedraw['pnr_ref'] = $Row[1];
+                                                         $paxfeedraw['pax_nbr'] = $Row[2];
+                                                         $paxfeedraw['first_name'] = $Row[3];
+                                                         $paxfeedraw['last_name'] = $Row[4];
+                                                         $paxfeedraw['ptc'] = $Row[5];
+                                                         $paxfeedraw['fqtv'] = $Row[6];
+                                                         $paxfeedraw['seg_nbr'] =  $Row[7];
+                                                         $paxfeedraw['carrier_code'] =  $Row[8];
+                                                         $paxfeedraw['flight_number'] = $Row[9];
+                                                         $paxfeedraw['dep_date'] = $Row[10];
+                                                         $paxfeedraw['class'] = $Row[11];
+                                                         $paxfeedraw['from_city'] = $Row[12];
+                                                         $paxfeedraw['to_city'] = $Row[13];
+                                                         $paxfeedraw['phone'] = $Row[14];
+                                                         $paxfeedraw['pax_contact_email'] = $Row[15];
+                                                         $paxfeedraw['booking_country'] =  $Row[16];
+                                                         $paxfeedraw['booking_city'] = $Row[17];
+                                                         $paxfeedraw['office_id'] = $Row[18];
+                                                         $paxfeedraw['channel'] = $Row[19];
+
+							  if($this->paxfeedraw_m->checkPaxFeedRaw($paxfeedraw)) {
+
+                                                             $paxfeedraw['create_date'] = time();
+                                                             $paxfeedraw['modify_date'] = time();
+                                                             $paxfeedraw['create_userID'] = $this->session->userdata('loginuserID');
+                                                             $paxfeedraw['modify_userID'] = $this->session->userdata('loginuserID');
+                                                              $raw_pax_id = $this->paxfeedraw_m->insert_paxfeedraw($paxfeedraw);
+
+								if ( $raw_pax_id ) {
+	 						$paxfeed['airline_code'] =  $this->rafeed_m->getDefIdByTypeAndCode($Row[0],'12'); 									$paxfeed['dtpfraw_id' ] = $raw_pax_id;
                                                          $paxfeed['pnr_ref'] = $Row[1];
                                                          $paxfeed['pax_nbr'] = $Row[2];
                                                          $paxfeed['first_name'] = $Row[3];
@@ -136,25 +168,27 @@ class Paxfeed extends Admin_Controller {
                                                          $paxfeed['flight_number'] = $Row[9];
                                                          $paxfeed['dep_date'] = strtotime(str_replace('-','/',$Row[10]));
                                                          $paxfeed['class'] = $Row[11];
-                                                         $paxfeed['from_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[12],'5');
-                                                         $paxfeed['to_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[13],'5');
+                                                         $paxfeed['from_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[12],'1');
+                                                         $paxfeed['to_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[13],'1');
 							 $paxfeed['phone'] = $Row[14];
                                                          $paxfeed['pax_contact_email'] = $Row[15];
                                                          $paxfeed['booking_country'] =  $this->rafeed_m->getDefIdByTypeAndCode($Row[16],'2');
 							 $paxfeed['booking_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[17],'5');
                                                          $paxfeed['office_id'] = $Row[18];
                                                          $paxfeed['channel'] = $Row[19];
-						if($this->paxfeed_m->checkPaxFeed($paxfeed)) {
+						         if($this->paxfeed_m->checkPaxFeed($paxfeed)) {
 							
-                                                           $paxfeed['create_date'] = time();
-                                                          $paxfeed['modify_date'] = time();
-                                                          $paxfeed['create_userID'] = $this->session->userdata('loginuserID');
-                                                          $paxfeed['modify_userID'] = $this->session->userdata('loginuserID');
+                                                             $paxfeed['create_date'] = time();
+                                                             $paxfeed['modify_date'] = time();
+                                                             $paxfeed['create_userID'] = $this->session->userdata('loginuserID');
+                                                             $paxfeed['modify_userID'] = $this->session->userdata('loginuserID');
 						//	print_r($rafeed);exit;
-                                                        $this->paxfeed_m->insert_paxfeed($paxfeed);
+                                                              $this->paxfeed_m->insert_paxfeed($paxfeed);
+						}
+						}
+						}
 						}
 
-					   	 } 						
 					   } else {
 						   print_r("mismatch");
 					   }

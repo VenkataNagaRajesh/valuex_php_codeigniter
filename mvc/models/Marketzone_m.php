@@ -260,6 +260,17 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 		return array_column($result,'market_name');
 	}
 
+
+	function getAirportsForMarketID($market_id) {
+                $this->db->select('airport_id')->from('VX_market_airport_map');
+                $this->db->where('market_id',$market_id);
+                $query = $this->db->get();
+                $result =  $query->result();
+                return array_column($result,'airport_id');
+        }
+
+
+
 	function update_marketzone($data, $id = NULL) {
 		parent::update($data, $id);
 		return $id;
