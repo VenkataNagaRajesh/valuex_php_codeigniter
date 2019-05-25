@@ -6,6 +6,7 @@ class Invfeed extends Admin_Controller {
 		parent::__construct();
 		$this->load->model("invfeed_m");
 		$this->load->model('rafeed_m');
+		$this->load->model("invfeedraw_m");
 		$this->load->model("airline_cabin_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('invfeed', $language);	
@@ -118,7 +119,25 @@ class Invfeed extends Admin_Controller {
                                         } else {
                                            if($flag == 1){                                                                                      
 					   	 if(count($Row) == 8){ //print_r($Row); exit;						
+
+							$invfeedraw['airline'] = $Row[0];
+							$invfeedraw['flight_nbr'] = $Row[1];
+							$invfeedraw['departure_date'] = $Row[2];
+							 $invfeedraw['origin_airport'] = $Row[3];
+							$invfeedraw['dest_airport'] = $Row[4];
+							$invfeedraw['cabin'] =  $Row[5];
+							$invfeedraw['empty_seats'] = $Row[6];
+							$invfeedraw['sold_seats'] = $Row[7];
+						if($this->invfeedraw_m->checkInvFeedRaw($invfeedraw)) {
+                                                           $invfeedraw['create_date'] = time();
+                                                          $invfeedraw['modify_date'] = time();
+                                                          $invfeedraw['create_userID'] = $this->session->userdata('loginuserID');
+                                                          $invfeedraw['modify_userID'] = $this->session->userdata('loginuserID');
+								$invfeed_raw_id = $this->invfeedraw_m->insert_invfeedraw($invfeedraw);
+							if($invfeed_raw_id) {
+
 	 						$invfeed['airline_id'] =  $this->rafeed_m->getDefIdByTypeAndCode($Row[0],'12'); 
+							$invfeed['invfeedraw_id'] = $invfeed_raw_id;
                                                          $invfeed['flight_nbr'] = $Row[1];
                                                          $invfeed['departure_date'] = strtotime(str_replace('-','/',$Row[2]));
                                                          $invfeed['origin_airport'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[3],'1');
@@ -136,7 +155,8 @@ class Invfeed extends Admin_Controller {
 						//	print_r($rafeed);exit;
                                                         $this->invfeed_m->insert_invfeed($invfeed);
 						}
-
+						}
+						}
 					   	 } 						
 					   } else {
 						   print_r("mismatch");
