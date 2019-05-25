@@ -297,13 +297,13 @@ $sWhere $sOrder $sLimit";
                                                 $ext["create_userID"] = $this->session->userdata('loginuserID');
                                                  $ext["modify_userID"] = $this->session->userdata('loginuserID');
 				if($f->from_cabin == $rule->upgrade_from_cabin_type && $f->to_cabin == $rule->upgrade_to_cabin_type) {
-                                                $ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndCode('Excl','20');
+                                                $ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 						$ext['exclusion_id'] = $rule->eexcl_id ;
                                                  $this->offer_eligibility_m->insert_dtpfext($ext);
 	
 						 
 				} else {
-                                                $ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndCode('New','20');
+                                                $ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
                                                  $this->offer_eligibility_m->insert_dtpfext($ext);
 
 				}

@@ -175,4 +175,5 @@ $lang['menu_paxfeed'] = 'Daily Tkt Pax Feed';
 $lang['menu_fclr'] = 'Fare Control Range';
 $lang['menu_acsr'] = 'Auto Confirm SetUp Rule';
 $lang['menu_offer_eligibility'] = 'Offer Eligibility';
+$lang['menu_event_status'] = 'Event Status';
 /* End Update Menu */

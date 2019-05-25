@@ -50,6 +50,19 @@ class Rafeed_m extends MY_Model {
         }
 
 
+	function getDefIdByTypeAndAlias($alias,$type) {
+
+                $this->db->select('vx_aln_data_defnsID');
+                $this->db->from('vx_aln_data_defns');
+                $this->db->where('aln_data_typeID',$alias);
+                $this->db->where('alias',$alias);
+                $this->db->limit(1);
+                $query = $this->db->get();
+                $name = $query->row();
+                return $name->vx_aln_data_defnsID;
+        }
+
+
 	function getDefIdByTypeAndName($name ,$type) {
 
 		$this->db->select('vx_aln_data_defnsID');
