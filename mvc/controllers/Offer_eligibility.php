@@ -281,8 +281,8 @@ $sWhere $sOrder $sLimit";
                         $upgrade['off_point'] = $feed->to_city;
                         $upgrade['flight_number'] = $feed->flight_number;
                         $upgrade['carrier_code'] = $feed->carrier_code;
-                        $upgrade['frequency'] =  $this->rafeed_m->getDefIdByTypeAndCode(date('w',$feed->dep_date),'14'); //507;
-                        $upgrade['season_id'] = $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code); //0;
+                        $upgrade['frequency'] = 507;// $this->rafeed_m->getDefIdByTypeAndCode(date('w',$feed->dep_date),'14'); //507;
+                        $upgrade['season_id'] = 0;//$this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code); //0;
                          $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
 		if(count($rules) > 0 ) {
 			// rule matches partially check for the cabins that are excluded
@@ -319,7 +319,7 @@ $sWhere $sOrder $sLimit";
 						$ext['dtpf_id'] = $feed->dtpf_id;
 						$ext['fclr_id'] = $f->fclr_id;
 						$ext['coupon_code'] = $coupon_code;
-						$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndCode('New','20');
+						$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
 						$ext["create_date"] = time();
                 		                $ext["modify_date"] = time();
 		                                $ext["create_userID"] = $this->session->userdata('loginuserID');
