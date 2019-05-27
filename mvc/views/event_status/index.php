@@ -38,15 +38,15 @@
                            <div class="col-sm-2">
                <?php $booking_status['0'] = "Select Event Name";
 			ksort($booking_status);
-                                   echo form_dropdown("event_id", $booking_status,set_value("event_id",$airliineID), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("event_id", $booking_status,set_value("event_id",$event_id), "id='event_id' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
                  <div class="col-sm-2">
 
 			<?php
 			
-                        $airlinecabins['0'] = "Select Cabin";
-			ksort($airlinecabins);
-                        echo form_dropdown("airline_cabin", $airlinecabins,set_value("airline_cabin",$cabinID), "id='airline_cabin' class='form-control hide-dropdown-icon select2'");    ?>
+	$booking_status['0'] = "Select Current Status";
+                        ksort($booking_status);
+                                   echo form_dropdown("current_status", $booking_status,set_value("current_status",$current_status), "id='current_status' class='form-control hide-dropdown-icon select2'");    ?>
 
 
                  </div>
@@ -117,8 +117,8 @@
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('event_status/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
-       aoData.push({"name": "airlineID","value": $("#airline_code").val()},
-		   {"name": "cabinID","value": $("#airline_cabin").val()},
+       aoData.push({"name": "eventID","value": $("#event_id").val()},
+		   {"name": "currentStatus","value": $("#current_status").val()},
 			{"name": "active","value": $("#active").val()})
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',

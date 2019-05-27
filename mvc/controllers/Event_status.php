@@ -77,23 +77,17 @@ class Event_status extends Admin_Controller {
                 );
 
 
-	        if(!empty($this->input->post('airline_code'))){
-                  $this->data['airlineID'] = $this->input->post('airline_code');
+	        if(!empty($this->input->post('event_id'))){
+                  $this->data['event_id'] = $this->input->post('event_id');
                 } else {
-                  $this->data['airlineID'] = 0;
+                  $this->data['event_id'] = 0;
                 }
 
 
-		if(!empty($this->input->post('airline_aircraft'))){
-                  $this->data['aircraftID'] = $this->input->post('airline_aircraft');
+                if(!empty($this->input->post('current_status'))){
+                $this->data['current_status'] = $this->input->post('current_status');
                 } else {
-                  $this->data['aircraftID'] = 0;
-                }
-
-                if(!empty($this->input->post('airline_class'))){
-                $this->data['classID'] = $this->input->post('airline_class');
-                } else {
-                  $this->data['classID'] = 0;
+                  $this->data['current_status'] = 0;
                 }
 
 		if(!empty($this->input->post('active'))){
@@ -103,10 +97,7 @@ class Event_status extends Admin_Controller {
                 }
 
 
-	//	$this->data['airline_cabin'] = $this->airline_cabin_m->get_AirlineCabinsMapList();
-          //  $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
-            //$this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
-
+		 $this->data['booking_status'] = $this->airports_m->getDefnsListByType('20');
 		$this->data["subview"] = "event_status/index";
 		$this->load->view('_layout_main', $this->data);
 
@@ -332,13 +323,13 @@ class Event_status extends Admin_Controller {
                                 }
                         }
 
-                        if(!empty($this->input->get('airlineID'))){
+                        if(!empty($this->input->get('eventID'))){
                      		 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              			$sWhere .= 'airline_code = '.$this->input->get('airlineID');
+              			$sWhere .= 'event_id = '.$this->input->get('eventID');
                 	}
-                        if(!empty($this->input->get('cabinID'))){
+                        if(!empty($this->input->get('currentStatus'))){
                       		$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              			$sWhere .= 'airline_cabin = '.$this->input->get('cabinID');
+              			$sWhere .= 'current_status = '.$this->input->get('currentStatus');
                 	}
 
                        if(!empty($this->input->get('active')) && $this->input->get('active') != '-1'){
@@ -360,6 +351,8 @@ LEFT JOIN vx_aln_data_defns ev on (ev.vx_aln_data_defnsID = es.event_id)
         LEFT JOIN  vx_aln_data_defns ns on (ns.vx_aln_data_defnsID = es.next_status)
 $sWhere  group by event_id, es.current_status, es.active , event_name, current_status_name,isInternalStatus
   $sOrder $sLimit";
+
+//print_r($sQuery);exit;
                 $rResult = $this->install_m->run_query($sQuery);
                 $sQuery = "SELECT FOUND_ROWS() as total";
                 $rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;
