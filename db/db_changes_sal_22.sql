@@ -1,0 +1,21 @@
+CREATE TABLE `VX_aln_dtpf_tracker` (
+  `dtpf_tracker_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+   `dtpfext_id` int(11) NOT NULL,
+  `comment` text DEFAULT NULL,
+  `booking_status_from` int(11) NOT NULL,
+  `booking_status_to` int(11) NOT NULL,
+  `create_date` int(11) NOT NULL,
+  `modify_date` int(11) NOT NULL,
+  `create_userID` int(11) NOT NULL,
+  `modify_userID` int(11) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT '1',
+    PRIMARY KEY (`dtpf_tracker_id`),
+  KEY `dtpfext_id_index` (`dtpfext_id`),
+   KEY `booking_status_from_index` (`booking_status_from`),
+    KEY `booking_status_to_index` (`booking_status_to`),
+  KEY `modify_date_index` (`modify_date`),
+  KEY `create_date_index` (`create_date`),
+  KEY `create_userID_index` (`create_userID`),
+  KEY `modify_userID_index` (`modify_userID`),
+  KEY `active_index` (`active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ;
