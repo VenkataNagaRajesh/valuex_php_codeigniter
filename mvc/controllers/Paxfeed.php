@@ -170,8 +170,8 @@ class Paxfeed extends Admin_Controller {
                                                          $paxfeed['class'] = $Row[11];
                                                          $paxfeed['from_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[12],'1');
                                                          $paxfeed['to_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[13],'1');
-							 $paxfeed['phone'] = $Row[14];
-                                                         $paxfeed['pax_contact_email'] = $Row[15];
+							 $paxfeed['phone'] = $Row[15];
+                                                         $paxfeed['pax_contact_email'] = $Row[14];
                                                          $paxfeed['booking_country'] =  $this->rafeed_m->getDefIdByTypeAndCode($Row[16],'2');
 							 $paxfeed['booking_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[17],'5');
                                                          $paxfeed['office_id'] = $Row[18];
