@@ -191,10 +191,10 @@ CREATE TABLE `VX_customer_payment_cards` (
   `cardID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `customerID` int(11) unsigned NOT NULL,
   `card_type` varchar(50) NOT NULL,
-  `cc_nbr` tinyint(1) NOT NULL,
+  `cc_nbr` int(11) NOT NULL,
   `cc_expiry_date` int(11) unsigned NOT NULL,
   `cvs_nbr` int(11) NOT NULL, 
   `isdefault` tinyint(1) NOT NULL,  
-  PRIMARY KEY (`fbmsgID`),
+  PRIMARY KEY (`cardID`),
   KEY `customer_indx` (`customerID`) 
 );
