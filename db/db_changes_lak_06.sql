@@ -33,9 +33,14 @@ drop table systemadmin;
 drop table transport;
 drop table uattendance;
 drop table vendor;
+drop table schoolyear;
+drop table visitorinfo;
 
  update menu set status = 0 where menuID =11;
  update menu set status = 0 where menuID =12;
  update menu set status = 0 where menuID =100;
  update menu set status = 0 where menuID =41;
 update menu set status = 0 where menuID =19;
+update menu set status = 0 where menuID =47;
+update menu set status = 0 where menuID =44;
+update menu set status = 0 where menuID =69;

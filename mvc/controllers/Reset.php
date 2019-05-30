@@ -69,7 +69,7 @@ class Reset extends CI_Controller {
 				$this->load->view('_layout_reset', $this->data);
 			} else {
 				$email = $this->input->post('email');
-				$tables = array('student' => 'student', 'parents' => 'parents', 'teacher' => 'teacher', 'user' => 'user', 'systemadmin' => 'systemadmin');
+				$tables = array('user' => 'user');
 				foreach ($tables as $table) {
 					$dbuser = $this->reset_m->get_table_users($table, $email);
 					if(count($dbuser)) {
@@ -143,7 +143,7 @@ class Reset extends CI_Controller {
 							$password = $this->input->post('newpassword');
 							$email = $dbreset->email;
 
-							$tables = array('student' => 'student', 'parents' => 'parents', 'teacher' => 'teacher', 'user' => 'user', 'systemadmin' => 'systemadmin');
+							$tables = array('user' => 'user');
 							foreach ($tables as $table) {
 								$dbuser = $this->reset_m->get_table_users($table, $email);
 								if(count($dbuser)) {

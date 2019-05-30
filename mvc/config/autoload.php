@@ -58,8 +58,8 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array('mydebug');
-
+$autoload['libraries'] = array('mydebug','recaptcha');
+//$autoload['libraries'] = array('recaptcha');
 /*
 | -------------------------------------------------------------------
 |  Auto-load Drivers
@@ -103,7 +103,7 @@ $autoload['helper'] = array("url", "html", "action", "security", 'site', 'file',
 | config files.  Otherwise, leave it blank.
 |
 */
-$autoload['config'] = array();
+$autoload['config'] = array('recaptcha');
 
 /*
 | -------------------------------------------------------------------
