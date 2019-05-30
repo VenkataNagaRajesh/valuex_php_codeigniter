@@ -3,7 +3,7 @@
     <title>reCAPTCHA Example</title>
 </head>
 <body>
-<form action="/a/test" method="post">
+<form action="<?php echo base_url('myhome/recaptcha'); ?>" method="post">
 <?php echo $widget;?>
 <?php echo $script;?>
 <br />
