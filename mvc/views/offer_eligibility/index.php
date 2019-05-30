@@ -16,6 +16,12 @@
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('generate_offer_eligibility')?>
                   </a>
+		  &nbsp;&nbsp;			
+		   <a href="<?php echo base_url('offer_issue') ?>">
+                      <i class="fa fa-upload"></i>
+                      <?=$this->lang->line('offer_issue')?>
+                  </a>
+
               </h5>
 			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 

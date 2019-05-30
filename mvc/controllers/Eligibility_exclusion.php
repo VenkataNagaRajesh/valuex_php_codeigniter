@@ -260,8 +260,8 @@ class Eligibility_exclusion extends Admin_Controller {
 				 $array["flight_nbr_end"] = $this->input->post("flight_nbr_end");
 				$array["flight_efec_date"] = strtotime($this->input->post("flight_efec_date"));
 				$array["flight_disc_date"] = strtotime($this->input->post("flight_disc_date"));
-				$array['flight_dep_start'] = $this->input->post("flight_dep_start_hrs").':'.$this->input->post("flight_dep_start_mins");
-				  $array['flight_dep_end'] = $this->input->post("flight_dep_end_hrs").':'.$this->input->post("flight_dep_end_mins");
+				$array['flight_dep_start'] = (3600 * $this->input->post("flight_dep_start_hrs")) + (60 * $this->input->post("flight_dep_start_mins"));
+				  $array['flight_dep_end'] = (3600 * $this->input->post("flight_dep_end_hrs"))  + ( 60 * $this->input->post("flight_dep_end_mins"));
 				$array['frequency'] = implode(',',$this->input->post("frequency"));
 				$array['upgrade_from_cabin_type'] = $this->input->post("upgrade_from_cabin_type");
 				$array['upgrade_to_cabin_type'] = $this->input->post("upgrade_to_cabin_type");
@@ -324,8 +324,8 @@ class Eligibility_exclusion extends Admin_Controller {
                                  $array["flight_nbr_end"] = $this->input->post("flight_nbr_end");
                                 $array["flight_efec_date"] = strtotime($this->input->post("flight_efec_date"));
                                 $array["flight_disc_date"] = strtotime($this->input->post("flight_disc_date"));
-                                $array['flight_dep_start'] = $this->input->post("flight_dep_start_hrs").':'.$this->input->post("flight_dep_start_mins");
-                                  $array['flight_dep_end'] = $this->input->post("flight_dep_end_hrs").':'.$this->input->post("flight_dep_end_mins");
+                                $array['flight_dep_start'] = (3600 * $this->input->post("flight_dep_start_hrs")) + (60 * $this->input->post("flight_dep_start_mins"));
+                                  $array['flight_dep_end'] = (3600 * $this->input->post("flight_dep_end_hrs")) + (60 * $this->input->post("flight_dep_end_mins"));
                                 $array['frequency'] = implode(',',$this->input->post("frequency"));
                                 $array['upgrade_from_cabin_type'] = $this->input->post("upgrade_from_cabin_type");
                                 $array['upgrade_to_cabin_type'] = $this->input->post("upgrade_to_cabin_type");
@@ -638,6 +638,8 @@ LEFT JOIN (
 	  foreach($rResult as $rule){	
 		$rule->flight_efec_date = date('d-m-Y',$rule->flight_efec_date);
                $rule->flight_disc_date = date('d-m-Y',$rule->flight_disc_date);
+		$rule->flight_dep_start = gmdate('H:i:s', $rule->flight_dep_start);
+		$rule->flight_dep_end = gmdate('H:i:s', $rule->flight_dep_end);
 		  
 		  $rule->future_use = ($rule->future_use)?"yes":"no";
 		  

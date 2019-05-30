@@ -161,7 +161,7 @@
 				<div class="col-sm-3">
 				Hrs:
                            <?php
-				$st_arr = explode(':',$e_rule->flight_dep_start);
+				$st_arr = explode(':',gmdate('H:i:s', $e_rule->flight_dep_start));
                                     echo form_dropdown("flight_dep_start_hrs", $hrs,set_value("flight_dep_start_hrs",$st_arr[0]), "id='flight_dep_start_hrs' class='form-control hide-dropdown-icon select2'");
                                  ?>
 				</div>
@@ -191,7 +191,7 @@
 				<div class="col-sm-3">
 				Hrs:
                            <?php
-			$end_arr = explode(':',$e_rule->flight_dep_end);
+			$end_arr = explode(':',gmdate('H:i:s',$e_rule->flight_dep_end));
                                      echo form_dropdown("flight_dep_end_hrs", $hrs,set_value("flight_dep_end_hrs",$end_arr[0]), "id='flight_dep_end_hrs' class='form-control hide-dropdown-icon select2'");
                                                    ?>
 				</div>

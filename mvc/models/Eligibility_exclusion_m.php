@@ -48,7 +48,8 @@ class Eligibility_exclusion_m extends MY_Model {
 				LEFT JOIN VX_market_airport_map sair on  (sair.market_id = orig_market_id) 
 				where sair.airport_id = " . $array['from_city'] . " AND dair.airport_id = ". $array['to_city'] . 
 				" and flight_nbr_start <= ". $array['flight_number'] . " and flight_nbr_end >= " . $array['flight_number'] . 
-				"  and 	flight_efec_date <= ".$array['dep_date']." and flight_disc_date >= ".$array['dep_date'];
+				"  and 	flight_efec_date <= ".$array['dep_date']." and flight_disc_date >= ".$array['dep_date'] .
+				"  and  flight_dep_start <= ".$array['dep_time']." and flight_dep_end >= ".$array['dep_time'];
 		$result = $this->install_m->run_query($query);
 		return $result;
 	}

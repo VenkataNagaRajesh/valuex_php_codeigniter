@@ -274,6 +274,7 @@ $sWhere $sOrder $sLimit";
 		$array['to_city'] = $feed->to_city;
 		$array['flight_number'] = $feed->flight_number;
 		$array['dep_date'] = $feed->dep_date;
+		$array['dep_time'] = $feed->dep_time;
 		
 		$rules = $this->eligibility_exclusion_m->apply_exclusion_rules($array);
 
@@ -281,18 +282,16 @@ $sWhere $sOrder $sLimit";
                         $upgrade['off_point'] = $feed->to_city;
                         $upgrade['flight_number'] = $feed->flight_number;
                         $upgrade['carrier_code'] = $feed->carrier_code;
-                        $upgrade['frequency'] =  507;$this->rafeed_m->getDefIdByTypeAndCode(date('w',$feed->dep_date),'14'); //507;
-                        $upgrade['season_id'] = 0;$this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code); //0;
+                        $upgrade['frequency'] =  $this->rafeed_m->getDefIdByTypeAndCode(date('w',$feed->dep_date),'14'); //507;
+                        $upgrade['season_id'] = $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code); //0;
                          $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
 		if(count($rules) > 0 ) {
 			// rule matches partially check for the cabins that are excluded
 			foreach($rules as $rule ) {
 				foreach($data as $f) {
 						$ext = array();
-					//$coupon_code = $this->generateRandomString(6);
 						$ext['dtpf_id'] = $feed->dtpf_id;
                                                 $ext['fclr_id'] = $f->fclr_id;
-					        //$ext['coupon_code'] = $coupon_code;	
 						$ext["create_date"] = time();
                                                  $ext["modify_date"] = time();
                                                 $ext["create_userID"] = $this->session->userdata('loginuserID');
@@ -313,14 +312,12 @@ $sWhere $sOrder $sLimit";
 		 } else {
 			//insert pax not excluded
                                         foreach($data as $f) {
-					//	$coupon_code = $this->generateRandomString(6);
                                                 // cabins Y, W we have to insert
                                                 // y->c,  W->C, Y-> W
                                                         // insert records ext table 
 						$ext = array();
 						$ext['dtpf_id'] = $feed->dtpf_id;
 						$ext['fclr_id'] = $f->fclr_id;
-						//$ext['coupon_code'] = $coupon_code;
 						$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
 						$ext["create_date"] = time();
                 		                $ext["modify_date"] = time();
@@ -340,20 +337,6 @@ $sWhere $sOrder $sLimit";
 
 	}
 
-
-  public  function generateRandomString($length = 20) {
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-	if ($this->offer_eligibility_m->checkForUniqueCouponCode($randomString)){
-        	return $this->encrypt->encode($randomString);  // to decode  $this->encrypt->decode($encrypt_key);
-	} else {
-		$this->generateRandomString(6);
-	}
-    }
 
 
 }

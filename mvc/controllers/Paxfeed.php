@@ -8,6 +8,7 @@ class Paxfeed extends Admin_Controller {
 		$this->load->model('paxfeedraw_m');
 		$this->load->model('rafeed_m');
 		$this->load->model("airline_cabin_m");
+		$this->load->model('airline_cabin_class_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('paxfeed', $language);	
 	}	
@@ -100,9 +101,11 @@ class Paxfeed extends Admin_Controller {
 
 				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
 				$Reader = new SpreadsheetReader($file); 
-				
+
+
+
 		$header = array("airline_code","pnr_ref","pax_nbr","first_name","last_name","ptc","fqtv","seg_nbr",
-				"carrier_code","flight_nbr","dep_date","class","from_city","to_city","pax_contact_email",
+				"carrier_code","flight_nbr","dep_date","dep_time","arrival_time","class","from_city","to_city","pax_contact_email",
 					"phone","booking_country","booking_city","office_id","channel");	
 
 				$Sheets = $Reader -> Sheets();
@@ -115,7 +118,6 @@ class Paxfeed extends Admin_Controller {
                                    $i = 0;
                  //$time_start = microtime(true);                                          
                                   foreach ($Reader as $Row){
-                                //      print_r($Row);exit;
                                         if($i == 0){ // header checking                                         
 
                                           $flag = 0 ;
@@ -124,7 +126,7 @@ class Paxfeed extends Admin_Controller {
                                          }
                                         } else {
                                            if($flag == 1){                                                                                      
-					   	 if(count($Row) == 20){ //print_r($Row); exit;						
+					   	 if(count($Row) == 22){ //print_r($Row); exit;						
 
 							$paxfeedraw['airline_code'] =  $Row[0];
                                                          $paxfeedraw['pnr_ref'] = $Row[1];
@@ -137,15 +139,17 @@ class Paxfeed extends Admin_Controller {
                                                          $paxfeedraw['carrier_code'] =  $Row[8];
                                                          $paxfeedraw['flight_number'] = $Row[9];
                                                          $paxfeedraw['dep_date'] = $Row[10];
-                                                         $paxfeedraw['class'] = $Row[11];
-                                                         $paxfeedraw['from_city'] = $Row[12];
-                                                         $paxfeedraw['to_city'] = $Row[13];
-                                                         $paxfeedraw['phone'] = $Row[14];
-                                                         $paxfeedraw['pax_contact_email'] = $Row[15];
-                                                         $paxfeedraw['booking_country'] =  $Row[16];
-                                                         $paxfeedraw['booking_city'] = $Row[17];
-                                                         $paxfeedraw['office_id'] = $Row[18];
-                                                         $paxfeedraw['channel'] = $Row[19];
+							 $paxfeedraw['dep_time'] = $Row[11];
+							 $paxfeedraw['arrival_time'] = $Row[12];
+                                                         $paxfeedraw['class'] = $Row[13];
+                                                         $paxfeedraw['from_city'] = $Row[14];
+                                                         $paxfeedraw['to_city'] = $Row[15];
+                                                         $paxfeedraw['phone'] = $Row[17];
+                                                         $paxfeedraw['pax_contact_email'] = $Row[16];
+                                                         $paxfeedraw['booking_country'] =  $Row[18];
+                                                         $paxfeedraw['booking_city'] = $Row[19];
+                                                         $paxfeedraw['office_id'] = $Row[20];
+                                                         $paxfeedraw['channel'] = $Row[21];
 
 							  if($this->paxfeedraw_m->checkPaxFeedRaw($paxfeedraw)) {
 
@@ -161,21 +165,26 @@ class Paxfeed extends Admin_Controller {
                                                          $paxfeed['pax_nbr'] = $Row[2];
                                                          $paxfeed['first_name'] = $Row[3];
 							 $paxfeed['last_name'] = $Row[4];
-                                                         $paxfeed['ptc'] = $Row[5];
+                                                         $paxfeed['ptc'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[5],'18');;
                                                          $paxfeed['fqtv'] = $Row[6];
                                                          $paxfeed['seg_nbr'] =  $Row[7];
 							 $paxfeed['carrier_code'] =  $this->rafeed_m->getDefIdByTypeAndCode($Row[8],'12');
                                                          $paxfeed['flight_number'] = $Row[9];
                                                          $paxfeed['dep_date'] = strtotime(str_replace('-','/',$Row[10]));
-                                                         $paxfeed['class'] = $Row[11];
-                                                         $paxfeed['from_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[12],'1');
-                                                         $paxfeed['to_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[13],'1');
-							 $paxfeed['phone'] = $Row[15];
-                                                         $paxfeed['pax_contact_email'] = $Row[14];
-                                                         $paxfeed['booking_country'] =  $this->rafeed_m->getDefIdByTypeAndCode($Row[16],'2');
-							 $paxfeed['booking_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[17],'5');
-                                                         $paxfeed['office_id'] = $Row[18];
-                                                         $paxfeed['channel'] = $Row[19];
+								
+							 $paxfeed['dep_time'] = $this->convertTimeToSeconds($Row[11]);
+							 $paxfeed['arrival_time'] = $this->convertTimeToSeconds($Row[12]);
+                                                         $paxfeed['class'] = $Row[13];
+							  $cabin = $this->airline_cabin_class_m->getCabinFromClassForCarrier($paxfeed['carrier_code'],$Row[13]);
+							 $paxfeed['cabin'] = $cabin->cabin_id;
+                                                         $paxfeed['from_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[14],'1');
+                                                         $paxfeed['to_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[15],'1');
+							 $paxfeed['phone'] = $Row[17];
+                                                         $paxfeed['pax_contact_email'] = $Row[16];
+                                                         $paxfeed['booking_country'] =  $this->rafeed_m->getDefIdByTypeAndCode($Row[18],'2');
+							 $paxfeed['booking_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[19],'5');
+                                                         $paxfeed['office_id'] = $Row[20];
+                                                         $paxfeed['channel'] = $Row[21];
 						         if($this->paxfeed_m->checkPaxFeed($paxfeed)) {
 							
                                                              $paxfeed['create_date'] = time();
@@ -318,16 +327,18 @@ $aColumns = array('dtpf_id', 'flight_nbr', 'dep_date', 'from_city', 'to_city', '
 			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
 
-			dtpf_id,first_name, last_name, pnr_ref, pax_nbr,flight_number,ptc, fqtv, seg_nbr, dep_date, class ,dt.code as to_city,
+			dtpf_id,first_name, last_name, pnr_ref, pax_nbr,flight_number,ptc.code as ptc, fqtv, seg_nbr, dep_date, class ,dt.code as to_city,
 			df.code as from_city, pax_contact_email, phone, cou.code as booking_country, cit.code as booking_city, office_id, 
-			da.code as airline_code , channel, dca.code as carrier_code,
-			pax.active  FROM VX_aln_daily_tkt_pax_feed pax 
+			da.code as airline_code , channel, dca.code as carrier_code, dcab.aln_data_value as cabin,
+			pax.active, pax.dep_time, pax.arrival_time  FROM VX_aln_daily_tkt_pax_feed pax 
 			LEFT JOIN vx_aln_data_defns df on (df.vx_aln_data_defnsID = pax.from_city) 
 			LEFT JOIN vx_aln_data_defns dt on  (dt.vx_aln_data_defnsID = pax.to_city) 
 			LEFT JOIN vx_aln_data_defns cou  on (cou.vx_aln_data_defnsID = pax.booking_country) 
                         LEFT JOIN vx_aln_data_defns cit on  (cit.vx_aln_data_defnsID = pax.booking_city) 
 			LEFT JOIN  vx_aln_data_defns da on (da.vx_aln_data_defnsID = pax.airline_code)  
-			LEFT JOIN  vx_aln_data_defns dca on (dca.vx_aln_data_defnsID = pax.carrier_code)
+			LEFT JOIN  vx_aln_data_defns dca on (dca.vx_aln_data_defnsID = pax.carrier_code)	
+			LEFT JOIN  vx_aln_data_defns dcab on (dcab.vx_aln_data_defnsID = pax.cabin)
+			LEFT JOIN  vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = pax.ptc)
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
@@ -344,6 +355,10 @@ $aColumns = array('dtpf_id', 'flight_nbr', 'dep_date', 'from_city', 'to_city', '
 	  );
 	  foreach($rResult as $feed){		 	
 		$feed->dep_date = date('d/m/Y',$feed->dep_date);
+		 $feed->dep_time = gmdate('H:i:s', $feed->dep_time);
+                $feed->arrival_time = gmdate('H:i:s', $feed->arrival_time);
+
+
 
 		  if(permissionChecker('paxfeed_delete')){
 		   $feed->action .= btn_delete('paxfeed/delete/'.$feed->dtpf_id, $this->lang->line('delete'));			 
@@ -364,7 +379,12 @@ $aColumns = array('dtpf_id', 'flight_nbr', 'dep_date', 'from_city', 'to_city', '
 		echo json_encode( $output );
 	}
 	
+ function convertTimeToSeconds($time_str) {
+	$str = explode(':',$time_str);
+	$time_in_seconds = (3600 * $str[0] ) + ( 60 * $str[1]) + (1 * $str[2]);
+	return $time_in_seconds; 
 
+ }
 
 
 

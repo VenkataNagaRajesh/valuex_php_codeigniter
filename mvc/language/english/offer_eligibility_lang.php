@@ -6,6 +6,7 @@ $lang['slno'] = "#";
 $lang['action'] = "Action";
 $lang['active'] = 'Status';
 
+$lang['offer_issue'] = 'Offer Issue';
 $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
 $lang['fclr_id'] = 'FCLR ID';

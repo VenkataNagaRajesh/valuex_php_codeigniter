@@ -282,7 +282,8 @@ SELECT  boarding_point, carrier_code,operating_airline_code,off_point, season_id
                LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) 
                LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.operating_airline_code 
 							AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) 
-		where acc.order > 1   
+		LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)
+		where acc.order > 1  AND ptc.code NOT IN ('INF', 'INS', 'UNN') 
 		group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,season_id,departure_date,operating_airline_code  
 		order by flight_number )  as MainSet 
 		group by  boarding_point, off_point, day_of_week, season_id, flight_number, departure_date,operating_airline_code
