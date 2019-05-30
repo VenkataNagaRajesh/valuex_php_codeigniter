@@ -13,6 +13,8 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("season_m");
 		$this->load->model("marketzone_m");
 		$this->load->model("fclr_m");
+		$this->load->library('email');
+		$this->load->model("reset_m");
 		$language = $this->session->userdata('lang');
 		$this->load->library('encrypt');
 		$this->lang->load('offer_eligibility', $language);
@@ -20,6 +22,8 @@ class Offer_issue extends Admin_Controller {
 	
 	
 	public function index() {
+
+		$this->data['siteinfos'] = $this->reset_m->get_site();
 /*
 
 $config = Array(
@@ -127,9 +131,9 @@ Booking Reference :<b style="color: blue;">'.$this->encrypt->decode($coupon_code
 </body>
 </html>
 ';
-			 $this->load->library('email');
-				 $this->email->set_newline("\r\n");
-			 $this->email->from('testsweken321@gmail.com', "Valuex Admin");
+
+
+			 $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
 			 $this->email->to('testsweken321@gmail.com');
 			 $this->email->subject("Upgrade Cabin Offer");
 			$this->email->message($message);
