@@ -257,7 +257,7 @@ $sWhere $sOrder $sLimit";
 
    function generatedata() {
 
-		$sQuery = "SELECT * FROM VX_aln_daily_tkt_pax_feed";
+		$sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf.cabin and cab.aln_data_typeID = 13 ) where cab.aln_data_value = 'Business'";
 		$rResult = $this->install_m->run_query($sQuery);
 
 		$exclQuery = "SELECT * from VX_aln_eligibility_excl_rules ";
