@@ -74,6 +74,8 @@
 						<th class="col-lg-1"><?=$this->lang->line('dest_airport')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('cabin')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('dep_time')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('arrival_time')?></th>
 						 <th class="col-lg-1"><?=$this->lang->line('empty_seats')?></th>
                                                 <th class="col-lg-1"><?=$this->lang->line('sold_seats')?></th>
 						
@@ -120,6 +122,8 @@
 				  {"data": "dest_airport"},
                                   {"data": "cabin" },
 				 {"data": "departure_date" },
+				 {"data": "dep_time" },
+				 {"data": "arrival_time" },
                                   {"data": "empty_seats" },
                                   {"data": "sold_seats"},
 					{"data": "active"},

@@ -22,7 +22,8 @@ $lang['booking_country']='Booking Country';
 $lang['booking_city'] = 'Booking City';
 $lang['issuance_country']='Issuance Country';
 $lang['issuance_city'] = 'Issuance City';
-
+$lang['dep_time'] = 'Departure Time';
+$lang['arrival_time'] = 'Arrival Time';
 $lang['board_point'] = 'Board Point';
 $lang['off_point'] = 'Off Point';
 $lang['cabin'] = 'Cabin';

@@ -126,7 +126,7 @@ class Rafeed extends Admin_Controller {
 
 		//		$header = array('ticket_number','airline_code','cpn_number','cpn_value','carrier','flight_number','boarding_point','off_point','class','cabin','flight_date','fare_basis','booking_country','booking_city','office_id','channel','pax_type');
 			$header  = array("ticket_number","coupon_number","booking_city","booking_country","issuance_city","issuance_country",
-				"board_point","off_point","cabin","class","booking_date","departure_date","prorated_price","marketing_airline_code","operating_airline_code","flight_number","channel","pax_type","office_id");	
+				"board_point","off_point","cabin","class","booking_date","departure_date","dep_time","arrival_time","prorated_price","marketing_airline_code","operating_airline_code","flight_number","channel","pax_type","office_id");	
 
 
 			//	print_r(count($header)); exit;
@@ -147,7 +147,7 @@ class Rafeed extends Admin_Controller {
 					 }				  
 					} else {
 					   if($flag == 1){ 						   										
-					   	 if(count($Row) == 19){ //print_r($Row); exit;
+					   	 if(count($Row) == 21){ //print_r($Row); exit;
 	 						$rafeed['ticket_number'] = $Row[0]; 
 							$rafeed['coupon_number'] = $Row[1];
 							$rafeed['booking_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[2],'5');
@@ -160,22 +160,24 @@ class Rafeed extends Admin_Controller {
 							 $rafeed['class'] = $Row[9];
 							$rafeed['booking_date'] = strtotime(str_replace('-','/',$Row[10]));
 							$rafeed['departure_date'] = strtotime(str_replace('-','/',$Row[11]));
+							$rafeed['dep_time'] = $this->convertTimeToSeconds($Row[12]);
+							$rafeed['arrival_time'] = $this->convertTimeToSeconds($Row[13]);
 							$rafeed['day_of_week'] = $this->rafeed_m->getDefIdByTypeAndCode(date('w', $rafeed['departure_date']),'14');
 							$rafeed['days_to_departure'] =  floor(($rafeed['departure_date'] - $rafeed['booking_date']) / (60*60*24) );
 
-							$rafeed['marketing_airline_code'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[13],'12');
-                                                         $rafeed['operating_airline_code']= $this->rafeed_m->getDefIdByTypeAndCode($Row[14],'12');
+							$rafeed['marketing_airline_code'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[15],'12');
+                                                         $rafeed['operating_airline_code']= $this->rafeed_m->getDefIdByTypeAndCode($Row[16],'12');
 
 								$season_id = $this->season_m->getSeasonForDateANDAirlineID($rafeed['departure_date'],$rafeed['operating_airline_code']);
 							if(is_null($season_id)) {
 								$season_id = 0;
 							} 
 							$rafeed['season_id'] = $season_id; 
-                                                         $rafeed['prorated_price'] = $Row[12];
-							 $rafeed['flight_number'] = $Row[15];
-                                                         $rafeed['office_id'] = $Row[18];
-							$rafeed['channel']= $Row[16];
-                                                         $rafeed['pax_type'] =  $this->rafeed_m->getDefIdByTypeAndCode($Row[17],'18');
+                                                         $rafeed['prorated_price'] = $Row[14];
+							 $rafeed['flight_number'] = $Row[17];
+                                                         $rafeed['office_id'] = $Row[20];
+							$rafeed['channel']= $Row[18];
+                                                         $rafeed['pax_type'] =  $this->rafeed_m->getDefIdByTypeAndCode($Row[19],'18');
 						if($this->rafeed_m->checkRaFeed($rafeed)) {
 								
                                                            $rafeed['create_date'] = time();
@@ -321,7 +323,7 @@ class Rafeed extends Admin_Controller {
 			   dci.code as  booking_city, dico.code as issuance_country, dici.code as issuance_city,
 			    dai.code as operating_airline_code, dam.code as marketing_airline_code, flight_number, dbp.code as boarding_point, 
                            dop.code as off_point,  dcla.code as cabin , booking_date, departure_date, prorated_price, class,
-                           office_id, channel, dpax.code as pax_type ,rf.active 
+                           office_id, channel, dpax.code as pax_type ,rf.active , rf.dep_time , rf.arrival_time
                            FROM VX_aln_ra_feed rf  
                           LEFT JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = rf.booking_country) 
                           LEFT JOIN vx_aln_data_defns dci on  (dci.vx_aln_data_defnsID = rf.booking_city) 
@@ -351,7 +353,10 @@ class Rafeed extends Admin_Controller {
 	  foreach($rResult as $feed){		 	
 		$feed->booking_date = date('d/m/Y',$feed->booking_date);
 		$feed->departure_date = date('d/m/Y',$feed->departure_date);
-		
+		  $feed->dep_time = gmdate('H:i:s', $feed->dep_time);
+                $feed->arrival_time = gmdate('H:i:s', $feed->arrival_time);
+
+
 		
 		  if(permissionChecker('rafeed_delete')){
 		   $feed->action .= btn_delete('rafeed/delete/'.$feed->rafeed_id, $this->lang->line('delete'));			 
@@ -402,6 +407,14 @@ class Rafeed extends Admin_Controller {
 			echo "Error";
 		}
 	}
+
+
+ function convertTimeToSeconds($time_str) {
+        $str = explode(':',$time_str);
+        $time_in_seconds = (3600 * $str[0] ) + ( 60 * $str[1]) + (1 * $str[2]);
+        return $time_in_seconds;
+
+ }
 
 }
 

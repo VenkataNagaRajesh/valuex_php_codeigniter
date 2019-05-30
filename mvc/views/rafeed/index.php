@@ -102,6 +102,8 @@
 			<th class="col-lg-1"><?=$this->lang->line('class')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('booking_date')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('dep_time')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('arrival_time')?></th>
 
                         <th class="col-lg-1"><?=$this->lang->line('day_of_week')?></th>
                          <th class="col-lg-1"><?=$this->lang->line('days_to_departure')?></th>
@@ -165,7 +167,8 @@
                                 {"data": "class" },
 				 {"data": "booking_date" },
 				{"data": "departure_date" },
-				
+				 {"data": "dep_time" },
+				 {"data": "arrival_time" },
                                   {"data": "day_of_week" },
                                   {"data": "days_to_departure"},
 

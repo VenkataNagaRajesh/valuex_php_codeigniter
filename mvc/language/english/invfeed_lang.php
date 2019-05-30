@@ -23,3 +23,5 @@ $lang['dest_airport'] = 'Dest Airport';
 $lang['sold_seats'] = 'Sold Seats';
 $lang['empty_seats'] = 'Empty Seats';
 $lang['departure_date'] = 'Departure Date';
+$lang['dep_time'] = 'Departure Time';
+$lang['arrival_time'] = 'Arrival Time';
