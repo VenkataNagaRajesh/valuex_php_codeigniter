@@ -28,7 +28,7 @@ class Home extends MY_Controller {
 			array(
 				'field' => 'g-recaptcha-response', 
 				'label' => 'reCaptcha', 
-				'rules' => 'required|xss_clean|max_length[60]|callback_validate_recaptcha'
+				'rules' => 'callback_validate_recaptcha'
 			)
 		);
 		return $rules;
@@ -44,7 +44,11 @@ class Home extends MY_Controller {
 				$this->form_validation->set_message("validate_recaptcha", $response['error-codes'][0]); 
                 return FALSE;
 			 } 
-		}
+		} else {
+            $this->form_validation->set_message("validate_recaptcha", "%s is required" );
+            return FALSE;
+        }
+
      }
 	
 	public function validate_code($code){
