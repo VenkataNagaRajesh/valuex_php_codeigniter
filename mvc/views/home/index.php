@@ -83,7 +83,7 @@
 								 </span>
 							</div>
 							<div class="form-group" style="margin-bottom: -16px;">
-								<div class="col-md-4 col-md-offset-4" style="margin-left: 151px;    margin-top: -25px;">
+								<div class="col-md-4 col-md-offset-4" style="margin-left: 151px;">
 									<button type="submit" class="btn btn-dander btn-lg">Proceed</button>
 								</div>
 							</div>
