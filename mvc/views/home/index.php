@@ -38,26 +38,53 @@
 			<div class="row">
 				<div class="col-md-8 col-md-offset-2">
 					<div class="pnr-form">
-						<form class="form-horizontal" action="/action_page.php">
+						 <form class="form-horizontal" role="form" method="post">
 							<div class="form-group">
-								<div class="col-sm-5 col-md-offset-1">
-									<input type="text" class="form-control" id="pnr" placeholder="PNR">
+								 <?php 
+									if(form_error('pnr')) 
+										echo "<div class='col-sm-5 col-md-offset-1 has-error' >";
+									else     
+										echo "<div class='col-sm-5 col-md-offset-1' >";
+								  ?>
+									<input type="text" class="form-control" id="pnr" name="pnr" placeholder="PNR" value="<?=set_value('pnr')?>" >
+									 <span>
+										<?php echo form_error('pnr'); ?>
+									</span>
 								</div>
-								<div class="col-sm-5">
-									<input type="text" class="form-control" id="code" placeholder="Code">
+								<?php 
+									if(form_error('code')) 
+										echo "<div class='col-sm-5  has-error' >";
+									else     
+										echo "<div class='col-sm-5 ' >";
+								  ?>								
+									<input type="text" class="form-control" id="code" name="code" placeholder="Code" value="<?=set_value('code')?>" >
+									 <span>
+										<?php echo form_error('code'); ?>
+									</span>
 								</div>
 							</div>
 							<div class="captcha">
-								<div class="col-sm-3 col-md-offset-3">
+							<?php 
+							   if(form_error('g-recaptcha-response')) 
+							   	echo "<div class='captcha  has-error' >";
+							   else     
+							   	echo "<div class='captcha ' >";
+							  ?>
+								<!--<div class="col-sm-3 col-md-offset-3">
 									<label><input type="checkbox" value=""> im not a Robot </label>
 								</div>
 								<div class="col-md-6">
 									<h2>Captcha</h2>
-								</div>
+								</div>-->
+								<?php echo $widget;?>
+                                <?php echo $script;?>
+								 <span>
+										<?php echo form_error('g-recaptcha-response'); ?>
+								 </span>
 							</div>
 							<div class="form-group">
 								<div class="col-md-4 col-md-offset-4">
-									<button type="button" class="btn btn-dander btn-lg">Proceed</button>
+									<button type="submit" class="btn btn-dander btn-lg">Proceed</button>
 								</div>
 							</div>
 						</form>
