@@ -35,6 +35,7 @@ class Offer_issue extends Admin_Controller {
 
 			$p_list = explode(',',$offer->pf_list);
 			$namelist = explode(';',$offer->pax_names);
+			$emails_list = explode(',', $offer->email_list);
 
 			$coupon_code = $this->generateRandomString(6);
 
@@ -99,7 +100,7 @@ PNR Reference : :<b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code:<b
 
 			 $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
 			 //$this->email->from('testsweken321@gmail.com', 'ADMIN');
-			 $this->email->to('testsweken321@gmail.com');
+			 $this->email->to($emails_list[0]);
 			 $this->email->subject("Upgrade Cabin Offer");
 			$this->email->message($message);
 			$this->email->send();
