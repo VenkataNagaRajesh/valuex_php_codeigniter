@@ -22,10 +22,8 @@ class Offer_issue extends Admin_Controller {
 	
 	public function index() {
 
-		$this->load->library('encrypt');
 		$this->data['siteinfos'] = $this->reset_m->get_site();
-                                                      
-
+	
 /*		$sQuery = " select group_concat(distinct pfe.dtpfext_id) as pf_list , group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names , booking_status, pnr_ref , flight_number, carrier_code, from_city,to_city,dep_date, dep_time, arrival_time, fci.aln_data_value as from_city_name , tci.aln_data_value as to_city_name, group_concat(distinct pfe.fclr_id)  as fclr_list ,group_concat(pax_contact_email) as email_list , cab.aln_data_value as cabin from VX_aln_dtpf_ext pfe LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_aln_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN vx_aln_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  cab on (cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13) where  dd.alias = 'new'  group by tpf.pnr_ref, flight_number, carrier_code, from_city, to_city ,dep_date,booking_status, from_city_name, to_city_name, dep_time, arrival_time, cabin";*/
 		$sQuery = " select tpf.pnr_ref, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_aln_dtpf_ext pfe LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_aln_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN vx_aln_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  cab on (cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13) where  dd.alias = 'new'  group by tpf.pnr_ref ,  booking_status";
 
@@ -41,7 +39,7 @@ class Offer_issue extends Admin_Controller {
 
 			//echo $coupon_code;exit;
 			$array = array();
-			$array['coupon_code'] = $coupon_code;
+			$array['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
 			$array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 			$array["modify_date"] = time();
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
@@ -84,7 +82,7 @@ experience our luxury products and services.<br />
 <br />
 <big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
 <br />
-PNR Reference : :<b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code:<b style="color: blue;">'.$this->encrypt->decode($coupon_code).'</b><br />
+PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b style="color: blue;">'.$coupon_code.'</b><br />
 <br />
 <br />
 <br />
@@ -99,7 +97,7 @@ PNR Reference : :<b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code:<b
 
 
 			 $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-			 //$this->email->from('testsweken321@gmail.com', 'ADMIN');
+			// $this->email->from('testsweken321@gmail.com', 'ADMIN');
 			 $this->email->to($emails_list[0]);
 			 $this->email->subject("Upgrade Cabin Offer");
 			$this->email->message($message);
@@ -121,7 +119,7 @@ PNR Reference : :<b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code:<b
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         if ($this->offer_eligibility_m->checkForUniqueCouponCode($randomString)){
-                return $this->encrypt->encode($randomString);  // to decode  $this->encrypt->decode($encrypt_key);
+                return $randomString;  // to decode  $this->encrypt->decode($encrypt_key);
         } else {
                 $this->generateRandomString(6);
         }
