@@ -5,10 +5,11 @@ class Home extends MY_Controller {
 	function __construct () {
 		parent::__construct();		
 		 $this->load->library('recaptcha');
+		 $this->load->library('encrypt');
 	     $this->load->model("login_m");
 		 $this->load->library('session');
 		 $this->load->helper('form');
-         $this->load->library('form_validation');	
+         $this->load->library('form_validation');			 
 	     $language = $this->session->userdata('lang');	  
 		$this->lang->load('home', $language);
 	}
@@ -23,7 +24,7 @@ class Home extends MY_Controller {
 			array(
 				'field' => 'code', 
 				'label' => $this->lang->line("home_code"), 
-				'rules' => 'trim|required|xss_clean|max_length[60]|callback_validate_code'
+				'rules' => 'trim|required|xss_clean|max_length[50]|callback_validate_code'
 			),
 			array(
 				'field' => 'g-recaptcha-response', 
@@ -52,11 +53,12 @@ class Home extends MY_Controller {
      }
 	
 	public function validate_code($code){
-	   if(empty($code) || empty($this->input->post('pnr'))){
+	   if(empty($code)){
 		  $this->form_validation->set_message("validate_code", "%s is required");
 		  return FALSE;
 	   }else{
-		  $count = $this->login_m->pnr_code_validate($this->input->post('pnr'),$code);
+		   $coupon_code = $this->encrypt->encode($code);
+		  $count = $this->login_m->pnr_code_validate($this->input->post('pnr'),$coupon_code);
 		  if($count > 0){
 			return TRUE; 
 		  } else {
