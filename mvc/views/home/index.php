@@ -26,7 +26,7 @@
 			<div class="row">
 				<div class="col-sm-5 col-md-4 col-md-offset-2">
 					<div class="tabulation animate-box">
-						<h2>Uprade for Sure</h2>
+						<h2>Upgrade for Sure</h2>
 					</div>
 				</div>
 				<div class="col-sm-5 col-md-4">
