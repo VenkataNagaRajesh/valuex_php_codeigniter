@@ -39,18 +39,19 @@ class Trigger_m extends MY_Model {
 */
 
 
-	function update_trigger($data){
+	function update_trigger($data, $table_name = NULL){
 	          $this->db->where('isReconfigured','1');
-		  $this->db->where('modify_date','0');
+		if($table_name) {
+		  $this->db->where('table_name',$table_name);
+		}
            	$this->db->update('VX_trigger_table',$data);
-
+		//var_dump($this->db->last_query());exit;
         	  if ($this->db->affected_rows() > 0){
              		return $this->db->insert_id();
           	  } else {
              		return FALSE;
           	  }
 	}
-
 
 	function hash($string) {
 		return parent::hash($string);

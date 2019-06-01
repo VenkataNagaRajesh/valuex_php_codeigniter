@@ -222,6 +222,7 @@ class Season extends Admin_Controller {
 		
 				$tarray['table_name'] = 'VX_aln_season';
 				$tarray['create_date'] = time();
+				$tarray['modify_date'] = time();
 				$tarray['create_userID'] = $this->session->userdata('loginuserID');
 				$tarray['modify_userID'] = $this->session->userdata('loginuserID');
 				$tarray['isReconfigured'] = '1';
@@ -288,6 +289,7 @@ class Season extends Admin_Controller {
 				
 						$tarray['table_name'] = 'VX_aln_season';
 						$tarray['create_date'] = time();
+						$tarray['modify_date'] = time();
 						$tarray['create_userID'] = $this->session->userdata('loginuserID');
 						$tarray['modify_userID'] = $this->session->userdata('loginuserID');
 						$tarray['isReconfigured'] = '1';

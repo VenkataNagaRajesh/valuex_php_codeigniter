@@ -231,6 +231,7 @@ class Marketzone extends Admin_Controller {
 		
 				$tarray['table_name'] = 'VX_aln_market_zone';
 				$tarray['create_date'] = $date_now;
+				$tarray['modify_date'] = $date_now;
 				$tarray['create_userID'] = $this->session->userdata('loginuserID');
 				$tarray['modify_userID'] = $this->session->userdata('loginuserID');
 				$tarray['isReconfigured'] = '1';
@@ -303,6 +304,7 @@ class Marketzone extends Admin_Controller {
 
 			        $tarray['table_name'] = 'VX_aln_market_zone';
                                 $tarray['create_date'] = $date_now;
+				$tarray['modify_date'] = $date_now;
                                 $tarray['create_userID'] = $this->session->userdata('loginuserID');
                                 $tarray['isReconfigured'] = '1';
 				$tarray['modify_userID'] = $this->session->userdata('loginuserID');
