@@ -28,32 +28,25 @@
 					<div class="tabulation animate-box">
 						<h2>Ugrade for Sure</h2>
 					</div>
-				</div>
-				<div class="col-sm-5 col-md-4">
 					<div class="tabulation animate-box">
-						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="180"></iframe>
+						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="140"></iframe>
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-8 col-md-offset-2">
+				<div class="col-sm-5 col-md-4">
 					<div class="pnr-form">
 						<form class="form-horizontal" action="/action_page.php">
 							<div class="form-group">
-								<div class="col-sm-5 col-md-offset-1">
+								<div class="col-sm-12">
 									<input type="text" class="form-control" id="pnr" placeholder="PNR">
 								</div>
-								<div class="col-sm-5">
+							</div>
+							<div class="form-group">
+								<div class="col-sm-12">
 									<input type="text" class="form-control" id="code" placeholder="Code">
 								</div>
 							</div>
 							<div class="captcha">
-								<div class="col-sm-3 col-md-offset-3">
-									<label><input type="checkbox" value=""> im not a Robot </label>
-								</div>
-								<div class="col-md-6">
-									<h2>Captcha</h2>
-								</div>
+								
 							</div>
 							<div class="form-group">
 								<div class="col-md-4 col-md-offset-4">
