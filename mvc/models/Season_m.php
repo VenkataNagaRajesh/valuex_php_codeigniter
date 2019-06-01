@@ -38,11 +38,17 @@ class season_m extends MY_Model {
 		return TRUE;
 	}
 
-	function getSeasonForDateANDAirlineID($date , $carrierID ) {
-		$this->db->select('VX_aln_seasonID')->from('VX_aln_season');
+	function getSeasonForDateANDAirlineID($date , $carrierID,$orig_id, $dest_id ) {
+
+
+		$this->db->select('VX_aln_seasonID')->from('VX_aln_season ss');
+		$this->db->join('VX_season_airport_origin_map om','om.seasonID = ss.VX_aln_seasonID','LEFT');
+		$this->db->join('VX_season_airport_dest_map dm','dm.seasonID = ss.VX_aln_seasonID','LEFT');
 		$this->db->where('ams_season_start_date <= ' , $date );
 		$this->db->where('ams_season_end_date >= ' , $date);
 		$this->db->where('airlineID' , $carrierID);
+		$this->db->where('dest_airportID' , $dest_id);
+		$this->db->where('orig_airportID' , $orig_id);
 	
 		 $this->db->limit(1);
                 $query = $this->db->get();

@@ -283,7 +283,7 @@ $sWhere $sOrder $sLimit";
                         $upgrade['flight_number'] = $feed->flight_number;
                         $upgrade['carrier_code'] = $feed->carrier_code;
                         $upgrade['frequency'] =  $this->rafeed_m->getDefIdByTypeAndCode(date('w',$feed->dep_date),'14'); //507;
-                        $upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code); //0;
+                        $upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
                          $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
 		if(count($rules) > 0 ) {
 			// rule matches partially check for the cabins that are excluded
