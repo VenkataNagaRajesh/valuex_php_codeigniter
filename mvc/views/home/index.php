@@ -26,36 +26,34 @@
 			<div class="row">
 				<div class="col-sm-5 col-md-4 col-md-offset-2">
 					<div class="tabulation animate-box">
-						<h2>Upgrade for Sure</h2>
+						<h2>Ugrade for Sure</h2>
+					</div>
+					<div class="tabulation animate-box">
+						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="228"></iframe>
 					</div>
 				</div>
 				<div class="col-sm-5 col-md-4">
-					<div class="tabulation animate-box">
-						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="180"></iframe>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-8 col-md-offset-2">
 					<div class="pnr-form">
-						 <form class="form-horizontal" role="form" method="post">
+						<form class="form-horizontal" method="post" role="form">
 							<div class="form-group">
-								 <?php 
+								<?php 
 									if(form_error('pnr')) 
-										echo "<div class='col-sm-5 col-md-offset-1 has-error' >";
+										echo "<div class='col-sm-12 has-error' >";
 									else     
-										echo "<div class='col-sm-5 col-md-offset-1' >";
+										echo "<div class='col-sm-12' >";
 								  ?>
 									<input type="text" class="form-control" id="pnr" name="pnr" placeholder="PNR" value="<?=set_value('pnr')?>" >
 									 <span>
 										<?php echo form_error('pnr'); ?>
 									</span>
 								</div>
+							</div>
+							<div class="form-group">
 								<?php 
 									if(form_error('code')) 
-										echo "<div class='col-sm-5  has-error' >";
+										echo "<div class='col-sm-12  has-error' >";
 									else     
-										echo "<div class='col-sm-5 ' >";
+										echo "<div class='col-sm-12' >";
 								  ?>								
 									<input type="text" class="form-control" id="code" name="code" placeholder="Code" value="<?=set_value('code')?>" >
 									 <span>
@@ -63,27 +61,20 @@
 									</span>
 								</div>
 							</div>
-							<div class="captcha">
 							<?php 
 							   if(form_error('g-recaptcha-response')) 
-							   	echo "<div class='captcha  has-error' >";
+							   	echo "<div class='col-md-12  has-error' style='margin-left:-6px;'>";
 							   else     
-							   	echo "<div class='captcha ' >";
+							   	echo "<div class='col-md-12 hidden-xs' style='margin-left:-6px;'>";
 							  ?>
-								<!--<div class="col-sm-3 col-md-offset-3">
-									<label><input type="checkbox" value=""> im not a Robot </label>
-								</div>
-								<div class="col-md-6">
-									<h2>Captcha</h2>
-								</div>-->
 								<?php echo $widget;?>
                                 <?php echo $script;?>
 								 <span>
 										<?php echo form_error('g-recaptcha-response'); ?>
 								 </span>
 							</div>
-							<div class="form-group" style="margin-bottom: -16px;">
-								<div class="col-md-4 col-md-offset-4" style="margin-left: 151px;">
+							<div class="form-group">
+								<div class="col-md-4 col-md-offset-4">
 									<button type="submit" class="btn btn-dander btn-lg">Proceed</button>
 								</div>
 							</div>
