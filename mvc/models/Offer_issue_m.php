@@ -53,8 +53,8 @@ class Offer_issue_m extends MY_Model {
                 parent::delete($id);
         }
 
-	function hash($string) {
-                return parent::hash($string);
+	public function getEncoded($str) {
+		return $this->hash($str);
         }
 
 	
