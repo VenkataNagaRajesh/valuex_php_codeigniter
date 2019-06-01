@@ -25,7 +25,7 @@ class Offer_eligibility_m extends MY_Model {
         function insert_dtpfext($array) {
 		$arr['fclr_id'] = $array['fclr_id'];
 		$arr['dtpf_id'] = $array['dtpf_id'];
-		$arr['booking_status'] = $array['booking_status'];		
+		//$arr['booking_status'] = $array['booking_status'];		
 		if ($this->checkDTPFExtEntry($arr)){
               	  $error = parent::insert($array);
                 	return TRUE;
@@ -58,7 +58,7 @@ class Offer_eligibility_m extends MY_Model {
 
 	function checkForUniqueCouponCode($code) {
 		$this->db->select('dtpfext_id')->from('VX_aln_dtpf_ext');
-		$this->db->where('coupon_code',$code);
+		$this->db->where('coupon_code',$this->hash($code));
 		$this->db->limit(1);
 		$query = $this->db->get();
                 $check = $query->row();

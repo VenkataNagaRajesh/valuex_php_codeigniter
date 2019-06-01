@@ -29,28 +29,53 @@
 						<h2>Ugrade for Sure</h2>
 					</div>
 					<div class="tabulation animate-box">
-						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="140"></iframe>
+						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="228"></iframe>
 					</div>
 				</div>
 				<div class="col-sm-5 col-md-4">
 					<div class="pnr-form">
-						<form class="form-horizontal" action="/action_page.php">
+						<form class="form-horizontal" method="post" role="form">
 							<div class="form-group">
-								<div class="col-sm-12">
-									<input type="text" class="form-control" id="pnr" placeholder="PNR">
+								<?php 
+									if(form_error('pnr')) 
+										echo "<div class='col-sm-12 has-error' >";
+									else     
+										echo "<div class='col-sm-12' >";
+								  ?>
+									<input type="text" class="form-control" id="pnr" name="pnr" placeholder="PNR" value="<?=set_value('pnr')?>" >
+									 <span>
+										<?php echo form_error('pnr'); ?>
+									</span>
 								</div>
 							</div>
 							<div class="form-group">
-								<div class="col-sm-12">
-									<input type="text" class="form-control" id="code" placeholder="Code">
+								<?php 
+									if(form_error('code')) 
+										echo "<div class='col-sm-12  has-error' >";
+									else     
+										echo "<div class='col-sm-12' >";
+								  ?>								
+									<input type="text" class="form-control" id="code" name="code" placeholder="Code" value="<?=set_value('code')?>" >
+									 <span>
+										<?php echo form_error('code'); ?>
+									</span>
 								</div>
 							</div>
-							<div class="captcha">
-								
+							<?php 
+							   if(form_error('g-recaptcha-response')) 
+							   	echo "<div class='col-md-12  has-error' style='margin-left:-6px;'>";
+							   else     
+							   	echo "<div class='col-md-12 hidden-xs' style='margin-left:-6px;'>";
+							  ?>
+								<?php echo $widget;?>
+                                <?php echo $script;?>
+								 <span>
+										<?php echo form_error('g-recaptcha-response'); ?>
+								 </span>
 							</div>
 							<div class="form-group">
 								<div class="col-md-4 col-md-offset-4">
-									<button type="button" class="btn btn-dander btn-lg">Proceed</button>
+									<button type="submit" class="btn btn-dander btn-lg">Proceed</button>
 								</div>
 							</div>
 						</form>

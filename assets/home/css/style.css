@@ -93,16 +93,19 @@ figure {
 	font-weight: bold;
 	font-size: 15px;
 	line-height: normal;
+	margin-top:10px;
 }
-.pnr-form .captcha{
-	padding: 19px 0px;
+.pnr-form .has-error span p{
+	margin-bottom: 0;
+	color: #cf0606;
+	font-size: 12px;
 }
 .tabulation h2{
 	margin: 18px 0;
 	vertical-align: middle;
 	color: #ff6633;
 	font-weight: bold;
-	font-size:40px;
+	font-size:38px;
 	text-transform:uppercase;
 }
 .pnr-box {
