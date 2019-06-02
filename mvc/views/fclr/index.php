@@ -11,11 +11,23 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">              
-              <h5 class="page-header">                        
+              <h5 class="page-header">  
+
+                                            <?php  if(permissionChecker('fclr_add')) {  ?>
+                        <a href="<?php echo base_url('fclr/add') ?>">
+                            <i class="fa fa-plus"></i> 
+                            <?=$this->lang->line('add_fclr')?>
+                        </a>
+                                                 <?php } ?>
+
+		&nbsp; &nbsp;
+                      
                   <a href="<?php echo base_url('fclr/generatedata') ?>">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('generate_fclr')?>
                   </a>
+
+		
               </h5>
 			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 
@@ -108,6 +120,9 @@
 			<th class="col-lg-1"><?=$this->lang->line('min')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('max')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('slider_start')?></th>
+			 <th class="col-lg-1"><?=$this->lang->line('fclr_status')?></th>
+                                <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+
                     </tr>
                  </thead>
                  <tbody>                          
@@ -160,7 +175,9 @@ $("#dep_to_date").datepicker();
 		   {"data": "average" },
                    {"data": "min" },
 		  {"data": "max" },
-		 {"data": "slider_start" }
+		 {"data": "slider_start" },
+		 {"data": "active"},
+                  {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
      buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
@@ -191,7 +208,7 @@ $("#dep_to_date").datepicker();
       if((status != '' || status != null) && (id !='')) {
           $.ajax({
               type: 'POST',
-              url: "<?=base_url('rafeed/active')?>",
+              url: "<?=base_url('fclr/active')?>",
               data: "id=" + id + "&status=" + status,
               dataType: "html",
               success: function(data) {

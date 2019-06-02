@@ -8,12 +8,267 @@ class Fclr extends Admin_Controller {
 		$this->load->model("airline_cabin_m");
 		$this->load->model("fclr_m");
 		$this->load->model("season_m");
+		$this->load->model('airports_m');
 		$this->load->model("marketzone_m");
+		$this->load->model('eligibility_exclusion_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('fclr', $language);	
 	}	
 	
 	
+
+ protected function rules() {
+                $rules = array(
+                        array(
+                                'field' => 'board_point',
+                                'label' => $this->lang->line("board_point"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                        ),
+                    array(
+                                'field' => 'off_point',
+                                'label' => $this->lang->line("off_point"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                       ),
+
+			array(
+                                'field' => 'carrier_code',
+                                'label' => $this->lang->line("carrier"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                       ),
+
+
+                        array(
+                                'field' => 'flight_number',
+                                'label' => $this->lang->line("flight_number"),
+                                'rules' => 'trim|required|integer|max_length[200]|xss_clean'
+                        ),
+                        array(
+                               'field' => 'season_id',
+                                'label' => $this->lang->line("season"),
+                                'rules' => 'trim|required|integer|max_length[200]|xss_clean'
+                        ),
+                        array(
+                                'field' => 'frequency',
+                               'label' => $this->lang->line("frequency"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                        ),
+                        array(
+                                 'field' => 'departure_date',
+                                 'label' => $this->lang->line("departure_date"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                        ),
+                         array(
+                                'field' => 'upgrade_from_cabin_type',
+                                'label' => $this->lang->line("from_cabin"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                        ),
+                                                    
+ array(
+                                'field' => 'upgrade_to_cabin_type',
+                                'label' => $this->lang->line("to_cabin"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                       ),
+
+                         array(
+                                  'field' => 'min',
+                                'label' => $this->lang->line("min"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                        ),
+
+			array(
+                                  'field' => 'max',
+                                'label' => $this->lang->line("max"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                        ),
+
+
+			array(
+                                  'field' => 'avg',
+                                'label' => $this->lang->line("avg"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                        ),
+			 array(
+                                  'field' => 'slider_start',
+                                'label' => $this->lang->line("slider_start"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                        ),
+
+
+
+
+                );
+                return $rules;
+        }
+
+        function valMarket($post_string){
+          if($post_string == '0'){
+                 $this->form_validation->set_message("valMarket", "%s is required");
+                  return FALSE;
+           }else{
+                  return TRUE;
+           }
+        }
+
+        function valOrigLevelValue($post_array){
+          if(count($post_array) < 1){
+                 $this->form_validation->set_message("valOrigLevelValue", "%s is required");
+                  return FALSE;
+           }else{
+                  return TRUE;
+           }
+        }
+
+
+    public function add() {
+       $this->data['headerassets'] = array(
+                'css' => array(
+                        'assets/select2/css/select2.css',
+                        'assets/select2/css/select2-bootstrap.css',               
+                                                'assets/datepicker/datepicker.css'
+                ),
+                'js' => array(
+                        'assets/select2/select2.js',                       
+                                                'assets/datepicker/datepicker.js'
+                )
+        );
+
+           $this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1'); // airports
+           $this->data['days'] = $this->airports_m->getDefnsListByType('14'); // days of week		
+	   $this->data['cabins'] = $this->airports_m->getDefnsListByType('13');
+	   $this->data['seasons'] = $this->season_m->getSeasonsList();
+	   $this->data['carrier'] = $this->airports_m->getDefnsCodesListByType('12');
+	   
+		
+
+                if($_POST) {
+                        $rules = $this->rules();
+                        $this->form_validation->set_rules($rules);
+                        if ($this->form_validation->run() == FALSE) {
+                                $this->data["subview"] = "fclr/add";
+                                $this->load->view('_layout_main', $this->data);
+                        } else {
+                                $array["boarding_point"] = $this->input->post("board_point");
+                                $array["off_point"] = $this->input->post("off_point");
+                                $array["carrier_code"] = $this->input->post("carrier_code");
+                                $array["flight_number"] = $this->input->post("flight_number");
+                                $array["departure_date"] = strtotime($this->input->post("departure_date"));
+                                $array['frequency'] = $this->input->post("frequency");
+                                $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
+                                $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
+				$array['season_id'] = $this->input->post("season_id");
+				$array['average'] = $this->input->post("avg");
+                                $array['min'] = $this->input->post("min");
+                                $array['max'] = $this->input->post("max");
+                                $array['slider_start'] = $this->input->post("slider_start");
+
+                                if($this->fclr_m->checkFCLREntry($array)) {
+                                        $array["create_date"] = time();
+                                        $array["modify_date"] = time();
+                                        $array["create_userID"] = $this->session->userdata('loginuserID');
+                                        $array["modify_userID"] = $this->session->userdata('loginuserID');
+                                        $this->fclr_m->insert_fclr($array);
+                                }
+
+
+                                                                                              
+                                $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+                                redirect(base_url("fclr/index"));
+                        }
+                } else {
+                        $this->data["subview"] = "fclr/add";
+                        $this->load->view('_layout_main', $this->data);
+                }
+        }
+
+        public function edit() {
+      $this->data['headerassets'] = array(
+                'css' => array(
+                        'assets/select2/css/select2.css',
+                        'assets/select2/css/select2-bootstrap.css',
+                        'assets/datepicker/datepicker.css'
+                ),
+                'js' => array(
+                        'assets/select2/select2.js',
+                        'assets/datepicker/datepicker.css'
+                )
+        );
+
+
+                $id = htmlentities(escapeString($this->uri->segment(3)));
+                if((int)$id) {
+                        $this->data['fclr'] = $this->fclr_m->get_single_fclr(array('fclr_id'=>$id));
+                        if($this->data['fclr']) {
+
+				 $this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1'); // airports
+			         $this->data['days'] = $this->airports_m->getDefnsListByType('14'); // days of week           
+          			 $this->data['cabins'] = $this->airports_m->getDefnsListByType('13');
+           			$this->data['seasons'] = $this->season_m->getSeasonsList();
+           			$this->data['carrier'] = $this->airports_m->getDefnsCodesListByType('12');
+
+                                if($_POST) {
+                                        $rules = $this->rules();
+                                        $this->form_validation->set_rules($rules);
+                                        if ($this->form_validation->run() == FALSE) {
+                                                $this->data["subview"] = "fclr/edit";
+                                                $this->load->view('_layout_main', $this->data);
+                                        } else {
+
+
+
+				$array["boarding_point"] = $this->input->post("board_point");
+                                $array["off_point"] = $this->input->post("off_point");
+                                $array["carrier_code"] = $this->input->post("carrier_code");
+                                $array["flight_number"] = $this->input->post("flight_number");
+                                $array["departure_date"] = strtotime($this->input->post("departure_date"));
+                                $array['frequency'] = $this->input->post("frequency");
+                                $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
+                                $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
+                                $array['season_id'] = $this->input->post("season_id");
+                                $array['average'] = $this->input->post("avg");
+                                $array['min'] = $this->input->post("min");
+                                $array['max'] = $this->input->post("max");
+                                $array['slider_start'] = $this->input->post("slider_start");
+
+                                $array["modify_date"] = time();
+                               $array["modify_userID"] = $this->session->userdata('loginuserID');
+
+                                $this->fclr_m->update_fclr($array, $id);
+
+
+                                                $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+                                                redirect(base_url("fclr/index"));
+                                        }
+                                } else {
+                                        $this->data["subview"] = "fclr/edit";
+                                        $this->load->view('_layout_main', $this->data);
+                                }
+                        } else {
+                                $this->data["subview"] = "error";
+                                $this->load->view('_layout_main', $this->data);
+                        }
+                } else {
+                        $this->data["subview"] = "error";
+                        $this->load->view('_layout_main', $this->data);
+                }
+        }
+
+        public function delete() {
+                $id = htmlentities(escapeString($this->uri->segment(3)));
+                if((int)$id) {
+                        $this->data['rule'] = $this->fclr_m->get_single_fclr(array('fclr_id'=>$id));
+                        if($this->data['rule']) {
+                                $this->fclr_m->delete_fclr($id);
+                                $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+                                redirect(base_url("fclr/index"));
+                        } else {
+                                redirect(base_url("fclr/index"));
+                        }
+                } else {
+                        redirect(base_url("fclr/index"));
+                }
+        }
+
+
 	public function index() {
 
 	$this->data['headerassets'] = array(
@@ -95,7 +350,7 @@ class Fclr extends Admin_Controller {
 
 
 		
-	    $aColumns = array('flight_number','departure_date','boarding_point','off_point');
+	    $aColumns = array('fclr_id','flight_number','departure_date','boarding_point','off_point');
 	
 		$sLimit = "";
 		
@@ -201,7 +456,7 @@ class Fclr extends Admin_Controller {
 
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS fclr_id,boarding_point, dai.code as carrier_code , off_point, season_id,flight_number, fca.code as fcabin, 
-            tca.code as tcabin, CONCAT(dfre.aln_data_value,'(',dfre.code,')') as day_of_week ,
+            tca.code as tcabin, CONCAT(dfre.aln_data_value,'(',dfre.code,')') as day_of_week , fc.active,
             departure_date, min,max,average,slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point
                     FROM VX_aln_fare_control_range  fc
@@ -235,6 +490,26 @@ $sWhere $sOrder $sLimit";
 			$feed->departure_date = date('d-m-Y',$feed->departure_date);
                                 $output['aaData'][] = $feed;
 
+                  if(permissionChecker('fclr_edit')){
+                        $feed->action = btn_edit('fclr/edit/'.$feed->fclr_id, $this->lang->line('edit'));
+                  }
+		
+                  if(permissionChecker('fclr_delete')){
+                   $feed->action .= btn_delete('fclr/delete/'.$feed->fclr_id, $this->lang->line('delete'));                   
+                  }
+                        $status = $feed->active;
+                        $feed->active = "<div class='onoffswitch-small' id='".$feed->fclr_id."'>";
+            $feed->active .= "<input type='checkbox' id='myonoffswitch".$feed->fclr_id."' class='onoffswitch-small-checkbox' name='paypal_demo'";
+                        if($status){
+                           $feed->active .= " checked >";
+                        } else {
+                           $feed->active .= ">";
+                        }
+
+                        $feed->active .= "<label for='myonoffswitch".$feed->fclr_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
+
+
+
 		}
 
 		
@@ -261,6 +536,37 @@ $sWhere $sOrder $sLimit";
 		 return  $feed;
 
  	}
+
+
+   function active() {
+                if(permissionChecker('fclr_edit')) {
+                        $id = $this->input->post('id');
+                        $status = $this->input->post('status');
+                        if($id != '' && $status != '') {
+                                if((int)$id) {
+                                        $data['modify_userID'] = $this->session->userdata('loginuserID');
+                                        $data['modify_date'] = time();
+                                        if($status == 'chacked') {
+                                                $data['active'] = 1 ;
+                                                $this->fclr_m->update_fclr($data, $id);
+                                                echo 'Success';
+                                        } elseif($status == 'unchacked') {
+                                                $data['active'] = 0 ;
+                                                $this->fclr_m->update_fclr($data, $id);
+                                                echo 'Success';
+                                        } else {
+                                                echo "Error";
+                                        }
+                                } else {
+                                        echo "Error";
+                                }
+                        } else {
+                                echo "Error";
+                        }
+                } else {
+                        echo "Error";
+                }
+        }
 
 
    function generatedata() {
@@ -390,6 +696,8 @@ SELECT  boarding_point, carrier_code,operating_airline_code,off_point, season_id
                            redirect(base_url("fclr/index"));
 
    }
+
+
 
 
 }
