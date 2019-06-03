@@ -4,8 +4,7 @@ class Home extends MY_Controller {
 	
 	function __construct () {
 		parent::__construct();		
-		 $this->load->library('recaptcha');
-		 $this->load->library('encrypt');
+		 $this->load->library('recaptcha');		
 	     $this->load->model("login_m");
 		 $this->load->library('session');
 		 $this->load->helper('form');
@@ -57,15 +56,15 @@ class Home extends MY_Controller {
 		  $this->form_validation->set_message("validate_code", "%s is required");
 		  return FALSE;
 	   }else{
-		   $coupon_code = $this->encrypt->encode($code);
+		  $this->load->model('offer_eligibility_m');
+          $coupon_code = $this->offer_eligibility_m->hash($code);
 		  $count = $this->login_m->pnr_code_validate($this->input->post('pnr'),$coupon_code);
 		  if($count > 0){
 			return TRUE; 
 		  } else {
 			$this->form_validation->set_message("validate_code", "%s is Invalid"); 
             return FALSE;			
-		  }
-		 
+		  }		 
 	   }
 	}
 	

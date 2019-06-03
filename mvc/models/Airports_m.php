@@ -2,7 +2,7 @@
 
 class Airports_m extends MY_Model {
 
-  public function checkData($data,$type,$parent = null){
+  public function checkData($data,$type,$parent = null,$code=null){
 	$this->db->select('*')->from('vx_aln_data_defns');
 	  $this->db->where(array('aln_data_value'=>$data,'aln_data_typeID'=> $type));
 	  $query = $this->db->get();	
@@ -12,6 +12,7 @@ class Airports_m extends MY_Model {
 		$array = array(
 		'aln_data_value' => $data,
 		'aln_data_typeID' => $type,
+		'code' => $code,
 		'create_date' => time(),
 		'modify_date' => time(),
 		'create_userID' => $this->session->userdata('loginuserID'),
@@ -19,6 +20,7 @@ class Airports_m extends MY_Model {
 		'parentID' => $parent
 		);
       $this->db->insert('vx_aln_data_defns',$array);
+	  //print_r($this->db->last_query()); exit;
 	  if ($this->db->affected_rows() > 0){
 	     return $this->db->insert_id();
 	  } else {
@@ -30,7 +32,8 @@ class Airports_m extends MY_Model {
   public function checkAirport($data){ 
 	  $this->db->select('count(*)')->from('vx_aln_data_defns');
 	  $this->db->where(array('aln_data_value'=>$data,'aln_data_typeID'=> 1));
-	  $query = $this->db->get();	
+	  $query = $this->db->get();
+      // print_r($this->db->last_query()); exit;  	  
 	  if ($query->row('count(*)') > 0) { 
        return 0;
       } else { 
