@@ -162,7 +162,9 @@ class Rafeed extends Admin_Controller {
 							$rafeed['departure_date'] = strtotime(str_replace('-','/',$Row[11]));
 							$rafeed['dep_time'] = $this->convertTimeToSeconds($Row[12]);
 							$rafeed['arrival_time'] = $this->convertTimeToSeconds($Row[13]);
-							$rafeed['day_of_week'] = $this->rafeed_m->getDefIdByTypeAndCode(date('w', $rafeed['departure_date']),'14');
+							$day_of_week = date('w', $rafeed['departure_date']);
+							$day = ($day_of_week)?$day_of_week:7;
+							$rafeed['day_of_week'] = $this->rafeed_m->getDefIdByTypeAndCode($day,'14');
 							$rafeed['days_to_departure'] =  floor(($rafeed['departure_date'] - $rafeed['booking_date']) / (60*60*24) );
 
 							$rafeed['marketing_airline_code'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[15],'12');
@@ -225,7 +227,7 @@ class Rafeed extends Admin_Controller {
 
 
 		
-	    $aColumns = array('rafeed_id','ticket_number', 'coupon_number', 'booking_country', 'booking_city', 'issuance_country', 'issuance_city','boarding_point', 'off_point', 'cabin', 'class', 'booking_date','departure_date', 'prorated_price', 'operating_airline_code', 'marketing_airline_code', 'active');
+	    $aColumns = array('rafeed_id','ticket_number', 'coupon_number', 'booking_country', 'booking_city', 'issuance_country', 'issuance_city','boarding_point', 'off_point', 'cabin', 'class', 'booking_date','departure_date', 'prorated_price', 'operating_airline_code', 'marketing_airline_code', 'rf.active');
 	
 		$sLimit = "";
 		
