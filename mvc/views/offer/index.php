@@ -4,30 +4,24 @@
 
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li class="active"><?=$this->lang->line('menu_fclr')?></li>
+            <li class="active"><?=$this->lang->line('panel_title')?></li>
         </ol>
     </div><!-- /.box-header -->
     <!-- form start -->
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">              
-              <h5 class="page-header">  
-
-                                            <?php  if(permissionChecker('fclr_add')) {  ?>
-                        <a href="<?php echo base_url('fclr/add') ?>">
-                            <i class="fa fa-plus"></i> 
-                            <?=$this->lang->line('add_fclr')?>
-                        </a>
-                                                 <?php } ?>
-
-		&nbsp; &nbsp;
-                      
-                  <a href="<?php echo base_url('fclr/generatedata') ?>">
+              <h5 class="page-header">                        
+                  <a href="<?php echo base_url('offer_eligibility/generatedata') ?>">
                       <i class="fa fa-upload"></i>
-                      <?=$this->lang->line('generate_fclr')?>
+                      <?=$this->lang->line('generate_offer_eligibility')?>
+                  </a>
+		  &nbsp;&nbsp;			
+		   <a href="<?php echo base_url('offer_issue') ?>">
+                      <i class="fa fa-upload"></i>
+                      <?=$this->lang->line('offer_issue')?>
                   </a>
 
-		
               </h5>
 			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 
@@ -106,22 +100,15 @@
                <table id="rafeedtable" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>
                     <tr>
-			 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('season')?></th>
+			 <th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('passenger_list')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('from_cabin')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('to_cabin')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('day_of_week')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('avg')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('min')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('max')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('slider_start')?></th>
-			 <th class="col-lg-1"><?=$this->lang->line('fclr_status')?></th>
-                                <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('booking_status')?></th>
 
                     </tr>
                  </thead>
@@ -142,7 +129,7 @@ $("#dep_to_date").datepicker();
     $('#rafeedtable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
-      "sAjaxSource": "<?php echo base_url('fclr/server_processing'); ?>",
+      "sAjaxSource": "<?php echo base_url('offer_issue/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#flight_number").val()},
 		  {"name": "flightNbrEnd","value": $("#end_flight_number").val()},
@@ -162,22 +149,16 @@ $("#dep_to_date").datepicker();
                     "success": fnCallback
                          } ); }, 
 
-      "columns": [ {"data": "fclr_id" },
-		   {"data": "season_id" },
+      "columns": [ {"data": "offer_id" },
+		   {"data": "passenger_list" },
+		   {"data": "pnr_ref"},
 		   {"data": "source_point" },
-	           {"data": "dest_point" },
-		   {"data": "departure_date" },
-		   {"data": "carrier_code" },
-		   {"data": "flight_number" },
-		   {"data": "fcabin" },
-		   {"data": "tcabin" },
-		   {"data": "day_of_week" },
-		   {"data": "average" },
-                   {"data": "min" },
-		  {"data": "max" },
-		 {"data": "slider_start" },
-		 {"data": "active"},
-                  {"data": "action"}
+                   {"data": "dest_point" },
+                   {"data": "departure_date" },
+                   {"data": "carrier_code" },
+                   {"data": "flight_number" },
+                {"data": "booking_status" }
+
 				  ],			     
      dom: 'B<"clear">lfrtip',
      buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
@@ -208,7 +189,7 @@ $("#dep_to_date").datepicker();
       if((status != '' || status != null) && (id !='')) {
           $.ajax({
               type: 'POST',
-              url: "<?=base_url('fclr/active')?>",
+              url: "<?=base_url('offer_eligibility/active')?>",
               data: "id=" + id + "&status=" + status,
               dataType: "html",
               success: function(data) {

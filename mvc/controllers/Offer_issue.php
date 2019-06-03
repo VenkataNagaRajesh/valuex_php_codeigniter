@@ -9,6 +9,7 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("airline_cabin_class_m");
 		$this->load->model("offer_issue_m");
 	        $this->load->model("offer_eligibility_m");
+		$this->load->model('offer_reference_m');
 		$this->load->model("eligibility_exclusion_m");
 		$this->load->model("season_m");
 		$this->load->model("marketzone_m");
@@ -16,11 +17,24 @@ class Offer_issue extends Admin_Controller {
 		$this->load->library('email');
 		$this->load->model("reset_m");
 		$language = $this->session->userdata('lang');
-		$this->lang->load('offer_eligibility', $language);
+		$this->lang->load('offer', $language);
 	}	
 	
 	
 	public function index() {
+        $this->data['headerassets'] = array(
+                'css' => array(
+                        'assets/select2/css/select2.css',
+                        'assets/select2/css/select2-bootstrap.css',
+                                                'assets/datepicker/datepicker.css'
+                ),
+                'js' => array(
+                        'assets/select2/select2.js',
+                                                'assets/datepicker/datepicker.js'
+                )
+        );
+
+
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
@@ -39,7 +53,7 @@ class Offer_issue extends Admin_Controller {
 
 			//echo $coupon_code;exit;
 			$array = array();
-			$array['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
+			//$array['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
 			$array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 			$array["modify_date"] = time();
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
@@ -49,7 +63,16 @@ class Offer_issue extends Admin_Controller {
 
 			$this->offer_eligibility_m->update_dtpfext($array,$p_list);
 	
+			$ref['pnr_ref'] = $offer->pnr_ref;
+			$ref['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
+			$ref['offer_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+			$ref["create_date"] = time();
+                        $ref["modify_date"] = time();
+                        $ref["create_userID"] = $this->session->userdata('loginuserID');
+                        $ref["modify_userID"] = $this->session->userdata('loginuserID');
 
+			$this->offer_reference_m->insert_offer_ref($ref);//offer update ref table
+			
 			// update tracker about change in status
 			$tracker = array();
 				$tracker['booking_status_from'] = $offer->booking_status;
@@ -105,7 +128,7 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 
 		}	
 		
-		$this->data["subview"] = "offer_eligibility/index";
+		$this->data["subview"] = "offer/index";
 		$this->load->view('_layout_main', $this->data);
 	}
 
@@ -126,5 +149,155 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
     }
 
 
-}
+ function server_processing(){
+                $userID = $this->session->userdata('loginuserID');
+                $usertypeID = $this->session->userdata('usertypeID');
 
+
+
+            $aColumns = array('offer_id');
+
+                $sLimit = "";
+
+                        if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
+                        {
+                          $sLimit = "LIMIT ".$_GET['iDisplayStart'].",".$_GET['iDisplayLength'];
+                        }
+                        if ( isset( $_GET['iSortCol_0'] ) )
+                        {
+                                $sOrder = "ORDER BY  ";
+                                for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ) ; $i++ )
+                                {
+                                        if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
+                                        {
+                                                if($_GET['iSortCol_0'] == 8){
+                                                        $sOrder .= " (s.order_no*-1) DESC ,";
+                                                } else {
+                                                 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
+                                                        ".$_GET['sSortDir_'.$i] .", ";
+                                                }
+                                        }
+                                }
+                                  $sOrder = substr_replace( $sOrder, "", -2 );
+
+                                if ( $sOrder == "ORDER BY" )
+                                {
+                                        $sOrder = "";
+                                }
+                        }
+                        $sWhere = "";
+                        if ( $_GET['sSearch'] != "" )
+                        {
+                                $sWhere = "WHERE (";
+                                for ( $i=0 ; $i<count($aColumns) ; $i++ )
+                                {
+                                        $sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch']."%' OR ";
+                                }
+                                $sWhere = substr_replace( $sWhere, "", -3 );
+                                $sWhere .= ')';
+                        }
+
+                        /* Individual column filtering */
+                        for ( $i=0 ; $i<count($aColumns) ; $i++ )
+                        {
+                                if ( $_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )
+                                {
+                                        if ( $sWhere == "" )
+                                        {
+                                                $sWhere = "WHERE ";
+                                        }
+                                        else
+                                        {
+                                                $sWhere .= " AND ";
+                                        }
+                                        $sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
+                                }
+                        }
+
+
+
+
+                        if(!empty($this->input->get('boardPoint'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'boarding_point = '.$this->input->get('boardPoint');
+                        }
+                        if(!empty($this->input->get('offPoint'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'off_point = '.$this->input->get('offPoint');
+                        }
+
+			if(!empty($this->input->get('flightNbr'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'pf.flight_number >= '.$this->input->get('flightNbr');
+                        }
+
+
+                        if(!empty($this->input->get('flightNbrEnd'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'pf.flight_number <= '.$this->input->get('flightNbrEnd');
+                        }
+
+
+                        if(!empty($this->input->get('depStartDate'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'pf.dep_date >= '. strtotime($this->input->get('depStartDate'));
+                        }
+                        if(!empty($this->input->get('depEndDate'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'pf.dep_date <= '.  strtotime($this->input->get('depEndDate'));
+                        }
+                        if(!empty($this->input->get('fromCabin'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'from_cabin = '. $this->input->get('fromCabin');
+                        }
+                        if(!empty($this->input->get('toCabin'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'to_cabin = '.  $this->input->get('toCabin');
+                        }
+
+
+
+
+
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrier_code, group_concat(distinct pf.to_city ) as off_point ,group_concat(distinct pf.from_city) as board_point, group_concat( distinct bs.aln_data_value) as booking_status ,group_concat(distinct dbp.code) as source_point , group_concat(distinct dep_date) as departure_date , group_concat(distinct dop.code) as dest_point ,group_concat(distinct  pf.flight_number)  as flight_number , group_concat(distinct offer_id) as offer_id  , ofr.pnr_ref  ,group_concat( distinct first_name , ' ' , last_name SEPARATOR '<br>' ) as passenger_list   from VX_aln_offer_ref ofr  LEFT JOIN  VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = ofr.pnr_ref) LEFT JOIN VX_aln_dtpf_ext pext  on (pext.dtpf_id = pf.dtpf_id) LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)  LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1) LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = fc.carrier_code AND dai.aln_data_typeID = 12)  LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency AND dfre.aln_data_typeID = 14)  LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13) LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13)           LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)  where bs.aln_data_value != 'Excluded'  ". $sWhere. " group by ofr.pnr_ref
+ $sOrder $sLimit";
+ 
+
+/*$sQuery = "   select ofr.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name SEPARATOR '<br>')  as list from VX_aln_offer_ref ofr  LEFT JOIN  VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = ofr.pnr_ref)  group by ofr.pnr_ref";
+*/
+//print_r($sQuery);exit;
+
+        $rResult = $this->install_m->run_query($sQuery);
+        $sQuery = "SELECT FOUND_ROWS() as total";
+        $rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;
+                $output = array(
+                "sEcho" => intval($_GET['sEcho']),
+                "iTotalRecords" => $rResultFilterTotal,
+                "iTotalDisplayRecords" => $rResultFilterTotal,
+                "aaData" => array()
+          );
+                foreach ($rResult as $feed ) {
+
+                        $boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
+                        $feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
+                         $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
+                        $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
+
+                        if($feed->booking_status == 'Excluded') {
+                                $feed->booking_status = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->exclusion_id.'">'.$feed->booking_status.'</a>';
+
+                        }
+                        $feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default season";
+                        $feed->departure_date = date('d-m-Y',$feed->departure_date);
+
+                                $output['aaData'][] = $feed;
+
+                }
+
+
+                echo json_encode( $output );
+
+	}
+
+
+}

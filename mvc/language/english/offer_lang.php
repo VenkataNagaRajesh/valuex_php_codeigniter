@@ -1,17 +1,21 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "FCLR";
+$lang['panel_title'] = "Offer Management";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
 $lang['active'] = 'Status';
-$lang['fclr_status'] = 'Status';
+
+$lang['offer_issue'] = 'Offer Issue';
 $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
-$lang['add_fclr'] = 'Add FCLR';
-$lang['add_rule'] = 'Add FCLR';
-$lang['edit_rule'] = 'Edit FCLR';
-$lang['generate_fclr'] = 'Generate FCLR';
+$lang['fclr_id'] = 'FCLR ID';
+$lang['pax_id'] = 'Pax feed ID';
+$lang['booking_status'] = 'Booking Status';
+$lang['offer_id'] = 'Offer ID';
+$lang['pnr_ref'] = 'PNR Reference';
+$lang['passenger_list'] = 'Passenger List'; 
+$lang['generate_offer_eligibility'] = 'Generate Offer Eligibility Data';
 $lang['view'] = 'View';
 $lang['avg'] = 'Average';
 $lang['min'] = 'Minimum';
@@ -30,8 +34,3 @@ $lang['departure_date'] = 'Departure Date';
 $lang['flight_number'] = 'Flight Number';
 $lang['operating_airline_code'] = 'Operating Airline';
 $lang['marketing_airline_code'] = 'Marketing Airline';
-
-$lang['edit'] = 'Edit';
-$lang['delete'] = 'Delete';
-$lang['view'] = 'View';
-

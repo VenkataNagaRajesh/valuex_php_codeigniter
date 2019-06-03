@@ -3,8 +3,8 @@
 class Home extends MY_Controller {
 	
 	function __construct () {
-		parent::__construct();		
-		 $this->load->library('recaptcha');		
+		parent::__construct();	
+		 $this->load->library('recaptcha');				
 	     $this->load->model("login_m");
 		 $this->load->library('session');
 		 $this->load->helper('form');

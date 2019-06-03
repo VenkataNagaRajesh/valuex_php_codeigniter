@@ -1,6 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class signin_m extends MY_Model {
+	
 	function __construct() {
 		parent::__construct();
 		$this->load->model("setting_m");
@@ -123,7 +124,6 @@ class signin_m extends MY_Model {
 	    return $ip;
 	}
 
-	
 	public function getBrowser() {
 	    $u_agent = $_SERVER['HTTP_USER_AGENT'];
 	    $bname = 'Unknown';
@@ -257,4 +257,5 @@ class signin_m extends MY_Model {
 	public function loggedin() {
 		return (bool) $this->session->userdata("loggedin");
 	}
+
 }

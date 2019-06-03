@@ -11,7 +11,7 @@ class visitorinfo_m extends MY_Model {
 		parent::__construct();
 	}
 
-	function get_visitorinfo($array=NULL, $signal=FALSE) {
+	/* function get_visitorinfo($array=NULL, $signal=FALSE) {
 		$query = parent::get($array, $signal);
 		return $query;
 	}
@@ -33,7 +33,7 @@ class visitorinfo_m extends MY_Model {
 
 	public function delete_visitorinfo($id){
 		parent::delete($id);
-	}
+	} */
 }
 
 /* End of file visitorinfo_m.php */

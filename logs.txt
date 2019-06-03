@@ -12,3 +12,73 @@ Array
     [1] => 1120
 )
 
+Array
+(
+    [airport] => San Francisco International Airport
+    [airportcode] => SFO
+    [citycode] => SFO
+    [countrycode] => US
+    [area] => 1
+    [region] => America
+)
+
+Array
+(
+    [airport] => Tokyo Haneda Airport
+    [airportcode] => TYO
+    [citycode] => TYO
+    [countrycode] => JP
+    [area] => 3
+    [region] => Asia
+)
+
+Array
+(
+    [airport] => Haneda International Airport
+    [airportcode] => HND
+    [citycode] => TYO
+    [countrycode] => JP
+    [area] => 3
+    [region] => Asia
+)
+
+Array
+(
+    [airport] => Orly Airport
+    [airportcode] => ORY
+    [citycode] => PAR
+    [countrycode] => FR
+    [area] => 2
+    [region] => Europe
+)
+
+Array
+(
+    [airport] => Changi Airport
+    [airportcode] => SIN
+    [citycode] => SIN
+    [countrycode] => SG
+    [area] => 3
+    [region] => Asia
+)
+
+Array
+(
+    [airport] => Kuala Lumpur International Airport
+    [airportcode] => KUL
+    [citycode] => KUL
+    [countrycode] => MY
+    [area] => 3
+    [region] => Asia
+)
+
+Array
+(
+    [airport] => Phuket International Airport
+    [airportcode] => HKT
+    [citycode] => HKT
+    [countrycode] => TH
+    [area] => 3
+    [region] => Asia
+)
+

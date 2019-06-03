@@ -18,7 +18,6 @@ class Trigger extends Admin_Controller {
 	public function index() {
 		$timestamp = $this->trigger_m->get_trigger_time('VX_aln_market_zone');
 		if (isset($timestamp)) {
-			
 		      $data = $this->marketzone_m->getMarketzones_for_triggerrun($timestamp);
 			foreach($data as $marketzone){
 				
@@ -149,7 +148,7 @@ class Trigger extends Admin_Controller {
 			$tarray['modify_date'] = time();
 			$tarray['isReconfigured'] = '0';
 			$tarray['modify_userID'] = $this->session->userdata('loginuserID');
-			$this->trigger_m->update_trigger($tarray);
+			$this->trigger_m->update_trigger($tarray,'VX_aln_market_zone');
 
 		}
 
@@ -250,7 +249,7 @@ class Trigger extends Admin_Controller {
 			}
 			$tarray['modify_date'] = time();
 			$tarray['isReconfigured'] = '0';
-			$this->trigger_m->update_trigger($tarray);
+			$this->trigger_m->update_trigger($tarray,'VX_aln_season');
 		} 
 		redirect(base_url("season/index"));
 	}
@@ -259,7 +258,7 @@ class Trigger extends Admin_Controller {
 		$timestamp = $this->trigger_m->get_trigger_time('VX_aln_market_zone');
 		if (isset($timestamp)) {
 		   $marketzones = $this->marketzone_m->getMarkets_for_triggerrun($timestamp);
-		   print_r($marketzones);
+		   //print_r($marketzones);
 		   $marketseasons = $this->season_m->getMarketSeasons_for_triggerrun();
 		   foreach($marketseasons as $season){
 			   $orig_list = []; $dest_list = [];
