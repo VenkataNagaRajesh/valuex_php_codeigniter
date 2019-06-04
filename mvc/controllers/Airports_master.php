@@ -10,15 +10,15 @@ class Airports_master extends Admin_Controller {
 		$this->load->model("season_m");
 		$this->load->model("season_airport_map_m");
 		$language = $this->session->userdata('lang');
-		$this->lang->load('airports', $language);	
-	}	
+		$this->lang->load('airports', $language);
+    }	
 	
 	protected function rules() {
 		$rules = array(
 		   array(
-				'field' => 'stateID', 
+				'field' => 'cityID', 
 				'label' => $this->lang->line("master_state"), 
-				'rules' => 'trim|required|xss_clean|max_length[60]|callback_state'
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_city'
 			),
 			array(
 				'field' => 'regionID', 
@@ -26,11 +26,11 @@ class Airports_master extends Admin_Controller {
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_region'
 			),
 			array(
-				'field' => 'areaID', 
-				'label' => $this->lang->line("master_area"), 
-				'rules' => 'trim|required|xss_clean|max_length[60]|callback_area'
+				'field' => 'countryID', 
+				'label' => $this->lang->line("master_country"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_country'
 			),
-			array(
+			/* array(
 				'field' => 'latitude', 
 				'label' => $this->lang->line("master_latitude"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]'
@@ -39,15 +39,15 @@ class Airports_master extends Admin_Controller {
 				'field' => 'longitude', 
 				'label' => $this->lang->line("master_longitude"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]'
-			)
+			) */
 			
 		);
 		return $rules;
 	}
 	
-	function state($post_string){		
+	function city($post_string){		
 	  if($post_string == '0'){
-		 $this->form_validation->set_message("state", "%s is required");
+		 $this->form_validation->set_message("city", "%s is required");
 		  return FALSE;
 	   }else{
 		  return TRUE;
@@ -63,28 +63,27 @@ class Airports_master extends Admin_Controller {
 	   }
 	}
 	
-	function area($post_string){		
+	function country($post_string){		
 	  if($post_string == '0'){
-		 $this->form_validation->set_message("area", "%s is required");
+		 $this->form_validation->set_message("country", "%s is required");
 		  return FALSE;
 	   }else{
 		  return TRUE;
 	   }
 	}
 
-	public function index() {
-		$this->data['countrylist'] = $this->airports_m->getDefns(2);
-		
+	public function index() {		
+		$this->data['areaslist'] = $this->airports_m->getDefns(5);
 		if(!empty($this->input->post('countryID'))){
 		  $this->data['countryID'] = $this->input->post('countryID');
 		} else {
 		  $this->data['countryID'] = 0;
 		}
-		if(!empty($this->input->post('stateID'))){		
-        	$this->data['stateID'] = $this->input->post('stateID');
+	   if(!empty($this->input->post('cityID'))){		
+        	$this->data['cityID'] = $this->input->post('cityID');
 		} else {
-		  $this->data['stateID'] = 0;
-		}
+		  $this->data['cityID'] = 0;
+		} 
 		if(!empty($this->input->post('regionID'))){	
 		   $this->data['regionID'] = $this->input->post('regionID');
 		} else {
@@ -94,9 +93,8 @@ class Airports_master extends Admin_Controller {
 	    	$this->data['areaID'] = $this->input->post('areaID');
 		} else {
 		    $this->data['areaID'] = 0;
-		}
+		}	
 		
-		//print_r( $this->data['regionID']); exit;
 		$this->data["subview"] = "airports_master/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -114,7 +112,7 @@ class Airports_master extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$this->data['airport'] = $this->airports_m->getAirportData($id);
-			$this->data['countrylist'] = $this->airports_m->getDefns(2);
+			$this->data['areaslist'] = $this->airports_m->getDefns(5);
 			//print_r($this->input->post('airport')); exit;
 			if($this->data['airport']) {
 				if($_POST) {	
@@ -125,11 +123,11 @@ class Airports_master extends Admin_Controller {
 				   	$this->load->view('_layout_main', $this->data);			
 				   } else {				
 						$data['countryID'] = $this->input->post('countryID');
-						$data['stateID'] = $this->input->post('stateID');
+						$data['cityID'] = $this->input->post('cityID');
 						$data['regionID'] = $this->input->post('regionID');
 						$data['areaID'] = $this->input->post('areaID');
-						$data['lat'] = $this->input->post('latitude');
-                        $data['lng'] = $this->input->post('longitude');
+						//$data['lat'] = $this->input->post('latitude');
+                       // $data['lng'] = $this->input->post('longitude');
                         $data['active'] = $this->input->post('active');						
 						$data['modify_date'] = time();					
 						$data['modify_userID'] = $this->session->userdata('loginuserID'); 
@@ -199,7 +197,8 @@ class Airports_master extends Admin_Controller {
 			   if(move_uploaded_file($file, APPPATH."/uploads/".$_FILES['file']['name'])){		
 				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
 				$Reader = new SpreadsheetReader($file); 
-				$header = array('id','ident','type','name','latitude_deg','longitude_deg','elevation_ft','continent','iso_country','iso_region','municipality','scheduled_service','gps_code','iata_code','local_code','home_link','wikipedia_link','keywords');
+				$header = array_map('strtolower',array('S.No','Airport Name','Airport Code','City Name','City Code','Country Code','Country','Region','Area'));
+				 $header = array_map('strtolower', $header);
 				//print_r(count($header)); exit;
 				$Sheets = $Reader -> Sheets();
 				$defnData = $this->airports_m->getDefns();
@@ -208,47 +207,46 @@ class Airports_master extends Admin_Controller {
 				   $Reader -> ChangeSheet($Index);
 				   $i = 0;
                  //$time_start = microtime(true); 					   
-				  foreach ($Reader as $Row){
+				  foreach ($Reader as $Row){ 
 					if($i == 0){ // header checking						
-					  $flag = 0 ;						 
-					 if($Row == $header){
+					  $flag = 0 ;	
+                       $Row = array_map('trim', $Row);					  
+                     $import_header = array_map('strtolower', $Row);
+                    if(count(array_diff($header,$import_header)) == 0){
 						 $flag = 1;
 					 }				  
 					} else {
 					   if($flag == 1){ 						   						
-					   	 if(count($Row) == 18){
-							 $airport = $Row[3];
-							 $latitude = $Row[4];
-							 $longitude = $Row[5];
-							 $country = $Row[8];
-							 $region = $Row[9];
-							 $state = explode('-',$Row[9])[1];	
-                                					 
-							 $area = $Row[10];
-							 /* echo 'Airport :'.$airport.'<br>';
-							 echo 'Country'.$country.'<br>';
-							 echo 'Region'.$region.'<br>';
-							 echo 'State'.$state.'<br>';
-							 echo 'Area'.$area.'<br>';
-echo '----------------------------------------------------------------------------------------------------<br>';*/
-                             $res = $this->airports_m->checkAirport($airport);							 
-							if($res){                             						
-							  /* $data['countryID'] = $this->airports_m->checkData($country,2);					 
-							  $data['stateID'] = $this->airports_m->checkData($state,3,$data['countryID']);
-							  $data['regionID'] = $this->airports_m->checkData($region,4,$data['stateID']);
-							  $data['areaID'] = $this->airports_m->checkData($area,5,$data['regionID']); */  
-							  // print_r($defnData);
-							  // echo "---------------------------------------------------------------------------";
-							  $countryID = 0;
-							  $stateID = 0;
+					   		 $airport_key = array_search ('airport name', $import_header);	
+                          	 $airportcode_key = array_search ('airport code', $import_header);
+                             $city_key = array_search ('city name', $import_header);
+                             $citycode_key = array_search ('city code', $import_header);
+                             $countrycode_key = array_search ('country code', $import_header);
+							 $country_key = array_search('country',$import_header);
+							 $region_key = array_search ('region', $import_header);
+							 $area_key = array_search('area',$import_header);				 						
+							  $Row = array_map('trim', $Row);	
+							 $airport = $Row[$airport_key];							
+							 $country = $Row[$country_key];
+							 $region = $Row[$region_key];	                              					 
+							 $area = $Row[$area_key];
+							 $city = $Row[$city_key];
+							unset($validate);
+							 $validate = array('airport'=> $airport,'airportcode' => $Row[$airportcode_key],'citycode' => $Row[$citycode_key],'countrycode' => $Row[$countrycode_key],'area' => $area,'region' => $region);					        								 
+							  $res = $this->airports_m->checkAirport($airport);							 
+						 if($res){
+                            $val_status = $this->validateAirport($validate);                            
+						  if($val_status){								
+							  $countryID = 0;							
 							  $regionID = 0;
 							  $areaID = 0;
+							  $cityID = 0;
 							   foreach($defnData as $aln_data){ //Total Execution Time: 0.45060066779455 Mins
 								 if($aln_data->aln_data_typeID == 2 && $aln_data->aln_data_value == $country){
 								 	$countryID = $aln_data->vx_aln_data_defnsID;
 								 }
-								 if($aln_data->aln_data_typeID == 3 && $aln_data->aln_data_value == $state){
-								 	$stateID = $aln_data->vx_aln_data_defnsID;
+								 if($aln_data->aln_data_typeID == 3 && $aln_data->aln_data_value == $city){
+								 	$cityID = $aln_data->vx_aln_data_defnsID;
 								 }
 								 if($aln_data->aln_data_typeID == 4 && $aln_data->aln_data_value == $region){
 								 	$regionID = $aln_data->vx_aln_data_defnsID;
@@ -256,51 +254,55 @@ echo '--------------------------------------------------------------------------
 								 if($aln_data->aln_data_typeID == 5 && $aln_data->aln_data_value == $area){	
 								 	$areaID = $aln_data->vx_aln_data_defnsID;
 								 }
-							  } 	
-							  if(!empty($countryID)){
-							  	$data['countryID'] = $countryID;
-							  } else {								 
-							  	$data['countryID'] =  $this->airports_m->checkData($country,2);
-                                $cobj->vx_aln_data_defnsID = $data['countryID'];
-                                $cobj->aln_data_typeID = 2;
-                                $cobj->aln_data_value = $country;
-                                $defnData[] = $cobj;
-								unset($cobj);
-							  }
+							  } 
 							  
-							   if(!empty($stateID)){
-							  	$data['stateID'] = $stateID;
-							  } else {
-							  	$data['stateID'] =  $this->airports_m->checkData($state,3,$data['countryID']);
-                                $sobj->vx_aln_data_defnsID = $data['stateID'];
-                                $sobj->aln_data_typeID = 3;
-                                $sobj->aln_data_value = $state;	
-                                $defnData[] = $sobj;	
-                                unset($sobj);								
-							  }
-							  
-							   if(!empty($regionID)){
-							  	$data['regionID'] = $regionID;
-							  } else {
-							  	$data['regionID'] =  $this->airports_m->checkData($region,4,$data['stateID']);
-                                $robj->vx_aln_data_defnsID = $data['regionID'];
-                                $robj->aln_data_typeID = 4;
-                                $robj->aln_data_value = $region;	
-                                 $defnData[] = $robj;	
-                                 unset($robj);								 
-							  }
-							  
-							   if(!empty($areaID)){
+							    if(!empty($areaID)){
 							  	$data['areaID'] = $areaID;								
 							  } else {
-							  	$data['areaID'] =  $this->airports_m->checkData($area,5,$data['regionID']);
+							  	$data['areaID'] =  $this->airports_m->checkData($area,5,null);
                                 $aobj->vx_aln_data_defnsID = $data['areaID'];
                                 $aobj->aln_data_typeID = 5;
                                 $aobj->aln_data_value = $area;	
                                 $defnData[] = $aobj;
 								unset($aobj);
 							  } 
-						     $data['airportID'] = $this->airports_m->addAirport($airport, $data['areaID'],$Row[1]);
+            
+			                   if(!empty($regionID)){
+							  	$data['regionID'] = $regionID;
+							  } else {
+							  	$data['regionID'] =  $this->airports_m->checkData($region,4,$data['areaID']);
+                                $robj->vx_aln_data_defnsID = $data['regionID'];
+                                $robj->aln_data_typeID = 4;
+                                $robj->aln_data_value = $region;	
+                                 $defnData[] = $robj;	
+                                 unset($robj);								 
+							  }							  
+							                           							  
+							  if(!empty($countryID)){
+							  	$data['countryID'] = $countryID;
+							  } else {								 
+							  	$data['countryID'] =  $this->airports_m->checkData($country,2,$data['regionID'] ,$Row[$countrycode_key]);
+                                $cobj->vx_aln_data_defnsID = $data['countryID'];
+                                $cobj->aln_data_typeID = 2;
+                                $cobj->aln_data_value = $country;
+                                $defnData[] = $cobj;
+								unset($cobj);
+							  }							  
+							 
+
+                              if(!empty($cityID)){
+							  	$data['cityID'] = $cityID;
+							  } else {
+							  	$data['cityID'] =  $this->airports_m->checkData($city,3,$data['countryID'],$Row[$citycode_key]);
+                                $ctobj->vx_aln_data_defnsID = $data['cityID'];
+                                $ctobj->aln_data_typeID = 3;
+                                $ctobj->aln_data_value = $city;	
+                                $defnData[] = $ctobj;	
+                                unset($ctobj);								
+							  }	 							  
+							  
+							  
+						     $data['airportID'] = $this->airports_m->addAirport($airport, $data['cityID'],$Row[$airportcode_key]);
                              
 							if ($data['airportID']) {
 							    $parentSet  = $this->marketzone_m->getParentsofAirport($data['airportID']);
@@ -389,17 +391,17 @@ echo '--------------------------------------------------------------------------
                               $this->airports_m->addMasterData($data);	
                        //Updating seasons maping data
 					     
-                  							  
+							 }				  
 							} else {
-								//echo "Airport :".$airport." already  existed";								 
+								$this->mydebug->airports_log("Airport :".$airport." already  existed");		 
 							}
-					   	 } 						
+					    					
 					   } else {
-						   print_r("mismatch");
+						   print_r("mismatch"); 
 					   }
 					 }
 				   $i++;					   
-				  }
+				  } 
                   /* $time_end = microtime(true);
                 $execution_time = ($time_end - $time_start)/60;
                 
@@ -422,13 +424,39 @@ echo '--------------------------------------------------------------------------
 			$this->data["subview"] = "airports_master/upload";
 			$this->load->view('_layout_main', $this->data); 
       }
-    }   
+    }
+
+    function validateAirport($validate){
+        $validateAirportCode = $this->airports_m->checkAirportCode($validate['airportcode']);		
+		if(strlen($validate['airportcode']) != 3 || ctype_alpha($validate['airportcode']) != 1){
+			$this->mydebug->airports_log("Airport Code must be alphabets and length 3 ".$validate['airport'].'-'.$validate['airportcode']);
+			return FALSE;
+		} else if($validateAirportCode != 0){
+			$this->mydebug->airports_log("Airport Code must be UNIQUE ".$validate['airport'].'-'.$validate['airportcode']);
+			return FALSE;
+		} else if(strlen($validate['citycode']) != 3 || ctype_alpha($validate['citycode']) != 1){
+			$this->mydebug->airports_log("City Code must be alphabets and length 3 ".$validate['airport'].'-'.$validate['citycode']);
+			return FALSE;
+		} else if(strlen($validate['countrycode']) != 2 || ctype_alpha($validate['countrycode']) != 1){
+			$this->mydebug->airports_log("Countrycode Code must be alphabets and length 2 ".$validate['airport'].'-'.$validate['countrycode']);
+			return FALSE;
+		} else if(strlen($validate['area']) != 1 || !is_numeric($validate['area'])){
+			$this->mydebug->airports_log("Area must be numeric and length 1 ".$validate['airport'].'-'.$validate['area']);
+			return FALSE;
+		} else if(strlen($validate['region']) > 99 || !ctype_alpha($validate['region'])){
+			$this->mydebug->airports_log("region must be alphabets and length <= 99 ".$validate['airport'].'-'.$validate['region']);			
+			return FALSE;
+		} else {			
+			return TRUE;
+		} 
+		
+	}	
 
     function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
 		$usertypeID = $this->session->userdata('usertypeID');	  
 		
-	    $aColumns = array('m.vx_amdID','ma.aln_data_value','mc.aln_data_value','ms.aln_data_value','mr.aln_data_value','mar.aln_data_value','ma.code','ma.active');
+	    $aColumns = array('m.vx_amdID','ma.aln_data_value','mct.aln_data_value','mc.aln_data_value','mr.aln_data_value','mar.aln_data_value','ma.code','ma.active');
 	
 		$sLimit = "";
 		
@@ -486,24 +514,24 @@ echo '--------------------------------------------------------------------------
 					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
 				}
 			}
-			
-			if($this->input->get('countryID') > 0){
+			if($this->input->get('areaID') > 0 ){
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'm.countryID = '.$this->input->get('countryID');		 
-	        }			
-			if($this->input->get('stateID') > 0){
-		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'm.stateID = '.$this->input->get('stateID');		 
+              $sWhere .= 'm.areaID = '.$this->input->get('areaID');		 
 	        }
 			if($this->input->get('regionID') > 0){
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
               $sWhere .= 'm.regionID = '.$this->input->get('regionID');		 
 	        }
-			if($this->input->get('areaID') > 0 ){
+			if($this->input->get('countryID') > 0){
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'm.areaID = '.$this->input->get('areaID');		 
-	        }
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.vx_amdID,ma.aln_data_value airport,mc.aln_data_value country,ms.aln_data_value state,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active from vx_aln_master_data m left join vx_aln_data_defns ma ON ma.vx_aln_data_defnsID = m.airportID left join vx_aln_data_defns ms ON ms.vx_aln_data_defnsID = m.stateID left join vx_aln_data_defns mc ON mc.vx_aln_data_defnsID = m.countryID left join vx_aln_data_defns mr ON mr.vx_aln_data_defnsID = m.regionID left join vx_aln_data_defns mar ON mar.vx_aln_data_defnsID = m.areaID	
+              $sWhere .= 'm.countryID = '.$this->input->get('countryID');		 
+	        }			
+			/* if($this->input->get('stateID') > 0){
+		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              $sWhere .= 'm.stateID = '.$this->input->get('stateID');		 
+	        } */			
+			
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.vx_amdID,ma.aln_data_value airport,ma.code airportcode,mct.aln_data_value city,mct.code citycode,mc.aln_data_value country,mc.aln_data_value countrycode,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active from vx_aln_master_data m left join vx_aln_data_defns ma ON ma.vx_aln_data_defnsID = m.airportID left join vx_aln_data_defns mct ON mct.vx_aln_data_defnsID = m.cityID left join vx_aln_data_defns mc ON mc.vx_aln_data_defnsID = m.countryID left join vx_aln_data_defns mr ON mr.vx_aln_data_defnsID = m.regionID left join vx_aln_data_defns mar ON mar.vx_aln_data_defnsID = m.areaID	
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
@@ -569,6 +597,12 @@ echo '--------------------------------------------------------------------------
 			echo "Error";
 		}
 	}
+	
+	function downloadFormat(){
+		$this->load->helper('download');
+        $filename = APPPATH.'downloads/airport_master.xlsx'; 
+		force_download($filename, null);		
+	}
 
 /*function testadd(){
 $data['airportID']='499';
@@ -628,6 +662,7 @@ $data['airportID']='499';
 
 
 }*/
+	
 	
    
 }

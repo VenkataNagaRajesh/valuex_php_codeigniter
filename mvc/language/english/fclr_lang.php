@@ -5,10 +5,12 @@ $lang['panel_title'] = "FCLR";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
 $lang['active'] = 'Status';
-
+$lang['fclr_status'] = 'Status';
 $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
-
+$lang['add_fclr'] = 'Add FCLR';
+$lang['add_rule'] = 'Add FCLR';
+$lang['edit_rule'] = 'Edit FCLR';
 $lang['generate_fclr'] = 'Generate FCLR';
 $lang['view'] = 'View';
 $lang['avg'] = 'Average';
@@ -28,3 +30,8 @@ $lang['departure_date'] = 'Departure Date';
 $lang['flight_number'] = 'Flight Number';
 $lang['operating_airline_code'] = 'Operating Airline';
 $lang['marketing_airline_code'] = 'Marketing Airline';
+
+$lang['edit'] = 'Edit';
+$lang['delete'] = 'Delete';
+$lang['view'] = 'View';
+

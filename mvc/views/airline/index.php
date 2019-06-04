@@ -86,7 +86,8 @@
                   {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
-     buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+     buttons: [ 'copy', 'csv', 'excel','pdf' ],
+     lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, "All"] ]	 
     });
 	
 	

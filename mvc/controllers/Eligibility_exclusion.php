@@ -330,9 +330,7 @@ class Eligibility_exclusion extends Admin_Controller {
                                 $array['upgrade_from_cabin_type'] = $this->input->post("upgrade_from_cabin_type");
                                 $array['upgrade_to_cabin_type'] = $this->input->post("upgrade_to_cabin_type");
                                 $array["future_use"] = $this->input->post("future_use");
-                                $array["create_date"] = time();
                                 $array["modify_date"] = time();
-                                $array["create_userID"] = $this->session->userdata('loginuserID');
                                $array["modify_userID"] = $this->session->userdata('loginuserID');
 
                                 $this->eligibility_exclusion_m->update_eligibility_rule($array, $id);
