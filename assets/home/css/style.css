@@ -145,3 +145,202 @@ figure {
 	color: #333;
 	font-size: 14px;
 }
+/*topbar css*/
+.top-bar{
+	background: #333;
+}
+.top-bar select{
+	padding: 3px 4px;
+	background: none;
+	color: #fff;
+	border: none;
+}
+.bid-tab{
+	margin: 20px 0;
+}
+.bid-tab .nav-tabs{
+	background: #666;
+	font-family: century gothic;
+}
+.bid-tab .nav-tabs li a{
+	color:#fff;
+}
+.bid-tab .nav-tabs .badge{
+	background: #fff;
+	color: #ff6633;
+	border: solid 1px #333;
+}
+.bid-tab .tab-content .tab-pane h3{
+	margin-bottom: 10px;
+	color: #ff6633;
+	font-size: 17px;
+	font-weight: bold;
+}
+.bid-tab .tab-content{
+	margin:20px 0;
+}
+.bid-tab .tab-content .tab-pane p{
+	margin-bottom: 5px;
+	color: #333;
+	font-family: century gothic;
+	font-size: 14px;
+}
+.bid-tab .tab-content .tab-pane ol li{
+	font-family:century gothic;
+	color:#333;
+	font-size:14px;
+}
+.bid-tab .tab-content .tab-pane ol {
+	margin-bottom: 6px;
+}
+.bid-tab .tab-content .pass-info p span{
+	color: #ff6633;
+	margin-left: 12px;
+}
+.bid-tab .tab-content .pass-info p{
+	font-weight:bold;
+}
+.bid-tab .tab-content .pass-info h2{
+	background: #ff6633;
+	color: #fff;
+	font-size: 14px;
+	padding: 8px;
+	margin-bottom: 8px;
+	font-weight: bold;
+}
+.bid-tab .tab-content .pass-info .col-md-4, .bid-tab .tab-content .pass-info .col-md-3, .bid-tab .tab-content .pass-info .col-md-5{
+	padding:0;
+}
+.bid-tab .tab-content .pass-info .bid-info ul{
+	padding-left: 0;
+	list-style: none;
+	font-size: 12px;
+	color: #333;
+	font-family: century gothic;
+	margin-bottom: 0;
+}
+.bid-tab .tab-content .pass-info .bid-info ul li:last-child{
+	color:#ff6633;
+}
+.bid-tab .tab-content .pass-info .bid-radio label{
+	color: #333;
+	font-size: 14px;
+	padding-left: 40px;
+}
+.bid-tab .tab-content .pass-info .bid-info{
+	display: flex;
+	margin-bottom: 20px;
+	padding: 0 12px;
+}
+.bid-tab .tab-content .pass-info .bid-radio{
+	margin-bottom: 3em;
+}
+.bid-tab .tab-content .pass-info .bid-info p {
+	position: relative;
+	color: #ff6633;
+}
+.bid-tab .tab-content .pass-info .bid-info p i{
+	color:#333;
+	left: -18px;
+	position: relative;
+}
+.bid-tab .tab-content .pass-info .bid-visible{
+		opacity:0.5;
+}
+.bid-tab .side-image img{
+	height:100px;
+}
+.bid-tab  #payment .side-image img{
+	width:100%;
+	height:180px;
+}
+.bid-tab  #payment h2{
+	margin: 12px 0;
+	font-size: 15px;
+	color: #333;
+}
+.bid-tab  #payment .booking-ref{
+	background: #ddd;
+	border-radius: 3px;
+}
+.bid-tab  #payment .back-btn{
+	margin-right: -7px;
+	padding-left: 0;
+}
+.bid-tab  #payment .back-btn .btn-danger{
+	width: 100%;
+	background: #ff6633;
+	border: none;
+}
+.bid-tab .side-image{
+	margin-bottom:5px;
+}
+.bid-tab .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus{
+	background-color: #ff6633;
+	border: none;
+	border-bottom-color: #ff6633;
+	cursor: pointer;
+	color:#fff;
+}
+.bid-tab .nav-tabs > li > a:hover {
+    border-color: #333;
+}
+.bid-tab .nav > li > a:hover, .nav > li > a:focus {
+    text-decoration: none;
+    background-color: #333;
+}
+.bid-tab .nav-tabs li{
+	padding:0;
+}
+.payment-box{
+	background: #f5f5f5;
+	padding: 16px;
+	border-radius: 3px;
+}
+.payment-box .card-exp input{
+	width: 58px;
+	padding: 3px;
+	text-align: center;
+	height: 36px;
+	color: #333;
+	display: inline-block;
+}
+.payment-box .card-exp label{
+	display: table;
+}
+.payment-box .actual-cash p{
+	margin-top:4em;
+}
+.payment-box .actual-cash p i{
+	margin-left:10px;
+}
+.payment-box .actual-cash .btn-danger{
+	background: #ff6633;
+	border: none;
+	padding: 10px 15px;
+	font-weight: 600;
+	text-transform: uppercase;
+	margin-top: 15px;
+}
+#payment .pay-info p{
+	color: #ff6633;
+}
+#payment .pay-info{
+	margin: 20px 0;
+}
+.payment-box  label{
+	margin-top:15px;
+	color:#333;
+	text-transform:capitalize;
+	font-size:14px;
+}
+#payment .price-range{
+	background: #f5f5f5;
+	padding: 14px;
+	margin: 20px 0px;
+}
+#offer .price-range{
+	background: #f5f5f5;
+	padding: 14px;
+	margin-bottom: 4em;
+}
