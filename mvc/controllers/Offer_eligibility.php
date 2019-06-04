@@ -282,7 +282,11 @@ $sWhere $sOrder $sLimit";
                         $upgrade['off_point'] = $feed->to_city;
                         $upgrade['flight_number'] = $feed->flight_number;
                         $upgrade['carrier_code'] = $feed->carrier_code;
-                        $upgrade['frequency'] =  $this->rafeed_m->getDefIdByTypeAndCode(date('w',$feed->dep_date),'14'); //507;
+
+			$day_of_week = date('w', $feed->dep_date); 
+                        $day = ($day_of_week)?$day_of_week:7;
+
+                        $upgrade['frequency'] =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
                         $upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
                          $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
 		if(count($rules) > 0 ) {
