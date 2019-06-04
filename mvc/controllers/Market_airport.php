@@ -120,12 +120,12 @@ class Market_airport extends Admin_Controller {
 
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS mz.market_id,mz.market_name,ma.aln_data_value airport,mc.aln_data_value country,ms.aln_data_value state,
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS mz.market_id,mz.market_name,ma.aln_data_value airport,mc.aln_data_value country,
             mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active FROM VX_aln_market_zone mz 
             JOIN VX_market_airport_map mam on (mam.market_id = mz.market_id) 
             LEFT JOIN vx_aln_master_data m on (m.airportID = mam.airport_id ) 
             left join vx_aln_data_defns ma ON (ma.vx_aln_data_defnsID = m.airportID) 
-            left join vx_aln_data_defns ms ON (ms.vx_aln_data_defnsID = m.stateID) 
+            
             left join vx_aln_data_defns mc ON (mc.vx_aln_data_defnsID = m.countryID) 
             left join vx_aln_data_defns mr ON (mr.vx_aln_data_defnsID = m.regionID) 
             left join vx_aln_data_defns mar ON (mar.vx_aln_data_defnsID = m.areaID)

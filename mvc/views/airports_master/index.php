@@ -21,29 +21,32 @@
 				 <?php } ?>
               </h5>
 			  <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
-			<div class='form-group'>			 
+			<div class='form-group'>
+                			
 			   <div class="col-sm-2">			   
-               <?php $clist = array("0" => "Select Country");               
-                   foreach($countrylist as $country){
-								 $clist[$country->vx_aln_data_defnsID] = $country->aln_data_value;
-							 }							
-				   echo form_dropdown("countryID", $clist,set_value("countryID",$countryID), "id='countryID' class='form-control hide-dropdown-icon select2'");    ?>
+                 <?php $alist = array("0" => "Select Area");               
+                   foreach($areaslist as $area){
+					 $alist[$area->vx_aln_data_defnsID] = $area->aln_data_value;
+				   }							
+				   echo form_dropdown("areaID", $alist,set_value("areaID",$areaID), "id='areaID' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
-                 <div class="col-sm-2">			   
-                   <select name="stateID" id="stateID" class="form-control" placeholder="State">
-				   
-				   </select>
-                 </div>                				
-			     <div class="col-sm-2">
+				 <div class="col-sm-2">
                     <select name="regionID" id="regionID" class="form-control" placeholder="Region">
 				   
 				    </select>
                  </div>
-                 <div class="col-sm-2">
-                 	<select name="areaID" id="areaID" class="form-control" placeholder="Area">
+				<div class="col-sm-2">
+                 	<select name="countryID" id="countryID" class="form-control" placeholder="Country">
 				   
 				    </select>	
                  </div>
+                 <div class="col-sm-2">			   
+                   <select name="cityID" id="cityID" class="form-control" placeholder="City">
+				   
+				   </select>
+                 </div>              				
+			    
+                 
                 <div class="col-sm-2">
                   <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
                 </div>	             				
@@ -55,14 +58,17 @@
                     <tr>
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
                         <th class="col-lg-2"><?=$this->lang->line('master_airport')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('master_country')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('master_state')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('master_region')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('master_area')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('master_code')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('master_city')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('master_citycode')?></th>
+						<!--<th class="col-lg-1"><?=$this->lang->line('master_state')?></th>-->
+						<th class="col-lg-1"><?=$this->lang->line('master_country')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('master_countrycode')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('master_region')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('master_area')?></th>						
 						<th class="col-lg-1"><?=$this->lang->line('master_active')?></th>
                         <?php if(permissionChecker('airports_master_edit') || permissionChecker('airports_master_delete')) { ?>
-                        <th class="col-lg-1"><?=$this->lang->line('action')?></th>
+                        <th class="col-lg-2"><?=$this->lang->line('action')?></th>
                         <?php } ?>
                     </tr>
                  </thead>
@@ -76,62 +82,19 @@
 </div>
 <script>
  $(document).ready(function() {	 
-	 var countryID = <?=$countryID?>;
-	 var stateID = <?=$stateID?>;
+	 var countryID = <?=$countryID?>;	
 	 var regionID =<?=$regionID?>;
-	 var areaID = <?=$areaID?>;
-	
-    if(countryID == null) {
-        $('#stateID').val(0);
-    } else {
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportStates')?>",          
-		   data: {"countryID" :countryID , "stateID": stateID},
-            dataType: "html",			
-            success: function(data) {
-               $('#stateID').html(data);
-            }
-        }); 		
-	}
-	
-	if(stateID === null) { 
-        $('#regionID').val(0);
-    } else { 
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportRegions')?>",          
-		   data: {"regionID" :regionID , "stateID": stateID},
-            dataType: "html",			
-            success: function(data) {
-               $('#regionID').html(data);
-            }
-        }); 		
-	}
-	
-	if(regionID === null) {
-        $('#areaID').val(0);
-    } else {
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportAreas')?>",          
-		   data: {"regionID" :regionID , "areaID": areaID},
-            dataType: "html",			
-            success: function(data) {
-               $('#areaID').html(data);
-            }
-        }); 		
-	}
+	 var areaID = <?=$areaID?>; 
 	 
     $('#master').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('airports_master/server_processing'); ?>",
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
-       aoData.push({"name": "countryID","value": $("#countryID").val()},{"name": "stateID","value": $("#stateID").val()},{"name": "regionID","value": $("#regionID").val()},{"name": "areaID","value": $("#areaID").val()}) //pushing custom parameters
+       aoData.push({"name": "countryID","value": $("#countryID").val()},
+	   {"name": "regionID","value": $("#regionID").val()},
+	   {"name": "areaID","value": $("#areaID").val()},
+	   {"name": "cityID","value": $("#cityID").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
                     "type": "GET",
@@ -141,17 +104,25 @@
 			 } ); },	  
       "columns": [{"data": "vx_amdID" },
                   {"data": "airport" },
+				  {"data": "code"},
+				  {"data": "city" },
+				  {"data": "citycode" },
+				 // {"data": "state" },
 				  {"data": "country" },
-				  {"data": "state" },
+				  {"data": "countrycode" },
 				  {"data": "region" },
                   {"data": "area"},
-                  {"data": "code"},				  
+                  				  
                   {"data": "active"},
                   {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',	
      buttons: [ 'copy', 'csv', 'excel','pdf' ]	
-    }); 	
+    }); 
+  
+    $("#areaID").trigger("change");
+	$("#regionID").trigger("change");
+	$("#countryID").trigger("change");
   });
  
   
@@ -226,33 +197,35 @@
   
   $('#countryID').on('change',function(event) {
    var countryID = $(this).val();
- if(countryID == null) {
-        $('#stateID').val(0);
+    var cityID = <?php echo $cityID; ?>;   
+   if(countryID == null) {
+        $('#cityID').val(0);
     } else {
         $.ajax({
             async: false,
             type: 'POST',
-            url: "<?=base_url('general/getAirportStates')?>",          
-		   data: {"countryID" :countryID},
+            url: "<?=base_url('general/getAirportCities')?>",          
+		   data: {"countryID" :countryID,"cityID":cityID},
             dataType: "html",			
             success: function(data) {
-               $('#stateID').html(data);
+               $('#cityID').html(data);
             }
         }); 		
 	}
 });	
 
-$('#stateID').on('change',function(e) {
+$('#areaID').on('change',function(e) {
 	e.preventDefault();
-   var stateID = $(this).val();   
-	if(stateID === null) {
+   var areaID = $(this).val();  
+   var regionID = <?php echo $regionID; ?>;   
+	if(areaID === null) {
         $('#regionID').val(0);
     } else {
         $.ajax({
             async: false,
             type: 'POST',
             url: "<?=base_url('general/getAirportRegions')?>",          
-		   data: {"stateID": stateID},
+		   data: {"areaID": areaID,"regionID":regionID},
             dataType: "html",			
             success: function(data) {
                $('#regionID').html(data);
@@ -263,17 +236,18 @@ $('#stateID').on('change',function(e) {
 
 $('#regionID').on('change', function(event) {
    var regionID = $(this).val();
+    var countryID = <?php echo $countryID; ?>;  
 	if(regionID === null) {
-        $('#areaID').val(0);
+        $('#countryID').val(0);
     } else {  
         $.ajax({
             async: false,
             type: 'POST',
-            url: "<?=base_url('general/getAirportAreas')?>",          
-		   data: {"regionID" :regionID},
+            url: "<?=base_url('general/getAirportCountries')?>",          
+		   data: {"regionID" :regionID,"countryID":countryID},
             dataType: "html",			
             success: function(data) {
-               $('#areaID').html(data);			   
+               $('#countryID').html(data);			   
             }
         }); 		
 	}

@@ -11,10 +11,7 @@ class Airports_master extends Admin_Controller {
 		$this->load->model("season_airport_map_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('airports', $language);
-     /* $header = array_map('strtolower',array('S.No','Airport Name','Airport Code','City Name','City Code','Country Code','Country','Region','Area','State'));
-				print_r($header); exit; */
-	//	echo ctype_alpha('JR'); exit;		
-	}	
+    }	
 	
 	protected function rules() {
 		$rules = array(
@@ -75,19 +72,18 @@ class Airports_master extends Admin_Controller {
 	   }
 	}
 
-	public function index() {
-		$this->data['countrylist'] = $this->airports_m->getDefns(2);
-		
+	public function index() {		
+		$this->data['areaslist'] = $this->airports_m->getDefns(5);
 		if(!empty($this->input->post('countryID'))){
 		  $this->data['countryID'] = $this->input->post('countryID');
 		} else {
 		  $this->data['countryID'] = 0;
 		}
-		if(!empty($this->input->post('stateID'))){		
-        	$this->data['stateID'] = $this->input->post('stateID');
+	   if(!empty($this->input->post('cityID'))){		
+        	$this->data['cityID'] = $this->input->post('cityID');
 		} else {
-		  $this->data['stateID'] = 0;
-		}
+		  $this->data['cityID'] = 0;
+		} 
 		if(!empty($this->input->post('regionID'))){	
 		   $this->data['regionID'] = $this->input->post('regionID');
 		} else {
@@ -97,9 +93,8 @@ class Airports_master extends Admin_Controller {
 	    	$this->data['areaID'] = $this->input->post('areaID');
 		} else {
 		    $this->data['areaID'] = 0;
-		}
+		}	
 		
-		//print_r( $this->data['regionID']); exit;
 		$this->data["subview"] = "airports_master/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -202,7 +197,7 @@ class Airports_master extends Admin_Controller {
 			   if(move_uploaded_file($file, APPPATH."/uploads/".$_FILES['file']['name'])){		
 				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
 				$Reader = new SpreadsheetReader($file); 
-				$header = array_map('strtolower',array('S.No','Airport Name','Airport Code','City Name','City Code','Country Code','Country','Region','Area','State'));
+				$header = array_map('strtolower',array('S.No','Airport Name','Airport Code','City Name','City Code','Country Code','Country','Region','Area'));
 				 $header = array_map('strtolower', $header);
 				//print_r(count($header)); exit;
 				$Sheets = $Reader -> Sheets();
@@ -229,13 +224,11 @@ class Airports_master extends Admin_Controller {
                              $countrycode_key = array_search ('country code', $import_header);
 							 $country_key = array_search('country',$import_header);
 							 $region_key = array_search ('region', $import_header);
-							 $area_key = array_search('area',$import_header);
-							 $state_key = array_search('state',$import_header);							
+							 $area_key = array_search('area',$import_header);				 						
 							  $Row = array_map('trim', $Row);	
 							 $airport = $Row[$airport_key];							
 							 $country = $Row[$country_key];
-							 $region = $Row[$region_key];
-							 $state = $Row[$state_key];                                					 
+							 $region = $Row[$region_key];	                              					 
 							 $area = $Row[$area_key];
 							 $city = $Row[$city_key];
 							unset($validate);
@@ -244,8 +237,7 @@ class Airports_master extends Admin_Controller {
 						 if($res){
                             $val_status = $this->validateAirport($validate);                            
 						  if($val_status){								
-							  $countryID = 0;
-							  $stateID = 0;
+							  $countryID = 0;							
 							  $regionID = 0;
 							  $areaID = 0;
 							  $cityID = 0;
@@ -253,8 +245,8 @@ class Airports_master extends Admin_Controller {
 								 if($aln_data->aln_data_typeID == 2 && $aln_data->aln_data_value == $country){
 								 	$countryID = $aln_data->vx_aln_data_defnsID;
 								 }
-								 if($aln_data->aln_data_typeID == 3 && $aln_data->aln_data_value == $state){
-								 	$stateID = $aln_data->vx_aln_data_defnsID;
+								 if($aln_data->aln_data_typeID == 3 && $aln_data->aln_data_value == $city){
+								 	$cityID = $aln_data->vx_aln_data_defnsID;
 								 }
 								 if($aln_data->aln_data_typeID == 4 && $aln_data->aln_data_value == $region){
 								 	$regionID = $aln_data->vx_aln_data_defnsID;
@@ -295,25 +287,15 @@ class Airports_master extends Admin_Controller {
                                 $cobj->aln_data_value = $country;
                                 $defnData[] = $cobj;
 								unset($cobj);
-							  }
-							  
-							  if(!empty($stateID)){
-							  	$data['stateID'] = $stateID;
-							  } else {
-							  	$data['stateID'] =  $this->airports_m->checkData($state,3,$data['countryID']);
-                                $sobj->vx_aln_data_defnsID = $data['stateID'];
-                                $sobj->aln_data_typeID = 3;
-                                $sobj->aln_data_value = $state;	
-                                $defnData[] = $sobj;	
-                                unset($sobj);								
-							  }	 
+							  }							  
+							 
 
                               if(!empty($cityID)){
 							  	$data['cityID'] = $cityID;
 							  } else {
-							  	$data['cityID'] =  $this->airports_m->checkData($city,21,$data['stateID'],$Row[$citycode_key]);
+							  	$data['cityID'] =  $this->airports_m->checkData($city,3,$data['countryID'],$Row[$citycode_key]);
                                 $ctobj->vx_aln_data_defnsID = $data['cityID'];
-                                $ctobj->aln_data_typeID = 21;
+                                $ctobj->aln_data_typeID = 3;
                                 $ctobj->aln_data_value = $city;	
                                 $defnData[] = $ctobj;	
                                 unset($ctobj);								
@@ -471,7 +453,7 @@ class Airports_master extends Admin_Controller {
 		$userID = $this->session->userdata('loginuserID');
 		$usertypeID = $this->session->userdata('usertypeID');	  
 		
-	    $aColumns = array('m.vx_amdID','ma.aln_data_value','mc.aln_data_value','ms.aln_data_value','mr.aln_data_value','mar.aln_data_value','ma.code','ma.active');
+	    $aColumns = array('m.vx_amdID','ma.aln_data_value','mct.aln_data_value','mc.aln_data_value','mr.aln_data_value','mar.aln_data_value','ma.code','ma.active');
 	
 		$sLimit = "";
 		
@@ -529,24 +511,24 @@ class Airports_master extends Admin_Controller {
 					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
 				}
 			}
-			
-			if($this->input->get('countryID') > 0){
+			if($this->input->get('areaID') > 0 ){
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'm.countryID = '.$this->input->get('countryID');		 
-	        }			
-			if($this->input->get('stateID') > 0){
-		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'm.stateID = '.$this->input->get('stateID');		 
+              $sWhere .= 'm.areaID = '.$this->input->get('areaID');		 
 	        }
 			if($this->input->get('regionID') > 0){
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
               $sWhere .= 'm.regionID = '.$this->input->get('regionID');		 
 	        }
-			if($this->input->get('areaID') > 0 ){
+			if($this->input->get('countryID') > 0){
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'm.areaID = '.$this->input->get('areaID');		 
-	        }
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.vx_amdID,ma.aln_data_value airport,mc.aln_data_value country,ms.aln_data_value state,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active from vx_aln_master_data m left join vx_aln_data_defns ma ON ma.vx_aln_data_defnsID = m.airportID left join vx_aln_data_defns ms ON ms.vx_aln_data_defnsID = m.stateID left join vx_aln_data_defns mc ON mc.vx_aln_data_defnsID = m.countryID left join vx_aln_data_defns mr ON mr.vx_aln_data_defnsID = m.regionID left join vx_aln_data_defns mar ON mar.vx_aln_data_defnsID = m.areaID	
+              $sWhere .= 'm.countryID = '.$this->input->get('countryID');		 
+	        }			
+			/* if($this->input->get('stateID') > 0){
+		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              $sWhere .= 'm.stateID = '.$this->input->get('stateID');		 
+	        } */			
+			
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.vx_amdID,ma.aln_data_value airport,ma.code airportcode,mct.aln_data_value city,mct.code citycode,mc.aln_data_value country,mc.aln_data_value countrycode,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active from vx_aln_master_data m left join vx_aln_data_defns ma ON ma.vx_aln_data_defnsID = m.airportID left join vx_aln_data_defns mct ON mct.vx_aln_data_defnsID = m.cityID left join vx_aln_data_defns mc ON mc.vx_aln_data_defnsID = m.countryID left join vx_aln_data_defns mr ON mr.vx_aln_data_defnsID = m.regionID left join vx_aln_data_defns mar ON mar.vx_aln_data_defnsID = m.areaID	
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
@@ -671,6 +653,7 @@ $data['airportID']='499';
 
 
 }*/
+	
 	
    
 }
