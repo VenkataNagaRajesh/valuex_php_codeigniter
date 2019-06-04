@@ -109,7 +109,7 @@
                         </label>
                         <div class="col-sm-6">
 			<?php
-			$aln_datatypes[-1] = "SELECT";
+			$aln_datatypes[0] = "SELECT";
                         ksort($aln_datatypes);
 
 			echo form_dropdown("amz_incl_id", $aln_datatypes, set_value("amz_incl_id",$marketzone->amz_incl_id), "id='amz_incl_id' class='form-control select2'");

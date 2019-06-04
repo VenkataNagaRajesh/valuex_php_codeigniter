@@ -151,9 +151,9 @@ public function getDefnsCodesListByType($type) {
   }
    
   public function getAirportData($id){
-	  $this->db->select('m.*,ma.aln_data_value airport,mc.aln_data_value country,ms.aln_data_value state,mr.aln_data_value region,mar.aln_data_value area,ma.code,u.name modify_by,m.modify_date')->from('vx_aln_master_data m');
+	  $this->db->select('m.*,ma.aln_data_value airport,mc.aln_data_value country,mr.aln_data_value region,mar.aln_data_value area,ma.code,u.name modify_by,m.modify_date')->from('vx_aln_master_data m');
 	  $this->db->join('vx_aln_data_defns ma','ma.vx_aln_data_defnsID = m.airportID','LEFT');
-	  $this->db->join('vx_aln_data_defns ms','ms.vx_aln_data_defnsID = m.stateID ','LEFT');
+	  $this->db->join('vx_aln_data_defns ms','ms.vx_aln_data_defnsID = m.cityID ','LEFT');
 	  $this->db->join('vx_aln_data_defns mc','mc.vx_aln_data_defnsID = m.countryID','LEFT');
 	  $this->db->join('vx_aln_data_defns mr','mr.vx_aln_data_defnsID = m.regionID','LEFT');
 	  $this->db->join('vx_aln_data_defns mar','mar.vx_aln_data_defnsID = m.areaID','LEFT');

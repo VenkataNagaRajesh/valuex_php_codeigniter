@@ -16,9 +16,9 @@ class Airports_master extends Admin_Controller {
 	protected function rules() {
 		$rules = array(
 		   array(
-				'field' => 'stateID', 
+				'field' => 'cityID', 
 				'label' => $this->lang->line("master_state"), 
-				'rules' => 'trim|required|xss_clean|max_length[60]|callback_state'
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_city'
 			),
 			array(
 				'field' => 'regionID', 
@@ -26,11 +26,11 @@ class Airports_master extends Admin_Controller {
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_region'
 			),
 			array(
-				'field' => 'areaID', 
-				'label' => $this->lang->line("master_area"), 
-				'rules' => 'trim|required|xss_clean|max_length[60]|callback_area'
+				'field' => 'countryID', 
+				'label' => $this->lang->line("master_country"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_country'
 			),
-			array(
+			/* array(
 				'field' => 'latitude', 
 				'label' => $this->lang->line("master_latitude"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]'
@@ -39,15 +39,15 @@ class Airports_master extends Admin_Controller {
 				'field' => 'longitude', 
 				'label' => $this->lang->line("master_longitude"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]'
-			)
+			) */
 			
 		);
 		return $rules;
 	}
 	
-	function state($post_string){		
+	function city($post_string){		
 	  if($post_string == '0'){
-		 $this->form_validation->set_message("state", "%s is required");
+		 $this->form_validation->set_message("city", "%s is required");
 		  return FALSE;
 	   }else{
 		  return TRUE;
@@ -63,9 +63,9 @@ class Airports_master extends Admin_Controller {
 	   }
 	}
 	
-	function area($post_string){		
+	function country($post_string){		
 	  if($post_string == '0'){
-		 $this->form_validation->set_message("area", "%s is required");
+		 $this->form_validation->set_message("country", "%s is required");
 		  return FALSE;
 	   }else{
 		  return TRUE;
@@ -112,7 +112,7 @@ class Airports_master extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$this->data['airport'] = $this->airports_m->getAirportData($id);
-			$this->data['countrylist'] = $this->airports_m->getDefns(2);
+			$this->data['areaslist'] = $this->airports_m->getDefns(5);
 			//print_r($this->input->post('airport')); exit;
 			if($this->data['airport']) {
 				if($_POST) {	
@@ -123,11 +123,11 @@ class Airports_master extends Admin_Controller {
 				   	$this->load->view('_layout_main', $this->data);			
 				   } else {				
 						$data['countryID'] = $this->input->post('countryID');
-						$data['stateID'] = $this->input->post('stateID');
+						$data['cityID'] = $this->input->post('cityID');
 						$data['regionID'] = $this->input->post('regionID');
 						$data['areaID'] = $this->input->post('areaID');
-						$data['lat'] = $this->input->post('latitude');
-                        $data['lng'] = $this->input->post('longitude');
+						//$data['lat'] = $this->input->post('latitude');
+                       // $data['lng'] = $this->input->post('longitude');
                         $data['active'] = $this->input->post('active');						
 						$data['modify_date'] = time();					
 						$data['modify_userID'] = $this->session->userdata('loginuserID'); 
@@ -600,7 +600,7 @@ class Airports_master extends Admin_Controller {
 	
 	function downloadFormat(){
 		$this->load->helper('download');
-        $filename = APPPATH.'\downloads\airport_master.xlsx'; 
+        $filename = APPPATH.'downloads/airport_master.xlsx'; 
 		force_download($filename, null);		
 	}
 

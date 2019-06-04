@@ -22,41 +22,26 @@
                         </div>                        
                     </div>
 					
-					<div class='form-group'>
-                        <label for="countryID" class="col-sm-2 control-label">
-                            <?=$this->lang->line("master_country")?><span class="text-red">*</span>
-                        </label>
-                        <div class="col-sm-6">
-                           <?php
-						     foreach($countrylist as $country){
-								 $clist[$country->vx_aln_data_defnsID] = $country->aln_data_value;
-							 }
-							
-						   echo form_dropdown("countryID", $clist,set_value("countryID", $airport->countryID), "id='countryID' class='form-control hide-dropdown-icon select2'"); 
-						   ?>
-                        </div>   
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('countryID'); ?>
-                        </span>						
-                    </div>
-					
-					<?php
-                        if(form_error('stateID'))
+					 <?php
+                        if(form_error('areaID'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="stateID" class="col-sm-2 control-label">
-                            <?=$this->lang->line("master_state")?>
+                        <label for="areaID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("master_area")?>
                         </label>
-                        <div class="col-sm-6">
-						     
-                             <select name="stateID" id="stateID" class="form-control">
+                        <div class="col-sm-6">						     
+                             <?php
+						     foreach($areaslist as $area){
+								 $alist[$area->vx_aln_data_defnsID] = $area->aln_data_value;
+							 }
 							
-							 </select>
+						   echo form_dropdown("areaID", $alist,set_value("areaID", $airport->areaID), "id='areaID' class='form-control hide-dropdown-icon select2'"); 
+						   ?>
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('stateID'); ?>
+                            <?php echo form_error('areaID'); ?>
                         </span>
                      </div>
 					 
@@ -79,60 +64,40 @@
                             <?php echo form_error('regionID'); ?>
                         </span>
                      </div>
-					 
-					  <?php
-                        if(form_error('areaID'))
+					
+					<div class='form-group'>
+                        <label for="countryID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("master_country")?><span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-6">
+                           <select name="countryID" id="countryID" class="form-control">
+							
+							 </select>
+                        </div>   
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('countryID'); ?>
+                        </span>						
+                    </div>
+					
+					<?php
+                        if(form_error('cityID'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="areaID" class="col-sm-2 control-label">
-                            <?=$this->lang->line("master_area")?>
+                        <label for="cityID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("master_city")?>
                         </label>
-                        <div class="col-sm-6">
-						     
-                             <select name="areaID" id="areaID" class="form-control">
+                        <div class="col-sm-6">					     
+                             <select name="cityID" id="cityID" class="form-control">
 							
 							 </select>
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('areaID'); ?>
+                            <?php echo form_error('cityID'); ?>
                         </span>
-                     </div>						
+                     </div>
 					
-					<?php
-                        if(form_error('latitude'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="latitude" class="col-sm-2 control-label">
-                            <?=$this->lang->line("master_latitude")?>
-                        </label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="latitude" name="latitude" value="<?=set_value('latitude', $airport->lat)?>">
-                        </div> 
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('latitude'); ?>
-                        </span>						
-                    </div>
-					
-					<?php
-                        if(form_error('longitude'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="usertype" class="col-sm-2 control-label">
-                            <?=$this->lang->line("master_longitude")?>
-                        </label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="longitude" name="longitude" value="<?=set_value('longitude', $airport->lng)?>">
-                        </div> 
-                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('longitude'); ?>
-                        </span>						
-                    </div>
 					
 					<div class='form-group'>
 					   <label for="district" class="col-sm-2 control-label">
@@ -163,85 +128,42 @@
 $( ".select2" ).select2();
 
 $(document).ready(function (){	
-	 var countryID = $('#countryID').val();
-	 var stateID = <?php echo $airport->stateID; ?>;	
-	 var regionID = <?=$airport->regionID?>;
-	 var areaID = <?=$airport->areaID?>;
-    if(stateID === null || countryID == null) {
-        $('#stateID').val(0);
-    } else {
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportStates')?>",          
-		   data: {"countryID" :countryID , "stateID": stateID},
-            dataType: "html",			
-            success: function(data) {
-               $('#stateID').html(data);
-            }
-        }); 		
-	}
-	
-	if(stateID === null || regionID == null) {
-        $('#regionID').val(0);
-    } else {
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportRegions')?>",          
-		   data: {"regionID" :regionID , "stateID": stateID},
-            dataType: "html",			
-            success: function(data) {
-               $('#regionID').html(data);
-            }
-        }); 		
-	}
-	
-	if(regionID === null || areaID == null) {
-        $('#areaID').val(0);
-    } else {
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportAreas')?>",          
-		   data: {"regionID" :regionID , "areaID": areaID},
-            dataType: "html",			
-            success: function(data) {
-               $('#areaID').html(data);
-            }
-        }); 		
-	}
+	$("#areaID").trigger("change");
+	$("#regionID").trigger("change");
+	$("#countryID").trigger("change");
 });
 
-$('#countryID').on('change',function(event) {
+  $('#countryID').on('change',function(event) {
    var countryID = $(this).val();
- if(countryID == null) {
-        $('#stateID').val(0);
+    var cityID = <?php echo $airport->cityID; ?>;   
+   if(countryID == null) {
+        $('#cityID').val(0);
     } else {
         $.ajax({
             async: false,
             type: 'POST',
-            url: "<?=base_url('general/getAirportStates')?>",          
-		   data: {"countryID" :countryID},
+            url: "<?=base_url('general/getAirportCities')?>",          
+		   data: {"countryID" :countryID,"cityID":cityID},
             dataType: "html",			
             success: function(data) {
-               $('#stateID').html(data);
+               $('#cityID').html(data);
             }
         }); 		
 	}
 });	
 
-$('#stateID').on('change',function(e) {
+$('#areaID').on('change',function(e) {
 	e.preventDefault();
-   var stateID = $(this).val();   
-	if(stateID === null) {
+   var areaID = $(this).val();  
+   var regionID = <?php echo $airport->regionID; ?>;   
+	if(areaID === null) {
         $('#regionID').val(0);
     } else {
         $.ajax({
             async: false,
             type: 'POST',
             url: "<?=base_url('general/getAirportRegions')?>",          
-		   data: {"stateID": stateID},
+		   data: {"areaID": areaID,"regionID":regionID},
             dataType: "html",			
             success: function(data) {
                $('#regionID').html(data);
@@ -252,17 +174,18 @@ $('#stateID').on('change',function(e) {
 
 $('#regionID').on('change', function(event) {
    var regionID = $(this).val();
+    var countryID = <?php echo $airport->countryID; ?>;  
 	if(regionID === null) {
-        $('#areaID').val(0);
-    } else { console.log(regionID);   
+        $('#countryID').val(0);
+    } else {  
         $.ajax({
             async: false,
             type: 'POST',
-            url: "<?=base_url('general/getAirportAreas')?>",          
-		   data: {"regionID" :regionID},
+            url: "<?=base_url('general/getAirportCountries')?>",          
+		   data: {"regionID" :regionID,"countryID":countryID},
             dataType: "html",			
             success: function(data) {
-               $('#areaID').html(data);
+               $('#countryID').html(data);			   
             }
         }); 		
 	}
