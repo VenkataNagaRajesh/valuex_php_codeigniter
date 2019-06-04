@@ -18,6 +18,11 @@
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('upload_airports')?>
                   </a>
+				  &nbsp;&nbsp;
+				  <a href="<?php echo base_url('airports_master/downloadFormat') ?>">
+                      <i class="fa fa-upload"></i>
+                      <?=$this->lang->line('download_airport_format')?>
+                  </a>
 				 <?php } ?>
               </h5>
 			  <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   

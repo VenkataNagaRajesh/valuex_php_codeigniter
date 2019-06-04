@@ -41,6 +41,13 @@ class Airports_m extends MY_Model {
       }	   
   }
   
+  public function checkAirportCode($code){ 
+	  $this->db->select('count(*) count')->from('vx_aln_data_defns');
+	  $this->db->where(array('code'=>$code,'aln_data_typeID'=> 1));
+	  $query = $this->db->get();     
+     return $query->row('count');	  
+  }
+  
   public function addAirport($airport,$parent,$code){ 
 	 $array = array(
 		'aln_data_value' => $airport,

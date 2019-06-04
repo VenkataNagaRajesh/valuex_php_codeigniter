@@ -393,7 +393,7 @@ class Airports_master extends Admin_Controller {
 					     
 							 }				  
 							} else {
-								$this->mydebug->airports_log("Airport :".$airport." already  existed");								 
+								$this->mydebug->airports_log("Airport :".$airport." already  existed");		 
 							}
 					    					
 					   } else {
@@ -427,9 +427,12 @@ class Airports_master extends Admin_Controller {
     }
 
     function validateAirport($validate){
-         		
+        $validateAirportCode = $this->airports_m->checkAirportCode($validate['airportcode']);		
 		if(strlen($validate['airportcode']) != 3 || ctype_alpha($validate['airportcode']) != 1){
 			$this->mydebug->airports_log("Airport Code must be alphabets and length 3 ".$validate['airport'].'-'.$validate['airportcode']);
+			return FALSE;
+		} else if($validateAirportCode != 0){
+			$this->mydebug->airports_log("Airport Code must be UNIQUE ".$validate['airport'].'-'.$validate['airportcode']);
 			return FALSE;
 		} else if(strlen($validate['citycode']) != 3 || ctype_alpha($validate['citycode']) != 1){
 			$this->mydebug->airports_log("City Code must be alphabets and length 3 ".$validate['airport'].'-'.$validate['citycode']);
@@ -593,6 +596,12 @@ class Airports_master extends Admin_Controller {
 		} else {
 			echo "Error";
 		}
+	}
+	
+	function downloadFormat(){
+		$this->load->helper('download');
+        $filename = APPPATH.'\downloads\airport_master.xlsx'; 
+		force_download($filename, null);		
 	}
 
 /*function testadd(){
