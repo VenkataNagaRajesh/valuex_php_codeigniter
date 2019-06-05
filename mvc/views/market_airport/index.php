@@ -58,8 +58,8 @@
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('market_name')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>
+				<th class="col-lg-1"><?=$this->lang->line('city')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('country')?></th>
-				<th class="col-lg-1"><?=$this->lang->line('state')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('region')?></th>	
 				<th class="col-lg-1"><?=$this->lang->line('area')?></th>	
                             </tr>
@@ -101,8 +101,8 @@
       "columns": [{"data": "market_id" },
 		  {"data": "market_name"},
                   {"data": "airport" },
-		  {"data": "country" },
-			{"data": "state" },
+		  {"data": "city" },
+			{"data": "country" },
 		 {"data": "region" },
 		{"data": "area" }
 				  ],			   
