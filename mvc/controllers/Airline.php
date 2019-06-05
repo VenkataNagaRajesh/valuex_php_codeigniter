@@ -68,32 +68,8 @@ class Airline extends Admin_Controller {
       }
     }
 	
-	
 	public function index() {
-		$this->data['countrylist'] = $this->airports_m->getDefns(2);
 		
-		if(!empty($this->input->post('countryID'))){
-		  $this->data['countryID'] = $this->input->post('countryID');
-		} else {
-		  $this->data['countryID'] = 0;
-		}
-		if(!empty($this->input->post('stateID'))){		
-        	$this->data['stateID'] = $this->input->post('stateID');
-		} else {
-		  $this->data['stateID'] = 0;
-		}
-		if(!empty($this->input->post('regionID'))){	
-		   $this->data['regionID'] = $this->input->post('regionID');
-		} else {
-		  $this->data['regionID'] = 0;
-		}
-		if(!empty($this->input->post('areaID'))){	
-	    	$this->data['areaID'] = $this->input->post('areaID');
-		} else {
-		    $this->data['areaID'] = 0;
-		}
-		
-		//print_r( $this->data['stateID']); exit;
 		$this->data["subview"] = "airline/index";
 		$this->load->view('_layout_main', $this->data);
 	}

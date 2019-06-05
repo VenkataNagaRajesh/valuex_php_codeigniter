@@ -344,7 +344,7 @@ class Client extends Admin_Controller {
 		$id = $client->userID;
 		if((int)$id) {
 			$user_info = $this->user_m->get_single_user(array('userID' => $id));
-			$tables = array('user' => 'user', 'systemadmin' => 'systemadmin');
+			$tables = array('user' => 'user');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $table) {

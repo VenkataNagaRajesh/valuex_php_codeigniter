@@ -12,6 +12,7 @@ class Marketzone extends Admin_Controller {
 		$this->load->model('user_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('marketzone', $language);
+		
 	}
 
 	protected function rules() {
@@ -161,9 +162,8 @@ class Marketzone extends Admin_Controller {
                            } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 }
-
-
-		$this->data['marketzones'] = $this->marketzone_m->get_marketzones();
+        
+		$this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
 		//$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
 		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 		  foreach($types as $type){
@@ -547,10 +547,10 @@ class Marketzone extends Admin_Controller {
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 		if($userTypeID == 2){
-                      $airlines = $this->airline_m->getClientAirline($userID, 1);
+                     // $airlines = $this->airline_m->getClientAirline($userID, 1);
 			 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                         $sWhere .= 'MainSet.airlineID = '.$airlines->airlineID;
-				
+                        // $sWhere .= 'MainSet.airlineID = '.$airlines->airlineID;
+						$sWhere .= 'MainSet.airlineID = '.$this->session->userdata('login_user_airlineID');			
                 } 
 
 $sQuery = "
