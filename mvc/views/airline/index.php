@@ -18,6 +18,11 @@
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('upload_airline')?>
                   </a>
+				  &nbsp;&nbsp;
+				  <a href="<?php echo base_url('airline/downloadFormat') ?>">
+                      <i class="fa fa-upload"></i>
+                      <?=$this->lang->line('download_format')?>
+                  </a>
 				 <?php } ?>
               </h5>
 			<!--  <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
@@ -56,7 +61,7 @@
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
                         <th class="col-lg-2"><?=$this->lang->line('airline_name')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('airline_flights_ids')?></th>
+						<!--<th class="col-lg-1"><?=$this->lang->line('airline_flights_ids')?></th>-->
 						<th class="col-lg-1"><?=$this->lang->line('airline_active')?></th>
                         <?php if(permissionChecker('airline_edit') || permissionChecker('airline_delete')) { ?>
                         <th class="col-lg-1"><?=$this->lang->line('action')?></th>
@@ -81,7 +86,7 @@
       "columns": [{"data": "vx_aln_data_defnsID" },
                   {"data": "aln_data_value" },
 				  {"data": "code" },
-				  {"data": "flights" },
+				  <!--{"data": "flights" },-->
 				  {"data": "active"},
                   {"data": "action"}
 				  ],			     

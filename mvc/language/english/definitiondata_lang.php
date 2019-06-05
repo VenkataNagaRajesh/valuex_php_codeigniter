@@ -1,7 +1,7 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "Definitions Data";
+$lang['panel_title'] = "Data Definitions";
 $lang['add_title'] = "Add Data";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
@@ -25,4 +25,4 @@ $lang['defdata_user'] = 'Create User';
 $lang['defdata_date'] = 'Date';
 $lang['add_defdata'] = 'Add Data';
 $lang['update_defdata'] = 'Update Data';
-$lang['defdata_information'] = 'Definition Data';
+$lang['defdata_information'] = 'Data Definition';
