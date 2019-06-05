@@ -1,0 +1,14 @@
+Airport Code must be alphabets and length 3 Kempegowda International Airport Bengaluru-BLRR Timestamp: 1559638948
+Countrycode Code must be alphabets and length 2 Charles de Gaulle Airport-FRR Timestamp: 1559638948
+City Code must be alphabets and length 3 Indira Gandhi International Airport-DE Timestamp: 1559638948
+Area must be numeric and length 1 Heathrow Airport-ss Timestamp: 1559638948
+Airport :San Francisco International Airport already  existed Timestamp: 1559638948
+Airport Code must be UNIQUE Tokyo Haneda Airports-SFO Timestamp: 1559638948
+Airport :Haneda International Airport already  existed Timestamp: 1559638948
+Airport :Orly Airport already  existed Timestamp: 1559638948
+Airport :Changi Airport already  existed Timestamp: 1559638948
+Airport :Kuala Lumpur International Airport already  existed Timestamp: 1559638948
+Airport :Cochin International Airport already  existed Timestamp: 1559638948
+Airport Code must be alphabets and length 3 Suvarnabhumi Airport-BKKK Timestamp: 1559638948
+Airport :Phuket International Airport already  existed Timestamp: 1559638948
+Airport :Cochin International Airport already  existed Timestamp: 1559638948

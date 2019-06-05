@@ -191,8 +191,10 @@ class Airline extends Admin_Controller {
 			   if(move_uploaded_file($file, APPPATH."/uploads/".$_FILES['file']['name'])){		
 				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
 				$Reader = new SpreadsheetReader($file); 
-				$header = array('SNO','code','Airline Name','flightno');
+				//$header = array('SNO','code','Airline Name','flightno');
 				//print_r(count($header)); exit;
+				$header = array_map('strtolower',array('S.No','AIRLINE NAME','Carrier Code'));
+				 $header = array_map('trim', $header);
 				$Sheets = $Reader -> Sheets();
 				$defnData = $this->airports_m->getDefns();
 					
@@ -202,35 +204,43 @@ class Airline extends Admin_Controller {
                  //$time_start = microtime(true); 					   
 				  foreach ($Reader as $Row){
 					if($i == 0){ // header checking						
-					  $flag = 0 ;						 
-					 if($Row == $header){
+					  $flag = 0 ;	
+                      $Row = array_map('trim', $Row);					  
+                     $import_header = array_map('strtolower', $Row);
+                     if(count(array_diff($header,$import_header)) == 0){
 						 $flag = 1;
-					 }				  
+					 }			  
 					} else {
-					   if($flag == 1){ 						   						
-					   	 if(count($Row) == 4){ //print_r($Row); exit;							
-							 $airline['name'] = $Row[2];
-							 $airline['code'] = $Row[1];
-							 //$airline['flights'] = $Row[3];
-                             $validate_code = $this->airline_m->get_single_airline(array('code'=>$Row[1]));	if(count($validate_code) < 1){								 
-                               $checkairline = $this->airline_m->add_airline($airline);					 
-								if($checkairline->id){
-								  $flights = explode(',',$Row[3]);
-								  $airline['flights']= array();							  
-								  foreach($flights as $flight){
-									 $id = $this->airports_m->checkData($flight,16,$checkairline->id);	 
-								  }                              				  
-								} else {
-									//echo "Airport :".$airport." already  existed";								 
-								}
-						     }
-					   	 } 						
+					   if($flag == 1){
+                           $airline_key = array_search ('airline name', $import_header);	
+                           $airline_code_key = array_search ('carrier code', $import_header);						   
+						  $airline['name'] = $Row[$airline_key];
+						  $airline['code'] = $Row[$airline_code_key];
+						 //$airline['flights'] = $Row[3];                            
+                           $val_status = $this->validateAirline($airline);                            
+						  if($val_status){
+                            $validate_code = $this->airline_m->get_single_airline(array('code'=>$Row[$airline_code_key]));							  
+						   if(count($validate_code) < 1){								 
+                              $checkairline = $this->airline_m->add_airline($airline);					 
+							/* if($checkairline->id){
+							  $flights = explode(',',$Row[3]);
+							  $airline['flights']= array();							  
+							  foreach($flights as $flight){
+								 $id = $this->airports_m->checkData($flight,16,$checkairline->id);	 
+							  }                              				  
+							} else {
+								//echo "Airport :".$airport." already  existed";								 
+							} */
+						  }else{
+							$this->mydebug->airlines_log("Airline Code must be UNIQUE ".$airline['name'].'-'.$airline['code']);
+						  }
+						} 						 
 					   } else {
 						   print_r("mismatch");
 					   }
 					 }
 				   $i++;					   
-				  }
+				  } //exit;
                   /* $time_end = microtime(true);
                 $execution_time = ($time_end - $time_start)/60;
                 
@@ -255,12 +265,27 @@ class Airline extends Admin_Controller {
       }
     }   
 
-    function server_processing(){		
+    public function validateAirline($data){
+	  if(!ctype_alnum($data['code']) || strlen($data['code']) != 2 ){
+		  $this->mydebug->airlines_log("Airline Code should be alphanumeric and length 2 ".$data['name'].'-'.$data['code']);
+		  return FALSE;
+	  }else{
+		  return TRUE;
+	  }
+	}
+	
+	function downloadFormat(){
+		$this->load->helper('download');
+        $filename = APPPATH.'downloads/airline_format.xlsx'; 
+		force_download($filename, null);		
+	}
+	
+	function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
 		$usertypeID = $this->session->userdata('usertypeID');	  
 		
-	    $aColumns = array('d.vx_aln_data_defnsID','d.aln_data_value','d.code','GROUP_CONCAT(dd.aln_data_value SEPARATOR ", ")');
-	
+	   // $aColumns = array('d.vx_aln_data_defnsID','d.aln_data_value','d.code','GROUP_CONCAT(dd.aln_data_value SEPARATOR ", ")');
+	     $aColumns = array('d.vx_aln_data_defnsID','d.aln_data_value','d.code');
 		$sLimit = "";
 		
 			if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -323,7 +348,7 @@ class Airline extends Admin_Controller {
 		  $sGroup = " GROUP BY vx_aln_data_defnsID ";  
          $ss = "select d.*,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID where d.aln_data_typeID = 12 group by d.vx_aln_data_defnsID"  ;
 		   
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS d.*,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID	
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS d.* from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID	
 		$sWhere
         $sGroup		
 		$sOrder		
