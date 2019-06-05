@@ -223,15 +223,15 @@
                         </label>
                         <div class="col-sm-6">
 <?php
-			foreach($days_of_week as $day ) {
-				$days[$day->vx_aln_data_defnsID] = $day->aln_data_value;
-			}
-		 echo form_multiselect("frequency[]", $days, set_value("frequency"), "id='frequency' class='form-control select2'");
+		 echo form_multiselect("frequency[]", $days_of_week, set_value("frequency"), "id='frequency' class='form-control select2'");
 
      ?>                   </div>
                         <span class="col-sm-4 control-label">
                             <?php echo form_error('frequency[]'); ?>
                         </span>
+			 <span> <input type="checkbox" id="freq_all" >Select All
+                        </span>
+
                     </div>
 
 
@@ -318,6 +318,18 @@ $( ".select2" ).select2({closeOnSelect:false,
 				
 $("#flight_efec_date").datepicker();
 $("#flight_disc_date").datepicker();
+
+
+
+$("#freq_all").click(function(){
+    if($("#freq_all").is(':checked') ){
+        $("#frequency > option").prop("selected","selected");
+        $("#frequency").trigger("change");
+    }else{
+        $("#frequency > option").removeAttr("selected");
+         $("#frequency").trigger("change");
+     }
+});
 
 
 </script>

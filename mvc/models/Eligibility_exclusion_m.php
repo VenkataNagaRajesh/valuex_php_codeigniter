@@ -27,8 +27,8 @@ class Eligibility_exclusion_m extends MY_Model {
 		return TRUE;
 	}
 
-	function time_dropdown($val) {
-                for($i=0;$i<$val;$i++){
+	function time_dropdown($val, $incre = 1) {
+                for($i=0;$i<$val;$i=$i+$incre){
                         if($i<10 && strlen($i)<2)
                         {
                                 $num = '0'.$i;
