@@ -19,14 +19,14 @@
 		</div>-->
 		<div class="fh5co-hero">
 			<div class="fh5co-cover container">
-				<img class="img-responsive" src="<?php echo base_url('assets/home/images/login-bg.png'); ?>" alt="About Our services">
+				<img class="img-responsive" src="<?php echo base_url('assets/home/images/login-bg.png'); ?>" alt="login bg">
 			</div>
 		</div>
 		<div class="container pnr-box">
 			<div class="row">
 				<div class="col-sm-5 col-md-4 col-md-offset-2">
 					<div class="tabulation animate-box">
-						<h2>Ugrade for Sure</h2>
+						<h2>Upgrade for Sure</h2>
 					</div>
 					<div class="tabulation animate-box">
 						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="228"></iframe>

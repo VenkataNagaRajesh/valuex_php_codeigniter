@@ -9,19 +9,33 @@ class General extends Admin_Controller {
 		$this->lang->load('usertype', $language);	
 	}
 	
-	public function getAirportStates(){
-		$countryID = $this->input->post('countryID');
-		if(!empty($this->input->post('stateID'))){
-		  $stateID = $this->input->post('stateID');
-		}
-	    if($countryID){
-		   $states = $this->airports_m->getDefns(3,$countryID);		
-			echo '<option value="0">Select State</option>';
-			foreach ($states as $state) {
-				if($state->vx_aln_data_defnsID == $stateID){
-					echo '<option value="'.$state->vx_aln_data_defnsID.'" selected>'.$state->aln_data_value.'</option>';
+	public function getAirportCountries(){
+		$countryID = $this->input->post('countryID');		
+		$regionID = $this->input->post('regionID');		
+	    if($regionID){
+		   $countries = $this->airports_m->getDefns(2,$regionID);		
+			echo '<option value="0">Select Country</option>';
+			foreach ($countries as $country) {
+				if($country->vx_aln_data_defnsID == $countryID){
+					echo '<option value="'.$country->vx_aln_data_defnsID.'" selected>'.$country->aln_data_value.'</option>';
 				}else{
-				   echo '<option value="'.$state->vx_aln_data_defnsID.'" >'.$state->aln_data_value.'</option>';
+				   echo '<option value="'.$country->vx_aln_data_defnsID.'" >'.$country->aln_data_value.'</option>';
+				}
+			}
+		}		
+	}
+	
+	public function getAirportCities(){
+		$countryID = $this->input->post('countryID');		
+		$cityID = $this->input->post('cityID');		
+	    if($countryID){
+		   $cities = $this->airports_m->getDefns(3,$countryID);		
+			echo '<option value="0">Select City</option>';
+			foreach ($cities as $city) {
+				if($city->vx_aln_data_defnsID == $cityID){
+					echo '<option value="'.$city->vx_aln_data_defnsID.'" selected>'.$city->aln_data_value.'</option>';
+				}else{
+				   echo '<option value="'.$city->vx_aln_data_defnsID.'" >'.$city->aln_data_value.'</option>';
 				}
 			}
 		}		
@@ -29,9 +43,9 @@ class General extends Admin_Controller {
 	
 	public function getAirportRegions(){
 		$regionID = $this->input->post('regionID');
-		$stateID = $this->input->post('stateID');	
-	    if($stateID){
-		   $regions = $this->airports_m->getDefns(4,$stateID);		
+		$areaID = $this->input->post('areaID');	
+	    if($areaID){
+		   $regions = $this->airports_m->getDefns(4,$areaID);		
 			echo '<option value="0">Select Region</option>';
 			foreach ($regions as $region) {
 				if($region->vx_aln_data_defnsID == $regionID){
@@ -71,5 +85,5 @@ class General extends Admin_Controller {
 		   }
 		}		 
 	}
-
+	
 }

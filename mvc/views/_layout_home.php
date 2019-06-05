@@ -19,6 +19,7 @@
 	<link href="<?php echo base_url('assets/home/css/cs-select.css'); ?>" rel="stylesheet">
 	<link href="<?php echo base_url('assets/home/css/cs-skin-border.css'); ?>" rel="stylesheet">
 	<link href="<?php echo base_url('assets/home/css/style.css'); ?>" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>	
 
