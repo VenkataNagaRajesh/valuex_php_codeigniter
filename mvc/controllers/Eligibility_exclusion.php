@@ -219,8 +219,8 @@ class Eligibility_exclusion extends Admin_Controller {
 		$this->data['marketzones'] = $this->marketzone_m->getMarketzones();
 		 $this->data['days_of_week'] = $this->airports_m->getDefns('14'); // days of week
 		$this->data['class_type'] = $this->airports_m->getDefns('13');
-		  $this->data['hrs'] = $this->eligibility_exclusion_m->time_dropdown('24');
-           $this->data['mins'] = $this->eligibility_exclusion_m->time_dropdown('60');
+		  $this->data['hrs'] = $this->eligibility_exclusion_m->time_dropdown('24',1);
+           $this->data['mins'] = $this->eligibility_exclusion_m->time_dropdown('60',5);
 
 
 		$this->data["subview"] = "eligibility_exclusion/index";
@@ -242,9 +242,9 @@ class Eligibility_exclusion extends Admin_Controller {
 	
 	   $this->data['marketzones'] = $this->marketzone_m->getMarketzones();
 	   $this->data['class_type'] = $this->airports_m->getDefns('13'); // airline class types
-	   $this->data['days_of_week'] = $this->airports_m->getDefns('14'); // days of week
-	   $this->data['hrs'] = $this->eligibility_exclusion_m->time_dropdown('24');
-	   $this->data['mins'] = $this->eligibility_exclusion_m->time_dropdown('60');
+	   $this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14'); // days of week
+	   $this->data['hrs'] = $this->eligibility_exclusion_m->time_dropdown('24',1);
+	   $this->data['mins'] = $this->eligibility_exclusion_m->time_dropdown('60',5);
 	 
 		if($_POST) {
 			$rules = $this->rules();
@@ -303,9 +303,9 @@ class Eligibility_exclusion extends Admin_Controller {
 
 			       $this->data['marketzones'] = $this->marketzone_m->getMarketzones();
 			       $this->data['class_type'] = $this->airports_m->getDefns('13'); // airline class types
-           			$this->data['days_of_week'] = $this->airports_m->getDefns('14'); // days of week
-           			$this->data['hrs'] = $this->eligibility_exclusion_m->time_dropdown('24');
-           			$this->data['mins'] = $this->eligibility_exclusion_m->time_dropdown('60');
+           			$this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14'); // days of week
+           			$this->data['hrs'] = $this->eligibility_exclusion_m->time_dropdown('24',1);
+           			$this->data['mins'] = $this->eligibility_exclusion_m->time_dropdown('60',5);
 
 
 				if($_POST) {
