@@ -154,9 +154,8 @@ class Marketzone extends Admin_Controller {
                 }
 
 
-		$userTypeID = $this->session->userdata('usertype');
+		$userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-
 		if($userTypeID == 2){
                         $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
                            } else {
@@ -259,7 +258,7 @@ class Marketzone extends Admin_Controller {
                 );
 
 
-		$userTypeID = $this->session->userdata('usertype');
+		$userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 
 		//$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
@@ -545,10 +544,10 @@ class Marketzone extends Admin_Controller {
                                 $sWhere .= 'MainSet.airlineID = '.$this->input->get('airlineID');
                         }
 
-                $userTypeID = $this->session->userdata('usertype');
+                $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 		if($userTypeID == 2){
-                      $airlines= $this->airline_m->getClientAirline($userID, 1);
+                      $airlines = $this->airline_m->getClientAirline($userID, 1);
 			 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                          $sWhere .= 'MainSet.airlineID = '.$airlines->airlineID;
 				
@@ -624,7 +623,7 @@ on MainSet.market_id = SubSet.market_id
 
                 $output = array(
                 "sEcho" => intval($_GET['sEcho']),
-                "iTotalRecords" => $marketzonescount,
+                "iTotalRecords" => $rResultFilterTotal,
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
             );

@@ -7,6 +7,7 @@ class Airline_cabin extends Admin_Controller {
 		$this->load->model('airline_cabin_m');
 		$this->load->model('airports_m');
 		$this->load->model('user_m');
+		$this->load->model('airline_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('airline_cabin', $language);
 	}
@@ -184,9 +185,22 @@ class Airline_cabin extends Admin_Controller {
                 }
 
 
-	//	$this->data['airline_cabin'] = $this->airline_cabin_m->get_AirlineCabinsMapList();
-            $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
+		
+                $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+
+
             $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
+
+                 if($userTypeID == 2){
+                        $this->data['airlinesdata'] = $this->airline_m->getClientAirlineArr($userID);
+
+                           } else {
+                        $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
+
+                }
+
+
 
 		$this->data["subview"] = "airline_cabin/index";
 		$this->load->view('_layout_main', $this->data);
@@ -208,8 +222,22 @@ class Airline_cabin extends Admin_Controller {
                 );
 
 
-	    $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
-	    $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
+		
+                $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+
+
+            	$this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
+
+                 if($userTypeID == 2){
+                        $this->data['airlinesdata'] = $this->airline_m->getClientAirlineArr($userID);
+
+                           } else {
+                        $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
+
+                }
+
+
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -255,8 +283,20 @@ class Airline_cabin extends Admin_Controller {
                         )
                 );
 		
-            $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
+		
+                $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+
+
             $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
+
+                 if($userTypeID == 2){
+                        $this->data['airlinesdata'] = $this->airline_m->getClientAirlineArr($userID);
+
+                           } else {
+                        $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
+
+                }
 
 
 		 $id = htmlentities(escapeString($this->uri->segment(3)));
@@ -535,6 +575,17 @@ class Airline_cabin extends Admin_Controller {
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'cm.active = '.$this->input->get('active');
                         }
+
+
+	        $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                      $airlines= $this->airline_m->getClientAirline($userID, 1);
+                         $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                         $sWhere .= 'cm.airline_code = '.$airlines->airlineID;
+
+                }
+
 
 
 
