@@ -319,7 +319,15 @@ class Airline extends Admin_Controller {
 					}
 					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
 				}
-			}			
+			}
+
+            $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+           $sWhere .= ' d.aln_data_typeID = 12 ';
+
+           if($this->session->userdata('usertypeID') == 2){  
+                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                  $sWhere .= 'd.vx_aln_data_defnsID = '.$this->session->userdata('login_user_airlineID');		
+            } 		   
 		  
 		  $sGroup = " GROUP BY vx_aln_data_defnsID ";  
          $ss = "select d.*,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID where d.aln_data_typeID = 12 group by d.vx_aln_data_defnsID"  ;
