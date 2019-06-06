@@ -11,11 +11,22 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">              
+
               <h5 class="page-header">                        
+		<?php if(permissionChecker('rafeed_upload')) { ?>
                   <a href="<?php echo base_url('rafeed/upload') ?>">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('upload_rafeed')?>
                   </a>
+		
+		   &nbsp;&nbsp;
+                                  <a href="<?php echo base_url('rafeed/downloadFormat') ?>">
+                      <i class="fa fa-upload"></i>
+                      <?=$this->lang->line('download_rafeed_format')?>
+                  </a>
+                                 <?php } ?>
+
+
               </h5>
 			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 
@@ -89,6 +100,7 @@
                  <thead>
                     <tr>
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+			 <th class="col-lg-2"><?=$this->lang->line('airline_code')?></th>
                         <th class="col-lg-2"><?=$this->lang->line('ticket_number')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('coupon_number')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('booking_country')?></th>
@@ -100,13 +112,10 @@
 			<th class="col-lg-1"><?=$this->lang->line('prorated_price')?></th>
 			 <th class="col-lg-1"><?=$this->lang->line('cabin')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('class')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('booking_date')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('fare_basis')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('dep_time')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('arrival_time')?></th>
 
                         <th class="col-lg-1"><?=$this->lang->line('day_of_week')?></th>
-                         <th class="col-lg-1"><?=$this->lang->line('days_to_departure')?></th>
 			 <th class="col-lg-1"><?=$this->lang->line('operating_airline_code')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('marketing_airline_code')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
@@ -154,6 +163,7 @@
                          } ); }, 
 
       "columns": [{"data": "rafeed_id" },
+		  {"data": "airline_code" },
                   {"data": "ticket_number" },
 				  {"data": "coupon_number" },
 				  {"data": "booking_country"},
@@ -165,12 +175,9 @@
 				{"data": "prorated_price" },
 				{"data": "cabin" },
                                 {"data": "class" },
-				 {"data": "booking_date" },
+				{"data": "fare_basis" },
 				{"data": "departure_date" },
-				 {"data": "dep_time" },
-				 {"data": "arrival_time" },
                                   {"data": "day_of_week" },
-                                  {"data": "days_to_departure"},
 
                                   {"data": "operating_airline_code"},
 				 {"data": "marketing_airline_code" },
