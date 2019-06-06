@@ -8,13 +8,14 @@ $lang['active'] = 'Status';
 
 $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
-
+$lang['download_rafeed_format'] = 'Download Rafeed Upload Format';
 $lang['upload_rafeed'] = 'Upload RAfeed';
 $lang['view'] = 'View';
 
 $lang['file_clear'] = 'Clear';
 $lang['file_browse'] = 'File Browse';
-
+$lang['airline_code'] = 'Airline Code';
+$lang['fare_basis'] = 'Fare Basis';
 $lang['ticket_number']='Ticket Number';
 $lang['coupon_number'] = 'Coupon number';
 $lang['flight_number'] = 'Flight Number';
