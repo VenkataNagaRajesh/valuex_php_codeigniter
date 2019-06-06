@@ -14,7 +14,7 @@ $lang['view'] = 'View';
 
 $lang['file_clear'] = 'Clear';
 $lang['file_browse'] = 'File Browse';
-
+$lang['download_format'] = 'InvFeed Download Format';
 $lang['flight_number']='Flight Number';
 $lang['airline_code'] = 'Airline  Code';
 $lang['cabin'] = 'Cabin';
