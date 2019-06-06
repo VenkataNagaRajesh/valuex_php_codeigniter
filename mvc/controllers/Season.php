@@ -156,18 +156,24 @@ class Season extends Admin_Controller {
           $this->data['destID'] = 0;
         }
         if(!empty($this->input->post('active'))){
-        $this->data['active'] = $this->input->post('active');
+          $this->data['active'] = $this->input->post('active');
         } else {
             $this->data['active'] = 1;
         }
 		if(!empty($this->input->post('airlinecode'))){
-        $this->data['airlinecode'] = $this->input->post('airlinecode');
+          $this->data['airlinecode'] = $this->input->post('airlinecode');
         } else {
-            $this->data['airlinecode'] = "";
+          $this->data['airlinecode'] = "";
         }
-        $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');	
-        $this->data['seasonslist'] = $this->season_m->get_seasons(); 
-		$this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,12));
+        $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');
+		
+        if($this->session->userdata('usertypeID') == 2){
+		   $this->data['seasonslist'] = $this->season_m->getSeasonsList($this->session->userdata('login_user_airlineID'));
+		}else{
+		   $this->data['seasonslist'] = $this->season_m->getSeasonsList(); 
+		}		
+      
+		$this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 		$this->data["subview"] = "season/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
@@ -266,6 +272,7 @@ class Season extends Admin_Controller {
 					$rules = $this->rules();
 					$this->form_validation->set_rules($rules);
 					if ($this->form_validation->run() == FALSE) { 
+					    //echo validation_errors();
 						$this->data["subview"] = "season/edit";
 						$this->load->view('_layout_main', $this->data);			
 					} else {

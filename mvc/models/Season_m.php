@@ -70,12 +70,15 @@ class season_m extends MY_Model {
 	}
 
 
-	function getSeasonsList(){
+	function getSeasonsList($airlineID = null){
                 $this->db->select('VX_aln_seasonID,season_name');
                 $this->db->from('VX_aln_season');
                 $this->db->where('active','1');
+				if($airlineID){
+					$this->db->where('airlineID',$airlineID);
+				}
                 $query = $this->db->get();
-                 $result = $query->result();
+			    $result = $query->result();
 
                 foreach($result  as $season) {
                         $seasons[$season->VX_aln_seasonID]  = $season->season_name;

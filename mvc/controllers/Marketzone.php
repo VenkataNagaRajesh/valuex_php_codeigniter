@@ -262,19 +262,18 @@ class Marketzone extends Admin_Controller {
 
 
 		$userTypeID = $this->session->userdata('usertypeID');
-                $userID = $this->session->userdata('loginuserID');
+        $userID = $this->session->userdata('loginuserID');
 
 		//$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
 		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 		  foreach($types as $type){
 			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
 		  }
-
-                 if($userTypeID == 2){
-                       $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                 } else {
-                   $this->data['airlines'] = $this->airline_m->getAirlinesData();
-                  }
+          if($userTypeID == 2){
+             $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+          } else {
+             $this->data['airlines'] = $this->airline_m->getAirlinesData();
+          }
 
 		 $id = htmlentities(escapeString($this->uri->segment(3)));
         if((int)$id) {
@@ -364,7 +363,11 @@ class Marketzone extends Admin_Controller {
         }
 	if ( isset($id)){
 		if($id == 17){
-		   $result = $this->marketzone_m->get_marketzones();
+		  if($this->session->userdata('usertypeID') == 2){
+		    $result = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
+		  } else {
+		    $result = $this->marketzone_m->get_marketzones();
+		  }
 		   foreach ($result as $market) {                               
                echo "<option value=\"$market->market_id\">",$market->market_name,"</option>";
             }

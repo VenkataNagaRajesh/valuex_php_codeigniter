@@ -477,6 +477,11 @@ class Client extends Admin_Controller {
 					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
 				}
 			}
+			
+			if($usertypeID == 2){
+				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                $sWhere .= 'c.userID = '.$this->session->userdata('loginuserID');	
+			}
 		
 		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,dd.aln_data_value airline_name FROM VX_aln_client c LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = c.airlineID
 			$sWhere			

@@ -34,7 +34,11 @@ class Season_airport extends Admin_Controller {
             $this->data['type'] = 'vx_season_airport_origin_map';
           }
 
-		$this->data['seasons'] = $this->season_m->get_seasons(); 
+		 if($this->session->userdata('usertypeID') == 2){
+		   $this->data['seasonslist'] = $this->season_m->getSeasonsList($this->session->userdata('login_user_airlineID'));
+		  }else{
+		   $this->data['seasonslist'] = $this->season_m->getSeasonsList(); 
+		  } 
 		$this->data['airports_list'] = $this->airports_m->getDefns('1');
 		$this->data["subview"] = "season_airport/index";
 		$this->load->view('_layout_main', $this->data);
@@ -110,13 +114,17 @@ class Season_airport extends Admin_Controller {
         		$sWhere .= $col.' = '.$this->input->get('airportID');
         	}
 			
-		
+		   if($this->session->userdata('usertypeID') == 2){  
+               $seasonslist = $this->season_m->getSeasonsList($this->session->userdata('login_user_airlineID'));
+			 // $markets = array_column($marketzones, 'market_id'); 	   
+			   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              $sWhere .= 'sap.seasonID IN ('.implode(', ', array_keys($seasonslist)).')';		
+            }
 
-            $sQuery="SELECT SQL_CALC_FOUND_ROWS s.season_name,sap.*,ma.aln_data_value airport,mc.aln_data_value country,ms.aln_data_value state, mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active FROM ".$table." sap 
+            $sQuery="SELECT SQL_CALC_FOUND_ROWS s.season_name,sap.*,ma.aln_data_value airport,mc.aln_data_value country,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active FROM ".$table." sap 
             LEFT JOIN VX_aln_season s on (s.VX_aln_seasonID = sap.seasonID) 
             LEFT JOIN vx_aln_master_data m on (m.airportID = ".$col." ) 
-            LEFT JOIN vx_aln_data_defns ma ON (ma.vx_aln_data_defnsID = m.airportID) 
-            LEFT JOIN vx_aln_data_defns ms ON (ms.vx_aln_data_defnsID = m.stateID) 
+            LEFT JOIN vx_aln_data_defns ma ON (ma.vx_aln_data_defnsID = m.airportID)          
             LEFT JOIN vx_aln_data_defns mc ON (mc.vx_aln_data_defnsID = m.countryID) 
             LEFT JOIN vx_aln_data_defns mr ON (mr.vx_aln_data_defnsID = m.regionID) 
             LEFT JOIN vx_aln_data_defns mar ON (mar.vx_aln_data_defnsID = m.areaID)
