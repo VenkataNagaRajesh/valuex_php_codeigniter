@@ -162,8 +162,11 @@ class Marketzone extends Admin_Controller {
                            } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 }
-        
-		$this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
+        if($this->session->userdata('usertypeID') == 2){
+		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
+		} else {
+		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones();
+		}
 		//$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
 		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 		  foreach($types as $type){

@@ -37,12 +37,14 @@ class Market_airport extends Admin_Controller {
                   $this->data['airportID'] = 0;
                 }
 
-		$this->data['marketzones'] = $this->marketzone_m->get_marketzones();
+		if($this->session->userdata('usertypeID') == 2){
+		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
+		} else {
+		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones();
+		}
 		$this->data['airports_list'] = $this->airports_m->getDefns('1');
 		$this->data["subview"] = "market_airport/index";
 		$this->load->view('_layout_main', $this->data);
-
-
 	}
 
 
@@ -119,7 +121,12 @@ class Market_airport extends Admin_Controller {
                 	}
 
 
-
+                if($this->session->userdata('usertypeID') == 2){  
+                   $marketzones = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
+				   $markets = array_column($marketzones, 'market_id'); 	   
+			      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                  $sWhere .= 'mz.market_id IN ('.implode(', ', $markets).')';		
+                } 
 
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS mz.market_id,mz.market_name,ma.aln_data_value airport,mc.aln_data_value country, 
