@@ -576,23 +576,24 @@ SELECT  boarding_point, carrier_code,off_point, season_id,flight_number, day_of_
 ";*/
 
 $sQuery = " 
-SELECT  boarding_point, carrier_code,operating_airline_code,off_point, season_id,flight_number, 
+SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number, 
         day_of_week ,departure_date,  group_concat(code,' ', cabin , ' ' , price SEPARATOR ';') as code_price  
         FROM (
-               SELECT dcla.code ,operating_airline_code,season_id, cabin ,departure_date ,day_of_week ,flight_number, 
+               SELECT dcla.code ,rf.carrier,season_id, cabin ,departure_date ,day_of_week ,flight_number, 
                       boarding_point,off_point , 
                       group_concat(prorated_price)  as price,dai.code as carrier_code   
                FROM VX_aln_ra_feed rf  
-               LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.operating_airline_code)  
+               LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)  
+	       LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)
                LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) 
                LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) 
-               LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.operating_airline_code 
+               LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier 
 							AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) 
 		LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)
 		where acc.order > 1  AND ptc.code NOT IN ('INF', 'INS', 'UNN') 
-		group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,season_id,departure_date,operating_airline_code  
+		group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,season_id,departure_date,rf.carrier  
 		order by flight_number )  as MainSet 
-		group by  boarding_point, off_point, day_of_week, season_id, flight_number, departure_date,operating_airline_code
+		group by  boarding_point, off_point, day_of_week, season_id, flight_number, departure_date,carrier
 ";
 
         $rResult = $this->install_m->run_query($sQuery);
@@ -602,7 +603,7 @@ SELECT  boarding_point, carrier_code,operating_airline_code,off_point, season_id
 			$array['boarding_point'] = $feed->boarding_point;
 			$array['off_point'] = $feed->off_point;
 			$array['flight_number'] = $feed->flight_number;
-			$array['carrier_code'] = $feed->operating_airline_code;
+			$array['carrier_code'] = $feed->carrier;
 			$array['departure_date'] = $feed->departure_date;
 			$array['frequency'] = $feed->day_of_week;
 
@@ -645,7 +646,7 @@ SELECT  boarding_point, carrier_code,operating_airline_code,off_point, season_id
                         if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
 				 $array['from_cabin'] = $cabins['Y'][1];
                                 $array['to_cabin'] = $cabins['W'][1];
-                                $feed = $this->calculate_Min_Max($fromCabin, $toCabin );
+                                $data = $this->calculate_Min_Max($fromCabin, $toCabin );
 				$array['average'] = $data->average;
                                 $array['min'] = $data->min;
                                 $array['max'] = $data->max;
@@ -669,13 +670,13 @@ SELECT  boarding_point, carrier_code,operating_airline_code,off_point, season_id
                         if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
 				 $array['from_cabin'] = $cabins['W'][1];
                                  $array['to_cabin'] = $cabins['C'][1];
-
-                                $feed = $this->calculate_Min_Max($fromCabin, $toCabin );
-
+                                $data = $this->calculate_Min_Max($fromCabin, $toCabin );
+				
 				$array['average'] = $data->average;
                                 $array['min'] = $data->min;
                                 $array['max'] = $data->max;
 				$array['slider_start'] = $data->slider_start;
+				//var_dump($array);exit;
 				if($this->fclr_m->checkFCLREntry($array)) {
                                         $array["create_date"] = time();
                                         $array["modify_date"] = time();
