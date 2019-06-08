@@ -143,6 +143,7 @@ class Rafeed extends Admin_Controller {
 				 } else {
 				      if($flag == 1){ 						   										
 				   if(count($Row) == 21){ //print_r($Row); exit;
+					$rafeed = array();
 	 			      $rafeed['ticket_number'] =  $Row[array_search('ticket number',$import_header)];
 				      $rafeed['coupon_number'] = $Row[array_search('coupon number',$import_header)];
 				      $rafeed['prorated_price'] = $Row[array_search('cpn value',$import_header)];

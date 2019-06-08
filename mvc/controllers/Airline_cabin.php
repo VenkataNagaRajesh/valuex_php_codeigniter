@@ -349,7 +349,7 @@ class Airline_cabin extends Admin_Controller {
 		if((int)$id) {
 			$this->data['airline_cabin'] = $this->airline_cabin_m->get_airline_cabin_map_by_id($id);
 			if($this->data['airline_cabin']) {
-				$this->airline_cabin_m->update_airline_cabin(array('active' => 0), $id);
+				$this->airline_cabin_m->delete_airline_cabin($id);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("airline_cabin/index"));
 			} else {
