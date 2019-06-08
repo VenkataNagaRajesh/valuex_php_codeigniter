@@ -1,0 +1,2 @@
+update vx_aln_data_types set name='aircraft_type',alias='Aircraft Type' where vx_aln_data_typeID = 21;
+insert into vx_aln_data_types (name,alias,create_userID,modify_userID,create_date,modify_date) values ('seat-capacity','Seat Capacity', '1','1','1554788423','1554788423');

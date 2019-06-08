@@ -84,12 +84,15 @@ function Stand_Deviation($arr)
     } 
 
 
-	function getUpgradeCabinsData($array){
+	function getUpgradeCabinsData($array,$array_in){
 		$this->db->select('fc.fclr_id,fc.carrier_code,fc.frequency, fc.flight_number,fc.from_cabin, fc.to_cabin, fc.min, fc.max, fc.average, fc.slider_start');
                 $this->db->from('VX_aln_fare_control_range fc');
 		$this->db->join('vx_aln_data_defns fca','fca.vx_aln_data_defnsID = fc.from_cabin','LEFT');
 		$this->db->join('vx_aln_data_defns tca','tca.vx_aln_data_defnsID = fc.to_cabin','LEFT');
-                $this->db->where($array);
+                $this->db->where_in('boarding_point',$array_in['boarding_point']);
+		$this->db->where_in('off_point',$array_in['off_point']);
+		$this->db->where($array);
+		
                 $query = $this->db->get();
                 $result = $query->result();
 		return $result;

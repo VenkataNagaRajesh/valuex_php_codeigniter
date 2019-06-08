@@ -9,7 +9,10 @@ class Airline extends Admin_Controller {
 		$this->load->model("market_airport_map_m");
 		$this->load->model("airline_m");
 		$language = $this->session->userdata('lang');
-		$this->lang->load('airline', $language);	
+		$this->lang->load('airline', $language); 
+         //$seat_capacityID = $this->airports_m->checkData('228–254',22,432); 
+       
+        // print_r($seat_capacityID); exit;		 
 	}	
 	
 	protected function rules() {
@@ -169,7 +172,7 @@ class Airline extends Admin_Controller {
 				$Reader = new SpreadsheetReader($file); 
 				//$header = array('SNO','code','Airline Name','flightno');
 				//print_r(count($header)); exit;
-				$header = array_map('strtolower',array('S.No','AIRLINE NAME','Carrier Code'));
+				$header = array_map('strtolower',array('s.no','airline name','Carrier Code','Aircraft Type','Seat Capacity','Flight Numbers'));
 				 $header = array_map('trim', $header);
 				$Sheets = $Reader -> Sheets();
 				$defnData = $this->airports_m->getDefns();
@@ -185,38 +188,76 @@ class Airline extends Admin_Controller {
                      $import_header = array_map('strtolower', $Row);
                      if(count(array_diff($header,$import_header)) == 0){
 						 $flag = 1;
-					 }			  
-					} else {
+					 }       	  
+					} else { 
 					   if($flag == 1){
                            $airline_key = array_search ('airline name', $import_header);	
-                           $airline_code_key = array_search ('carrier code', $import_header);						   
+                           $airline_code_key = array_search ('carrier code', $import_header);
+                           $aircraft_type_key = array_search ('aircraft type', $import_header);
+                           $seat_capacity_key = array_search ('seat capacity', $import_header);
+                           $flightno_key = array_search ('flight numbers', $import_header);						   
 						  $airline['name'] = $Row[$airline_key];
-						  $airline['code'] = $Row[$airline_code_key];
+						  $airline['code'] = $Row[$airline_code_key];						  
+						 
 						 //$airline['flights'] = $Row[3];                            
-                           $val_status = $this->validateAirline($airline);                            
+                            $val_status = $this->validateAirline($airline);                            
 						  if($val_status){
                             $validate_code = $this->airline_m->get_single_airline(array('code'=>$Row[$airline_code_key]));							  
-						   if(count($validate_code) < 1){								 
+						   if(count($validate_code) < 1){
+                              $airline['aircraftID'] = $this->airports_m->checkData($Row[$aircraft_type_key],21);$seat_capacityID = $this->airports_m->checkData($Row[$seat_capacity_key],22,$airline['aircraftID']);	   
                               $checkairline = $this->airline_m->add_airline($airline);					 
-							/* if($checkairline->id){
-							  $flights = explode(',',$Row[3]);
-							  $airline['flights']= array();							  
-							  foreach($flights as $flight){
-								 $id = $this->airports_m->checkData($flight,16,$checkairline->id);	 
-							  }                              				  
-							} else {
+							 if($checkairline->id){	 					  
+							  $flights_array = explode(',',$Row[$flightno_key]); 
+							  foreach($flights_array as $flights_data){ 
+							 $code =null;$from=null;$to=null; $flights = array();
+							    if(preg_match('/([a-z]+)(\d+)-[a-z]+(\d+)/i', $flights_data, $matches)){//AS1011-AS1020
+								   $code = $matches[1];
+								   $from = $matches[2];
+								   $to = $matches[3];						 								
+								 }elseif(preg_match('/(\d+)-(\d+)/', $flights_data, $matches)) {//1011-1020		   
+								   $from = $matches[1];
+								   $to = $matches[2];
+								   $code=null;						 
+								 }elseif(preg_match('/^(\d+)/', $flights_data, $matches)) {//1011
+								   $from = $matches[0];
+								   $to = $matches[0];
+								   $code=null; 
+								 }elseif(preg_match('/([a-z]+)(\d+)$/i', $flights_data, $matches)) {	//AS1011  
+									$code = $matches[1];							   
+									$from = $matches[2];
+									$to = $matches[2]; 	
+								 }elseif(preg_match('/([a-z]+)(\d+)([a-z])/i', $flights_data, $matches)) { //AS1011A
+									 $code = $matches[1];							   
+									 $from = $matches[2];
+									 $to = $matches[2]; $endcode = $matches[3];
+								 } else {			
+									$this->mydebug->airlines_log("Flight number".$Row[$flightno_key]." format not matched ".$airline['name'].'-'.$airline['code'] ); 
+								 }
+								if(($from && $to) && $from <= $to){
+								 for($i=$from;$i<=$to;$i++){									
+									   $flights[] = $i; 									
+								 } 
+								 
+								  foreach($flights as $flight)
+								  {								     
+								    $id = $this->airports_m->checkData($flight,16,$checkairline->id);	 
+							      }
+								}
+							   }								
+							                               				  
+							 } else {
 								//echo "Airport :".$airport." already  existed";								 
-							} */
+							} 
 						  }else{
-							$this->mydebug->airlines_log("Airline Code must be UNIQUE ".$airline['name'].'-'.$airline['code']);
+							$this->mydebug->airlines_log("Airline Code must be UNIQUE ".$airline['name'].' - '.$airline['code']);
 						  }
-						} 						 
+						}  						 
 					   } else {
-						   print_r("mismatch");
+						   $this->mydebug->airlines_log("file format no matched file name : ".$_FILES['file']['name']);
 					   }
 					 }
 				   $i++;					   
-				  } //exit;
+				  } exit;
                   /* $time_end = microtime(true);
                 $execution_time = ($time_end - $time_start)/60;
                 
@@ -243,7 +284,7 @@ class Airline extends Admin_Controller {
 
     public function validateAirline($data){
 	  if(!ctype_alnum($data['code']) || strlen($data['code']) != 2 ){
-		  $this->mydebug->airlines_log("Airline Code should be alphanumeric and length 2 ".$data['name'].'-'.$data['code']);
+		  $this->mydebug->airlines_log("Airline Code should be alphanumeric and length 2 ".$data['name'].' - '.$data['code']);
 		  return FALSE;
 	  }else{
 		  return TRUE;
@@ -252,7 +293,7 @@ class Airline extends Admin_Controller {
 	
 	function downloadFormat(){
 		$this->load->helper('download');
-        $filename = APPPATH.'downloads/airline_format.xlsx'; 
+        $filename = APPPATH.'downloads/airlines_with_aircraft_types.xlsx'; 
 		force_download($filename, null);		
 	}
 	
