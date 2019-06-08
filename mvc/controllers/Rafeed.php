@@ -6,6 +6,7 @@ class Rafeed extends Admin_Controller {
 		parent::__construct();
 		$this->load->model("rafeed_m");
 		$this->load->model("airline_cabin_m");
+		$this->load->model('airports_m');
 		$this->load->model("season_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('rafeed', $language);	
@@ -61,7 +62,7 @@ class Rafeed extends Admin_Controller {
 
 		//print_r( $this->data['stateID']); exit;
 		$this->data['country'] = $this->rafeed_m->getCodesByType('2');
-		$this->data['city'] = $this->rafeed_m->getCodesByType('5');
+		$this->data['city'] = $this->rafeed_m->getCodesByType('3');
 		$this->data['airlines'] = $this->rafeed_m->getCodesByType('12');
 		$this->data['airport'] = $this->rafeed_m->getCodesByType('1');
 		$this->data['cabin'] = $this->rafeed_m->getCodesByType('13');
@@ -120,66 +121,67 @@ class Rafeed extends Admin_Controller {
 
 				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
 				$Reader = new SpreadsheetReader($file); 
-				
-				//$header = array('ticket_number','coupon_number'	, 'booking_city', 'booking_country','issuance_city','issuance_country','board_point','off_point','cabin','class','booking_date','departure_date','days_to_departure','prorated_price','marketing_airline_code','operating_airline_code');
+				$header = array_map('strtolower', array("Airline Code","Ticket Number", "Coupon Number", "Carrier","Flight Number","Boarding Point","Off Point","CPN Value","Class","Flight Date","Fare Basis","Cabin","Booking Country","Booking City","Issuance Country","Issuance City","Marketing Airline Code","Operating Airline Code","OfficeID","Channel","Pax Type"));
+                                 $header = array_map('strtolower', $header);
 
 
-		//		$header = array('ticket_number','airline_code','cpn_number','cpn_value','carrier','flight_number','boarding_point','off_point','class','cabin','flight_date','fare_basis','booking_country','booking_city','office_id','channel','pax_type');
-			$header  = array("ticket_number","coupon_number","booking_city","booking_country","issuance_city","issuance_country",
-				"board_point","off_point","cabin","class","booking_date","departure_date","dep_time","arrival_time","prorated_price","marketing_airline_code","operating_airline_code","flight_number","channel","pax_type","office_id");	
-
-
-			//	print_r(count($header)); exit;
-				$Sheets = $Reader -> Sheets();
-			//	$defnData = $this->airports_m->getDefns();
+				 $Sheets = $Reader -> Sheets();
 					
-			    foreach ($Sheets as $Index => $Name){                 					
-				   $Reader -> ChangeSheet($Index);
-				   $i = 0;
-                 //$time_start = microtime(true); 					   
-				  foreach ($Reader as $Row){
-				//	print_r($Row);exit;
-					if($i == 0){ // header checking						
+			foreach ($Sheets as $Index => $Name){                 					
+			   $Reader -> ChangeSheet($Index);
+			   $i = 0;
+			   foreach ($Reader as $Row){
+			//	print_r($Row);exit;
+				if($i == 0){ // header checking						
 					
-					  $flag = 0 ;						 
-					 if($Row == $header ){
+				  $flag = 0 ;						 
+				  $Row = array_map('trim', $Row);
+				   $import_header = array_map('strtolower', $Row);
+				  if(count(array_diff($header,$import_header)) == 0){
 						 $flag = 1;
-					 }				  
-					} else {
-					   if($flag == 1){ 						   										
-					   	 if(count($Row) == 21){ //print_r($Row); exit;
-	 						$rafeed['ticket_number'] = $Row[0]; 
-							$rafeed['coupon_number'] = $Row[1];
-							$rafeed['booking_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[2],'5');
-							$rafeed['booking_country'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[3],'2');
-							$rafeed['issuance_city'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[4],'5');
-							$rafeed['issuance_country'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[5],'2');
-							$rafeed['boarding_point'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[6],'1');
-                                                        $rafeed['off_point'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[7],'1');
-							$rafeed['cabin'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[8],'13');
-							 $rafeed['class'] = $Row[9];
-							$rafeed['booking_date'] = strtotime(str_replace('-','/',$Row[10]));
-							$rafeed['departure_date'] = strtotime(str_replace('-','/',$Row[11]));
-							$rafeed['dep_time'] = $this->convertTimeToSeconds($Row[12]);
-							$rafeed['arrival_time'] = $this->convertTimeToSeconds($Row[13]);
-							$day_of_week = date('w', $rafeed['departure_date']);
-							$day = ($day_of_week)?$day_of_week:7;
-							$rafeed['day_of_week'] = $this->rafeed_m->getDefIdByTypeAndCode($day,'14');
-							$rafeed['days_to_departure'] =  floor(($rafeed['departure_date'] - $rafeed['booking_date']) / (60*60*24) );
+				   }				  
+				 } else {
+				      if($flag == 1){ 						   										
+				   if(count($Row) == 21){ //print_r($Row); exit;
+	 			      $rafeed['ticket_number'] =  $Row[array_search('ticket number',$import_header)];
+				      $rafeed['coupon_number'] = $Row[array_search('coupon number',$import_header)];
+				      $rafeed['prorated_price'] = $Row[array_search('cpn value',$import_header)];
+				      $rafeed['airline_code'] = $Row[array_search('airline code',$import_header)];
+				      $rafeed['fare_basis'] = $Row[array_search('fare basis',$import_header)];
+   				      $rafeed['carrier'] = 
+					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('carrier',$import_header)],'12');
+				      $rafeed['booking_country'] = 
+					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('booking country',$import_header)],'2');
+				      $rafeed['booking_city'] = 
+					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('booking city',$import_header)],'3');
+				      $rafeed['issuance_country'] = 
+					   $this->airports_m->getDefIdByTypeAndCode($Row[array_search('issuance country',$import_header)],'2');
+                                      $rafeed['issuance_city'] = 
+					     $this->airports_m->getDefIdByTypeAndCode($Row[array_search('issuance city',$import_header)],'3');
+				      $rafeed['boarding_point'] =
+					     $this->airports_m->getDefIdByTypeAndCode($Row[array_search('boarding point',$import_header)],'1');
 
-							$rafeed['marketing_airline_code'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[15],'12');
-                                                         $rafeed['operating_airline_code']= $this->rafeed_m->getDefIdByTypeAndCode($Row[16],'12');
-
-								$season_id = $this->season_m->getSeasonForDateANDAirlineID($rafeed['departure_date'],$rafeed['operating_airline_code'],$rafeed['boarding_point'],$rafeed['off_point']);
-							if(is_null($season_id)) {
-								$season_id = 0;
-							} 
-							$rafeed['season_id'] = $season_id; 
-                                                         $rafeed['prorated_price'] = $Row[14];
-							 $rafeed['flight_number'] = $Row[17];
-                                                         $rafeed['office_id'] = $Row[20];
-							$rafeed['channel']= $Row[18];
-                                                         $rafeed['pax_type'] =  $this->rafeed_m->getDefIdByTypeAndCode($Row[19],'18');
+				      $rafeed['off_point'] =
+					     $this->airports_m->getDefIdByTypeAndCode($Row[array_search('off point',$import_header)],'1');
+				      $rafeed['cabin'] = 
+					     $this->airports_m->getDefIdByTypeAndCode($Row[array_search('cabin',$import_header)],'13');
+  				      $rafeed['class'] = $Row[array_search('class',$import_header)];
+				      $rafeed['departure_date'] =  
+					     strtotime(str_replace('-','/',$Row[array_search('flight date',$import_header)]));
+				      $day_of_week = date('w', $rafeed['departure_date']);
+				      $day = ($day_of_week)?$day_of_week:7;
+				      $rafeed['day_of_week'] = $this->airports_m->getDefIdByTypeAndCode($day,'14');
+				      $rafeed['marketing_airline_code'] = 
+					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('marketing airline code',$import_header)],'12');
+                                      $rafeed['operating_airline_code']= 
+					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('operating airline code',$import_header)],'12');
+					$season_id = $this->season_m->getSeasonForDateANDAirlineID($rafeed['departure_date'],$rafeed['operating_airline_code'],$rafeed['boarding_point'],$rafeed['off_point']);
+				     $rafeed['season_id'] = $season_id; 
+					$rafeed['flight_number'] = substr($Row[array_search('flight number',$import_header)], 2);
+                                      $rafeed['office_id'] = $Row[array_search('officeid',$import_header)];
+				      $rafeed['channel']= $Row[array_search('channel',$import_header)];
+                                      $rafeed['pax_type'] =  $this->airports_m->getDefIdByTypeAndCode($Row[array_search('pax type',$import_header)],'18');
+					//var_dump($rafeed);exit;
 						if($this->rafeed_m->checkRaFeed($rafeed)) {
 								
                                                            $rafeed['create_date'] = time();
@@ -227,7 +229,7 @@ class Rafeed extends Admin_Controller {
 
 
 		
-	    $aColumns = array('rafeed_id','ticket_number', 'coupon_number', 'booking_country', 'booking_city', 'issuance_country', 'issuance_city','boarding_point', 'off_point', 'cabin', 'class', 'booking_date','departure_date', 'prorated_price', 'operating_airline_code', 'marketing_airline_code', 'rf.active');
+	    $aColumns = array('rafeed_id','ticket_number', 'coupon_number', 'booking_country', 'booking_city', 'issuance_country', 'issuance_city','boarding_point', 'off_point', 'cabin', 'class', 'departure_date', 'prorated_price', 'operating_airline_code', 'marketing_airline_code', 'rf.active');
 	
 		$sLimit = "";
 		
@@ -310,7 +312,7 @@ class Rafeed extends Admin_Controller {
 
 			if(!empty($this->input->get('airLine'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'rf.operating_airline_code = '.$this->input->get('airLine');
+                                $sWhere .= 'rf.carrier= '.$this->input->get('airLine');
                         }
                         if(!empty($this->input->get('Class'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
@@ -321,11 +323,11 @@ class Rafeed extends Admin_Controller {
 
 			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS rafeed_id,ticket_number, coupon_number, dc.code as booking_country , 
-				CONCAT(dfre.aln_data_value,'(',dfre.code,')' ) as day_of_week, days_to_departure, 
+				CONCAT(dfre.aln_data_value,'(',dfre.code,')' ) as day_of_week,  
 			   dci.code as  booking_city, dico.code as issuance_country, dici.code as issuance_city,
 			    dai.code as operating_airline_code, dam.code as marketing_airline_code, flight_number, dbp.code as boarding_point, 
-                           dop.code as off_point,  dcla.code as cabin , booking_date, departure_date, prorated_price, class,
-                           office_id, channel, dpax.code as pax_type ,rf.active , rf.dep_time , rf.arrival_time
+                           dop.code as off_point,  dcla.code as cabin ,  departure_date, prorated_price, class,
+                           office_id, channel, dpax.code as pax_type ,rf.active  ,rf.airline_code, rf.fare_basis
                            FROM VX_aln_ra_feed rf  
                           LEFT JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = rf.booking_country) 
                           LEFT JOIN vx_aln_data_defns dci on  (dci.vx_aln_data_defnsID = rf.booking_city) 
@@ -353,10 +355,7 @@ class Rafeed extends Admin_Controller {
 		"aaData" => array()
 	  );
 	  foreach($rResult as $feed){		 	
-		$feed->booking_date = date('d/m/Y',$feed->booking_date);
 		$feed->departure_date = date('d/m/Y',$feed->departure_date);
-		  $feed->dep_time = gmdate('H:i:s', $feed->dep_time);
-                $feed->arrival_time = gmdate('H:i:s', $feed->arrival_time);
 
 
 		
@@ -381,7 +380,11 @@ class Rafeed extends Admin_Controller {
 	
 
 
-
+ function downloadFormat(){
+                $this->load->helper('download');
+        $filename = APPPATH.'downloads/rafeed.xlsx';
+                force_download($filename, null);
+      }
 
     function active() {
 

@@ -69,6 +69,8 @@
                         </label>
                         <div class="col-sm-6">
 			<?php
+				$aln_datatypes[0] = 'Select Level Type';
+				ksort($aln_datatypes);
 				echo form_dropdown("amz_level_id", $aln_datatypes, set_value("amz_level_id",$marketzone->amz_level_id), "id='amz_level_id' class='form-control select2'");
 			?>
                         </div>
@@ -109,7 +111,7 @@
                         </label>
                         <div class="col-sm-6">
 			<?php
-			$aln_datatypes[0] = "SELECT";
+			$aln_datatypes[0] = "SELECT Inclusion Type";
                         ksort($aln_datatypes);
 
 			echo form_dropdown("amz_incl_id", $aln_datatypes, set_value("amz_incl_id",$marketzone->amz_incl_id), "id='amz_incl_id' class='form-control select2'");
@@ -156,6 +158,7 @@
                         <div class="col-sm-6">
 			
 			<?php
+			$aln_datatypes[0] = 'Select Excluson Type';
  echo form_dropdown("amz_excl_id", $aln_datatypes, set_value("amz_excl_id", $marketzone->amz_excl_id), "id='amz_excl_id' class='form-control select2'");
                         ?>
 

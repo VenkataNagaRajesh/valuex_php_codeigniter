@@ -61,6 +61,10 @@ class signin_m extends MY_Model {
 							"defaultschoolyearID" => $defaultschoolyearID,
 							"loggedin" => TRUE
 						);
+						if($userdata->usertypeID == 2){		
+                            $this->load->model('client_m');						
+							$data['login_user_airlineID'] = $this->client_m->get_single_client(array('userID'=>$userdata->userID))->airlineID;
+						}
 						//print_r($data); exit;
 						$browser = $this->getBrowser();
 

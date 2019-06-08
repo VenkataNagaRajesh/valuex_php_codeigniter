@@ -82,7 +82,7 @@ class Airline_cabin_class extends Admin_Controller {
                 }
 
 
-		           $userTypeID = $this->session->userdata('usertype');
+		           $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 
 
@@ -118,7 +118,7 @@ class Airline_cabin_class extends Admin_Controller {
                 );
 
 
-	   $userTypeID = $this->session->userdata('usertype');
+	   $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 
 	    $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
@@ -177,7 +177,7 @@ class Airline_cabin_class extends Admin_Controller {
                 );
 		
 
-		$userTypeID = $this->session->userdata('usertype');
+		$userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 
             $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
@@ -389,7 +389,7 @@ class Airline_cabin_class extends Admin_Controller {
 
 
 			
-               $userTypeID = $this->session->userdata('usertype');
+               $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
                 if($userTypeID == 2){
                       $airlines= $this->airline_m->getClientAirline($userID, 1);
@@ -414,7 +414,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, airline_class,  ac.aln_data_value
 
                 $output = array(
                 "sEcho" => intval($_GET['sEcho']),
-                "iTotalRecords" => $airlinecabinsmapcnt,
+                "iTotalRecords" => $rResultFilterTotal,
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
             );

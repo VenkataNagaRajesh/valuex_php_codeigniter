@@ -31,7 +31,7 @@
 				   <div class="col-sm-2">			   
 				    <?php $slist = array("0" => "Select Season");               
 					   foreach($seasonslist as $season){
-						  $slist[$season->VX_aln_seasonID] = $season->season_name;
+						  $slist[] = $season;
 						}							
 					   echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>

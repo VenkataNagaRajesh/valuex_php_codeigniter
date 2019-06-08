@@ -12,6 +12,7 @@ class Marketzone extends Admin_Controller {
 		$this->load->model('user_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('marketzone', $language);
+		
 	}
 
 	protected function rules() {
@@ -154,17 +155,18 @@ class Marketzone extends Admin_Controller {
                 }
 
 
-		$userTypeID = $this->session->userdata('usertype');
+		$userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-
 		if($userTypeID == 2){
                         $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
                            } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 }
-
-
-		$this->data['marketzones'] = $this->marketzone_m->get_marketzones();
+        if($this->session->userdata('usertypeID') == 2){
+		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
+		} else {
+		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones();
+		}
 		//$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
 		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 		  foreach($types as $type){
@@ -259,20 +261,19 @@ class Marketzone extends Admin_Controller {
                 );
 
 
-		$userTypeID = $this->session->userdata('usertype');
-                $userID = $this->session->userdata('loginuserID');
+		$userTypeID = $this->session->userdata('usertypeID');
+        $userID = $this->session->userdata('loginuserID');
 
 		//$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
 		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 		  foreach($types as $type){
 			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
 		  }
-
-                 if($userTypeID == 2){
-                       $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                 } else {
-                   $this->data['airlines'] = $this->airline_m->getAirlinesData();
-                  }
+          if($userTypeID == 2){
+             $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+          } else {
+             $this->data['airlines'] = $this->airline_m->getAirlinesData();
+          }
 
 		 $id = htmlentities(escapeString($this->uri->segment(3)));
         if((int)$id) {
@@ -362,7 +363,11 @@ class Marketzone extends Admin_Controller {
         }
 	if ( isset($id)){
 		if($id == 17){
-		   $result = $this->marketzone_m->get_marketzones();
+		  if($this->session->userdata('usertypeID') == 2){
+		    $result = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
+		  } else {
+		    $result = $this->marketzone_m->get_marketzones();
+		  }
 		   foreach ($result as $market) {                               
                echo "<option value=\"$market->market_id\">",$market->market_name,"</option>";
             }
@@ -545,13 +550,13 @@ class Marketzone extends Admin_Controller {
                                 $sWhere .= 'MainSet.airlineID = '.$this->input->get('airlineID');
                         }
 
-                $userTypeID = $this->session->userdata('usertype');
+                $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 		if($userTypeID == 2){
-                      $airlines= $this->airline_m->getClientAirline($userID, 1);
+                     // $airlines = $this->airline_m->getClientAirline($userID, 1);
 			 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                         $sWhere .= 'MainSet.airlineID = '.$airlines->airlineID;
-				
+                        // $sWhere .= 'MainSet.airlineID = '.$airlines->airlineID;
+						$sWhere .= 'MainSet.airlineID = '.$this->session->userdata('login_user_airlineID');			
                 } 
 
 $sQuery = "
@@ -624,7 +629,7 @@ on MainSet.market_id = SubSet.market_id
 
                 $output = array(
                 "sEcho" => intval($_GET['sEcho']),
-                "iTotalRecords" => $marketzonescount,
+                "iTotalRecords" => $rResultFilterTotal,
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
             );

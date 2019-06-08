@@ -20,11 +20,11 @@
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
           <div class='form-group'>
             <div class="col-sm-2">
-              <?php $seasonlist = array("0" => "Select Season");
-                   foreach($seasons as $season){
-                         $seasonlist[$season->VX_aln_seasonID] = $season->season_name;
-                   }
-               echo form_dropdown("seasonID", $seasonlist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
+             <?php $slist = array("0" => "Select Season");               
+					   foreach($seasonslist as $season){
+						  $slist[] = $season;
+						}							
+				echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
             </div>
 			
             <div class="col-sm-2">
@@ -55,8 +55,7 @@
                  <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
 			     <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
                  <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>
-				 <th class="col-lg-1"><?=$this->lang->line('country')?></th>
-				 <th class="col-lg-1"><?=$this->lang->line('state')?></th>
+				 <th class="col-lg-1"><?=$this->lang->line('country')?></th>				
 				 <th class="col-lg-1"><?=$this->lang->line('region')?></th>	
 				 <th class="col-lg-1"><?=$this->lang->line('area')?></th>	
                </tr>
@@ -96,8 +95,7 @@
       "columns": [{"data": "id" },
 		          {"data": "season_name"},
                   {"data": "airport" },
-		          {"data": "country" },
-		          {"data": "state" },
+		          {"data": "country" },		          
 		          {"data": "region" },
 		          {"data": "area" }
 				 ],			   

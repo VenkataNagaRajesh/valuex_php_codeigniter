@@ -37,12 +37,14 @@ class Market_airport extends Admin_Controller {
                   $this->data['airportID'] = 0;
                 }
 
-		$this->data['marketzones'] = $this->marketzone_m->get_marketzones();
+		if($this->session->userdata('usertypeID') == 2){
+		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
+		} else {
+		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones();
+		}
 		$this->data['airports_list'] = $this->airports_m->getDefns('1');
 		$this->data["subview"] = "market_airport/index";
 		$this->load->view('_layout_main', $this->data);
-
-
 	}
 
 
@@ -119,13 +121,22 @@ class Market_airport extends Admin_Controller {
                 	}
 
 
+                if($this->session->userdata('usertypeID') == 2){  
+                   $marketzones = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
+				   $markets = array_column($marketzones, 'market_id'); 	   
+			      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                  $sWhere .= 'mz.market_id IN ('.implode(', ', $markets).')';		
+                } 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS mz.market_id,mz.market_name,ma.aln_data_value airport,mc.aln_data_value country,
+
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS mz.market_id,mz.market_name,ma.aln_data_value airport,mc.aln_data_value country, 
+		mct.aln_data_value as city,
             mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active FROM VX_aln_market_zone mz 
             JOIN VX_market_airport_map mam on (mam.market_id = mz.market_id) 
+
             LEFT JOIN vx_aln_master_data m on (m.airportID = mam.airport_id ) 
             left join vx_aln_data_defns ma ON (ma.vx_aln_data_defnsID = m.airportID) 
-            
+            left join vx_aln_data_defns mct ON (mct.vx_aln_data_defnsID = m.cityID) 
             left join vx_aln_data_defns mc ON (mc.vx_aln_data_defnsID = m.countryID) 
             left join vx_aln_data_defns mr ON (mr.vx_aln_data_defnsID = m.regionID) 
             left join vx_aln_data_defns mar ON (mar.vx_aln_data_defnsID = m.areaID)

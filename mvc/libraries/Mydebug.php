@@ -27,5 +27,19 @@ class Mydebug {
          }
          fwrite($file,$msg.' Timestamp: '.time()."\n");
        }
+	   
+	   
+	   public function airlines_log($logs)
+        {
+
+         $file=fopen('./debug/airlines_log.txt','a+');
+
+         if (is_array($logs)) {
+             $msg = print_r($logs,1);
+         } else {
+             $msg = $logs;
+         }
+         fwrite($file,$msg.' Timestamp: '.time()."\n");
+       }
 
 }

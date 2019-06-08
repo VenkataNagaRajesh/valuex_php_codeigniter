@@ -39,17 +39,24 @@ class season_m extends MY_Model {
 	}
 
 	function getSeasonForDateANDAirlineID($date , $carrierID,$orig_id, $dest_id ) {
-
-
+		$date_format =  date('d-m', $date); 
+		$current_year =  date("Y");
+		$prv_year = $current_year - 1;
+		 $current_yr_date = strtotime($date_format.'-'.$current_year);
+		 $old_yr_date = strtotime($date_format.'-'.$prv_year);
 		$this->db->select('VX_aln_seasonID')->from('VX_aln_season ss');
 		$this->db->join('VX_season_airport_origin_map om','om.seasonID = ss.VX_aln_seasonID','LEFT');
 		$this->db->join('VX_season_airport_dest_map dm','dm.seasonID = ss.VX_aln_seasonID','LEFT');
-		$this->db->where('ams_season_start_date <= ' , $date );
-		$this->db->where('ams_season_end_date >= ' , $date);
 		$this->db->where('airlineID' , $carrierID);
 		$this->db->where('dest_airportID' , $dest_id);
 		$this->db->where('orig_airportID' , $orig_id);
-	
+
+	//	$this->db->where('year(FROM_UNIXTIME(ams_season_start_date))' , $current_year);
+        //        $this->db->where('year(FROM_UNIXTIME(ams_season_end_date)) ' , $current_year);
+
+	        $this->db->where('((ams_season_start_date <= '.$current_yr_date.' AND ams_season_end_date >= ' . $current_yr_date . ') OR (ams_season_start_date <= ' .$old_yr_date .  ' AND ams_season_end_date >= '  . $old_yr_date.'))');
+		$this->db->order_by('VX_aln_seasonID','desc');
+// select CONCAT(day(FROM_UNIXTIME(ams_season_start_date)),'-',month(FROM_UNIXTIME(ams_season_start_date)),'-',year(FROM_UNIXTIME(ams_season_start_date))) as date , FROM_UNIXTIME(ams_season_start_date) , day(FROM_UNIXTIME(ams_season_start_date)) as day ,month(FROM_UNIXTIME(ams_season_start_date)) as mon from VX_aln_season where CONCAT(day(FROM_UNIXTIME(ams_season_start_date)),'-',month(FROM_UNIXTIME(ams_season_start_date)),'-',year(FROM_UNIXTIME(ams_season_start_date))) = '1-6-2019';
 		 $this->db->limit(1);
                 $query = $this->db->get();
                 $arr = $query->row();
@@ -63,12 +70,15 @@ class season_m extends MY_Model {
 	}
 
 
-	function getSeasonsList(){
+	function getSeasonsList($airlineID = null){
                 $this->db->select('VX_aln_seasonID,season_name');
                 $this->db->from('VX_aln_season');
                 $this->db->where('active','1');
+				if($airlineID){
+					$this->db->where('airlineID',$airlineID);
+				}
                 $query = $this->db->get();
-                 $result = $query->result();
+			    $result = $query->result();
 
                 foreach($result  as $season) {
                         $seasons[$season->VX_aln_seasonID]  = $season->season_name;

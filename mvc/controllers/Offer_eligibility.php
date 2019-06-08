@@ -257,7 +257,7 @@ $sWhere $sOrder $sLimit";
 
    function generatedata() {
 
-		$sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf.cabin and cab.aln_data_typeID = 13 ) where cab.aln_data_value != 'Business'";
+		$sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf.cabin and cab.aln_data_typeID = 13 ) where cab.aln_data_value != 'Business' order by dtpf_id";
 		$rResult = $this->install_m->run_query($sQuery);
 
 		$exclQuery = "SELECT * from VX_aln_eligibility_excl_rules ";
@@ -277,7 +277,6 @@ $sWhere $sOrder $sLimit";
 		$array['dep_time'] = $feed->dep_time;
 		
 		$rules = $this->eligibility_exclusion_m->apply_exclusion_rules($array);
-
 			$upgrade['boarding_point'] = $feed->from_city;
                         $upgrade['off_point'] = $feed->to_city;
                         $upgrade['flight_number'] = $feed->flight_number;
@@ -288,11 +287,17 @@ $sWhere $sOrder $sLimit";
 
                         $upgrade['frequency'] =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
                         $upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
+
                          $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+
 		if(count($rules) > 0 ) {
 			// rule matches partially check for the cabins that are excluded
 			foreach($rules as $rule ) {
+				//var_dump($rule);
+				//echo "<br> <br>";
+				//var_dump($data);exit;
 				foreach($data as $f) {
+						$rule_freq= explode(',',$rule->frequency);
 						$ext = array();
 						$ext['dtpf_id'] = $feed->dtpf_id;
                                                 $ext['fclr_id'] = $f->fclr_id;
@@ -300,7 +305,8 @@ $sWhere $sOrder $sLimit";
                                                  $ext["modify_date"] = time();
                                                 $ext["create_userID"] = $this->session->userdata('loginuserID');
                                                  $ext["modify_userID"] = $this->session->userdata('loginuserID');
-				if($f->from_cabin == $rule->upgrade_from_cabin_type && $f->to_cabin == $rule->upgrade_to_cabin_type) {
+				if($f->from_cabin == $rule->upgrade_from_cabin_type && $f->to_cabin == $rule->upgrade_to_cabin_type  &&
+						in_array($f->frequency,$rule_freq)) {
                                                 $ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 						$ext['exclusion_id'] = $rule->eexcl_id ;
                                                  $this->offer_eligibility_m->insert_dtpfext($ext);

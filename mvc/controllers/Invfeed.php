@@ -8,6 +8,7 @@ class Invfeed extends Admin_Controller {
 		$this->load->model('rafeed_m');
 		$this->load->model("invfeedraw_m");
 		$this->load->model("airline_cabin_m");
+		$this->load->model('airports_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('invfeed', $language);	
 	}	
@@ -93,9 +94,8 @@ class Invfeed extends Admin_Controller {
 
 				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
 				$Reader = new SpreadsheetReader($file); 
-				
-				$header = array('airline_code','flight_nbr','departure_date','dep_time','arrival_time','origin_airport','dest_airport','cabin','empty_seats','sold_seats');
-
+				 $header = array_map('strtolower',array("Airlline code", "Flight nbr","Dept date","Origin Airport","Destination Airport","Cabin","Empty seats","Sold seats"));	
+				$header = array_map('strtolower', $header);
 				$Sheets = $Reader -> Sheets();
 					
 
@@ -109,27 +109,27 @@ class Invfeed extends Admin_Controller {
                                    $i = 0;
                  //$time_start = microtime(true);                                          
                                   foreach ($Reader as $Row){
-                                //      print_r($Row);exit;
+                                    //  print_r($Row);exit;
                                         if($i == 0){ // header checking                                         
 
                                           $flag = 0 ;
-                                         if($Row == $header ){
+					 $Row = array_map('trim', $Row);
+                                         $import_header = array_map('strtolower', $Row);
+                                         if(count(array_diff($header,$import_header)) == 0 ){
                                                  $flag = 1;
                                          }
                                         } else {
-                                           if($flag == 1){                                                                                      
-					   	 if(count($Row) == 10){ //print_r($Row); exit;						
+                                           if($flag == 1){                                                                                      						
+					   	 if(count($Row) == 8){ //print_r($Row); exit;						
 
-							$invfeedraw['airline'] = $Row[0];
-							$invfeedraw['flight_nbr'] = $Row[1];
-							$invfeedraw['departure_date'] = $Row[2];
-							$invfeedraw['dep_time'] = $Row[3];
-							$invfeedraw['arrival_time'] = $Row[4];
-							 $invfeedraw['origin_airport'] = $Row[5];
-							$invfeedraw['dest_airport'] = $Row[6];
-							$invfeedraw['cabin'] =  $Row[7];
-							$invfeedraw['empty_seats'] = $Row[8];
-							$invfeedraw['sold_seats'] = $Row[9];
+							$invfeedraw['airline'] = $Row[array_search('airline code',$import_header)];
+							$invfeedraw['flight_nbr'] = $Row[array_search('flight nbr',$import_header)];
+							$invfeedraw['departure_date'] = $Row[array_search('dept date',$import_header)];
+							 $invfeedraw['origin_airport'] = $Row[array_search('origin airport',$import_header)];
+							$invfeedraw['dest_airport'] = $Row[array_search('destination airport',$import_header)];
+							$invfeedraw['cabin'] =  $Row[array_search('cabin',$import_header)];
+							$invfeedraw['empty_seats'] = $Row[array_search('empty seats',$import_header)];
+							$invfeedraw['sold_seats'] = $Row[array_search('sold seats',$import_header)];
 						if($this->invfeedraw_m->checkInvFeedRaw($invfeedraw)) {
                                                            $invfeedraw['create_date'] = time();
                                                           $invfeedraw['modify_date'] = time();
@@ -138,17 +138,15 @@ class Invfeed extends Admin_Controller {
 								$invfeed_raw_id = $this->invfeedraw_m->insert_invfeedraw($invfeedraw);
 							if($invfeed_raw_id) {
 
-	 						$invfeed['airline_id'] =  $this->rafeed_m->getDefIdByTypeAndCode($Row[0],'12'); 
+	 						$invfeed['airline_id'] =  $this->airports_m->getDefIdByTypeAndCode($invfeedraw['airline'],'12'); 
 							$invfeed['invfeedraw_id'] = $invfeed_raw_id;
-                                                         $invfeed['flight_nbr'] = $Row[1];
-                                                         $invfeed['departure_date'] = strtotime(str_replace('-','/',$Row[2]));
-							  $invfeed['dep_time'] = $this->convertTimeToSeconds($Row[3]);
-                                                        $invfeed['arrival_time'] = $this->convertTimeToSeconds($Row[4]);
-                                                         $invfeed['origin_airport'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[5],'1');
-							 $invfeed['dest_airport'] = $this->rafeed_m->getDefIdByTypeAndCode($Row[6],'1');
-                                                         $invfeed['cabin'] = $this->airline_cabin_m->getAirlineClassByName($Row[7]);
-                                                         $invfeed['empty_seats'] = $Row[8];
-                                                         $invfeed['sold_seats'] =  $Row[9];
+                                                         $invfeed['flight_nbr'] = substr($invfeedraw['flight_nbr'],2);
+                                                         $invfeed['departure_date'] = strtotime(str_replace('-','/',$invfeedraw['departure_date']));
+                                                         $invfeed['origin_airport'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['origin_airport'],'1');
+							 $invfeed['dest_airport'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['dest_airport'],'1');
+                                                         $invfeed['cabin'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['cabin'],13);
+                                                         $invfeed['empty_seats'] = $invfeedraw['empty_seats'] ;
+                                                         $invfeed['sold_seats'] =   $invfeedraw['sold_seats'];
 		
 						if($this->invfeed_m->checkInvFeed($invfeed)) {
 							
@@ -285,7 +283,7 @@ $aColumns = array('invfeed_id', 'flight_nbr', 'departure_date', 'origin_airport'
 		        departure_date, sold_seats, empty_seats,
 			concat(ds.aln_data_value,'(',ds.code,')') as dest_airport, dc.aln_data_value as cabin, 
 			concat(da.aln_data_value,'(',da.code,')')  as airline_code ,
-			inv.active, inv.dep_time, inv.arrival_time  FROM VX_aln_daily_inv_feed inv  
+			inv.active   FROM VX_aln_daily_inv_feed inv  
 			LEFT JOIN vx_aln_data_defns do on (do.vx_aln_data_defnsID = inv.origin_airport) 
 			LEFT JOIN vx_aln_data_defns ds on  (ds.vx_aln_data_defnsID = inv.dest_airport) 
 			LEFT JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = inv.cabin)  
@@ -306,8 +304,6 @@ $aColumns = array('invfeed_id', 'flight_nbr', 'departure_date', 'origin_airport'
 	  );
 	  foreach($rResult as $feed){		 	
 		$feed->departure_date = date('d/m/Y',$feed->departure_date);
-		   $feed->dep_time = gmdate('H:i:s', $feed->dep_time);
-                $feed->arrival_time = gmdate('H:i:s', $feed->arrival_time);
 
 
 
@@ -330,6 +326,11 @@ $aColumns = array('invfeed_id', 'flight_nbr', 'departure_date', 'origin_airport'
 		echo json_encode( $output );
 	}
 	
+ function downloadFormat(){
+                $this->load->helper('download');
+        $filename = APPPATH.'downloads/invfeed.xlsx';
+                force_download($filename, null);
+      }
 
 
 
