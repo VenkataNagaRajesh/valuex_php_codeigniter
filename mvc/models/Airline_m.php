@@ -138,6 +138,14 @@ class Airline_m extends MY_Model {
 			} else {
 				 return FALSE; 
 			}
+	}
+
+    public function getFlights($id){
+		$this->db->select('*')->from('vx_aln_data_defns');
+		$this->db->where('parentID',$id);
+		$this->db->where('aln_data_typeID',16);
+		$query = $this->db->get();
+		return $query->result();
 	}	
 	
 }

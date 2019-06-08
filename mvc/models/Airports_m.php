@@ -20,7 +20,8 @@ class Airports_m extends MY_Model {
 		'parentID' => $parent
 		);
       $this->db->insert('vx_aln_data_defns',$array);
-	  //print_r($this->db->last_query()); exit;
+	 // $this->mydebug->debug($data);
+	 //$this->mydebug->debug($this->db->last_query());
 	  if ($this->db->affected_rows() > 0){
 	     return $this->db->insert_id();
 	  } else {
