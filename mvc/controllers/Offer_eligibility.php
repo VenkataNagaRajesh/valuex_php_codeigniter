@@ -212,8 +212,8 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext
 		     from VX_aln_dtpf_ext pext 
 		     LEFT JOIN VX_aln_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id)
 		     LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)
-                     LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
-		     LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
+                     LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 3)  
+		     LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 3)    
 		     LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = pf.carrier_code AND dai.aln_data_typeID = 12)
 		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency AND dfre.aln_data_typeID = 14)
 		     LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13)
@@ -270,15 +270,14 @@ $sWhere $sOrder $sLimit";
 
 	foreach ($rResult as $feed ) {
 		$cabin = $this->airline_cabin_class_m->getCabinFromClassForCarrier($feed->carrier_code,$feed->class);
-		$array['from_city'] = $feed->from_city;
-		$array['to_city'] = $feed->to_city;
+		$array['from_city'] = $this->marketzone_m->getAirportsList($feed->from_city);
+		$array['to_city'] = $this->marketzone_m->getAirportsList($feed->to_city);
 		$array['flight_number'] = $feed->flight_number;
 		$array['dep_date'] = $feed->dep_date;
-		$array['dep_time'] = $feed->dep_time;
-		
+		//$array['dep_time'] = $feed->dep_time;
 		$rules = $this->eligibility_exclusion_m->apply_exclusion_rules($array);
-			$upgrade['boarding_point'] = $feed->from_city;
-                        $upgrade['off_point'] = $feed->to_city;
+			$upgrade_in['boarding_point'] = $this->marketzone_m->getAirportsList($feed->from_city);
+                        $upgrade_in['off_point'] = $this->marketzone_m->getAirportsList($feed->to_city);
                         $upgrade['flight_number'] = $feed->flight_number;
                         $upgrade['carrier_code'] = $feed->carrier_code;
 
@@ -288,7 +287,7 @@ $sWhere $sOrder $sLimit";
                         $upgrade['frequency'] =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
                         $upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
 
-                         $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+                         $data = $this->fclr_m->getUpgradeCabinsData($upgrade,$upgrade_in);
 
 		if(count($rules) > 0 ) {
 			// rule matches partially check for the cabins that are excluded

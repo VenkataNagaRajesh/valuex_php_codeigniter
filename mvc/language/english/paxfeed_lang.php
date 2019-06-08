@@ -37,3 +37,4 @@ $lang['booking_country'] = 'Booking Country';
 $lang['booking_city'] = 'Booking City';
 $lang['office_id'] = 'Office';
 $lang['channel'] = 'Channel';
+$lang['download_paxfeed_format']  = 'Download Pax Feed Format';
