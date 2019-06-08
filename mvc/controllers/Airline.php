@@ -10,9 +10,10 @@ class Airline extends Admin_Controller {
 		$this->load->model("airline_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('airline', $language); 
-         //$seat_capacityID = $this->airports_m->checkData('228–254',22,432); 
+         //$seat_capacityID = $this->airports_m->checkData('228 – 254',22,432);       
+         //print_r($seat_capacityID); exit;	
        
-        // print_r($seat_capacityID); exit;		 
+
 	}	
 	
 	protected function rules() {
@@ -204,11 +205,13 @@ class Airline extends Admin_Controller {
 						  if($val_status){
                             $validate_code = $this->airline_m->get_single_airline(array('code'=>$Row[$airline_code_key]));							  
 						   if(count($validate_code) < 1){
-                              $airline['aircraftID'] = $this->airports_m->checkData($Row[$aircraft_type_key],21);$seat_capacityID = $this->airports_m->checkData($Row[$seat_capacity_key],22,$airline['aircraftID']);	   
+                              $airline['aircraftID'] = $this->airports_m->checkData($Row[$aircraft_type_key],21);
+							  $seat_capacity = str_replace('-',' - ',$Row[$seat_capacity_key]);
+							  $seat_capacityID = $this->airports_m->checkData($seat_capacity,22,$airline['aircraftID']);	   
                               $checkairline = $this->airline_m->add_airline($airline);					 
 							 if($checkairline->id){	 					  
 							  $flights_array = explode(',',$Row[$flightno_key]); 
-							  foreach($flights_array as $flights_data){ 
+							  foreach($flights_array as $flights_data){  	
 							 $code =null;$from=null;$to=null; $flights = array();
 							    if(preg_match('/([a-z]+)(\d+)-[a-z]+(\d+)/i', $flights_data, $matches)){//AS1011-AS1020
 								   $code = $matches[1];
@@ -233,16 +236,20 @@ class Airline extends Admin_Controller {
 								 } else {			
 									$this->mydebug->airlines_log("Flight number".$Row[$flightno_key]." format not matched ".$airline['name'].'-'.$airline['code'] ); 
 								 }
-								if(($from && $to) && $from <= $to){
+								// $this->mydebug->debug("from : " .$from ."length : ".strlen((string)$from));
+								// $this->mydebug->debug("to : " .$to."length : ".strlen((string)$to));
+								if(($from && $to) && $from<=$to && (strlen((string)$from) < 5) && (strlen((string)$to) < 5)){
 								 for($i=$from;$i<=$to;$i++){									
 									   $flights[] = $i; 									
-								 } 
-								 
+								 }
+                                }
+                                // $this->mydebug->debug($flights);								
 								  foreach($flights as $flight)
-								  {								     
+								  {	
+                                    							  
 								    $id = $this->airports_m->checkData($flight,16,$checkairline->id);	 
 							      }
-								}
+								
 							   }								
 							                               				  
 							 } else {
@@ -257,7 +264,7 @@ class Airline extends Admin_Controller {
 					   }
 					 }
 				   $i++;					   
-				  } exit;
+				  } //exit;
                   /* $time_end = microtime(true);
                 $execution_time = ($time_end - $time_start)/60;
                 
@@ -409,8 +416,11 @@ class Airline extends Admin_Controller {
 			   $airline->active .= ">";
 			}	
 			
-			$airline->active .= "<label for='myonoffswitch".$airline->vx_aln_data_defnsID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";  
-           
+			$airline->active .= "<label for='myonoffswitch".$airline->vx_aln_data_defnsID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>"; 
+            $flights = $this->airline_m->getFlights($airline->vx_aln_data_defnsID);			
+            $flights_data = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $flights));
+			 $airline->flights = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$flights_data.'"><i class="fa fa-list"></i></a>';
+			 $airline->flightss = $flights;
 			$output['aaData'][] = $airline;				
 		}
 		echo json_encode( $output );
