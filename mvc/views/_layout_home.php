@@ -20,7 +20,6 @@
 	<link href="<?php echo base_url('assets/home/css/cs-skin-border.css'); ?>" rel="stylesheet">
 	<link href="<?php echo base_url('assets/home/css/style.css'); ?>" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
 </head>	
 
 <body>
@@ -42,6 +41,7 @@
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/classie.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/selectFx.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/main.js');?>"></script>
+	<script type="text/javascript" src="<?php echo base_url('assets/home/js/jquery.smartWizard.min.js');?>"></script>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 </body>
 </html>
