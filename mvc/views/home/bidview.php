@@ -17,7 +17,7 @@
 	<div class="row">
 		<div class="bid-tab">
 			<ul class="nav nav-tabs">
-				<li class="col-md-6"><a href="#offer"><span class="badge badge-secondary">1</span> Make Us ana Offer</a></li>
+				<li class="col-md-6"><a href="#offer"><span class="badge badge-secondary">1</span> Make Us an Offer</a></li>
 				<li class="col-md-6"><a href="#payment"><span class="badge badge-secondary">2</span> Review & Payment</a></li>
 			</ul>
             <div class="tab-content">
