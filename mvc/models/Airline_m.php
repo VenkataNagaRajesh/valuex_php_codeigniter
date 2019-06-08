@@ -127,7 +127,8 @@ class Airline_m extends MY_Model {
 			'modify_date' => time(),
 			'create_userID' => $this->session->userdata('loginuserID'),
 			'modify_userID' => $this->session->userdata('loginuserID'),
-			'code' => $airline['code']
+			'code' => $airline['code'],
+			'parentID' => $airline['aircraftID']
 			);
 		  $this->db->insert('vx_aln_data_defns',$array);
 			if ($this->db->affected_rows() > 0){
