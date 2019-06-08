@@ -12,10 +12,19 @@
         <div class="row">
             <div class="col-sm-12">              
               <h5 class="page-header">                        
+		<?php if(permissionChecker('paxfeed_upload')) { ?>
                   <a href="<?php echo base_url('paxfeed/upload') ?>">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('upload_paxfeed')?>
                   </a>
+
+		    &nbsp;&nbsp;
+                                  <a href="<?php echo base_url('paxfeed/downloadFormat') ?>">
+                      <i class="fa fa-upload"></i>
+                      <?=$this->lang->line('download_paxfeed_format')?>
+                  </a>
+                                 <?php } ?>
+
               </h5>
 			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 
@@ -92,8 +101,6 @@
 			<th class="col-lg-1"><?=$this->lang->line('seg_nbr')?></th>
 			 <th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('dep_date')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('dep_time')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('arrival_time')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('class')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('cabin')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('from_city')?></th>
@@ -156,8 +163,6 @@
 				{"data": "seg_nbr" },
 				{"data": "flight_number" },
                                 {"data": "dep_date" },
-				{"data": "dep_time" },
-				{"data": "arrival_time" },
 				 {"data": "class" },
 				 {"data": "cabin" },
 				{"data": "from_city" },

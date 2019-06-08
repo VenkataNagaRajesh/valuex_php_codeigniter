@@ -57,12 +57,12 @@ class Offer_eligibility_m extends MY_Model {
 
 
 	function checkForUniqueCouponCode($code) {
-		$this->db->select('dtpfext_id')->from('VX_aln_dtpf_ext');
+		$this->db->select('offer_id')->from('VX_aln_offer_ref');
 		$this->db->where('coupon_code',$this->hash($code));
 		$this->db->limit(1);
 		$query = $this->db->get();
                 $check = $query->row();
-		if($check->dtpfext_id) {
+		if($check->offer_id) {
                     return false ;
                 } else {
                   return true;
