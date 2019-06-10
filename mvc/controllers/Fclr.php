@@ -597,7 +597,7 @@ SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number,
 ";
 
         $rResult = $this->install_m->run_query($sQuery);
-
+		$i= 0 ;
               foreach ($rResult as $feed ) {
                         $array['season_id'] = $feed->season_id;
 			$array['boarding_point'] = $feed->boarding_point;
@@ -609,8 +609,7 @@ SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number,
 
                         $code_price = $feed->code_price;
                         $arr = explode(';', $code_price) ;
-                        $cabins['C'] = array();
-                        $cabins['Y'] = array();
+			$cabins = array();
                         foreach($arr as $f ) {
                                 $str = explode(' ' , $f);
                                 $cabins[$str[0]][0] = explode(',',$str[2]);
@@ -618,6 +617,7 @@ SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number,
                         }
 
                 // from economy to business (Y->C) 
+		  $fromCabin = $toCabin = array();
                   $fromCabin = $cabins['Y'][0]; 
                   $toCabin = $cabins['C'][0];
 
@@ -639,10 +639,9 @@ SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number,
 				
                          }
                         // from economy to pre-eco
-
+			$fromCabin = $toCabin = array();
                         $fromCabin =  $cabins['Y'][0];
                         $toCabin = $cabins['W'][0];
-
                         if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
 				 $array['from_cabin'] = $cabins['Y'][1];
                                 $array['to_cabin'] = $cabins['W'][1];
@@ -663,7 +662,7 @@ SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number,
 				
                          }
                         // from economy to pre-eco
-
+			$fromCabin = $toCabin = array();
                         $fromCabin =  $cabins['W'][0];
                         $toCabin = $cabins['C'][0];
 
@@ -691,7 +690,6 @@ SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number,
 
 
                 }
-
 
 		$this->session->set_flashdata('success', $this->lang->line('menu_success'));
                            redirect(base_url("fclr/index"));

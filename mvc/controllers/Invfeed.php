@@ -121,7 +121,7 @@ class Invfeed extends Admin_Controller {
                                         } else {
                                            if($flag == 1){                                                                                      						
 					   	 if(count($Row) == 8){ //print_r($Row); exit;						
-
+							$invfeedraw = array();
 							$invfeedraw['airline'] = $Row[array_search('airline code',$import_header)];
 							$invfeedraw['flight_nbr'] = $Row[array_search('flight nbr',$import_header)];
 							$invfeedraw['departure_date'] = $Row[array_search('dept date',$import_header)];
@@ -131,12 +131,14 @@ class Invfeed extends Admin_Controller {
 							$invfeedraw['empty_seats'] = $Row[array_search('empty seats',$import_header)];
 							$invfeedraw['sold_seats'] = $Row[array_search('sold seats',$import_header)];
 						if($this->invfeedraw_m->checkInvFeedRaw($invfeedraw)) {
+						
                                                            $invfeedraw['create_date'] = time();
                                                           $invfeedraw['modify_date'] = time();
                                                           $invfeedraw['create_userID'] = $this->session->userdata('loginuserID');
                                                           $invfeedraw['modify_userID'] = $this->session->userdata('loginuserID');
 								$invfeed_raw_id = $this->invfeedraw_m->insert_invfeedraw($invfeedraw);
 							if($invfeed_raw_id) {
+								$invfeed = array();
 
 	 						$invfeed['airline_id'] =  $this->airports_m->getDefIdByTypeAndCode($invfeedraw['airline'],'12'); 
 							$invfeed['invfeedraw_id'] = $invfeed_raw_id;

@@ -132,6 +132,7 @@ class Paxfeed extends Admin_Controller {
                         } else {
                              if($flag == 1){                                                                                      
 			   	 if(count($Row) == 20){ //print_r($Row); exit;						
+					$paxfeedraw = array();
 			   	      $paxfeedraw['airline_code'] =  $Row[array_search('airline code',$import_header)];
                                       $paxfeedraw['pnr_ref'] = $Row[array_search('pnr ref',$import_header)];
                                       $paxfeedraw['pax_nbr'] = $Row[array_search('pax nbr',$import_header)];
@@ -161,6 +162,7 @@ class Paxfeed extends Admin_Controller {
                                           $raw_pax_id = $this->paxfeedraw_m->insert_paxfeedraw($paxfeedraw);
 
 			             if ( $raw_pax_id ) {
+					$paxfeed = array();
 	 				$paxfeed['airline_code'] =  $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['airline_code'],'12');
  					$paxfeed['dtpfraw_id' ] = $raw_pax_id;
                                         $paxfeed['pnr_ref'] = $paxfeedraw['pnr_ref'];
