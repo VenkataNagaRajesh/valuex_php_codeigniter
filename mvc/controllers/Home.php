@@ -106,5 +106,9 @@ class Home extends MY_Controller {
 		$this->data["subview"] = "home/temp2";
 		$this->load->view('_layout_home', $this->data);
 	}
+	public function temp3() {		
+		$this->data["subview"] = "home/temp3";
+		$this->load->view('_layout_home', $this->data);
+	}
 		
 }

@@ -534,3 +534,44 @@ figure {
 	margin:10px 0px;
 	padding:3px 15px;
 }
+.email-temp3 h3{
+	margin: 10px 0;
+	font-weight: bold;
+	font-size: 18px;
+	color: #333;
+}
+.email-temp3 h1{
+	margin-bottom: 12px;
+	color: #ff6633;
+	font-weight: bold;
+	font-size: 20px;
+}
+.email-temp3 p span{
+	font-size:13px;
+}
+.email-temp3 .info p{
+	font-size: 13px;
+	text-align: center;	
+}
+.email-temp3 .info{
+	margin-top: -24px;
+}
+.email-temp3 .btn-danger{
+	background: #ff6633;
+	font-weight: bold;
+	padding: 5px 18px;
+	font-size: 17px;
+	border-radius: 33px;
+	border: none;
+}
+.email-temp3 .bk-info{
+	position: relative;
+	top: -50px;
+	left: 30px;
+	border: dotted 1px #f5f5f5;
+	font-size: 15px;
+}
+.email-temp3{
+	border:solid 1px #333;
+	margin-top:20px;
+}
