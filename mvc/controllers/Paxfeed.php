@@ -178,8 +178,8 @@ class Paxfeed extends Admin_Controller {
                                         $paxfeed['class'] = $paxfeedraw['class'];
 		  		         $cabin = $this->airline_cabin_class_m->getCabinFromClassForCarrier($paxfeed['carrier_code'],$paxfeed['class']);
 					 $paxfeed['cabin'] = $cabin->cabin_id;
-                                         $paxfeed['from_city'] = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['from_city'],'3');
-                                         $paxfeed['to_city'] = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['to_city'],'3');
+                                         $paxfeed['from_city'] = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['from_city'],'1');
+                                         $paxfeed['to_city'] = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['to_city'],'1');
 					 $paxfeed['phone'] = $paxfeedraw['phone'];
                                          $paxfeed['pax_contact_email'] = $paxfeedraw['pax_contact_email'];
                                          $paxfeed['booking_country'] =  $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['booking_country'],'2');
