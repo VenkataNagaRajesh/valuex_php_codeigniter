@@ -107,15 +107,16 @@
                  <thead>
                     <tr>
 			 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('season')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('season')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('start_date')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('end_date')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('day_of_week')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('from_cabin')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('to_cabin')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('day_of_week')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('avg')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('min')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('max')?></th>
@@ -163,15 +164,16 @@ $("#dep_to_date").datepicker();
                          } ); }, 
 
       "columns": [ {"data": "fclr_id" },
-		   {"data": "season_id" },
 		   {"data": "source_point" },
 	           {"data": "dest_point" },
-		   {"data": "departure_date" },
 		   {"data": "carrier_code" },
 		   {"data": "flight_number" },
+		   {"data": "season_id" },
+		   {"data": "start_date" },
+		   {"data": "end_date" },
+		   {"data": "day_of_week" },
 		   {"data": "fcabin" },
 		   {"data": "tcabin" },
-		   {"data": "day_of_week" },
 		   {"data": "average" },
                    {"data": "min" },
 		  {"data": "max" },

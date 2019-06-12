@@ -52,11 +52,6 @@ class Fclr extends Admin_Controller {
                                'label' => $this->lang->line("frequency"),
                                 'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
                         ),
-                        array(
-                                 'field' => 'departure_date',
-                                 'label' => $this->lang->line("departure_date"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean'
-                        ),
                          array(
                                 'field' => 'upgrade_from_cabin_type',
                                 'label' => $this->lang->line("from_cabin"),
@@ -151,7 +146,6 @@ class Fclr extends Admin_Controller {
                                 $array["off_point"] = $this->input->post("off_point");
                                 $array["carrier_code"] = $this->input->post("carrier_code");
                                 $array["flight_number"] = $this->input->post("flight_number");
-                                $array["departure_date"] = strtotime($this->input->post("departure_date"));
                                 $array['frequency'] = $this->input->post("frequency");
                                 $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
                                 $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
@@ -219,7 +213,6 @@ class Fclr extends Admin_Controller {
                                 $array["off_point"] = $this->input->post("off_point");
                                 $array["carrier_code"] = $this->input->post("carrier_code");
                                 $array["flight_number"] = $this->input->post("flight_number");
-                                $array["departure_date"] = strtotime($this->input->post("departure_date"));
                                 $array['frequency'] = $this->input->post("frequency");
                                 $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
                                 $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
@@ -350,7 +343,7 @@ class Fclr extends Admin_Controller {
 
 
 		
-	    $aColumns = array('fclr_id','flight_number','departure_date','boarding_point','off_point');
+	    $aColumns = array('fclr_id','flight_number','boarding_point','off_point');
 	
 		$sLimit = "";
 		
@@ -434,14 +427,14 @@ class Fclr extends Admin_Controller {
                         }
 
 
-			if(!empty($this->input->get('depStartDate'))){
+	/*		if(!empty($this->input->get('depStartDate'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'departure_date >= '. strtotime($this->input->get('depStartDate'));
                         }
                         if(!empty($this->input->get('depEndDate'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'departure_date <= '.  strtotime($this->input->get('depEndDate'));
-                        }
+                        }*/
 			if(!empty($this->input->get('fromCabin'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'from_cabin = '. $this->input->get('fromCabin');
@@ -455,9 +448,9 @@ class Fclr extends Admin_Controller {
 			
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS fclr_id,boarding_point, dai.code as carrier_code , off_point, season_id,flight_number, fca.code as fcabin, 
-            tca.code as tcabin, CONCAT(dfre.aln_data_value,'(',dfre.code,')') as day_of_week , fc.active,
-            departure_date, min,max,average,slider_start,from_cabin, to_cabin,
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS fclr_id,boarding_point, dai.code as carrier_code , off_point, season_id,flight_number, concat(fca.aln_data_value,' (',fca.code,')') as fcabin, 
+            concat(tca.aln_data_value,' (',tca.code,')') as tcabin, CONCAT(dfre.aln_data_value,' (',dfre.code,')') as day_of_week , fc.active,
+            min,max,average,slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point
                     FROM VX_aln_fare_control_range  fc
                      LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = fc.boarding_point) 
@@ -482,13 +475,22 @@ $sWhere $sOrder $sLimit";
 	  );
 		foreach ($rResult as $feed ) {
 			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
+			$feed->day_of_week = ($feed->day_of_week)? ($feed->day_of_week):"NA";
 			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
 			 $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
 
-			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default season";
-			$feed->departure_date = date('d-m-Y',$feed->departure_date);
-                                $output['aaData'][] = $feed;
+			
+			if ( $feed->season_id > 0 ) {
+				$season = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$feed->season_id));
+				$feed->season_id =  $season->season_name ;
+				$feed->start_date = date('d-m-Y',$season->ams_season_start_date);
+				$feed->end_date  = date('d-m-Y',$season->ams_season_end_date);
+			} else {
+				 $feed->season_id = 'default season';
+				$feed->start_date = 'NA';
+				$feed->end_date = 'NA';
+			}
 
                   if(permissionChecker('fclr_edit')){
                         $feed->action = btn_edit('fclr/edit/'.$feed->fclr_id, $this->lang->line('edit'));
@@ -508,7 +510,7 @@ $sWhere $sOrder $sLimit";
 
                         $feed->active .= "<label for='myonoffswitch".$feed->fclr_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
 
-
+		$output['aaData'][] = $feed;
 
 		}
 
@@ -571,11 +573,21 @@ $sWhere $sOrder $sLimit";
 
    function generatedata() {
 
+$param = htmlentities(escapeString($this->uri->segment(3)));
+if((int)$param) {
+	$year = $param; 
+}else {
+	$current_year =  date("Y");
+        $year = $current_year - 1;
+
+}
+
+ $where = " year(FROM_UNIXTIME(rf.departure_date)) = " .$year;
 /*	$sQuery = " 
 SELECT  boarding_point, carrier_code,off_point, season_id,flight_number, day_of_week , source_point, dest_point , departure_date,  group_concat(code,' ' , price SEPARATOR ';') as code_price  FROM (SELECT dcla.code ,operating_airline_code,season_id, departure_date ,day_of_week ,flight_number, dbp.code as source_point , dop.code as dest_point ,boarding_point,off_point , group_concat(prorated_price)  as price,dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = rf.booking_country)  LEFT JOIN vx_aln_data_defns dci on  (dci.vx_aln_data_defnsID = rf.booking_city) LEFT JOIN vx_aln_data_defns dico on (dico.vx_aln_data_defnsID = rf.issuance_country)  LEFT JOIN vx_aln_data_defns dici on  (dici.vx_aln_data_defnsID = rf.issuance_city) LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.operating_airline_code)  LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = rf.boarding_point) LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = rf.off_point) LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.operating_airline_code AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class)   group by dcla.code, day_of_week,flight_number, boarding_point,off_point,season_id,departure_date,operating_airline_code  order by flight_number )  as MainSet group by  boarding_point, off_point, day_of_week, season_id, flight_number, departure_date,operating_airline_code
 ";*/
 
-$sQuery = " 
+/*$sQuery = " 
 SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number, 
         day_of_week ,departure_date,  group_concat(code,' ', cabin , ' ' , price SEPARATOR ';') as code_price  
         FROM (
@@ -590,22 +602,48 @@ SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number,
                LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier 
 							AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) 
 		LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)
-		where acc.order > 1  AND ptc.code NOT IN ('INF', 'INS', 'UNN') 
+		where acc.order > 1   AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN') 
 		group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,season_id,departure_date,rf.carrier  
 		order by flight_number )  as MainSet 
 		group by  boarding_point, off_point, day_of_week, season_id, flight_number, departure_date,carrier
-";
+";*/
 
-        $rResult = $this->install_m->run_query($sQuery);
-		$i= 0 ;
+$sQuery = " SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number, day_of_week ,  group_concat(code,' ', cabin , ' ' , price SEPARATOR ';') as code_price  FROM ( SELECT dcla.code ,rf.carrier,season_id, cabin ,day_of_week ,flight_number, boarding_point,off_point ,  group_concat(prorated_price)  as price,dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)   LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)                LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where " . $where . " AND   rf.season_id = 0 AND acc.order > 1  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,season_id,rf.carrier  order by flight_number, day_of_week)  as MainSet group by  boarding_point, off_point, day_of_week, season_id, flight_number,carrier";
+        $rResult1 = $this->install_m->run_query($sQuery);
+
+$sQuery = " SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number, 
+        group_concat(code,' ', cabin , ' ' , price SEPARATOR ';') as code_price  
+        FROM (
+               SELECT dcla.code ,rf.carrier,season_id, cabin ,flight_number, 
+                      boarding_point,off_point , 
+                      group_concat(prorated_price)  as price,dai.code as carrier_code   
+               FROM VX_aln_ra_feed rf  
+               LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)  
+               LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)
+               LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) 
+               LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) 
+               LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier 
+                                                        AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) 
+                LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)
+                where rf.season_id > 0 AND acc.order > 1   AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN') 
+                group by dcla.code, cabin ,flight_number, boarding_point,off_point,season_id,rf.carrier  
+                order by flight_number )  as MainSet 
+                group by  boarding_point, off_point, season_id, flight_number, carrier ";
+$rResult2 = $this->install_m->run_query($sQuery);
+$rResult = array_merge($rResult1, $rResult2);
               foreach ($rResult as $feed ) {
                         $array['season_id'] = $feed->season_id;
+
+			if ($array['season_id'] > 0 ) {
+				$array['frequency'] = 0;
+			}else {
+			  $array['frequency'] = $feed->day_of_week;
+			}
+			
 			$array['boarding_point'] = $feed->boarding_point;
 			$array['off_point'] = $feed->off_point;
 			$array['flight_number'] = $feed->flight_number;
 			$array['carrier_code'] = $feed->carrier;
-			$array['departure_date'] = $feed->departure_date;
-			$array['frequency'] = $feed->day_of_week;
 
                         $code_price = $feed->code_price;
                         $arr = explode(';', $code_price) ;

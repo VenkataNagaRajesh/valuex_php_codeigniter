@@ -87,23 +87,6 @@
 
 	
                                         <?php
-                        if(form_error('departure_date'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="departure_date" class="col-sm-2 control-label">
-                            <?=$this->lang->line('departure_date')?>
-                        </label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="departure_date" name="departure_date" value="<?=set_value('departure_date')?>" >
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('departure_date'); ?>
-                        </span>
-                    </div>
-
-                                        <?php
                         if(form_error('carrier_code'))
                             echo "<div class='form-group has-error' >";
                         else
@@ -307,7 +290,6 @@
 
 $( ".select2" ).select2();
 
-$("#departure_date").datepicker();
 
 
 </script>
