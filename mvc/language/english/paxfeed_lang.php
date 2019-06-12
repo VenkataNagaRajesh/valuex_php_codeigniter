@@ -27,6 +27,7 @@ $lang['flight_number'] = 'Flight Number';
 $lang['dep_date'] = 'Departure Date';
 $lang['dep_time'] = 'Departure Time';
 $lang['arrival_time'] = 'Arrival Time';
+$lang['arrival_date'] = 'Arrival Date';
 $lang['class' ] ='Class';
 $lang['cabin'] = 'Cabin';
 $lang['from_city'] = 'From City';
