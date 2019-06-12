@@ -1,22 +1,14 @@
 <div id="fh5co-wrapper">
 	<div id="fh5co-page">
-		<!--<div class="container">
+		<div class="container top-bar">
 			<div class="row">
-				<div class="col-md-1">
-					<img src="" alt="emirtaes" class="img-responsive">
-				</div>
-				<div class="col-md-1 pull-right">
-					<p> 
-						<select class="form-control">
-							<i class="fa fa-world"></i>
-							<option value="0">IN</option>
-							<option value="1">USA</option>
-							<option value="2">UK</option>
-						</select>
-					</p>
+				<div class="col-md-12">
+					<div class="col-md-2">
+						<img class="img-responsive" src="<?php echo base_url('assets/home/images/emir.png'); ?>" alt="logo">
+					</div>
 				</div>
 			</div>
-		</div>-->
+		</div>
 		<div class="fh5co-hero">
 			<div class="fh5co-cover container">
 				<img class="img-responsive" src="<?php echo base_url('assets/home/images/login-bg.png'); ?>" alt="login bg">
@@ -29,7 +21,7 @@
 						<h2>Upgrade for Sure</h2>
 					</div>
 					<div class="tabulation animate-box">
-						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="228"></iframe>
+						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="198"></iframe>
 					</div>
 				</div>
 				<div class="col-sm-5 col-md-4">

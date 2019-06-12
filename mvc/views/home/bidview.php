@@ -1,19 +1,13 @@
-<div class="container">
-	<!--<div class="row">
-		<div class="col-md-12 top-bar">
-			<div class="col-md-1">
-				<img src="" alt="emirtaes" class="img-responsive">
-			</div>
-			<div class="col-md-1 pull-right">
-				<select class="form-control">
-					<i class="fa fa-world"></i>
-					<option value="0">IN</option>
-					<option value="1">USA</option>
-					<option value="2">UK</option>
-				</select>
+<div class="container top-bar">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="col-md-2">
+				<img class="img-responsive" src="<?php echo base_url('assets/home/images/emir.png'); ?>" alt="logo">
 			</div>
 		</div>
-	</div>-->
+	</div>
+</div>
+<div class="container">
 	<div class="row">
 		<div class="bid-tab">
 			<ul class="nav nav-tabs">

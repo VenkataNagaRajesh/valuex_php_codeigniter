@@ -80,6 +80,11 @@ figure {
 .pnr-form input{
 	border: solid 1px #b9b4b4;
 	border-radius: 25px;
+	height: 35px;
+	padding: 4px 14px;
+}
+.pnr-form .form-group{
+	margin-bottom: 5px;
 }
 .pnr-form button{
 	background: #ff6633;
@@ -101,7 +106,7 @@ figure {
 	font-size: 12px;
 }
 .tabulation h2{
-	margin: 18px 0;
+	margin: 10px 0;
 	vertical-align: middle;
 	color: #ff6633;
 	font-weight: bold;
@@ -149,11 +154,8 @@ figure {
 .top-bar{
 	background: #333;
 }
-.top-bar select{
-	padding: 3px 4px;
-	background: none;
-	color: #fff;
-	border: none;
+.top-bar img{
+	width:120px;
 }
 .bid-tab{
 	margin: 20px 0;
