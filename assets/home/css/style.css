@@ -577,3 +577,23 @@ figure {
 	border:solid 1px #333;
 	margin-top:20px;
 }
+.price-range .slider-horizontal{
+	width:200px !important;
+	margin: 0 8px;
+}
+.price-range b{
+    font-size: 12px;
+	color:#333;
+}
+ #ex1Slider .slider-selection {
+	background: #f2126f;
+    } 
+#ex1Slider .slider-handle {
+	background: #ff6633;
+}
+#ex1Slider .slider12a{
+	background: #f2126f;
+}
+
+
+   

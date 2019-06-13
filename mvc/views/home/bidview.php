@@ -120,9 +120,10 @@
 							<div class="col-md-3">
 								<h2>Upgrade Type</h2>
 								<div class="bid-radio">
-								   <?php $i=0; $offer_cabins = explode(',',$result->to_cabins);foreach($offer_cabins as $cabin) {?>								      
+								   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
+								   foreach($result->to_cabins as $key => $value) {?>								      
 									<label class="radio-inline">
-										<input type="radio" name="bid_cabin" value="<?php echo $cabin; ?>" <?php echo ($i==0)?"checked":''; ?> ><?php echo $cabins[$cabin]; ?>
+										<input type="radio" name="bid_cabin" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0)?"checked":''; ?> ><?php echo $cabins[$value]; ?>
 									</label><br>
 								   <?php $i++; } ?>
 									<!--<label class="radio-inline">
@@ -169,13 +170,16 @@
 							<div class="col-md-4">
 								<h2>Bid (s)</h2>
 								<div class="price-range">
-									<div role="main" class="ui-content">
+									<!--<div role="main" class="ui-content">
 										<div class="jquery-script-ads"></div>
 										<label for="slider"></label>
-										<?php echo round(explode(',',$result->min)[0]); ?>
+										<?php// echo round(explode(',',$result->min)[0]); ?>
 										<input type="range" name="sliders" id="slider0"  value="<?php echo round($result->avg); ?>" min="<?php echo round(explode(',',$result->min)[0]); ?>" max="<?php echo round(explode(',',$result->max)[0]); ?>" data-highlight="true" step="1">
-										<?php echo round(explode(',',$result->max)[0]); ?>
-									</div>									
+										<?php// echo round(explode(',',$result->max)[0]); ?>
+									</div>-->
+                                    	<b>$<?php echo explode(',',$result->min)[0]; ?> </b>
+       										<input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[0]; ?>" data-slider-max="<?php echo explode(',',$result->max)[0]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->avg)[0]; ?>" data-slider-handle="square"/>
+										<b> $<?php echo explode(',',$result->max)[0]; ?></b>								
 								</div>
 								<!--<div class="price-range bid-visible">
 									<p>Price Range</p>
@@ -192,7 +196,7 @@
 								</div>-->
 							</div>
 							<div class="col-md-12" style="padding-right:0;">
-								<p class="pull-right">Total Bid Amount <i class="fa fa-dollar" id="tot"></i></p>
+								<p class="pull-right">Total Bid Amount <i class="fa fa-dollar" id="tot"> </i></p>
 							</div>
 							<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button">Continue</a>
 						</div>
@@ -291,17 +295,34 @@
 </div>
 
 <script>
-$(document).ready(function () {
-	$('#tot').html($('#slider0').val());
-  console.log($('#slider0').val());
-});
-$('#slider0').change(function (){
-	alert("changed");
-});
-
 $('input[type=radio][name=bid_cabin]').change(function(){
 	var bid_cabin = $(this).val();
 	console.log(bid_cabin);
+	var result = $(this).val().split('|');
+   console.log( result[1] );
+}); 
+$(document).ready(function () {
+  $("#tot").text(<?php echo explode(',',$result->avg)[0]; ?>); 
+});
+
+  $('#ex1').slider({
+	tooltip: 'always',
+	formatter: function(value) {
+		return value + ' Per Passenger(1)';
+	}//,
+	//rangeHighlights: [{ "start": 150, "end": 250, "class": "category1" },
+                 //     { "start": 250, "end": 300, "class": "category2" }] 
+});
+
+$("#ex1").on("slide", function(slideEvt) {
+	$("#tot").text(slideEvt.value);
+   if(slideEvt.value < 250){
+	   $(' #ex1Slider .slider-selection').css({"background":"#f2126f"});
+   } else if(slideEvt.value < 300 && slideEvt.value > 250){
+	   $(' #ex1Slider .slider-selection').css({"background":"green"}); 
+   } else if(slideEvt.value > 300 ){
+	   $(' #ex1Slider .slider-selection').css({"background":"yellow"}); 
+   }
 });
 
 </script>

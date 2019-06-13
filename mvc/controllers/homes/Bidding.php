@@ -13,11 +13,18 @@ class Bidding extends MY_Controller {
   
     public function index() {
         $this->data['result'] = $this->login_m->getPassengers();
+		$this->data['result']->to_cabins = explode(',',$this->data['result']->to_cabins);
+		foreach($this->data['result']->to_cabins as $key => $value){
+			  $data = explode('-',$value);
+			  $this->data['result']->to_cabins[$data[1]] = $data[0];
+			  unset($this->data['result']->to_cabins[$key]);
+		} 
         $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();		
 		//$this->data['passengers'] = explode(';',$result->pax_names);
-       //print_r($this->data['result']); exit;	
+      // print_r($this->data['result']); exit;	
 	   
 		$this->data["subview"] = "home/bidview";
+		//$this->data["subview"] = "example";
 		$this->load->view('_layout_home', $this->data);
 	}
 
