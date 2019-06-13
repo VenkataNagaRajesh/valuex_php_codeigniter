@@ -13,7 +13,7 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model("marketzone_m");
 		$this->load->model("fclr_m");
 		$language = $this->session->userdata('lang');
-		$this->load->library('encrypt');
+		//$this->load->library('encrypt');
 		$this->lang->load('offer_eligibility', $language);	
 	}	
 	

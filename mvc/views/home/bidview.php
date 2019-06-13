@@ -1,3 +1,4 @@
+
 <div class="container">
 	<!--<div class="row">
 		<div class="col-md-12 top-bar">
@@ -34,53 +35,32 @@
 					</div>
 					<div class="col-md-10">
 						<div class="pass-info">
-							<p>Passenger(s):<span>Mr.Ram kishore, Mr.Vamsi, Mr.Suraj, Mr.Shyam</span>
+							<p>Passenger(s):<span><?php echo ucfirst($result->pax_names); ?></span>
 							<span class="pull-right" style="color:#333;">Booking Ref No: 12346789</span></p>
 							<div class="col-md-5">
 								<h2>Flight Information</h2>
 								<div class="bid-info">
 									<div class="col-md-6">
-										<p>Los Angeles</p>
+										<p><?php echo $result->from_city; ?></p>
 										<ul>
-											<li>02 Jan 2016</li>
-											<li>Flight LX 41</li>
+											<li><?php echo date('d M Y',$result->dep_date); ?></li>
+											<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
 											<li>11 hours 15 mins</li>
 											<li>02.30am-15.25pm</li>
 										</ul>
 									</div>
 									<p><i class="fa fa-fighter-jet"></i></p>
 									<div class="col-md-6">
-										<p>Zurich (ZRH)</p>
+										<p><?php echo $result->to_city; ?></p>
 										<ul>
-											<li>02 Jan 2016</li>
-											<li>Flight LX 41</li>
+											<li><?php echo date('d M Y',$result->dep_date); ?></li>
+											<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
 											<li>11 hours 15 mins</li>
 											<li>02.30am-15.25pm</li>
 										</ul>
 									</div>
 								</div>
-								<div class="bid-info bid-visible">
-									<div class="col-md-6">
-										<p>Los Angeles</p>
-										<ul>
-											<li>02 Jan 2016</li>
-											<li>Flight LX 41</li>
-											<li>11 hours 15 mins</li>
-											<li>02.30am-15.25pm</li>
-										</ul>
-									</div>
-									<p><i class="fa fa-fighter-jet"></i></p>
-									<div class="col-md-6">
-										<p>Zurich (ZRH)</p>
-										<ul>
-											<li>02 Jan 2016</li>
-											<li>Flight LX 41</li>
-											<li>11 hours 15 mins</li>
-											<li>02.30am-15.25pm</li>
-										</ul>
-									</div>
-								</div>
-								<div class="bid-info">
+						<!--	<div class="bid-info bid-visible">
 									<div class="col-md-6">
 										<p>Los Angeles</p>
 										<ul>
@@ -122,21 +102,44 @@
 										</ul>
 									</div>
 								</div>
+								<div class="bid-info">
+									<div class="col-md-6">
+										<p>Los Angeles</p>
+										<ul>
+											<li>02 Jan 2016</li>
+											<li>Flight LX 41</li>
+											<li>11 hours 15 mins</li>
+											<li>02.30am-15.25pm</li>
+										</ul>
+									</div>
+									<p><i class="fa fa-fighter-jet"></i></p>
+									<div class="col-md-6">
+										<p>Zurich (ZRH)</p>
+										<ul>
+											<li>02 Jan 2016</li>
+											<li>Flight LX 41</li>
+											<li>11 hours 15 mins</li>
+											<li>02.30am-15.25pm</li>
+										</ul>
+									</div>
+								</div>-->
 							</div>
 							<div class="col-md-3">
 								<h2>Upgrade Type</h2>
 								<div class="bid-radio">
+								   <?php $i=0; $offer_cabins = explode(',',$result->to_cabins);foreach($offer_cabins as $cabin) {?>								      
 									<label class="radio-inline">
-										<input type="radio" name="optradio">Premium
+										<input type="radio" name="bid_cabin" value="<?php echo $cabin; ?>" <?php echo ($i==0)?"checked":''; ?> ><?php echo $cabins[$cabin]; ?>
 									</label><br>
-									<label class="radio-inline">
+								   <?php $i++; } ?>
+									<!--<label class="radio-inline">
 										<input type="radio" name="optradio">Business
 									</label><br>
 									<label class="radio-inline">
 										<input type="radio" name="optradio">No Bid
-									</label>
+									</label>-->
 								</div>
-								<div class="bid-radio bid-visible">
+								<!--<div class="bid-radio bid-visible">
 									<label class="radio-inline">
 										<input type="radio" name="optradio">Premium
 									</label><br>
@@ -168,7 +171,7 @@
 									<label class="radio-inline">
 										<input type="radio" name="optradio">No Bid
 									</label>
-								</div>
+								</div>-->
 							</div>
 							<div class="col-md-4">
 								<h2>Bid (s)</h2>
@@ -176,21 +179,27 @@
 									<div role="main" class="ui-content">
 										<div class="jquery-script-ads"></div>
 										<label for="slider"></label>
-										<input type="range" name="sliders" id="slider0"  value="93" min="0" max="100" data-highlight="true">
+										<?php echo round(explode(',',$result->min)[0]); ?>
+										<input type="range" name="sliders" id="slider0"  value="<?php echo round($result->avg); ?>" min="<?php echo round(explode(',',$result->min)[0]); ?>" max="<?php echo round(explode(',',$result->max)[0]); ?>" data-highlight="true" step="1">
+										<?php echo round(explode(',',$result->max)[0]); ?>
+									</div>									
+								</div>
+								<!--<div class="price-range bid-visible">
+									<p>Price Range</p>
+								</div>
+								<div class="price-range">
+									<div role="main" class="ui-content">
+										<div class="jquery-script-ads"></div>
+										<label for="slider"></label>
+										<input type="range" name="sliders" id="slider1"  value="93" min="0" max="100" data-highlight="true">
 									</div>
 								</div>
-								<div class="price-range bid-visible">
-									<p>Price Range</p>
-								</div>
 								<div class="price-range">
 									<p>Price Range</p>
-								</div>
-								<div class="price-range">
-									<p>Price Range</p>
-								</div>
+								</div>-->
 							</div>
 							<div class="col-md-12" style="padding-right:0;">
-								<p class="pull-right">Total Bid Amount <i class="fa fa-dollar"></i>6000.00</p>
+								<p class="pull-right">Total Bid Amount <i class="fa fa-dollar" id="tot"></i></p>
 							</div>
 							<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button">Continue</a>
 						</div>
@@ -287,4 +296,21 @@
         </div>
 	</div>
 </div>
+
+<script>
+$(document).ready(function () {
+	$('#tot').html($('#slider0').val());
+  console.log($('#slider0').val());
+});
+$('#slider0').change(function (){
+	alert("changed");
+});
+
+$('input[type=radio][name=bid_cabin]').change(function(){
+	var bid_cabin = $(this).val();
+	console.log(bid_cabin);
+});
+
+</script>
+
 

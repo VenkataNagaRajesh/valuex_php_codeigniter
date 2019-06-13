@@ -34,7 +34,7 @@ class Home extends MY_Controller {
 		return $rules;
 	}
 	
-	public function validate_recaptcha(){		
+	public function validate_recaptcha(){	
 		$recaptcha = $this->input->post('g-recaptcha-response');
 		if (!empty($recaptcha)) {
 			$response = $this->recaptcha->verifyResponse($recaptcha);
@@ -51,7 +51,7 @@ class Home extends MY_Controller {
 
      }
 	
-	public function validate_code($code){
+	public function validate_code($code){ 
 	   if(empty($code)){
 		  $this->form_validation->set_message("validate_code", "%s is required");
 		  return FALSE;
@@ -80,16 +80,17 @@ class Home extends MY_Controller {
 				$this->data["subview"] = "home/index";
 		        $this->load->view('_layout_home', $this->data);		
 			} else {				
-				echo "success"; exit;
+				//echo "success"; exit;
 				//$this->usertype_m->insert_usertype($array);
 				//$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-				//redirect(base_url("usertype/index"));
+				redirect(base_url("homes/bidding"));
 			}
 		} else {			
 		   $this->data["subview"] = "home/index";
 		   $this->load->view('_layout_home', $this->data);
 		}     		
 	}	
+	
 	public function bidview() {		
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);

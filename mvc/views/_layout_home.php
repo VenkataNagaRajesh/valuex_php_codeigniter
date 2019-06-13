@@ -22,12 +22,12 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>	
 
-<body>
+<body>	
 
-	<?php $this->load->view($subview); ?>
-	
-	<script type="text/javascript" src="<?php echo base_url('assets/home/js/modernizr-2.6.2.min.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/jquery.min.js');?>"></script>	
+
+
+		<script type="text/javascript" src="<?php echo base_url('assets/home/js/modernizr-2.6.2.min.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/jquery.easing.1.3.js');?>"></script>	
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/bootstrap.min.js');?>"></script>	
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/jquery.waypoints.min.js');?>"></script>
@@ -42,6 +42,13 @@
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/selectFx.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/main.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/jquery.smartWizard.min.js');?>"></script>
+	<!--<script type="text/javascript" src="<?php echo base_url('assets/home/js/colored.slider.js');?>"></script>-->
 	<script src='https://www.google.com/recaptcha/api.js'></script>
+<link rel="stylesheet" type="text/css" href="http://code.jquery.com/mobile/1.4.1/jquery.mobile-1.4.1.min.css">
+<script type='text/javascript' src="http://code.jquery.com/mobile/1.4.1/jquery.mobile-1.4.1.min.js"></script>
+<script type="text/javascript" src="http://localhost/valuex/assets/home/js/colored.slider.js"></script>
+<?php $this->load->view($subview); ?>
+
+
 </body>
 </html>

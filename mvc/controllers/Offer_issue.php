@@ -18,6 +18,7 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("reset_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('offer', $language);
+		
 	}	
 	
 	
