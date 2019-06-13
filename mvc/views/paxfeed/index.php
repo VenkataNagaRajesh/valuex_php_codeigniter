@@ -101,6 +101,9 @@
 			<th class="col-lg-1"><?=$this->lang->line('seg_nbr')?></th>
 			 <th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('dep_date')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('dep_time')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('arrival_date')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('arrival_time')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('class')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('cabin')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('from_city')?></th>
@@ -163,6 +166,9 @@
 				{"data": "seg_nbr" },
 				{"data": "flight_number" },
                                 {"data": "dep_date" },
+				{"data": "dept_time" },
+				{"data": "arrival_date" },
+				{"data": "arrival_time" },
 				 {"data": "class" },
 				 {"data": "cabin" },
 				{"data": "from_city" },

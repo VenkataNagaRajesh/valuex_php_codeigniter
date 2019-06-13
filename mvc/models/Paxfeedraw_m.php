@@ -23,7 +23,7 @@ class Paxfeedraw_m extends MY_Model {
 
 	function checkPaxFeedRaw($array){
 		$this->db->select('dtpfraw_id');
-		$this->db->from('VX_aln_daily_tkt_pax_feed');
+		$this->db->from('VX_aln_daily_tkt_pax_feed_raw');
 		$this->db->where($array);
 		$this->db->limit(1);
 		$query = $this->db->get();

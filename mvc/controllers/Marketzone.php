@@ -338,7 +338,7 @@ class Marketzone extends Admin_Controller {
 		if((int)$id) {
 			$this->data['marketzone'] = $this->marketzone_m->get_marketzonename($id);
 			if($this->data['marketzone']) {
-				$this->marketzone_m->update_marketzone(array('active' => 0), $id);
+				$this->marketzone_m->delete_marketzone($id);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("marketzone/index"));
 			} else {

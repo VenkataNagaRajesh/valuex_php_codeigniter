@@ -95,5 +95,21 @@ class Home extends MY_Controller {
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);
 	}	
+	public function paysuccess() {		
+		$this->data["subview"] = "home/paysuccess";
+		$this->load->view('_layout_home', $this->data);
+	}
+	public function temp1() {		
+		$this->data["subview"] = "home/temp1";
+		$this->load->view('_layout_home', $this->data);
+	}
+	public function temp2() {		
+		$this->data["subview"] = "home/temp2";
+		$this->load->view('_layout_home', $this->data);
+	}
+	public function temp3() {		
+		$this->data["subview"] = "home/temp3";
+		$this->load->view('_layout_home', $this->data);
+	}
 		
 }

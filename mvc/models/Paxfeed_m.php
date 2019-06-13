@@ -40,7 +40,7 @@ class Paxfeed_m extends MY_Model {
 
 	function insert_paxfeed($array) {// echo "check"; exit;
 		$error = parent::insert($array);
-//		print_r($this->db->last_query); exit;
+		//print_r($this->db->last_query()); exit;
 		return TRUE;
 	}
 

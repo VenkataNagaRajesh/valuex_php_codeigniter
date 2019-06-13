@@ -105,7 +105,7 @@ class Paxfeed extends Admin_Controller {
 
 
 
-	$header = array_map("strtolower", array("Airline Code","PNR ref","Pax nbr","first name","last name","ptc","FQTV","seg nbr","carrier code","flight nbr","dept date","class","from city","to city","PAX contact email","Phone","Booking country","booking city","office-id","channel"));	
+	$header = array_map("strtolower", array("Airline Code","PNR ref","Pax nbr","first name","last name","ptc","FQTV","seg nbr","carrier code","flight nbr","dept date","arrival date","dept time", "arrival time","class","from city","to city","PAX contact email","Phone","Booking country","booking city","office-id","channel"));	
 		$header = array_map('strtolower', $header);
 
 
@@ -131,7 +131,8 @@ class Paxfeed extends Admin_Controller {
                          }
                         } else {
                              if($flag == 1){                                                                                      
-			   	 if(count($Row) == 20){ //print_r($Row); exit;						
+			   	 if(count($Row) == 23){ //print_r($Row); exit;						
+					$paxfeedraw = array();
 			   	      $paxfeedraw['airline_code'] =  $Row[array_search('airline code',$import_header)];
                                       $paxfeedraw['pnr_ref'] = $Row[array_search('pnr ref',$import_header)];
                                       $paxfeedraw['pax_nbr'] = $Row[array_search('pax nbr',$import_header)];
@@ -143,6 +144,9 @@ class Paxfeed extends Admin_Controller {
                                       $paxfeedraw['carrier_code'] =  $Row[array_search('carrier code',$import_header)];
                                       $paxfeedraw['flight_number'] = $Row[array_search('flight nbr',$import_header)];
                                       $paxfeedraw['dep_date'] = $Row[array_search('dept date',$import_header)];
+					$paxfeedraw['arrival_date'] = $Row[array_search('arrival date',$import_header)];
+				      $paxfeedraw['dept_time'] = $Row[array_search('dept time',$import_header)];
+				      $paxfeedraw['arrival_time'] = $Row[array_search('arrival time',$import_header)];
                                       $paxfeedraw['class'] = $Row[array_search('class',$import_header)];
                                       $paxfeedraw['from_city'] = $Row[array_search('from city',$import_header)];
                                       $paxfeedraw['to_city'] = $Row[array_search('to city',$import_header)];
@@ -152,6 +156,7 @@ class Paxfeed extends Admin_Controller {
                                       $paxfeedraw['booking_city'] = $Row[array_search('booking city',$import_header)];
                                       $paxfeedraw['office_id'] = $Row[array_search('office-id',$import_header)];
                                       $paxfeedraw['channel'] = $Row[array_search('channel',$import_header)];
+					
 				      if($this->paxfeedraw_m->checkPaxFeedRaw($paxfeedraw)) {
 
                                           $paxfeedraw['create_date'] = time();
@@ -161,6 +166,7 @@ class Paxfeed extends Admin_Controller {
                                           $raw_pax_id = $this->paxfeedraw_m->insert_paxfeedraw($paxfeedraw);
 
 			             if ( $raw_pax_id ) {
+					$paxfeed = array();
 	 				$paxfeed['airline_code'] =  $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['airline_code'],'12');
  					$paxfeed['dtpfraw_id' ] = $raw_pax_id;
                                         $paxfeed['pnr_ref'] = $paxfeedraw['pnr_ref'];
@@ -173,11 +179,14 @@ class Paxfeed extends Admin_Controller {
 				        $paxfeed['carrier_code'] =  $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['carrier_code'],'12');
                                         $paxfeed['flight_number'] =  substr($paxfeedraw['flight_number'], 2);
                                         $paxfeed['dep_date'] = strtotime(str_replace('-','/',$paxfeedraw['dep_date']));
+					 $paxfeed['arrival_date'] = strtotime(str_replace('-','/',$paxfeedraw['arrival_date']));
+					$paxfeed['dept_time'] = $this->convertTimeToSeconds($paxfeedraw['dept_time']);
+					 $paxfeed['arrival_time'] = $this->convertTimeToSeconds($paxfeedraw['arrival_time']);
                                         $paxfeed['class'] = $paxfeedraw['class'];
 		  		         $cabin = $this->airline_cabin_class_m->getCabinFromClassForCarrier($paxfeed['carrier_code'],$paxfeed['class']);
 					 $paxfeed['cabin'] = $cabin->cabin_id;
-                                         $paxfeed['from_city'] = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['from_city'],'3');
-                                         $paxfeed['to_city'] = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['to_city'],'3');
+                                         $paxfeed['from_city'] = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['from_city'],'1');
+                                         $paxfeed['to_city'] = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['to_city'],'1');
 					 $paxfeed['phone'] = $paxfeedraw['phone'];
                                          $paxfeed['pax_contact_email'] = $paxfeedraw['pax_contact_email'];
                                          $paxfeed['booking_country'] =  $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['booking_country'],'2');
@@ -328,7 +337,8 @@ $aColumns = array('dtpf_id', 'flight_nbr', 'dep_date', 'from_city', 'to_city', '
 
 			dtpf_id,first_name, last_name, pnr_ref, pax_nbr,flight_number,ptc.code as ptc, fqtv, seg_nbr, dep_date, class ,dt.code as to_city,
 			df.code as from_city, pax_contact_email, phone, cou.code as booking_country, cit.code as booking_city, office_id, 
-			da.code as airline_code , channel, dca.code as carrier_code, dcab.aln_data_value as cabin,
+			da.code as airline_code , channel, dca.code as carrier_code, dcab.aln_data_value as cabin, pax.arrival_time,
+			pax.dept_time, pax.arrival_date,
 			pax.active  FROM VX_aln_daily_tkt_pax_feed pax 
 			LEFT JOIN vx_aln_data_defns df on (df.vx_aln_data_defnsID = pax.from_city) 
 			LEFT JOIN vx_aln_data_defns dt on  (dt.vx_aln_data_defnsID = pax.to_city) 
@@ -354,8 +364,10 @@ $aColumns = array('dtpf_id', 'flight_nbr', 'dep_date', 'from_city', 'to_city', '
 	  );
 	  foreach($rResult as $feed){		 	
 		$feed->dep_date = date('d/m/Y',$feed->dep_date);
-
-
+		$feed->arrival_date = date('d/m/Y',$feed->arrival_date);
+		$feed->dept_time = gmdate("H:i:s", $feed->dept_time);
+		$feed->arrival_time = gmdate("H:i:s", $feed->arrival_time);
+		
 
 		  if(permissionChecker('paxfeed_delete')){
 		   $feed->action .= btn_delete('paxfeed/delete/'.$feed->dtpf_id, $this->lang->line('delete'));			 

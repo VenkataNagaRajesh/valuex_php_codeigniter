@@ -36,10 +36,10 @@ a:hover {
 }
 
 p, ul, ol {
-  margin-bottom: 1.5em;
+  margin-bottom: 10px;
   font-size: 16px;
-  color: #848484;
-  font-family: "Open Sans", Arial, sans-serif;
+  color: #333;
+  font-family: century gothic;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -80,6 +80,11 @@ figure {
 .pnr-form input{
 	border: solid 1px #b9b4b4;
 	border-radius: 25px;
+	height: 35px;
+	padding: 4px 14px;
+}
+.pnr-form .form-group{
+	margin-bottom: 5px;
 }
 .pnr-form button{
 	background: #ff6633;
@@ -101,7 +106,7 @@ figure {
 	font-size: 12px;
 }
 .tabulation h2{
-	margin: 18px 0;
+	margin: 10px 0;
 	vertical-align: middle;
 	color: #ff6633;
 	font-weight: bold;
@@ -149,11 +154,8 @@ figure {
 .top-bar{
 	background: #333;
 }
-.top-bar select{
-	padding: 3px 4px;
-	background: none;
-	color: #fff;
-	border: none;
+.top-bar img{
+	width:120px;
 }
 .bid-tab{
 	margin: 20px 0;
@@ -252,7 +254,7 @@ figure {
 }
 .bid-tab  #payment .side-image img{
 	width:100%;
-	height:180px;
+	height:150px;
 }
 .bid-tab  #payment h2{
 	margin: 12px 0;
@@ -443,4 +445,135 @@ figure {
 .sw-theme-arrows > ul.step-anchor > li.danger > a:after {
     border-left: 30px solid #d9534f !important;
 }
-/*colour Range*/
+/*paysuccess box*/
+.paysucces-box{
+	margin-top: 6em;
+	border: solid 1px #333;
+	border-radius: 10px;
+	padding: 40px;
+}
+.paysucces-box .success-payment{ 
+	text-align: center;
+	background: #f5f5f5;
+	padding: 20px;
+}
+.paysucces-box .success-payment p{ 
+	color: #333;
+	font-family: century gothic;
+	font-size: 18px;
+	margin-bottom: 10px;
+}
+/*email temp css*/
+.email-temp1 p{
+	text-align:center;
+}
+.email-temp1{
+	border:solid 1px #333;
+	margin-top:20px;
+}
+.email-temp1 .header-email{
+	background-image: url(../../../assets/home/images/temp1-hdr-bg.jpg);
+	margin-top: 20px;
+}
+.email-temp1 .header-email .pull-right{
+	color:#333;
+}
+.email-temp1 .header-email .pull-right b{
+	color: #ff6633;
+	font-size: 28px;
+}
+.email-temp1 .btn-danger{
+	background: #ff6633;
+	font-weight: bold;
+	padding: 8px 26px;
+	font-size: 23px;
+	border-radius: 33px;
+	border: none;
+}
+.email-temp1 .header-email h1{
+	margin-bottom: 8px;
+	color: #fff;
+	font-size: 24px;
+	font-weight: bold;
+	padding: 12px;
+}
+.email-temp2 .header-email img{
+	margin-right: auto;
+	margin-left: auto;
+}
+.email-temp2 h1{
+	margin-bottom: 10px;
+	color: #ff6633;
+	font-weight: bold;
+	text-align: center;
+	font-size: 30px;
+	margin-top: 1em;
+}
+.email-temp2 p{
+	text-align:center;
+}
+.email-temp2 .info p{
+	font-size: 12px;
+}
+.email-temp2 .btn-danger{
+	background: #ff6633;
+	font-weight: bold;
+	padding: 8px 26px;
+	font-size: 23px;
+	border-radius: 33px;
+	border: none;
+}
+.email-temp2{
+	border:solid 1px #333;
+	margin-top:20px;
+	padding: 20px 0px;
+}
+.email-temp2 .booking-ref img{
+	width:100%;
+}
+.email-temp2 .booking-ref p{
+	border:dotted 1px #333;
+	margin:10px 0px;
+	padding:3px 15px;
+}
+.email-temp3 h3{
+	margin: 10px 0;
+	font-weight: bold;
+	font-size: 18px;
+	color: #333;
+}
+.email-temp3 h1{
+	margin-bottom: 12px;
+	color: #ff6633;
+	font-weight: bold;
+	font-size: 20px;
+}
+.email-temp3 p span{
+	font-size:13px;
+}
+.email-temp3 .info p{
+	font-size: 13px;
+	text-align: center;	
+}
+.email-temp3 .info{
+	margin-top: -24px;
+}
+.email-temp3 .btn-danger{
+	background: #ff6633;
+	font-weight: bold;
+	padding: 5px 18px;
+	font-size: 17px;
+	border-radius: 33px;
+	border: none;
+}
+.email-temp3 .bk-info{
+	position: relative;
+	top: -50px;
+	left: 30px;
+	border: dotted 1px #f5f5f5;
+	font-size: 15px;
+}
+.email-temp3{
+	border:solid 1px #333;
+	margin-top:20px;
+}
