@@ -144,11 +144,15 @@
 		  })
 		}
 	}; 
+	
+	$(function(){
+        $('.rating').rating();
+      });
 
 	// Document on load.
 	$(function(){
 		mainMenu();
-		parallax();
+		//parallax();
 		offcanvas();
 		mobileMenuOutsideClick();
 		contentWayPoint();

@@ -577,7 +577,7 @@ class Airline_cabin extends Admin_Controller {
                         }
 
 
-	        $userTypeID = $this->session->userdata('usertypeID');
+	            $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
                 if($userTypeID == 2){
                       $airlines= $this->airline_m->getClientAirline($userID, 1);
@@ -585,10 +585,6 @@ class Airline_cabin extends Admin_Controller {
                          $sWhere .= 'cm.airline_code = '.$airlines->airlineID;
 
                 }
-
-
-
-
 
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,name, airline_class,  ac.aln_data_value as airline_code , 

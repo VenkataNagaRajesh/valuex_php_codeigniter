@@ -21,6 +21,7 @@ class Offer_issue extends Admin_Controller {
 		$language = $this->session->userdata('lang');
 		
 		$this->lang->load('offer', $language);
+		
 	}	
 	
 	
