@@ -14,7 +14,7 @@
 body {
   font-family: century gothic;
   line-height: 1.6;
-  font-size: 16px;
+  font-size: 14px;
   background: #fff;
   color: #848484;
   font-weight: 300;
@@ -37,7 +37,7 @@ a:hover {
 
 p, ul, ol {
   margin-bottom: 10px;
-  font-size: 16px;
+  font-size: 14px;
   color: #333;
   font-family: century gothic;
 }
@@ -576,4 +576,82 @@ figure {
 .email-temp3{
 	border:solid 1px #333;
 	margin-top:20px;
+}
+/*bid success*/
+.bid-strip{
+	background: #f5f5f5;
+	height: 38px;
+	margin: 16px 0;
+}
+.bid-success-box .congo-info span{
+	color:#ff6633;
+	font-weight:bold;
+	margin-right:8px;
+}
+.bid-success-box p{
+	font-size:14px;
+}
+.bid-success-box .track-info span{
+	font-weight: bold;
+	color: #ff6633;
+}
+.bid-success-box .table .table-hover{
+	width:100%;
+}
+.bid-success-box .table-hover thead{
+	background: #ff6633;
+	color: #fff;
+	text-transform: capitalize;
+}
+.bid-success-box .table-hover thead tr th, .bid-success-box .table-hover tbody tr td{
+	padding: 6px 10px;
+}
+.bid-success-box .table-hover tbody tr td{
+	color:#333;
+	background:#f5f5f5;
+}
+.bid-success-box .note-ex-info .web-link span{
+	font-weight:bold;
+	color:#ff6633;
+}
+.bid-success-box .upgrade-list {
+	list-style-type:none;
+}
+.bid-success-box .upgrade-list li:before{
+	content: '\f111';
+	font-family: 'FontAwesome';
+	margin-right: 6px;
+	color: #ff6600;
+	font-size: 10px;
+}
+.bid-success-box .upgrade-card-info{
+	background: #f5f5f5;
+	padding: 15px;
+	margin-bottom: 10px;
+}
+.bid-success-box .upgrade-card-info li span{
+	display: inline-block;
+	width: 38%;
+	font-weight: bold;
+	text-transform: capitalize;
+	font-size: 12px;
+}
+.bid-success-box .upgrade-card-info ul{
+	list-style: none;
+	padding-left: 0;
+}
+.bid-success-box .share ul{
+	list-style:none;
+	padding-left: 0;
+}
+.bid-success-box .share ul li{
+	float: left;
+	background: #10aec8;
+	color: #fff;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	text-align: center;
+	font-size: 24px;
+	margin-right:10px;
 }
