@@ -19,7 +19,15 @@ class Bidding extends MY_Controller {
 		  $data = explode('-',$value);
 		  $this->data['result']->to_cabins[$data[1]] = $data[0];
 		  unset($this->data['result']->to_cabins[$key]);
-		} 
+		}
+        
+		$dept = date('d-m-Y H:i:s',$this->data['result']->dep_date+$this->data['result']->dept_time);
+		$arrival =  date('d-m-Y H:i:s',$this->data['result']->arrival_date+$this->data['result']->arrival_time);
+		$dteStart = new DateTime($dept); 
+		$dteEnd   = new DateTime($arrival); 
+		$dteDiff  = $dteStart->diff($dteEnd);
+		$this->data['result']->time_diff = $dteDiff->format('%d days %H hours %i min');          		 
+       // echo $interval->format('%Y years %m months %d days %H hours %i minutes %s seconds');	 exit; 
         $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();		
 		// $this->data['passengers'] = explode(';',$result->pax_names);
         // print_r($this->data['result']); exit;	

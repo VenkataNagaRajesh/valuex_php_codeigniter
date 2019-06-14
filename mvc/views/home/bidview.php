@@ -38,8 +38,8 @@
 										<ul>
 											<li><?php echo date('d M Y',$result->dep_date); ?></li>
 											<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
-											<li>11 hours 15 mins</li>
-											<li>02.30am-15.25pm</li>
+											<li><?=$result->time_diff?></li>
+											<li><?=date('H:i a',$result->dep_date+$result->dept_time)?></li>
 										</ul>
 									</div>
 									<p><i class="fa fa-fighter-jet"></i></p>
@@ -48,8 +48,8 @@
 										<ul>
 											<li><?php echo date('d M Y',$result->arrival_date); ?></li>
 											<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
-											<li>11 hours 15 mins</li>
-											<li>02.30am-15.25pm</li>
+											<li><?=$result->time_diff?></li>
+											<li><?=date('H:i a',$result->arrival_date+$result->arrival_time)?></li>
 										</ul>
 									</div>
 								</div>
@@ -170,9 +170,9 @@
 							<div class="col-md-4">
 								<h2>Bid (s)</h2>
 								<div class="price-range">									
-                                    	<b><i class="fa fa-dollar" id="min"> </i></b>
+                                    	<i class="fa fa-dollar"></i><b id="min"></b>
        										<input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[0]; ?>" data-slider-max="<?php echo explode(',',$result->max)[0]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->avg)[0]; ?>" data-slider-handle="square"min-slider-handle="200"/>
-										<b><i class="fa fa-dollar" id="max"> </i></b>						
+										<i class="fa fa-dollar"></i><b id="max"></b>						
 								</div>
 								<!--<div class="price-range bid-visible">
 									<p>Price Range</p>
@@ -189,7 +189,7 @@
 								</div>-->
 							</div>
 							<div class="col-md-12" style="padding-right:0;">
-								<p class="pull-right">Total Bid Amount <i class="fa fa-dollar" id="tot"> </i></p>
+								<p class="pull-right">Total Bid Amount  <b style="margin-left:12px;"><i class="fa fa-dollar" id="tot"></i> </b></p>
 							</div>
 							<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button">Continue</a>
 						</div>
