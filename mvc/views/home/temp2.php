@@ -1,3 +1,12 @@
+<div class="container top-bar">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="col-md-2">
+				<img class="img-responsive" src="<?php echo base_url('assets/home/images/emir.png'); ?>" alt="logo">
+			</div>
+		</div>
+	</div>
+</div>
 <div class="container">
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2 email-temp2">
