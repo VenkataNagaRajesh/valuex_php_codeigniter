@@ -33,7 +33,24 @@ class Offer_issue_m extends MY_Model {
                 return $id;
         }
 
+	function getPassengerData($offerid,$flight_number) {
 
+		$this->db->select("oref.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name)  as passengers, group_concat(distinct pax_contact_email)  as emails, group_concat(distinct pext.dtpfext_id) as p_list")->from('VX_aln_daily_tkt_pax_feed pf');
+		$this->db->join('VX_aln_offer_ref oref', 'oref.pnr_ref =  pf.pnr_ref', 'LEFT');
+		$this->db->join('VX_aln_dtpf_ext pext', 'pext.dtpf_id =  pf.dtpf_id', 'LEFT');
+		$this->db->join(' vx_aln_data_defns dd', 'dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20', 'LEFT');
+		$this->db->where('offer_id',$offerid); 
+		$this->db->where('dd.alias','bid_complete');
+		$this->db->where('pf.flight_number',$flight_number);
+		$this->db->group_by('pf.pnr_ref' , 'booking_status');
+		$query = $this->db->get();
+                $passgr = $query->row();
+		
+		return $passgr;
+
+
+
+	}
 	function checkForUniqueCouponCode($code) {
 		$this->db->select('dtpfext_id')->from('VX_aln_dtpf_ext');
 		$this->db->where('coupon_code',$code);

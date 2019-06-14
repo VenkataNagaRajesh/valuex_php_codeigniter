@@ -41,5 +41,17 @@ class preference_m extends MY_Model {
 		$query = $this->db->get();
 		return $query->row();
 	}
+
+	function get_preference_value_bycode($code,$type){
+
+		$this->db->select('pref_value')->from('VX_aln_preference');
+		$this->db->where('pref_code',$code);	
+		$this->db->where('pref_type',$type);
+
+		$query = $this->db->get();
+		$data = $query->row();
+		return $data->pref_value;
+
+	}
 }
 
