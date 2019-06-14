@@ -1,0 +1,437 @@
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559907396
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909886
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559909887
+Airline Code must be UNIQUE United Air Lines Inc - UA Timestamp: 1559975824
+Airline Code must be UNIQUE American Airlines Inc. - AA Timestamp: 1559975825
+Airline Code must be UNIQUE US Airways Inc. - US Timestamp: 1559975825
+Airline Code must be UNIQUE US Airways Inc. - US Timestamp: 1559975825
+Airline Code must be UNIQUE United Air Lines Inc - UA Timestamp: 1559975825
+Airline Code must be UNIQUE United Air Lines Inc - UA Timestamp: 1559975825
+Airline Code must be UNIQUE American Airlines Inc. - AA Timestamp: 1559975825
+Airline Code must be UNIQUE American Airlines Inc. - AA Timestamp: 1559975825
+Airline Code must be UNIQUE American Airlines Inc. - AA Timestamp: 1559975825
+Airline Code must be UNIQUE US Airways Inc. - US Timestamp: 1559975825
+Airline Code must be UNIQUE US Airways Inc. - US Timestamp: 1559975825
+Airline Code must be UNIQUE US Airways Inc. - US Timestamp: 1559975825
+Airline Code must be UNIQUE Skywest Airlines Inc. - OO Timestamp: 1559975828
+Airline Code must be UNIQUE Alaska Airlines Inc. - AS Timestamp: 1559975865
+Airline Code must be UNIQUE Spirit Air Lines - NK Timestamp: 1559975866
+Airline Code must be UNIQUE Southwest Airlines Co. - WN Timestamp: 1559975867
+Airline Code must be UNIQUE Delta Air Lines Inc. - DL Timestamp: 1559975868
+Airline Code must be UNIQUE Atlantic Southeast Airlines - EV Timestamp: 1559975869
+Airline Code must be UNIQUE Hawaiian Airlines Inc. - HA Timestamp: 1559975870
+Airline Code must be UNIQUE American Eagle Airlines Inc. - MQ Timestamp: 1559975872
+Airline Code must be UNIQUE Virgin America - VX Timestamp: 1559975874
+Airline Code must be UNIQUE Virgin America - VX Timestamp: 1559975874
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559975874
+Airline Code must be UNIQUE United Air Lines Inc - UA Timestamp: 1559975897
+Airline Code must be UNIQUE United Air Lines Inc - UA Timestamp: 1559975897
+Airline Code must be UNIQUE American Airlines Inc. - AA Timestamp: 1559975897
+Airline Code must be UNIQUE American Airlines Inc. - AA Timestamp: 1559975897
+Airline Code must be UNIQUE US Airways Inc. - US Timestamp: 1559975897
+Airline Code must be UNIQUE US Airways Inc. - US Timestamp: 1559975897
+Airline Code must be UNIQUE United Air Lines Inc - UA Timestamp: 1559975897
+Airline Code must be UNIQUE United Air Lines Inc - UA Timestamp: 1559975897
+Airline Code must be UNIQUE American Airlines Inc. - AA Timestamp: 1559975897
+Airline Code must be UNIQUE American Airlines Inc. - AA Timestamp: 1559975897
+Airline Code must be UNIQUE American Airlines Inc. - AA Timestamp: 1559975897
+Airline Code must be UNIQUE US Airways Inc. - US Timestamp: 1559975897
+Airline Code must be UNIQUE US Airways Inc. - US Timestamp: 1559975897
+Airline Code must be UNIQUE US Airways Inc. - US Timestamp: 1559975897
+Airline Code must be UNIQUE Frontier Airlines Inc. - F9 Timestamp: 1559975897
+Airline Code must be UNIQUE JetBlue Airways - XX Timestamp: 1559975897
+Airline Code must be UNIQUE Skywest Airlines Inc. - OO Timestamp: 1559975897
+Airline Code must be UNIQUE Skywest Airlines Inc. - OO Timestamp: 1559975897
+Airline Code must be UNIQUE Alaska Airlines Inc. - AS Timestamp: 1559975897
+Airline Code must be UNIQUE Alaska Airlines Inc. - AS Timestamp: 1559975897
+Airline Code must be UNIQUE Spirit Air Lines - NK Timestamp: 1559975897
+Airline Code must be UNIQUE Spirit Air Lines - NK Timestamp: 1559975897
+Airline Code must be UNIQUE Southwest Airlines Co. - WN Timestamp: 1559975897
+Airline Code must be UNIQUE Southwest Airlines Co. - WN Timestamp: 1559975897
+Airline Code must be UNIQUE Delta Air Lines Inc. - DL Timestamp: 1559975897
+Airline Code must be UNIQUE Delta Air Lines Inc. - DL Timestamp: 1559975897
+Airline Code must be UNIQUE Atlantic Southeast Airlines - EV Timestamp: 1559975897
+Airline Code must be UNIQUE Atlantic Southeast Airlines - EV Timestamp: 1559975898
+Airline Code must be UNIQUE Hawaiian Airlines Inc. - HA Timestamp: 1559975898
+Airline Code must be UNIQUE Hawaiian Airlines Inc. - HA Timestamp: 1559975898
+Airline Code must be UNIQUE American Eagle Airlines Inc. - MQ Timestamp: 1559975898
+Airline Code must be UNIQUE American Eagle Airlines Inc. - MQ Timestamp: 1559975898
+Airline Code must be UNIQUE Virgin America - VX Timestamp: 1559975898
+Airline Code must be UNIQUE Virgin America - VX Timestamp: 1559975898
+Airline Code must be UNIQUE Virgin America - VX Timestamp: 1559975898
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559975898
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977568
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977568
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977568
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977568
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977568
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977568
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977568
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977568
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977568
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977568
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977569
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977660
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559977899
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978070
+Airline Code must be UNIQUE United Air Lines Inc - UV Timestamp: 1559978208
+Airline Code must be UNIQUE United Air Lines Inc - UG Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978208
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978226
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978227
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978275
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978275
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978275
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978275
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978275
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978275
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978275
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978275
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978276
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559978618
+Airline Code must be UNIQUE United Air Lines Inc - UV Timestamp: 1559991004
+Airline Code must be UNIQUE United Air Lines Inc - UG Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004
+Airline Code should be alphanumeric and length 2  -  Timestamp: 1559991004

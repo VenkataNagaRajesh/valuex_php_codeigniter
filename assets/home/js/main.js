@@ -148,7 +148,7 @@
 	// Document on load.
 	$(function(){
 		mainMenu();
-		parallax();
+		//parallax();
 		offcanvas();
 		mobileMenuOutsideClick();
 		contentWayPoint();

@@ -13,7 +13,7 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model("marketzone_m");
 		$this->load->model("fclr_m");
 		$language = $this->session->userdata('lang');
-		$this->load->library('encrypt');
+		//$this->load->library('encrypt');
 		$this->lang->load('offer_eligibility', $language);	
 	}	
 	
@@ -218,7 +218,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext
 		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency AND dfre.aln_data_typeID = 14)
 		     LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13)
                      LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13)
-		     LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
+		     INNER JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
 
 $sWhere $sOrder $sLimit";
 
@@ -292,6 +292,8 @@ $sWhere $sOrder $sLimit";
 			if($upgrade['season_id'] == 0 ) {
 				$upgrade['frequency'] = $p_freq;
 			}
+
+			$upgrade['from_cabin'] = $feed->cabin;
 
                          $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
 
