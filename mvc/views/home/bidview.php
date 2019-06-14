@@ -29,7 +29,7 @@
 					<div class="col-md-10">
 						<div class="pass-info">
 							<p>Passenger(s):<span><?php echo ucfirst($result->pax_names); ?></span>
-							<span class="pull-right" style="color:#333;">Booking Ref No: 12346789</span></p>
+							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$result->pnr_ref?></span></p>
 							<div class="col-md-5">
 								<h2>Flight Information</h2>
 								<div class="bid-info">
@@ -38,18 +38,18 @@
 										<ul>
 											<li><?php echo date('d M Y',$result->dep_date); ?></li>
 											<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
-											<li>11 hours 15 mins</li>
-											<li>02.30am-15.25pm</li>
+											<li><?=$result->time_diff?></li>
+											<li><?=date('H:i a',$result->dep_date+$result->dept_time)?></li>
 										</ul>
 									</div>
 									<p><i class="fa fa-fighter-jet"></i></p>
 									<div class="col-md-6">
 										<p><?php echo $result->to_city; ?></p>
 										<ul>
-											<li><?php echo date('d M Y',$result->dep_date); ?></li>
+											<li><?php echo date('d M Y',$result->arrival_date); ?></li>
 											<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
-											<li>11 hours 15 mins</li>
-											<li>02.30am-15.25pm</li>
+											<li><?=$result->time_diff?></li>
+											<li><?=date('H:i a',$result->arrival_date+$result->arrival_time)?></li>
 										</ul>
 									</div>
 								</div>
@@ -169,17 +169,10 @@
 							</div>
 							<div class="col-md-4">
 								<h2>Bid (s)</h2>
-								<div class="price-range">
-									<!--<div role="main" class="ui-content">
-										<div class="jquery-script-ads"></div>
-										<label for="slider"></label>
-										<?php// echo round(explode(',',$result->min)[0]); ?>
-										<input type="range" name="sliders" id="slider0"  value="<?php echo round($result->avg); ?>" min="<?php echo round(explode(',',$result->min)[0]); ?>" max="<?php echo round(explode(',',$result->max)[0]); ?>" data-highlight="true" step="1">
-										<?php// echo round(explode(',',$result->max)[0]); ?>
-									</div>-->
-                                    	<b>$<?php echo explode(',',$result->min)[0]; ?> </b>
-       										<input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[0]; ?>" data-slider-max="<?php echo explode(',',$result->max)[0]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->avg)[0]; ?>" data-slider-handle="square"/>
-										<b> $<?php echo explode(',',$result->max)[0]; ?></b>								
+								<div class="price-range">									
+                                    	<i class="fa fa-dollar"></i><b id="min"></b>
+       										<input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[0]; ?>" data-slider-max="<?php echo explode(',',$result->max)[0]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->avg)[0]; ?>" data-slider-handle="square"min-slider-handle="200"/>
+										<i class="fa fa-dollar"></i><b id="max"></b>						
 								</div>
 								<!--<div class="price-range bid-visible">
 									<p>Price Range</p>
@@ -196,7 +189,7 @@
 								</div>-->
 							</div>
 							<div class="col-md-12" style="padding-right:0;">
-								<p class="pull-right">Total Bid Amount <i class="fa fa-dollar" id="tot"> </i></p>
+								<p class="pull-right">Total Bid Amount  <b style="margin-left:12px;"><i class="fa fa-dollar" id="tot"></i> </b></p>
 							</div>
 							<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button">Continue</a>
 						</div>
@@ -228,10 +221,10 @@
 							<a type="button" class="btn btn-danger btn btn-secondary sw-btn-prev"><i class="fa fa-arrow-left"></i> Back</a>
 						</div>
 						<div class="col-md-10 booking-ref">
-							<h2 class="pull-right">Booking Ref No: 12346789</h2>
+							<h2 class="pull-right">Booking Ref No: <?php echo $result->pnr_ref; ?></h2>
 						</div>
 						<div class="col-md-12">
-							<p class="pull-right">Total Bid Amount  <b style="margin-left:12px;"><i class="fa fa-dollar"></i> 2100.00</b></p>
+							<p class="pull-right">Total Bid Amount  <b style="margin-left:12px;"><i class="fa fa-dollar" id="bidtot"></i> </b></p>
 						</div>
 						<div class="col-md-8 col-md-offset-2">
 							<div class="price-range">
@@ -295,36 +288,72 @@
 </div>
 
 <script>
-$('input[type=radio][name=bid_cabin]').change(function(){
-	var bid_cabin = $(this).val();
-	console.log(bid_cabin);
-	var result = $(this).val().split('|');
-   console.log( result[1] );
-}); 
 $(document).ready(function () {
-  $("#tot").text(<?php echo explode(',',$result->avg)[0]; ?>); 
+  $("#tot").text(<?php echo explode(',',$result->avg)[0]; ?>);
+ $("#bidtot").text(<?php echo explode(',',$result->avg)[0]; ?>);  
+  $("#min").text(<?php echo explode(',',$result->min)[0]; ?>); 
+  $("#max").text(<?php echo explode(',',$result->max)[0]; ?>); 
+  changeColors();
 });
 
   $('#ex1').slider({
 	tooltip: 'always',
 	formatter: function(value) {
 		return value + ' Per Passenger(1)';
-	}//,
-	//rangeHighlights: [{ "start": 150, "end": 250, "class": "category1" },
-                 //     { "start": 250, "end": 300, "class": "category2" }] 
+	}
 });
 
 $("#ex1").on("slide", function(slideEvt) {
-	$("#tot").text(slideEvt.value);
-   if(slideEvt.value < 250){
-	   $(' #ex1Slider .slider-selection').css({"background":"#f2126f"});
-   } else if(slideEvt.value < 300 && slideEvt.value > 250){
-	   $(' #ex1Slider .slider-selection').css({"background":"green"}); 
-   } else if(slideEvt.value > 300 ){
-	   $(' #ex1Slider .slider-selection').css({"background":"yellow"}); 
-   }
+	$("#tot").text(slideEvt.value); 
+	$("#bidtot").text(slideEvt.value); 
+    changeColors();	 
 });
 
+$('input[type=radio][name=bid_cabin]').change(function(){
+	var bid_cabin = $(this).val();
+	var result = $(this).val().split('|');
+       $.ajax({
+          async: false,
+          type: 'POST',
+          url: "<?=base_url('homes/bidding/getFclrValues')?>",          
+		  data: {"fclr_id" :result[1]},
+          dataType: "html",			
+          success: function(data) {
+            var info = jQuery.parseJSON(data);              		
+            $("#ex1").slider('setAttribute', 'max', Math.round(info['max']));
+		    $("#ex1").slider('setAttribute', 'min', Math.round(info['min']));
+		    $("#ex1").slider('setValue', Math.round(info['average']));
+			$("#max").text(Math.round(info['max']));
+			$("#min").text(Math.round(info['min']));
+			$("#tot").text(Math.round(info['average']));
+			$("#bidtot").text(Math.round(info['average']));
+            changeColors();			
+          }
+   });
+});
+
+ function changeColors(){
+	 var value = $("#ex1").slider('getValue');	
+	 var diff = $("#ex1").slider('getAttribute', 'max') - $("#ex1").slider('getAttribute', 'min');
+	 var min = $("#ex1").slider('getAttribute', 'min');
+	 var one = min + Math.round((diff)*(25/100));
+	 var two = min + Math.round((diff)*(50/100));
+	 var three = min+ Math.round((diff)*(75/100));
+	
+	  if(value <= one ){
+	   $('.slider-selection').css({"background":"red"});
+	   $('.slider-handle').css({"background":"red"});
+     } else if(value <= two){ 
+	   $('.slider-selection').css({"background":"orange"}); 
+	   $('.slider-handle').css({"background":"orange"});
+     } else if(value <= three ){
+	   $('.slider-selection').css({"background":"#00ff00"}); 
+	   $('.slider-handle').css({"background":"#00ff00"});
+     } else {
+	    $('.slider-selection').css({"background":"#009900"}); 
+		$('.slider-handle').css({"background":"#009900"});
+     }
+ }
 </script>
 
 

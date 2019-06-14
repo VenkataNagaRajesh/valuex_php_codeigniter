@@ -660,18 +660,12 @@ figure {
 	margin: 0 8px;
 }
 .price-range b{
-    font-size: 12px;
+    font-size: 13px;
 	color:#333;
+	font-family: century gothic;
+    font-weight: bold;
 }
- #ex1Slider .slider-selection {
-	background: #f2126f;
-    } 
-#ex1Slider .slider-handle {
-	background: #ff6633;
-}
-#ex1Slider .slider12a{
-	background: #f2126f;
-}
+<<<<<<< HEAD
 .mail-bid-error {
 	margin-top:15px;
 }
@@ -771,3 +765,9 @@ figure {
 	font-size: 20px;
 	width: 34px;
 }
+.price-range i{
+    font-weight: bold;
+	color:#333;
+	font-size: 13px;
+}
+
