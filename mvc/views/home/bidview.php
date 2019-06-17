@@ -266,7 +266,8 @@
 									</div>
 								</div>
 								<div class="col-md-4 actual-cash">
-									<p>Total Cash to be Paid <b><i class="fa fa-dollar"></i>1200.00</b></p>
+									<p>Total Cash to be Paid <b><i class="fa fa-dollar" id="paid_cash"></i></b></p>
+									<p>Total Miles to be Paid : <b id="paid_miles"></b></p>
 									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$result->offer_id?>)">Pay Now</a>
 								</div>
 							</form>
@@ -315,13 +316,15 @@ $('#mile1').slider({
 		var dollar = value * mile_value;
 		var bid_amount = $("#ex1").slider('getValue');
 		var pay_cash = bid_amount - Math.round(dollar);
+		$("#paid_cash").text(pay_cash);
+        $("#paid_miles").text(value + ' Miles'+'($'+Math.round(dollar)+')'); 		
 		return '$'+pay_cash+' + '+value + ' Miles'+'($'+Math.round(dollar)+')';
 		//return value;
 		
 	}
 });
 
-/* $("#mile1").on("slide", function(slideEvt) {
+/*  $("#mile1").on("slide", function(slideEvt) {
 	var value = $("#ex1").slider('getValue');
 	var miles = value/mile_value;
 	var limit = Math.round(miles)* mile_proportion;	
@@ -331,6 +334,12 @@ $('#mile1').slider({
 	}else{
 		//$("#mile1").slider("enable");
 	}  
+}); */ 
+
+/* $("#mile1").on("slide", function(slideEvt) {
+	$("#paid_cash").text(slideEvt.value); 
+	$("#paid_miles").text(slideEvt.value);
+   	 
 }); */
 
 $("#ex1").on("slide", function(slideEvt) {
@@ -392,7 +401,8 @@ $('input[type=radio][name=bid_cabin]').change(function(){
      var miles = value/mile_value;
 	  $("#mile-min").text(0);  
 	  $("#mile-max").text(Math.round(miles));
-	  $("#mile1").slider('setAttribute', 'max', Math.round(miles)); 
+	  $("#mile1").slider('setAttribute', 'max', Math.round(miles));
+      //$("#mile1").slider('setAttribute', 'min', Math.round(miles)* mile_proportion);	  
 	  $("#mile1").slider('setValue', Math.round(miles)* mile_proportion);  
 	  $("#mile1").slider('setAttribute', 'step', Math.round(1/mile_value)); 
 	  
@@ -429,7 +439,8 @@ $('input[type=radio][name=bid_cabin]').change(function(){
 				  }
 			   });
 			} else {
-				alert(cardinfo['status']);
+				var status = cardinfo['status'];
+				alert($(status).text());
 			}			
           } 
      });
