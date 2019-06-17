@@ -144,6 +144,10 @@
 		  })
 		}
 	}; 
+	
+	$(function(){
+        $('.rating').rating();
+      });
 
 	// Document on load.
 	$(function(){

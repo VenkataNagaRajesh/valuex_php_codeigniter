@@ -38,6 +38,21 @@ class Invfeed_m extends MY_Model {
 	}
 
 
+	 function getCabinSeatData($array){
+                $this->db->select('cabin,empty_seats');
+                $this->db->from('VX_aln_daily_inv_feed');
+                $this->db->where($array);
+                $query = $this->db->get();
+                $result = $query->result();
+		$arr = array();
+		foreach($result as $feed) {
+			$arr[$feed->cabin] = $feed->empty_seats;
+		}
+                return $arr;
+        }
+
+
+
 	function insert_invfeed($array) {// echo "check"; exit;
 		$error = parent::insert($array);
 //		print_r($this->db->last_query); exit;

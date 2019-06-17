@@ -114,5 +114,12 @@ class Home extends MY_Controller {
 		$this->data["subview"] = "home/temp3";
 		$this->load->view('_layout_home', $this->data);
 	}
-		
+	public function mailerror() {		
+		$this->data["subview"] = "home/mailerror";
+		$this->load->view('_layout_home', $this->data);
+	}
+	public function feedback() {		
+		$this->data["subview"] = "home/feedback";
+		$this->load->view('_layout_home', $this->data);
+	}	
 }

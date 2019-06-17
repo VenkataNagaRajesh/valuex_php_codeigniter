@@ -15,8 +15,11 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("marketzone_m");
 		$this->load->model("fclr_m");
 		$this->load->library('email');
+		$this->load->model('invfeed_m');
 		$this->load->model("reset_m");
+		$this->load->model('acsr_m');
 		$language = $this->session->userdata('lang');
+		
 		$this->lang->load('offer', $language);
 		
 	}	
@@ -279,7 +282,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
           );
                 foreach ($rResult as $feed ) {
 
-                        $boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
+                        $boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->board_point));
                         $feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
                          $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
@@ -300,5 +303,199 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 
 	}
 
+  function auto_acsr() {
+	$this->load->model('preference_m');
+	
+	$days = $this->preference_m->get_preference_value_bycode('CONFIRM_WINDOW','7');
+	$current_time = time();
+	$tstamp = $current_time + ($days * 86400);
+
+		// update is required if offer status is updated in VX_aln_offer_ref
+		// for now considering offer status is updated in  PF records
+		//
+	$sQuery = "select pf.dep_date , pf.flight_number , pf.carrier_code , pf.cabin, group_concat(distinct offer_id) as offer_list  
+			from VX_aln_offer_ref oref 
+			INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref)
+			INNER JOIN VX_aln_dtpf_ext pext on (pext.dtpf_id = pf.dtpf_id)
+			INNER JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20)
+			WHERE pf.dep_date >= ".$current_time. " AND pf.dep_date <= " . $tstamp  .
+			" AND dd.alias != 'excl' AND pext.exclusion_id = 0 AND 
+			dd.alias = 'bid_complete'  group by pf.flight_number, pf.carrier_code, pf.dep_date,pf.cabin  order by pf.flight_number"; 
+	$rResult = $this->install_m->run_query($sQuery);
+	$full_offerlist = array();
+	$partial_offerlist = array();	
+	foreach($rResult as $data ) {
+			$inv = array();
+		 	$inv['flight_nbr'] = $data->flight_number;
+                        $inv['airline_id'] = $data->carrier_code;
+			$inv['departure_date'] = $data->dep_date;
+			$empty_seats = $this->invfeed_m->getCabinSeatData($inv);
+			
+		$q = "select distinct rbd_markup, flight_number, from_city, to_city,tier_markup, (val + ((rbd_markup * val)/100)) as bid_val , 
+			offer_id,bid_submit_date , dep_date, upgrade_type, carrier_code, src_point,  dest_point, cabin FROM (
+				SELECT (bid_value + ((pf.tier_markup * bid_value)/100)) as val,pf.dep_date,bid.upgrade_type,pf.flight_number,
+				pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point
+				from VX_aln_bid bid 
+				LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )  
+				LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number) 
+				LEFT JOIN vx_aln_data_defns df on (df.vx_aln_data_defnsID = pf.from_city and df.aln_data_typeID = 1)
+				LEFT JOIN vx_aln_data_defns dt on (dt.vx_aln_data_defnsID = pf.to_city and dt.aln_data_typeID = 1)
+				WHERE bid.offer_id IN (".$data->offer_list .") AND bid.flight_number = " .$data->flight_number .
+
+		      "	) as FirstSet order by bid_val desc,tier_markup desc , rbd_markup desc,bid_submit_date desc";
+		$offers =  $this->install_m->run_query($q);
+		//var_dump($offers); echo "<br><br>";
+		foreach ($offers as $feed ) {
+			$passenger_data = $this->offer_issue_m->getPassengerData($feed->offer_id,$feed->flight_number);	
+			$cabin_seats = $empty_seats[$feed->upgrade_type];
+
+			$namelist = explode(',',$passenger_data->passengers);
+			$emails_list =  explode(',',$passenger_data->emails);
+
+			$passenger_cnt =  count($namelist);
+			
+			$acsr = array();
+			$acsr['from_city'] = $feed->from_city;
+			$acsr['to_city'] = $feed->to_city;
+			$acsr['flight_number'] = $feed->flight_number;
+			$acsr['dep_date'] = $feed->dep_date;
+			$acsr['from_cabin'] = $feed->cabin;
+			$acsr['to_cabin'] = $feed->upgrade_type;
+                        $day_of_week = date('w', $feed->dep_date);
+                      $day = ($day_of_week)?$day_of_week:7;
+
+                        $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
+                        $acsr['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
+
+                        if($acsr['season_id'] == 0 ) {
+                                $acsr['frequency'] = $p_freq;
+                        }
+
+			$acsr_data = $this->acsr_m->apply_acsr_rules($acsr);	
+			$this->data['siteinfos'] = $this->reset_m->get_site();
+			/*echo "pnr ref: " . $passenger_data->pnr_ref;
+			echo "<br>";
+			echo "<br>status: " . $acsr_data->status ;
+			echo "<br>bidval: " . $feed->bid_val;
+			echo "<br>min bid price " . $acsr_data->min_bid_price;
+			echo "<br> cabincnt = " .$cabin_seats;
+			echo "<br>  passen cnt = " . $passenger_cnt;
+			echo "<br> memp = " .  $acsr_data->memp;	
+			echo "<br>";
+			var_dump($acsr_data);	echo "<br>";*/
+			if((($acsr_data->status == 'accept' && $feed->bid_val < $acsr_data->min_bid_price) || ( $acsr_data->status == 'accept'  && ($cabin_seats -  $passenger_cnt) <= $acsr_data->memp)) || $acsr_data->status == 'reject' ) {			
+					// send mail min bid value not met
+					// update pf entry status and VX_aln_offer_ref status as bid not accepted
+		//		echo "rejected ---<br>";
+					                           $message = '
+        <html>
+        <body>
+        <div style="max-width: 800px; margin: 0; padding: 30px 0;">
+        <table width="80%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+<td width="5%"></td>
+        <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
+<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
+ Your bid is rejected.<br />
+<br />
+<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
+<br />
+PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+
+<br />
+<br />
+<br />
+</td>
+</tr>
+</table>
+
+</div>
+</body>
+</html>
+';
+
+
+  //                       $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                         $this->email->to($emails_list[0]);
+                         $this->email->subject("Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point);
+                        $this->email->message($message);
+                        $this->email->send();
+
+				 $array = array();
+                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_cancel','20');
+                        $array["modify_date"] = time();
+                        $array["modify_userID"] = $this->session->userdata('loginuserID');
+			$p_list = explode(',',$passenger_data->p_list);
+
+                        // update extension table with new status
+
+                        $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+
+			} else {
+			if ($cabin_seats > $passenger_cnt  && ($cabin_seats -  $passenger_cnt) >= $feed->memp) {
+		//	echo "accepetd";
+				$empty_seats[$feed->upgrade_type] = $cabin_seats -  $passenger_cnt;
+				
+					// accept bid
+					                                                         $message = '
+        <html>
+        <body>
+        <div style="max-width: 800px; margin: 0; padding: 30px 0;">
+        <table width="80%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+<td width="5%"></td>
+        <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
+<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
+ Your bid is accepted.<br />
+<br />
+<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
+<br />
+PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+
+<br />
+<br />
+<br />
+</td>
+</tr>
+</table>
+
+</div>
+</body>
+</html>
+';
+
+
+                        // $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                         $this->email->to($emails_list[0]);
+                         $this->email->subject("Bid is accepted From " .$feed->src_point.'To ' . $feed->dest_point);
+                        $this->email->message($message);
+                        $this->email->send();
+
+			 $array = array();
+                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
+                        $array["modify_date"] = time();
+                        $array["modify_userID"] = $this->session->userdata('loginuserID');
+
+
+                        // update extension table with new status
+			$p_list = explode(',',$passenger_data->p_list);
+                        $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+		}
+
+
+				}
+
+
+
+				}
+
+			}
+			
+		}		
+		
 
 }
