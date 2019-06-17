@@ -228,9 +228,9 @@
 						</div>
 						<div class="col-md-8 col-md-offset-2">
 							<div class="price-range">
-								<i class="fa fa-dollar"></i><b id="mile-min"></b>
+								<b id="mile-min"></b>miles
        										<input id="mile1" data-slider-id='mile1Slider' type="text" data-slider-min="0" data-slider-max="<?=$result->miles?>" data-slider-step="5" data-slider-value="<?=$result->miles/2?>" data-slider-handle="square"min-slider-handle="200"/>
-										<i class="fa fa-dollar"></i><b id="mile-max"></b>
+									<b id="mile-max"></b>miles
 							</div>
 						</div>
 						<div class="col-md-12 payment-box">
@@ -315,7 +315,7 @@ $('#mile1').slider({
 		var dollar = value * mile_value;
 		var bid_amount = $("#ex1").slider('getValue');
 		var pay_cash = bid_amount - Math.round(dollar);
-		return pay_cash+'$ + '+value + ' Miles'+'($'+Math.round(dollar)+')';
+		return '$'+pay_cash+' + '+value + ' Miles'+'($'+Math.round(dollar)+')';
 		//return value;
 		
 	}
@@ -361,7 +361,7 @@ $('input[type=radio][name=bid_cabin]').change(function(){
 			mileSliderUpdate();
             changeColors();			
           }
-   });
+     });
 });
 
  function changeColors(){
@@ -398,10 +398,42 @@ $('input[type=radio][name=bid_cabin]').change(function(){
 	  
  }
  
- function saveBid(offer_id){
-	alert("Save Bid"+offer_id); 
- }
- 
+ function saveBid(offer_id){  
+   $.ajax({
+          async: false,
+          type: 'POST',
+          url: "<?=base_url('homes/bidding/saveCardData')?>",          
+		  data: {"card_number" :$('#card_number').val(),"month_expiry":$('#month_expiry').val(),"year_expiry":$('#year_expiry').val(),"cvv":$('#cvv').val(),"offer_id":offer_id},
+          dataType: "html",			
+          success: function(data) {
+            var cardinfo = jQuery.parseJSON(data);              		
+            if(cardinfo['status'] == "success"){
+				var bid_value = $("#ex1").slider('getValue');  
+				var miles = $("#mile1").slider('getValue');	
+				var pay_cash = bid_value - Math.round(miles * mile_value);
+				var flight_number = <?=$result->flight_number?>;
+				var upgrade_type = $('input[type=radio][name=bid_cabin]').val().split('|')[0];	
+				$.ajax({
+				  async: false,
+				  type: 'POST',
+				  url: "<?=base_url('homes/bidding/saveBidData')?>",          
+				  data: {"offer_id" :offer_id,"bid_value":bid_value,"miles":miles,"cash":pay_cash,"flight_number":flight_number,"upgrade_type":upgrade_type},
+				  dataType: "html",			
+				  success: function(data) {
+					var info = jQuery.parseJSON(data);              		
+					if(info['status'] == "success"){
+						window.location = "<?=base_url('home/bidsuccess')?>/"+offer_id;
+					} else {
+						alert(info['status']);
+					}			
+				  }
+			   });
+			} else {
+				alert(cardinfo['status']);
+			}			
+          } 
+     });
+ } 
  
 </script>
 
