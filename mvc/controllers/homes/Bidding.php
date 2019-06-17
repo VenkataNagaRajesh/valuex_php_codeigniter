@@ -7,6 +7,7 @@ class Bidding extends MY_Controller {
 	     $this->load->model("login_m");
 		 $this->load->model("airline_cabin_m");
 		 $this->load->model("fclr_m");
+		 $this->load->model("preference_m");
 		 $this->load->library('session');				 
 	     $language = $this->session->userdata('lang');	  
 		$this->lang->load('home', $language);
@@ -28,8 +29,10 @@ class Bidding extends MY_Controller {
 		$dteDiff  = $dteStart->diff($dteEnd);
 		$this->data['result']->time_diff = $dteDiff->format('%d days %H hours %i min');          		 
        // echo $interval->format('%Y years %m months %d days %H hours %i minutes %s seconds');	 exit; 
-        $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();		
-		// $this->data['passengers'] = explode(';',$result->pax_names);
+        $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
+        $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
+         $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_CASH_PROPORTION'))->pref_value;		
+		
         // print_r($this->data['result']); exit;	
 	   
 		$this->data["subview"] = "home/bidview";

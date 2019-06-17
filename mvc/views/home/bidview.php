@@ -228,7 +228,9 @@
 						</div>
 						<div class="col-md-8 col-md-offset-2">
 							<div class="price-range">
-								<p>Price Range</p>
+								<i class="fa fa-dollar"></i><b id="mile-min"></b>
+       										<input id="mile1" data-slider-id='mile1Slider' type="text" data-slider-min="0" data-slider-max="<?=$result->miles?>" data-slider-step="5" data-slider-value="<?=$result->miles/2?>" data-slider-handle="square"min-slider-handle="200"/>
+										<i class="fa fa-dollar"></i><b id="mile-max"></b>
 							</div>
 						</div>
 						<div class="col-md-12 payment-box">
@@ -238,8 +240,8 @@
 										<div class="col-md-12">
 											<label for="cardNumber">Card number</label>
 											<div class="input-group">
-												<input type="tel" class="form-control" name="cardNumber"
-													placeholder="Enter Card Number"
+												<input type="tel" class="form-control" name="card_number" id="card_number"
+													placeholder="Enter Card Number" min="16" max="16"
 												/>
 												<span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
 											</div>
@@ -248,12 +250,12 @@
 									<div class="form-group card-exp">
 										<div class="col-md-6">
 											<label for="cardExpiry">Expiry Date</label>
-											<input type="tel" class="form-control" name="cardExpiry" placeholder="MM"/>
-											/ <input type="tel" class="form-control" name="cardExpiry" placeholder="YY"/>
+											<input type="tel" class="form-control" name="month_expiry" id="month_expiry" placeholder="MM"/>
+											/ <input type="tel" class="form-control" name="year_expiry" id="year_expiry" placeholder="YY"/>
 										</div>
 										<div class="col-md-6">
 											<label for="cardCVC" style="position: relative;margin-left: auto;margin-right: 2em;">CVV</label>
-											<input type="tel" class="form-control pull-right" name="cardCVC" />
+											<input type="tel" class="form-control pull-right" name="cvv" id="cvv" />
 										</div>
 									</div>
 									<div class="col-md-12">
@@ -265,7 +267,7 @@
 								</div>
 								<div class="col-md-4 actual-cash">
 									<p>Total Cash to be Paid <b><i class="fa fa-dollar"></i>1200.00</b></p>
-									<a href="#" type="button" class="btn btn-danger">Pay Now</a>
+									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$result->offer_id?>)">Pay Now</a>
 								</div>
 							</form>
 						</div>
@@ -288,24 +290,53 @@
 </div>
 
 <script>
+var mile_value = <?=$mile_value?>;
+var mile_proportion = <?=$mile_proportion?>;
+
 $(document).ready(function () {
   $("#tot").text(<?php echo explode(',',$result->avg)[0]; ?>);
- $("#bidtot").text(<?php echo explode(',',$result->avg)[0]; ?>);  
+  $("#bidtot").text(<?php echo explode(',',$result->avg)[0]; ?>);  
   $("#min").text(<?php echo explode(',',$result->min)[0]; ?>); 
-  $("#max").text(<?php echo explode(',',$result->max)[0]; ?>); 
+  $("#max").text(<?php echo explode(',',$result->max)[0]; ?>);  
+  mileSliderUpdate();
   changeColors();
 });
 
-  $('#ex1').slider({
+$('#ex1').slider({
 	tooltip: 'always',
 	formatter: function(value) {
-		return value + ' Per Passenger(1)';
+		return value + ' Per Offer';
 	}
 });
 
+$('#mile1').slider({
+	tooltip: 'always',
+	formatter: function(value) {			
+		var dollar = value * mile_value;
+		var bid_amount = $("#ex1").slider('getValue');
+		var pay_cash = bid_amount - Math.round(dollar);
+		return pay_cash+'$ + '+value + ' Miles'+'($'+Math.round(dollar)+')';
+		//return value;
+		
+	}
+});
+
+/* $("#mile1").on("slide", function(slideEvt) {
+	var value = $("#ex1").slider('getValue');
+	var miles = value/mile_value;
+	var limit = Math.round(miles)* mile_proportion;	
+	 if(slideEvt.value > limit){
+		//$("#mile1").slider("toggle");
+		return false;
+	}else{
+		//$("#mile1").slider("enable");
+	}  
+}); */
+
 $("#ex1").on("slide", function(slideEvt) {
 	$("#tot").text(slideEvt.value); 
-	$("#bidtot").text(slideEvt.value); 
+	$("#bidtot").text(slideEvt.value);
+    mileSliderUpdate();	
     changeColors();	 
 });
 
@@ -327,6 +358,7 @@ $('input[type=radio][name=bid_cabin]').change(function(){
 			$("#min").text(Math.round(info['min']));
 			$("#tot").text(Math.round(info['average']));
 			$("#bidtot").text(Math.round(info['average']));
+			mileSliderUpdate();
             changeColors();			
           }
    });
@@ -354,6 +386,23 @@ $('input[type=radio][name=bid_cabin]').change(function(){
 		$('.slider-handle').css({"background":"#009900"});
      }
  }
+ 
+ function mileSliderUpdate(){
+	 var value = $("#ex1").slider('getValue');   
+     var miles = value/mile_value;
+	  $("#mile-min").text(0);  
+	  $("#mile-max").text(Math.round(miles));
+	  $("#mile1").slider('setAttribute', 'max', Math.round(miles)); 
+	  $("#mile1").slider('setValue', Math.round(miles)* mile_proportion);  
+	  $("#mile1").slider('setAttribute', 'step', Math.round(1/mile_value)); 
+	  
+ }
+ 
+ function saveBid(offer_id){
+	alert("Save Bid"+offer_id); 
+ }
+ 
+ 
 </script>
 
 
