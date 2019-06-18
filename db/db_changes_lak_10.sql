@@ -7,7 +7,7 @@ alter table VX_aln_bid drop column modify_userID;
 alter table VX_aln_bid drop column create_date;
 alter table VX_aln_bid drop column modify_date;
 
-CREATE TABLE `vx_aln_card_data` (
+CREATE TABLE `VX_aln_card_data` (
   `card_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `offer_id` int(11) NOT NULL,
   `card_number` text NOT NULL,

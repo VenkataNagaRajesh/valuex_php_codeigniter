@@ -6,6 +6,7 @@ class Home extends MY_Controller {
 		parent::__construct();	
 		 $this->load->library('recaptcha');				
 	     $this->load->model("bid_m");
+		 $this->load->model("offer_reference_m");
 		 $this->load->library('session');
 		 $this->load->helper('form');
          $this->load->library('form_validation');			 
@@ -93,7 +94,8 @@ class Home extends MY_Controller {
 	
 	public function bidsuccess() {
         $offer_id = htmlentities(escapeString($this->uri->segment(3)));	
-       // $this->data['result'] = $this->bid_m->getPassengers();		
+        $this->data['offer_data'] = $this->bid_m->get_offer_data($offer_id);
+        // print_r($this->data['offer_data']); exit;		
 		$this->data["subview"] = "home/bidsuccess";
 		$this->load->view('_layout_home', $this->data);
 	}	
@@ -101,7 +103,9 @@ class Home extends MY_Controller {
 		$this->data["subview"] = "home/upgradeoffer";
 		$this->load->view('_layout_home', $this->data);
 	}		
-	public function paysuccess() {		
+	public function paysuccess() {
+        $offer_id = htmlentities(escapeString($this->uri->segment(3)));	
+        $this->data['offer_data'] = $this->offer_reference_m->get_single_offer_ref(array("offer_id" => $offer_id));		
 		$this->data["subview"] = "home/paysuccess";
 		$this->load->view('_layout_home', $this->data);
 	}

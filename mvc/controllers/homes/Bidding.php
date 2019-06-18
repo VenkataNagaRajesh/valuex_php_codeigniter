@@ -8,6 +8,10 @@ class Bidding extends MY_Controller {
 		 $this->load->model("airline_cabin_m");
 		 $this->load->model("fclr_m");
 		 $this->load->model("preference_m");
+		 $this->load->model("offer_eligibility_m");
+		 $this->load->model("offer_issue_m");
+		 $this->load->model("offer_reference_m");
+		 $this->load->model("rafeed_m");
 		 $this->load->library('session');
          $this->load->helper('form');
          $this->load->library('form_validation');		 
@@ -57,14 +61,35 @@ class Bidding extends MY_Controller {
 			$data['cash'] = $this->input->post("cash");
 			$data['bid_value'] = $this->input->post("bid_value");
 			$data['miles'] = $this->input->post("miles");
+			$data['fclr_id'] = $this->input->post("fclr_id");
 			$data['upgrade_type'] = $this->input->post("upgrade_type");
 			$data['flight_number'] = $this->input->post("flight_number");	
 			$data['bid_submit_date'] = time();
 			$data['active'] = 1;
-            $id = $this->bid_m->save_bid_data($data);
+            $id = $this->bid_m->save_bid_data($data);			
           if($id){
+			  $select_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),1);
+			  $unselect_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"));
+			  
+			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_complete','20');
+			  $unselect_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_unselect_cabin','20');
+			   $array['booking_status'] = $select_status;
+               $array["modify_date"] = time(); 
+			   
+			   $select_p_list = explode(',',$select_passengers_data->p_list);
+               $unselect_p_list = explode(',',$unselect_passengers_data->p_list);
+			   
+			   $this->mydebug->debug($select_passengers_data->p_list);
+			   $this->mydebug->debug($unselect_passengers_data->p_list);
+			   
+               $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $select_status,"modify_date"=>time()),$select_p_list);
+			    $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);
+			   
+			   $ref['offer_status'] = $select_status;
+			   $ref["modify_date"] = time();
+			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
 			  $json['status'] = "success";
-		  }			
+    	  }			
 		}else{
 			$json['status'] = "send offer_id";
 		}
@@ -73,7 +98,7 @@ class Bidding extends MY_Controller {
         $this->output->set_output(json_encode($json));
 	}
 	
-	 protected function rules() {
+	protected function rules() {
 		$rules = array(
 			array(
 				'field' => 'card_number', 
@@ -123,5 +148,7 @@ class Bidding extends MY_Controller {
 		$this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($json));
 	}
+	
+	
 
 }

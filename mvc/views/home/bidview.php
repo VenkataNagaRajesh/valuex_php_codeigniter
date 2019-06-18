@@ -228,9 +228,9 @@
 						</div>
 						<div class="col-md-8 col-md-offset-2">
 							<div class="price-range">
-								<b id="mile-min"></b>miles
+								<b id="mile-min"> </b>
        										<input id="mile1" data-slider-id='mile1Slider' type="text" data-slider-min="0" data-slider-max="<?=$result->miles?>" data-slider-step="5" data-slider-value="<?=$result->miles/2?>" data-slider-handle="square"min-slider-handle="200"/>
-									<b id="mile-max"></b>miles
+									<b id="mile-max"></b> 
 							</div>
 						</div>
 						<div class="col-md-12 payment-box">
@@ -336,12 +336,7 @@ $('#mile1').slider({
 	}  
 }); */ 
 
-/* $("#mile1").on("slide", function(slideEvt) {
-	$("#paid_cash").text(slideEvt.value); 
-	$("#paid_miles").text(slideEvt.value);
-   	 
-}); */
-
+	
 $("#ex1").on("slide", function(slideEvt) {
 	$("#tot").text(slideEvt.value); 
 	$("#bidtot").text(slideEvt.value);
@@ -399,11 +394,13 @@ $('input[type=radio][name=bid_cabin]').change(function(){
  function mileSliderUpdate(){
 	 var value = $("#ex1").slider('getValue');   
      var miles = value/mile_value;
-	  $("#mile-min").text(0);  
-	  $("#mile-max").text(Math.round(miles));
-	  $("#mile1").slider('setAttribute', 'max', Math.round(miles));
-      //$("#mile1").slider('setAttribute', 'min', Math.round(miles)* mile_proportion);	  
-	  $("#mile1").slider('setValue', Math.round(miles)* mile_proportion);  
+	  $("#mile-min").text(0+' Miles');  
+	 // $("#mile-max").text(Math.round(miles)+' Miles');
+	 // $("#mile1").slider('setAttribute', 'max', Math.round(miles));
+	 //$("#mile1").slider('setValue', Math.round(miles)* mile_proportion);
+	 $("#mile-max").text( Math.round(Math.round(miles)* mile_proportion)+' Miles');
+	 $("#mile1").slider('setAttribute', 'max', Math.round(Math.round(miles)* mile_proportion));	  
+	  $("#mile1").slider('setValue',0);  
 	  $("#mile1").slider('setAttribute', 'step', Math.round(1/mile_value)); 
 	  
  }
@@ -422,17 +419,19 @@ $('input[type=radio][name=bid_cabin]').change(function(){
 				var miles = $("#mile1").slider('getValue');	
 				var pay_cash = bid_value - Math.round(miles * mile_value);
 				var flight_number = <?=$result->flight_number?>;
-				var upgrade_type = $('input[type=radio][name=bid_cabin]').val().split('|')[0];	
+				var upgrade = $('input[type=radio][name=bid_cabin]').val().split('|');
+				var upgrade_type = upgrade[0];	
+				var fclr_id = upgrade[1];
 				$.ajax({
 				  async: false,
 				  type: 'POST',
 				  url: "<?=base_url('homes/bidding/saveBidData')?>",          
-				  data: {"offer_id" :offer_id,"bid_value":bid_value,"miles":miles,"cash":pay_cash,"flight_number":flight_number,"upgrade_type":upgrade_type},
+				  data: {"offer_id" :offer_id,"bid_value":bid_value,"miles":miles,"cash":pay_cash,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id},
 				  dataType: "html",			
 				  success: function(data) {
 					var info = jQuery.parseJSON(data);              		
 					if(info['status'] == "success"){
-						window.location = "<?=base_url('home/bidsuccess')?>/"+offer_id;
+						window.location = "<?=base_url('home/paysuccess')?>/"+offer_id;
 					} else {
 						alert(info['status']);
 					}			
