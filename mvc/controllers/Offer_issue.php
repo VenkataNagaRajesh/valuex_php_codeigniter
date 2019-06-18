@@ -383,7 +383,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 			echo "<br> memp = " .  $acsr_data->memp;	
 			echo "<br>";
 			var_dump($acsr_data);	echo "<br>";*/
-			if((($acsr_data->status == 'accept' && $feed->bid_val < $acsr_data->min_bid_price) || ( $acsr_data->status == 'accept'  && ($cabin_seats -  $passenger_cnt) <= $acsr_data->memp)) || $acsr_data->status == 'reject' ) {			
+			if(($acsr_data->status == 'accept' && $feed->bid_val < $acsr_data->min_bid_price)  || $acsr_data->status == 'reject' ) {			
 					// send mail min bid value not met
 					// update pf entry status and VX_aln_offer_ref status as bid not accepted
 		//		echo "rejected ---<br>";
@@ -434,7 +434,60 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 
 			} else {
-			if ($cabin_seats > $passenger_cnt  && ($cabin_seats -  $passenger_cnt) >= $feed->memp) {
+
+
+				if ( $acsr_data->status == 'accept' && $feed->bid_val > $acsr_data->min_bid_price  && ($cabin_seats -  $passenger_cnt) <= $acsr_data->memp) {
+
+					
+					                                                                  $message = '
+        <html>
+        <body>
+        <div style="max-width: 800px; margin: 0; padding: 30px 0;">
+        <table width="80%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+<td width="5%"></td>
+        <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
+<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
+ Your bid is not processed due to non availability of seats.<br />
+<br />
+<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
+<br />
+PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+
+<br />
+<br />
+<br />
+</td>
+</tr>
+</table>
+
+</div>
+</body>
+</html>
+';
+
+
+  //                       $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                         $this->email->to($emails_list[0]);
+                         $this->email->subject("Bid is rejected, No seats avaiable  From " .$feed->src_point.' To ' . $feed->dest_point);
+                        $this->email->message($message);
+                        $this->email->send();
+
+                                 $array = array();
+                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('no_seats','20');
+                        $array["modify_date"] = time();
+                        $array["modify_userID"] = $this->session->userdata('loginuserID');
+                        $p_list = explode(',',$passenger_data->p_list);
+
+
+				   // update extension table with new status
+
+                        $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+				}
+
+			if ($acsr_data->status == 'accept' && $cabin_seats > $passenger_cnt  && ($cabin_seats -  $passenger_cnt) >= $feed->memp) {
 		//	echo "accepetd";
 				$empty_seats[$feed->upgrade_type] = $cabin_seats -  $passenger_cnt;
 				
