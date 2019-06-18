@@ -144,7 +144,9 @@ class Rafeed extends Admin_Controller {
 				      if($flag == 1){ 						   										
 				   if(count($Row) == 21){ //print_r($Row); exit;
 					$rafeed = array();
-	 			      $rafeed['ticket_number'] =  $Row[array_search('ticket number',$import_header)];
+					$num =  explode('E',$Row[array_search('ticket number',$import_header)]);
+					$num1 = explode('.',$num[0]);
+	 			      $rafeed['ticket_number'] =  $num1[0];
 				      $rafeed['coupon_number'] = $Row[array_search('coupon number',$import_header)];
 				      $rafeed['prorated_price'] = $Row[array_search('cpn value',$import_header)];
 				      $rafeed['airline_code'] = $Row[array_search('airline code',$import_header)];

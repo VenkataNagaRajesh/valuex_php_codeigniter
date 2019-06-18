@@ -393,7 +393,7 @@ class Preference extends Admin_Controller {
 		$get_value = $this->input->post('get_value');
 		if($type){
 		  if($type == 11){
-			$list = $this->airports_m->getDefdataTypes(null,array('1','2','3','4','5'));		
+			$list = $this->airports_m->getDefdataTypes(null,array('1','2','3','4','5','23'));		
 		  } else {
 			$list = $this->airports_m->getDefdataTypes(null,array($type));	
 		  }
