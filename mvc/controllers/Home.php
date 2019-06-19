@@ -36,7 +36,7 @@ class Home extends MY_Controller {
 		return $rules;
 	}
 	
-	public function validate_recaptcha(){ return true;	
+	public function validate_recaptcha(){ 
 		$recaptcha = $this->input->post('g-recaptcha-response');
 		if (!empty($recaptcha)) {
 			$response = $this->recaptcha->verifyResponse($recaptcha);
@@ -53,7 +53,7 @@ class Home extends MY_Controller {
 
      }
 	
-	public function validate_code($code){ return true;
+	public function validate_code($code){ 
 	   if(empty($code)){
 		  $this->form_validation->set_message("validate_code", "%s is required");
 		  return FALSE;
