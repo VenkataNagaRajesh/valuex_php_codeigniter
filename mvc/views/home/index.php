@@ -25,6 +25,8 @@
 					</div>
 				</div>
 				<div class="col-sm-5 col-md-4">
+							<span>	<?=$error?> </span>
+							
 					<div class="pnr-form">
 						<form class="form-horizontal" method="post" role="form">
 							<div class="form-group">
@@ -70,6 +72,7 @@
 									<button type="submit" class="btn btn-dander btn-lg">Proceed</button>
 								</div>
 							</div>
+							
 						</form>
 					</div>
 				</div>

@@ -405,8 +405,8 @@ $('input[type=radio][name=bid_cabin]').change(function(){
 	  
  }
  
- function saveBid(offer_id){  
-   $.ajax({
+ function saveBid(offer_id){  			
+    $.ajax({
           async: false,
           type: 'POST',
           url: "<?=base_url('homes/bidding/saveCardData')?>",          
@@ -419,7 +419,7 @@ $('input[type=radio][name=bid_cabin]').change(function(){
 				var miles = $("#mile1").slider('getValue');	
 				var pay_cash = bid_value - Math.round(miles * mile_value);
 				var flight_number = <?=$result->flight_number?>;
-				var upgrade = $('input[type=radio][name=bid_cabin]').val().split('|');
+				var upgrade = $('input[type=radio][name=bid_cabin]:checked').val().split('|');
 				var upgrade_type = upgrade[0];	
 				var fclr_id = upgrade[1];
 				$.ajax({
@@ -442,7 +442,7 @@ $('input[type=radio][name=bid_cabin]').change(function(){
 				alert($(status).text());
 			}			
           } 
-     });
+     }); 
  } 
  
 </script>

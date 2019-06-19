@@ -6,6 +6,7 @@ class bid_m extends MY_Model {
 	$this->db->select('count(*) count')->from('VX_aln_offer_ref');	 
 	 $this->db->where('pnr_ref',$pnr);
 	 $this->db->where('coupon_code',$code);
+	 //$this->db->where('offer_status',$status);
 	 $result = $this->db->get();	 
 	 return $result->row('count');
   }

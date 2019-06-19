@@ -6,12 +6,13 @@ class Home extends MY_Controller {
 		parent::__construct();	
 		 $this->load->library('recaptcha');				
 	     $this->load->model("bid_m");
-		 $this->load->model("offer_reference_m");
+		 $this->load->model("offer_reference_m");		
 		 $this->load->library('session');
 		 $this->load->helper('form');
          $this->load->library('form_validation');			 
 	     $language = $this->session->userdata('lang');	  
 		$this->lang->load('home', $language);
+		
 	}
 	
 	 protected function rules() {
@@ -35,7 +36,7 @@ class Home extends MY_Controller {
 		return $rules;
 	}
 	
-	public function validate_recaptcha(){	
+	public function validate_recaptcha(){ return true;	
 		$recaptcha = $this->input->post('g-recaptcha-response');
 		if (!empty($recaptcha)) {
 			$response = $this->recaptcha->verifyResponse($recaptcha);
@@ -52,13 +53,14 @@ class Home extends MY_Controller {
 
      }
 	
-	public function validate_code($code){ 
+	public function validate_code($code){ return true;
 	   if(empty($code)){
 		  $this->form_validation->set_message("validate_code", "%s is required");
 		  return FALSE;
 	   }else{
 		  $this->load->model('offer_eligibility_m');
           $coupon_code = $this->offer_eligibility_m->hash($code);
+		 // $status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 		  $count = $this->bid_m->pnr_code_validate($this->input->post('pnr'),$coupon_code);
 		  if($count > 0){
 			return TRUE; 
@@ -81,11 +83,14 @@ class Home extends MY_Controller {
 				$this->data["subview"] = "home/index";
 		        $this->load->view('_layout_home', $this->data);		
 			} else {				
-				//echo "success"; exit;
-				//$this->usertype_m->insert_usertype($array);
-				//$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-				redirect(base_url("homes/bidding"));
-			}
+				$this->data['error'] = $this->allowValidation($this->input->post('pnr'));
+                if(empty($this->data['error'])){
+				   redirect(base_url("homes/bidding"));
+				} else {
+				   $this->data["subview"] = "home/index";
+		           $this->load->view('_layout_home', $this->data);
+				}				
+			}			
 		} else {			
 		   $this->data["subview"] = "home/index";
 		   $this->load->view('_layout_home', $this->data);
@@ -99,6 +104,7 @@ class Home extends MY_Controller {
 		$this->data["subview"] = "home/bidsuccess";
 		$this->load->view('_layout_home', $this->data);
 	}	
+	
 	public function upgradeoffer() {		
 		$this->data["subview"] = "home/upgradeoffer";
 		$this->load->view('_layout_home', $this->data);

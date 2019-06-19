@@ -79,8 +79,8 @@ class Bidding extends MY_Controller {
 			   $select_p_list = explode(',',$select_passengers_data->p_list);
                $unselect_p_list = explode(',',$unselect_passengers_data->p_list);
 			   
-			   $this->mydebug->debug($select_passengers_data->p_list);
-			   $this->mydebug->debug($unselect_passengers_data->p_list);
+			 //  $this->mydebug->debug($select_passengers_data->p_list);
+			 //  $this->mydebug->debug($unselect_passengers_data->p_list);
 			   
                $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $select_status,"modify_date"=>time()),$select_p_list);
 			    $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);
