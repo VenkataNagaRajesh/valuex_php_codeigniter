@@ -85,7 +85,8 @@ class Home extends MY_Controller {
 			} else {				
 				$this->data['error'] = $this->allowValidation($this->input->post('pnr'));
                 if(empty($this->data['error'])){
-				   redirect(base_url("homes/bidding"));
+					$offer = $this->offer_reference_m->get_single_offer_ref(array('pnr_ref'=>$this->input->post('pnr')));
+				   redirect(base_url("homes/bidding/index/".$offer->offer_id));
 				} else {
 				   $this->data["subview"] = "home/index";
 		           $this->load->view('_layout_home', $this->data);

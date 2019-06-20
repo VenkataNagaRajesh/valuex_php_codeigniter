@@ -20,7 +20,8 @@ class Bidding extends MY_Controller {
 	}
   
     public function index() {
-        $this->data['results'] = $this->bid_m->getPassengers();
+		$id = htmlentities(escapeString($this->uri->segment(4)));
+        $this->data['results'] = $this->bid_m->getPassengers($id);
 		if(empty($this->data['results'])){
 			redirect(base_url('home/index'));
 		}
