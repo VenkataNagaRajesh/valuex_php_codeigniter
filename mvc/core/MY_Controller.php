@@ -38,8 +38,9 @@ class MY_Controller extends CI_Controller {
 		$bid_confirmation = $this->preference_m->get_preference(array("pref_code" => 'BID_CONFIRMATION'))->pref_value;
 		$bid_expire = $this->preference_m->get_preference(array("pref_code" => 'BID_EXPIRE'))->pref_value;
 		$offer_data = $this->offer_reference_m->getOfferDataByRef($pnr_ref);
-		$this->mydebug->debug($status);
-		$this->mydebug->debug($offer_data->offer_status);
+		//print_r($offer_data); exit;
+		//$this->mydebug->debug($status);
+		//$this->mydebug->debug($offer_data->offer_status);
 		//$offer_data->dep_date = 1561805915;
 		if($status == $offer_data->offer_status){
 		    $added_timestamp = strtotime('+'.$bid_expire+$bid_confirmation.' day', time());

@@ -24,10 +24,10 @@
 						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="198"></iframe>
 					</div>
 				</div>
-				<div class="col-sm-5 col-md-4">
-							<span>	<?=$error?> </span>
+				<div class="col-sm-5 col-md-4">				
 							
 					<div class="pnr-form">
+					    <span style="color:red">	<?=$error?> </span>
 						<form class="form-horizontal" method="post" role="form">
 							<div class="form-group">
 								<?php 
