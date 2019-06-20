@@ -31,4 +31,4 @@ $lang['master_latitude'] = 'Latitude';
 $lang['master_longitude'] = 'Longitude';
 $lang['airport_created_user'] = 'Created By';
 $lang['airport_created_date'] = 'Create Date';
-$lang['download_airport_format'] = 'Download Format';
+$lang['download_airport_format'] = 'Upload Format';
