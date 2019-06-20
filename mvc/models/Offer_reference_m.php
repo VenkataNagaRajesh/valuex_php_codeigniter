@@ -42,6 +42,15 @@ class Offer_reference_m extends MY_Model {
 	public function getEncoded($str) {
 		return $this->hash($str);
         }
+		
+		public function getOfferDataByRef($pnr_ref){
+			$this->db->select('ref.offer_status,MIN(tpf.dep_date) dep_date')->from('VX_aln_daily_tkt_pax_feed tpf');
+			$this->db->join('VX_aln_offer_ref ref','ref.pnr_ref = tpf.pnr_ref','LEFT');
+            $this->db->where('ref.pnr_ref',$pnr_ref);
+            //$this->db->group_by('tpf.flight_number');			
+            $query = $this->db->get();
+            return 	$query->row();		
+		}
 
 	
 }

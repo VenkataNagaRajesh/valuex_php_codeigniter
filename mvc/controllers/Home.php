@@ -6,11 +6,13 @@ class Home extends MY_Controller {
 		parent::__construct();	
 		 $this->load->library('recaptcha');				
 	     $this->load->model("bid_m");
+		 $this->load->model("offer_reference_m");		
 		 $this->load->library('session');
 		 $this->load->helper('form');
          $this->load->library('form_validation');			 
 	     $language = $this->session->userdata('lang');	  
 		$this->lang->load('home', $language);
+		
 	}
 	
 	 protected function rules() {
@@ -34,7 +36,7 @@ class Home extends MY_Controller {
 		return $rules;
 	}
 	
-	public function validate_recaptcha(){	
+	public function validate_recaptcha(){ 
 		$recaptcha = $this->input->post('g-recaptcha-response');
 		if (!empty($recaptcha)) {
 			$response = $this->recaptcha->verifyResponse($recaptcha);
@@ -58,6 +60,7 @@ class Home extends MY_Controller {
 	   }else{
 		  $this->load->model('offer_eligibility_m');
           $coupon_code = $this->offer_eligibility_m->hash($code);
+		 // $status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 		  $count = $this->bid_m->pnr_code_validate($this->input->post('pnr'),$coupon_code);
 		  if($count > 0){
 			return TRUE; 
@@ -80,11 +83,15 @@ class Home extends MY_Controller {
 				$this->data["subview"] = "home/index";
 		        $this->load->view('_layout_home', $this->data);		
 			} else {				
-				//echo "success"; exit;
-				//$this->usertype_m->insert_usertype($array);
-				//$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-				redirect(base_url("homes/bidding"));
-			}
+				$this->data['error'] = $this->allowValidation($this->input->post('pnr'));
+                if(empty($this->data['error'])){
+					$offer = $this->offer_reference_m->get_single_offer_ref(array('pnr_ref'=>$this->input->post('pnr')));
+				   redirect(base_url("homes/bidding/index/".$offer->offer_id));
+				} else {
+				   $this->data["subview"] = "home/index";
+		           $this->load->view('_layout_home', $this->data);
+				}				
+			}			
 		} else {			
 		   $this->data["subview"] = "home/index";
 		   $this->load->view('_layout_home', $this->data);
@@ -93,15 +100,19 @@ class Home extends MY_Controller {
 	
 	public function bidsuccess() {
         $offer_id = htmlentities(escapeString($this->uri->segment(3)));	
-       // $this->data['result'] = $this->bid_m->getPassengers();		
+        $this->data['offer_data'] = $this->bid_m->get_offer_data($offer_id);
+        // print_r($this->data['offer_data']); exit;		
 		$this->data["subview"] = "home/bidsuccess";
 		$this->load->view('_layout_home', $this->data);
 	}	
+	
 	public function upgradeoffer() {		
 		$this->data["subview"] = "home/upgradeoffer";
 		$this->load->view('_layout_home', $this->data);
 	}		
-	public function paysuccess() {		
+	public function paysuccess() {
+        $offer_id = htmlentities(escapeString($this->uri->segment(3)));	
+        $this->data['offer_data'] = $this->offer_reference_m->get_single_offer_ref(array("offer_id" => $offer_id));		
 		$this->data["subview"] = "home/paysuccess";
 		$this->load->view('_layout_home', $this->data);
 	}
