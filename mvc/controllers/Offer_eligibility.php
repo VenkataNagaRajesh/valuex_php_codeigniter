@@ -275,6 +275,7 @@ $sWhere $sOrder $sLimit";
 		$array['to_city'] = $feed->to_city;
 		$array['flight_number'] = $feed->flight_number;
 		$array['dep_date'] = $feed->dep_date;
+		$array['carrier'] = $feed->carrier_code;
 		//$array['dep_time'] = $feed->dep_time;
 		$rules = $this->eligibility_exclusion_m->apply_exclusion_rules($array);
 			$upgrade = array();

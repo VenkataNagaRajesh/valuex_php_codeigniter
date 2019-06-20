@@ -183,6 +183,7 @@
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('orig_market')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('dest_market')?></th>
+				 <th class="col-lg-1"><?=$this->lang->line('carrier_code')?></th>
 			       <th class="col-lg-1"><?=$this->lang->line('flight_dep_date_start')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('flight_dep_date_end')?></th>
 			      <th class="col-lg-1"><?=$this->lang->line('flight_dep_time_start')?></th>
@@ -242,6 +243,7 @@ $(document).ready(function() {
       "columns": [{"data": "acsr_id" },
                                   {"data": "orig_mkt_name" },
                                   {"data": "dest_mkt_name" },
+				  {"data": "carrier" },
                                   {"data": "flight_dep_date_start" }, 
                   {"data": "flight_dep_date_end"},
                                   {"data": "flight_dep_time_start" },

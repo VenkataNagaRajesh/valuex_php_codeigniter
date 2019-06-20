@@ -28,6 +28,14 @@ class Eligibility_exclusion extends Admin_Controller {
                 		'label' => $this->lang->line("dest_market"),
                 		'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
                        ),
+
+			 array(
+                                'field' => 'carrier',
+                                'label' => $this->lang->line("carrier"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                       ),
+
+
 			array(
                  		'field' => 'flight_nbr_start',
                  		'label' => $this->lang->line("flight_nbr_start"),
@@ -242,9 +250,11 @@ class Eligibility_exclusion extends Admin_Controller {
 	
 	   $this->data['marketzones'] = $this->marketzone_m->getMarketzones();
 	   $this->data['class_type'] = $this->airports_m->getDefns('13'); // airline class types
+	   $this->data['carriers'] = $this->airports_m->getDefnsListByType('12');
 	   $this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14'); // days of week
 	   $this->data['hrs'] = $this->eligibility_exclusion_m->time_dropdown('24',1);
 	   $this->data['mins'] = $this->eligibility_exclusion_m->time_dropdown('60',5);
+	   
 	 
 		if($_POST) {
 			$rules = $this->rules();
@@ -266,6 +276,7 @@ class Eligibility_exclusion extends Admin_Controller {
 				$array['upgrade_from_cabin_type'] = $this->input->post("upgrade_from_cabin_type");
 				$array['upgrade_to_cabin_type'] = $this->input->post("upgrade_to_cabin_type");
 				$array["future_use"] = $this->input->post("future_use");
+				$array["carrier"] = $this->input->post("carrier");
 				$array["create_date"] = time();
 				$array["modify_date"] = time();
 				$array["create_userID"] = $this->session->userdata('loginuserID');
@@ -306,6 +317,7 @@ class Eligibility_exclusion extends Admin_Controller {
            			$this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14'); // days of week
            			$this->data['hrs'] = $this->eligibility_exclusion_m->time_dropdown('24',1);
            			$this->data['mins'] = $this->eligibility_exclusion_m->time_dropdown('60',5);
+				$this->data['carriers'] = $this->airports_m->getDefnsListByType('12');
 
 
 				if($_POST) {
@@ -330,6 +342,7 @@ class Eligibility_exclusion extends Admin_Controller {
                                 $array['upgrade_from_cabin_type'] = $this->input->post("upgrade_from_cabin_type");
                                 $array['upgrade_to_cabin_type'] = $this->input->post("upgrade_to_cabin_type");
                                 $array["future_use"] = $this->input->post("future_use");
+				$array["carrier"] = $this->input->post("carrier");
                                 $array["modify_date"] = time();
                                $array["modify_userID"] = $this->session->userdata('loginuserID');
 
@@ -591,20 +604,22 @@ SELECT  SQL_CALC_FOUND_ROWS MainSet.eexcl_id,MainSet.excl_reason_desc ,MainSet.o
         MainSet.flight_efec_date, MainSet.flight_disc_date, MainSet.flight_dep_start, MainSet.flight_dep_end, 
         MainSet.flight_nbr, MainSet.from_class, MainSet.to_class, Subset.frequency, MainSet.future_use, MainSet.active,
         MainSet.orig_market_id, MainSet.dest_market_id , Subset.dayslist , MainSet.upgrade_from_cabin_type, MainSet.upgrade_to_cabin_type,
-        MainSet.flight_nbr_start, MainSet.flight_nbr_end 
+        MainSet.flight_nbr_start, MainSet.flight_nbr_end , MainSet.carrier_code
 
 FROM (     
 
               select eexcl_id,excl_reason_desc, ex.orig_market_id , ex.dest_market_id ,oz.market_name as orig_mkt_name, dz.market_name as dest_mkt_name, 
               flight_efec_date, flight_disc_date, flight_dep_start, flight_dep_end, CONCAT(flight_nbr_start,'-',flight_nbr_end) 
               as flight_nbr,fc.aln_data_value as from_class , tc.aln_data_value as to_class, future_use, ex.active , 
-              ex.upgrade_from_cabin_type, ex.upgrade_to_cabin_type  ,ex.flight_nbr_start, ex.flight_nbr_end
+              ex.upgrade_from_cabin_type, ex.upgrade_to_cabin_type  ,ex.flight_nbr_start, ex.flight_nbr_end, car.code as carrier_code
               from VX_aln_eligibility_excl_rules ex 
 
               LEFT JOIN VX_aln_market_zone oz on (oz.market_id = ex.orig_market_id) 
               LEFT JOIN VX_aln_market_zone dz on (dz.market_id = ex.dest_market_id)  
-              LEFT JOIN  vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type ) 
-              LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID  = ex.upgrade_to_cabin_type)) as MainSet 
+              LEFT JOIN  vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type AND fc.aln_data_typeID = 13) 
+              LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID  = ex.upgrade_to_cabin_type AND fc.aln_data_typeID = 13)
+	      LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID  = ex.carrier AND car.aln_data_typeID = 12)
+) as MainSet 
 LEFT JOIN (
               select
                         FirstSet.frequency,FirstSet.eexcl_id, FirstSet.dayslist

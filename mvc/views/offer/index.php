@@ -22,6 +22,14 @@
                       <?=$this->lang->line('offer_issue')?>
                   </a>
 
+		 &nbsp;&nbsp;                  
+                   <a href="<?php echo base_url('offer_issue/auto_acsr') ?>">
+                      <i class="fa fa-upload"></i>
+                      <?php echo "Auto Acsr"?>
+                  </a>
+
+
+
               </h5>
 			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 
