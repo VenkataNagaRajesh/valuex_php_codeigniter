@@ -184,6 +184,7 @@
                                 <th class="col-lg-1"><?=$this->lang->line('desc')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('orig_market')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('dest_market')?></th>
+				<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 			       <th class="col-lg-1"><?=$this->lang->line('flight_efec_date')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('flight_disc_date')?></th>
 			      <th class="col-lg-1"><?=$this->lang->line('flight_dep_start')?></th>
@@ -240,6 +241,7 @@ $(document).ready(function() {
                   {"data": "excl_reason_desc" },
                                   {"data": "orig_mkt_name" },
                                   {"data": "dest_mkt_name" },
+				  {"data": "carrier_code" },
                                   {"data": "flight_efec_date" }, 
                   {"data": "flight_disc_date"},
                                   {"data": "flight_dep_start" },

@@ -313,15 +313,17 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 		// update is required if offer status is updated in VX_aln_offer_ref
 		// for now considering offer status is updated in  PF records
 		//
-	$sQuery = "select pf.dep_date , pf.flight_number , pf.carrier_code , pf.cabin, group_concat(distinct offer_id) as offer_list  
+	$sQuery = "select pf.dep_date , pf.flight_number , pf.carrier_code , group_concat(distinct offer_id) as offer_list  
 			from VX_aln_offer_ref oref 
 			INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref)
 			INNER JOIN VX_aln_dtpf_ext pext on (pext.dtpf_id = pf.dtpf_id)
 			INNER JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20)
 			WHERE pf.dep_date >= ".$current_time. " AND pf.dep_date <= " . $tstamp  .
 			" AND dd.alias != 'excl' AND pext.exclusion_id = 0 AND 
-			dd.alias = 'bid_complete'  group by pf.flight_number, pf.carrier_code, pf.dep_date,pf.cabin  order by pf.flight_number"; 
+			dd.alias = 'bid_complete'  group by pf.flight_number, pf.carrier_code, pf.dep_date  order by pf.flight_number"; 
+
 	$rResult = $this->install_m->run_query($sQuery);
+
 	$full_offerlist = array();
 	$partial_offerlist = array();	
 	foreach($rResult as $data ) {
@@ -330,7 +332,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
                         $inv['airline_id'] = $data->carrier_code;
 			$inv['departure_date'] = $data->dep_date;
 			$empty_seats = $this->invfeed_m->getCabinSeatData($inv);
-			
+			//var_dump($empty_seats);
 		$q = "select distinct rbd_markup, flight_number, from_city, to_city,tier_markup, (val + ((rbd_markup * val)/100)) as bid_val , 
 			offer_id,bid_submit_date , dep_date, upgrade_type, carrier_code, src_point,  dest_point, cabin FROM (
 				SELECT (bid_value + ((pf.tier_markup * bid_value)/100)) as val,pf.dep_date,bid.upgrade_type,pf.flight_number,
@@ -344,9 +346,11 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 
 		      "	) as FirstSet order by bid_val desc,tier_markup desc , rbd_markup desc,bid_submit_date desc";
 		$offers =  $this->install_m->run_query($q);
-		//var_dump($offers); echo "<br><br>";
+		//var_dump($q);echo "<br><br>";
+		//var_dump($offers); echo "<br><br>";exit;
 		foreach ($offers as $feed ) {
 			$passenger_data = $this->offer_issue_m->getPassengerData($feed->offer_id,$feed->flight_number);	
+			//var_dump($passenger_data);exit;
 			$cabin_seats = $empty_seats[$feed->upgrade_type];
 
 			$namelist = explode(',',$passenger_data->passengers);
@@ -361,6 +365,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 			$acsr['dep_date'] = $feed->dep_date;
 			$acsr['from_cabin'] = $feed->cabin;
 			$acsr['to_cabin'] = $feed->upgrade_type;
+			$acsr['carrier_code'] = $feed->carrier_code;
                         $day_of_week = date('w', $feed->dep_date);
                       $day = ($day_of_week)?$day_of_week:7;
 
@@ -372,8 +377,9 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
                         }
 
 			$acsr_data = $this->acsr_m->apply_acsr_rules($acsr);	
+
 			$this->data['siteinfos'] = $this->reset_m->get_site();
-			/*echo "pnr ref: " . $passenger_data->pnr_ref;
+		/*	echo "pnr ref: " . $passenger_data->pnr_ref;
 			echo "<br>";
 			echo "<br>status: " . $acsr_data->status ;
 			echo "<br>bidval: " . $feed->bid_val;
@@ -382,7 +388,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 			echo "<br>  passen cnt = " . $passenger_cnt;
 			echo "<br> memp = " .  $acsr_data->memp;	
 			echo "<br>";
-			var_dump($acsr_data);	echo "<br>";*/
+			//var_dump($acsr_data);	echo "<br>";exit;*/
 			if(($acsr_data->status == 'accept' && $feed->bid_val < $acsr_data->min_bid_price)  || $acsr_data->status == 'reject' ) {			
 					// send mail min bid value not met
 					// update pf entry status and VX_aln_offer_ref status as bid not accepted
@@ -415,8 +421,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 ';
 
 
-                         $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                        // $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                        // $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point);
                         $this->email->message($message);
@@ -437,7 +443,6 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 
 				if ( $acsr_data->status == 'accept' && $feed->bid_val > $acsr_data->min_bid_price  && ($cabin_seats -  $passenger_cnt) <= $acsr_data->memp) {
-
 					
 					                                                                  $message = '
         <html>
@@ -467,8 +472,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 ';
 
 
-                         $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                        // $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                        // $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid is rejected, No seats avaiable  From " .$feed->src_point.' To ' . $feed->dest_point);
                         $this->email->message($message);
@@ -520,8 +525,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 ';
 
 
-                         $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                        // $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                        // $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid is accepted From " .$feed->src_point.'To ' . $feed->dest_point);
                         $this->email->message($message);
@@ -548,6 +553,10 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 			}
 			
+
+	  $this->data["subview"] = "offer/index";
+                $this->load->view('_layout_main', $this->data);
+
 		}		
 		
 
