@@ -20,26 +20,31 @@ class Bidding extends MY_Controller {
 	}
   
     public function index() {
-        $this->data['result'] = $this->bid_m->getPassengers();
-		$this->data['result']->to_cabins = explode(',',$this->data['result']->to_cabins);
-		foreach($this->data['result']->to_cabins as $key => $value){
-		  $data = explode('-',$value);
-		  $this->data['result']->to_cabins[$data[1]] = $data[0];
-		  unset($this->data['result']->to_cabins[$key]);
+        $this->data['results'] = $this->bid_m->getPassengers();
+		if(empty($this->data['results'])){
+			redirect(base_url('home/index'));
 		}
-        
-		$dept = date('d-m-Y H:i:s',$this->data['result']->dep_date+$this->data['result']->dept_time);
-		$arrival =  date('d-m-Y H:i:s',$this->data['result']->arrival_date+$this->data['result']->arrival_time);
-		$dteStart = new DateTime($dept); 
-		$dteEnd   = new DateTime($arrival); 
-		$dteDiff  = $dteStart->diff($dteEnd);
-		$this->data['result']->time_diff = $dteDiff->format('%d days %H hours %i min');          		 
+		foreach($this->data['results'] as $result ){
+			$result->to_cabins = explode(',',$result->to_cabins);
+			foreach($result->to_cabins as $key => $value){
+			  $data = explode('-',$value);
+			  $result->to_cabins[$data[1]] = $data[0];
+			  unset($result->to_cabins[$key]);
+			}
+			
+			$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
+			$arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
+			$dteStart = new DateTime($dept); 
+			$dteEnd   = new DateTime($arrival); 
+			$dteDiff  = $dteStart->diff($dteEnd);
+			$result->time_diff = $dteDiff->format('%d days %H hours %i min'); 
+     	}	
        // echo $interval->format('%Y years %m months %d days %H hours %i minutes %s seconds');	 exit; 
         $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
         $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
 		
-        // print_r($this->data['result']); exit;	
+        // print_r($this->data['results']); exit;	
 	   
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);

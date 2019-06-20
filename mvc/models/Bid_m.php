@@ -33,11 +33,14 @@ class bid_m extends MY_Model {
 	  $this->db->join('vx_aln_data_defns car','(car.vx_aln_data_defnsID = tpf.carrier_code AND car.aln_data_typeID = 12)','LEFT'); 
 	 // $this->db->join('','','LEFT');
 	  $this->db->where('dd.alias','sent_offer_mail');
-	  $this->db->where("tpf.pnr_ref","WQ1234");
+	 // $this->db->where("tpf.pnr_ref","WQ1234");
 	 // $this->db->where("oref.coupon_code",$this->hash('7k7BXu'));
-	  $query = $this->db->get();
-	  //print_r($this->db->last_query()); exit;
-	  return $query->row();
+	    $this->db->where('tpf.pnr_ref','WQ1235');
+		$this->db->group_by('tpf.flight_number');
+	    $query = $this->db->get();
+	 // print_r($this->db->last_query()); exit;
+	  
+	  return $query->result();
   } 
   
    public function get_offer_data($offer_id){
@@ -53,7 +56,7 @@ class bid_m extends MY_Model {
 	  $this->db->join('vx_aln_data_defns car','(car.vx_aln_data_defnsID = tpf.carrier_code AND car.aln_data_typeID = 12)','LEFT');
       $this->db->where('oref.offer_id',$offer_id);	  
 	  $this->db->where('dd.alias','sent_offer_mail');
-	  $query = $this->db->get();	 
+	  $query = $this->db->get();     
 	  return $query->row(); 
    } 
   
