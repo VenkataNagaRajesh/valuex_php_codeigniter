@@ -267,5 +267,18 @@ public function getDefnsCodesListByType($type) {
 
 
 
+function getDefDataCodeByIDANDType($defId,$type) {
+
+	 $this->db->select('code');
+                $this->db->from('vx_aln_data_defns');
+                $this->db->where('aln_data_typeID',$type);
+                $this->db->where('vx_aln_data_defnsID',$defId);
+                $this->db->limit(1);
+                $query = $this->db->get();
+                $name = $query->row();
+                return $name->code;
+
+}
+
 }
 

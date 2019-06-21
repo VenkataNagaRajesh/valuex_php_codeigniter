@@ -43,7 +43,7 @@ class Offer_issue extends Admin_Controller {
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
 /*		$sQuery = " select group_concat(distinct pfe.dtpfext_id) as pf_list , group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names , booking_status, pnr_ref , flight_number, carrier_code, from_city,to_city,dep_date, dep_time, arrival_time, fci.aln_data_value as from_city_name , tci.aln_data_value as to_city_name, group_concat(distinct pfe.fclr_id)  as fclr_list ,group_concat(pax_contact_email) as email_list , cab.aln_data_value as cabin from VX_aln_dtpf_ext pfe LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_aln_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN vx_aln_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  cab on (cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13) where  dd.alias = 'new'  group by tpf.pnr_ref, flight_number, carrier_code, from_city, to_city ,dep_date,booking_status, from_city_name, to_city_name, dep_time, arrival_time, cabin";*/
-		$sQuery = " select tpf.pnr_ref, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_aln_dtpf_ext pfe LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_aln_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN vx_aln_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  cab on (cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13) where  dd.alias = 'new'  group by tpf.pnr_ref ,  booking_status";
+		$sQuery = " select tpf.pnr_ref, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_aln_dtpf_ext pfe LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_aln_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN vx_aln_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  cab on (cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13) where  tpf.is_processed = 1 and tpf.active = 1  AND dd.alias = 'new'  group by tpf.pnr_ref ,  booking_status";
 
 		$rResult = $this->install_m->run_query($sQuery);
 
@@ -263,7 +263,7 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrier_code, group_concat(distinct pf.to_city ) as off_point ,group_concat(distinct pf.from_city) as board_point, group_concat( distinct bs.aln_data_value) as booking_status ,group_concat(distinct dbp.code) as source_point , group_concat(distinct dep_date) as departure_date , group_concat(distinct dop.code) as dest_point ,group_concat(distinct  pf.flight_number)  as flight_number , group_concat(distinct offer_id) as offer_id  , ofr.pnr_ref  ,group_concat( distinct first_name , ' ' , last_name SEPARATOR '<br>' ) as passenger_list   from VX_aln_offer_ref ofr  LEFT JOIN  VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = ofr.pnr_ref) LEFT JOIN VX_aln_dtpf_ext pext  on (pext.dtpf_id = pf.dtpf_id) LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)  LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1) LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = fc.carrier_code AND dai.aln_data_typeID = 12)  LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency AND dfre.aln_data_typeID = 14)  LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13) LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13)           LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)  where bs.aln_data_value != 'Excluded'  ". $sWhere. " group by ofr.pnr_ref
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrier_code, group_concat(distinct pf.to_city ) as off_point ,group_concat(distinct pf.from_city) as board_point, group_concat( distinct bs.aln_data_value) as booking_status ,group_concat(distinct dbp.code) as source_point , group_concat(distinct dep_date) as departure_date , group_concat(distinct dop.code) as dest_point ,group_concat(distinct  pf.flight_number)  as flight_number , group_concat(distinct offer_id) as offer_id  , ofr.pnr_ref  ,group_concat( distinct first_name , ' ' , last_name SEPARATOR '<br>' ) as passenger_list   from VX_aln_offer_ref ofr  LEFT JOIN  VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = ofr.pnr_ref) LEFT JOIN VX_aln_dtpf_ext pext  on (pext.dtpf_id = pf.dtpf_id) LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)  LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1) LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = fc.carrier_code AND dai.aln_data_typeID = 12)  LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency AND dfre.aln_data_typeID = 14)  LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13) LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13)           LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)  where pf.is_processed = 1 and pf.active = 1  and bs.aln_data_value != 'Excluded'  ". $sWhere. " group by ofr.pnr_ref
  $sOrder $sLimit";
  
 
@@ -315,15 +315,18 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 		//
 	$sQuery = "select pf.dep_date , pf.flight_number , pf.carrier_code , group_concat(distinct offer_id) as offer_list  
 			from VX_aln_offer_ref oref 
-			INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref)
+			INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and pf.is_processed = 1 and pf.active = 1)
 			INNER JOIN VX_aln_dtpf_ext pext on (pext.dtpf_id = pf.dtpf_id)
 			INNER JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20)
 			WHERE pf.dep_date >= ".$current_time. " AND pf.dep_date <= " . $tstamp  .
 			" AND dd.alias != 'excl' AND pext.exclusion_id = 0 AND 
 			dd.alias = 'bid_complete'  group by pf.flight_number, pf.carrier_code, pf.dep_date  order by pf.flight_number"; 
 
+	//var_dump($sQuery);exit;
 	$rResult = $this->install_m->run_query($sQuery);
 
+
+	//var_dump($rResult);exit;
 	$full_offerlist = array();
 	$partial_offerlist = array();	
 	foreach($rResult as $data ) {
@@ -332,14 +335,14 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
                         $inv['airline_id'] = $data->carrier_code;
 			$inv['departure_date'] = $data->dep_date;
 			$empty_seats = $this->invfeed_m->getCabinSeatData($inv);
-			//var_dump($empty_seats);
+			var_dump($empty_seats);
 		$q = "select distinct rbd_markup, flight_number, from_city, to_city,tier_markup, (val + ((rbd_markup * val)/100)) as bid_val , 
 			offer_id,bid_submit_date , dep_date, upgrade_type, carrier_code, src_point,  dest_point, cabin FROM (
 				SELECT (bid_value + ((pf.tier_markup * bid_value)/100)) as val,pf.dep_date,bid.upgrade_type,pf.flight_number,
 				pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point
 				from VX_aln_bid bid 
 				LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )  
-				LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number) 
+				LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  pf.is_processed = 1 and pf.active = 1 )
 				LEFT JOIN vx_aln_data_defns df on (df.vx_aln_data_defnsID = pf.from_city and df.aln_data_typeID = 1)
 				LEFT JOIN vx_aln_data_defns dt on (dt.vx_aln_data_defnsID = pf.to_city and dt.aln_data_typeID = 1)
 				WHERE bid.offer_id IN (".$data->offer_list .") AND bid.flight_number = " .$data->flight_number .
@@ -352,7 +355,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 			$passenger_data = $this->offer_issue_m->getPassengerData($feed->offer_id,$feed->flight_number);	
 			//var_dump($passenger_data);exit;
 			$cabin_seats = $empty_seats[$feed->upgrade_type];
-
+			
 			$namelist = explode(',',$passenger_data->passengers);
 			$emails_list =  explode(',',$passenger_data->emails);
 
@@ -376,8 +379,8 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
                                 $acsr['frequency'] = $p_freq;
                         }
 
-			$acsr_data = $this->acsr_m->apply_acsr_rules($acsr);	
 
+			$acsr_data = $this->acsr_m->apply_acsr_rules($acsr);	
 			$this->data['siteinfos'] = $this->reset_m->get_site();
 		/*	echo "pnr ref: " . $passenger_data->pnr_ref;
 			echo "<br>";
@@ -494,6 +497,21 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 			if ($acsr_data->status == 'accept' && $cabin_seats > $passenger_cnt  && ($cabin_seats -  $passenger_cnt) >= $feed->memp) {
 		//	echo "accepetd";
+
+				// check preference before accepting for cutoff time.
+
+			       $cabin_type = $this->airports_m->getDefDataCodeByIDANDType($feed->upgrade_type,'13');
+				$cutoff_time = 0;
+				if( $cabin_type == 'Y') {
+					$cutoff_time  = $this->preference_m->get_preference_value_bycode('OFFER_ACPT_ECO','7');
+				} else if ($cabin_type == 'W') {
+
+					$cutoff_time  = $this->preference_m->get_preference_value_bycode('OFFER_ACPT_PEY','7');
+				}
+
+					$cutoff_time_in_secs = $cutoff_time * 3600 ;
+
+				if( ($feed->dep_date - $current_time ) > $cutoff_time_in_secs ) {	
 				$empty_seats[$feed->upgrade_type] = $cabin_seats -  $passenger_cnt;
 				
 					// accept bid
@@ -541,6 +559,59 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                         // update extension table with new status
 			$p_list = explode(',',$passenger_data->p_list);
                         $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+	          } else {
+
+
+                                                                                        $message = '
+        <html>
+        <body>
+        <div style="max-width: 800px; margin: 0; padding: 30px 0;">
+        <table width="80%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+<td width="5%"></td>
+        <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
+<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
+ Your bid offer is expired.<br />
+<br />
+<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
+<br />
+PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+
+<br />
+<br />
+<br />
+</td>
+</tr>
+</table>
+
+</div>
+</body>
+</html>
+';
+
+
+
+		                         $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                        // $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                         $this->email->to($emails_list[0]);
+                         $this->email->subject("Bid Offer is expired  From " .$feed->src_point.'To ' . $feed->dest_point);
+                        $this->email->message($message);
+                        $this->email->send();
+
+                         $array = array();
+                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('offer_expire','20');
+                        $array["modify_date"] = time();
+                        $array["modify_userID"] = $this->session->userdata('loginuserID');
+
+
+                        // update extension table with new status
+                        $p_list = explode(',',$passenger_data->p_list);
+                        $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+
+
+		  }
 
 		}
 
