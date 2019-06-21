@@ -6,7 +6,9 @@ class Home extends MY_Controller {
 		parent::__construct();	
 		 $this->load->library('recaptcha');				
 	     $this->load->model("bid_m");
-		 $this->load->model("offer_reference_m");		
+		 $this->load->model("paxfeed_m");
+		 $this->load->model("offer_reference_m");
+         $this->load->model("reset_m");	$this->load->library('email');	 
 		 $this->load->library('session');
 		 $this->load->helper('form');
          $this->load->library('form_validation');			 
@@ -118,15 +120,21 @@ class Home extends MY_Controller {
 		$this->data["subview"] = "home/paysuccess";
 		$this->load->view('_layout_home', $this->data);
 	}
-	public function temp1() {		
+	public function temp1() {
+        $dtpf_id = htmlentities(escapeString($this->uri->segment(3)));	
+        $this->data['pax_data'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$dtpf_id));		
 		$this->data["subview"] = "home/temp1";
 		$this->load->view('_layout_home', $this->data);
 	}
-	public function temp2() {		
+	public function temp2() {
+        $dtpf_id = htmlentities(escapeString($this->uri->segment(3)));	
+        $this->data['pax_data'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$dtpf_id));		
 		$this->data["subview"] = "home/temp2";
 		$this->load->view('_layout_home', $this->data);
 	}
-	public function temp3() {		
+	public function temp3() {
+        $dtpf_id = htmlentities(escapeString($this->uri->segment(3)));	
+        $this->data['pax_data'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$dtpf_id));		
 		$this->data["subview"] = "home/temp3";
 		$this->load->view('_layout_home', $this->data);
 	}
@@ -138,4 +146,16 @@ class Home extends MY_Controller {
 		$this->data["subview"] = "home/feedback";
 		$this->load->view('_layout_home', $this->data);
 	}	
+	
+	public function sendMail(){
+		$dtpf_id = 60;
+		$this->data['pax_data'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$dtpf_id));	
+		$message =  $this->load->view('home/temp1',$this->data);
+		$this->data['siteinfos'] = $this->reset_m->get_site();
+		$this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);		
+		$this->email->to('lakshmi.amujuru@sweken.com');
+		$this->email->subject("Upgrade Cabin Offer");
+		$this->email->message($message);
+		$this->email->send();
+	}
 }

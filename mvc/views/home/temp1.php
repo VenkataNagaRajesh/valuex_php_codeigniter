@@ -12,7 +12,7 @@
 		<div class="col-md-8 col-md-offset-2 email-temp1">
 			<div class="col-md-12">
 				<div class="header-email">
-					<h1><span>Hi Pappala ! </span><span class="pull-right">Booking Reference : <b>(PNR)</b></span></h1>
+					<h1><span>Hi <?=$pax_data->first_name.' '.$pax_data->last_name?> ! </span><span class="pull-right">Booking Reference : <b><?=$pax_data->pnr_ref?></b></span></h1>
 				</div>
 				<div class="email-bg">
 					<img class="img-responsive" src="<?php echo base_url('assets/home/images/temp1-bnr.jpg'); ?>" alt="temp bnr">

@@ -8,7 +8,7 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("airline_cabin_m");
 		$this->load->model("airline_cabin_class_m");
 		$this->load->model("offer_issue_m");
-	        $this->load->model("offer_eligibility_m");
+	    $this->load->model("offer_eligibility_m");
 		$this->load->model('offer_reference_m');
 		$this->load->model("eligibility_exclusion_m");
 		$this->load->model("season_m");
