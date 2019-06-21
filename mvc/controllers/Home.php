@@ -15,7 +15,7 @@ class Home extends MY_Controller {
 		
 	}
 	
-	 protected function rules() {
+	protected function rules() {
 		$rules = array(
 			array(
 				'field' => 'pnr', 
@@ -86,8 +86,9 @@ class Home extends MY_Controller {
 				$this->data['error'] = $this->allowValidation($this->input->post('pnr'));
                 if(empty($this->data['error'])){
 					$this->session->set_userdata('validation_check', 1);
-					$offer = $this->offer_reference_m->get_single_offer_ref(array('pnr_ref'=>$this->input->post('pnr')));
-				   redirect(base_url("homes/bidding/index/".$offer->offer_id));
+					$this->session->set_userdata('pnr_ref',$this->input->post('pnr'));
+					//$offer = $this->offer_reference_m->get_single_offer_ref(array('pnr_ref'=>$this->input->post('pnr')));
+				   redirect(base_url("homes/bidding"));
 				} else {
 				   $this->data["subview"] = "home/index";
 		           $this->load->view('_layout_home', $this->data);
