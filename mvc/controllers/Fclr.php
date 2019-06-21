@@ -221,9 +221,8 @@ class Fclr extends Admin_Controller {
                                 $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
                                 $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
                                 $array['season_id'] = $this->input->post("season_id");
-
 				$fclr_id = $this->fclr_m->checkFCLREntry($array);
-				if ( $fclr_id != $id ) {
+				if ( $fclr_id && $fclr_id != $id )  {
 					 $this->session->set_flashdata('error', 'Duplicate Entry');
                                         redirect(base_url("fclr/index"));
 
@@ -235,7 +234,6 @@ class Fclr extends Admin_Controller {
 					
 					$array["modify_date"] = time(); 
 	                               $array["modify_userID"] = $this->session->userdata('loginuserID');
-
         	                        $this->fclr_m->update_fclr($array, $id);
 
 
