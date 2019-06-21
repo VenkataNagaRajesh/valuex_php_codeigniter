@@ -421,8 +421,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 ';
 
 
-                        // $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                         $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                         //$this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point);
                         $this->email->message($message);
@@ -472,8 +472,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 ';
 
 
-                        // $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                         $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                        // $this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid is rejected, No seats avaiable  From " .$feed->src_point.' To ' . $feed->dest_point);
                         $this->email->message($message);
@@ -525,8 +525,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 ';
 
 
-                        // $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                         $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                        // $this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid is accepted From " .$feed->src_point.'To ' . $feed->dest_point);
                         $this->email->message($message);
