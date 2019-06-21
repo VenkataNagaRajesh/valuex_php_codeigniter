@@ -5,7 +5,7 @@
                 <section class="sidebar">
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
-                        <div class="pull-left image">
+                        <div class="image">
                             <img style="display:block" src="<?=base_url("uploads/images/".$this->session->userdata('photo'));
                                 ?>" class="img-circle" alt="" />
                         </div>
@@ -27,7 +27,7 @@
 
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <?php $usertype = $this->session->userdata("usertype"); ?>
-                    <ul class="sidebar-menu">
+                    <ul class="sidebar-menu custom-menu">
                         <?php
                             if(count($dbMenus)) {
                                 $menuDesign = '';
