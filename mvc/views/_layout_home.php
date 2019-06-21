@@ -32,7 +32,6 @@
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/bootstrap-datepicker.min.js');?>"></script>
     <script type="text/javascript" src="<?php echo base_url('assets/home/js/main.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/jquery.smartWizard.min.js');?>"></script>
-	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/simple-rating.js');?>"></script>
 
 <?php $this->load->view($subview); ?>

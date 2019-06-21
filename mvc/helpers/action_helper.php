@@ -493,7 +493,7 @@ function display_menu($nodes, &$menu) {
 
     foreach ($nodes as $key => $node) {
 
-        $leftIcon = '<i class="fa fa-angle-left pull-right"></i>';
+        $leftIcon = '<i class="fa fa-angle-right pull-right"></i>';
         
         $f = 0;
         if(isset($node['child'])) {
@@ -523,7 +523,7 @@ function display_menu($nodes, &$menu) {
             }
 
             $menu .= '<li class="'.($f ? $treeView : '').$active.'">';
-                $menu .= anchor($node['link'], '<i class="fa '.($node['icon'] != NULL ? $node['icon'] : 'fa-home').'"></i><span>'. ($CI->lang->line('menu_'.$node['menuName']) != NULL ? $CI->lang->line('menu_'.$node['menuName']) : $node['menuName']).'</span> '.($f ? $leftIcon : ''));
+                $menu .= anchor($node['link'], '<span>'. ($CI->lang->line('menu_'.$node['menuName']) != NULL ? $CI->lang->line('menu_'.$node['menuName']) : $node['menuName']).'<i class="pull-right fa '.($node['icon'] != NULL ? $node['icon'] : 'fa-home').'"></i></span> '.($f ? $leftIcon : ''));
                 if ($f) {
                     $menu .= '<ul class="treeview-menu">';
                         display_menu($node['child'],$menu);

@@ -1,149 +1,334 @@
-
-<div class="box">
-    <div class="box-header">
-        <h3 class="box-title"><i class="fa fa-sitemap"></i> <?=$this->lang->line('panel_title')?></h3>
-        <ol class="breadcrumb">
-            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-           
-            <li class="active"><?=$this->lang->line('menu_marketzone')?></li>           
-        </ol>
-    </div><!-- /.box-header -->
-    <!-- form start -->
-    <div class="box-body">
-        <div class="row">
-            <div class="col-sm-12">			
-			  <div class="nav-tabs-custom">
-               <ul class="nav nav-tabs">
-                  <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
-               </ul>
-
-                    <h5 class="page-header">
-
-		<?php
-                    if(permissionChecker('marketzone_add')) {
-                ?>
-                        <a href="<?php echo base_url('marketzone/add') ?>">
-                            <i class="fa fa-plus"></i>
-                            <?=$this->lang->line('add_title')?>
-                        </a>
-	
-		<?php } ?>
-
-                        &nbsp;&nbsp;
-                         <?php if(permissionChecker('marketzone_reconfigure')) {
-					 if( isset ($reconfigure)) {?>
-                                <a href="<?php echo base_url('trigger') ?>">
-                                    <i class="fa fa-plus"></i>
-                                    <?=$this->lang->line('generate_map_table')?>
-                                </a>
-                        <?php } }?>
-
-                    </h5>
-
-       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
-                      <div class='form-group'>
-                           <div class="col-sm-2">
-               <?php $marketlist = array("0" => "Select Marketzone");
-                   foreach($marketzones as $marketzone){
-                                                                 $marketlist[$marketzone->market_id] = $marketzone->market_name;
-                                                         }
-                                   echo form_dropdown("market_id", $marketlist,set_value("market_id",$marketID), "id='market_id' class='form-control hide-dropdown-icon select2'");    ?>
-                </div>
-                 <div class="col-sm-2">
-		<?php 
-			$aln_datatypes['0'] = "Select Level Type";
-                        ksort($aln_datatypes);
-			echo form_dropdown("amz_level_id", $aln_datatypes,set_value("amz_level_id",$levelID), "id='amz_level_id' class='form-control hide-dropdown-icon select2'");    ?>
-
-                 </div>
-                             <div class="col-sm-2">
-
-			  <?php
-                        $aln_datatypes['0'] = "Select Inclusion Type ";
-                        ksort($aln_datatypes);
-                        echo form_dropdown("amz_incl_id", $aln_datatypes,set_value("amz_incl_id",$inclID), "id='amz_incl_id' class='form-control hide-dropdown-icon select2'");    ?>
-
-
-                 </div>
-                 <div class="col-sm-2">
-
-			<?php
-                        $aln_datatypes['0'] = "Select Exclusion Type ";
-                        ksort($aln_datatypes);
-                        echo form_dropdown("amz_excl_id", $aln_datatypes,set_value("amz_excl_id",$exclID), "id='amz_excl_id' class='form-control hide-dropdown-icon select2'");    ?>
-
-
-                 </div>
-
-		  <div class="col-sm-2">
-                           <?php
-                        $airlinelist[0]= 'Select Airline For marketzone';
-                        foreach($airlines as $airline){
-                                $airlinelist[$airline->vx_aln_data_defnsID] = $airline->airline_name;
-                        }
-			
-                        echo form_dropdown("airline_id", $airlinelist,set_value("airline_id"), "id='airline_id' class='form-control hide-dropdown-icon select2'");?>
-                                                   
-                        </div>
-
-
-		<div class="col-sm-2">
-
-                        <?php
-			$mkt_status['-1'] = 'Select Status';
-			$mkt_status['1'] = 'Active';
-			$mkt_status['0'] = 'In Active';
-                        echo form_dropdown("active", $mkt_status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
-
-
-                 </div>
-
-                <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
-                </div>
-                          </div>
-                         </form>
-
-		
-		
-	       <div class="tab-content">
-                <div id="all" class="tab-pane active">
-                  <div id="hide-table">
-                    <table id="tztable" class="table table-striped table-bordered table-hover dataTable no-footer">
-                       <thead>
-                            <tr>
-                                <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('market_name')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('level_type')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('amz_level_value')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('amz_incl_type')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('amz_incl_value')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('amz_excl_type')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('amz_excl_value')?></th>
-								 <?php if(permissionChecker('marketzone_edit')) { ?>
-                        				        <th class="col-lg-1"><?=$this->lang->line('marketzone_status')?></th>
-                                <?php } ?>
-                             
-                                 <?php if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_view') ||  permissionChecker('marketzone_detete')) { ?>
-                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
-                                <?php } ?>
-                            </tr>
-                        </thead>
-						<tbody>                           
-                        </tbody>
-                    <tbody>
-					</tbody>
-					</table>
+<div class="mzones">
+	<div class="col-md-12">
+		<div class="col-md-4">
+			<div class="srch-buttons">
+				<div class="col-md-4">
+					<a href="#" type="button" class="btn btn-default">Market Zone</a>
+				</div>
+				<div class="col-md-8">
+				  <div class="input-group">
+					<input type="text" class="form-control" placeholder="Search">
+					<div class="input-group-btn">
+					  <button class="btn btn-danger" type="submit">
+						<i class="glyphicon glyphicon-search"></i>
+					  </button>
+					</div>
 				  </div>
-                </div>
-              </div>
-            </div>
-		  </div>
-        </div>
-    </div>
+				 </div>
+			</div>
+			<div class="market-info-tree">
+				<div class="col-md-12">
+					<ul id="tree1">
+						<li>TECH
+							<ul>
+								<li>Company Maintenance</li>
+								<li>Employees
+									<ul>
+										<li>Reports
+											<ul>
+												<li>Report1</li>
+												<li>Report2</li>
+												<li>Report3</li>
+											</ul>
+										</li>
+										<li>Employee Maint.</li>
+									</ul>
+								</li>
+								<li>Human Resources</li>
+							</ul>
+						</li>
+						<li>XRP
+							<ul>
+								<li>Company Maintenance</li>
+								<li>Employees
+									<ul>
+										<li>Reports
+											<ul>
+												<li>Report1</li>
+												<li>Report2</li>
+												<li>Report3</li>
+											</ul>
+										</li>
+										<li>Employee Maint.</li>
+									</ul>
+								</li>
+								<li>Human Resources</li>
+							</ul>
+						</li>
+						<li>Middle East
+							<ul>
+								<li>Company Maintenance</li>
+								<li>Employees
+									<ul>
+										<li>Reports
+											<ul>
+												<li>Report1</li>
+												<li>Report2</li>
+												<li>Report3</li>
+											</ul>
+										</li>
+										<li>Employee Maint.</li>
+									</ul>
+								</li>
+								<li>Human Resources</li>
+							</ul>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="mzone-config col-md-12">
+				<div class="col-md-12 zone-info1">
+					<h2>Market Zone Configuration<span class="pull-right">Tree View</span></h2>
+					<div class="col-md-2">
+						<p>Airline Code</p>
+						<input type="text" class="form-control" id="code">
+					</div>
+					<div class="col-md-2">
+						<p>Market Name</p>
+						<input type="text" class="form-control" id="name">
+					</div>
+					<div class="col-md-2">
+						<p>Market Level</p>
+						<select class="form-control" id="inc-level">
+							<option>level</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+						</select>
+					</div>
+					<div class="col-md-6">
+						<p>Value</p>
+						<input type="password" class="form-control" id="pwd">
+					</div>
+				</div>
+				<div class="col-md-12 zone-info2">
+					<div class="col-md-6">
+						<select class="form-control" id="inc-level">
+							<option>Inclusion Level</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+						</select>
+						<input type="password" class="form-control" id="level1">
+					</div>
+					<div class="col-md-6">
+						<select class="form-control" id="ex-level">
+							<option>Exclusion Level</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+						</select>
+						<input type="password" class="form-control" id="level2">
+					</div>
+					<div class="col-md-12">
+						<textarea class="form-control" rows="5" id="comment"></textarea>
+						<span><a href="#" type="button" class="btn btn-danger">Add</a></span>
+						<span class="pull-right">
+							<a href="#" type="button" class="btn btn-danger">Save</a>
+							<a href="#" type="button" class="btn btn-danger">Cancel</a>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="mzones-list-bar">
+			<div class="title-bar">
+				<div class="col-md-2">
+					<h2>Market Zones</h2><span class="pull-right"></span>
+				</div>
+				<div class="col-md-8">
+					<div class="toolbar"></div>
+				</div>
+				<div class="col-md-2">
+					<a href="#" type="button" class="btn btn-danger">Add Market Zone</a>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<div class="table-reponsive col-md-12">
+					<div class="col-md-11">
+						<table class="table table-bordered table-striped table-highlight">
+							<thead>
+								<th>Airline Code</th>
+								<th>Select Marketzone</th>
+								<th>Select Level Type</th>
+								<th>Select Level Value</th>
+								<th>Select Inclusion Type</th>
+								<th>Select Inclusion Value</th>
+								<th>Select Exclusion Type</th>
+								<th>Select Exclusion Value</th>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<input type="text" class="form-control" id="alcode">
+									</td>
+									<td>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</td>
+									<td>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</td>
+									<td>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</td>	
+									<td>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</td>
+									<td>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</td>
+									<td>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</td>
+									<td>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</td>	
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-1">
+						<a href="#" type="button" class="btn btn-danger">Filter</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="col-md-12">
+			<button type="submit" class="col-md-1 btn btn-danger pull-right" name="filter" id="filter">Filter</button>
+		</div>
+		<div class="col-md-12">
+			<div class="tab-content table-responsive">
+				<table id="tztable" class="table table-bordered dataTable no-footer">
+				  <thead>
+					   <tr>
+							<th><?=$this->lang->line('slno')?></th>
+							<th><?=$this->lang->line('market_name')?></th>
+							<th><?=$this->lang->line('airline_code')?></th>
+							<th><?=$this->lang->line('level_type')?></th>
+							<th><?=$this->lang->line('amz_level_value')?></th>
+							<th><?=$this->lang->line('amz_incl_type')?></th>
+							<th><?=$this->lang->line('amz_incl_value')?></th>
+							<th><?=$this->lang->line('amz_excl_type')?></th>
+							<th><?=$this->lang->line('amz_excl_value')?></th>
+							 <?php if(permissionChecker('marketzone_edit')) { ?>
+								 <th><?=$this->lang->line('marketzone_status')?></th>
+							<?php } ?>                       
+							<?php if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_view') ||  permissionChecker('marketzone_detete')) { ?>
+						   <th><?=$this->lang->line('action')?></th>
+						   <?php } ?>
+					   </tr>
+				   </thead>
+				   <tbody>
+					</tbody>
+				</table>
+			 </div>
+		 </div>
+	</div>
 </div>
+<script>
+$.fn.extend({
+    treed: function (o) {
+      
+      var openedClass = 'glyphicon-minus-sign';
+      var closedClass = 'glyphicon-plus-sign';
+      
+      if (typeof o != 'undefined'){
+        if (typeof o.openedClass != 'undefined'){
+        openedClass = o.openedClass;
+        }
+        if (typeof o.closedClass != 'undefined'){
+        closedClass = o.closedClass;
+        }
+      };
+      
+        //initialize each of the top levels
+        var tree = $(this);
+        tree.addClass("tree");
+        tree.find('li').has("ul").each(function () {
+            var branch = $(this); //li with children ul
+            branch.prepend("<i class='indicator glyphicon " + closedClass + "'></i>");
+            branch.addClass('branch');
+            branch.on('click', function (e) {
+                if (this == e.target) {
+                    var icon = $(this).children('i:first');
+                    icon.toggleClass(openedClass + " " + closedClass);
+                    $(this).children().children().toggle();
+                }
+            })
+            branch.children().children().toggle();
+        });
+        //fire event from the dynamically added icon
+      tree.find('.branch .indicator').each(function(){
+        $(this).on('click', function () {
+            $(this).closest('li').click();
+        });
+      });
+        //fire event to open branch if the li contains an anchor instead of text
+        tree.find('.branch>a').each(function () {
+            $(this).on('click', function (e) {
+                $(this).closest('li').click();
+                e.preventDefault();
+            });
+        });
+        //fire event to open branch if the li contains a button instead of text
+        tree.find('.branch>button').each(function () {
+            $(this).on('click', function (e) {
+                $(this).closest('li').click();
+                e.preventDefault();
+            });
+        });
+    }
+});
 
+//Initialization of treeviews
+
+$('#tree1').treed();
+
+$('#tree2').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
+
+$('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
+</script>
 
 <script type="text/javascript">
   $(document).ready(function() {
