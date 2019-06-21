@@ -25,6 +25,7 @@ $lang['rule_status'] = "Active";
 $lang['action_type'] = 'Action Type';
 $lang['memp'] = 'Memp';
 $lang['min_bid_price'] = 'Min Bid price';
+$lang['carrier_code'] = 'Carrier';
 
 $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';

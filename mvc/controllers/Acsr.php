@@ -24,6 +24,13 @@ class Acsr extends Admin_Controller {
                 		'label' => $this->lang->line("dest_market"),
                 		'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
                        ),
+
+			 array(
+                                'field' => 'carrier_code',
+                                'label' => $this->lang->line("carrier_code"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                       ),
+
 			array(
                  		'field' => 'flight_nbr_start',
                  		'label' => $this->lang->line("flight_nbr_start"),
@@ -113,7 +120,7 @@ class Acsr extends Admin_Controller {
 			array(
                                   'field' => 'season',
                                 'label' => $this->lang->line("season"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                                'rules' => 'trim|max_length[200]|xss_clean'
                         ),
 
 
@@ -268,6 +275,7 @@ class Acsr extends Admin_Controller {
 	   $this->data['hrs'] = $this->acsr_m->time_dropdown('24');
 	   $this->data['mins'] = $this->acsr_m->time_dropdown('60');
 		$this->data['seasons'] = $this->season_m->getSeasonsList();
+	  $this->data['carriers'] = $this->airports_m->getDefnsListByType('12');
 	$this->data['action_types'] = $this->airports_m->getDefns('19');
 	 
 		if($_POST) {
@@ -294,6 +302,7 @@ class Acsr extends Admin_Controller {
 				$array['action_type'] = $this->input->post("action_type");
                                 $array['memp'] = $this->input->post("memp");
                                 $array["min_bid_price"] = $this->input->post("min_bid_price");
+				$array["carrier_code"] = $this->input->post("carrier_code");
 
 				$array["create_date"] = time();
 				$array["modify_date"] = time();
@@ -335,6 +344,7 @@ class Acsr extends Admin_Controller {
 		           $this->data['days_of_week'] = $this->airports_m->getDefns('14'); // days of week
            		   $this->data['hrs'] = $this->acsr_m->time_dropdown('24');
            		   $this->data['mins'] = $this->acsr_m->time_dropdown('60');
+			 $this->data['carriers'] = $this->airports_m->getDefnsListByType('12');
                 	   $this->data['seasons'] = $this->season_m->getSeasonsList();
                            $this->data['action_types'] = $this->airports_m->getDefns('19');
 
@@ -364,6 +374,7 @@ class Acsr extends Admin_Controller {
                                 $array['action_type'] = $this->input->post("action_type");
                                 $array['memp'] = $this->input->post("memp");
                                 $array["min_bid_price"] = $this->input->post("min_bid_price");
+				$array["carrier_code"] = $this->input->post("carrier_code");
 
                                 $array["create_date"] = time();
                                 $array["modify_date"] = time();
@@ -609,7 +620,7 @@ SELECT  SQL_CALC_FOUND_ROWS MainSet.acsr_id,MainSet.orig_mkt_name, MainSet.dest_
         MainSet.orig_market_id, MainSet.dest_market_id , Subset.dayslist , MainSet.upgrade_from_cabin_type, MainSet.upgrade_to_cabin_type,
         MainSet.flight_nbr_start, MainSet.flight_nbr_end ,  MainSet.action_type, MainSet.action_typ, MainSet.season_name,MainSet.min_bid_price,
 
-	MainSet.memp
+	MainSet.memp, MainSet.carrier 
 
 FROM (     
 
@@ -617,15 +628,17 @@ FROM (
               flight_dep_date_start, flight_dep_date_end, flight_dep_time_start, flight_dep_time_end, CONCAT(flight_nbr_start,'-',flight_nbr_end) 
               as flight_nbr,fc.aln_data_value as from_cabin , tc.aln_data_value as to_cabin, future_use, ex.active , 
               ex.upgrade_from_cabin_type, ex.upgrade_to_cabin_type  ,ex.flight_nbr_start, ex.flight_nbr_end,
-	      ex.action_type, at.aln_data_value as action_typ,ex.memp, ex.season_id, ss.season_name, ex.min_bid_price
+	      ex.action_type, at.aln_data_value as action_typ,ex.memp, ex.season_id, ss.season_name, ex.min_bid_price, car.code as carrier
               from VX_aln_auto_confirm_setup_rules ex 
 
               LEFT JOIN VX_aln_market_zone oz on (oz.market_id = ex.orig_market_id) 
               LEFT JOIN VX_aln_market_zone dz on (dz.market_id = ex.dest_market_id)  
 	      LEFT JOIN  vx_aln_data_defns at on (at.vx_aln_data_defnsID = ex.action_type ) 
 	      LEFT JOIN  VX_aln_season ss on (ss.VX_aln_seasonID = ex.season_id ) 
-              LEFT JOIN  vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type ) 
-              LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID  = ex.upgrade_to_cabin_type)) as MainSet 
+              LEFT JOIN  vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type and fc.aln_data_typeID = 13 ) 
+              LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID  = ex.upgrade_to_cabin_type and  tc.aln_data_typeID = 13)
+		LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID  = ex.carrier_code and car.aln_data_typeID = 12)
+) as MainSet 
 		
 LEFT JOIN (
               select

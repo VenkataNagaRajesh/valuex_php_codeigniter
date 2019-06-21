@@ -21,12 +21,12 @@
 				<img class="img-responsive" src="<?php echo base_url('assets/home/images/temp2-logo.jpg'); ?>" alt="temp bnr">
 			</div>
 			<div class="col-md-12">
-				<h1>Hi Pappala !<span class="pull-right">Help Center | I'm Not Intrested</span></h1>
+				<h1>Hi <?=$pax_data->first_name.' '.$pax_data->last_name?> !<span class="pull-right">Help Center | I'm Not Intrested</span></h1>
 				<p>
 					With AC Bid Upgrade you can enhance your travel experince by enjoying priority. One or more of yourupcoming flight (s) are eligible for bids	
 				</p>
 				<img class="img-responsive" src="<?php echo base_url('assets/home/images/temp3-bnr.jpg'); ?>" alt="temp bnr">
-				<p class="col-md-4 bk-info"><b>BOOKING REFERENECE: <b style="color:#fff;">PNR</b></b></p>
+				<p class="col-md-4 bk-info"><b>BOOKING REFERENECE: <b style="color:#fff;"><?=$pax_data->pnr_ref?></b></b></p>
 			</div>
 			<div class="col-md-12">
 				<div class="info">

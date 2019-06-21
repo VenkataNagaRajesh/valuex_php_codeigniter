@@ -40,13 +40,32 @@ class Fclr_m extends MY_Model {
                 $query = $this->db->get();
                 $check = $query->row();
                 if($check->fclr_id) {
-                    return false ;
+                    return $check->fclr_id;
                 } else {
-                  return true;
+                  return false;
                 }
 
 
         }
+
+
+	function checkANDInsertFCLR($data,$array1) {
+	   $fclr_id = $this->checkFCLREntry($data);
+		$array = array_merge($data,$array1);
+           if($fclr_id){ 
+                  $array["modify_date"] = time();
+                  $array["modify_userID"] = $this->session->userdata('loginuserID');
+                  $this->fclr_m->update_fclr($array,$fclr_id);
+
+           } else {
+                  $array["create_date"] = time();
+                  $array["modify_date"] = time();
+                  $array["create_userID"] = $this->session->userdata('loginuserID');
+                  $array["modify_userID"] = $this->session->userdata('loginuserID');
+                 $this->fclr_m->insert_fclr($array);
+            }
+	}
+
 
 
         public function delete_fclr($id){
@@ -90,6 +109,7 @@ function Stand_Deviation($arr)
 		$this->db->join('vx_aln_data_defns fca','fca.vx_aln_data_defnsID = fc.from_cabin','LEFT');
 		$this->db->join('vx_aln_data_defns tca','tca.vx_aln_data_defnsID = fc.to_cabin','LEFT');
 		$this->db->where($array);
+		 $this->db->where('fc.active','1');
 		
                 $query = $this->db->get();
                 $result = $query->result();

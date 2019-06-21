@@ -5,15 +5,19 @@ class Home extends MY_Controller {
 	function __construct () {
 		parent::__construct();	
 		 $this->load->library('recaptcha');				
-	     $this->load->model("login_m");
+	     $this->load->model("bid_m");
+		 $this->load->model("paxfeed_m");
+		 $this->load->model("offer_reference_m");
+         $this->load->model("reset_m");	$this->load->library('email');	 
 		 $this->load->library('session');
 		 $this->load->helper('form');
          $this->load->library('form_validation');			 
 	     $language = $this->session->userdata('lang');	  
 		$this->lang->load('home', $language);
+		
 	}
 	
-	 protected function rules() {
+	protected function rules() {
 		$rules = array(
 			array(
 				'field' => 'pnr', 
@@ -34,7 +38,7 @@ class Home extends MY_Controller {
 		return $rules;
 	}
 	
-	public function validate_recaptcha(){	
+	public function validate_recaptcha(){ 
 		$recaptcha = $this->input->post('g-recaptcha-response');
 		if (!empty($recaptcha)) {
 			$response = $this->recaptcha->verifyResponse($recaptcha);
@@ -58,7 +62,8 @@ class Home extends MY_Controller {
 	   }else{
 		  $this->load->model('offer_eligibility_m');
           $coupon_code = $this->offer_eligibility_m->hash($code);
-		  $count = $this->login_m->pnr_code_validate($this->input->post('pnr'),$coupon_code);
+		 // $status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+		  $count = $this->bid_m->pnr_code_validate($this->input->post('pnr'),$coupon_code);
 		  if($count > 0){
 			return TRUE; 
 		  } else {
@@ -80,37 +85,56 @@ class Home extends MY_Controller {
 				$this->data["subview"] = "home/index";
 		        $this->load->view('_layout_home', $this->data);		
 			} else {				
-				//echo "success"; exit;
-				//$this->usertype_m->insert_usertype($array);
-				//$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-				redirect(base_url("homes/bidding"));
-			}
+				$this->data['error'] = $this->allowValidation($this->input->post('pnr'));
+                if(empty($this->data['error'])){
+					$this->session->set_userdata('validation_check', 1);
+					$this->session->set_userdata('pnr_ref',$this->input->post('pnr'));
+					//$offer = $this->offer_reference_m->get_single_offer_ref(array('pnr_ref'=>$this->input->post('pnr')));
+				   redirect(base_url("homes/bidding"));
+				} else {
+				   $this->data["subview"] = "home/index";
+		           $this->load->view('_layout_home', $this->data);
+				}				
+			}			
 		} else {			
 		   $this->data["subview"] = "home/index";
 		   $this->load->view('_layout_home', $this->data);
 		}     		
 	}
-	public function bidsuccess() {		
+	
+	public function bidsuccess() {
+        $offer_id = htmlentities(escapeString($this->uri->segment(3)));	
+        $this->data['offer_data'] = $this->bid_m->get_offer_data($offer_id);
+        // print_r($this->data['offer_data']); exit;		
 		$this->data["subview"] = "home/bidsuccess";
 		$this->load->view('_layout_home', $this->data);
 	}	
+	
 	public function upgradeoffer() {		
 		$this->data["subview"] = "home/upgradeoffer";
 		$this->load->view('_layout_home', $this->data);
 	}		
-	public function paysuccess() {		
+	public function paysuccess() {
+        $offer_id = htmlentities(escapeString($this->uri->segment(3)));	
+        $this->data['offer_data'] = $this->offer_reference_m->get_single_offer_ref(array("offer_id" => $offer_id));		
 		$this->data["subview"] = "home/paysuccess";
 		$this->load->view('_layout_home', $this->data);
 	}
-	public function temp1() {		
+	public function temp1() {
+        $dtpf_id = htmlentities(escapeString($this->uri->segment(3)));	
+        $this->data['pax_data'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$dtpf_id));		
 		$this->data["subview"] = "home/temp1";
 		$this->load->view('_layout_home', $this->data);
 	}
-	public function temp2() {		
+	public function temp2() {
+        $dtpf_id = htmlentities(escapeString($this->uri->segment(3)));	
+        $this->data['pax_data'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$dtpf_id));		
 		$this->data["subview"] = "home/temp2";
 		$this->load->view('_layout_home', $this->data);
 	}
-	public function temp3() {		
+	public function temp3() {
+        $dtpf_id = htmlentities(escapeString($this->uri->segment(3)));	
+        $this->data['pax_data'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$dtpf_id));		
 		$this->data["subview"] = "home/temp3";
 		$this->load->view('_layout_home', $this->data);
 	}
@@ -122,4 +146,16 @@ class Home extends MY_Controller {
 		$this->data["subview"] = "home/feedback";
 		$this->load->view('_layout_home', $this->data);
 	}	
+	
+	public function sendMail(){
+		$dtpf_id = 60;
+		$this->data['pax_data'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$dtpf_id));	
+		$message =  $this->load->view('home/temp1',$this->data);
+		$this->data['siteinfos'] = $this->reset_m->get_site();
+		$this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);		
+		$this->email->to('lakshmi.amujuru@sweken.com');
+		$this->email->subject("Upgrade Cabin Offer");
+		$this->email->message($message);
+		$this->email->send();
+	}
 }

@@ -10,6 +10,8 @@ class Paxfeed extends Admin_Controller {
 		$this->load->model('airports_m');
 		$this->load->model("airline_cabin_m");
 		$this->load->model('airline_cabin_class_m');
+        	$this->load->model('preference_m');
+
 		$language = $this->session->userdata('lang');
 		$this->lang->load('paxfeed', $language);	
 	}	
@@ -105,7 +107,7 @@ class Paxfeed extends Admin_Controller {
 
 
 
-	$header = array_map("strtolower", array("Airline Code","PNR ref","Pax nbr","first name","last name","ptc","FQTV","seg nbr","carrier code","flight nbr","dept date","arrival date","dept time", "arrival time","class","from city","to city","PAX contact email","Phone","Booking country","booking city","office-id","channel"));	
+	$header = array_map("strtolower", array("Airline Code","PNR ref","Pax nbr","first name","last name","ptc","FQTV","seg nbr","carrier code","flight nbr","dept date","arrival date","dept time", "arrival time","class","from city","to city","PAX contact email","Phone","Booking country","booking city","office-id","channel","tier markup"));	
 		$header = array_map('strtolower', $header);
 
 
@@ -131,7 +133,7 @@ class Paxfeed extends Admin_Controller {
                          }
                         } else {
                              if($flag == 1){                                                                                      
-			   	 if(count($Row) == 23){ //print_r($Row); exit;						
+			   	 if(count($Row) == 24){ //print_r($Row); exit;						
 					$paxfeedraw = array();
 			   	      $paxfeedraw['airline_code'] =  $Row[array_search('airline code',$import_header)];
                                       $paxfeedraw['pnr_ref'] = $Row[array_search('pnr ref',$import_header)];
@@ -157,6 +159,8 @@ class Paxfeed extends Admin_Controller {
                                       $paxfeedraw['office_id'] = $Row[array_search('office-id',$import_header)];
                                       $paxfeedraw['channel'] = $Row[array_search('channel',$import_header)];
 					
+					$paxfeedraw['tier_markup'] = $Row[array_search('tier markup',$import_header)];
+
 				      if($this->paxfeedraw_m->checkPaxFeedRaw($paxfeedraw)) {
 
                                           $paxfeedraw['create_date'] = time();
@@ -193,6 +197,30 @@ class Paxfeed extends Admin_Controller {
 					 $paxfeed['booking_city'] = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['booking_city'],'3');
                                          $paxfeed['office_id'] = $paxfeedraw['office_id'];
                                          $paxfeed['channel'] = $paxfeedraw['channel'];
+				/*
+					 if ($paxfeedraw['tier_markup'] == 1 ){
+						$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T1_MARKUP','7');
+					 } else if($paxfeedraw['tier_markup'] == 2){
+
+						$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T2_MARKUP','7');
+					 } else if ($paxfeedraw['tier_markup'] == 3){
+						$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T3_MARKUP','7');
+					 } else if ($paxfeedraw['tier_markup'] == 4){
+						$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T4_MARKUP','7');
+					 }else {
+						$paxfeed['tier_markup'] = 0;
+					  }*/
+				if ( $paxfeedraw["tier_markup"] ) {
+				$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T'.$paxfeedraw["tier_markup"].'_MARKUP','7');
+				} else {
+					$paxfeed['tier_markup'] = 0;
+				}
+
+				if ( $cabin->cabin_code != '') {
+				$paxfeed['rbd_markup'] = $this->preference_m->get_preference_value_bycode('RBD_'.$cabin->cabin_code,'7');
+				} else {
+					$paxfeed['rbd_markup'] = 0;
+				}
 					 if($this->paxfeed_m->checkPaxFeed($paxfeed)) {
 							
                                                              $paxfeed['create_date'] = time();

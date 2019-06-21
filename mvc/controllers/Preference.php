@@ -347,7 +347,7 @@ class Preference extends Admin_Controller {
 			}
 			
 			
-		$sQuery = "SELECT p.*,dd.aln_data_value category,dd1.alias type,dt1.alias valuetype,dt2.alias value FROM VX_aln_preference p LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = p.categoryID LEFT JOIN vx_aln_data_types dd1 ON dd1.vx_aln_data_typeID = p.pref_type LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = p.pref_get_value_type LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = p.pref_get_value
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS p.*,dd.aln_data_value category,dd1.alias type,dt1.alias valuetype,dt2.alias value FROM VX_aln_preference p LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = p.categoryID LEFT JOIN vx_aln_data_types dd1 ON dd1.vx_aln_data_typeID = p.pref_type LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = p.pref_get_value_type LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = p.pref_get_value
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
@@ -393,7 +393,7 @@ class Preference extends Admin_Controller {
 		$get_value = $this->input->post('get_value');
 		if($type){
 		  if($type == 11){
-			$list = $this->airports_m->getDefdataTypes(null,array('1','2','3','4','5'));		
+			$list = $this->airports_m->getDefdataTypes(null,array('1','2','3','4','5','23'));		
 		  } else {
 			$list = $this->airports_m->getDefdataTypes(null,array($type));	
 		  }

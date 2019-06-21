@@ -58,6 +58,29 @@
                     </div>
 					
 
+	               <?php
+                        if(form_error('carrier_code'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group'>";
+                    ?>
+                        <label for="carrier_code" class="col-sm-2 control-label">
+                            <?=$this->lang->line('carrier_code')?>
+                        </label>
+                        <div class="col-sm-6">
+                        <?php
+			$carriers[0] = 'Select Carrier';
+			ksort($carriers);
+                          echo form_dropdown("carrier_code", $carriers,set_value("carrier_code"), "id='carrier_code' class='form-control hide-dropdown-icon select2'");
+                                                   ?>
+
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('carrier_code'); ?>
+                        </span>
+                    </div>
+
+
 
 
                               <?php

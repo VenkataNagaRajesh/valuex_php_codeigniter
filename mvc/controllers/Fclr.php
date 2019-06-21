@@ -45,7 +45,7 @@ class Fclr extends Admin_Controller {
                         array(
                                'field' => 'season_id',
                                 'label' => $this->lang->line("season"),
-                                'rules' => 'trim|required|integer|max_length[200]|xss_clean'
+                                'rules' => 'trim|integer|max_length[200]|xss_clean'
                         ),
                         array(
                                 'field' => 'frequency',
@@ -150,23 +150,27 @@ class Fclr extends Admin_Controller {
                                 $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
                                 $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
 				$array['season_id'] = $this->input->post("season_id");
-				$array['average'] = $this->input->post("avg");
-                                $array['min'] = $this->input->post("min");
-                                $array['max'] = $this->input->post("max");
-                                $array['slider_start'] = $this->input->post("slider_start");
 
-                                if($this->fclr_m->checkFCLREntry($array)) {
-                                        $array["create_date"] = time();
-                                        $array["modify_date"] = time();
-                                        $array["create_userID"] = $this->session->userdata('loginuserID');
-                                        $array["modify_userID"] = $this->session->userdata('loginuserID');
-                                        $this->fclr_m->insert_fclr($array);
-                                }
-
+				$fclr_id = $this->fclr_m->checkFCLREntry($array);
+				 if ($fclr_id ) {
+					 $this->session->set_flashdata('error', 'Duplicate Entry');
+                                        redirect(base_url("fclr/index"));
+                                }  else {
+					$array['average'] = $this->input->post("avg");
+                                	$array['min'] = $this->input->post("min");
+                                	$array['max'] = $this->input->post("max");
+                                	$array['slider_start'] = $this->input->post("slider_start");
+					$array["create_date"] = time();
+                			  $array["modify_date"] = time();
+                  			$array["create_userID"] = $this->session->userdata('loginuserID');
+                  			$array["modify_userID"] = $this->session->userdata('loginuserID');
+                 			$this->fclr_m->insert_fclr($array);
+					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
+                                	redirect(base_url("fclr/index"));
+				}
+				
 
                                                                                               
-                                $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                                redirect(base_url("fclr/index"));
                         }
                 } else {
                         $this->data["subview"] = "fclr/add";
@@ -217,19 +221,27 @@ class Fclr extends Admin_Controller {
                                 $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
                                 $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
                                 $array['season_id'] = $this->input->post("season_id");
-                                $array['average'] = $this->input->post("avg");
-                                $array['min'] = $this->input->post("min");
-                                $array['max'] = $this->input->post("max");
-                                $array['slider_start'] = $this->input->post("slider_start");
+				$fclr_id = $this->fclr_m->checkFCLREntry($array);
+				if ( $fclr_id && $fclr_id != $id )  {
+					 $this->session->set_flashdata('error', 'Duplicate Entry');
+                                        redirect(base_url("fclr/index"));
 
-                                $array["modify_date"] = time();
-                               $array["modify_userID"] = $this->session->userdata('loginuserID');
-
-                                $this->fclr_m->update_fclr($array, $id);
+				  } else {
+                                	$array['average'] = $this->input->post("avg");
+                                	$array['min'] = $this->input->post("min");
+                                	$array['max'] = $this->input->post("max");
+                                	$array['slider_start'] = $this->input->post("slider_start");
+					
+					$array["modify_date"] = time(); 
+	                               $array["modify_userID"] = $this->session->userdata('loginuserID');
+        	                        $this->fclr_m->update_fclr($array, $id);
 
 
                                                 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
                                                 redirect(base_url("fclr/index"));
+
+						
+				 }
                                         }
                                 } else {
                                         $this->data["subview"] = "fclr/edit";
@@ -663,17 +675,11 @@ $rResult = array_merge($rResult1, $rResult2);
 				$array['from_cabin'] = $cabins['Y'][1];
 				$array['to_cabin'] = $cabins['C'][1];
                                 $data = $this->calculate_Min_Max($fromCabin, $toCabin );
-                                $array['average'] = $data->average;
-                                $array['min'] = $data->min;
-                                $array['max'] = $data->max;
-				$array['slider_start'] = $data->slider_start;
-				if($this->fclr_m->checkFCLREntry($array)) {
-					$array["create_date"] = time();
-		                        $array["modify_date"] = time();
-                		        $array["create_userID"] = $this->session->userdata('loginuserID');
-                        		$array["modify_userID"] = $this->session->userdata('loginuserID');
-                                	$this->fclr_m->insert_fclr($array);
-				}
+                                $array1['average'] = $data->average;
+                                $array1['min'] = $data->min;
+                                $array1['max'] = $data->max;
+				$array1['slider_start'] = $data->slider_start;
+				$this->fclr_m->checkANDInsertFCLR($array,$array1);
 				
                          }
                         // from economy to pre-eco
@@ -684,19 +690,11 @@ $rResult = array_merge($rResult1, $rResult2);
 				 $array['from_cabin'] = $cabins['Y'][1];
                                 $array['to_cabin'] = $cabins['W'][1];
                                 $data = $this->calculate_Min_Max($fromCabin, $toCabin );
-				$array['average'] = $data->average;
-                                $array['min'] = $data->min;
-                                $array['max'] = $data->max;
-				$array['slider_start'] = $data->slider_start;
-
-				if($this->fclr_m->checkFCLREntry($array)) {
-                                        $array["create_date"] = time();
-                                        $array["modify_date"] = time();
-                                        $array["create_userID"] = $this->session->userdata('loginuserID');
-                                        $array["modify_userID"] = $this->session->userdata('loginuserID');
-                                        $this->fclr_m->insert_fclr($array);
-                                }
-
+				$array1['average'] = $data->average;
+                                $array1['min'] = $data->min;
+                                $array1['max'] = $data->max;
+				$array1['slider_start'] = $data->slider_start;
+				$this->fclr_m->checkANDInsertFCLR($array,$array1);
 				
                          }
                         // from economy to pre-eco
@@ -709,18 +707,13 @@ $rResult = array_merge($rResult1, $rResult2);
                                  $array['to_cabin'] = $cabins['C'][1];
                                 $data = $this->calculate_Min_Max($fromCabin, $toCabin );
 				
-				$array['average'] = $data->average;
-                                $array['min'] = $data->min;
-                                $array['max'] = $data->max;
-				$array['slider_start'] = $data->slider_start;
+				$array1['average'] = $data->average;
+                                $array1['min'] = $data->min;
+                                $array1['max'] = $data->max;
+				$array1['slider_start'] = $data->slider_start;
 				//var_dump($array);exit;
-				if($this->fclr_m->checkFCLREntry($array)) {
-                                        $array["create_date"] = time();
-                                        $array["modify_date"] = time();
-                                        $array["create_userID"] = $this->session->userdata('loginuserID');
-                                        $array["modify_userID"] = $this->session->userdata('loginuserID');
-                                        $this->fclr_m->insert_fclr($array);
-                                }
+
+				$this->fclr_m->checkANDInsertFCLR($array,$array1);
 
 
                          }

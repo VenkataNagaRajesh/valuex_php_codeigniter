@@ -73,6 +73,31 @@
                             <?php echo form_error('dest_market_id'); ?>
                         </span>
                     </div>
+
+
+                                                                     <?php
+                        if(form_error('carrier'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group'>";
+                    ?>
+                        <label for="carrier" class="col-sm-2 control-label">
+                            <?=$this->lang->line('carrier')?>
+                        </label>
+                        <div class="col-sm-6">
+                        <?php
+                        $carriers[0] = 'Select Carrier';
+                        ksort($carriers);
+                          echo form_dropdown("carrier", $carriers,set_value("carrier",$e_rule->carrier), "id='carrier' class='form-control hide-dropdown-icon select2'");
+                                                   ?>
+
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('carrier'); ?>
+                        </span>
+                    </div>
+
+
 					
 					
                        <?php

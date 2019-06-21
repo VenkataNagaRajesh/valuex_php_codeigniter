@@ -54,7 +54,8 @@ class Eligibility_exclusion_m extends MY_Model {
 				 from VX_aln_eligibility_excl_rules ex  
 				LEFT JOIN VX_market_airport_map dair on (dair.market_id = dest_market_id)   
 				LEFT JOIN VX_market_airport_map sair on  (sair.market_id = orig_market_id) 
-				where sair.airport_id =".$array['from_city']. "  AND dair.airport_id =". $array['to_city'] . 
+				where ex.active = 1 AND sair.airport_id =".$array['from_city']. "  AND dair.airport_id =". $array['to_city'] . 
+				" AND carrier = ".$array['carrier'] .
 				" and flight_nbr_start <= ". $array['flight_number'] . " and flight_nbr_end >= " . $array['flight_number'] . 
 			//	" and  flight_dep_start <= ".$array['dep_time']." and flight_dep_end >= ".$array['dep_time'] .
 				" AND ((flight_efec_date <= ".$current_yr_date." AND flight_disc_date >= " . $current_yr_date . ") OR (flight_efec_date <= ".$old_yr_date." AND flight_disc_date >= "  . $old_yr_date."))";

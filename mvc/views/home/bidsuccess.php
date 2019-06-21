@@ -24,7 +24,7 @@
 					<span>What to do Now:</span><br>
 					Lorem Ipsum is simply dummy text of the Printing and typecasting Industry. Lorem Ipsum has been the Industry's Standard Dummy Text ever since the 1500s,
 				</p>
-				<p><b><span style="color:#ff6633;">Bid Summary : </span> Bid Reference No : 4567989AAQ123</b></p>
+				<p><b><span style="color:#ff6633;">Bid Summary : </span> Bid Reference No : <?=$offer_data->pnr_ref?></b></p>
 				<div class="table">
 					<table class="table-hover">
 						<thead>
@@ -42,12 +42,12 @@
 					  <tbody>
 							<tr>
 								<td>13/06/2019</td>
-								<td>ET505</td>
+								<td><?=$offer_data->carrier_code.$offer_data->flight_number?></td>
 								<td>13:15 pm</td>
-								<td>Los Angeles (LAX)</td>
-								<td>Dubai (DXB)</td>
+								<td><?=$offer_data->from_city?></td>
+								<td><?=$offer_data->to_city?></td>
 								<td>Business Class</td>
-								<td>E25</td>
+								<td><?=$offer_data->cabin?></td>
 								<td>$775 USD</td>
 							</tr>
 						</tbody>
