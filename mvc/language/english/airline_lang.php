@@ -29,4 +29,4 @@ $lang['airline_created_date'] = 'Create Date';
 $lang['airline_flights'] = 'Flight Numbers';
 $lang['airline_id'] = 'Airline ID';
 $lang['airline_flights_ids'] = "Flights ID's";
-$lang['download_format'] ='Download Format';
+$lang['download_format'] ='Upload Format';

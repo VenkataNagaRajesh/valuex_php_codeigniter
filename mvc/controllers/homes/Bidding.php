@@ -25,6 +25,9 @@ class Bidding extends MY_Controller {
 		if(empty($this->data['results'])){
 			redirect(base_url('home/index'));
 		}
+		if($this->session->userdata('validation_check') != 1){
+			redirect(base_url('home/index'));
+		}
 		foreach($this->data['results'] as $result ){
 			$result->to_cabins = explode(',',$result->to_cabins);
 			foreach($result->to_cabins as $key => $value){
@@ -95,6 +98,7 @@ class Bidding extends MY_Controller {
 			   $ref["modify_date"] = time();
 			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
 			  $json['status'] = "success";
+			  $this->session->unset_userdata('validation_check');
     	  }			
 		}else{
 			$json['status'] = "send offer_id";

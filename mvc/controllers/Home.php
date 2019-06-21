@@ -85,6 +85,7 @@ class Home extends MY_Controller {
 			} else {				
 				$this->data['error'] = $this->allowValidation($this->input->post('pnr'));
                 if(empty($this->data['error'])){
+					$this->session->set_userdata('validation_check', 1);
 					$offer = $this->offer_reference_m->get_single_offer_ref(array('pnr_ref'=>$this->input->post('pnr')));
 				   redirect(base_url("homes/bidding/index/".$offer->offer_id));
 				} else {

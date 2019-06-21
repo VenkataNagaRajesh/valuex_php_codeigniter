@@ -71,12 +71,12 @@
                     </div>
 
                     <?php
-                        if(form_error('religion'))
+                     /*    if(form_error('religion'))
                             echo "<div class='form-group has-error' >";
                         else
-                            echo "<div class='form-group' >";
+                            echo "<div class='form-group' >"; */
                     ?>
-                        <label for="religion" class="col-sm-2 control-label">
+                   <!--     <label for="religion" class="col-sm-2 control-label">
                             <?=$this->lang->line("user_religion")?>
                         </label>
                         <div class="col-sm-6">
@@ -85,7 +85,7 @@
                         <span class="col-sm-4 control-label">
                             <?php echo form_error('religion'); ?>
                         </span>
-                    </div>
+                    </div>-->
 
                     <?php
                         if(form_error('email'))
@@ -287,7 +287,7 @@
                 </form>
                 <?php if ($siteinfos->note==1) { ?>
                     <div class="callout callout-danger">
-                        <p><b>Note:</b> Create user role before create a user. User like as school staff.</p>
+                        <p><b>Note:</b> Create user role before create a user. User like as Airline staff.</p>
                     </div>
                 <?php } ?>
             </div>
