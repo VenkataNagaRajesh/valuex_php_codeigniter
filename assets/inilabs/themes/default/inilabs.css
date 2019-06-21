@@ -940,9 +940,23 @@ label {
     font-size: 12px;
     padding: 5px;
 }
-
 .activity-padd-left {
   padding-left: 0;
+}
+.custom-menu li a span i{
+	margin-right:13px;
+	background: #000;
+	width: 25px !important;
+	height: 25px;
+	text-align: center;
+	border-radius: 4px;
+	padding-top: 4px;
+}
+.custom-menu li a .fa-angle-left::before {
+	font-size:13px;
+}
+.skin-blue .sidebar > .sidebar-menu > li > a:hover, .skin-blue .sidebar > .sidebar-menu > li.active > a{
+	background:#ff6633;
 }
 
 /* INILabs Code Colose Here */

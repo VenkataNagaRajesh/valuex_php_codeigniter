@@ -216,7 +216,7 @@ class Airports_master extends Admin_Controller {
 						 $flag = 1;
 					 }				  
 					} else {
-					   if($flag == 1){ 						   						
+					   if($flag == 1){  //exit; 						   						
 					   		 $airport_key = array_search ('airport name', $import_header);	
                           	 $airportcode_key = array_search ('airport code', $import_header);
                              $city_key = array_search ('city name', $import_header);
@@ -300,8 +300,7 @@ class Airports_master extends Admin_Controller {
                                 $defnData[] = $ctobj;	
                                 unset($ctobj);								
 							  }	 							  
-							  
-							  
+							 
 						     $data['airportID'] = $this->airports_m->addAirport($airport, $data['cityID'],$Row[$airportcode_key]);
                              
 							if ($data['airportID']) {
@@ -531,7 +530,7 @@ class Airports_master extends Admin_Controller {
               $sWhere .= 'm.stateID = '.$this->input->get('stateID');		 
 	        } */			
 			
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.vx_amdID,ma.aln_data_value airport,ma.code airportcode,mct.aln_data_value city,mct.code citycode,mc.aln_data_value country,mc.aln_data_value countrycode,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active from vx_aln_master_data m left join vx_aln_data_defns ma ON ma.vx_aln_data_defnsID = m.airportID left join vx_aln_data_defns mct ON mct.vx_aln_data_defnsID = m.cityID left join vx_aln_data_defns mc ON mc.vx_aln_data_defnsID = m.countryID left join vx_aln_data_defns mr ON mr.vx_aln_data_defnsID = m.regionID left join vx_aln_data_defns mar ON mar.vx_aln_data_defnsID = m.areaID	
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.vx_amdID,ma.aln_data_value airport,ma.code airportcode,mct.aln_data_value city,mct.code citycode,mc.aln_data_value country,mc.code countrycode,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active from vx_aln_master_data m left join vx_aln_data_defns ma ON ma.vx_aln_data_defnsID = m.airportID left join vx_aln_data_defns mct ON mct.vx_aln_data_defnsID = m.cityID left join vx_aln_data_defns mc ON mc.vx_aln_data_defnsID = m.countryID left join vx_aln_data_defns mr ON mr.vx_aln_data_defnsID = m.regionID left join vx_aln_data_defns mar ON mar.vx_aln_data_defnsID = m.areaID	
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

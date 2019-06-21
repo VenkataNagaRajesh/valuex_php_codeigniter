@@ -28,10 +28,11 @@
 html,
 body {
   overflow-x: hidden!important;
-  font-family: 'OpenSans Regular';
+  font-family: century gothic;
   -webkit-font-smoothing: antialiased;
   min-height: 100%;
   background: #f1f2f7;
+  font-size:12px;
 }
 a {
   color: #707478;
@@ -143,7 +144,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: 'OpenSans Regular';
+  font-family: century gothic;
 }
 /* Page Header */
 .page-header {
@@ -2668,10 +2669,13 @@ Component: timeline
   background: #f9f9f9;
 }
 .skin-blue .left-side {
-  background: none repeat scroll 0 0 #2D353C;
-  -webkit-box-shadow: inset -3px 0px 8px -4px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: inset -3px 0px 8px -4px rgba(0, 0, 0, 0.1);
-  box-shadow: inset -3px 0px 8px -4px rgba(0, 0, 0, 0.07);
+	background: none repeat scroll 0 0 #2D353C;
+	-webkit-box-shadow: inset -3px 0px 8px -4px rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: inset -3px 0px 8px -4px rgba(0, 0, 0, 0.1);
+	box-shadow: inset -3px 0px 8px -4px rgba(0, 0, 0, 0.07);
+	background-image: url(../../../../assets/inilabs/themes/default/admin-sidebar-bg.jpg);
+	background-size: cover;
+	background-repeat: no-repeat;
 }
 .skin-blue .sidebar a {
   color: #555555;
@@ -3598,7 +3602,7 @@ fieldset[disabled] .btn-vk.active {
   padding: 15px;
   color: #444;
   border-top: 1px solid #DDDDDD;
-  position: fixed;
+  /*position: fixed;*/
   bottom: 0px;
   left: 0px;
   right: 0px;
@@ -3609,10 +3613,229 @@ fieldset[disabled] .btn-vk.active {
 
 #season_calendar {
     margin-top: 40px;
-}
-    
+}   
 .event a {
     background-color: #42B373 !important;
     background-image :none !important;
     color: #ffffff !important;
+}
+/*my custom styles*/
+.srch-buttons .btn-default{
+	background: #fff;
+	color: #ff6633;
+	font-weight: bold;
+	font-size: 12px;
+	border: solid 1px #999;
+	padding: 5px 10px;
+}
+.srch-buttons .input-group .input-group-btn .btn-danger{
+	font-size: 12px;
+	background: #ffff;
+	border: none;
+	color: #333;
+}
+.srch-buttons .input-group{
+	border: solid 1px #999;
+	border-radius: 5px;
+}
+.srch-buttons .input-group input{
+	padding: 2px 3px;
+	height: 29px;
+	border-radius: 5px;
+}
+.market-info-tree .tree, .market-info-tree .tree ul {
+    margin:0;
+    padding:0;
+    list-style:none;
+	cursor:pointer;
+}
+.market-info-tree .tree ul {
+    margin-left:1em;
+    position:relative
+}
+.market-info-tree .tree ul ul {
+    margin-left:.5em
+}
+.market-info-tree .tree{
+	border: solid 1px #999;
+	margin: 12px 0;
+	padding: 12px 0;
+}
+.market-info-tree .tree ul:before {
+    content:"";
+    display:block;
+    width:0;
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    border-left:1px solid
+}
+.market-info-tree .tree li {
+    margin:0;
+    padding:0 1em;
+    line-height:2em;
+    color:#333;
+    font-weight:700;
+    position:relative;
+	text-transform:capitalize;
+}
+.market-info-tree .tree ul li:before {
+    content:"";
+    display:block;
+    width:10px;
+    height:0;
+    border-top:1px solid;
+    margin-top:-1px;
+    position:absolute;
+    top:1em;
+    left:0
+}
+.market-info-tree .tree ul li:last-child:before {
+    background:#fff;
+    height:auto;
+    top:1em;
+    bottom:0
+}
+.market-info-tree .indicator {
+    margin-right:5px;
+}
+.market-info-tree .tree li a {
+    text-decoration: none;
+    color:#369;
+}
+.market-info-tree .tree li button, .market-info-tree .tree li button:active, .market-info-tree .tree li button:focus {
+    text-decoration: none;
+    color:#369;
+    border:none;
+    background:transparent;
+    margin:0px 0px 0px 0px;
+    padding:0px 0px 0px 0px;
+    outline: 0;
+}
+.mzone-config{
+	border: solid 1px #999;
+	padding: 12px 0px;
+}
+.mzone-config h2{
+	color: #ff6633;
+	font-size: 12px;
+	font-weight: bold;
+	margin: 1px 0px 10px;
+}
+.mzone-config .zone-info1 p{
+	background: #ddd;
+	text-align: center;
+	border-radius: 3px;
+	border: solid 1px #666;
+	color: #333;
+	margin-bottom: 5px;
+	font-size: 11px;
+	padding: 2px 1px;
+}
+.mzone-config .zone-info2 p{
+	background: #ff6633;
+	text-align: center;
+	border-radius: 3px;
+	border: solid 1px #666;
+	color: #fff;
+	margin-bottom: 5px;
+}
+.mzone-config input{
+	padding: 2px 3px;
+	height: 29px;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	border:solid 1px #999;
+}
+.mzone-config .zone-info1 select{
+	padding: 2px 3px;
+	height: 29px;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	border:solid 1px #999;
+}
+.mzone-config .zone-info2 select{
+	padding: 2px 3px;
+	height: 29px;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	border:solid 1px #999;
+	background:#ff6633;
+	color:#fff;
+}
+.mzone-config .zone-info2 {
+	margin-top:12px;
+}
+.mzone-config textarea{
+	padding: 2px 3px;
+	border-radius: 5px;
+	margin-bottom: 5px;
+	border:solid 1px #999;
+}
+.mzones .btn-danger{
+	font-size: 13px;
+	background: #ff6633;
+	padding: 4px 11px;
+	border: solid 1px #999;
+}
+.table-reponsive{
+	border: solid 1px #999;
+	padding: 14px;
+	margin: 10px 0;
+	border-radius:3px;
+	background:#fff;
+}
+.table-reponsive .table thead th{
+	font-weight:bold;
+}
+.table-reponsive .table{
+	margin-bottom: 0;
+}
+.table-reponsive .table tr td input , .table-reponsive .table tr td select{
+	border:solid 1px #999;
+}
+.table-reponsive .col-md-1{
+	padding: 0;
+	margin-top: 3em;
+}
+.table-reponsive .btn-danger{
+	width:100%;
+}
+.mzones{
+	color:#333;
+}
+.mzones-list-bar .title-bar{
+	margin-top:12px;
+}
+.mzones-list-bar .title-bar h2{
+	font-size: 16px;
+	color: #ff6633;
+	font-weight: bold;
+	margin-bottom: 0;
+}
+.mzones-list-bar .toolbar{
+	height: 30px;
+	background: #ddd;
+	margin-bottom: 0;
+}
+.mzones .tab-content .dt-button{
+	background:#ff6633;
+	color:#fff;
+}
+.mzones .tab-content .table{
+	background:#fff;
+}
+.mzones .tab-content .table .onoffswitch-small-inner::before {
+	background:#109610;
+}
+.mzones .tab-content {
+	margin-top:12px;
+	overflow:auto;
+}
+.mzones .tab-content tr td{
+	color:#333;
+}
+.mzones .tab-content .btn-danger{
+	padding:1px 5px;
 }

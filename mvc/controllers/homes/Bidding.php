@@ -19,13 +19,16 @@ class Bidding extends MY_Controller {
 		$this->lang->load('bidding', $language);
 	}
   
-    public function index() {
-		$id = htmlentities(escapeString($this->uri->segment(4)));
-        $this->data['results'] = $this->bid_m->getPassengers($id);
-		if(empty($this->data['results'])){
+    public function index() {  
+       //$this->session->set_userdata('pnr_ref','WQ1235');	
+		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
+			$this->session->unset_userdata('pnr_ref');
 		}
-		if($this->session->userdata('validation_check') != 1){
+		
+		$this->data['results'] = $this->bid_m->getPassengers($this->session->userdata('pnr_ref'));
+		
+		if(empty($this->data['results'])){
 			redirect(base_url('home/index'));
 		}
 		foreach($this->data['results'] as $result ){
@@ -99,6 +102,7 @@ class Bidding extends MY_Controller {
 			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
 			  $json['status'] = "success";
 			  $this->session->unset_userdata('validation_check');
+			  $this->session->unset_userdata('pnr_ref');
     	  }			
 		}else{
 			$json['status'] = "send offer_id";
