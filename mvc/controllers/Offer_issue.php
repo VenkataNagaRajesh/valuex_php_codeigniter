@@ -18,6 +18,7 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model('invfeed_m');
 		$this->load->model("reset_m");
 		$this->load->model('acsr_m');
+		$this->load->model("airports_m");
 		$language = $this->session->userdata('lang');
 		
 		$this->lang->load('offer', $language);
@@ -335,7 +336,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
                         $inv['airline_id'] = $data->carrier_code;
 			$inv['departure_date'] = $data->dep_date;
 			$empty_seats = $this->invfeed_m->getCabinSeatData($inv);
-			var_dump($empty_seats);
+			//var_dump($empty_seats);
 		$q = "select distinct rbd_markup, flight_number, from_city, to_city,tier_markup, (val + ((rbd_markup * val)/100)) as bid_val , 
 			offer_id,bid_submit_date , dep_date, upgrade_type, carrier_code, src_point,  dest_point, cabin FROM (
 				SELECT (bid_value + ((pf.tier_markup * bid_value)/100)) as val,pf.dep_date,bid.upgrade_type,pf.flight_number,
