@@ -1,5 +1,10 @@
 <div class="mzones">
-	<div class="col-md-12">
+	<div class="col-md-12 card-header">
+		<div class="col-md-12">
+			<p data-toggle="collapse" data-target="#mzonesAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
+		</div>
+	</div>
+	<div class="col-md-12 collapse" id="mzonesAdd">
 		<div class="col-md-4">
 			<div class="srch-buttons">
 				<div class="col-md-4">
@@ -141,11 +146,8 @@
 					<div class="col-md-2">
 						<h2>Market Zones</h2><span class="pull-right"></span>
 					</div>
-					<div class="col-md-8">
+					<div class="col-md-10">
 						<div class="toolbar"></div>
-					</div>
-					<div class="col-md-2">
-						<a href="#" type="button" class="btn btn-danger">Add Market Zone</a>
 					</div>
 				</div>
 				<div class="col-md-12">
@@ -440,7 +442,19 @@ $('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon
           });
       }
   }); 
-
-
-  
+</script>
+<script>
+    $(document).ready(function(){
+        // Add minus icon for collapse element which is open by default
+        $(".collapse.show").each(function(){
+        	$(this).prev(".card-header").find(".fa").addClass("fa-minus").removeClass("fa-plus");
+        });
+        
+        // Toggle plus minus icon on show hide of collapse element
+        $(".collapse").on('show.bs.collapse', function(){
+        	$(this).prev(".card-header").find(".fa").removeClass("fa-plus").addClass("fa-minus");
+        }).on('hide.bs.collapse', function(){
+        	$(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
+        });
+    });
 </script>
