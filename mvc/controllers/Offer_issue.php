@@ -19,10 +19,9 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("reset_m");
 		$this->load->model('acsr_m');
 		$this->load->model("airports_m");
-		$language = $this->session->userdata('lang');
-		
-		/* $this->lang->load('offer', $language);
-		$data['tomail'] = "lakshmi.amujuru@sweken.com";
+		$language = $this->session->userdata('lang');		
+		 $this->lang->load('offer', $language);
+		/*$data['tomail'] = "lakshmi.amujuru@sweken.com";
 		$data['mail_subject'] ="Offer mail template testing";
 		$data['first_name'] ="Lakshmi";
 		$data['last_name'] = "Amujuru";

@@ -553,15 +553,18 @@ class Admin_Controller extends MY_Controller {
 		$siteinfos = $this->reset_m->get_site();
 		
 		foreach($tags as $tag){
+			/* if($tag->tagname == '[mail_logo]'){			
+				 $message = str_replace('[mail_logo]', $mail_logo, $message);
+			} */
 			if($tag->tagname == '[first_name]'){
-				if($data->fist_name){
+				if($data->first_name){
 				 $message = str_replace('[first_name]', $data->first_name, $message);
 				}else {
 				 $message = str_replace('[first_name]','', $message);	
 				}
 			}
 			if($tag->tagname == '[last_name]'){
-				if($data->fist_name){
+				if($data->last_name){
 				 $message = str_replace('[last_name]', $data->last_name, $message);
 				}else {
 				 $message = str_replace('[last_name]','', $message);	
@@ -569,7 +572,7 @@ class Admin_Controller extends MY_Controller {
 			}
 			
 			if($tag->tagname == '[pnr_ref]'){
-				if($data->fist_name){
+				if($data->pnr_ref){
 				 $message = str_replace('[pnr_ref]', $data->pnr_ref, $message);
 				}else {
 				 $message = str_replace('[pnr_ref]','', $message);	
