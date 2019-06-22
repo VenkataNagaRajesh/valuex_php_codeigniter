@@ -136,101 +136,103 @@
 	</div>
 	<div class="col-md-12">
 		<div class="mzones-list-bar">
-			<div class="title-bar">
-				<div class="col-md-2">
-					<h2>Market Zones</h2><span class="pull-right"></span>
-				</div>
-				<div class="col-md-8">
-					<div class="toolbar"></div>
-				</div>
-				<div class="col-md-2">
-					<a href="#" type="button" class="btn btn-danger">Add Market Zone</a>
-				</div>
-			</div>
-			<div class="col-md-12">
-				<div class="table-reponsive col-md-12">
-					<div class="col-md-11">
-						<table class="table table-bordered table-striped table-highlight">
-							<thead>
-								<th>Airline Code</th>
-								<th>Select Marketzone</th>
-								<th>Select Level Type</th>
-								<th>Select Level Value</th>
-								<th>Select Inclusion Type</th>
-								<th>Select Inclusion Value</th>
-								<th>Select Exclusion Type</th>
-								<th>Select Exclusion Value</th>
-							</thead>
-							<tbody>
-								<tr>
-									<td>
-										<input type="text" class="form-control" id="alcode">
-									</td>
-									<td>
-										<select class="form-control" id="inc-level">
-											<option>level</option>
-											<option>2</option>
-											<option>3</option>
-											<option>4</option>
-										</select>
-									</td>
-									<td>
-										<select class="form-control" id="inc-level">
-											<option>level</option>
-											<option>2</option>
-											<option>3</option>
-											<option>4</option>
-										</select>
-									</td>
-									<td>
-										<select class="form-control" id="inc-level">
-											<option>level</option>
-											<option>2</option>
-											<option>3</option>
-											<option>4</option>
-										</select>
-									</td>	
-									<td>
-										<select class="form-control" id="inc-level">
-											<option>level</option>
-											<option>2</option>
-											<option>3</option>
-											<option>4</option>
-										</select>
-									</td>
-									<td>
-										<select class="form-control" id="inc-level">
-											<option>level</option>
-											<option>2</option>
-											<option>3</option>
-											<option>4</option>
-										</select>
-									</td>
-									<td>
-										<select class="form-control" id="inc-level">
-											<option>level</option>
-											<option>2</option>
-											<option>3</option>
-											<option>4</option>
-										</select>
-									</td>
-									<td>
-										<select class="form-control" id="inc-level">
-											<option>level</option>
-											<option>2</option>
-											<option>3</option>
-											<option>4</option>
-										</select>
-									</td>	
-								</tr>
-							</tbody>
-						</table>
+			<form class="form-horizontal" action="#">
+				<div class="title-bar">
+					<div class="col-md-2">
+						<h2>Market Zones</h2><span class="pull-right"></span>
 					</div>
-					<div class="col-md-1">
-						<a href="#" type="button" class="btn btn-danger">Filter</a>
+					<div class="col-md-8">
+						<div class="toolbar"></div>
+					</div>
+					<div class="col-md-2">
+						<a href="#" type="button" class="btn btn-danger">Add Market Zone</a>
 					</div>
 				</div>
-			</div>
+				<div class="col-md-12">
+					<div class="table-reponsive col-md-12">
+						<div class="col-md-11">
+							<table class="table table-bordered table-striped table-highlight">
+								<thead>
+									<th>Airline Code</th>
+									<th>Select Marketzone</th>
+									<th>Select Level Type</th>
+									<th>Select Level Value</th>
+									<th>Select Inclusion Type</th>
+									<th>Select Inclusion Value</th>
+									<th>Select Exclusion Type</th>
+									<th>Select Exclusion Value</th>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<input type="text" class="form-control" id="alcode">
+										</td>
+										<td>
+											<select class="form-control" id="inc-level">
+												<option>level</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+											</select>
+										</td>
+										<td>
+											<select class="form-control" id="inc-level">
+												<option>level</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+											</select>
+										</td>
+										<td>
+											<select class="form-control" id="inc-level">
+												<option>level</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+											</select>
+										</td>	
+										<td>
+											<select class="form-control" id="inc-level">
+												<option>level</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+											</select>
+										</td>
+										<td>
+											<select class="form-control" id="inc-level">
+												<option>level</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+											</select>
+										</td>
+										<td>
+											<select class="form-control" id="inc-level">
+												<option>level</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+											</select>
+										</td>
+										<td>
+											<select class="form-control" id="inc-level">
+												<option>level</option>
+												<option>2</option>
+												<option>3</option>
+												<option>4</option>
+											</select>
+										</td>	
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="col-md-1">
+							<a href="#" type="button" class="btn btn-danger">Filter</a>
+						</div>
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
 	<div class="col-md-12">
