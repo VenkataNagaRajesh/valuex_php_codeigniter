@@ -111,12 +111,13 @@
 			 <th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('passenger_list')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('origin')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('destination')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('booking_status')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('details')?></th>
 
                     </tr>
                  </thead>
@@ -165,7 +166,8 @@ $("#dep_to_date").datepicker();
                    {"data": "departure_date" },
                    {"data": "carrier_code" },
                    {"data": "flight_number" },
-                {"data": "booking_status" }
+                {"data": "booking_status" },
+		{"data": "action" }
 
 				  ],			     
      dom: 'B<"clear">lfrtip',

@@ -36,5 +36,3 @@ class Mailandsmstemplatetag_m extends MY_Model {
 	}
 }
 
-/* End of file notice_m.php */
-/* Location: .//D/xampp/htdocs/school/mvc/models/notice_m.php */

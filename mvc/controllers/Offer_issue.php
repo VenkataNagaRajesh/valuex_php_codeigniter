@@ -25,6 +25,26 @@ class Offer_issue extends Admin_Controller {
 		
 	}	
 	
+
+        public function view() {
+                $id = htmlentities(escapeString($this->uri->segment(3)));
+
+                if ((int)$id) {
+                        $this->data["ofr"] = $this->offer_issue_m->getOfferDetailsById($id);
+
+                        if($this->data["ofr"]) {
+                                $this->data["subview"] = "offer/view";
+                                $this->load->view('_layout_main', $this->data);
+                        } else {
+                                $this->data["subview"] = "error";
+                                $this->load->view('_layout_main', $this->data);
+                        }
+                } else {
+                        $this->data["subview"] = "error";
+                        $this->load->view('_layout_main', $this->data);
+                }
+        }
+
 	
 	public function index() {
         $this->data['headerassets'] = array(
@@ -294,6 +314,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
                         }
                         $feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default season";
                         $feed->departure_date = date('d-m-Y',$feed->departure_date);
+			$feed->action = btn_view('offer_issue/view/'.$feed->offer_id, $this->lang->line('view'));
 
                                 $output['aaData'][] = $feed;
 
