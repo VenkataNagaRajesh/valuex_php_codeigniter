@@ -10,6 +10,7 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model("offer_eligibility_m");
 		$this->load->model("eligibility_exclusion_m");
 		$this->load->model("season_m");
+		$this->load->model('paxfeed_m');
 		$this->load->model("marketzone_m");
 		$this->load->model("fclr_m");
 		$language = $this->session->userdata('lang');
@@ -210,7 +211,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext
             	pf.dep_date as departure_date, min,max,average,slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id
 		     from VX_aln_dtpf_ext pext 
-		     LEFT JOIN VX_aln_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id)
+		     LEFT JOIN VX_aln_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_processed = 1 and pf.active = 1)
 		     LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)
                      LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
 		     LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
@@ -257,7 +258,7 @@ $sWhere $sOrder $sLimit";
 
    function generatedata() {
 
-		$sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf.cabin and cab.aln_data_typeID = 13 ) where cab.aln_data_value != 'Business' order by dtpf_id";
+		$sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf.cabin and cab.aln_data_typeID = 13 ) where cab.aln_data_value != 'Business'  AND is_processed = 0 order by dtpf_id";
 		$rResult = $this->install_m->run_query($sQuery);
 
 		$exclQuery = "SELECT * from VX_aln_eligibility_excl_rules ";
@@ -267,8 +268,11 @@ $sWhere $sOrder $sLimit";
  " ;
 		$fclr = $this->install_m->run_query($fclrQuery);*/
 
-
 	foreach ($rResult as $feed ) {
+
+		//update record it is processed
+
+		$this->paxfeed_m->update_paxfeed(array('is_processed' => '1'), $feed->dtpf_id);
 		$cabin = $this->airline_cabin_class_m->getCabinFromClassForCarrier($feed->carrier_code,$feed->class);
 		$array = array();
 		$array['from_city'] = $feed->from_city;
