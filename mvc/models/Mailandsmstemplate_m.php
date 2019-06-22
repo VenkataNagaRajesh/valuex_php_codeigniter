@@ -52,6 +52,7 @@ class Mailandsmstemplate_m extends MY_Model {
 	function setDefault($catID,$mailandsmstemplateID){
 		$this->db->set('default', 0);
 		$this->db->where('catID',$catID);
+		$this->db->where('type','email');
 		$this->db->update('mailandsmstemplate');
 		
 		$this->db->set('default', 1);

@@ -88,6 +88,7 @@
                                         <?php echo btn_view('mailandsmstemplate/view/'.$mailandsmstemplate->mailandsmstemplateID, $this->lang->line('view')) ?>
                                         <?php echo btn_edit('mailandsmstemplate/edit/'.$mailandsmstemplate->mailandsmstemplateID, $this->lang->line('edit')) ?>
                                         <?php echo btn_delete('mailandsmstemplate/delete/'.$mailandsmstemplate->mailandsmstemplateID, $this->lang->line('delete')) ?>
+										<a href="<?=base_url('mailandsmstemplate/makedefault/'.$mailandsmstemplate->mailandsmstemplateID)?>" class="btn btn-success btn-xs mrg">Make Default</a>
                                     </td>
                                     <?php } ?>
                                 </tr>

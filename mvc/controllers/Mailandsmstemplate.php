@@ -282,6 +282,15 @@ class Mailandsmstemplate extends Admin_Controller {
 			redirect(base_url("mailandsmstemplate/index"));
 		}
 	}
+	
+	public function makedefault(){
+		$id = htmlentities(escapeString($this->uri->segment(3)));
+		if((int)$id) {
+	      $mailandsmstemplate = $this->mailandsmstemplate_m->get_mailandsmstemplate($id);
+          $this->mailandsmstemplate_m->setDefault($mailandsmstemplate->catID,$id);
+          redirect(base_url("mailandsmstemplate/index"));	
+		}
+	}
 
 }
 

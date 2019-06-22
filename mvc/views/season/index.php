@@ -1,97 +1,228 @@
-<div class="box">
-    <div class="box-header">
-        <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
-        <ol class="breadcrumb">
-            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li class="active"><?=$this->lang->line('menu_season')?></li>
-        </ol>
-    </div><!-- /.box-header -->
-    <!-- form start -->
-    <div class="box-body">
-        <div class="row">
-            <div class="col-sm-12">               
-                    <h5 class="page-header">
-					    <?php  if(permissionChecker('season_add')) {  ?>
-                        <a href="<?php echo base_url('season/add') ?>">
-                            <i class="fa fa-plus"></i> 
-                            <?=$this->lang->line('add_title')?>
-                        </a>
-						 <?php } ?>
-						 
-						 &nbsp;&nbsp;
-                         <?php if( isset ($reconfigure) && permissionChecker('season_reconfigure')) {?>
-                                <a href="<?php echo base_url('trigger/season_trigger') ?>">
-                                    <i class="fa fa-plus"></i>
-                                    <?=$this->lang->line('generate_map_table')?>
-                                </a>
-                        <?php } ?>
-                    </h5>
-			<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
-				<div class='form-group'>			 
-				   <div class="col-sm-2">			   
-				    <?php $slist = array("0" => "Select Season");               
-					   foreach($seasonslist as $season){
-						  $slist[] = $season;
-						}							
-					   echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
-					</div>
-					<div class="col-sm-2">			   
-				      <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>
-					</div>
-					 <div class="col-sm-2">			   
-					   <?php $olist = array("0" => "Select Origin Level");               
-					   foreach($types as $type){
-						  $olist[$type->vx_aln_data_typeID] = $type->alias;
-						}							
-					   echo form_dropdown("origID", $olist,set_value("origID",$origID), "id='origID' class='form-control hide-dropdown-icon select2'");    ?>
-					 </div>                				
-					 <div class="col-sm-2">
-						<?php $dlist = array("0" => "Select Destination");               
-					    foreach($types as $type){
-						  $dlist[$type->vx_aln_data_typeID] = $type->alias;
-						}							
-					   echo form_dropdown("destID", $dlist,set_value("destID",$destID), "id='destID' class='form-control hide-dropdown-icon select2'");    ?>
-					 </div>
-					 <div class="col-sm-2">
-						<?php $activestatus[1]="Active";	$activestatus[0]="In Active";				
-					   echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
-					 </div>
-					<div class="col-sm-2">
-					  <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Search</button>
-					</div>	             				
-				  </div>
-			 </form>
-               
-                <div id="hide-table">
-                    <table id="seasonslist" class="table table-striped table-bordered table-hover dataTable no-footer">
-                        <thead>
-                            <tr>
-                                <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('orig_level_value')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('dest_level')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('dest_level_value')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('season_start_date')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('season_end_date')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('is_return_inclusive')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('season_color')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('season_active')?></th>
-                                <?php if(permissionChecker('season_edit') || permissionChecker('season_delete')) { ?>
-                                <th class="col-lg-2"><?=$this->lang->line('action')?></th>
-                                <?php } ?>
-                            </tr>
-                        </thead>
-                        <tbody>                            
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="seasons">
+	<p class="card-header" data-toggle="collapse" data-target="#seasonAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add Season" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
+	<div class="table-responsive col-md-12 collapse" id="seasonAdd">
+		<form class="form-horizontal" action="#">
+			<div class="col-md-8 col-md-offset-2">
+				<label class="control-label col-md-3">Season Name</label>
+				<div class="col-md-9">
+					<input type="text" class="form-control" id="season-name">
+				</div>
+			</div>
+			<div class="col-md-12">
+				<table class="table table-bordered">
+					<thead>
+						<th>Origin Market</th>
+						<th>Destination Market</th>
+						<th>Date Range</th>
+						<th>Return Inclusive</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<div class="col-md-6">
+									<p>
+										<span>Content</span>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</p>
+								</div>
+								<div class="col-md-6">
+									<p>
+										<span>Level</span>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</p>
+								</div>
+							</td>
+							<td>
+								<div class="col-md-6">
+									<p>
+										<span>Content</span>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</p>
+								</div>
+								<div class="col-md-6">
+									<p>
+										<span>Level</span>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</p>
+								</div>
+							</td>
+							<td>
+								<div class="col-md-6">
+									<p>
+										<span>Effective</span>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</p>
+								</div>
+								<div class="col-md-6">
+									<p>
+										<span>Discontinue</span>
+										<select class="form-control" id="inc-level">
+											<option>level</option>
+											<option>2</option>
+											<option>3</option>
+											<option>4</option>
+										</select>
+									</p>
+								</div>
+							</td>
+							<td>
+								<label class="radio-inline">
+									<input type="radio" name="optradio">Yes
+								</label>
+								<label class="radio-inline">
+									<input type="radio" name="optradio">No
+								</label>
+							</td>	
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-8">
+				<div class="calendar-box">
+					<div id="calendar1" class="col-md-5 cal-box"></div>
+					<div id="calendar2" class="col-md-5 cal-box"></div>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="season-highlight">
+					<p>
+						<span>Season</span><span>Highlights</span><br>
+						<span class="default">Default</span><span class="default-high">&nbsp;</span><br>
+						<span class="default">Summer Peak</span><span class="summer-high">&nbsp;</span><br>
+						<span class="default">Christmas Peak</span><span class="christ-high">&nbsp;</span>
+					</p>
+				</div>
+			</div>
+			<div class="col-md-12">
+				<p class="pull-right">
+					<a href="#" type="button" class="btn btn-danger">Save</a>
+					<a href="#" type="button" class="btn btn-danger">Cancel</a>
+				</p>
+			</div>
+		</form>
+	</div>
+	<div class="col-md-12 season-table">
+		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
+			<div class='form-group'>			 
+				<div class="col-sm-2">			   
+				<?php $slist = array("0" => "Select Season");               
+				   foreach($seasonslist as $season){
+					  $slist[] = $season;
+					}							
+				   echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
+				</div>
+				<div class="col-sm-2">			   
+				  <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>
+				</div>
+				<div class="col-sm-2">			   
+				  <?php $olist = array("0" => "Select Origin Level");               
+				  foreach($types as $type){
+					  $olist[$type->vx_aln_data_typeID] = $type->alias;
+					}							
+				  echo form_dropdown("origID", $olist,set_value("origID",$origID), "id='origID' class='form-control hide-dropdown-icon select2'");    ?>
+				</div>                				
+				<div class="col-sm-2">
+					<?php $dlist = array("0" => "Select Destination");               
+				   foreach($types as $type){
+					  $dlist[$type->vx_aln_data_typeID] = $type->alias;
+					}							
+				  echo form_dropdown("destID", $dlist,set_value("destID",$destID), "id='destID' class='form-control hide-dropdown-icon select2'");    ?>
+				</div>
+				<div class="col-sm-2">
+					<?php $activestatus[1]="Active";	$activestatus[0]="In Active";				
+				  echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
+				</div>
+				<div class="col-sm-2">
+				  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Search</button>
+				</div>	             				
+			</div>
+		</form>
+        <div id="hide-table">
+            <table id="seasonslist" class="table table-striped table-bordered table-hover dataTable no-footer">
+                <thead>
+					<tr>
+                        <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('orig_level_value')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('dest_level')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('dest_level_value')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('season_start_date')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('season_end_date')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('is_return_inclusive')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('season_color')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('season_active')?></th>
+                        <?php if(permissionChecker('season_edit') || permissionChecker('season_delete')) { ?>
+                        <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+                           <?php } ?>
+                      </tr>
+                   </thead>
+                   <tbody>                            
+                   </tbody>
+               </table>
+          </div>
+	</div>
 </div>
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        
+        // An array of dates
+        var eventDates = {};
+        eventDates[ new Date( '12/04/2014' )] = new Date( '12/04/2014' );
+        eventDates[ new Date( '12/06/2014' )] = new Date( '12/06/2014' );
+        eventDates[ new Date( '12/20/2014' )] = new Date( '12/20/2014' );
+        eventDates[ new Date( '12/25/2014' )] = new Date( '12/25/2014' );
+        
+        // datepicker
+        jQuery('#calendar1').datepicker({
+            beforeShowDay: function( date ) {
+                var highlight = eventDates[date];
+                if( highlight ) {
+                     return [true, "event", highlight];
+                } else {
+                     return [true, '', ''];
+                }
+             }
+        });
+		jQuery('#calendar2').datepicker({
+            beforeShowDay: function( date ) {
+                var highlight = eventDates[date];
+                if( highlight ) {
+                     return [true, "event", highlight];
+                } else {
+                     return [true, '', ''];
+                }
+             }
+        });
+    });
+</script>
 <script>
 $(document).ready(function() {	 
     $('#seasonslist').DataTable( {
@@ -228,4 +359,19 @@ $(document).ready(function() {
     }
 	
    });
+</script>
+<script>
+    $(document).ready(function(){
+        // Add minus icon for collapse element which is open by default
+        $(".collapse.show").each(function(){
+        	$(this).prev(".card-header").find(".fa").addClass("fa-minus").removeClass("fa-plus");
+        });
+        
+        // Toggle plus minus icon on show hide of collapse element
+        $(".collapse").on('show.bs.collapse', function(){
+        	$(this).prev(".card-header").find(".fa").removeClass("fa-plus").addClass("fa-minus");
+        }).on('hide.bs.collapse', function(){
+        	$(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
+        });
+    });
 </script>
