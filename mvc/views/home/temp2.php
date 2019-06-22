@@ -14,7 +14,7 @@
 				<div class="header-email">
 					<img class="img-responsive" src="<?php echo base_url('assets/home/images/temp2-logo.jpg'); ?>" alt="temp bnr">
 				</div>
-				<h1>Hi <?=$pax_data->first_name.' '.$pax_data->last_name?> !</h1>
+				<h1>Hi [first_name] [last_name]</h1>
 				<p>
 					With AC Bid Upgrade you can enhance your travel experince by enjoying priority. One or more of yourupcoming flight (s) are eligible for bids
 				</p>
@@ -28,7 +28,7 @@
 			</div>
 			<div class="col-md-6 booking-ref">
 				<img class="img-responsive" src="<?php echo base_url('assets/home/images/temp2-bnr.jpg'); ?>" alt="temp2 bnr">
-				<p class="pull-right"><b>BOOKING REFERENECE: <span style="color:#ff6633;"><?=$pax_data->pnr_ref?></span></b></p>
+				<p class="pull-right"><b>BOOKING REFERENECE: <span style="color:#ff6633;">[pnr_ref]</span></b></p>
 			</div>
 		</div>
 	</div>

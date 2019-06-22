@@ -22,9 +22,31 @@ class Offer_reference_m extends MY_Model {
                 return $query;
         }
 
+
+
         function insert_offer_ref($array) {
-		$error = parent::insert($array);
-                return TRUE;
+		$arr['pnr_ref'] = $array['pnr_ref'];
+		if ($this->checkOfferRefEntry($arr)){
+                  $error = parent::insert($array);
+                        return TRUE;
+                }
+
+        }
+
+
+       function checkOfferRefEntry($array){
+                $this->db->select('offer_id');
+                $this->db->from('VX_aln_offer_ref');
+                $this->db->where($array);
+                $this->db->limit(1);
+                $query = $this->db->get();
+                $check = $query->row();
+                if($check->offer_id) {
+                    return false ;
+                } else {
+                  return true;
+                }
+
 
         }
 
