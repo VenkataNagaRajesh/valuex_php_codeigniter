@@ -547,7 +547,7 @@ class Admin_Controller extends MY_Controller {
 		$temp2_img = base_url('assets/home/images/temp2-bnr.jpg');
 		$temp2_logo = base_url('assets/home/images/temp2-logo.jpg');
 		$temp2_img = base_url('assets/home/images/temp3-bnr.jpg');
-		
+		$data = (object)$data;
 		$tags = $this->mailandsmstemplatetag_m->get_mailandsmstemplatetag();
 		$message = $this->mailandsmstemplate_m->get_mailandsmstemplate(array("mailandsmstemplateID"=>$templateID))->template;
 		$siteinfos = $this->reset_m->get_site();
