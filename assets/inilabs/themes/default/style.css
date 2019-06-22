@@ -3937,3 +3937,74 @@ fieldset[disabled] .btn-vk.active {
     background-image :none !important;
     color: #ffffff !important;
 }
+/*fclr codes*/
+.fclr-bar .table-responsive{
+	border: solid 1px #999;
+	padding: 15px 0;
+	background: #fff;
+}
+.fclr-bar .table-responsive thead{
+	background: #ddd;
+}
+.fclr-bar .table-responsive thead th{
+	color:#ff6633;
+	font-weight:bold;
+	border-right: solid 5px #fff;
+}
+.fclr-bar .table-responsive thead th:last-child{
+	border-right: none;
+}
+.fclr-bar .table-responsive tbody tr td .input-group, .fclr-bar .table-responsive tbody tr td  select, .fclr-bar .table-responsive tbody tr td .select2{
+	color:#333;
+}
+.fclr-bar .table-responsive .table .btn-danger{
+	font-size: 13px;
+	background: #ff6633;
+	padding: 4px 11px;
+	border: solid 1px #999;
+}
+.fclr-table-add .btn-danger{
+	font-size: 13px;
+	background: #ff6633;
+	padding: 4px 11px;
+	border: solid 1px #999;
+}
+.fclr-bar .fclr-table{
+	border: solid 1px #999;
+	margin: 15px 0px;
+	background: #fff;
+	padding: 20px;
+}
+.fclr-bar .fclr-table .fclr-table-data{
+	overflow: auto;
+}
+.fclr-bar .fclr-table .dt-button{
+	background:#ff6633;
+	color:#fff;
+}
+.fclr-bar .fclr-table .onoffswitch-small-inner::before {
+	background:#109610;
+}
+.fclr-bar .fclr-table .btn-success{
+	background:#ff6633;
+}
+.fclr-bar .fclr-table-add{
+	background: #fff;
+	border: solid 1px #999;
+	margin-bottom: 15px;
+	padding: 15px 0;
+}
+.fclr-bar .fclr-table-add thead{
+	background:#ddd;
+	color:#ff6633;
+}
+.fclr-bar .fclr-table-add thead th{
+	border-right:solid 3px #fff;
+}
+.fclr-bar .card-header .btn-danger{
+	font-size: 13px;
+	background: #ff6633;
+	padding: 4px 11px;
+	border: solid 1px #999;
+	margin-bottom:6px;
+}
