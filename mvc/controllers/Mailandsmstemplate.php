@@ -1,19 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Mailandsmstemplate extends Admin_Controller {
-/*
-| -----------------------------------------------------
-| PRODUCT NAME: 	INILABS SCHOOL MANAGEMENT SYSTEM
-| -----------------------------------------------------
-| AUTHOR:			INILABS TEAM
-| -----------------------------------------------------
-| EMAIL:			info@inilabs.net
-| -----------------------------------------------------
-| COPYRIGHT:		RESERVED BY INILABS IT
-| -----------------------------------------------------
-| WEBSITE:			http://inilabs.net
-| -----------------------------------------------------
-*/
+
 	function __construct() {
 		parent::__construct();
 		$this->load->model('usertype_m');
@@ -91,57 +79,9 @@ class Mailandsmstemplate extends Admin_Controller {
 			)
 		);
 		$usertypes = $this->usertype_m->get_usertype();
+		$this->data['categories'] = $this->mailandsmstemplate_m->get_categories();
 		$this->data['usertypes'] = $usertypes;
-		if(count($usertypes)) {
- 			foreach ($usertypes as $key => $usertype) {
-				if($usertype->usertypeID == 2) {
-					$teachertags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => $usertype->usertypeID));
-
-					$flag = '';
-					if(count($teachertags)) {
-						foreach ($teachertags as $teachertagkey => $teachertag) {
-							$flag .= '<input class="btn bg-black btn-xs email_alltag sms_alltag" type="button" value="'.$teachertag->tagname.'"> ';
-						}
-					}
-
-					$this->data['teachers'] = $flag;
-				} elseif($usertype->usertypeID == 3) {
-					$studenttags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => $usertype->usertypeID));
-					$flag = '';
-					if(count($studenttags)) {
-						foreach ($studenttags as $studenttagkey => $studenttag) {
-							$flag .= '<input class="btn bg-black btn-xs email_alltag sms_alltag" type="button" value="'.$studenttag->tagname.'"> ';
-						}
-					}
-
-					$this->data['students'] = $flag;
-				} elseif($usertype->usertypeID == 4) {
-					$parentstags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => $usertype->usertypeID));
-
-					$flag = '';
-					if(count($parentstags)) {
-						foreach ($parentstags as $parentstagkey => $parentstag) {
-							$flag .= '<input class="btn bg-black btn-xs email_alltag sms_alltag" type="button" value="'.$parentstag->tagname.'"> ';
-						}
-					}
-
-					$this->data['parents'] = $flag;
-				} else {
-					$usertags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => 1));
-
-					$flag = '';
-					if(count($usertags)) {
-						foreach ($usertags as $usertagkey => $usertag) {
-							$flag .= '<input class="btn bg-black btn-xs email_alltag sms_alltag" type="button" value="'.$usertag->tagname.'"> ';
-						}
-					}
-
-					$this->data['users'] = $flag;
-				}
-			}
-		}
-
-		if($_POST) {
+		if($_POST) { 
 			$type = $this->input->post('type');
 			if($type == 'email') {
 				$this->data["email"] = 1;
@@ -159,10 +99,13 @@ class Mailandsmstemplate extends Admin_Controller {
 						'name' => $this->input->post('email_name'),
 						'usertypeID' => $this->input->post('email_user'),
 						'type' => $this->input->post('type'),
+						'catID' => $this->input->post('category'),
 						'template' => $this->input->post('email_template'),
 					);
-
-					$this->mailandsmstemplate_m->insert_mailandsmstemplate($array);
+					$id = $this->mailandsmstemplate_m->insert_mailandsmstemplate($array);
+					if($id && $this->input->post('default')){
+						$this->mailandsmstemplate_m->setDefault($this->input->post('category'),$id);
+					}
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url('mailandsmstemplate/index'));
 				}
@@ -229,60 +172,10 @@ class Mailandsmstemplate extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$this->data['mailandsmstemplate'] = $this->mailandsmstemplate_m->get_mailandsmstemplate($id);
-
 			if($this->data['mailandsmstemplate']) {
-
 				$usertypes = $this->usertype_m->get_usertype();
 				$this->data['usertypes'] = $usertypes;
-				if(count($usertypes)) {
-		 			foreach ($usertypes as $key => $usertype) {
-						if($usertype->usertypeID == 2) {
-							$teachertags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => $usertype->usertypeID));
-
-							$flag = '';
-							if(count($teachertags)) {
-								foreach ($teachertags as $teachertagkey => $teachertag) {
-									$flag .= '<input class="btn bg-black btn-xs email_alltag sms_alltag" type="button" value="'.$teachertag->tagname.'"> ';
-								}
-							}
-
-							$this->data['teachers'] = $flag;
-						} elseif($usertype->usertypeID == 3) {
-							$studenttags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => $usertype->usertypeID));
-							$flag = '';
-							if(count($studenttags)) {
-								foreach ($studenttags as $studenttagkey => $studenttag) {
-									$flag .= '<input class="btn bg-black btn-xs email_alltag sms_alltag" type="button" value="'.$studenttag->tagname.'"> ';
-								}
-							}
-
-							$this->data['students'] = $flag;
-						} elseif($usertype->usertypeID == 4) {
-							$parentstags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => $usertype->usertypeID));
-
-							$flag = '';
-							if(count($parentstags)) {
-								foreach ($parentstags as $parentstagkey => $parentstag) {
-									$flag .= '<input class="btn bg-black btn-xs email_alltag sms_alltag" type="button" value="'.$parentstag->tagname.'"> ';
-								}
-							}
-
-							$this->data['parents'] = $flag;
-						} else {
-							$usertags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => 1));
-
-							$flag = '';
-							if(count($usertags)) {
-								foreach ($usertags as $usertagkey => $usertag) {
-									$flag .= '<input class="btn bg-black btn-xs email_alltag sms_alltag" type="button" value="'.$usertag->tagname.'"> ';
-								}
-							}
-
-							$this->data['users'] = $flag;
-						}
-					}
-				}
-
+				$this->data['categories'] = $this->mailandsmstemplate_m->get_categories();
 				if($_POST) {
 					if($this->data['mailandsmstemplate']->type == 'email') {
 						/* For Email */
@@ -301,8 +194,11 @@ class Mailandsmstemplate extends Admin_Controller {
 								'name' => $this->input->post('email_name'),
 								'usertypeID' => $this->input->post('email_user'),
 								'template' => $this->input->post('email_template'),
+								'catID' => $this->input->post('category')
 							);
-
+                            if($this->input->post('default')){
+						     $this->mailandsmstemplate_m->setDefault($this->input->post('category'),$id);
+					        }
 							$this->mailandsmstemplate_m->update_mailandsmstemplate($array, $id);
 							$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 							redirect(base_url('mailandsmstemplate/index'));
@@ -389,5 +285,3 @@ class Mailandsmstemplate extends Admin_Controller {
 
 }
 
-/* End of file mailandsmstemplate.php */
-/* Location: .//D/xampp/htdocs/school/mvc/controllers/mailandsmstemplate.php */

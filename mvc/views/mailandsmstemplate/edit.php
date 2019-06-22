@@ -61,18 +61,18 @@
                         </div>
 
                         <?php 
-                            if(form_error('email_tags')) 
+                            /* if(form_error('email_tags')) 
                                 echo "<div class='form-group has-error' >";
                             else     
-                                echo "<div class='form-group' >";
+                                echo "<div class='form-group' >"; */
                         ?>
-                            <label for="email_tags" class="col-sm-1 control-label">
+                           <!-- <label for="email_tags" class="col-sm-1 control-label">
                                 <?=$this->lang->line("mailandsmstemplate_tags")?>
                             </label>
                             <div class="col-sm-8" >
                                 <div class="col-sm-12 border" id="email_tags">
 <?php
-if(count($usertypes)) {
+/* if(count($usertypes)) {
     foreach ($usertypes as $key => $usertype) {
         if($usertype->usertypeID == 2) {
             echo '<div class="emailtagdiv" id="'."email_".$usertype->usertype.'">';
@@ -95,14 +95,46 @@ if(count($usertypes)) {
 
         }                                   
     }
-}
+} */
 ?>
                                 </div>
                             </div>
                             <span class="col-sm-3 control-label">
                                 <?php echo form_error('email_tags'); ?>
                             </span>
-                        </div>
+                        </div>-->
+						
+						<?php
+                               if(form_error('category'))
+                                   echo "<div class='form-group has-error' >";
+                               else
+                                   echo "<div class='form-group' >";
+                           ?>
+                               <label for="email_user" class="col-sm-1 control-label">
+                                   <?=$this->lang->line("mailandsmstemplate_category")?>
+                               </label>
+                               <div class="col-sm-4">
+                                   <?php                                                                   
+                                      foreach ($categories as $category) {
+                                        $cat[$category->catID] = $category->name;
+                                      }                                                  
+                                    echo form_dropdown("category", $cat, set_value("category",$mailandsmstemplate->catID), "id='category' class='form-control'");
+                                   ?>
+                               </div>
+                               <span class="col-sm-4 control-label">
+                                   <?php echo form_error('category'); ?>
+                               </span>
+                           </div>
+						
+						<div class='form-group' >
+						   <label for="email_template" class="col-sm-1 control-label">
+                                   <?="Set Default"?>
+                              </label>
+                              <div class="col-sm-1">
+                                   <input type="checkbox" name="default" class="form-control" id="default" style="height:19px"/>
+                              </div>
+                       </div>										   
+
 
                         <?php 
                             if(form_error('email_template')) 

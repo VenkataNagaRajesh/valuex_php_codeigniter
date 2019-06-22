@@ -33,7 +33,8 @@
                                 <th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_name')?></th>
                                 <th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_type')?></th>
                                 <th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_user')?></th>
-                                <th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_template')?></th>
+								<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_category')?></th>
+								<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_default')?></th>
                                 <?php if(permissionChecker('mailandsmstemplate_edit') || permissionChecker('mailandsmstemplate_delete') || permissionChecker('mailandsmstemplate_view')) {
                                 ?>
                                 <th class="col-sm-2"><?=$this->lang->line('action')?></th>
@@ -62,6 +63,16 @@
                                             echo ucfirst($mailandsmstemplate->usertype);
                                         ?>
                                     </td>
+									 <td data-title="<?=$this->lang->line('mailandsmstemplate_catgeory')?>">
+                                        <?php
+                                            echo ucfirst($mailandsmstemplate->category);
+                                        ?>
+                                    </td>
+									<td data-title="<?=$this->lang->line('mailandsmstemplate_default')?>">
+                                        <?php
+                                            echo ucfirst($mailandsmstemplate->default);
+                                        ?>
+                                    </td>
                                     <td data-title="<?=$this->lang->line('mailandsmstemplate_template')?>">
                                         <?php 
                                             if(strlen($mailandsmstemplate->template) > 25)
@@ -70,6 +81,7 @@
                                                 echo substr($mailandsmstemplate->template, 0, 25);
                                         ?>
                                     </td>
+									
                                     <?php if(permissionChecker('mailandsmstemplate_edit') || permissionChecker('mailandsmstemplate_delete') || permissionChecker('mailandsmstemplate_view')) {
                                     ?>
                                     <td data-title="<?=$this->lang->line('action')?>">
