@@ -141,7 +141,8 @@
 	</div>
 	<div class="col-md-12">
 		<div class="mzones-list-bar">
-			<form class="form-horizontal" action="#">
+
+		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
 				<div class="title-bar">
 					<div class="col-md-2">
 						<h2>Market Zones</h2><span class="pull-right"></span>
@@ -158,79 +159,75 @@
 									<th>Airline Code</th>
 									<th>Select Marketzone</th>
 									<th>Select Level Type</th>
-									<th>Select Level Value</th>
+								<!---	<th>Select Level Value</th>  -->
 									<th>Select Inclusion Type</th>
-									<th>Select Inclusion Value</th>
+							        <!---	<th>Select Inclusion Value</th> -->
 									<th>Select Exclusion Type</th>
-									<th>Select Exclusion Value</th>
+								<!---	<th>Select Exclusion Value</th> -->
 								</thead>
 								<tbody>
 									<tr>
 										<td>
-											<input type="text" class="form-control" id="alcode">
+											     <?php                         
+										$airlinelist[0]= 'Select Airline Code'; 
+                       			 					foreach($airlines as $airline){     
+
+						                            $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+		                					 } 			                       
+
+				 echo form_dropdown("airline_id", $airlinelist,set_value("airline_id"), "id='airline_id' class='form-control hide-dropdown-icon select2'");?>                                                
 										</td>
 										<td>
-											<select class="form-control" id="inc-level">
-												<option>level</option>
-												<option>2</option>
-												<option>3</option>
-												<option>4</option>
-											</select>
+								
+               <?php $marketlist = array("0" => "Select Marketzone");
+                   foreach($marketzones as $marketzone){
+                                                                 
+				$marketlist[$marketzone->market_id] = $marketzone->market_name;
+                                                         }
+                  echo form_dropdown("market_id", $marketlist,set_value("market_id",$marketID), "id='market_id' class='form-control hide-dropdown-icon select2'");    ?>
+                
 										</td>
 										<td>
-											<select class="form-control" id="inc-level">
-												<option>level</option>
-												<option>2</option>
-												<option>3</option>
-												<option>4</option>
-											</select>
+							<?php 			$aln_datatypes['0'] = "Select Level Type";                         ksort($aln_datatypes); 			echo form_dropdown("amz_level_id", $aln_datatypes,set_value("amz_level_id",$levelID), "id='amz_level_id' class='form-control hide-dropdown-icon select2'");    ?>
 										</td>
-										<td>
+									<!--	<td>
 											<select class="form-control" id="inc-level">
 												<option>level</option>
 												<option>2</option>
 												<option>3</option>
 												<option>4</option>
 											</select>
-										</td>	
+										</td>	-->
 										<td>
-											<select class="form-control" id="inc-level">
-												<option>level</option>
-												<option>2</option>
-												<option>3</option>
-												<option>4</option>
-											</select>
+
+								  <?php                         $aln_datatypes['0'] = "Select Inclusion Type ";                         ksort($aln_datatypes);                         echo form_dropdown("amz_incl_id", $aln_datatypes,set_value("amz_incl_id",$inclID), "id='amz_incl_id' class='form-control hide-dropdown-icon select2'");    ?> 
 										</td>
-										<td>
+									<!--	<td>
 											<select class="form-control" id="inc-level">
 												<option>level</option>
 												<option>2</option>
 												<option>3</option>
 												<option>4</option>
 											</select>
+										</td>-->
+										<td>
+
+		 			<?php                         $aln_datatypes['0'] = "Select Exclusion Type ";                         ksort($aln_datatypes);                         echo form_dropdown("amz_excl_id", $aln_datatypes,set_value("amz_excl_id",$exclID), "id='amz_excl_id' class='form-control hide-dropdown-icon select2'");    ?> 
 										</td>
-										<td>
+									<!--	<td>
 											<select class="form-control" id="inc-level">
 												<option>level</option>
 												<option>2</option>
 												<option>3</option>
 												<option>4</option>
 											</select>
-										</td>
-										<td>
-											<select class="form-control" id="inc-level">
-												<option>level</option>
-												<option>2</option>
-												<option>3</option>
-												<option>4</option>
-											</select>
-										</td>	
+										</td>	-->
 									</tr>
 								</tbody>
 							</table>
 						</div>
 						<div class="col-md-1">
-							<a href="#" type="button" class="btn btn-danger">Filter</a>
+		                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 						</div>
 					</div>
 				</div>

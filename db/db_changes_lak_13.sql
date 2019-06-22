@@ -13,3 +13,9 @@ CREATE TABLE `mailandsmscategory` (
 );
 
 insert into mailandsmscategory set name='Offer Mail',alias='offer_mail';
+
+
+insert into mailandsmstemplatetag set usertypeID = 12,create_date=1560342432,tagname='[mail_logo]';
+insert into mailandsmstemplatetag set usertypeID = 12,create_date=1560342432,tagname='[temp1_img]';
+insert into mailandsmstemplatetag set usertypeID = 12,create_date=1560342432,tagname='[temp2_img]';
+insert into mailandsmstemplatetag set usertypeID = 12,create_date=1560342432,tagname='[temp3_img]';

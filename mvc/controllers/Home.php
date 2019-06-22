@@ -158,4 +158,5 @@ class Home extends MY_Controller {
 		$this->email->message($message);
 		$this->email->send();
 	}
+		
 }
