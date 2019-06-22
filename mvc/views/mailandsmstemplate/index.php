@@ -35,6 +35,7 @@
                                 <th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_user')?></th>
 								<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_category')?></th>
 								<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_default')?></th>
+								<!--<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_template')?></th>-->
                                 <?php if(permissionChecker('mailandsmstemplate_edit') || permissionChecker('mailandsmstemplate_delete') || permissionChecker('mailandsmstemplate_view')) {
                                 ?>
                                 <th class="col-sm-2"><?=$this->lang->line('action')?></th>
@@ -73,14 +74,14 @@
                                             echo ucfirst($mailandsmstemplate->default);
                                         ?>
                                     </td>
-                                    <td data-title="<?=$this->lang->line('mailandsmstemplate_template')?>">
+                                   <!-- <td data-title="<?=$this->lang->line('mailandsmstemplate_template')?>">
                                         <?php 
                                             if(strlen($mailandsmstemplate->template) > 25)
                                                 echo substr($mailandsmstemplate->template, 0, 25)."...";
                                             else 
                                                 echo substr($mailandsmstemplate->template, 0, 25);
                                         ?>
-                                    </td>
+                                    </td>-->
 									
                                     <?php if(permissionChecker('mailandsmstemplate_edit') || permissionChecker('mailandsmstemplate_delete') || permissionChecker('mailandsmstemplate_view')) {
                                     ?>
