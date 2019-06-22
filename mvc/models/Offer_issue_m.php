@@ -86,6 +86,16 @@ class Offer_issue_m extends MY_Model {
 	}
 
 
+public function getOfferDetailsById($id) {
+$query = "select  car.code as carrier,offer_id, dep_date,pf.pnr_ref ,fc.code as origin , tc.code as destination  ,flight_number, group_concat(first_name , ' ' , last_name SEPARATOR '<br>' ) as list, bs.aln_data_value as status   from VX_aln_offer_ref oref LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref) LEFT JOIN VX_aln_dtpf_ext pext on (pext.dtpf_id = pf.dtpf_id )  LEFT JOIN vx_aln_data_defns fc on (fc.vx_aln_data_defnsID  =  pf.from_city  AND fc.aln_data_typeID = 1)   LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID  =  pf.to_city  AND tc.aln_data_typeID = 1) LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID  =  pext.booking_status  AND bs.aln_data_typeID = 20)  LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID  =  pf.carrier_code  AND car.aln_data_typeID = 12) where offer_id = ".$id." group by flight_number, from_city, to_city, booking_status, dep_date,pf.carrier_code";
+
+$rResult = $this->install_m->run_query($query);
+
+return $rResult;
+
+}
+
+
         public function delete_dtpf_tracker($id){
                 parent::delete($id);
         }
