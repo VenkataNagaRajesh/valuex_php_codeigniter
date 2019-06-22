@@ -1,5 +1,5 @@
 <div class="fclr-bar">
-	<p class="card-header" data-toggle="collapse" data-target="#fclrAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add FCLR" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
+	<!--<p class="card-header" data-toggle="collapse" data-target="#fclrAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add FCLR" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="col-md-12 fclr-table-add collapse" id="fclrAdd">
 		<form class="form-horizontal" action="#">
 			<div class="col-md-12">
@@ -102,7 +102,7 @@
 				</div>
 			</div>
 		</form>
-	</div>
+	</div>-->
 	<div class="col-md-12 table-responsive">
 		<form class="form-horizontal" action="#">
 			<div class="col-md-12">
