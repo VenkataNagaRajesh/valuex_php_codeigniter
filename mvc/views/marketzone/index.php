@@ -1,7 +1,7 @@
 <div class="mzones">
 	<div class="col-md-12 card-header">
 		<div class="col-md-12">
-			<p data-toggle="collapse" data-target="#mzonesAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
+			<p data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id='add_zone_button' class="btn btn-danger pull-right" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 		</div>
 	</div>
 	<div class="col-md-12 collapse" id="mzonesAdd">
@@ -83,61 +83,82 @@
 			</div>
 		</div>
 		<div class="col-md-8">
+		<form class="form-horizontal" role="form" method="post" id='add_zone' enctype="multipart/form-data">
 			<div class="mzone-config col-md-12">
 				<div class="col-md-12 zone-info1">
 					<h2>Market Zone Configuration<span class="pull-right">Tree View</span></h2>
 					<div class="col-md-2">
 						<p>Airline Code</p>
-						<input type="text" class="form-control" id="code">
+
+					<?php
+                                                         $airlinelist[0]= 'Select Airline';
+                                                     foreach($airlines as $airline){
+                                                                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                                         }
+							ksort($airlinelist);
+                                                   echo form_dropdown("airline_id", $airlinelist,set_value("airline_id"), "id='airline_id' class='form-control hide-dropdown-icon select2'");
+                                                   ?>
 					</div>
 					<div class="col-md-2">
 						<p>Market Name</p>
-						<input type="text" class="form-control" id="name">
+
+						<input type="text" class="form-control" id="market_name" name="market_name" value="<?=set_value('market_name')?>" >
 					</div>
 					<div class="col-md-2">
 						<p>Market Level</p>
-						<select class="form-control" id="inc-level">
-							<option>level</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-						</select>
+					<?php $aln_datatypes['0'] = "SELECT Level ";
+  			                      ksort($aln_datatypes);
+
+			echo form_dropdown("amz_level_id", $aln_datatypes, set_value("amz_level_id"), "id='amz_level_id' class='form-control select2'");
+					?>
 					</div>
 					<div class="col-md-6">
 						<p>Value</p>
-						<input type="password" class="form-control" id="pwd">
+						 <select  name="amz_level_value[]"  id="amz_level_value" class="form-control select2" multiple="multiple">
+                                </select>
 					</div>
 				</div>
 				<div class="col-md-12 zone-info2">
 					<div class="col-md-6">
-						<select class="form-control" id="inc-level">
-							<option>Inclusion Level</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-						</select>
-						<input type="password" class="form-control" id="level1">
+						<?php
+					 $aln_datatypes['0'] = "SELECT Inclusion Level";
+                                              ksort($aln_datatypes);
+                        echo form_dropdown("amz_incl_id", $aln_datatypes, set_value("amz_incl_id"), "id='amz_incl_id' class='form-control select2'");
+                        ?>
+				<br>
+				<select  name="amz_incl_value[]"  id="amz_incl_value" class="form-control select2" multiple="multiple">
+                                </select>
+
+
 					</div>
 					<div class="col-md-6">
-						<select class="form-control" id="ex-level">
-							<option>Exclusion Level</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
-						</select>
-						<input type="password" class="form-control" id="level2">
+				                    <?php
+						 $aln_datatypes['0'] = "SELECT Exclusion Level";
+                                              ksort($aln_datatypes);
+ echo form_dropdown("amz_excl_id", $aln_datatypes, set_value("amz_excl_id"), "id='amz_excl_id' class='form-control select2'");
+                        ?>
+					<br>
+
+<select  name="amz_excl_value[]"  id="amz_excl_value" class="form-control select2" multiple="multiple">
+                                </select>
+
+
 					</div>
 					<div class="col-md-12">
-						<textarea class="form-control" rows="5" id="comment"></textarea>
-						<span><a href="#" type="button" class="btn btn-danger">Add</a></span>
+					<input type="hidden" class="form-control" id="market_id" name="market_id"   value="" >
+					</div>
+					<div class="col-md-12">
+					<br>
+					<input type="text" class="form-control" id="desc" name="desc" placeholder='description'  value="<?=set_value('market_name')?>" >
 						<span class="pull-right">
-							<a href="#" type="button" class="btn btn-danger">Save</a>
-							<a href="#" type="button" class="btn btn-danger">Cancel</a>
+					   <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savezone()"><?=$this->lang->line("add_marketzone")?></a>
+
 						</span>
 					</div>
 				</div>
 			</div>
 		</div>
+	</form>
 	</div>
 	<div class="col-md-12">
 		<div class="mzones-list-bar">
@@ -146,9 +167,6 @@
 				<div class="title-bar">
 					<div class="col-md-2">
 						<h2>Market Zones</h2><span class="pull-right"></span>
-					</div>
-					<div class="col-md-10">
-						<div class="toolbar"></div>
 					</div>
 				</div>
 				<div class="col-md-12">
@@ -175,7 +193,7 @@
 						                            $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
 		                					 } 			                       
 
-				 echo form_dropdown("airline_id", $airlinelist,set_value("airline_id"), "id='airline_id' class='form-control hide-dropdown-icon select2'");?>                                                
+				 echo form_dropdown("sairline_id", $airlinelist,set_value("sairline_id"), "id='sairline_id' class='form-control hide-dropdown-icon select2'");?>                                                
 										</td>
 										<td>
 								
@@ -184,11 +202,11 @@
                                                                  
 				$marketlist[$marketzone->market_id] = $marketzone->market_name;
                                                          }
-                  echo form_dropdown("market_id", $marketlist,set_value("market_id",$marketID), "id='market_id' class='form-control hide-dropdown-icon select2'");    ?>
+                  echo form_dropdown("smarket_id", $marketlist,set_value("smarket_id",$marketID), "id='smarket_id' class='form-control hide-dropdown-icon select2'");    ?>
                 
 										</td>
 										<td>
-							<?php 			$aln_datatypes['0'] = "Select Level Type";                         ksort($aln_datatypes); 			echo form_dropdown("amz_level_id", $aln_datatypes,set_value("amz_level_id",$levelID), "id='amz_level_id' class='form-control hide-dropdown-icon select2'");    ?>
+							<?php 			$aln_datatypes['0'] = "Select Level Type";                         ksort($aln_datatypes); 			echo form_dropdown("samz_level_id", $aln_datatypes,set_value("samz_level_id",$levelID), "id='samz_level_id' class='form-control hide-dropdown-icon select2'");    ?>
 										</td>
 									<!--	<td>
 											<select class="form-control" id="inc-level">
@@ -200,7 +218,7 @@
 										</td>	-->
 										<td>
 
-								  <?php                         $aln_datatypes['0'] = "Select Inclusion Type ";                         ksort($aln_datatypes);                         echo form_dropdown("amz_incl_id", $aln_datatypes,set_value("amz_incl_id",$inclID), "id='amz_incl_id' class='form-control hide-dropdown-icon select2'");    ?> 
+								  <?php                         $aln_datatypes['0'] = "Select Inclusion Type ";                         ksort($aln_datatypes);                         echo form_dropdown("samz_incl_id", $aln_datatypes,set_value("samz_incl_id",$inclID), "id='samz_incl_id' class='form-control hide-dropdown-icon select2'");    ?> 
 										</td>
 									<!--	<td>
 											<select class="form-control" id="inc-level">
@@ -212,7 +230,7 @@
 										</td>-->
 										<td>
 
-		 			<?php                         $aln_datatypes['0'] = "Select Exclusion Type ";                         ksort($aln_datatypes);                         echo form_dropdown("amz_excl_id", $aln_datatypes,set_value("amz_excl_id",$exclID), "id='amz_excl_id' class='form-control hide-dropdown-icon select2'");    ?> 
+		 			<?php                         $aln_datatypes['0'] = "Select Exclusion Type ";                         ksort($aln_datatypes);                         echo form_dropdown("samz_excl_id", $aln_datatypes,set_value("samz_excl_id",$exclID), "id='samz_excl_id' class='form-control hide-dropdown-icon select2'");    ?> 
 										</td>
 									<!--	<td>
 											<select class="form-control" id="inc-level">
@@ -235,9 +253,6 @@
 		</div>
 	</div>
 	<div class="col-md-12">
-		<div class="col-md-12">
-			<button type="submit" class="col-md-1 btn btn-danger pull-right" name="filter" id="filter">Filter</button>
-		</div>
 		<div class="col-md-12">
 			<div class="tab-content table-responsive">
 				<table id="tztable" class="table table-bordered dataTable no-footer">
@@ -336,16 +351,21 @@ $('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon
 
   $( ".select2" ).select2();
 
+loaddatatable();
+ });
+
+
+function loaddatatable() {
     $('#tztable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('marketzone/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
-       aoData.push({"name": "marketID","value": $("#market_id").val()},
-		   {"name": "levelID","value": $("#amz_level_id").val()},
-		   {"name": "inclID","value": $("#amz_incl_id").val()},
-		   {"name": "exclID","value": $("#amz_excl_id").val()},
-		   {"name": "airlineID","value": $("#airline_id").val()},
+       aoData.push({"name": "marketID","value": $("#smarket_id").val()},
+		   {"name": "levelID","value": $("#samz_level_id").val()},
+		   {"name": "inclID","value": $("#samz_incl_id").val()},
+		   {"name": "exclID","value": $("#samz_excl_id").val()},
+		   {"name": "airlineID","value": $("#sairline_id").val()},
 		   {"name": "active","value": $("#active").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -370,8 +390,7 @@ $('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon
 	dom: 'B<"clear">lfrtip',
     buttons: [ 'copy', 'csv', 'excel','pdf' ]
     });
-  });
-  
+}  
    $('#tztable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
@@ -454,4 +473,158 @@ $('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon
         	$(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
         });
     });
+
+
+$(document).ready(function(){
+$('#amz_incl_id').trigger('change');
+$('#amz_excl_id').trigger('change');
+$('#amz_level_id').trigger('change');
+        var level = [<?php echo implode(',',$this->input->post("amz_level_value")); ?>];
+        $('#amz_level_value').val(level).trigger('change');
+
+        var incl = [<?php echo implode(',',$this->input->post("amz_incl_value")); ?>];
+        $('#amz_incl_value').val(incl).trigger('change');
+
+        var excl = [<?php echo implode(',',$this->input->post("amz_excl_value")); ?>];
+        $('#amz_excl_value').val(excl).trigger('change');
+
+});
+
+
+$('#amz_level_id').change(function(event) {    
+        $('#amz_level_value').val(null).trigger('change')
+  var level_id = $(this).val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+             data: "id=" + level_id,            
+             dataType: "html",                                  
+             success: function(data) {               
+             $('#amz_level_value').html(data); }        
+      });       
+});
+
+$('#amz_incl_id').change(function(event) {    
+        $('#amz_incl_value').val(null).trigger('change');
+  var incl_id = $(this).val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+             data: "id=" + incl_id,            
+             dataType: "html",                                  
+             success: function(data) {               
+             $('#amz_incl_value').html(data); }        
+      });       
+});
+
+
+
+$('#amz_excl_id').change(function(event) {    
+        $('#amz_excl_value').val(null).trigger('change');
+  var excl_id = $(this).val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+             data: "id=" + excl_id,            
+             dataType: "html",                                  
+             success: function(data) {               
+             $('#amz_excl_value').html(data); }        
+      });       
+});
+ 
+function savezone() {
+  $.ajax({
+          async: false,
+          type: 'POST',
+          url: "<?=base_url('marketzone/save')?>",          
+                  data: {"airline_id" :$('#airline_id').val(),
+			 "market_name":$('#market_name').val(),
+			 "amz_level_id":$('#amz_level_id').val(),
+			 "amz_level_value":$('#amz_level_value').val(),
+		         "amz_incl_id":$('#amz_incl_id').val(),
+			  "amz_incl_value":$('#amz_incl_value').val(),
+			  "amz_excl_id":$('#amz_excl_id').val(),
+                          "amz_excl_value":$('#amz_excl_value').val(),
+			  "desc":$('#desc').val(),
+				
+			   "market_id":$('#market_id').val()},
+          dataType: "html",                     
+          success: function(data) {
+		var zoneinfo = jQuery.parseJSON(data);
+		var status = zoneinfo['status'];
+		newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
+		if (status == 'success' ) {
+			alert(status);
+			$("#tztable").dataTable().fnDestroy();
+			loaddatatable();
+		} else {
+			alert(newstatus);
+		
+		}
+
+	  }
+          });
+}
+
+
+function editzone(market_id) {
+
+                var isVisible = $( "#mzonesAdd" ).is( ":visible" );
+
+		var isHidden = $( "#mzonesAdd" ).is( ":hidden" );
+		if( isVisible == false ) {
+			$( "#add_zone_button" ).trigger( "click" );
+		}       
+$.ajax({
+          async: false,
+          type: 'POST',
+          url: "<?=base_url('marketzone/getMarketZoneData')?>",          
+                  data: {
+                           "market_id":market_id},
+          dataType: "html",                     
+          success: function(data) {
+                var zoneinfo = jQuery.parseJSON(data);
+		$('#btn_txt').text('Edit Marketzone');
+		$('#desc').val(zoneinfo['description']);
+		$('#airline_id').val(zoneinfo['airline_id']);
+		$('#airline_id').trigger('change');
+		$('#market_name').val(zoneinfo['market_name']);
+
+		$('#amz_level_id').val(zoneinfo['amz_level_id']);
+		$('#amz_level_id').trigger('change');
+		var level = zoneinfo['amz_level_name'].split(',');
+        	$('#amz_level_value').val(level).trigger('change');
+	
+		if(zoneinfo['amz_incl_id'] != 0 ){	
+			$('#amz_incl_id').val(zoneinfo['amz_incl_id']);
+			$('#amz_incl_id').trigger('change');
+		}
+		if( zoneinfo['amz_incl_name'] != null ) {
+			var incl = zoneinfo['amz_incl_name'].split(',');
+                	$('#amz_incl_value').val(incl).trigger('change');
+		}
+
+		if (zoneinfo['amz_excl_id'] != 0 ){  
+			$('#amz_excl_id').val(zoneinfo['amz_excl_id']);
+                	$('#amz_excl_id').trigger('change');
+		}
+
+		if( zoneinfo['amz_excl_name'] != null ) {
+		var excl = zoneinfo['amz_excl_name'].split(',');
+                $('#amz_excl_value').val(zoneinfo['amz_excl_name']).trigger('change');
+		}
+		
+		var mktid  = zoneinfo['market_id'];
+		$('#market_id').val(mktid);
+
+
+
+
+	//	var info = JSON.stringify(zoneinfo);
+
+          }
+          });
+}
+
+
 </script>
