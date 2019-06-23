@@ -141,14 +141,14 @@
                                                 <?php //echo form_error('email_tags'); ?>
                                             </span>
                                         </div>-->
-										<div class='form-group' >
+										<!--<div class='form-group' >
 										   <label for="email_template" class="col-sm-1 control-label">
                                                 <?="Set Default"?>
                                            </label>
                                            <div class="col-sm-1">
                                                 <input type="checkbox" name="default" class="form-control" id="default" style="height:19px"/>
                                            </div>
-                                        </div>										   
+                                        </div>-->										   
 
                                         <?php
                                             if(form_error('email_template'))

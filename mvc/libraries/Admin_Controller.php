@@ -12,6 +12,8 @@ class Admin_Controller extends MY_Controller {
 		$this->load->model("permission_m");
 		$this->load->model("message_m");
 		$this->load->model("site_m");
+		$this->load->model('mailandsmstemplatetag_m');
+        $this->load->model('mailandsmstemplate_m');	        
 		//$this->load->model("schoolyear_m");
 		$this->data["siteinfos"] = $this->site_m->get_site(1);
 
@@ -538,5 +540,61 @@ class Admin_Controller extends MY_Controller {
     	}
     	return $tree;
     }
+	
+	public function sendMailTemplate($templateID,$data){		
+		$mail_logo = base_url('assets/home/images/emir.png');
+		$temp1_img = base_url('assets/home/images/temp1-bnr.jpg');
+		$temp2_img = base_url('assets/home/images/temp2-bnr.jpg');
+		$temp2_logo = base_url('assets/home/images/temp2-logo.jpg');
+		$temp2_img = base_url('assets/home/images/temp3-bnr.jpg');
+		$data = (object)$data;
+		$tags = $this->mailandsmstemplatetag_m->get_mailandsmstemplatetag();
+		$message = $this->mailandsmstemplate_m->get_mailandsmstemplate(array("mailandsmstemplateID"=>$templateID))->template;
+		$siteinfos = $this->reset_m->get_site();
+		
+		foreach($tags as $tag){
+			/* if($tag->tagname == '[mail_logo]'){			
+				 $message = str_replace('[mail_logo]', $mail_logo, $message);
+			} */
+			if($tag->tagname == '[first_name]'){
+				if($data->first_name){
+				 $message = str_replace('[first_name]', $data->first_name, $message);
+				}else {
+				 $message = str_replace('[first_name]','', $message);	
+				}
+			}
+			if($tag->tagname == '[last_name]'){
+				if($data->last_name){
+				 $message = str_replace('[last_name]', $data->last_name, $message);
+				}else {
+				 $message = str_replace('[last_name]','', $message);	
+				}
+			}
+			
+			if($tag->tagname == '[pnr_ref]'){
+				if($data->pnr_ref){
+				 $message = str_replace('[pnr_ref]', $data->pnr_ref, $message);
+				}else {
+				 $message = str_replace('[pnr_ref]','', $message);	
+				}
+			}			
+		}
+		
+		if($data->tomail) {
+			$subject = $data->mail_subject;
+			$email = $data->tomail;
+			$this->email->set_mailtype("html");
+			$this->email->from($siteinfos->email,$siteinfos->sname);
+			$this->email->to($email);
+			$this->email->subject($subject);
+			$this->email->message($message);
+
+			if($this->email->send()) {
+				$this->mydebug->debug("mail sent successfully");
+			} else {
+				$this->mydebug->debug($this->lang->line('mail_error'));
+			}		
+		}	
+	}
 }
 
