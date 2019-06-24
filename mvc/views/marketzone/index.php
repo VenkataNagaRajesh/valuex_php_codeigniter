@@ -168,6 +168,19 @@
 					<div class="col-md-2">
 						<h2>Market Zones</h2><span class="pull-right"></span>
 					</div>
+
+					<div class="col-md-2" id='reconfigure'>
+
+					 <?php if(permissionChecker('marketzone_reconfigure')) {
+					 if( isset ($reconfigure)) {?>
+                               			 <h2><a href="<?php echo base_url('trigger') ?>">
+                                    			<i class="fa fa-plus"></i>
+                                    			<?=$this->lang->line('generate_map_table')?>
+                                			</a>
+						  </h2> <span class="pull-right"></span>
+                        <?php } }?>
+
+                                        </div>
 				</div>
 				<div class="col-md-12">
 					<div class="table-reponsive col-md-12">
@@ -341,19 +354,49 @@ $.fn.extend({
 
 $('#tree1').treed();
 
-$('#tree2').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
+//$('#tree2').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
 
-$('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
+//$('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
 </script>
+
+
 
 <script type="text/javascript">
   $(document).ready(function() {
 
   $( ".select2" ).select2();
+	
+	loadtreeview();
 
-loaddatatable();
+	loaddatatable();
  });
 
+
+function loadtreeview(){
+
+var js_data = '<?php echo json_encode($treedata); ?>';
+var arr = JSON.parse(js_data );
+
+//alert(JSON.stringify(arr));
+var templateString = '<div class="col-md-12"> <ul id="tree1">';
+$.each(arr, function(i){
+         templateString = templateString + '<li>'+arr[i].market_name+'<ul>';
+         var a_list = arr[i].airports.split(',');
+
+        $.each(a_list, function(i){
+                templateString = templateString + '<li>'+a_list[i]+'</li>'; 
+        });
+
+         templateString = templateString + '</ul></li>';        
+});
+                templateString =  templateString + '</ul> </div>';
+
+
+        $('.market-info-tree').html(templateString);
+        $('#tree1').treed();
+
+
+}
 
 function loaddatatable() {
     $('#tztable').DataTable( {
@@ -549,14 +592,62 @@ function savezone() {
 				
 			   "market_id":$('#market_id').val()},
           dataType: "html",                     
+
+	 beforeSend: function() {
+
+			if($('#airline_id').val() == '0' ) {
+				$('#airline_id').addClass('alert');
+				var error = 1;
+				//alert('Airline Code is required');
+			}
+
+			if($('#market_name').val() == '' ) {
+				var error = 1;
+				$('#market_name').addClass("alert");
+				//alert('Market Name is required');
+			}
+			if($('#amz_level_id').val() == '0'  ) {
+				var error = 1;
+				 $('#amz_level_id').addClass('alert');
+				//alert('Market Level field is required');
+                        }
+
+			if($('#amz_level_value').val() == '' ) {
+				var error = 1;
+                                $('#amz_level_value').addClass('alert');
+				//alert('Market Level Value fields is required');
+                        }
+
+
+			if (error == 1 ) {
+				alert('Please select required fields');
+				return false;
+		
+			}
+
+    			},
+
+
           success: function(data) {
 		var zoneinfo = jQuery.parseJSON(data);
 		var status = zoneinfo['status'];
 		newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
 		if (status == 'success' ) {
-			alert(status);
+			alert('Marketzone update success');
 			$("#tztable").dataTable().fnDestroy();
 			loaddatatable();
+			if (zoneinfo['has_reconf_perm'] && zoneinfo['reconfigure']) {
+				var link = $("<a>");
+               				link.attr("href", '<?php echo base_url('trigger') ?>');
+                			link.text("<?=$this->lang->line('generate_map_table')?>");
+
+				//var link = '<h2><a href='<?php echo base_url('trigger') ?>'>';
+				//	link  = link + '<i class="fa fa-plus"></i>';
+				//	link = link + linkalias;
+				//	link = link + '</a> </h2> <span class="pull-right"></span>';
+				$('#reconfigure').html(link);
+			}
+
 		} else {
 			alert(newstatus);
 		
@@ -603,7 +694,7 @@ $.ajax({
 			var incl = zoneinfo['amz_incl_name'].split(',');
                 	$('#amz_incl_value').val(incl).trigger('change');
 		}
-
+ 
 		if (zoneinfo['amz_excl_id'] != 0 ){  
 			$('#amz_excl_id').val(zoneinfo['amz_excl_id']);
                 	$('#amz_excl_id').trigger('change');
@@ -628,3 +719,10 @@ $.ajax({
 
 
 </script>
+
+<style>
+    .alert {
+        border: 1px solid red !important;
+	
+    }
+</style>
