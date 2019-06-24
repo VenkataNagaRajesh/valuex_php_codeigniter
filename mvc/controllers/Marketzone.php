@@ -182,6 +182,8 @@ class Marketzone extends Admin_Controller {
 		  foreach($types as $type){
 			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
 		  }
+
+		$this->data['treedata'] = $this->marketzone_m->getAirportsMarketData();
 		$this->data["subview"] = "marketzone/index";
 		$this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_market_zone');
 		$this->load->view('_layout_main', $this->data);
@@ -236,6 +238,8 @@ class Marketzone extends Admin_Controller {
 				$tarray['isReconfigured'] = '1';
 			
 			        $this->trigger_m->insert_trigger($tarray);
+
+				$json['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_market_zone');
 				$json['status'] = "success";
 			  }
 

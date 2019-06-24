@@ -168,6 +168,19 @@
 					<div class="col-md-2">
 						<h2>Market Zones</h2><span class="pull-right"></span>
 					</div>
+
+					<div class="col-md-2" id='reconfigure'>
+
+					 <?php if(permissionChecker('marketzone_reconfigure')) {
+					 if( isset ($reconfigure)) {?>
+                               			 <h2><a href="<?php echo base_url('trigger') ?>">
+                                    			<i class="fa fa-plus"></i>
+                                    			<?=$this->lang->line('generate_map_table')?>
+                                			</a>
+						  </h2> <span class="pull-right"></span>
+                        <?php } }?>
+
+                                        </div>
 				</div>
 				<div class="col-md-12">
 					<div class="table-reponsive col-md-12">
@@ -549,14 +562,51 @@ function savezone() {
 				
 			   "market_id":$('#market_id').val()},
           dataType: "html",                     
+
+	 beforeSend: function() {
+
+			if($('#airline_id').val() == '0' ) {
+				$('#airline_id').addClass('alert');
+				var error = 1;
+				//alert('Airline Code is required');
+			}
+
+			if($('#market_name').val() == '' ) {
+				var error = 1;
+				$('#market_name').addClass("alert");
+				//alert('Market Name is required');
+			}
+			if($('#amz_level_id').val() == '0'  ) {
+				var error = 1;
+				 $('#amz_level_id').addClass('alert');
+				//alert('Market Level field is required');
+                        }
+
+			if($('#amz_level_value').val() == '' ) {
+				var error = 1;
+                                $('#amz_level_value').addClass('alert');
+				//alert('Market Level Value fields is required');
+                        }
+
+
+			if (error == 1 ) {
+				alert('Please select required fields');
+				return false;
+		
+			}
+
+    			},
+
+
           success: function(data) {
 		var zoneinfo = jQuery.parseJSON(data);
 		var status = zoneinfo['status'];
 		newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
 		if (status == 'success' ) {
-			alert(status);
+			alert('Marketzone update success');
 			$("#tztable").dataTable().fnDestroy();
 			loaddatatable();
+
 		} else {
 			alert(newstatus);
 		
@@ -628,3 +678,10 @@ $.ajax({
 
 
 </script>
+
+<style>
+    .alert {
+        border: 1px solid red !important;
+	
+    }
+</style>
