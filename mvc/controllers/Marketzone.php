@@ -240,6 +240,7 @@ class Marketzone extends Admin_Controller {
 			        $this->trigger_m->insert_trigger($tarray);
 
 				$json['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_market_zone');
+				$json['has_reconf_perm'] = permissionChecker('marketzone_reconfigure');
 				$json['status'] = "success";
 			  }
 

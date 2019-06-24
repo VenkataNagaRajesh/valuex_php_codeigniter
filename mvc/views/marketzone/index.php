@@ -354,19 +354,49 @@ $.fn.extend({
 
 $('#tree1').treed();
 
-$('#tree2').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
+//$('#tree2').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
 
-$('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
+//$('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
 </script>
+
+
 
 <script type="text/javascript">
   $(document).ready(function() {
 
   $( ".select2" ).select2();
+	
+	loadtreeview();
 
-loaddatatable();
+	loaddatatable();
  });
 
+
+function loadtreeview(){
+
+var js_data = '<?php echo json_encode($treedata); ?>';
+var arr = JSON.parse(js_data );
+
+//alert(JSON.stringify(arr));
+var templateString = '<div class="col-md-12"> <ul id="tree1">';
+$.each(arr, function(i){
+         templateString = templateString + '<li>'+arr[i].market_name+'<ul>';
+         var a_list = arr[i].airports.split(',');
+
+        $.each(a_list, function(i){
+                templateString = templateString + '<li>'+a_list[i]+'</li>'; 
+        });
+
+         templateString = templateString + '</ul></li>';        
+});
+                templateString =  templateString + '</ul> </div>';
+
+
+        $('.market-info-tree').html(templateString);
+        $('#tree1').treed();
+
+
+}
 
 function loaddatatable() {
     $('#tztable').DataTable( {
@@ -606,6 +636,17 @@ function savezone() {
 			alert('Marketzone update success');
 			$("#tztable").dataTable().fnDestroy();
 			loaddatatable();
+			if (zoneinfo['has_reconf_perm'] && zoneinfo['reconfigure']) {
+				var link = $("<a>");
+               				link.attr("href", '<?php echo base_url('trigger') ?>');
+                			link.text("<?=$this->lang->line('generate_map_table')?>");
+
+				//var link = '<h2><a href='<?php echo base_url('trigger') ?>'>';
+				//	link  = link + '<i class="fa fa-plus"></i>';
+				//	link = link + linkalias;
+				//	link = link + '</a> </h2> <span class="pull-right"></span>';
+				$('#reconfigure').html(link);
+			}
 
 		} else {
 			alert(newstatus);
@@ -653,7 +694,7 @@ $.ajax({
 			var incl = zoneinfo['amz_incl_name'].split(',');
                 	$('#amz_incl_value').val(incl).trigger('change');
 		}
-
+ 
 		if (zoneinfo['amz_excl_id'] != 0 ){  
 			$('#amz_excl_id').val(zoneinfo['amz_excl_id']);
                 	$('#amz_excl_id').trigger('change');

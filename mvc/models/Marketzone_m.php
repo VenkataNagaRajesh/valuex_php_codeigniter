@@ -276,7 +276,7 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 
 	function getAirportsMarketData() {
 	
-	  $sql  =  "select  mz.market_id, group_concat(dd.aln_data_value , '(' ,dd.code,')'  )   as airports
+	  $sql  =  "select  mz.market_name, group_concat(dd.aln_data_value , '(' ,dd.code,')'  )   as airports
 		    from VX_market_airport_map map 
 			INNER JOIN VX_aln_market_zone mz on (mz.market_id = map.market_id)  
 			INNER JOIN  vx_aln_data_defns dd on (dd.vx_aln_data_defnsID =  map.airport_id ) group by mz.market_id";
