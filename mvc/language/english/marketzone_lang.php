@@ -7,6 +7,7 @@ $lang['slno'] = "#";
 $lang['market_id'] = 'Marketzone ID';
 $lang['market_name'] = "Marketzone Name";
 $lang['level_type'] = "Level type";
+$lang['airline_id'] = 'Airline Code';
 $lang['amz_level_value'] = "Level value";
 $lang['amz_incl_type'] = "Inclusion type";
 $lang['amz_incl_value'] = "Inclusion value";

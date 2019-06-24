@@ -23,6 +23,13 @@ class Marketzone extends Admin_Controller {
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_unique_marketzonename'
 			),
 
+			array(
+                                'field' => 'market_name',
+                                'label' => $this->lang->line("market_name"),
+                                'rules' => 'trim|required|xss_clean|max_length[60]'
+                        ),
+
+
 
 			array(
                                 'field' => 'desc',
@@ -31,16 +38,19 @@ class Marketzone extends Admin_Controller {
                         ),
 
 			array(
-                                'field' => 'airline_id',
-                                'label' => $this->lang->line("airline_id"),
-                                'rules' => 'trim|required|xss_clean|max_length[60]|callback_valLevelType'
-                        ),
-
-			array(
 				'field' => 'amz_level_id',
 				'label' => $this->lang->line("level_type"),
 				'rules' => 'trim|required|max_length[200]|xss_clean|callback_valLevelType'
 			),
+
+			array(
+                                'field' => 'airline_id',
+                                'label' => $this->lang->line("airline_id"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valLevelType'
+                        ),
+
+
+
    		       array(
                                 'field' => 'amz_level_value[]',
                                 'label' => $this->lang->line("amz_level_value"),
@@ -178,39 +188,21 @@ class Marketzone extends Admin_Controller {
 
 	}
 
-	public function add() {
+	public function save() {
 
-	   $this->data['headerassets'] = array(
-                        'css' => array(
-                                'assets/select2/css/select2.css',
-                                'assets/select2/css/select2-bootstrap.css'
-                        ),
-                        'js' => array(
-                                'assets/select2/select2.js'
-                        )
-                );
-		$userTypeID = $this->session->userdata('usertypeID');
-		$userID = $this->session->userdata('loginuserID');
-
-	    //$this->data['aln_datatypes'] = $this->marketzone_m->getAlnDataTYpes();
-          $types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
-		  foreach($types as $type){
-			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
-		  }
-
-
-		 if($userTypeID == 2){ 
-              		$this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-		           } else {
-                   $this->data['airlines'] = $this->airline_m->getAirlinesData();
-           	}
-            // print_r($this->data['airlines']); exit;
 		if($_POST) {
+
+			$market_id = $this->input->post("market_id");
+			if($market_id) {
+				unset($rules[0]);
+	
+			} else {
+				unset($rules[1]);
+			}
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
 			if ($this->form_validation->run() == FALSE) {
-				$this->data["subview"] = "marketzone/add";
-				$this->load->view('_layout_main', $this->data);
+				$json['status'] = validation_errors();
 			} else {
 				$date_now = time(); 
 				$array["market_name"] = $this->input->post("market_name");
@@ -221,13 +213,18 @@ class Marketzone extends Admin_Controller {
 				$array["amz_incl_name"] = implode(',',$this->input->post("amz_incl_value"));
 				$array["amz_excl_id"] = $this->input->post("amz_excl_id");
 				$array["amz_excl_name"] = implode(',',$this->input->post("amz_excl_value"));
-				$array["create_date"] = $date_now;
-				$array["modify_date"] = $date_now;
-				$array["create_userID"] = $this->session->userdata('loginuserID');
-			        $array["modify_userID"] = $this->session->userdata('loginuserID');
 				$array['airline_id'] = $this->input->post("airline_id");
-				$array["active"] = 1;
-				$this->marketzone_m->insert_marketzone($array);
+				 if( $market_id) {
+					$array["modify_date"] = $date_now;
+					$array["modify_userID"] = $this->session->userdata('loginuserID');
+					$this->marketzone_m->update_marketzone($array, $market_id);
+			 	  } else {	
+					$array["create_date"] = $date_now;
+					$array["modify_date"] = $date_now;
+					$array["create_userID"] = $this->session->userdata('loginuserID');
+			        	$array["modify_userID"] = $this->session->userdata('loginuserID');
+					$this->marketzone_m->insert_marketzone($array);
+				 }
 				
 			      // insert entry in trigger table for mapping table generation
 		
@@ -239,16 +236,37 @@ class Marketzone extends Admin_Controller {
 				$tarray['isReconfigured'] = '1';
 			
 			        $this->trigger_m->insert_trigger($tarray);
-				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-				redirect(base_url("marketzone/index"));
-			}
-		} else {
-			$this->data["subview"] = "marketzone/add";
-			$this->load->view('_layout_main', $this->data);
+				$json['status'] = "success";
+			  }
+
+
+                }else {
+
+			$json['status'] = "no data";
 		}
+
+		 $this->output->set_content_type('application/json');
+                 $this->output->set_output(json_encode($json));
 	}
 
 
+
+
+	public function getMarketZoneData() {
+		$id = $this->input->post('market_id');
+		if((int)$id) {
+           		$mktzone = $this->marketzone_m->get_single_marketzone(array('market_id' => $id));
+            		if($mktzone) {
+				$mktzone = $this->marketzone_m->get_single_marketzone(array('market_id' => $id));
+			 } 
+
+		}
+		 		
+			$this->output->set_content_type('application/json');
+                        $this->output->set_output(json_encode($mktzone));
+		
+
+	}
 	public function edit() {
 		 $this->data['headerassets'] = array(
                         'css' => array(
@@ -636,7 +654,8 @@ on MainSet.market_id = SubSet.market_id
 
                 foreach($rResult as $marketzone){
                         if(permissionChecker('marketzone_edit') ) {
-				$marketzone->action .= btn_edit('marketzone/edit/'.$marketzone->market_id, $this->lang->line('edit'));
+				//$marketzone->action .= btn_edit('marketzone/edit/'.$marketzone->market_id, $this->lang->line('edit'));
+				$marketzone->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_market"  data-placement="top" onclick="editzone('.$marketzone->market_id.')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></a>';
 			}
 			
 			if (permissionChecker('marketzone_view') ) {
