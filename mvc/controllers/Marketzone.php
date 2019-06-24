@@ -219,17 +219,19 @@ class Marketzone extends Admin_Controller {
 				 if( $market_id) {
 					$array["modify_date"] = $date_now;
 					$array["modify_userID"] = $this->session->userdata('loginuserID');
-					$this->marketzone_m->update_marketzone($array, $market_id);
+					$editid = $this->marketzone_m->update_marketzone($array, $market_id);
+					$json['action'] = 'edit';
 			 	  } else {	
 					$array["create_date"] = $date_now;
 					$array["modify_date"] = $date_now;
 					$array["create_userID"] = $this->session->userdata('loginuserID');
 			        	$array["modify_userID"] = $this->session->userdata('loginuserID');
-					$this->marketzone_m->insert_marketzone($array);
+					$newid = $this->marketzone_m->insert_marketzone($array);
+					$json['action'] = 'add';
 				 }
 				
 			      // insert entry in trigger table for mapping table generation
-		
+	
 				$tarray['table_name'] = 'VX_aln_market_zone';
 				$tarray['create_date'] = $date_now;
 				$tarray['modify_date'] = $date_now;

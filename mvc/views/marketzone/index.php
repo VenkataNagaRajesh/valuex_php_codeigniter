@@ -373,26 +373,21 @@ $('#tree1').treed();
 
 
 function loadtreeview(){
-
-var js_data = '<?php echo json_encode($treedata); ?>';
-var arr = JSON.parse(js_data );
-
 //alert(JSON.stringify(arr));
-var templateString = '<div class="col-md-12"> <ul id="tree1">';
-$.each(arr, function(i){
-         templateString = templateString + '<li>'+arr[i].market_name+'<ul>';
-         var a_list = arr[i].airports.split(',');
+<?php $templateString = '<div class="col-md-12"> <ul id="tree1">';
+foreach($treedata as $data) {
+         $templateString .= '<li>'.$data->market_name.'<ul>';
+	$a_list = explode(',',$data->airports);
+	foreach($a_list as $airport) {
+                $templateString .= '<li>'.$airport.'</li>'; 
+        }
 
-        $.each(a_list, function(i){
-                templateString = templateString + '<li>'+a_list[i]+'</li>'; 
-        });
+         $templateString .= '</ul></li>';        
+}
+                $templateString .= '</ul> </div>';
+?>
 
-         templateString = templateString + '</ul></li>';        
-});
-                templateString =  templateString + '</ul> </div>';
-
-
-        $('.market-info-tree').html(templateString);
+        $('.market-info-tree').html('<?php echo $templateString?>');
         $('#tree1').treed();
 
 
@@ -633,19 +628,20 @@ function savezone() {
 		var status = zoneinfo['status'];
 		newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
 		if (status == 'success' ) {
-			alert('Marketzone update success');
+			if ( zoneinfo['action'] == 'add' ) {	
+				alert('Marketzone added successfully');
+			} else if (zoneinfo['action'] == 'edit') {
+				alert('Marketzone updated successfully');
+			}
 			$("#tztable").dataTable().fnDestroy();
 			loaddatatable();
 			if (zoneinfo['has_reconf_perm'] && zoneinfo['reconfigure']) {
-				var link = $("<a>");
-               				link.attr("href", '<?php echo base_url('trigger') ?>');
-                			link.text("<?=$this->lang->line('generate_map_table')?>");
+				<?php
+					$link = '<h2><a href="'.base_url('trigger').'"> <i class="fa fa-plus"></i> '.$this->lang->line('generate_map_table').' </a></h2>';
+	
+				  ?>
 
-				//var link = '<h2><a href='<?php echo base_url('trigger') ?>'>';
-				//	link  = link + '<i class="fa fa-plus"></i>';
-				//	link = link + linkalias;
-				//	link = link + '</a> </h2> <span class="pull-right"></span>';
-				$('#reconfigure').html(link);
+				$('#reconfigure').html('<?php echo $link?>');
 			}
 
 		} else {
