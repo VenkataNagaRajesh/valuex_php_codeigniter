@@ -156,6 +156,13 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 			 $this->email->subject("Upgrade Cabin Offer");
 			$this->email->message($message);
 			$this->email->send();
+			
+		/* $data['tomail'] = $emails_list[0];
+		$data['mail_subject'] ="Upgrade Cabin Offer";
+		$data['first_name'] =$namelist[0];
+		$data['last_name'] = "";
+		$data['pnr_ref'] = $offer->pnr_ref;
+		$this->sendMailTemplate(1,$data); */
 
 		}	
 		

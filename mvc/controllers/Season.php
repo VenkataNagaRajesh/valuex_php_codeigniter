@@ -64,18 +64,18 @@ class Season extends Admin_Controller {
                  'field' => 'season_color',
                  'label' => $this->lang->line("season_color"),
                  'rules' => 'trim|required|max_length[200]|xss_clean'
-            ),
-			array(
+            )
+			/* array(
                  'field' => 'active',
                  'label' => $this->lang->line("active"),
                  'rules' => 'trim|required|max_length[200]|xss_clean'
-            )
+            ) */
 		);
 		return $rules;
 	}
 	
 	public function unique_name($post_string) {
-      $id = htmlentities(escapeString($this->uri->segment(3)));
+      $id = $this->input->post("season_id");
       if((int)$id) {
              $season =  $this->season_m->get_single_season(array('VX_aln_seasonID !='=>$id,'season_name'=>$post_string));
               if(count($season)) {
@@ -140,6 +140,17 @@ class Season extends Admin_Controller {
 	}
 	
 	public function index() {
+		 $this->data['headerassets'] = array(
+                'css' => array(
+                        'assets/select2/css/select2.css',
+                        'assets/select2/css/select2-bootstrap.css',                       
+						'assets/datepicker/datepicker.css'
+                ),
+                'js' => array(
+                        'assets/select2/select2.js',                       
+						'assets/datepicker/datepicker.js'
+                )
+        );	
 		if(!empty($this->input->post('seasonID'))){
           $this->data['seasonID'] = $this->input->post('seasonID');
         } else {
@@ -172,8 +183,13 @@ class Season extends Admin_Controller {
 		}else{
 		   $this->data['seasonslist'] = $this->season_m->getSeasonsList(); 
 		}		
-      
+       
 		$this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
+			if($usertypeID == 2){
+			  $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+		   } else {
+			   $this->data['airlines'] = $this->airline_m->getAirlinesData();
+		   }
 		$this->data["subview"] = "season/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
@@ -242,6 +258,58 @@ class Season extends Admin_Controller {
 			$this->data["subview"] = "season/add";
 			$this->load->view('_layout_main', $this->data);
 		}
+	}
+	
+	public function save() {     
+		if($_POST) {
+			$season_id = $this->input->post("season_id");			
+			$rules = $this->rules();
+			$this->form_validation->set_rules($rules);
+			if ($this->form_validation->run() == FALSE) { 
+				$json['status'] = validation_errors();		
+			} else {
+				$array["season_name"] = $this->input->post("season_name");
+				$array["airlineID"] = $this->input->post("airlineID");
+				$array["ams_orig_levelID"] = $this->input->post("ams_orig_levelID");
+				$array["ams_orig_level_value"] = implode(',',$this->input->post("ams_orig_level_value"));
+				$array["ams_dest_levelID"] = $this->input->post("ams_dest_levelID");
+				$array["ams_dest_level_value"] = implode(',',$this->input->post("ams_dest_level_value"));
+				$array["ams_season_start_date"] = strtotime($this->input->post("ams_season_start_date"));
+				$array["ams_season_end_date"] = strtotime($this->input->post("ams_season_end_date"));
+				$array['is_return_inclusive'] = $this->input->post("is_return_inclusive");
+				$array['season_color'] = $this->input->post("season_color");
+				
+				if( $season_id) {
+					$array["modify_date"] = time();
+					$array["modify_userID"] = $this->session->userdata('loginuserID');
+					$this->season_m->update_season($array,$season_id);
+			 	  } else {	
+					$array["active"] = 1;
+					$array["create_date"] = time();
+					$array["modify_date"] = time();
+					$array["create_userID"] = $this->session->userdata('loginuserID');
+					$array["modify_userID"] = $this->session->userdata('loginuserID');					
+					$this->season_m->insert_season($array);
+				 }			
+				
+			      // insert entry in trigger table for mapping table generation
+		
+				$tarray['table_name'] = 'VX_aln_season';
+				$tarray['create_date'] = time();
+				$tarray['modify_date'] = time();
+				$tarray['create_userID'] = $this->session->userdata('loginuserID');
+				$tarray['modify_userID'] = $this->session->userdata('loginuserID');
+				$tarray['isReconfigured'] = '1';
+			
+			    $this->trigger_m->insert_trigger($tarray);				
+				$json['status'] = "success";
+			}
+		} else {
+			$json['status'] = "no data";
+		}
+
+		 $this->output->set_content_type('application/json');
+         $this->output->set_output(json_encode($json));
 	}
 
 	public function edit() {
@@ -362,6 +430,17 @@ class Season extends Admin_Controller {
 			$this->data["subview"] = "error";
 			$this->load->view('_layout_main', $this->data);
 		}
+	}
+	
+	public function getSeasonData() {
+		$id = $this->input->post('season_id');
+		if((int)$id) {
+          $season = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
+		  $season->ams_season_start_date=date('d-m-Y',$season->ams_season_start_date);
+		  $season->ams_season_end_date=date('d-m-Y',$season->ams_season_end_date);
+        }	 		
+		$this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($season));
 	}
   
     function active() {
@@ -508,7 +587,8 @@ class Season extends Admin_Controller {
 		  $season->is_return_inclusive = ($season->is_return_inclusive)?"yes":"no";
 		  
 		  if(permissionChecker('season_edit')){ 			
-			$season->action = btn_edit('season/edit/'.$season->VX_aln_seasonID, $this->lang->line('edit'));
+			//$season->action = btn_edit('season/edit/'.$season->VX_aln_seasonID, $this->lang->line('edit'));
+			$season->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_market"  data-placement="top" onclick="editseason('.$season->VX_aln_seasonID.')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></a>';
 		  }
 		  if(permissionChecker('season_delete')){
 		   $season->action .= btn_delete('season/delete/'.$season->VX_aln_seasonID, $this->lang->line('delete'));			 
