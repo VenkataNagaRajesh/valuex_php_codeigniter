@@ -55,9 +55,9 @@
 					?>
 					</div>
 					<div class="col-md-6">
-						<p>Value</p>
+						<p class="col-md-10">Value</p> &nbsp; &nbsp; &nbsp; <span title="Select All" data-toggle="tooltip" data-placement="top"><input type="checkbox" id="checkbox_level"></span>
 						 <select  name="amz_level_value[]"  id="amz_level_value" class="form-control select2" multiple="multiple">
-                                </select>
+                          </select>
 					</div>
 				</div>
 				<div class="col-md-12 zone-info2">
@@ -68,8 +68,12 @@
                         echo form_dropdown("amz_incl_id", $aln_datatypes, set_value("amz_incl_id"), "id='amz_incl_id' class='form-control select2'");
                         ?>
 				<br>
-				<select  name="amz_incl_value[]"  id="amz_incl_value" class="form-control select2" multiple="multiple">
-                                </select>
+				<div class="col-md-10" style="padding:0;">
+				<select  name="amz_incl_value[]"  id="amz_incl_value" class="form-control select2" multiple="multiple"></select>
+				</div>
+				<div class="col-md-2">
+					<span title="Select All" data-toggle="tooltip" data-placement="top"> <input type="checkbox" id="checkbox_incl" ></span>
+				</div>
 
 
 					</div>
@@ -80,11 +84,13 @@
  echo form_dropdown("amz_excl_id", $aln_datatypes, set_value("amz_excl_id"), "id='amz_excl_id' class='form-control select2'");
                         ?>
 					<br>
-
-<select  name="amz_excl_value[]"  id="amz_excl_value" class="form-control select2" multiple="multiple">
-                                </select>
-
-
+					<div class="col-md-10" style="padding:0;">
+						<select  name="amz_excl_value[]"  id="amz_excl_value" class="form-control select2" multiple="multiple">
+                     </select>
+					</div>
+					<div class="col-md-2">
+						<span title="Select All" data-toggle="tooltip" data-placement="top"> <input type="checkbox" id="checkbox_excl" ></span>
+					</div>
 					</div>
 					<div class="col-md-12">
 					<input type="hidden" class="form-control" id="market_id" name="market_id"   value="" >
@@ -724,7 +730,33 @@ $.ajax({
           });
 }
 
-
+$("#checkbox_level").click(function(){
+    if($("#checkbox_level").is(':checked') ){
+        $("#amz_level_value > option").prop("selected","selected");
+        $("#amz_level_value").trigger("change");
+    }else{
+        $("#amz_level_value > option").removeAttr("selected");
+         $("#amz_level_value").trigger("change");
+     }
+});
+$("#checkbox_incl").click(function(){
+    if($("#checkbox_incl").is(':checked') ){
+        $("#amz_incl_value > option").prop("selected","selected");
+        $("#amz_incl_value").trigger("change");
+    }else{
+        $("#amz_incl_value > option").removeAttr("selected");
+         $("#amz_incl_value").trigger("change");
+     }
+});
+$("#checkbox_excl").click(function(){
+    if($("#checkbox_excl").is(':checked') ){
+        $("#amz_excl_value > option").prop("selected","selected");
+        $("#amz_excl_value").trigger("change");
+    }else{
+        $("#amz_excl_value > option").removeAttr("selected");
+         $("#amz_excl_value").trigger("change");
+     }
+});
 </script>
 
 <style>
