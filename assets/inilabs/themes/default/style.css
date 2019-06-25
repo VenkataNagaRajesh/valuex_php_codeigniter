@@ -3888,11 +3888,11 @@ fieldset[disabled] .btn-vk.active {
 .seasons .form-horizontal .calendar-box {
 	border:solid 1px #999;
 	padding:15px;
-	display:inline-block;
 }
 .seasons .form-horizontal .calendar-box .cal-box{
 	margin: 0px 15px;
 	padding: 0;
+	overflow:auto;
 }
 .seasons  .season-table{
 	margin-top: 15px;
@@ -4003,10 +4003,10 @@ fieldset[disabled] .btn-vk.active {
 	padding: 15px 0;
 }
 .btn span.glyphicon {    			
-	opacity: 1;				
+	opacity: 0;				
 }
 .btn.active span.glyphicon {				
-	opacity: 0;				
+	opacity: 1;			
 }
 .off-elg .form-horizontal .form-group h4{
 	background: #ddd;
@@ -4040,4 +4040,72 @@ fieldset[disabled] .btn-vk.active {
 }
 .off-elg .off-elg-table #hide-table{
 	overflow: auto;
+}
+
+div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
+    display: none;
+}
+
+.simpleTree-highlight {
+    background-color: greenyellow;
+}
+
+.simpleTree-nodeContainer {
+    padding: .1rem 0;
+    line-height: 1.15rem;
+}
+
+.simpleTree-indent {
+    display: inline-block;
+}
+
+.simpleTree-toggle {
+    display: inline-block;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    padding-left: .5rem;
+    cursor: pointer;
+}
+
+.simpleTree-toggle:not(.disabled):hover {
+    cursor: pointer;
+    font-size: larger;
+}
+
+.simpleTree-toggle.disabled {
+    color: gray;
+    cursor: default !important;
+}
+
+.simpleTree-label {
+    display: inline-block;
+    padding: .2rem .25rem;
+    cursor: pointer;
+    margin-left: .25rem;
+    border: 1px solid transparent;
+}
+
+.simpleTree-label:hover {
+    font-weight: bold;
+}
+
+.simpleTree-selected {
+    border: 1px solid gray;
+    background-color: whitesmoke;
+    border-radius: .25rem;
+    font-weight: bold;
+}
+
+.simpleTree-childCountBadge {
+    margin-left: .5em;
+    font-weight: normal;
+    opacity: .75;
+}
+.event a {
+    background-color: #5FBA7D !important;
+    color: #ffffff !important;
+}
+.select2-container.select2-container-multi.form-control{
+	height:50px !important;
+	overflow:auto;
 }

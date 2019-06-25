@@ -130,7 +130,7 @@ class Season extends Admin_Controller {
 	   }
 	}
 	
-	function valDestLevelValue($post_array){        	
+	function valDestLevelValue($post_array){        
 	  if(count($post_array) < 1){
 		 $this->form_validation->set_message("valDestLevelValue", "%s is required");
 		  return FALSE;
@@ -266,7 +266,19 @@ class Season extends Admin_Controller {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
 			if ($this->form_validation->run() == FALSE) { 
-				$json['status'] = validation_errors();		
+				$json['status'] = validation_errors();	
+                $json['errors'] = array(
+                'season_name' => form_error('season_name'),
+                'airlineID' => form_error('airlineID'),
+                'ams_orig_levelID' => form_error('ams_orig_levelID'),
+                'ams_orig_level_value' => form_error('ams_orig_level_value[]'),
+                'ams_dest_levelID' => form_error('ams_dest_levelID'),
+				'ams_dest_level_value' => form_error('ams_dest_level_value[]'),
+				'ams_season_start_date' => form_error('ams_season_start_date'),
+				'ams_season_end_date' => form_error('ams_season_end_date'),
+				'season_color' => form_error('season_color'),
+				'is_return_inclusive' => form_error('is_return_inclusive')
+                );				
 			} else {
 				$array["season_name"] = $this->input->post("season_name");
 				$array["airlineID"] = $this->input->post("airlineID");
