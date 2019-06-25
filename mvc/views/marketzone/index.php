@@ -168,6 +168,19 @@
 					<div class="col-md-2">
 						<h2>Market Zones</h2><span class="pull-right"></span>
 					</div>
+
+					<div class="col-md-2" id='reconfigure'>
+
+					 <?php if(permissionChecker('marketzone_reconfigure')) {
+					 if( isset ($reconfigure)) {?>
+                               			 <h2><a href="<?php echo base_url('trigger') ?>">
+                                    			<i class="fa fa-plus"></i>
+                                    			<?=$this->lang->line('generate_map_table')?>
+                                			</a>
+						  </h2> <span class="pull-right"></span>
+                        <?php } }?>
+
+                                        </div>
 				</div>
 				<div class="col-md-12">
 					<div class="table-reponsive col-md-12">
@@ -341,19 +354,44 @@ $.fn.extend({
 
 $('#tree1').treed();
 
-$('#tree2').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
+//$('#tree2').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
 
-$('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
+//$('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
 </script>
+
+
 
 <script type="text/javascript">
   $(document).ready(function() {
 
   $( ".select2" ).select2();
+	
+	loadtreeview();
 
-loaddatatable();
+	loaddatatable();
  });
 
+
+function loadtreeview(){
+//alert(JSON.stringify(arr));
+<?php $templateString = '<div class="col-md-12"> <ul id="tree1">';
+foreach($treedata as $data) {
+         $templateString .= '<li>'.$data->market_name.'<ul>';
+	$a_list = explode(',',$data->airports);
+	foreach($a_list as $airport) {
+                $templateString .= '<li>'.$airport.'</li>'; 
+        }
+
+         $templateString .= '</ul></li>';        
+}
+                $templateString .= '</ul> </div>';
+?>
+
+        $('.market-info-tree').html('<?php echo $templateString?>');
+        $('#tree1').treed();
+
+
+}
 
 function loaddatatable() {
     $('#tztable').DataTable( {
@@ -549,14 +587,63 @@ function savezone() {
 				
 			   "market_id":$('#market_id').val()},
           dataType: "html",                     
+
+	 beforeSend: function() {
+
+			if($('#airline_id').val() == '0' ) {
+				$('#airline_id').addClass('alert');
+				var error = 1;
+				//alert('Airline Code is required');
+			}
+
+			if($('#market_name').val() == '' ) {
+				var error = 1;
+				$('#market_name').addClass("alert");
+				//alert('Market Name is required');
+			}
+			if($('#amz_level_id').val() == '0'  ) {
+				var error = 1;
+				 $('#amz_level_id').addClass('alert');
+				//alert('Market Level field is required');
+                        }
+
+			if($('#amz_level_value').val() == '' ) {
+				var error = 1;
+                                $('#amz_level_value').addClass('alert');
+				//alert('Market Level Value fields is required');
+                        }
+
+
+			if (error == 1 ) {
+				alert('Please select required fields');
+				return false;
+		
+			}
+
+    			},
+
+
           success: function(data) {
 		var zoneinfo = jQuery.parseJSON(data);
 		var status = zoneinfo['status'];
 		newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
 		if (status == 'success' ) {
-			alert(status);
+			if ( zoneinfo['action'] == 'add' ) {	
+				alert('Marketzone added successfully');
+			} else if (zoneinfo['action'] == 'edit') {
+				alert('Marketzone updated successfully');
+			}
 			$("#tztable").dataTable().fnDestroy();
 			loaddatatable();
+			if (zoneinfo['has_reconf_perm'] && zoneinfo['reconfigure']) {
+				<?php
+					$link = '<h2><a href="'.base_url('trigger').'"> <i class="fa fa-plus"></i> '.$this->lang->line('generate_map_table').' </a></h2>';
+	
+				  ?>
+
+				$('#reconfigure').html('<?php echo $link?>');
+			}
+
 		} else {
 			alert(newstatus);
 		
@@ -603,7 +690,7 @@ $.ajax({
 			var incl = zoneinfo['amz_incl_name'].split(',');
                 	$('#amz_incl_value').val(incl).trigger('change');
 		}
-
+ 
 		if (zoneinfo['amz_excl_id'] != 0 ){  
 			$('#amz_excl_id').val(zoneinfo['amz_excl_id']);
                 	$('#amz_excl_id').trigger('change');
@@ -628,3 +715,10 @@ $.ajax({
 
 
 </script>
+
+<style>
+    .alert {
+        border: 1px solid red !important;
+	
+    }
+</style>

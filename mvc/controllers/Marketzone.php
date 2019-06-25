@@ -182,6 +182,8 @@ class Marketzone extends Admin_Controller {
 		  foreach($types as $type){
 			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
 		  }
+
+		$this->data['treedata'] = $this->marketzone_m->getAirportsMarketData();
 		$this->data["subview"] = "marketzone/index";
 		$this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_market_zone');
 		$this->load->view('_layout_main', $this->data);
@@ -217,17 +219,19 @@ class Marketzone extends Admin_Controller {
 				 if( $market_id) {
 					$array["modify_date"] = $date_now;
 					$array["modify_userID"] = $this->session->userdata('loginuserID');
-					$this->marketzone_m->update_marketzone($array, $market_id);
+					$editid = $this->marketzone_m->update_marketzone($array, $market_id);
+					$json['action'] = 'edit';
 			 	  } else {	
 					$array["create_date"] = $date_now;
 					$array["modify_date"] = $date_now;
 					$array["create_userID"] = $this->session->userdata('loginuserID');
 			        	$array["modify_userID"] = $this->session->userdata('loginuserID');
-					$this->marketzone_m->insert_marketzone($array);
+					$newid = $this->marketzone_m->insert_marketzone($array);
+					$json['action'] = 'add';
 				 }
 				
 			      // insert entry in trigger table for mapping table generation
-		
+	
 				$tarray['table_name'] = 'VX_aln_market_zone';
 				$tarray['create_date'] = $date_now;
 				$tarray['modify_date'] = $date_now;
@@ -236,6 +240,9 @@ class Marketzone extends Admin_Controller {
 				$tarray['isReconfigured'] = '1';
 			
 			        $this->trigger_m->insert_trigger($tarray);
+
+				$json['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_market_zone');
+				$json['has_reconf_perm'] = permissionChecker('marketzone_reconfigure');
 				$json['status'] = "success";
 			  }
 
