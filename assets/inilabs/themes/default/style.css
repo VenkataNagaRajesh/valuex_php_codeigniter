@@ -3742,11 +3742,7 @@ fieldset[disabled] .btn-vk.active {
 	margin-bottom: 5px;
 }
 .mzone-config input{
-	padding: 2px 3px;
-	height: 29px;
-	border-radius: 5px;
-	margin-bottom: 5px;
-	border:solid 1px #999;
+	margin-bottom: 10px;
 }
 .mzone-config .zone-info1 select{
 	padding: 2px 3px;
@@ -3832,6 +3828,9 @@ fieldset[disabled] .btn-vk.active {
 .mzones .tab-content {
 	margin-top:12px;
 	overflow:auto;
+}
+#mzonesAdd{
+	margin-top:12px;
 }
 .mzones .tab-content tr td{
 	color:#333;
@@ -4007,4 +4006,57 @@ fieldset[disabled] .btn-vk.active {
 	padding: 4px 11px;
 	border: solid 1px #999;
 	margin-bottom:6px;
+}
+/*eer rules*/
+.eer .form-horizontal h2{
+	font-size: 16px;
+	color: #ff6633;
+	font-weight: bold;
+	margin-bottom: 0;
+}
+.eer .table-responsive{
+	background: #fff;
+	border: solid 1px #999;
+	margin: 18px 0;
+	padding: 12px 0;
+}
+.eer .form-horizontal .table thead{
+	background:#ddd;
+}
+.eer .form-horizontal .table {
+	margin-top:15px;
+}
+.eer .form-horizontal .table thead th{
+	font-weight: bold;
+	color: #ff6633;
+	border-right:solid 2px #fff;
+}
+.eer .form-horizontal .table .form-control{
+	margin-bottom:15px;
+}
+.eer .form-horizontal .rule-box ul{
+	list-style:none;
+}
+.eer .form-horizontal .rule-box ul li span{
+	
+}
+.eer .off-table{
+	background: #fff;
+	border: solid 1px #999;
+	padding: 20px 0;
+	overflow: auto;
+	margin-top:12px;
+}
+.eer .off-table .dt-button{
+	background:#ff6633;
+	color:#fff;
+}
+.eer .off-table .dataTables_wrapper{
+	padding: 15px 0;
+}
+.btn span.glyphicon {    			
+	opacity: 0;				
+}
+.btn.active span.glyphicon {				
+	opacity: 1;				
 }
