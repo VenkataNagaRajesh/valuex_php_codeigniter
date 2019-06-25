@@ -3910,11 +3910,11 @@ fieldset[disabled] .btn-vk.active {
 .seasons .form-horizontal .calendar-box {
 	border:solid 1px #999;
 	padding:15px;
-	display:inline-block;
 }
 .seasons .form-horizontal .calendar-box .cal-box{
 	margin: 0px 15px;
 	padding: 0;
+	overflow:auto;
 }
 .seasons  .season-table{
 	margin-top: 15px;
@@ -4059,4 +4059,12 @@ fieldset[disabled] .btn-vk.active {
 }
 .btn.active span.glyphicon {				
 	opacity: 1;				
+}
+.event a {
+    background-color: #5FBA7D !important;
+    color: #ffffff !important;
+}
+.select2-container.select2-container-multi.form-control{
+	height:50px !important;
+	overflow:auto;
 }
