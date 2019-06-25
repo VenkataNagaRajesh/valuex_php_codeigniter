@@ -206,7 +206,7 @@
 							</table>
 						</div>
 						<div class="col-md-1">
-		                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+				 <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#tztable').dataTable().fnDestroy();;loaddatatable()">Filter</a>
 						</div>
 					</div>
 				</div>
@@ -312,7 +312,7 @@ $('#tree1').treed();
 <script type="text/javascript">
   $(document).ready(function() {
 
-  $( ".select2" ).select2();
+$( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Value'});
 	
 	loadtreeview();
 
