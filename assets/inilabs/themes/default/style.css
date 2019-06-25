@@ -56,6 +56,10 @@ a:focus {
 .wrapper:after {
   clear: both;
 }
+.dt-buttons .dt-button{
+	background:#ff6633;
+	color:#fff;
+}
 /* Header */
 body > .header {
   position: absolute;
@@ -1956,9 +1960,14 @@ Component: timeline
   border-color: #4AABC8;
 }
 .btn.btn-danger {
-  color: #fff;
-  background-color: #ff5b57;
-  border-color: #ff5b57;
+	/*color: #fff;
+	background-color: #ff5b57;
+	border-color: #ff5b57;*/
+	font-size: 13px;
+	background: #ff6633;
+	padding: 4px 11px;
+	border: solid 1px #999;
+	color: #fff;
 }
 .btn.btn-danger:hover,
 .btn.btn-danger:active,
@@ -3628,12 +3637,6 @@ fieldset[disabled] .btn-vk.active {
 	border: solid 1px #999;
 	padding: 5px 10px;
 }
-.srch-buttons .input-group .input-group-btn .btn-danger{
-	font-size: 12px;
-	background: #ffff;
-	border: none;
-	color: #333;
-}
 .srch-buttons .input-group{
 	border: solid 1px #999;
 	border-radius: 5px;
@@ -3769,12 +3772,6 @@ fieldset[disabled] .btn-vk.active {
 	margin-bottom: 5px;
 	border:solid 1px #999;
 }
-.mzones .btn-danger{
-	font-size: 13px;
-	background: #ff6633;
-	padding: 4px 11px;
-	border: solid 1px #999;
-}
 .table-reponsive{
 	border: solid 1px #999;
 	padding: 14px;
@@ -3815,10 +3812,6 @@ fieldset[disabled] .btn-vk.active {
 	background: #ddd;
 	margin-bottom: 0;
 }
-.mzones .tab-content .dt-button{
-	background:#ff6633;
-	color:#fff;
-}
 .mzones .tab-content .table{
 	background:#fff;
 }
@@ -3834,9 +3827,6 @@ fieldset[disabled] .btn-vk.active {
 }
 .mzones .tab-content tr td{
 	color:#333;
-}
-.mzones .tab-content .btn-danger{
-	padding:1px 5px;
 }
 /*seasons codes*/
 .seasons .table-responsive{
@@ -3895,18 +3885,6 @@ fieldset[disabled] .btn-vk.active {
 .seasons .table-responsive .table thead{
 	background:#ddd;
 }
-.seasons .form-horizontal .btn-danger{
-	font-size: 13px;
-	background: #ff6633;
-	padding: 4px 11px;
-	border: solid 1px #999;
-}
-.seasons p .btn-danger{
-	font-size: 13px;
-	background: #ff6633;
-	padding: 4px 11px;
-	border: solid 1px #999;
-}
 .seasons .form-horizontal .calendar-box {
 	border:solid 1px #999;
 	padding:15px;
@@ -3926,10 +3904,6 @@ fieldset[disabled] .btn-vk.active {
 }
 .seasons  .season-table #hide-table{
 	overflow:auto;
-}
-.seasons  .season-table .dt-button{
-	background:#ff6633;
-	color:#fff;
 }
 .event a {
     background-color: #42B373 !important;
@@ -3956,18 +3930,6 @@ fieldset[disabled] .btn-vk.active {
 .fclr-bar .table-responsive tbody tr td .input-group, .fclr-bar .table-responsive tbody tr td  select, .fclr-bar .table-responsive tbody tr td .select2{
 	color:#333;
 }
-.fclr-bar .table-responsive .table .btn-danger{
-	font-size: 13px;
-	background: #ff6633;
-	padding: 4px 11px;
-	border: solid 1px #999;
-}
-.fclr-table-add .btn-danger{
-	font-size: 13px;
-	background: #ff6633;
-	padding: 4px 11px;
-	border: solid 1px #999;
-}
 .fclr-bar .fclr-table{
 	border: solid 1px #999;
 	margin: 15px 0px;
@@ -3976,10 +3938,6 @@ fieldset[disabled] .btn-vk.active {
 }
 .fclr-bar .fclr-table .fclr-table-data{
 	overflow: auto;
-}
-.fclr-bar .fclr-table .dt-button{
-	background:#ff6633;
-	color:#fff;
 }
 .fclr-bar .fclr-table .onoffswitch-small-inner::before {
 	background:#109610;
@@ -3999,13 +3957,6 @@ fieldset[disabled] .btn-vk.active {
 }
 .fclr-bar .fclr-table-add thead th{
 	border-right:solid 3px #fff;
-}
-.fclr-bar .card-header .btn-danger{
-	font-size: 13px;
-	background: #ff6633;
-	padding: 4px 11px;
-	border: solid 1px #999;
-	margin-bottom:6px;
 }
 /*eer rules*/
 .eer .form-horizontal h2{
@@ -4037,8 +3988,9 @@ fieldset[disabled] .btn-vk.active {
 .eer .form-horizontal .rule-box ul{
 	list-style:none;
 }
-.eer .form-horizontal .rule-box ul li span{
-	
+.eer .form-horizontal .rule-box ul li{
+	font-weight:bold;
+	color:#333;
 }
 .eer .off-table{
 	background: #fff;
@@ -4047,10 +3999,6 @@ fieldset[disabled] .btn-vk.active {
 	overflow: auto;
 	margin-top:12px;
 }
-.eer .off-table .dt-button{
-	background:#ff6633;
-	color:#fff;
-}
 .eer .off-table .dataTables_wrapper{
 	padding: 15px 0;
 }
@@ -4058,7 +4006,40 @@ fieldset[disabled] .btn-vk.active {
 	opacity: 0;				
 }
 .btn.active span.glyphicon {				
-	opacity: 1;				
+	opacity: 1;			
+}
+.off-elg .form-horizontal .form-group h4{
+	background: #ddd;
+	font-weight: bold;
+	color: #ff6633;
+	font-size: 14px;
+	padding: 8px 15px;
+	margin: 15px 0;
+}
+.off-elg .form-horizontal .form-group .select-form .form-control{
+	margin-bottom:15px;
+}
+.off-elg .form-horizontal .form-group .col-sm-12{
+	padding:0;
+}
+.off-elg .form-horizontal .form-group .input-group{
+	margin-bottom:15px;
+}
+.off-elg .form-horizontal .form-group .btn-danger{
+	margin:15px 0px;
+}
+.off-elg .off-elg-filter-box{
+	border:solid 1px #999;
+	background:#fff;
+}
+.off-elg .off-elg-table{
+	background: #fff;
+	border: solid 1px #999;
+	padding: 15px 0;
+	margin: 20px 0;
+}
+.off-elg .off-elg-table #hide-table{
+	overflow: auto;
 }
 
 div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {

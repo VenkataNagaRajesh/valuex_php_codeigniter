@@ -99,7 +99,7 @@
 					<br>
 					<input type="text" class="form-control" id="desc" name="desc" placeholder='description'  value="<?=set_value('market_name')?>" >
 						<span class="pull-right">
-					   <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savezone()"><?=$this->lang->line("add_marketzone")?></a>
+					   <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savezone()">Save</a>
 
 						</span>
 					</div>
@@ -688,7 +688,7 @@ $.ajax({
           dataType: "html",                     
           success: function(data) {
                 var zoneinfo = jQuery.parseJSON(data);
-		$('#btn_txt').text('Edit Marketzone');
+		$('#btn_txt').text('Update Marketzone');
 		$('#desc').val(zoneinfo['description']);
 		$('#airline_id').val(zoneinfo['airline_id']);
 		$('#airline_id').trigger('change');
