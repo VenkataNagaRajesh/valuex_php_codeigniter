@@ -147,7 +147,7 @@
 		</form>
 	</div>
 	<div class="col-md-12 season-table">
-		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
+		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form">		   
 			<div class='form-group'>			 
 				<div class="col-sm-2">			   
 				<?php $slist = array("0" => "Select Season");               
@@ -412,9 +412,11 @@ $(document).ready(function(){
 	$('#ams_orig_level_value').val(orig_level).trigger('change');
 	var dest_level = [<?php echo implode(',',$this->input->post("ams_dest_level_value")); ?>];
 	$('#ams_dest_level_value').val(dest_level).trigger('change');  
+	//$("input[name=is_return_inclusive][value=1]").attr('checked', 'checked');
 });
 
 $('#ams_orig_levelID').change(function(e){
+	$(this).parent().removeClass('has-error');
 	$('#ams_orig_level_value').val(null).trigger('change')
      var level_id = $(this).val();                 
     $.ajax({ 
@@ -430,6 +432,7 @@ $('#ams_orig_levelID').change(function(e){
 });	
 			
 $('#ams_dest_levelID').change(function(e){
+	$(this).parent().removeClass('has-error');
 	$('#ams_dest_level_value').val(null).trigger('change')
      var level_id = $(this).val();                 
     $.ajax({ 
@@ -479,7 +482,7 @@ $("#dest_all").click(function(){
 			    "ams_season_start_date":$('#ams_season_start_date').val(),
                 "ams_season_end_date":$('#ams_season_end_date').val(),
 				"season_color":$('#season_color').val(),
-				"is_return_inclusive":$('input[type=radio][name=is_return_inclusive]').val(),
+				"is_return_inclusive":$('input[type=radio][name=is_return_inclusive]:checked').val(),
 			    "desc":$('#desc').val(),				
 			    "season_id":$('#season_id').val()},
          dataType: "html",                     
@@ -490,13 +493,21 @@ $("#dest_all").click(function(){
 				alert(status);
 				$("#seasonslist").dataTable().fnDestroy();
 				loaddatatable();
-			} else {
+			} else {				
 				alert($(status).text());
-			
+			    $.each(seasoninfo['errors'], function(key, value) {
+					if(value != ''){					 
+                      $('#' + key).parent().addClass('has-error'); 
+					}                  				
+                });				
 			}
 	     }
      });
    }
+   
+    $('#season-form').on('keyup change', function () {       
+        $(this).parent().removeClass('has-error');
+    });
    
    function editseason(season_id) {
       var isVisible = $( "#seasonAdd" ).is( ":visible" );

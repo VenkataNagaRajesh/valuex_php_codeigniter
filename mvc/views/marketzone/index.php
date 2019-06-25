@@ -163,7 +163,7 @@
 	<div class="col-md-12">
 		<div class="mzones-list-bar">
 
-		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="margin-bottom:-3em;">
+		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
 				<div class="title-bar">
 					<div class="col-md-2">
 						<h2>Market Zones</h2><span class="pull-right"></span>
@@ -373,21 +373,26 @@ $('#tree1').treed();
 
 
 function loadtreeview(){
+
+var js_data = '<?php echo json_encode($treedata); ?>';
+var arr = JSON.parse(js_data );
+
 //alert(JSON.stringify(arr));
-<?php $templateString = '<div class="col-md-12"> <ul id="tree1">';
-foreach($treedata as $data) {
-         $templateString .= '<li>'.$data->market_name.'<ul>';
-	$a_list = explode(',',$data->airports);
-	foreach($a_list as $airport) {
-                $templateString .= '<li>'.$airport.'</li>'; 
-        }
+var templateString = '<div class="col-md-12"> <ul id="tree1">';
+$.each(arr, function(i){
+         templateString = templateString + '<li>'+arr[i].market_name+'<ul>';
+         var a_list = arr[i].airports.split(',');
 
-         $templateString .= '</ul></li>';        
-}
-                $templateString .= '</ul> </div>';
-?>
+        $.each(a_list, function(i){
+                templateString = templateString + '<li>'+a_list[i]+'</li>'; 
+        });
 
-        $('.market-info-tree').html('<?php echo $templateString?>');
+         templateString = templateString + '</ul></li>';        
+});
+                templateString =  templateString + '</ul> </div>';
+
+
+        $('.market-info-tree').html(templateString);
         $('#tree1').treed();
 
 
@@ -591,25 +596,25 @@ function savezone() {
 	 beforeSend: function() {
 
 			if($('#airline_id').val() == '0' ) {
-				$('#airline_id').addClass('alert');
+				$('#airline_id').addClass('has-error');
 				var error = 1;
 				//alert('Airline Code is required');
 			}
 
 			if($('#market_name').val() == '' ) {
 				var error = 1;
-				$('#market_name').addClass("alert");
+				$('#market_name').parent().addClass("has-error");
 				//alert('Market Name is required');
 			}
 			if($('#amz_level_id').val() == '0'  ) {
 				var error = 1;
-				 $('#amz_level_id').addClass('alert');
+				 $('#amz_level_id').addClass('has-error');
 				//alert('Market Level field is required');
                         }
 
 			if($('#amz_level_value').val() == '' ) {
 				var error = 1;
-                                $('#amz_level_value').addClass('alert');
+                                $('#amz_level_value').addClass('has-error');
 				//alert('Market Level Value fields is required');
                         }
 
@@ -628,20 +633,19 @@ function savezone() {
 		var status = zoneinfo['status'];
 		newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
 		if (status == 'success' ) {
-			if ( zoneinfo['action'] == 'add' ) {	
-				alert('Marketzone added successfully');
-			} else if (zoneinfo['action'] == 'edit') {
-				alert('Marketzone updated successfully');
-			}
+			alert('Marketzone update success');
 			$("#tztable").dataTable().fnDestroy();
 			loaddatatable();
 			if (zoneinfo['has_reconf_perm'] && zoneinfo['reconfigure']) {
-				<?php
-					$link = '<h2><a href="'.base_url('trigger').'"> <i class="fa fa-plus"></i> '.$this->lang->line('generate_map_table').' </a></h2>';
-	
-				  ?>
+				var link = $("<a>");
+               				link.attr("href", '<?php echo base_url('trigger') ?>');
+                			link.text("<?=$this->lang->line('generate_map_table')?>");
 
-				$('#reconfigure').html('<?php echo $link?>');
+				//var link = '<h2><a href='<?php echo base_url('trigger') ?>'>';
+				//	link  = link + '<i class="fa fa-plus"></i>';
+				//	link = link + linkalias;
+				//	link = link + '</a> </h2> <span class="pull-right"></span>';
+				$('#reconfigure').html(link);
 			}
 
 		} else {
