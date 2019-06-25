@@ -132,6 +132,7 @@ class Marketzone extends Admin_Controller {
                                 'assets/select2/css/select2-bootstrap.css'
                         ),
                         'js' => array(
+				'assets/treeview/simpleTree.js',
                                 'assets/select2/select2.js'
                         )
                 );

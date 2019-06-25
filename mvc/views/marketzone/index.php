@@ -12,75 +12,17 @@
 				</div>
 				<div class="col-md-8">
 				  <div class="input-group">
-					<input type="text" class="form-control" placeholder="Search">
+					 <input type="text" class="form-control" id="example" placeholder="Search">
+
 					<div class="input-group-btn">
-					  <button class="btn btn-danger" type="submit">
+					  <button class="btn btn-danger" id='mysearch' type="submit">
 						<i class="glyphicon glyphicon-search"></i>
 					  </button>
 					</div>
 				  </div>
 				 </div>
 			</div>
-			<div class="market-info-tree">
-				<div class="col-md-12">
-					<ul id="tree1">
-						<li>TECH
-							<ul>
-								<li>Company Maintenance</li>
-								<li>Employees
-									<ul>
-										<li>Reports
-											<ul>
-												<li>Report1</li>
-												<li>Report2</li>
-												<li>Report3</li>
-											</ul>
-										</li>
-										<li>Employee Maint.</li>
-									</ul>
-								</li>
-								<li>Human Resources</li>
-							</ul>
-						</li>
-						<li>XRP
-							<ul>
-								<li>Company Maintenance</li>
-								<li>Employees
-									<ul>
-										<li>Reports
-											<ul>
-												<li>Report1</li>
-												<li>Report2</li>
-												<li>Report3</li>
-											</ul>
-										</li>
-										<li>Employee Maint.</li>
-									</ul>
-								</li>
-								<li>Human Resources</li>
-							</ul>
-						</li>
-						<li>Middle East
-							<ul>
-								<li>Company Maintenance</li>
-								<li>Employees
-									<ul>
-										<li>Reports
-											<ul>
-												<li>Report1</li>
-												<li>Report2</li>
-												<li>Report3</li>
-											</ul>
-										</li>
-										<li>Employee Maint.</li>
-									</ul>
-								</li>
-								<li>Human Resources</li>
-							</ul>
-						</li>
-					</ul>
-				</div>
-			</div>
+			<div id="mytree" class='.market-info-tree'></div>
 		</div>
 		<div class="col-md-8">
 		<form class="form-horizontal" role="form" method="post" id='add_zone' enctype="multipart/form-data">
@@ -369,31 +311,96 @@ $('#tree1').treed();
 	loadtreeview();
 
 	loaddatatable();
+
+$(function() {
+  $('#mysearch').click(function() {
+    //Clear last search
+    //$("#files li").removeclass("collapsible").find("span").removeClass("highlighted");
+    //Search again
+/*
+ $('.market-info-tree').find('ul').has("li").each(function () {
+            var branch = $(this); //li with children ul
+	alert($(this).text());
+            branch.prepend("<i class='indicator glyphicon " + closedClass + "'></i>");
+            branch.addClass('branch');
+            branch.on('click', function (e) {
+                if (this == e.target) {
+                    var icon = $(this).children('i:first');
+                    icon.toggleClass(openedClass + " " + closedClass);
+                    $(this).children().children().toggle();
+                }
+            })
+            branch.children().children().toggle();
+        });
+
+*/
+
+$('.market-info-tree ul li').each(function() {
+        var stext = $('#searchtxt').val();
+	var branch = $(this);
+      //  branch.("li:contains("+stext+")").css("background-color", "yellow").parent().toggle();
+        
+    //$(this).append("<a href='#somewhere'>Click Here</a>");
+  });
+});
+});
+
  });
 
 
 function loadtreeview(){
 
-var js_data = '<?php echo json_encode($treedata); ?>';
-var arr = JSON.parse(js_data );
+data = [
+<?php foreach ($treedata as $data) {?>
+	  {
+            label: '<?php echo $data->market_name?>',
+            value: '<?php echo $data->market_name?>',
+                children: [
+        <?php $airids = explode(',',$data->airports);
+                foreach($airids as $airid) {?>
+                        {
+                        label: '<?php echo $airid?>',
+                        value: '<?php echo $airid?>',
+                        },
+                <?php }?>
+                ]},
+        <?php }?>
+        ];
+               
+var options = {
+        // Optionally provide here the jQuery element that you use as the search box for filtering the tree. simpleTree then takes control over the provided box, handling user input
+        searchBox: $('#example'),
 
-//alert(JSON.stringify(arr));
-var templateString = '<div class="col-md-12"> <ul id="tree1">';
-$.each(arr, function(i){
-         templateString = templateString + '<li>'+arr[i].market_name+'<ul>';
-         var a_list = arr[i].airports.split(',');
+        // Search starts after at least 3 characters are entered in the search box
+        searchMinInputLength: 2,
 
-        $.each(a_list, function(i){
-                templateString = templateString + '<li>'+a_list[i]+'</li>'; 
-        });
+        // Number of pixels to indent each additional nesting level
+        indentSize: 25,
 
-         templateString = templateString + '</ul></li>';        
-});
-                templateString =  templateString + '</ul> </div>';
+        // Show child count badges?
+        childCountShow: true,
 
+        // Symbols for expanded and collapsed nodes that have child nodes
+        symbols: {
+            collapsed: '▶',
+            expanded: '▼'
+        },
 
-        $('.market-info-tree').html(templateString);
-        $('#tree1').treed();
+        // these are the CSS class names used on various occasions. If you change these names, you also need to provide the corresponding CSS class
+        css: {
+            childrenContainer: 'simpleTree-childrenContainer',
+            childCountBadge: 'simpleTree-childCountBadge badge badge-pill badge-secondary',
+            highlight: 'simpleTree-highlight',
+            indent: 'simpleTree-indent',
+            label: 'simpleTree-label',
+            mainContainer: 'simpleTree-mainContainer',
+            nodeContainer: 'simpleTree-nodeContainer',
+            selected: 'simpleTree-selected',
+            toggle: 'simpleTree-toggle'
+        }
+    };
+$('#mytree').simpleTree(options, data);
+
 
 
 }
@@ -612,7 +619,7 @@ function savezone() {
 				//alert('Market Level field is required');
                         }
 
-			if($('#amz_level_value').val() == '' ) {
+			if($('#amz_level_value').val() == null ) {
 				var error = 1;
                                 $('#amz_level_value').addClass('has-error');
 				//alert('Market Level Value fields is required');
