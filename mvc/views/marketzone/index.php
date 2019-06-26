@@ -22,7 +22,7 @@
 				  </div>
 				 </div>
 			</div>
-			<div id="mytree" class='.market-info-tree'></div>
+			<div id="mytree" class="market-info-tree"></div>
 		</div>
 		<div class="col-md-8">
 		<form class="form-horizontal" role="form" method="post" id='add_zone' enctype="multipart/form-data">
@@ -111,7 +111,7 @@
 	<div class="col-md-12">
 		<div class="mzones-list-bar">
 
-		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="margin-bottom:-3em;">
 				<div class="title-bar">
 					<div class="col-md-2">
 						<h2>Market Zones</h2><span class="pull-right"></span>
