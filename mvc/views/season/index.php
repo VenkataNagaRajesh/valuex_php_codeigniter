@@ -46,12 +46,12 @@
 								</div>
 								<div class="col-md-6">
 									<p>
-										<span>Content</span>
-										<select name="ams_orig_level_value[]" id="ams_orig_level_value" class="form-control select2" multiple="multiple">
-						                </select>
+										<span>Content</span>&nbsp; &nbsp; &nbsp; 
 										<span>
-											<input type="checkbox" id="orig_all" >Select All
+											<input type="checkbox" id="orig_all" title="Select All" data-toggle="tooltip" data-placement="top">
 										</span>
+										<select name="ams_orig_level_value[]" id="ams_orig_level_value" class="form-control select2" multiple="multiple">
+						                </select>										
 									</p>
 								</div>
 							</td>
@@ -70,12 +70,13 @@
 								</div>
 								<div class="col-md-6">
 									<p>
-										<span>Content</span>
+										<span>Content</span>&nbsp; &nbsp; &nbsp; 
+										<span>
+											<input type="checkbox" id="dest_all" title="Select All" data-toggle="tooltip" data-placement="top">
+										</span>
 										<select name="ams_dest_level_value[]" id="ams_dest_level_value" class="form-control select2" multiple="multiple">
 						                </select>
-										<span>
-											<input type="checkbox" id="dest_all" >Select All
-										</span>
+										
 									</p>
 								</div>
 							</td>							
@@ -124,17 +125,20 @@
 			</div>
 			<div class="col-md-8">
 				<div class="calendar-box">
-					<div id="calendar1" class="col-md-5 cal-box"></div>
-					<div id="calendar2" class="col-md-5 cal-box"></div>
+					<div id="calendar1" class="cal-box"></div>
+					<!--<div id="calendar2" class="col-md-5 cal-box"></div>-->
 				</div>
 			</div>
 			<div class="col-md-4">
 				<div class="season-highlight">
 					<p>
 						<span>Season</span><span>Highlights</span><br>
-						<span class="default">Default</span><span class="default-high">&nbsp;</span><br>
+						<!--<span class="default">Default</span><span class="default-high">&nbsp;</span><br>
 						<span class="default">Summer Peak</span><span class="summer-high">&nbsp;</span><br>
-						<span class="default">Christmas Peak</span><span class="christ-high">&nbsp;</span>
+						<span class="default">Christmas Peak</span><span class="christ-high">&nbsp;</span>-->
+						<?php foreach($seasonslist as $season) { ?>
+						<span class="default"><?=$season->season_name?></span><span style="background: <?=$season->season_color?>;">&nbsp;</span>
+						<?php } ?>
 					</p>
 				</div>
 			</div>
@@ -147,12 +151,20 @@
 		</form>
 	</div>
 	<div class="col-md-12 season-table">
+	     <h6 class="page-header">
+	      <?php if( isset ($reconfigure) && permissionChecker('season_reconfigure')) {?>
+                   <a href="<?php echo base_url('trigger/season_trigger') ?>">
+                       <i class="fa fa-plus"></i>
+                       <?=$this->lang->line('generate_map_table')?>
+                   </a>
+           <?php } ?>
+		</h6>
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form">		   
 			<div class='form-group'>			 
 				<div class="col-sm-2">			   
 				<?php $slist = array("0" => "Select Season");               
 				   foreach($seasonslist as $season){
-					  $slist[] = $season;
+					  $slist[$season->VX_aln_seasonID] = $season->season_name;
 					}							
 				   echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
@@ -211,37 +223,44 @@
 	</div>
 </div>
 <script type="text/javascript">
-    jQuery(document).ready(function() {
-        
+    jQuery(document).ready(function() {	
         // An array of dates
-        var eventDates = {};
-        eventDates[ new Date( '12/04/2014' )] = new Date( '12/04/2014' );
-        eventDates[ new Date( '12/06/2014' )] = new Date( '12/06/2014' );
-        eventDates[ new Date( '12/20/2014' )] = new Date( '12/20/2014' );
-        eventDates[ new Date( '12/25/2014' )] = new Date( '12/25/2014' );
-        
-        // datepicker
-        jQuery('#calendar1').datepicker({
-            beforeShowDay: function( date ) {
+     var eventDates = {}; var season = {}; var name = {};
+    
+   
+   <?php foreach ($seasonslist as $season){
+          foreach($season->dates as $date){	   ?>       
+	       eventDates[ new Date( '<?=$date?>' )] = new Date( '<?=$date?>' ).toString();
+		    season[ new Date( '<?=$date?>' )] = "<?=$season->VX_aln_seasonID?>";
+			name[ new Date( '<?=$date?>' )] = "<?=$season->season_name?>";
+			 
+    <?php } ?>
+	    $("<style> .season<?=$season->VX_aln_seasonID?> { color:#fffff !important;  background:<?=$season->season_color?> !important;} </style>").appendTo("head");
+    <?php } ?>  
+    //console.log(event);
+       
+        jQuery('#calendar1').datepicker({		    
+           // changeMonth: true,
+           // changeYear: true,
+            numberOfMonths: [3,4],            			
+		    beforeShowDay: function( date ) {					
                 var highlight = eventDates[date];
-                if( highlight ) {
-                     return [true, "event", highlight];
+				var color = "";
+				var seasonid = season[highlight];
+                var season_name = name[highlight];				
+				console.log(season_name);
+				 if( highlight ) {                   
+					return [true,"season"+seasonid,season_name];								
                 } else {
-                     return [true, '', ''];
-                }
-             }
-        });
-		jQuery('#calendar2').datepicker({
-            beforeShowDay: function( date ) {
-                var highlight = eventDates[date];
-                if( highlight ) {
-                     return [true, "event", highlight];
-                } else {
-                     return [true, '', ''];
-                }
-             }
-        });
+                    return [true, '', ''];
+                }  
+				
+            }
+        }); 
+		
     });
+	
+	
 </script>
 <script>
 $(document).ready(function() {	 

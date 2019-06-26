@@ -26,7 +26,7 @@ class Myhome extends MY_Controller {
 		return $rules;
 	}
    
-    public function recaptcha() { 
+   public function recaptcha() { 
         if($this->request->post){
 			//$recaptcha = $this->input->post('g-recaptcha-response');
 			if (!empty($recaptcha)) {

@@ -4108,13 +4108,18 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
     font-weight: normal;
     opacity: .75;
 }
-.event a {
-    background-color: #5FBA7D !important;
-    color: #ffffff !important;
-}
+/* .event a {
+    background-color: red !important;
+    color: #ffffff ;
+} */
+
 .select2-container.select2-container-multi.form-control{
 	height:50px !important;
 	overflow:auto;
+}
+
+.calendar-box .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+	    background: none;
 }
 /*offer eligibility dtl page screen*/
 .off-dtl-page{
