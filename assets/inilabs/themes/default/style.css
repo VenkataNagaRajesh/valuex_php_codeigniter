@@ -4109,3 +4109,110 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 	height:50px !important;
 	overflow:auto;
 }
+/*offer eligibility dtl page screen*/
+.off-dtl-page{
+	color:#333;
+}
+.off-dtl-page .title-bar{
+	background: #ff6633;
+	padding: 5px 13px;
+	color: #fff;
+	font-weight: bold;
+	font-size: 13px;
+	border-radius: 4px;
+	border: solid 1px #999;
+}
+.off-dtl-page .off-comment{
+	background: #ff6633;
+	padding: 5px 13px;
+	border-radius: 4px;
+	border: solid 1px #999;
+}
+.off-dtl-page .off-comment p{
+	margin-bottom:0;
+	color:#fff !important;
+}
+.off-dtl-page .title-bar p{
+	margin-bottom:0;
+}
+.off-dtl-page .title-bar p span{
+	width: 30%;
+	display: inline-block;
+}
+.off-dtl-page .off-pass-dtls p{
+	margin:12px 0px;
+	color:#333;
+}
+.off-dtl-page .off-list ul{
+	padding-left: 0;
+	list-style: none;
+}
+.off-dtl-page .off-list ul li{
+	background: #ddd;
+	padding: 6px 15px;
+	border: solid 1px #999;
+	color: #333;
+	font-size: 13px;
+	border-radius: 4px;
+	margin: 12px 0px;
+}
+.off-dtl-page .off-list ul li span{
+	width: 25%;
+	display: inline-block;
+}
+.off-dtl-page .off-list p{
+	color:#333;
+	font-size:14px;
+}
+.off-dtl-page .off-list p span{
+	width:10%;
+	display:inline-block;
+}
+.off-dtl-page .off-list p b{
+	color:#ff6633;
+}
+.off-dtl-page .off-pass-dtls p span{
+	width: 30%;
+	display: inline-block;
+}
+.off-dtl-page .off-status{
+	border: solid 1px #999;
+	padding: 12px;
+	border-radius: 4px;
+	height: 334px;
+}
+.off-dtl-page .off-status p{
+	line-height: 25px;
+	padding: 13px;
+}
+.off-dtl-page .off-status p span{
+	width: 30%;
+	display: inline-block;
+	color:#ff6633;
+}
+.off-dtl-page .table-responsive{
+	border: solid 1px #999;
+	margin: 20px 0;
+	border-radius: 4px;
+}
+.off-dtl-page .table-responsive thead{
+	background: #ddd;
+}
+.off-dtl-page .table-responsive thead tr th{
+	padding: 6px 15px;
+	text-align:center;
+}
+.off-dtl-page .table-responsive tbody tr td .fa-check-circle{
+	color: #339933;
+}
+.off-dtl-page .table-responsive tbody tr td .fa-times-circle-o{
+	color: red;
+}
+.off-dtl-page .table-responsive tbody tr td{
+	padding: 6px 15px;
+	color:#ff6633;
+	text-align:center;
+}
+.off-dtl-page .table-responsive .table-hover{
+	width:100%;
+}

@@ -358,8 +358,9 @@ $sWhere $sOrder $sLimit";
 
 
 	}
-
-
-
+	public function offdtlpage() {		
+		$this->data["subview"] = "offer_eligibility/offdtlpage";
+		$this->load->view('_layout_main', $this->data);
+	}
 }
 
