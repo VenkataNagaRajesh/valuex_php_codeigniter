@@ -32,7 +32,7 @@ class Offer_table extends Admin_Controller {
                         $this->data["ofr"] = $this->offer_issue_m->getOfferDetailsById($id);
 
                         if($this->data["ofr"]) {
-                                $this->data["subview"] = "offer/view";
+                                $this->data["subview"] = "offer_table/view";
                                 $this->load->view('_layout_main', $this->data);
                         } else {
                                 $this->data["subview"] = "error";
@@ -225,11 +225,12 @@ $sQuery = "select  SQL_CALC_FOUND_ROWS
           );
 		$i = 0;
                 foreach ($rResult as $feed ) {
-			$feed->cnt = $i++;
+			$feed->cnt = ++$i;
 			$feed->avg_fare = $feed->bid_value;;
                         $feed->flight_date = date('d-m-Y',$feed->flight_date);
 			$feed->offer_date = date('d-m-Y',$feed->offer_date);
 			$feed->p_count = count(explode(',',$feed->p_list));
+			$feed->action = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
                                 $output['aaData'][] = $feed;
 
                 }

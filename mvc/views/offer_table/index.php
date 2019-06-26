@@ -106,6 +106,7 @@
                         <th class="col-lg-1"><?=$this->lang->line('cash')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('miles')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('offer_status')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('details')?></th>
 
                     </tr>
                  </thead>
@@ -164,6 +165,7 @@ $("#dep_to_date").datepicker();
                 {"data": "cash" },
 		{"data": "miles" },
 		{"data": "offer_status" },
+		{"data": "action" }
 
 				  ],			     
      dom: 'B<"clear">lfrtip',

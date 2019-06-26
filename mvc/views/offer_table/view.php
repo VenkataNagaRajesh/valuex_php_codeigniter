@@ -3,7 +3,7 @@
         <div class="col-sm-6">
             <ol class="breadcrumb">            
               <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>             
-              <li><a href="<?=base_url("offer_issue/index")?>"><?=$this->lang->line('menu_offer_issue')?></a></li>             
+              <li><a href="<?=base_url("offer_table/index")?>"><?=$this->lang->line('menu_offer_table')?></a></li>             
               <li class="active"><?=$this->lang->line('view')?></li>            
             </ol>
          </div>

@@ -6,7 +6,7 @@ $lang['slno'] = "#";
 $lang['action'] = "Action";
 $lang['active'] = 'Status';
 $lang['offer_information'] = 'Offer Information';
-
+$lang['details'] = 'View Details';
 $lang['offer_table'] = 'Offer Management';
 $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
