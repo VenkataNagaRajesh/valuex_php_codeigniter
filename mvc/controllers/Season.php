@@ -140,17 +140,17 @@ class Season extends Admin_Controller {
 	}
 	
 	public function index() {
-		 $this->data['headerassets'] = array(
+		  $this->data['headerassets'] = array(
                 'css' => array(
                         'assets/select2/css/select2.css',
-                        'assets/select2/css/select2-bootstrap.css',                       
-						'assets/datepicker/datepicker.css'
+                        'assets/select2/css/select2-bootstrap.css'                      
+						//'assets/datepicker/datepicker.css'
                 ),
                 'js' => array(
-                        'assets/select2/select2.js',                       
-						'assets/datepicker/datepicker.js'
+                        'assets/select2/select2.js'                       
+						//'assets/datepicker/datepicker.js'
                 )
-        );	
+        );	 
 		if(!empty($this->input->post('seasonID'))){
           $this->data['seasonID'] = $this->input->post('seasonID');
         } else {
@@ -179,11 +179,16 @@ class Season extends Admin_Controller {
         $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');
 		
         if($this->session->userdata('usertypeID') == 2){
-		   $this->data['seasonslist'] = $this->season_m->getSeasonsList($this->session->userdata('login_user_airlineID'));
+		   $this->data['seasonslist'] = $this->season_m->get_seasons(array("airlineID" => $this->session->userdata('login_user_airlineID')));
 		}else{
-		   $this->data['seasonslist'] = $this->season_m->getSeasonsList(); 
-		}		
-       
+		   $this->data['seasonslist'] = $this->season_m->get_seasons(); 
+		}  
+		   foreach($this->data['seasonslist'] as $season){
+             $season->ams_season_start_date = date('m/d/Y',$season->ams_season_start_date);
+		    $season->ams_season_end_date = date('m/d/Y',$season->ams_season_end_date);
+            $season->dates = $this->createDateRange($season->ams_season_start_date,$season->ams_season_end_date);		
+           }			
+       //print_r($this->data['seasonslist']); exit;
 		$this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 			if($usertypeID == 2){
 			  $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
@@ -192,6 +197,21 @@ class Season extends Admin_Controller {
 		   }
 		$this->data["subview"] = "season/index";
 		$this->load->view('_layout_main', $this->data);		
+	}
+	
+	function createDateRange($startDate, $endDate, $format = "m/d/Y"){
+		$begin = new DateTime($startDate);
+		$end = new DateTime($endDate);
+
+		$interval = new DateInterval('P1D'); // 1 Day
+		$dateRange = new DatePeriod($begin, $interval, $end);
+
+		$range = [];
+		foreach ($dateRange as $date) {
+			$range[] = $date->format($format);
+		}
+
+		return $range;
 	}
 
 	public function add() {
@@ -640,6 +660,8 @@ class Season extends Admin_Controller {
 			
            $season->orig_level_values = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$orig_level_values.'"><i class="fa fa-list"></i></a>';
 		   $season->dest_level_values = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$dest_level_values.'"><i class="fa fa-list"></i></a>';
+		   
+		   //$season->season_color = '<span style="background: '.$season->season_color.'"></span>';
 			
 			$output['aaData'][] = $season;				
 		}

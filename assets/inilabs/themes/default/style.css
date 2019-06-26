@@ -4060,11 +4060,35 @@ fieldset[disabled] .btn-vk.active {
 .btn.active span.glyphicon {				
 	opacity: 1;				
 }
-.event a {
-    background-color: #5FBA7D !important;
-    color: #ffffff !important;
-}
+/* .event a {
+    background-color: red !important;
+    color: #ffffff ;
+} */
+
 .select2-container.select2-container-multi.form-control{
 	height:50px !important;
 	overflow:auto;
+}
+.HighlightedGreen a
+  {
+       background-color : Green !important;
+       background-image :none !important;
+       color: White !important;
+       font-weight:bold !important;
+       font-size: 12pt;
+      }
+   .HighlightedYellow  a
+  {
+       background-color : Yellow  !important;
+       background-image :none !important;
+       color: White !important;
+       font-weight:bold !important;
+       font-size: 12pt;
+ }
+ .css-class-to-highlight a{
+       background: #5FBA7D !important;
+       color: #ffffff !important;
+   }
+.calendar-box .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+	    background: none;
 }
