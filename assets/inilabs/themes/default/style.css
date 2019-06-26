@@ -2132,6 +2132,9 @@ Component: timeline
 .callout.callout-info h4 {
   color: #3A87AD;
 }
+.table .odd .btn-danger, .table .even .btn-danger{
+	padding:1px 5px;
+}
 /*
     Component: alert
 ------------------------
@@ -3604,8 +3607,6 @@ fieldset[disabled] .btn-vk.active {
   border-radius: 3px;
   boder: 1px solid #F24E56;
 }
-
-
 .main-footer {
   background: #fff;
   padding: 15px;
@@ -3959,6 +3960,9 @@ fieldset[disabled] .btn-vk.active {
 	border-right:solid 3px #fff;
 }
 /*eer rules*/
+.eer .form-horizontal tbody > tr > td{
+	padding:12px 0;
+}
 .eer .form-horizontal h2{
 	font-size: 16px;
 	color: #ff6633;
@@ -3991,6 +3995,9 @@ fieldset[disabled] .btn-vk.active {
 .eer .form-horizontal .rule-box ul li{
 	font-weight:bold;
 	color:#333;
+}
+.eer .form-horizontal .rule-box .cabins{
+	margin-bottom:20px;
 }
 .eer .off-table{
 	background: #fff;
