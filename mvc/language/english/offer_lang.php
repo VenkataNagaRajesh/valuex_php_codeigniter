@@ -1,11 +1,11 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "Offer Management";
+$lang['panel_title'] = "Offer Issue Management";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
 $lang['active'] = 'Status';
-$lang['offer_information'] = 'Offer Information';
+$lang['offer_information'] = 'Offer Issue Information';
 
 $lang['offer_issue'] = 'Offer Issue';
 $lang['edit'] = 'Edit';
