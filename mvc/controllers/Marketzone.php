@@ -24,14 +24,6 @@ class Marketzone extends Admin_Controller {
 			),
 
 			array(
-                                'field' => 'market_name',
-                                'label' => $this->lang->line("market_name"),
-                                'rules' => 'trim|required|xss_clean|max_length[60]'
-                        ),
-
-
-
-			array(
                                 'field' => 'desc',
                                 'label' => $this->lang->line("desc"),
                                 'rules' => 'trim|xss_clean|max_length[200]'
@@ -85,6 +77,7 @@ class Marketzone extends Admin_Controller {
 	}
 
   public function unique_marketzonename() {
+	$id = $this->input->post("market_id");
                 $id = htmlentities(escapeString($this->uri->segment(3)));
                 if((int)$id) {
                         $marketzone = $this->marketzone_m->get_order_by_marketzone(array("market_name" => $this->input->post("market_name"), "market_id !=" => $id));
@@ -103,6 +96,8 @@ class Marketzone extends Admin_Controller {
                         return TRUE;
                 }
         }
+
+
 
 
 
@@ -196,12 +191,6 @@ class Marketzone extends Admin_Controller {
 		if($_POST) {
 
 			$market_id = $this->input->post("market_id");
-			if($market_id) {
-				unset($rules[0]);
-	
-			} else {
-				unset($rules[1]);
-			}
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
 			if ($this->form_validation->run() == FALSE) {

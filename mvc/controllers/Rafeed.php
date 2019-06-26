@@ -178,7 +178,7 @@ class Rafeed extends Admin_Controller {
 					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('marketing airline code',$import_header)],'12');
                                       $rafeed['operating_airline_code']= 
 					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('operating airline code',$import_header)],'12');
-					$season_id = $this->season_m->getSeasonForDateANDAirlineID($rafeed['departure_date'],$rafeed['operating_airline_code'],$rafeed['boarding_point'],$rafeed['off_point']);
+					$season_id = $this->season_m->getSeasonForDateANDAirlineID($rafeed['departure_date'],$rafeed['carrier'],$rafeed['boarding_point'],$rafeed['off_point']);
 				     $rafeed['season_id'] = $season_id; 
 					$rafeed['flight_number'] = substr($Row[array_search('flight number',$import_header)], 2);
                                       $rafeed['office_id'] = $Row[array_search('officeid',$import_header)];
