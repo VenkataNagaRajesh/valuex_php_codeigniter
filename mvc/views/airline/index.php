@@ -23,7 +23,12 @@
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('download_format')?>
                   </a>
-				 <?php } ?>
+				  &nbsp;&nbsp;
+				   <a href="<?php echo base_url('airline/addFlights') ?>">
+                      <i class="fa fa-plus"></i>
+                      <?=$this->lang->line('add_flights')?>
+                  </a>
+				  <?php } ?>
               </h5>
 			<!--  <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 
