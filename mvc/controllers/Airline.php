@@ -33,6 +33,51 @@ class Airline extends Admin_Controller {
 		return $rules;
 	}
 	
+	protected function flightrules() {
+		$rules = array(
+		   array(
+				'field' => 'airlineID', 
+				'label' => $this->lang->line("airline_name"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_valAirline'
+			),
+			array(
+				'field' => 'flights', 
+				'label' => $this->lang->line("airline_flights"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_valFlights'
+			)	
+			
+		);
+		return $rules;
+	}
+	
+	
+	function valAirline($post_string){		
+	  if($post_string == '0'){
+		 $this->form_validation->set_message("valAirline", "%s is required");
+		  return FALSE;
+	   }else{
+		  return TRUE;
+	   }
+	}
+	
+	function valFlights($post_string){
+	  if(empty($post_string)){
+		$this->form_validation->set_message("valFlights", "%s is Required");
+		return FALSE;	
+	  } else {
+		  $flights_array = explode(',',$post_string); 
+		   foreach($flights_array as $flights_data){  
+			  if(preg_match('/([a-z]+)(\d+)-[a-z]+(\d+)/i', $flights_data) || preg_match('/(\d+)-(\d+)/', $flights_data) || preg_match('/^(\d+)/', $flights_data) || preg_match('/([a-z]+)(\d+)$/i', $flights_data) || preg_match('/([a-z]+)(\d+)([a-z])/i', $flights_data)){
+				  
+			  } else {
+				$this->form_validation->set_message("valFlights", "%s Format Not Matched");
+				return FALSE;  
+			 }
+		  }
+		   return TRUE;
+	  }	   
+	}
+	
 	public function unique_name($post_string) {
       $id = htmlentities(escapeString($this->uri->segment(3)));
       if((int)$id) {
@@ -154,6 +199,71 @@ class Airline extends Admin_Controller {
 			$this->data["subview"] = "error";
 			$this->load->view('_layout_main', $this->data);
 		}
+	}
+	
+	public function addFlights(){
+		$this->data['headerassets'] = array(
+			'css' => array(
+				'assets/select2/css/select2.css',
+				'assets/select2/css/select2-bootstrap.css'
+			),
+			'js' => array(
+				'assets/select2/select2.js'
+			)
+		);
+		$this->data['id'] = htmlentities(escapeString($this->uri->segment(3)));
+		$this->data['airlinelist'] = $this->airline_m->getAirlinesData();
+		if($_POST) {	
+            $rules = $this->flightrules();
+		    $this->form_validation->set_rules($rules);
+		  if ($this->form_validation->run() == FALSE) { 
+		  	$this->data["subview"] = "airline/add";
+		  	$this->load->view('_layout_main', $this->data);			
+		  } else {				
+			 $flights_array = explode(',',$this->input->post('flights')); 
+			 foreach($flights_array as $flights_data){  	
+				$code =null;$from=null;$to=null; $flights = array();
+				   if(preg_match('/([a-z]+)(\d+)-[a-z]+(\d+)/i', $flights_data, $matches)){//AS1011-AS1020
+				   $code = $matches[1];
+				   $from = $matches[2];
+				   $to = $matches[3];						 								
+				 }elseif(preg_match('/(\d+)-(\d+)/', $flights_data, $matches)) {//1011-1020		   
+				   $from = $matches[1];
+				   $to = $matches[2];
+				   $code=null;						 
+				 }elseif(preg_match('/^(\d+)/', $flights_data, $matches)) {//1011
+				   $from = $matches[0];
+				   $to = $matches[0];
+				   $code=null; 
+				 }elseif(preg_match('/([a-z]+)(\d+)$/i', $flights_data, $matches)) {	//AS1011  
+					$code = $matches[1];							   
+					$from = $matches[2];
+					$to = $matches[2]; 	
+				 }elseif(preg_match('/([a-z]+)(\d+)([a-z])/i', $flights_data, $matches)) { //AS1011A
+					 $code = $matches[1];							   
+					 $from = $matches[2];
+					 $to = $matches[2]; $endcode = $matches[3];
+				 } else {			
+					$this->mydebug->airlines_log(" format not matched "); 
+				 }
+			
+				if(($from && $to) && $from<=$to && (strlen((string)$from) < 5) && (strlen((string)$to) < 5)){
+				 for($i=$from;$i<=$to;$i++){									
+					   $flights[] = $i; 									
+				 }
+                }                             						
+			    foreach($flights as $flight)  {	                      							  
+			     $id = $this->airports_m->checkData($flight,16,$this->input->post('airlineID'));	 
+			    }								
+			  }					
+			   $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+			   redirect(base_url("airline/index"));	
+           }						
+		 } else {
+			$this->data["subview"] = "airline/add";
+			$this->load->view('_layout_main', $this->data);
+		 }
+        		
 	}
 
 	public function upload(){
@@ -399,6 +509,7 @@ class Airline extends Admin_Controller {
 	  foreach($rResult as $airline){		 	
 		  if(permissionChecker('airline_edit')){ 			
 			$airline->action = btn_edit('airline/edit/'.$airline->vx_aln_data_defnsID, $this->lang->line('edit'));
+				
 		  }
 		  if(permissionChecker('airline_delete')){
 		   $airline->action .= btn_delete('airline/delete/'.$airline->vx_aln_data_defnsID, $this->lang->line('delete'));			 
@@ -406,7 +517,9 @@ class Airline extends Admin_Controller {
 		  if(permissionChecker('airline_view') ) {
 		    $airline->action .= btn_view('airline/view/'.$airline->vx_aln_data_defnsID, $this->lang->line('view'));
 		  }
-		    
+		  if(permissionChecker('airline_edit')){ 	
+		   $airline->action .= '<a href="'.base_url('airline/addFlights/'.$airline->vx_aln_data_defnsID).'" class="btn btn-warning btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Add Flights"><i class="fa fa-plus"></i></a>';
+		  }  	   
 			$status = $airline->active;
 			$airline->active = "<div class='onoffswitch-small' id='".$airline->vx_aln_data_defnsID."'>";
             $airline->active .= "<input type='checkbox' id='myonoffswitch".$airline->vx_aln_data_defnsID."' class='onoffswitch-small-checkbox' name='paypal_demo'";

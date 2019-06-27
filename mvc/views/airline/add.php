@@ -6,8 +6,8 @@
        
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li><a href="<?=base_url("usertype/index")?>"></i> <?=$this->lang->line('menu_usertype')?></a></li>
-            <li class="active"><?=$this->lang->line('menu_add')?> <?=$this->lang->line('menu_usertype')?></li>
+            <li><a href="<?=base_url("airline/index")?>"></i> <?=$this->lang->line('menu_airline')?></a></li>
+            <li class="active"><?=$this->lang->line('menu_add')?> <?=$this->lang->line('menu_airline')?></li>
         </ol>
     </div><!-- /.box-header -->
     <!-- form start -->
@@ -15,27 +15,49 @@
         <div class="row">
             <div class="col-sm-8">
                 <form class="form-horizontal" role="form" method="post">
-
                     <?php 
-                        if(form_error('usertype')) 
+                        if(form_error('airlineID')) 
                             echo "<div class='form-group has-error' >";
                         else     
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="usertype" class="col-sm-2 control-label">
-                            <?=$this->lang->line("usertype_usertype")?>
+					   <label for="airlineID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline")?><span class="text-red">*</span>
+                       </label>
+                        <div class="col-sm-6">
+                            <?php 
+                              $airlines[0]=$this->lang->line("select_airline");					
+							   foreach($airlinelist as $airline){
+								  $airlines[$airline->vx_aln_data_defnsID] = $airline->airline_name;
+							  } 
+							  echo form_dropdown("airlineID", $airlines,set_value("airlineID",$id), "id='airlineID' class='form-control hide-dropdown-icon select2'");
+							?>
+                        </div>
+						<span class="col-sm-4 control-label">
+                            <?php echo form_error('airlineID'); ?>
+                        </span>
+                    </div>
+					
+                    <?php 
+                        if(form_error('flights')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="flights" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_flights")?>
                         </label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="usertype" name="usertype" value="<?=set_value('usertype')?>" >
+                            <input type="text" class="form-control" id="flights" name="flights" value="<?=set_value('flights')?>" >
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('usertype'); ?>
+                            <?php echo form_error(flights); ?>
                         </span>
                     </div>
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
-                            <input type="submit" class="btn btn-success" value="<?=$this->lang->line("add_usertype")?>" >
+                            <input type="submit" class="btn btn-success" value="<?=$this->lang->line("add_flights")?>" >
                         </div>
                     </div>
 

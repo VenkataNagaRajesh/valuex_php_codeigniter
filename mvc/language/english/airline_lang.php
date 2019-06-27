@@ -30,3 +30,6 @@ $lang['airline_flights'] = 'Flight Numbers';
 $lang['airline_id'] = 'Airline ID';
 $lang['airline_flights_ids'] = "Flights ID's";
 $lang['download_format'] ='Upload Format';
+$lang['select_airline'] = 'Select Airline';
+$lang['airline'] = 'Airline';
+$lang['add_flights'] = 'Add Flights';

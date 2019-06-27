@@ -46,6 +46,11 @@ class Client extends Admin_Controller {
 				'rules' => 'trim|max_length[200]|xss_clean|callback_photoupload'
 			),
 			array(
+				'field' => 'mail_logo',
+				'label' => $this->lang->line("client_mail_logo"),
+				'rules' => 'trim|max_length[200]|xss_clean|callback_maillogoupload'
+			),
+			array(
 				'field' => 'username',
 				'label' => $this->lang->line("client_username"),
 				'rules' => 'trim|required|min_length[4]|max_length[40]|xss_clean|callback_lol_username'
@@ -121,6 +126,50 @@ class Client extends Admin_Controller {
 			}
 		}
 	}
+	
+	public function maillogoupload() {
+		$id = htmlentities(escapeString($this->uri->segment(3)));
+		$client = array();
+		if((int)$id) {
+			$client = $this->client_m->get_client($id);
+		}
+		$new_file = "defualt.png";
+		if($_FILES["mail_logo"]['name'] !="") {
+			$file_name = $_FILES["mail_logo"]['name'];
+			$random = rand(1, 10000000000000000);
+	    	$makeRandom = hash('sha512', $random.$this->input->post('username') . config_item("encryption_key"));
+			$file_name_rename = $makeRandom;
+            $explode = explode('.', $file_name);
+            if(count($explode) >= 2) {
+	            $new_file = $file_name_rename.'.'.end($explode);
+				$config['upload_path'] = "./uploads/images";
+				$config['allowed_types'] = "gif|jpg|png";
+				$config['file_name'] = $new_file;
+				$config['max_size'] = '1024';
+				$config['max_width'] = '3000';
+				$config['max_height'] = '3000';
+				$this->load->library('upload', $config);
+				if(!$this->upload->do_upload("mail_logo")) {
+					$this->form_validation->set_message("maillogoupload", $this->upload->display_errors());
+	     			return FALSE;
+				} else {
+					$this->upload_data['mail_logo'] =  $this->upload->data();
+					return TRUE;
+				}
+			} else {
+				$this->form_validation->set_message("maillogoupload", "Invalid file");
+	     		return FALSE;
+			}
+		} else {
+			if(count($client)) {
+				$this->upload_data['mail_logo'] = array('file_name' => $client->mail_logo);
+				return TRUE;
+			} else {
+				$this->upload_data['mail_logo'] = array('file_name' => $new_file);
+			return TRUE;
+			}
+		}
+	}
 
 	public function index() {
 		
@@ -179,6 +228,7 @@ class Client extends Admin_Controller {
 				$client["modify_userID"] = $this->session->userdata('loginuserID');
 				$client["active"] = $this->input->post("active");	
 				$client['photo'] = $this->upload_data['file']['file_name'];
+				$client['mail_logo'] = $this->upload_data['mail_logo']['file_name'];
 				//print_r($client); exit;
 				 $this->client_m->insert_client($client);
 			 }
@@ -194,10 +244,13 @@ class Client extends Admin_Controller {
 	public function edit() {
 		$this->data['headerassets'] = array(
 			'css' => array(
-				'assets/datepicker/datepicker.css'
+				'assets/datepicker/datepicker.css',
+				'assets/select2/css/select2.css',
+				'assets/select2/css/select2-bootstrap.css'
 			),
 			'js' => array(
-				'assets/datepicker/datepicker.js'
+				'assets/datepicker/datepicker.js',
+				'assets/select2/select2.js'
 			)
 		);
 
@@ -207,7 +260,7 @@ class Client extends Admin_Controller {
 			if($this->data['client']) {
 				$this->data['airlinelist'] = $this->airline_m->getAirlinesData();	
 				$rules = $this->rules();
-				unset($rules[7]);
+				unset($rules[8]);
 				$this->form_validation->set_rules($rules);
 				if ($this->form_validation->run() == FALSE) {
 					$this->data["subview"] = "client/edit";
@@ -232,7 +285,7 @@ class Client extends Admin_Controller {
 					$client["create_userID"] = $this->session->userdata('loginuserID');					
 					$client["active"] = $this->input->post("active");	
 					$client['photo'] = $this->upload_data['file']['file_name'];
-					
+					$client['mail_logo'] = $this->upload_data['mail_logo']['file_name'];
 					 $this->client_m->update_client($client,$id);
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url("client/index"));
