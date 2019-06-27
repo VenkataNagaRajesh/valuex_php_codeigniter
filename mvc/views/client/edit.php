@@ -134,7 +134,39 @@
                         <span class="col-sm-4">
                             <?php echo form_error('photo'); ?>
                         </span>
-                    </div>				
+                    </div>
+
+                    <?php
+                        if(form_error('mail_logo'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="mail_logo" class="col-sm-2 control-label">
+                            <?=$this->lang->line("client_mail_logo")?>
+                        </label>
+                        <div class="col-sm-6">
+                           <div class="input-group mail-logo-preview">
+                                <input type="text" class="form-control mail-logo-preview-filename" disabled="disabled">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default mail-logo-preview-clear" style="display:none;">
+                                        <span class="fa fa-remove"></span>
+                                        <?=$this->lang->line('client_clear')?>
+                                    </button>
+                                    <div class="btn btn-success mail-logo-preview-input">
+                                        <span class="fa fa-repeat"></span>
+                                        <span class="mail-logo-preview-input-title">
+                                        <?=$this->lang->line('client_upload_mail_logo')?></span>
+                                        <input type="file" accept="image/png, image/jpeg, image/gif" name="mail_logo"/>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+
+                        <span class="col-sm-4">
+                            <?php echo form_error('mail_logo'); ?>
+                        </span>
+                    </div>					
 
                     <?php
                         if(form_error('username'))
@@ -250,4 +282,66 @@ $(function() {
         reader.readAsDataURL(file);
     });
 });
+
+$(document).on('click', '#close-preview', function(){
+    $('.mail-logo-preview').popover('hide');
+    // Hover befor close the preview
+    $('.mail-logo-preview').hover(
+        function () {
+           $('.mail-logo-preview').popover('show');
+           $('.content').css('padding-bottom', '100px');
+        },
+         function () {
+           $('.mail-logo-preview').popover('hide');
+           $('.content').css('padding-bottom', '20px');
+        }
+    );
+});
+
+$(function() {
+    // Create the close button
+    var closebtn = $('<button/>', {
+        type:"button",
+        text: 'x',
+        id: 'close-preview',
+        style: 'font-size: initial;',
+    });
+    closebtn.attr("class","close pull-right");
+    // Set the popover default content
+    $('.mail-logo-preview').popover({
+        trigger:'manual',
+        html:true,
+        title: "<strong>Preview</strong>"+$(closebtn)[0].outerHTML,
+        content: "There's no image",
+        placement:'bottom'
+    });
+    // Clear event
+    $('.mail-logo-preview-clear').click(function(){
+        $('.mail-logo-preview').attr("data-content","").popover('hide');
+        $('.mail-logo-preview-filename').val("");
+        $('.mail-logo-preview-clear').hide();
+        $('.mail-logo-preview-input input:file').val("");
+        $(".mail-logo-preview-input-title").text("<?=$this->lang->line('client_upload_mail_logo')?>");
+    });
+	
+	 // Create the preview image
+    $(".mail-logo-preview-input input:file").change(function (){
+        var img = $('<img/>', {
+            id: 'dynamic',
+            width:250,
+            height:200,
+            overflow:'hidden'
+        });
+        var file = this.files[0];
+        var reader = new FileReader();
+        // Set preview image into the popover data-content
+        reader.onload = function (e) {
+            $(".mail-logo-preview-input-title").text("<?=$this->lang->line('client_upload_mail_logo')?>");
+            $(".mail-logo-preview-clear").show();
+            $(".mail-logo-preview-filename").val(file.name);
+        }
+        reader.readAsDataURL(file);
+    });
+});
+
 </script>
