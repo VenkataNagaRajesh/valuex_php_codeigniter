@@ -516,7 +516,7 @@ $("#dest_all").click(function(){
 				alert($(status).text());
 			    $.each(seasoninfo['errors'], function(key, value) {
 					if(value != ''){					 
-                      $('#' + key).parent().addClass('has-error'); 
+                      			$('#' + key).parent().addClass('has-error'); 
 					}                  				
                 });				
 			}

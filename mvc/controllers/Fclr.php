@@ -114,6 +114,97 @@ class Fclr extends Admin_Controller {
         }
 
 
+
+
+        public function getFCLRData() {
+                $id = $this->input->post('fclr_id');
+                if((int)$id) {
+                        $fclr = $this->fclr_m->get_single_fclr(array('fclr_id' => $id));
+
+                }
+
+                        $this->output->set_content_type('application/json');
+                        $this->output->set_output(json_encode($fclr));
+
+
+        }
+
+
+
+ public function save() {
+                if($_POST) {
+                        $fclr_id = $this->input->post("fclr_id");
+                        $rules = $this->rules();
+                        $this->form_validation->set_rules($rules);
+                        if ($this->form_validation->run() == FALSE) {
+                                $json['status'] = validation_errors();
+                $json['errors'] = array(
+                'board_point' => form_error('board_point'),
+                'off_point' => form_error('off_point'),
+                'frequency' => form_error('frequency'),
+                'flight_number' => form_error('flight_number'),
+                                'carrier_code' => form_error('carrier_code'),
+                                'upgrade_from_cabin_type' => form_error('upgrade_from_cabin_type'),
+                                'upgrade_to_cabin_type' => form_error('upgrade_to_cabin_type'),
+                                'min' => form_error('min'),
+                                'max' => form_error('max'),
+				'avg' => form_error('avg'),
+                                'slider_start' => form_error('slider_start'),
+                );
+                        } else {
+
+
+				$array["boarding_point"] = $this->input->post("board_point");
+                                $array["off_point"] = $this->input->post("off_point");
+                                $array["carrier_code"] = $this->input->post("carrier_code");
+                                $array["flight_number"] = $this->input->post("flight_number");
+                                $array['frequency'] = $this->input->post("frequency");
+                                $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
+                                $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
+                                $array['season_id'] = $this->input->post("season_id");
+                                $exist_id = $this->fclr_m->checkFCLREntry($array);
+
+				$array['average'] = $this->input->post("avg");
+                                $array['min'] = $this->input->post("min");
+                                $array['max'] = $this->input->post("max");
+                                $array['slider_start'] = $this->input->post("slider_start");
+
+				if ( $fclr_id ) {
+					if ( $exist_id && $exist_id != $fclr_id )  {
+						$json['status'] = 'duplicate';	
+					} else {
+						$array["modify_date"] = time();
+                                        	$array["modify_userID"] = $this->session->userdata('loginuserID');
+                                        	$this->fclr_m->update_fclr($array,$fclr_id);
+                                        	$json['status'] = 'success';
+					}
+				
+
+				}  else {
+					if ( $exist_id ) {
+						$json['status'] = 'duplicate';
+					} else {
+						$array["create_date"] = time();
+                                        	$array["modify_date"] = time();
+                                        	$array["create_userID"] = $this->session->userdata('loginuserID');
+                                         	$array["modify_userID"] = $this->session->userdata('loginuserID');
+                                        	$this->fclr_m->insert_fclr($array);
+                                        	$json['status'] = 'success';
+					}
+
+
+				}
+					}
+                } else {
+                        $json['status'] = "no data";
+                }
+
+                 $this->output->set_content_type('application/json');
+        	 $this->output->set_output(json_encode($json));
+        }
+
+
+
     public function add() {
        $this->data['headerassets'] = array(
                 'css' => array(
@@ -296,14 +387,14 @@ class Fclr extends Admin_Controller {
 		} else {
 		  $this->data['boarding_point'] = 0;
 		}
-		if(!empty($this->input->post('off_point'))){	
-	    	$this->data['off_point'] = $this->input->post('off_point');
+		if(!empty($this->input->post('soff_point'))){	
+	    	$this->data['off_point'] = $this->input->post('soff_point');
 		} else {
 		    $this->data['off_point'] = 0;
 		}
 
-               if(!empty($this->input->post('flight_number'))){       
-                 $this->data['flight_number'] = $this->input->post('flight_number');
+               if(!empty($this->input->post('sflight_number'))){       
+                 $this->data['flight_number'] = $this->input->post('sflight_number');
                 } 
 
                 if(!empty($this->input->post('end_flight_number'))){    
@@ -320,33 +411,44 @@ class Fclr extends Admin_Controller {
                 }
 
 
-		if(!empty($this->input->post('from_cabin'))){       
-                   $this->data['from_cabin'] = $this->input->post('from_cabin');
+		if(!empty($this->input->post('smarket'))){       
+                   $this->data['smarket'] = $this->input->post('smarket');
                 } else {
-                  $this->data['from_cabin'] = 0;
+                  $this->data['smarket'] = 0;
                 }
 
 
-                if(!empty($this->input->post('to_cabin'))){    
-                $this->data['to_cabin'] = $this->input->post('to_cabin');
+                if(!empty($this->input->post('dmarket'))){    
+                $this->data['dmarket'] = $this->input->post('dmarket');
                 } else {
-                    $this->data['to_cabin'] = 0;
+                    $this->data['dmarket'] = 0;
                 }
 
 
-		
+		 if(!empty($this->input->post('sfrequency'))){
+                          $this->data['frequency'] = $this->input->post('sfrequency');
+                } else {
+                         $this->data['day'] = 0;
+                }
+
+
+           $this->data['seasons'] = $this->season_m->getSeasonsList();
+
 
 		$this->data['country'] = $this->rafeed_m->getCodesByType('2');
 		$this->data['city'] = $this->rafeed_m->getCodesByType('5');
 		$this->data['airlines'] = $this->rafeed_m->getCodesByType('12');
-		$this->data['airport'] = $this->rafeed_m->getCodesByType('1');
-		$this->data['cabin'] = $this->rafeed_m->getCodesByType('13');
-		$this->data['flights'] = $this->rafeed_m->getNamesByType('16');
-		
+		$this->data['airports'] = $this->rafeed_m->getCodesByType('1');
+		$this->data['cabins'] = $this->rafeed_m->getCodesByType('13');
+		$this->data['marketzones'] = $this->marketzone_m->getMarketzones();
+		//$this->data['flights'] = $this->rafeed_m->getNamesByType('16');
+		$this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14'); 
 		$this->data["subview"] = "fclr/index";
 		$this->load->view('_layout_main', $this->data);
 	}
 	
+
+
 
 
     function server_processing(){		
@@ -439,28 +541,37 @@ class Fclr extends Admin_Controller {
                         }
 
 
-	/*		if(!empty($this->input->get('depStartDate'))){
+			if(!empty($this->input->get('depStartDate'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'departure_date >= '. strtotime($this->input->get('depStartDate'));
                         }
                         if(!empty($this->input->get('depEndDate'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'departure_date <= '.  strtotime($this->input->get('depEndDate'));
-                        }*/
-			if(!empty($this->input->get('fromCabin'))){
-                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'from_cabin = '. $this->input->get('fromCabin');
                         }
-                        if(!empty($this->input->get('toCabin'))){
+
+			
+		      if(!empty($this->input->get('frequency') )){
+				  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'fc.frequency = '.$this->input->get('frequency');
+
+                        }
+
+
+			if(!empty($this->input->get('smarket'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'smap.market_id = '. $this->input->get('smarket');
+                        }
+                        if(!empty($this->input->get('dmarket'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'to_cabin = '.  $this->input->get('toCabin');
+                                $sWhere .= 'dmap.market_id = '.  $this->input->get('dmarket');
                         }
 
 
 			
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS fclr_id,boarding_point, dai.code as carrier_code , off_point, season_id,flight_number, concat(fca.aln_data_value,' (',fca.code,')') as fcabin, 
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code as carrier_code , off_point, season_id,flight_number, concat(fca.aln_data_value,' (',fca.code,')') as fcabin, 
             concat(tca.aln_data_value,' (',tca.code,')') as tcabin, CONCAT(dfre.aln_data_value,' (',dfre.code,')') as day_of_week , fc.active,
             min,max,average,slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point
@@ -471,6 +582,8 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS fclr_id,boarding_point, dai.code as carri
 		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency)
 		     LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin)
                      LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin)
+		    INNER JOIN VX_market_airport_map smap on (smap.airport_id = fc.boarding_point ) 
+		     INNER  JOIN VX_market_airport_map dmap on (dmap.airport_id = fc.off_point)
 
 $sWhere $sOrder $sLimit";
 
@@ -488,9 +601,9 @@ $sWhere $sOrder $sLimit";
 		foreach ($rResult as $feed ) {
 			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
 			$feed->day_of_week = ($feed->day_of_week)? ($feed->day_of_week):"NA";
-			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
+			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip"  data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
 			 $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
-                        $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
+                        $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip"  data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
 
 			
 			if ( $feed->season_id > 0 ) {
@@ -505,7 +618,8 @@ $sWhere $sOrder $sLimit";
 			}
 
                   if(permissionChecker('fclr_edit')){
-                        $feed->action = btn_edit('fclr/edit/'.$feed->fclr_id, $this->lang->line('edit'));
+
+			 $feed->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_fclr"  data-placement="top" onclick="editfclr('.$feed->fclr_id.')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></a>';
                   }
 		
                   if(permissionChecker('fclr_delete')){
