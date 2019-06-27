@@ -14,6 +14,7 @@ class Offer_table extends Admin_Controller {
 		$this->load->model("season_m");
 		$this->load->model("marketzone_m");
 		$this->load->model("fclr_m");
+		
 		$this->load->library('email');
 		$this->load->model('invfeed_m');
 		$this->load->model("reset_m");
@@ -63,6 +64,78 @@ class Offer_table extends Admin_Controller {
 	}
 
 
+function processbid() {
+$offer_id = htmlentities(escapeString($this->uri->segment(3)));
+$flight_number = htmlentities(escapeString($this->uri->segment(4)));
+$status = htmlentities(escapeString($this->uri->segment(5)));
+ 
+$this->data['siteinfos'] = $this->reset_m->get_site();
+  $passenger_data = $this->offer_issue_m->getPassengerData($offer_id,$flight_number);
+$namelist = explode(',',$passenger_data->passengers);
+                        $emails_list =  explode(',',$passenger_data->emails);
+
+                        $passenger_cnt =  count($namelist);
+if( $status == 'accept' ) {
+//accept 
+$bid_status = 'bid_accepted';
+$msg_txt = "Bid is accepted";
+} else if ( $status == 'reject' ) { 
+$bid_status = 'bid_cancel';	
+$msg_txt = 'Bid is rejected';
+	
+} else {
+	$this->session->set_flashdata('error', 'No Action Status');
+        redirect(base_url("offer_table/view/".$offer_id));
+
+}
+
+                                                                                                 $message = '
+        <html>
+        <body>
+        <div style="max-width: 800px; margin: 0; padding: 30px 0;">
+        <table width="80%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+<td width="5%"></td>
+        <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
+<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
+ ' .$msg_txt.'<br />
+<br />
+<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
+<br />
+PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+
+<br />
+<br />
+<br />
+</td>
+</tr>
+</table>
+
+</div>
+</body>
+</html>
+';
+
+  $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+//                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                         $this->email->to($emails_list[0]);
+                         $this->email->subject($msg_txt . " For Flight: " . $flight_number);
+                        $this->email->message($message);
+                        $this->email->send();
+
+                         $array = array();
+                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
+                        $array["modify_date"] = time();
+                        $array["modify_userID"] = $this->session->userdata('loginuserID');
+
+                        // update extension table with new status
+                        $p_list = explode(',',$passenger_data->p_list);
+                        $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+		 	 $this->session->set_flashdata('success', $msg_txt);
+                            redirect(base_url("offer_table/view/".$offer_id));
+
+}
 	
  function server_processing(){
                 $userID = $this->session->userdata('loginuserID');
@@ -174,40 +247,43 @@ class Offer_table extends Admin_Controller {
 
 
 
- 
-$sQuery = "select  SQL_CALC_FOUND_ROWS  
-			MainSet.offer_id, MainSet.offer_date, SubSet.flight_date ,MainSet.flight_number , 
-			SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
-			MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, SubSet.offer_status  
+$sQuery = " select  SQL_CALC_FOUND_ROWS  
+                        MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
+                        SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
+                        MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, SubSet.offer_status  
 
-		FROM ( 
-				select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, 
-				tcab.aln_data_value as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  
-				from  
-					VX_aln_offer_ref oref 
-					INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id) 
-					LEFT JOIN vx_aln_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13)
-					INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref 
-							and pf.flight_number = bid.flight_number) 
-		     ) as MainSet 
+                FROM ( 
+                                select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, 
+                                tcab.aln_data_value as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  
+                                from  
+                                        VX_aln_offer_ref oref 
+                                        INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id) 
+                                        LEFT JOIN vx_aln_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13)
 
-			
-			INNER JOIN (
-					select  flight_number,group_concat(distinct fqtv) as fqtv ,
-						group_concat(distinct dep_date) as flight_date  ,
-						pnr_ref,group_concat(first_name, ' ' , last_name) as p_list , 
-						group_concat(distinct cab.aln_data_value) as from_cabin  , fc.code as from_city, tc.code as to_city, 
-						group_concat(distinct bs.aln_data_value) as offer_status  
-					from VX_aln_daily_tkt_pax_feed pf1 
-					LEFT JOIN VX_aln_dtpf_ext pext1 on (pext1.dtpf_id = pf1.dtpf_id )  
-					LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext1.booking_status AND bs.aln_data_typeID = 20) 
-					LEFT JOIN vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
-					LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
-					LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13)
-					where pf1.is_processed = 1 AND  bs.alias != 'excl'  ". $sWhere. " 
-					group by pnr_ref, from_city, to_city,flight_number
-		   ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number) 
-		$sOrder $sLimit";
+                                        INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref 
+                                                        and pf.flight_number = bid.flight_number) 
+                     ) as MainSet 
+
+                        
+                        INNER JOIN (
+                                        select  flight_number,group_concat(distinct fqtv) as fqtv ,
+                                                group_concat(distinct dep_date) as flight_date  ,
+                                                pnr_ref,group_concat(first_name, ' ' , last_name) as p_list , 
+                                                group_concat(distinct cab.aln_data_value) as from_cabin  , fc.code as from_city, tc.code as to_city, 
+                                                group_concat(distinct bs.aln_data_value) as offer_status , car.code as carrier 
+                                        from VX_aln_daily_tkt_pax_feed pf1 
+                                        LEFT JOIN VX_aln_dtpf_ext pext1 on (pext1.dtpf_id = pf1.dtpf_id )  
+                                        LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext1.booking_status AND bs.aln_data_typeID = 20) 
+                                        LEFT JOIN vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
+                                        LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
+                                        LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13)
+                                        LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
+                                        where pf1.is_processed = 1 AND  bs.alias != 'excl'  ". $sWhere. " 
+                                        group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
+                   ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number) 
+$sOrder $sLimit";
+
+
 
 
 /*$sQuery = "   select ofr.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name SEPARATOR '<br>')  as list from VX_aln_offer_ref ofr  LEFT JOIN  VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = ofr.pnr_ref)  group by ofr.pnr_ref";

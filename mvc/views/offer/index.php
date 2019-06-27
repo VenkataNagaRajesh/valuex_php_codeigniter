@@ -17,7 +17,7 @@
                       <?=$this->lang->line('generate_offer_eligibility')?>
                   </a>
 		  &nbsp;&nbsp;			
-		   <a href="<?php echo base_url('offer_issue') ?>">
+		   <a href="<?php echo base_url('offer_issue/run_offer_issue') ?>">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('offer_issue')?>
                   </a>

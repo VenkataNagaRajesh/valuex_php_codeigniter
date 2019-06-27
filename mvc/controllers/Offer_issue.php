@@ -52,7 +52,26 @@ class Offer_issue extends Admin_Controller {
         }
 
 	
-	public function index() {
+
+public function index() {
+$this->data['headerassets'] = array(
+                'css' => array(
+                        'assets/select2/css/select2.css',
+                        'assets/select2/css/select2-bootstrap.css',
+                                                'assets/datepicker/datepicker.css'
+                ),
+                'js' => array(
+                        'assets/select2/select2.js',
+                                                'assets/datepicker/datepicker.js'
+                )
+        );
+
+	$this->data["subview"] = "offer/index";
+                $this->load->view('_layout_main', $this->data);
+
+
+}
+	public function run_offer_issue() {
         $this->data['headerassets'] = array(
                 'css' => array(
                         'assets/select2/css/select2.css',
