@@ -26,6 +26,7 @@ $lang['board_point'] = 'Board Point';
 $lang['off_point'] = 'Off Point';
 $lang['from_cabin'] = 'From Cabin';
 $lang['to_cabin'] = 'To Cabin';
+$lang['frequency'] = 'Frequency';
 $lang['day_of_week'] = 'Frequency';
 $lang['days_to_departure'] = 'Days to Departure';
 $lang['departure_date'] = 'Departure Date';

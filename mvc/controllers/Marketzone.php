@@ -253,9 +253,6 @@ class Marketzone extends Admin_Controller {
 		$id = $this->input->post('market_id');
 		if((int)$id) {
            		$mktzone = $this->marketzone_m->get_single_marketzone(array('market_id' => $id));
-            		if($mktzone) {
-				$mktzone = $this->marketzone_m->get_single_marketzone(array('market_id' => $id));
-			 } 
 
 		}
 		 		

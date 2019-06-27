@@ -99,7 +99,7 @@
 					<br>
 					<input type="text" class="form-control" id="desc" name="desc" placeholder='description'  value="<?=set_value('market_name')?>" >
 						<span class="pull-right">
-					   <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savezone()">Save</a>
+					   <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savezone()">Add</a>
 
 						</span>
 					</div>
@@ -206,7 +206,7 @@
 							</table>
 						</div>
 						<div class="col-md-1">
-				 <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#tztable').dataTable().fnDestroy();;loaddatatable()">Filter</a>
+				 <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#tztable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
 						</div>
 					</div>
 				</div>
@@ -641,32 +641,35 @@ function savezone() {
     			},
 
 
-          success: function(data) {
-		var zoneinfo = jQuery.parseJSON(data);
-		var status = zoneinfo['status'];
-		newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
-		if (status == 'success' ) {
-			alert('Marketzone update success');
-			$("#tztable").dataTable().fnDestroy();
-			loaddatatable();
-			if (zoneinfo['has_reconf_perm'] && zoneinfo['reconfigure']) {
-				var link = $("<a>");
-               				link.attr("href", '<?php echo base_url('trigger') ?>');
-                			link.text("<?=$this->lang->line('generate_map_table')?>");
 
-				//var link = '<h2><a href='<?php echo base_url('trigger') ?>'>';
-				//	link  = link + '<i class="fa fa-plus"></i>';
-				//	link = link + linkalias;
-				//	link = link + '</a> </h2> <span class="pull-right"></span>';
-				$('#reconfigure').html(link);
-			}
+         success: function(data) {
+                var zoneinfo = jQuery.parseJSON(data);
+                var status = zoneinfo['status'];
+                newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
+                if (status == 'success' ) {
+                        if ( zoneinfo['action'] == 'add' ) {
+                                alert('Marketzone added successfully');
+                        } else if (zoneinfo['action'] == 'edit') {
+                                alert('Marketzone updated successfully');
+                        }
+                        $("#tztable").dataTable().fnDestroy();
+                        loaddatatable();
+                        if (zoneinfo['has_reconf_perm'] && zoneinfo['reconfigure']) {
+                                <?php
+                                        $link = '<h2><a href="'.base_url('trigger').'"> <i class="fa fa-plus"></i> '.$this->lang->line('generate_map_table').' </a></h2>';
 
-		} else {
-			alert(newstatus);
-		
-		}
+                                  ?>
 
-	  }
+                                $('#reconfigure').html('<?php echo $link?>');
+                        }
+
+                } else {
+                        alert(newstatus);
+
+                }
+
+          }
+
           });
 }
 

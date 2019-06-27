@@ -216,8 +216,7 @@
                 var highlight = eventDates[date];
 				var color = "";
 				var seasonid = season[highlight];
-                var season_name = name[highlight];				
-				console.log(season_name);
+                var season_name = name[highlight];					
 				 if( highlight ) {                   
 					return [true,"season"+seasonid,season_name];								
                 } else {
@@ -456,6 +455,22 @@ $("#dest_all").click(function(){
      }
 });
 
+  function form_reset(){    
+	  var $inputs = $('#season_form :input'); 
+	  $inputs.each(function (index)
+       {
+          $(this).val("");  
+       });
+	   $("#airlineID").removeAttr("selected");
+	   $('#airlineID').trigger('change');
+	   $("#orig_all").removeAttr("checked");
+	   $("#dest_all").removeAttr("checked");
+       $("#ams_orig_levelID").removeAttr("selected");
+	   $('#ams_orig_levelID').trigger('change');	   
+	   $("#ams_dest_levelID").removeAttr("selected");
+	   $('#ams_dest_levelID').trigger('change');	   
+  }
+
     function saveseason() {
       $.ajax({
           async: false,
@@ -477,15 +492,16 @@ $("#dest_all").click(function(){
          success: function(data) {
 			var seasoninfo = jQuery.parseJSON(data);
 			var status = seasoninfo['status'];			
-			if (status == 'success' ) {
+			if (status == 'success' ) {				
 				alert(status);
+				form_reset();
 				$("#seasonslist").dataTable().fnDestroy();
 				loaddatatable();
 			} else {				
 				alert($(status).text());
 			    $.each(seasoninfo['errors'], function(key, value) {
 					if(value != ''){					 
-                      $('#' + key).parent().addClass('has-error'); 
+                      			$('#' + key).parent().addClass('has-error'); 
 					}                  				
                 });				
 			}
