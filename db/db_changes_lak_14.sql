@@ -1,0 +1,1 @@
+alter table VX_aln_client add column mail_logo varchar(200) NOT NULL;
