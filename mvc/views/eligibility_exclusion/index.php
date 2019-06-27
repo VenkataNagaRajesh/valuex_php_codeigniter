@@ -156,7 +156,7 @@
 					<div class="col-md-9">
 						<ul>
 							<li>Rule Action<br>Flights to be considered upgrade offer</li>
-							<li>Cabin Exclusion</li>
+							<li style="margin-bottom:10em;">Cabin Exclusion</li>
 							<li>Cutoff time for offer acceptance</li>
 						</ul>
 					</div>
@@ -264,6 +264,38 @@
 						</div>
 						<div class="cabin-off">
 							<div class="btn-group" data-toggle="buttons">
+								<label class="btn btn-default active">
+									<input type="checkbox" autocomplete="off" checked>
+									<span class="glyphicon glyphicon-ok"></span>
+								</label>
+								<label class="btn btn-default active">
+									<input type="checkbox" autocomplete="off" checked>
+									<span class="glyphicon glyphicon-ok"></span>
+								</label>
+								<label class="btn btn-default active">
+									<input type="checkbox" autocomplete="off" checked>
+									<span class="glyphicon glyphicon-ok"></span>
+								</label>
+								<label class="btn btn-default active">
+									<input type="checkbox" autocomplete="off" checked>
+									<span class="glyphicon glyphicon-ok"></span>
+								</label>
+								<label class="btn btn-default active">
+									<input type="checkbox" autocomplete="off" checked>
+									<span class="glyphicon glyphicon-ok"></span>
+								</label>
+								<label class="btn btn-default active">
+									<input type="checkbox" autocomplete="off" checked>
+									<span class="glyphicon glyphicon-ok"></span>
+								</label>
+								<label class="btn btn-default active">
+									<input type="checkbox" autocomplete="off" checked>
+									<span class="glyphicon glyphicon-ok"></span>
+								</label>
+								<label class="btn btn-default active">
+									<input type="checkbox" autocomplete="off" checked>
+									<span class="glyphicon glyphicon-ok"></span>
+								</label>
 								<label class="btn btn-default active">
 									<input type="checkbox" autocomplete="off" checked>
 									<span class="glyphicon glyphicon-ok"></span>
