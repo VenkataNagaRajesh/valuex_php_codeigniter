@@ -4228,3 +4228,20 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 .off-dtl-page .table-responsive .table-hover{
 	width:100%;
 }
+.auto-gen {
+	margin: 35px 0 6px;
+}
+.auto-gen a{
+	background: #ff6633;
+	padding: 7px 15px;
+	color: #fff;
+	font-weight: bold;
+	border-radius: 4px;
+	border: solid 1px #999;
+	margin-right: 30px;
+}
+.table tbody  td .btn-custom{
+	background: none;
+	color: #333;
+	border: solid 1px #333;
+}

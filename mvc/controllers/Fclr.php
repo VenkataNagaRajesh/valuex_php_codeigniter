@@ -488,9 +488,9 @@ $sWhere $sOrder $sLimit";
 		foreach ($rResult as $feed ) {
 			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
 			$feed->day_of_week = ($feed->day_of_week)? ($feed->day_of_week):"NA";
-			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
+			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
 			 $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
-                        $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
+                        $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
 
 			
 			if ( $feed->season_id > 0 ) {

@@ -211,7 +211,7 @@
 	</div>
 	<div class="col-md-12 fclr-table">
 		<div id="hide-table" class="fclr-table-data">
-             <table id="rafeedtable" class="table table-striped table-bordered table-hover dataTable no-footer">
+             <table id="rafeedtable" class="table table-striped table-bordered dataTable no-footer">
                  <thead>
 					<tr>
 						<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
