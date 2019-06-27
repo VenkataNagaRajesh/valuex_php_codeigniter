@@ -299,7 +299,7 @@ class Season extends Admin_Controller {
 				'season_color' => form_error('season_color'),
 				'is_return_inclusive' => form_error('is_return_inclusive')
                 );				
-			} else {
+			} else {				
 				$array["season_name"] = $this->input->post("season_name");
 				$array["airlineID"] = $this->input->post("airlineID");
 				$array["ams_orig_levelID"] = $this->input->post("ams_orig_levelID");
@@ -325,7 +325,7 @@ class Season extends Admin_Controller {
 				 }			
 				
 			      // insert entry in trigger table for mapping table generation
-		
+		         
 				$tarray['table_name'] = 'VX_aln_season';
 				$tarray['create_date'] = time();
 				$tarray['modify_date'] = time();

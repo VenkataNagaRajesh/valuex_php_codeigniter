@@ -1,7 +1,7 @@
 <div class="seasons">
 	<p class="card-header" data-toggle="collapse" data-target="#seasonAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add Season" data-toggle="tooltip"  id='add_season_button'><i class="fa fa-plus"></i></button></p>
 	<div class="table-responsive col-md-12 collapse" id="seasonAdd">
-		<form class="form-horizontal" action="#">
+		<form class="form-horizontal" action="#" id="season_form">
 			<div class="col-md-8 col-md-offset-2">
 				<label class="control-label col-md-3">Season Name</label>
 				<div class="col-md-9">
@@ -145,7 +145,7 @@
 			<div class="col-md-12">
 				<p class="pull-right">
 					<a href="#" type="button" class="btn btn-danger" id='btn_txt' onclick="saveseason()">Save</a>
-					<a href="#" type="button" class="btn btn-danger">Cancel</a>
+					<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
 				</p>
 			</div>
 		</form>
@@ -247,8 +247,7 @@
                 var highlight = eventDates[date];
 				var color = "";
 				var seasonid = season[highlight];
-                var season_name = name[highlight];				
-				console.log(season_name);
+                var season_name = name[highlight];					
 				 if( highlight ) {                   
 					return [true,"season"+seasonid,season_name];								
                 } else {
@@ -487,6 +486,22 @@ $("#dest_all").click(function(){
      }
 });
 
+  function form_reset(){    
+	  var $inputs = $('#season_form :input'); 
+	  $inputs.each(function (index)
+       {
+          $(this).val("");  
+       });
+	   $("#airlineID").removeAttr("selected");
+	   $('#airlineID').trigger('change');
+	   $("#orig_all").removeAttr("checked");
+	   $("#dest_all").removeAttr("checked");
+       $("#ams_orig_levelID").removeAttr("selected");
+	   $('#ams_orig_levelID').trigger('change');	   
+	   $("#ams_dest_levelID").removeAttr("selected");
+	   $('#ams_dest_levelID').trigger('change');	   
+  }
+
     function saveseason() {
       $.ajax({
           async: false,
@@ -508,8 +523,9 @@ $("#dest_all").click(function(){
          success: function(data) {
 			var seasoninfo = jQuery.parseJSON(data);
 			var status = seasoninfo['status'];			
-			if (status == 'success' ) {
+			if (status == 'success' ) {				
 				alert(status);
+				form_reset();
 				$("#seasonslist").dataTable().fnDestroy();
 				loaddatatable();
 			} else {				
