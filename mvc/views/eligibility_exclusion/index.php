@@ -1,4 +1,5 @@
 <div class="eer">
+	<h2 class="title-tool-bar" style="color:#fff;">Eligibility Exclusion Rules</h2>
 	<p class="card-header" data-toggle="collapse" data-target="#eerAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add Rule" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="table-responsive col-md-12 collapse" id="eerAdd">
 		<div class="col-md-12"><h2>Rule Criteria</h2></div>

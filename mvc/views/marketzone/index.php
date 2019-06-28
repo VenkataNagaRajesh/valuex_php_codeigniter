@@ -1,5 +1,8 @@
 <div class="mzones">
-	<div class="col-md-12 card-header">
+	<div class="col-md-12">
+		<h2 class="title-tool-bar">Market Zones</h2>
+	</div>
+	<div class="col-md-12 card-hea">
 		<div class="col-md-12">
 			<p data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id='add_zone_button' class="btn btn-danger pull-right" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 		</div>
@@ -22,7 +25,9 @@
 				  </div>
 				 </div>
 			</div>
-			<div id="mytree" class="market-info-tree"></div>
+			<div class="col-md-12">
+				<div id="mytree" class="market-info-tree"></div>
+			</div>
 		</div>
 		<div class="col-md-8">
 		<form class="form-horizontal" role="form" method="post" id='add_zone' enctype="multipart/form-data">
@@ -388,8 +393,8 @@ var options = {
 
         // Symbols for expanded and collapsed nodes that have child nodes
         symbols: {
-            collapsed: '▶',
-            expanded: '▼'
+            collapsed: '+',
+            expanded: '-'
         },
 
         // these are the CSS class names used on various occasions. If you change these names, you also need to provide the corresponding CSS class

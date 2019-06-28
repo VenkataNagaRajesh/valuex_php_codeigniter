@@ -4079,7 +4079,12 @@ fieldset[disabled] .btn-vk.active {
 .off-elg .off-elg-table #hide-table{
 	overflow: auto;
 }
-
+/*tree code*/
+#mytree{
+	border: solid 1px #999;
+	margin: 12px 0;
+	padding: 7px;
+}
 div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
     display: none;
 }
@@ -4121,8 +4126,16 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
     cursor: pointer;
     margin-left: .25rem;
     border: 1px solid transparent;
+	color: #333;
+	font-weight: bold;
 }
-
+.title-tool-bar{
+	color: #fff;
+	font-weight: bold;
+	font-size: 18px;
+	background: #ff6633;
+	padding: 5px 15px;
+}
 .simpleTree-label:hover {
     font-weight: bold;
 }
