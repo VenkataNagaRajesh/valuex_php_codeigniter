@@ -1,123 +1,89 @@
 <div class="eer">
 	<p class="card-header" data-toggle="collapse" data-target="#eerAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add Rule" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="table-responsive col-md-12 collapse" id="eerAdd">
+		<div class="col-md-12"><h2>Rule Criteria</h2></div>
 		<form class="form-horizontal" action="#">
 			<div class="col-md-12">
-				<h2 class="col-md-2">Rule Criteria</h2>
-				<label class="control-label col-md-2">Exclusion Reason Name</label>
-				<div class="col-md-6">
-					<input type="text" class="form-control" id="desc" name="desc" value="<?=set_value('desc')?>" >
-				</div>
-			</div>
-			<div class="col-md-12">
-				<table class="table">
-					<thead>
-						<th>Origin</th>
-						<th>Destination</th>
-						<th>Carrier</th>
-						<th>Flight Effective Date</th>
-						<th>Flight Discontinue Date</th>
-						<th>Departure Start Time: HRS </th>
-						<th>Departure Start Time: Mins</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
+				<div class="form-group">
+					<div class="col-md-3">
+						<label class="control-label">Exclusion Reason Name</label>
+						<input type="text" placeholder="Enter Name" class="form-control" id="desc" name="desc" value="<?=set_value('desc')?>" >
+					</div>
+					<div class="col-md-3">
+						<label class="control-label">Origin & Destination</label>
+						<div class="col-md-6">
+							<?php
+								$marketzones['0'] = 'Select Origin';
+								ksort($marketzones);
+								echo form_dropdown("orig_market_id", $marketzones,set_value("orig_market_id"), "id='orig_market_id' class='form-control hide-dropdown-icon select2'");?>
+						</div>
+						<div class="col-md-6">
+							 <?php
+								$marketzones['0'] = 'Select Dest';
+								echo form_dropdown("dest_market_id", $marketzones,set_value("dest_market_id"), "id='dest_market_id' class='form-control hide-dropdown-icon select2'"); ?>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<label class="control-label">Carrier</label>
+						<?php
+							$carriers[0] = 'Select Carrier';
+							ksort($carriers);
+							  echo form_dropdown("carrier", $carriers,set_value("carrier"), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
+
+					</div>
+					<div class="col-md-3">
+						<label class="control-label">Flight Effective & Discontinue Date</label>
+						<div class="col-md-6">
+							<input type="text" placeholder="Effect Date" class="form-control" id="flight_efec_date" name="flight_efec_date" value="<?=set_value('flight_efec_date')?>" >
+						</div>
+						<div class="col-md-6">
+							<input type="text" class="form-control" placeholder="Disc Date" id="flight_disc_date" name="flight_disc_date" value="<?=set_value('flight_disc_date')?>" >
+						</diV>
+					</div>
+					<div class="col-md-3">
+						<label class="control-label">Departure Start Time: HRS & Mins</label>
+						<div class="col-md-6">
+							<?php
+								echo form_dropdown("flight_dep_start_hrs", $hrs,set_value("flight_dep_start_hrs"), "id='flight_dep_start_hrs' class='form-control hide-dropdown-icon select2'");?>
+						</div>
+						<div class="col-md-6">
+							 <?php
+							 echo form_dropdown("flight_dep_start_mins", $mins,set_value("flight_dep_start_mins"), "id='flight_dep_start_mins' class='form-control hide-dropdown-icon select2'"); ?>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<label class="control-label">Departure End Time: HRS & Mins</label>
+						<div class="col-md-6">
+							<?php
+								echo form_dropdown("flight_dep_end_hrs", $hrs,set_value("flight_dep_end_hrs"), "id='flight_dep_end_hrs' class='form-control hide-dropdown-icon select2'");?>
+						</div>
+						<div class="col-md-6">
+							 <?php
+								echo form_dropdown("flight_dep_end_mins", $mins,set_value("flight_dep_end_mins"), "id='flight_dep_end_mins' class='form-control hide-dropdown-icon select2'");?>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<label class="control-label">Flight Number Start & End</label>
+						<div class="col-md-6">
+							 <input type="text" class="form-control" placeholder="Start" id="flight_nbr_start" name="flight_nbr_start" value="<?=set_value('flight_nbr_start')?>" >
+						</div>
+						<div class="col-md-6">
+							 <input type="text" class="form-control" placeholder="End" id="flight_nbr_end" name="flight_nbr_end" value="<?=set_value('flight_nbr_end')?>" >
+						</div>
+					</div>
+					<div class="col-md-2">
+						<label class="control-label">Frequency</label>
+						<?php
+							echo form_multiselect("frequency[]", $days_of_week, set_value("frequency"), "id='frequency' class='form-control select2'");  ?>  
+					</div>
+					<div class="col-md-1">	
+						<label class="control-label" style="font-size:10px;padding:5px 3px;">Future Use</label>
 						 <?php
-                        $marketzones['0'] = 'Select Market';
-                        ksort($marketzones);
-                          echo form_dropdown("orig_market_id", $marketzones,set_value("orig_market_id"), "id='orig_market_id' class='form-control hide-dropdown-icon select2'");
-                                                   ?>
-
-							</td>
-							<td>
-
-	 <?php
-                          echo form_dropdown("dest_market_id", $marketzones,set_value("dest_market_id"), "id='dest_market_id' class='form-control hide-dropdown-icon select2'");
-                                                   ?>
-
-							</td>
-							<td>
-		<?php
-                        $carriers[0] = 'Select Carrier';
-                        ksort($carriers);
-                          echo form_dropdown("carrier", $carriers,set_value("carrier"), "id='carrier' class='form-control hide-dropdown-icon select2'");
-                                                   ?>
-
-							</td>
-							<td>
- <input type="text" class="form-control" id="flight_efec_date" name="flight_efec_date" value="<?=set_value('flight_efec_date')?>" >
-
-							</td>
-							<td>
-
- <input type="text" class="form-control" id="flight_disc_date" name="flight_disc_date" value="<?=set_value('flight_disc_date')?>" >
-
-							</td>
-							<td>
- <?php
-
-                                    echo form_dropdown("flight_dep_start_hrs", $hrs,set_value("flight_dep_start_hrs"), "id='flight_dep_start_hrs' class='form-control hide-dropdown-icon select2'");
-                                 ?>
-
-							</td>
-							<td>
-
-                <?php
-                                                    echo form_dropdown("flight_dep_start_mins", $mins,set_value("flight_dep_start_mins"), "id='flight_dep_start_mins' class='form-control hide-dropdown-icon select2'");
-
-                ?>
-
-							</td>
-						</tr>
-					</tbody>
-					<thead>
-						<th>Departure End Time: Hrs</th>
-						<th>Departure End Time: Mins</th>
-						<th>Flight Number Start</th>
-						<th>Flight Number End</th>
-						<th>Frequency</th>
-						<th>Future Use</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-<?php
-                                     echo form_dropdown("flight_dep_end_hrs", $hrs,set_value("flight_dep_end_hrs"), "id='flight_dep_end_hrs' class='form-control hide-dropdown-icon select2'");
-                                                   ?>
-
-							</td>
-							<td>
-   <?php
-                                     echo form_dropdown("flight_dep_end_mins", $mins,set_value("flight_dep_end_mins"), "id='flight_dep_end_mins' class='form-control hide-dropdown-icon select2'");
-                                                   ?>
-
-							</td>
-							<td>
- <input type="text" class="form-control" id="flight_nbr_start" name="flight_nbr_start" value="<?=set_value('flight_nbr_start')?>" >
-
-							</td>
-							<td>
-  <input type="text" class="form-control" id="flight_nbr_end" name="flight_nbr_end" value="<?=set_value('flight_nbr_end')?>" >
-
-							</td>
-							<td>
-<?php
-                 echo form_multiselect("frequency[]", $days_of_week, set_value("frequency"), "id='frequency' class='form-control select2'");
-
-     ?>   
-							</td>
-							<td>
- <?php
-                                                          $toggle[1] = "Yes";
-                                                          $toggle[0] = "No";
-                                                          echo form_dropdown("future_use", $toggle,set_value("future_use",1), "id='future_use' class='form-control hide-dropdown-icon'");
-                                                        ?>
-
-							</td>
-						</tr>
-					</tbody>
-				</table>
+							 $toggle[1] = "Yes";
+							  $toggle[0] = "No";
+							  echo form_dropdown("future_use", $toggle,set_value("future_use",1), "id='future_use' class='form-control hide-dropdown-icon'");?>
+					</div>
+				</div>
 			</div>
 			<div class="col-md-12">
 				<div class="rule-box">
@@ -129,106 +95,38 @@
 						</ul>
 					</div>
 					<div class="col-md-3">
-<!--						<p class="onoffswitch-small" id="1"><input id="myonoffswitch1" class="onoffswitch-small-checkbox" name="paypal_demo" checked="" type="checkbox"><label for="myonoffswitch1" class="onoffswitch-small-label"><span class="onoffswitch-small-inner"></span> <span class="onoffswitch-small-switch"></span> </label></p> -->
+						<!--<p class="onoffswitch-small" id="1"><input id="myonoffswitch1" class="onoffswitch-small-checkbox" name="paypal_demo" checked="" type="checkbox"><label for="myonoffswitch1" class="onoffswitch-small-label"><span class="onoffswitch-small-inner"></span> <span class="onoffswitch-small-switch"></span> </label></p> --> 
 						<div class="cabins">
-							<div class="btn-group" data-toggle="buttons">
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off">
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off">
-									<span>Y</span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span>W</span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span>C</span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span>F</span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-								<label class="btn btn-default active">
-									<input type="checkbox" autocomplete="off" checked>
-									<span class="glyphicon glyphicon-ok"></span>
-								</label>
-							</div>
+							<table class="table">
+								<tr>
+									<td></td>
+									<td>Y</td>
+									<td>P</td>
+									<td>C</td>
+									<td>F</td>
+								</tr>
+								<tr>
+									<td>Y</td>
+									<td class="block"></td>
+									<td><i class="fa fa-check"></i></td>
+									<td><i class="fa fa-check"></i></td>
+									<td><i class="fa fa-check"></i></td>
+								</tr>
+								<tr>
+									<td>P</td>
+									<td class="block"></td>
+									<td class="block"></td>
+									<td><i class="fa fa-check"></i></td>
+									<td><i class="fa fa-check"></i></td>
+								</tr>
+								<tr>
+									<td>C</td>
+									<td class="block"></td>
+									<td class="block"></td>
+									<td class="block"></td>
+									<td><i class="fa fa-check"></i></td>
+								</tr>
+							</table>
 						</div>
 					</div>
 				</div>
