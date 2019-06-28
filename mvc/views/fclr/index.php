@@ -10,7 +10,7 @@
 	<p class="card-header" data-toggle="collapse" data-target="#fclrAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add FCLR" data-toggle="tooltip" id='fclr_add_btn' ><i class="fa fa-plus"></i></button></p>
  <?php } ?>
 	<div class="col-md-12 fclr-table-add collapse" id="fclrAdd">
-		<form class="form-horizontal" action="#">
+		<form class="form-horizontal" action="#" id='fclr_add_form'>
 			<div class="col-md-12">
 				<table class="table">
 					<thead>
@@ -108,6 +108,7 @@
 				</table>
 				<div class="col-md-2 pull-right">
 					<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savefclr();">ADD FCLR</a>
+					<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
 				</div>
 			</div>
 		</form>
@@ -410,6 +411,7 @@ success: function(data) {
 			newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
                         if (status == 'success' ) {
                                 alert(status);
+				form_reset();
                                 $("#fclrtable").dataTable().fnDestroy();
                                 loaddatatable();
                         } else if (status == 'duplicate'){
@@ -495,6 +497,23 @@ $.ajax({
 
 
 <script>
+
+function form_reset(){    
+          var $inputs = $('#fclr_add_form :input'); 
+          $inputs.each(function (index)
+       {
+          $(this).val("");  
+       });
+
+           $("#board_point").val(0).trigger('change');
+           $("#off_point").val(0).trigger('change');
+           $("#season_id").val(0).trigger('change');
+           $("#carrier_code").val(0).trigger('change');
+           $("#frequency").val(0).trigger('change');
+           $("#upgrade_from_cabin_type").val(0).trigger('change');
+           $("#upgrade_to_cabin_type").val(0).trigger('change');
+  }
+
     $(document).ready(function(){
         // Add minus icon for collapse element which is open by default
         $(".collapse.show").each(function(){
