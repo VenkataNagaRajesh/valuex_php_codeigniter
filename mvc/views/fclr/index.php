@@ -1,5 +1,15 @@
 <div class="fclr-bar">
-	<!--<p class="card-header" data-toggle="collapse" data-target="#fclrAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add FCLR" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
+
+<a href="<?php echo base_url('fclr/generatedata') ?>">
+                      <i class="fa fa-upload"></i>
+                      <?=$this->lang->line('generate_fclr')?>
+                  </a>
+
+
+<?php  if(permissionChecker('fclr_add')) {  ?>
+	<p class="card-header" data-toggle="collapse" data-target="#fclrAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add FCLR" data-toggle="tooltip" id='fclr_add_btn' ><i class="fa fa-plus"></i></button></p>
+
+ <?php } ?>
 	<div class="col-md-12 fclr-table-add collapse" id="fclrAdd">
 		<form class="form-horizontal" action="#">
 			<div class="col-md-12">
@@ -16,30 +26,30 @@
 						<tr>
 							<td>
 								<?php
-									$airports['0'] = 'Select Board Point';
+									$airports['0'] = 'Board Point';
 									ksort($airports);
 									echo form_dropdown("board_point", $airports,set_value("board_point"), "id='board_point' class='form-control hide-dropdown-icon select2'");
                                 ?>
 							</td>
 							<td>
 								 <?php
-									$airports['0'] = 'Select Off Point';
+									$airports['0'] = 'Off Point';
 									ksort($airports);
 									echo form_dropdown("off_point", $airports,set_value("off_point"), "id='off_point' class='form-control hide-dropdown-icon select2'");
                                  ?>
 							</td>
 							<td>
 								<?php 
-									$seasons[0] = 'Select Seasons';
+									$seasons[0] = 'Seasons';
 									ksort($seasons);
 									echo form_dropdown("season_id", $seasons,set_value("season_id"), "id='season_id' class='form-control hide-dropdown-icon select2'");  
                                  ?>
 							</td>
 							<td>
 								 <?php
-									$carrier[0] = 'Select Carrier';
-									ksort($carrier);
-									echo form_dropdown("carrier_code", $carrier,set_value("carrier_code"), "id='carrier_code' class='form-control hide-dropdown-icon select2'");
+									$airlines[0] = 'Carrier';
+									ksort($airlines);
+									echo form_dropdown("carrier_code", $airlines,set_value("carrier_code"), "id='carrier_code' class='form-control hide-dropdown-icon select2'");
                                   ?>
 							</td>
 							<td>
@@ -47,9 +57,9 @@
 							</td>
 							<td>
 								<?php
-									$days[0] = 'Select Frequency';
-									ksort($days);
-									echo form_dropdown("frequency", $days, set_value("frequency"), "id='frequency' class='form-control hide-dropdown-icon select2'");
+									$days_of_week[0] = 'Frequency';
+									ksort($days_of_week);
+									echo form_dropdown("frequency", $days_of_week, set_value("frequency"), "id='frequency' class='form-control hide-dropdown-icon select2'");
 
 								?>  
 							</td>
@@ -67,7 +77,7 @@
 						<tr>
 							<td>
 								<?php
-									$cabins['0'] = 'Select From Cabin';
+									$cabins['0'] = 'From Cabin';
 									ksort($cabins);
 									echo form_dropdown("upgrade_from_cabin_type", $cabins,set_value("upgrade_from_cabin_type"), "id='upgrade_from_cabin_type' class='form-control hide-dropdown-icon select2'");
 
@@ -75,7 +85,7 @@
 							</td>
 							<td>
 								 <?php
-									$cabins['0'] = 'Select To Cabin';
+									$cabins['0'] = 'To Cabin';
 									ksort($cabins);
 									echo form_dropdown("upgrade_to_cabin_type", $cabins,set_value("upgrade_to_cabin_type"), "id='upgrade_to_cabin_type' class='form-control hide-dropdown-icon select2'");
 
@@ -93,16 +103,16 @@
 							<td>
 								<input type="text" class="form-control" id="slider_start" name="slider_start" value="<?=set_value('slider_start')?>" >
 							</td>
+                                        <input type="hidden" class="form-control" id="fclr_id" name="fclr_id"   value="" >
 						</tr>
 					</tbody>
 				</table>
 				<div class="col-md-2 pull-right">
-					<span><button type="submit" class="btn btn-danger" name="add" id="add">Add</button></span>
-					<span><button type="submit" class="btn btn-danger" name="add" id="add">Save</button></span>
+					<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savefclr();">ADD FCLR</a>
 				</div>
 			</div>
 		</form>
-	</div>-->
+	</div>
 	<div class="col-md-12 table-responsive">
 		<form class="form-horizontal" action="#">
 			<div class="col-md-12">
@@ -115,27 +125,25 @@
 						<tr>
 							<td>
 								<div class="col-md-6">
-									<?php $airport['0'] = 'Select Boarding Point';
-										ksort($airport);
-										echo form_dropdown("boarding_point", $airport,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
+<input type="text" class="form-control" placeholder="Enter Start range Flight Number" id="sflight_number" name="sflight_number" value="<?=set_value('sflight_number',$flight_number)?>" >
 
 								</div>
 								<div class="col-md-6">
-									<?php $airport['0'] = 'Select Off Point';
-										ksort($airport);
-										echo form_dropdown("off_point", $airport,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
+<input type="text" class="form-control" placeholder="Enter End range Flight number" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
 								</div>
 							</td>
 							<td>
 								<div class="col-md-6">
 									<div class="input-group">
-										<input type="text" class="form-control" placeholder="Enter Dep From date" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
+                            <input type="text" class="form-control" placeholder="Enter Dep From date" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
+
 										<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 									 </div>
 								</div>
 								<div class="col-md-6">
 									 <div class="input-group">
-										<input type="text" class="form-control" placeholder="Enter Dep To date" id="dep_to_date" name="dep_to_date" value="<?=set_value('dep_to_date',$dep_to_date)?>" >
+  <input type="text" class="form-control" placeholder="Enter Dep To date" id="dep_to_date" name="dep_to_date" value="<?=set_value('dep_to_date',$dep_to_date)?>" >
+
 										<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
 									 </div>
 								</div>
@@ -145,45 +153,46 @@
 				</table>
 				<table class="table">
 					<thead>
-						<th>City</th>
+						<th>Board/Off Point</th>
 						<th>Market</th>
 					</thead>
 					<tbody>
 						<tr>
 							<td>
 								<div class="col-md-6">
-									<select class="form-control" id="inc-level">
-										<option>Origin</option>
-										<option>2</option>
-										<option>3</option>
-										<option>4</option>
-									</select>
+ <?php
+                        $airports['0'] = 'Select Boarding Point';
+                        ksort($airports);
+
+                                   echo form_dropdown("boarding_point", $airports,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
+
 								</div>
 								<div class="col-md-6">
-									<select class="form-control" id="inc-level">
-										<option>Dest</option>
-										<option>2</option>
-										<option>3</option>
-										<option>4</option>
-									</select>
+<?php
+        $airports['0'] = 'Select Off Point';
+                        ksort($airports);
+
+                                   echo form_dropdown("soff_point", $airports,set_value("soff_point",$off_point), "id='soff_point' class='form-control hide-dropdown-icon select2'");    ?>
+
 								</div>
 							</td>
 							<td>
 								<div class="col-md-6">
-									<select class="form-control" id="inc-level">
-										<option>Origin</option>
-										<option>2</option>
-										<option>3</option>
-										<option>4</option>
-									</select>
+
+				<?php
+        $marketzones['0'] = 'Origin Market';
+                        ksort($marketzones);
+
+                                   echo form_dropdown("smarket", $marketzones,set_value("smarket",$smarket), "id='smarket' class='form-control hide-dropdown-icon select2'");    ?>
+
 								</div>
 								<div class="col-md-6">
-									<select class="form-control" id="inc-level">
-										<option>Dest</option>
-										<option>2</option>
-										<option>3</option>
-										<option>4</option>
-									</select>
+  <?php
+        $marketzones['0'] = 'Dest Market';
+                        ksort($marketzones);
+
+                                   echo form_dropdown("dmarket", $marketzones,set_value("dmarket",$dmarket), "id='dmarket' class='form-control hide-dropdown-icon select2'");    ?>
+
 								</div>
 							</td>	
 						</tr>
@@ -197,10 +206,13 @@
 						<tr>
 							<td>
 								<div class="col-md-6">
-									<input type="text" class="form-control" id="frequency" placeholder="Enter Frequency">
+<?php
+ echo form_dropdown("sfrequency", $days_of_week, set_value("sfrequency",$frequency), "id='sfrequency' class='form-control select2'");
+     ?>   
 								</div>
 								<div class="col-sm-2">
-									<button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+   <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+
 								</div>
 							</td>							
 						</tr>
@@ -211,7 +223,7 @@
 	</div>
 	<div class="col-md-12 fclr-table">
 		<div id="hide-table" class="fclr-table-data">
-             <table id="rafeedtable" class="table table-striped table-bordered dataTable no-footer">
+             <table id="fclrtable" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>
 					<tr>
 						<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
@@ -244,20 +256,25 @@
 	
 $("#dep_from_date").datepicker();
 $("#dep_to_date").datepicker();
+loaddatatable();
+});
 
-    $('#rafeedtable').DataTable( {
+
+function loaddatatable() {
+    $('#fclrtable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('fclr/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
-       aoData.push({"name": "flightNbr","value": $("#flight_number").val()},
+       aoData.push({"name": "flightNbr","value": $("#sflight_number").val()},
 		  {"name": "flightNbrEnd","value": $("#end_flight_number").val()},
                    {"name": "boardPoint","value": $("#boarding_point").val()},
-                   {"name": "offPoint","value": $("#off_point").val()},
+                   {"name": "offPoint","value": $("#soff_point").val()},
 		    {"name": "depStartDate","value": $("#dep_from_date").val()},
                    {"name": "depEndDate","value": $("#dep_to_date").val()},
-		  {"name": "fromCabin","value": $("#from_cabin").val()},
-                   {"name": "toCabin","value": $("#to_cabin").val()},
+			{"name": "frequency","value": $("#sfrequency").val()},
+		  {"name": "smarket","value": $("#smarket").val()},
+                   {"name": "dmarket","value": $("#dmarket").val()},
                   
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
@@ -291,10 +308,9 @@ $("#dep_to_date").datepicker();
     });
 	
 	
-  });
- 
+} 
   
-   $('#rafeedtable tbody').on('mouseover', 'tr', function () {
+   $('#fclrtable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
         html: true
@@ -303,7 +319,7 @@ $("#dep_to_date").datepicker();
   
   var status = '';
   var id = 0;
- $('#rafeedtable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
+ $('#fclrtable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");
@@ -362,8 +378,123 @@ $("#dep_to_date").datepicker();
           });
       }
   }); 
-$( ".select2" ).select2();
+$( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Frequency'});
  </script>
+
+<script>
+
+function savefclr() {
+$.ajax({
+          async: false,
+          type: 'POST',
+          url: "<?=base_url('fclr/save')?>",          
+                  data: {"board_point" :$('#board_point').val(),
+                         "off_point":$('#off_point').val(),
+                         "season_id":$('#season_id').val(),
+                         "carrier_code":$('#carrier_code').val(),
+			 "flight_number":$('#flight_number').val(),
+                         "frequency":$('#frequency').val(),
+                          "upgrade_from_cabin_type":$('#upgrade_from_cabin_type').val(),
+                          "upgrade_to_cabin_type":$('#upgrade_to_cabin_type').val(),
+                          "min":$('#min').val(),
+			  "max":$('#max').val(),
+                          "avg":$('#avg').val(),
+                          "slider_start":$('#slider_start').val(),
+                           "fclr_id":$('#fclr_id').val()},
+          dataType: "html",                     
+
+
+success: function(data) {
+
+                        var fclrinfo = jQuery.parseJSON(data);
+                        var status = fclrinfo['status'];
+			newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
+                        if (status == 'success' ) {
+                                alert(status);
+                                $("#fclrtable").dataTable().fnDestroy();
+                                loaddatatable();
+                        } else if (status == 'duplicate'){
+				alert('Duplicate Entry');
+			} else {                                
+                                alert($(status).text());
+                            $.each(fclrinfo['errors'], function(key, value) {
+                                        if(value != ''){                                         
+                                        $('#' + key).parent().addClass('has-error'); 
+                                        }                                               
+                });                             
+                        }
+             }
+
+          });
+}
+
+
+function editfclr(fclr_id) {
+
+                var isVisible = $( "#fclrAdd" ).is( ":visible" );
+
+                var isHidden = $( "#fclrAdd" ).is( ":hidden" );
+                if( isVisible == false ) {
+                        $( "#fclr_add_btn" ).trigger( "click" );
+                }       
+$.ajax({
+          async: false,
+          type: 'POST',
+          url: "<?=base_url('fclr/getFCLRData')?>",          
+                  data: {
+                           "fclr_id":fclr_id},
+          dataType: "html",                     
+          success: function(data) {
+                var fclrinfo = jQuery.parseJSON(data);
+                $('#btn_txt').text('Update FCLR');
+                $('#carrier_code').val(fclrinfo['carrier_code']);
+                $('#carrier_code').trigger('change');
+                $('#board_point').val(fclrinfo['boarding_point']);
+		$('#board_point').trigger('change');
+
+		 $('#off_point').val(fclrinfo['off_point']);
+                $('#off_point').trigger('change');
+
+		 $('#flight_number').val(fclrinfo['flight_number']);
+
+		  $('#season_id').val(fclrinfo['season_id']);
+                $('#season_id').trigger('change');
+
+
+                $('#frequency').val(fclrinfo['frequency']);
+                $('#frequency').trigger('change');
+
+		$('#upgrade_from_cabin_type').val(fclrinfo['from_cabin']);
+		$('#upgrade_from_cabin_type').trigger('change');
+
+		$('#upgrade_to_cabin_type').val(fclrinfo['to_cabin']);
+		$('#upgrade_to_cabin_type').trigger('change');
+
+
+		$('#min').val(fclrinfo['min']);
+		$('#max').val(fclrinfo['max']);
+		$('#avg').val(fclrinfo['average']);
+		$('#slider_start').val(fclrinfo['slider_start']);
+
+                var fclrid  = fclrinfo['fclr_id'];
+                $('#fclr_id').val(fclrid);
+
+
+
+
+        //      var info = JSON.stringify(zoneinfo);
+
+          }
+          });
+}
+
+
+
+
+
+</script>
+
+
 <script>
     $(document).ready(function(){
         // Add minus icon for collapse element which is open by default

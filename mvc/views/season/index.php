@@ -1,133 +1,108 @@
 <div class="seasons">
 	<p class="card-header" data-toggle="collapse" data-target="#seasonAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add Season" data-toggle="tooltip"  id='add_season_button'><i class="fa fa-plus"></i></button></p>
-	<div class="table-responsive col-md-12 collapse" id="seasonAdd">
-		<form class="form-horizontal" action="#" id="season_form">
-			<div class="col-md-8 col-md-offset-2">
-				<label class="control-label col-md-3">Season Name</label>
-				<div class="col-md-9">
-					<input type="text" class="form-control"  id="season_name" name="season_name" value="<?=set_value('season_name')?>">
+	<div class="col-md-12 season-add-box collapse" id="seasonAdd">
+		<form class="form-horizontal" action="#">
+			<div class="form-group">
+				<div class="row">
+					<div class="col-md-3 select-form">
+						<div class="col-md-12">
+							<input type="text" class="form-control"  placeholder="Enter Name" id="season_name" name="season_name" value="<?=set_value('season_name')?>">
+						</div>
+						<div class="col-md-12">
+							<?php
+								$airlinelist[0]=$this->lang->line("season_select_airline");
+								 foreach($airlines as $airline){
+									$airlinelist[$airline->vx_aln_data_defnsID] = $airline->airline_name;
+								  }							
+								echo form_dropdown("airlineID", $airlinelist,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'"); ?>
+						</div>
+					</div>
+					<div class="col-md-3 select-form">
+						<div class="col-md-12">
+							<?php
+								 $orglevels[0]=$this->lang->line("season_orig_level_select");
+								 foreach($types as $level){
+									 $orglevels[$level->vx_aln_data_typeID] = $level->alias;
+								 }							
+								echo form_dropdown("ams_orig_levelID", $orglevels,set_value("ams_orig_levelID"), "id='ams_orig_levelID' class='form-control hide-dropdown-icon select2'"); ?>
+						</div>
+						<div class="col-md-12">
+							<div class="col-md-10" style="padding:0;">
+								<select name="ams_orig_level_value[]" id="ams_orig_level_value" class="form-control select2" multiple="multiple">
+								</select>
+							</div>
+							<div class="col-md-2">
+								<input type="checkbox" id="orig_all" title="Select All" data-toggle="tooltip" data-placement="top">
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3 select-form">
+						<div class="col-md-12">
+							 <?php
+								 $destlevels[0]=$this->lang->line("season_dest_level_select");
+								 foreach($types as $level){
+									 $destlevels[$level->vx_aln_data_typeID] = $level->alias;
+								 }							
+							   echo form_dropdown("ams_dest_levelID", $destlevels,set_value("ams_dest_levelID"), "id='ams_dest_levelID' class='form-control hide-dropdown-icon select2'"); 
+							?>
+						</div>
+						<div class="col-md-12">
+							<div class="col-md-10" style="padding:0;">
+								<select name="ams_dest_level_value[]" id="ams_dest_level_value" class="form-control select2 col-md-10" multiple="multiple">
+							</select>	
+							</div>
+							<div class="col-md-2">
+								<input type="checkbox" id="dest_all" title="Select All" data-toggle="tooltip" data-placement="top">
+							</div>	
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="col-md-12">
+							<div class="input-group">
+								<input type="text" class="form-control" id="ams_season_start_date" name="ams_season_start_date" placeholder="Enter Dep From date" value="<?=set_value('ams_season_start_date')?>" >
+								<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="input-group">
+								<input type="text" class="form-control" id="ams_season_end_date" name="ams_season_end_date" placeholder="Enter Dep To date" value="<?=set_value('ams_season_end_date')?>" >
+								<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						<label class="control-label col-md-3">Color</label>
+						<div class="col-md-9">
+							<input type="color" class="form-control" id="season_color" name="season_color" value="<?=set_value('season_color')?>" >
+						</div>
+					</div>
+					<div class="col-md-4">
+						<label class="control-label col-md-5">Return Inclusive</label>
+						<div class="col-md-7">
+							<label class="radio-inline">
+								<input type="radio" name="is_return_inclusive" value="1" <?=set_value('is_return_inclusive')?> >Yes
+							</label>
+							<label class="radio-inline" style="margin-left: 0px;">
+								<input type="radio" name="is_return_inclusive" value="0"  <?=set_value('is_return_inclusive')?> >No
+							</label>
+							<input type="hidden" class="form-control" id="season_id" name="season_id"   value="" >	
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="col-md-12">
+							<p class="pull-right">
+								<a href="#" type="button" class="btn btn-danger" id='btn_txt' onclick="saveseason()">Save</a>
+								<a href="#" type="button" class="btn btn-danger">Cancel</a>
+							</p>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="col-md-12">
-				<table class="table table-bordered">
-					<thead>
-					    <th>Carrier</th>
-						<th>Origin Market</th>
-						<th>Destination Market</th>
-					</thead>
-					<tbody>
-						<tr>
-						    <td>
-							  <div class="col-md-12">
-								 <p>
-								   <span>Carrier</span>
-									 <?php
-							            $airlinelist[0]=$this->lang->line("season_select_airline");
-						                 foreach($airlines as $airline){
-							              $airlinelist[$airline->vx_aln_data_defnsID] = $airline->airline_name;
-						             	 }							
-						                 echo form_dropdown("airlineID", $airlinelist,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'"); 
-									 ?>
-								  </p>
-								</div>
-							</td>
-							<td>
-								<div class="col-md-6">
-									<p>
-										<span>Level</span>
-										<?php
-											 $orglevels[0]=$this->lang->line("season_orig_level_select");
-											 foreach($types as $level){
-												 $orglevels[$level->vx_aln_data_typeID] = $level->alias;
-											 }							
-										   echo form_dropdown("ams_orig_levelID", $orglevels,set_value("ams_orig_levelID"), "id='ams_orig_levelID' class='form-control hide-dropdown-icon select2'"); 
-										?>
-									</p>
-								</div>
-								<div class="col-md-6">
-									<p>
-										<span>Content</span>&nbsp; &nbsp; &nbsp; 
-										<span>
-											<input type="checkbox" id="orig_all" title="Select All" data-toggle="tooltip" data-placement="top">
-										</span>
-										<select name="ams_orig_level_value[]" id="ams_orig_level_value" class="form-control select2" multiple="multiple">
-						                </select>										
-									</p>
-								</div>
-							</td>
-							<td>
-								<div class="col-md-6">
-									<p>
-										<span>Level</span>
-										 <?php
-											 $destlevels[0]=$this->lang->line("season_dest_level_select");
-											 foreach($types as $level){
-												 $destlevels[$level->vx_aln_data_typeID] = $level->alias;
-											 }							
-										   echo form_dropdown("ams_dest_levelID", $destlevels,set_value("ams_dest_levelID"), "id='ams_dest_levelID' class='form-control hide-dropdown-icon select2'"); 
-										?>
-									</p>
-								</div>
-								<div class="col-md-6">
-									<p>
-										<span>Content</span>&nbsp; &nbsp; &nbsp; 
-										<span>
-											<input type="checkbox" id="dest_all" title="Select All" data-toggle="tooltip" data-placement="top">
-										</span>
-										<select name="ams_dest_level_value[]" id="ams_dest_level_value" class="form-control select2" multiple="multiple">
-						                </select>
-										
-									</p>
-								</div>
-							</td>							
-						</tr>
-					</tbody>
-					<thead>					    
-						<th>Date Range</th>
-						<th>Color</th>
-						<th>Return Inclusive</th>
-					</thead>
-					<tbody>
-						<tr>						   
-							<td>
-								<div class="col-md-6">
-									<p>
-										<span>Start Date</span>
-										<input type="text" class="form-control" id="ams_season_start_date" name="ams_season_start_date" value="<?=set_value('ams_season_start_date')?>" >
-									</p>
-								</div>
-								<div class="col-md-6">
-									<p>
-										<span>End Date</span>
-										<input type="text" class="form-control" id="ams_season_end_date" name="ams_season_end_date" value="<?=set_value('ams_season_end_date')?>" >
-									</p>
-								</div>
-							</td>
-							<td>
-							  <div class="col-md-12">
-								<p>
-								   <span>Color</span>
-								   <input type="color" class="form-control" id="season_color" name="season_color" value="<?=set_value('season_color')?>" >
-								</p> 
-							</td>
-							<td>
-								<label class="radio-inline">
-									<input type="radio" name="is_return_inclusive" value="1" <?=set_value('is_return_inclusive')?> >Yes
-								</label>
-								<label class="radio-inline" style="margin-left: 0px;">
-									<input type="radio" name="is_return_inclusive" value="0"  <?=set_value('is_return_inclusive')?> >No
-								</label>
-							</td>
-                            <input type="hidden" class="form-control" id="season_id" name="season_id"   value="" >							
-						</tr>
-					</tbody>
-				</table>
-			</div>
+			<hr>
 			<div class="col-md-8">
-				<div class="calendar-box">
-					<div id="calendar1" class="cal-box"></div>
-					<!--<div id="calendar2" class="col-md-5 cal-box"></div>-->
-				</div>
+				<div id="calendar1" class="cal-box"></div>
 			</div>
 			<div class="col-md-4">
 				<div class="season-highlight">
@@ -142,23 +117,17 @@
 					</p>
 				</div>
 			</div>
-			<div class="col-md-12">
-				<p class="pull-right">
-					<a href="#" type="button" class="btn btn-danger" id='btn_txt' onclick="saveseason()">Save</a>
-					<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
-				</p>
-			</div>
 		</form>
 	</div>
 	<div class="col-md-12 season-table">
-	     <h6 class="page-header">
+		<p>
 	      <?php if( isset ($reconfigure) && permissionChecker('season_reconfigure')) {?>
-                   <a href="<?php echo base_url('trigger/season_trigger') ?>">
+                   <a href="<?php echo base_url('trigger/season_trigger') ?>" class="btn btn-danger">
                        <i class="fa fa-plus"></i>
                        <?=$this->lang->line('generate_map_table')?>
                    </a>
            <?php } ?>
-		</h6>
+		</p>
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form">		   
 			<div class='form-group'>			 
 				<div class="col-sm-2">			   
@@ -532,7 +501,7 @@ $("#dest_all").click(function(){
 				alert($(status).text());
 			    $.each(seasoninfo['errors'], function(key, value) {
 					if(value != ''){					 
-                      $('#' + key).parent().addClass('has-error'); 
+                      			$('#' + key).parent().addClass('has-error'); 
 					}                  				
                 });				
 			}

@@ -44,7 +44,7 @@
 					<div class="col-md-2">
 						<p>Market Name</p>
 
-						<input type="text" class="form-control" id="market_name" name="market_name" value="<?=set_value('market_name')?>" >
+						<input type="text" class="form-control" placeholder='market name' id="market_name" name="market_name" value="<?=set_value('market_name')?>" >
 					</div>
 					<div class="col-md-2">
 						<p>Market Level</p>
@@ -100,7 +100,7 @@
 					<input type="text" class="form-control" id="desc" name="desc" placeholder='description'  value="<?=set_value('market_name')?>" >
 						<span class="pull-right">
 					   <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savezone()">Save</a>
-
+					  <a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
 						</span>
 					</div>
 				</div>
@@ -206,7 +206,7 @@
 							</table>
 						</div>
 						<div class="col-md-1">
-				 <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#tztable').dataTable().fnDestroy();;loaddatatable()">Filter</a>
+				 <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#tztable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
 						</div>
 					</div>
 				</div>
@@ -641,34 +641,57 @@ function savezone() {
     			},
 
 
-          success: function(data) {
-		var zoneinfo = jQuery.parseJSON(data);
-		var status = zoneinfo['status'];
-		newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
-		if (status == 'success' ) {
-			alert('Marketzone update success');
-			$("#tztable").dataTable().fnDestroy();
-			loaddatatable();
-			if (zoneinfo['has_reconf_perm'] && zoneinfo['reconfigure']) {
-				var link = $("<a>");
-               				link.attr("href", '<?php echo base_url('trigger') ?>');
-                			link.text("<?=$this->lang->line('generate_map_table')?>");
 
-				//var link = '<h2><a href='<?php echo base_url('trigger') ?>'>';
-				//	link  = link + '<i class="fa fa-plus"></i>';
-				//	link = link + linkalias;
-				//	link = link + '</a> </h2> <span class="pull-right"></span>';
-				$('#reconfigure').html(link);
-			}
+         success: function(data) {
+                var zoneinfo = jQuery.parseJSON(data);
+                var status = zoneinfo['status'];
+                newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
+                if (status == 'success' ) {
+                        if ( zoneinfo['action'] == 'add' ) {
+                                alert('Marketzone added successfully');
+                        } else if (zoneinfo['action'] == 'edit') {
+                                alert('Marketzone updated successfully');
+                        }
+			form_reset();
+                        $("#tztable").dataTable().fnDestroy();
+                        loaddatatable();
+                        if (zoneinfo['has_reconf_perm'] && zoneinfo['reconfigure']) {
+                                <?php
+                                        $link = '<h2><a href="'.base_url('trigger').'"> <i class="fa fa-plus"></i> '.$this->lang->line('generate_map_table').' </a></h2>';
 
-		} else {
-			alert(newstatus);
-		
-		}
+                                  ?>
 
-	  }
+                                $('#reconfigure').html('<?php echo $link?>');
+                        }
+
+                } else {
+                        alert(newstatus);
+
+                }
+
+          }
+
           });
 }
+function form_reset(){    
+          var $inputs = $('#add_zone :input'); 
+          $inputs.each(function (index)
+       {
+          $(this).val("");  
+       });
+
+           $("#airline_id").val(0);
+           $('#airline_id').trigger('change');
+	   $("#amz_level_id").val(0);
+           $('#amz_level_id').trigger('change');
+
+	    $("#amz_incl_id").val(0);
+           $('#amz_incl_id').trigger('change');
+	
+	  $("#amz_excl_id").val(0);
+           $('#amz_excl_id').trigger('change');
+  }
+
 
 
 function editzone(market_id) {
@@ -688,7 +711,6 @@ $.ajax({
           dataType: "html",                     
           success: function(data) {
                 var zoneinfo = jQuery.parseJSON(data);
-		$('#btn_txt').text('Update Marketzone');
 		$('#desc').val(zoneinfo['description']);
 		$('#airline_id').val(zoneinfo['airline_id']);
 		$('#airline_id').trigger('change');

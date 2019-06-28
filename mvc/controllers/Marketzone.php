@@ -78,7 +78,6 @@ class Marketzone extends Admin_Controller {
 
   public function unique_marketzonename() {
 	$id = $this->input->post("market_id");
-                $id = htmlentities(escapeString($this->uri->segment(3)));
                 if((int)$id) {
                         $marketzone = $this->marketzone_m->get_order_by_marketzone(array("market_name" => $this->input->post("market_name"), "market_id !=" => $id));
                         if(count($marketzone)) {
@@ -253,9 +252,6 @@ class Marketzone extends Admin_Controller {
 		$id = $this->input->post('market_id');
 		if((int)$id) {
            		$mktzone = $this->marketzone_m->get_single_marketzone(array('market_id' => $id));
-            		if($mktzone) {
-				$mktzone = $this->marketzone_m->get_single_marketzone(array('market_id' => $id));
-			 } 
 
 		}
 		 		
