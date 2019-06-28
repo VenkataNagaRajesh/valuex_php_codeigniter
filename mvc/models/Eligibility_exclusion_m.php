@@ -27,6 +27,16 @@ class Eligibility_exclusion_m extends MY_Model {
 		return TRUE;
 	}
 
+
+	function get_max_grp(){
+		$this->db->select('max(excl_grp) as cnt')->from('VX_aln_eligibility_excl_rules');
+		$query = $this->db->get();
+                $r = $query->row();
+
+                return $r->cnt;
+
+
+	}
 	function time_dropdown($val, $incre = 1) {
                 for($i=0;$i<$val;$i=$i+$incre){
                         if($i<10 && strlen($i)<2)
@@ -70,9 +80,23 @@ class Eligibility_exclusion_m extends MY_Model {
 		return $result;
 	}
 
+	function getDataForEditRule($grp_id) {
+
+	 $sql = "select  excl_grp, group_concat(df.code ,'-', dt.code  ) as cabins ,excl_reason_desc, orig_market_id ,dest_market_id ,flight_efec_date, flight_disc_date, flight_dep_start, flight_dep_end, flight_nbr_start, flight_nbr_end, carrier, frequency , future_use  from VX_aln_eligibility_excl_rules ex LEFT JOIN  vx_aln_data_defns df on (df.vx_aln_data_defnsID = ex.upgrade_from_cabin_type )  LEFT JOIN vx_aln_data_defns dt on (dt.vx_aln_data_defnsID = ex.upgrade_to_cabin_type )  where excl_grp = " . $grp_id. "  group by excl_reason_desc, orig_market_id ,dest_market_id ,flight_efec_date, flight_disc_date, flight_dep_start, flight_dep_end, flight_nbr_start, flight_nbr_end, carrier, frequency , future_use";
+		$result = $this->install_m->run_query($sql);
+		return $result[0];
+
+	}
+
 	function update_eligibility_rule($data, $id = NULL) {
 		parent::update($data, $id);
 		return $id;
+	}
+
+	function delete_data_bygrp($grp_id){
+		$this->db->where('excl_grp',$grp_id);
+                $this->db->delete('VX_aln_eligibility_excl_rules');
+                return;
 	}
 
 	public function delete_eligibility_rule($id){

@@ -1,8 +1,8 @@
 <div class="eer">
-	<p class="card-header" data-toggle="collapse" data-target="#eerAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add Rule" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
+	<p class="card-header" data-toggle="collapse" data-target="#eerAdd"><button type="button" id = 'rule_add_btn' class="btn btn-danger pull-right" data-placement="left" title="Add Rule" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="table-responsive col-md-12 collapse" id="eerAdd">
 		<div class="col-md-12"><h2>Rule Criteria</h2></div>
-		<form class="form-horizontal" action="#">
+		<form class="form-horizontal" id='add_rule_form' action="#">
 			<div class="col-md-12">
 				<div class="form-group">
 					<div class="col-md-3">
@@ -74,6 +74,8 @@
 					<div class="col-md-2">
 						<label class="control-label">Frequency</label>
 						<?php
+
+
 							echo form_multiselect("frequency[]", $days_of_week, set_value("frequency"), "id='frequency' class='form-control select2'");  ?>  
 					</div>
 					<div class="col-md-1">	
@@ -83,6 +85,7 @@
 							  $toggle[0] = "No";
 							  echo form_dropdown("future_use", $toggle,set_value("future_use",1), "id='future_use' class='form-control hide-dropdown-icon'");?>
 					</div>
+
 				</div>
 			</div>
 			<div class="col-md-12">
@@ -96,35 +99,37 @@
 					</div>
 					<div class="col-md-3">
 						<!--<p class="onoffswitch-small" id="1"><input id="myonoffswitch1" class="onoffswitch-small-checkbox" name="paypal_demo" checked="" type="checkbox"><label for="myonoffswitch1" class="onoffswitch-small-label"><span class="onoffswitch-small-inner"></span> <span class="onoffswitch-small-switch"></span> </label></p> --> 
+
 						<div class="cabins">
 							<table class="table">
 								<tr>
 									<td></td>
 									<td>Y</td>
-									<td>P</td>
+									<td>W</td>
 									<td>C</td>
 									<td>F</td>
 								</tr>
 								<tr>
+<input type="hidden" class="form-control" id="excl_id" name="excl_id"   value="" >
 									<td>Y</td>
 									<td class="block"></td>
-									<td><i class="fa fa-check"></i></td>
-									<td><i class="fa fa-check"></i></td>
-									<td><i class="fa fa-check"></i></td>
+									<td><input type="checkbox" class="form-control"  name='cabin_list' value='Y-W'  > 												</td>
+									<td><input type="checkbox" class="form-control"  name='cabin_list' value='Y-C'  ></td>
+									<td><input type="checkbox" class="form-control"  name='cabin_list' value='Y-F'  ></td>
 								</tr>
 								<tr>
-									<td>P</td>
+									<td>W</td>
 									<td class="block"></td>
 									<td class="block"></td>
-									<td><i class="fa fa-check"></i></td>
-									<td><i class="fa fa-check"></i></td>
+									<td><input type="checkbox" class="form-control" name='cabin_list'  value='W-C'  ></td>
+									<td><input type="checkbox" class="form-control"  name='cabin_list' value='W-F'  ></td>
 								</tr>
 								<tr>
 									<td>C</td>
 									<td class="block"></td>
 									<td class="block"></td>
 									<td class="block"></td>
-									<td><i class="fa fa-check"></i></td>
+									<td><input type="checkbox" class="form-control"  name='cabin_list' value='C-F' ></td>
 								</tr>
 							</table>
 						</div>
@@ -133,8 +138,8 @@
 			</div>
 			<div class="col-md-12">
 				<span class="col-md-2">
-					<a href="#" type="button"  id='btn_txt' class="btn btn-danger">Save</a>
-					<a href="#" type="button"  id='btn_txt' class="btn btn-danger">Cancel</a>
+					<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="saverule();">ADD Rule</a>
+					<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
 				</span>
 			</div>
 		</form>
@@ -142,10 +147,7 @@
 	<div class="col-sm-12 off-table">
 		<div class="col-sm-2">
 			<?php
-                 foreach($days_of_week as $day ) {
-					$days[$day->vx_aln_data_defnsID] = $day->aln_data_value;
-                 }
-                 echo form_multiselect("day[]", $days, set_value("day"), "id='day' class='form-control select2'"); ?>
+		echo form_multiselect("sfrequency[]", $days_of_week, set_value("sfrequency"), "id='sfrequency' class='form-control select2'");  ?>
 		</div>
 		<div class="col-sm-2">
 			<?php
@@ -194,7 +196,11 @@
 </div>
 <script>
 $(document).ready(function() {	 
+loaddatatable();
+});
 
+
+function loaddatatable() {
   $('#ruleslist').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
@@ -245,8 +251,8 @@ $(document).ready(function() {
         dom: 'B<"clear">lfrtip',
     buttons: [ 'copy', 'csv', 'excel','pdf' ]
     });
-  });
   
+}
    $('#ruleslist tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
@@ -321,6 +327,160 @@ $( ".select2" ).select2({closeOnSelect:false,
 
 $("#flight_efec_date").datepicker();
 $("#flight_disc_date").datepicker();
+
+
+function saverule() {
+            var favorite = [];
+
+            $.each($('input[type=checkbox][name=cabin_list]:checked'), function(){            
+                favorite.push($(this).val());
+
+            });
+$.ajax({
+          async: false,
+          type: 'POST',
+          url: "<?=base_url('eligibility_exclusion/save')?>",          
+                  data: {"orig_market_id" :$('#orig_market_id').val(),
+                         "dest_market_id":$('#dest_market_id').val(),
+			 "desc":$('#desc').val(),
+                         "carrier":$('#carrier').val(),
+                         "flight_efec_date":$('#flight_efec_date').val(),
+                         "flight_disc_date":$('#flight_disc_date').val(),
+                         "flight_dep_start_hrs":$('#flight_dep_start_hrs').val(),
+                          "flight_dep_start_mins":$('#flight_dep_start_mins').val(),
+                          "flight_dep_end_hrs":$('#flight_dep_end_hrs').val(),
+			 "flight_dep_end_mins":$('#flight_dep_end_mins').val(),
+                          "flight_nbr_start":$('#flight_nbr_start').val(),
+                          "flight_nbr_end":$('#flight_nbr_end').val(),
+                          "frequency":$('#frequency').val(),
+				"cabin_list":favorite,
+                          "future_use":$('#future_use').val(),
+                           "excl_id":$('#excl_id').val(),
+			   },
+
+          dataType: "html",                     
+
+
+success: function(data) {
+
+                        var ruleinfo = jQuery.parseJSON(data);
+                        var status = ruleinfo['status'];
+                        newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
+                        if (status == 'success' ) {
+                                alert(status);
+				form_reset();
+                                $("#ruleslist").dataTable().fnDestroy();
+                                loaddatatable();
+                        } else {                                
+                                alert($(status).text());
+                            $.each(ruleinfo['errors'], function(key, value) {
+                                        if(value != ''){                                         
+                                        $('#' + key).parent().addClass('has-error'); 
+                                        }                                               
+                });                             
+                        }
+             }
+
+          });
+
+
+}
+
+
+
+function editrule(excl_grp_id) {
+
+               var isVisible = $( "#eerAdd" ).is( ":visible" );
+
+                var isHidden = $( "#eerAdd" ).is( ":hidden" );
+                if( isVisible == false ) {
+                        $( "#rule_add_btn" ).trigger( "click" );
+                }       
+$.ajax({
+          async: false,
+          type: 'POST',
+          url: "<?=base_url('eligibility_exclusion/getRuleData')?>",          
+                  data: {
+                           "excl_grp_id":excl_grp_id},
+          dataType: "html",                     
+          success: function(data) {
+                var ruleinfo = jQuery.parseJSON(data);
+                $('#btn_txt').text('Update Rule');
+		$('#desc').val(ruleinfo['excl_reason_desc']);
+                $('#orig_market_id').val(ruleinfo['orig_market_id']);
+                $('#orig_market_id').trigger('change');
+                $('#dest_market_id').val(ruleinfo['dest_market_id']);
+                $('#orig_market_id').trigger('change');
+		$('#carrier').val(ruleinfo['carrier']);
+                $('#carrier').trigger('change');
+
+                $('#flight_efec_date').val(ruleinfo['flight_efec_date']);
+		$('#flight_efec_date').trigger('change');
+
+		$('#flight_disc_date').val(ruleinfo['flight_disc_date']);
+		 $('#flight_disc_date').trigger('change');
+
+		 $('#flight_dep_start_hrs').val(ruleinfo['flight_dep_start_hrs']);
+		$('#flight_dep_start_hrs').trigger('change');
+		$('#flight_dep_start_mins').val(ruleinfo['flight_dep_start_mins']);
+                $('#flight_dep_start_mins').trigger('change');
+
+
+                 $('#flight_dep_end_hrs').val(ruleinfo['flight_dep_end_hrs']);
+                $('#flight_dep_end_hrs').trigger('change');
+                $('#flight_dep_end_mins').val(ruleinfo['flight_dep_end_mins']);
+                $('#flight_dep_end_mins').trigger('change');
+
+
+		$('#flight_nbr_start').val(ruleinfo['flight_nbr_start']);
+		$('#flight_nbr_end').val(ruleinfo['flight_nbr_end']);
+
+		var freq = ruleinfo['frequency'].split(',');
+                $('#frequency').val(freq).trigger('change');
+
+
+		$('#future_use').val(ruleinfo['future_use']);
+                $('#future_use').trigger('change');
+
+		var cab = ruleinfo['cabins'].split(',');
+
+		$.each(cab, function (index, value) {
+  			$('input[name="cabin_list"][value="' + value.toString() + '"]').prop("checked", true);
+		});	
+
+		
+
+                var excl_id  = ruleinfo['excl_grp'];
+                $('#excl_id').val(excl_id);
+
+
+
+
+        //      var info = JSON.stringify(zoneinfo);
+
+          }
+          });
+}
+
+
+function form_reset(){    
+          var $inputs = $('#add_rule_form :input'); 
+          $inputs.each(function (index)
+       {
+          $(this).val("");  
+       });
+
+           $("#carrier").val(0).trigger('change');
+	   $("#orig_market_id").val(0).trigger('change');
+	   $("#dest_market_id").val(0).trigger('change');
+           $("#frequency").val(0).trigger('change');
+	   $("#future_use").val(0).trigger('change');
+	   $("#flight_dep_start_hrs").val('00').trigger('change');
+	   $("#flight_dep_start_mins").val('00').trigger('change');
+	   $("#flight_dep_end_hrs").val('00').trigger('change');
+           $("#flight_dep_end_mins").val('00').trigger('change');
+  }
+
 
 </script>
 <script>
