@@ -146,32 +146,164 @@
 		</form>
 	</div>
 	<div class="col-sm-12 off-table">
-		<div class="col-sm-2">
-			<?php
-		echo form_multiselect("sfrequency[]", $days_of_week, set_value("sfrequency"), "id='sfrequency' class='form-control select2'");  ?>
-		</div>
-		<div class="col-sm-2">
-			<?php
-               $status['-1'] = 'Select Status';
-               $status['1'] = 'Active';
-               $status['0'] = 'In Active';
-               echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");   ?>
-		</div>
-		<div class="col-sm-2">
-             <?php
-				$toggle['-1'] = 'Select future use';
-                $toggle[1] = "Yes";
-                $toggle[0] = "No";
-                echo form_dropdown("future_use", $toggle,set_value("future_use",$future_use), "id='future_use' class='form-control hide-dropdown-icon select2'"); ?>
-         </div>
-         <div class="col-sm-2 filter">
-              <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+
+<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+                      <div class='form-group'>
+		<div class="col-sm-12">
+                           <div class="col-sm-2">
+               <?php 
+			$marketzones['0'] = 'Select Origin Market';
+			ksort($marketzones);
+
+                                   echo form_dropdown("sorig_market_id", $marketzones,set_value("sorig_market_id",$origmarketID), "id='sorig_market_id' class='form-control hide-dropdown-icon select2'");    ?>
+
+                </div>
+
+<div class="col-sm-2">
+               <?php $marketzones['0'] = 'Select Destination Market';
+			ksort($marketzones);
+                                   echo form_dropdown("sdest_market_id", $marketzones,set_value("sdest_market_id",$destmarketID), "id='sdest_market_id' class='form-control hide-dropdown-icon select2'");    ?>
+
+                </div>
+
+		                <div class="col-sm-2">
+                        <input type="text" class="form-control" id="sflight_nbr_start" name="sflight_nbr_start"  placeholder='Select flight nbr start' value="<?=set_value('sflight_nbr_start',$nbr_start)?>" >
+                </div>
+
+
+
+                <div class="col-sm-2">
+                        <input type="text" class="form-control" id="sflight_nbr_end" name="sflight_nbr_end"  placeholder='Select flight nbr end' value="<?=set_value('sflight_nbr_end',$nbr_end)?>" >
+                </div>
+
+
+                           <div class="col-sm-2">
+                        <input type="text" class="form-control" id="sflight_efec_date" name="sflight_efec_date"  placeholder='Select flight Effective Date' value="<?=set_value('sflight_efec_date',$efec_date)?>" >
+                </div>
+
+
+
+                <div class="col-sm-2">
+                        <input type="text" class="form-control" id="sflight_disc_date" name="sflight_disc_date"  placeholder='Select flight discontinue Date' value="<?=set_value('sflight_disc_date',$disc_date)?>" >
+                </div>
+</div></div>
+<br> 
+<div class='form-group'>
+<div class='col-sm-12'>
+  <div class="col-sm-2">
+                           <?php
+				$hrs['-1'] = 'Select Departure Start Hrs';
+				ksort($hrs);
+
+                                    echo form_dropdown("sflight_dep_start_hrs", $hrs,set_value("sflight_dep_start_hrs"), "id='sflight_dep_start_hrs' class='form-control hide-dropdown-icon select2'");
+                                 ?>
+                                </div>
+                                <div class="col-sm-2">
+                <?php
+				$mins['-1'] = 'Select Departure start Mins';
+				ksort($mins);
+                                                    echo form_dropdown("sflight_dep_start_mins", $mins,set_value("sflight_dep_start_mins"), "id='sflight_dep_start_mins' class='form-control hide-dropdown-icon select2'");
+
+                ?>
+                                </div>
+  <div class="col-sm-2">
+                           <?php
+		 $hrs['-1'] = 'Select Departure End Hrs';
+                                ksort($hrs);
+
+                                    echo form_dropdown("sflight_dep_end_hrs", $hrs,set_value("sflight_dep_end_hrs"), "id='sflight_dep_end_hrs' class='form-control hide-dropdown-icon select2'");
+                                 ?>
+                                </div>
+                                <div class="col-sm-2">
+                <?php
+
+			 $mins['-1'] = 'Select Departure End Mins';
+                                ksort($mins);
+                                                    echo form_dropdown("sflight_dep_end_mins", $mins,set_value("sflight_dep_end_mins"), "id='sflight_dep_end_mins' class='form-control hide-dropdown-icon select2'");
+
+                ?>
+                                </div>
+
+
+	   <div class="col-sm-2">
+               <?php
+                        $class_list['0'] = 'Select From Class';
+                        foreach ($class_type as $class) {
+                                $class_list[$class->vx_aln_data_defnsID] = $class->aln_data_value;
+                        }
+
+			ksort($class_type);
+
+                                   echo form_dropdown("sfrom_class", $class_list,set_value("sfrom_class",$fromclass), "id='sfrom_class' class='form-control hide-dropdown-icon select2'");    ?>
+
+                </div>
+
+
+	     <div class="col-sm-2">
+               <?php
+                        $class_list['0'] = 'Select To Class';
+			ksort($class_list);
+
+                                   echo form_dropdown("sto_class", $class_list,set_value("sto_class",$toclass), "id='sto_class' class='form-control hide-dropdown-icon select2'");    ?>
+
+                </div>
+</div></div>
+<br>
+<div class='form-group'>
+<div class="col-sm-12">
+
+		 <div class="col-sm-2">
+
+                        <?php
+                 echo form_multiselect("sday[]", $days_of_week, set_value("sday"), "id='sday' class='form-control select2'");
+
+                        ?>
+
+                 </div>
+
+
+
+          <div class="col-sm-2">
+
+                        <?php
+                        $status['-1'] = 'Select Status';
+                        $status['1'] = 'Active';
+                        $status['0'] = 'In Active';
+                        echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
+
+
+                 </div>
+
+		 <div class="col-sm-2">
+                            <?php
+
+						$toggle['-1'] = 'Select future use';
+                                                          $toggle[1] = "Yes";
+                                                          $toggle[0] = "No";
+                                                          echo form_dropdown("sfuture_use", $toggle,set_value("sfuture_use",$future_use), "id='sfuture_use' class='form-control hide-dropdown-icon select2'");
+                                                        ?>
+                        </div>
+                                  
+
+                <div class="col-sm-2">
+		<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#ruleslist').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+
+                </div>
+
+</div>
+                          </div>
+
+
+                         </form>
+
+
          </div>
 		 <div id="hide-table" class="col-md-12">
               <table id="ruleslist" class="table table-striped table-bordered table-hover dataTable no-footer">
                    <thead>
                        <tr>
 							<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+							<th class="col-lg-1">Rule#</th>
 							<th class="col-lg-1"><?=$this->lang->line('desc')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('orig_market')?></th>
                             <th class="col-lg-1"><?=$this->lang->line('dest_market')?></th>
@@ -207,21 +339,21 @@ function loaddatatable() {
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('eligibility_exclusion/server_processing'); ?>",   
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
-       aoData.push({"name": "origID","value": $("#orig_market_id").val()},
-                   {"name": "destID","value": $("#dest_market_id").val()},
-		   {"name": "day","value": $("#day").val()},
-		   {"name": "fromClass","value": $("#from_class").val()},
-		   {"name": "toClass","value": $("#to_class").val()},
-		    {"name": "nbrStart","value": $("#flight_nbr_start").val()},
-                   {"name": "nbrEnd","value": $("#flight_nbr_end").val()},
-		   {"name": "efecDate","value": $("#flight_efec_date").val()},
-                   {"name": "discDate","value": $("#flight_disc_date").val()},
-		   {"name": "futureuse","value": $("#future_use").val()},
+       aoData.push({"name": "origID","value": $("#sorig_market_id").val()},
+                   {"name": "destID","value": $("#sdest_market_id").val()},
+		   {"name": "day","value": $("#sday").val()},
+		   {"name": "fromClass","value": $("#sfrom_class").val()},
+		   {"name": "toClass","value": $("#sto_class").val()},
+		    {"name": "nbrStart","value": $("#sflight_nbr_start").val()},
+                   {"name": "nbrEnd","value": $("#sflight_nbr_end").val()},
+		   {"name": "efecDate","value": $("#sflight_efec_date").val()},
+                   {"name": "discDate","value": $("#sflight_disc_date").val()},
+		   {"name": "futureuse","value": $("#sfuture_use").val()},
 
-		   {"name": "startHrs","value": $("#flight_dep_start_hrs").val()},
-                   {"name": "startMins","value": $("#flight_dep_start_mins").val()},
-		 {"name": "endHrs","value": $("#flight_dep_end_hrs").val()},
-                   {"name": "endMins","value": $("#flight_dep_end_mins").val()},
+		   {"name": "startHrs","value": $("#sflight_dep_start_hrs").val()},
+                   {"name": "startMins","value": $("#sflight_dep_start_mins").val()},
+		 {"name": "endHrs","value": $("#sflight_dep_end_hrs").val()},
+                   {"name": "endMins","value": $("#sflight_dep_end_mins").val()},
                    {"name": "active","value": $("#active").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -230,7 +362,8 @@ function loaddatatable() {
                     "data": aoData,
                     "success": fnCallback
                          } ); }, 
-      "columns": [{"data": "eexcl_id" },
+      "columns": [{"data": "sno" },
+		  {"data": "ruleno" },
                   {"data": "excl_reason_desc" },
                                   {"data": "orig_mkt_name" },
                                   {"data": "dest_mkt_name" },
@@ -328,6 +461,10 @@ $( ".select2" ).select2({closeOnSelect:false,
 
 $("#flight_efec_date").datepicker();
 $("#flight_disc_date").datepicker();
+
+$("#sflight_efec_date").datepicker();
+$("#sflight_disc_date").datepicker();
+
 
 
 function saverule() {

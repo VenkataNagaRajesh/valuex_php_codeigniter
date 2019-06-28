@@ -153,59 +153,59 @@ class Eligibility_exclusion extends Admin_Controller {
         );
 
 
-		if(!empty($this->input->post('orig_market_id'))){
-		          $this->data['origmarketID'] = $this->input->post('orig_market_id');
+		if(!empty($this->input->post('sorig_market_id'))){
+		          $this->data['origmarketID'] = $this->input->post('sorig_market_id');
         	} else {
           		$this->data['origmarketID'] = 0;
        		}
-	        if(!empty($this->input->post('dest_market_id'))){
-        		  $this->data['destmarketID'] = $this->input->post('dest_market_id');
+	        if(!empty($this->input->post('sdest_market_id'))){
+        		  $this->data['destmarketID'] = $this->input->post('sdest_market_id');
         	} else {
          		 $this->data['destmarketID'] = 0;
         	}
 		
 
-		 if(!empty($this->input->post('from_class'))){
-                          $this->data['fromclass'] = $this->input->post('from_class');
+		 if(!empty($this->input->post('sfrom_class'))){
+                          $this->data['fromclass'] = $this->input->post('sfrom_class');
                 } else {
                          $this->data['fromclass'] = 0;
                 }
 
-                 if(!empty($this->input->post('to_class'))){
-                          $this->data['toclass'] = $this->input->post('to_class');
+                 if(!empty($this->input->post('sto_class'))){
+                          $this->data['toclass'] = $this->input->post('sto_class');
                 } else {
                          $this->data['toclass'] = 0;
                 }
 
 
-                if(!empty($this->input->post('future_use'))){
-                          $this->data['future_use'] = $this->input->post('future_use');
+                if(!empty($this->input->post('sfuture_use'))){
+                          $this->data['future_use'] = $this->input->post('sfuture_use');
                 } else {
                          $this->data['future_use'] = 1;
                 }
 
 
-		if(!empty($this->input->post('flight_nbr_start'))){
-                          $this->data['nbr_start'] = $this->input->post('flight_nbr_start');
+		if(!empty($this->input->post('sflight_nbr_start'))){
+                          $this->data['nbr_start'] = $this->input->post('sflight_nbr_start');
                 }
 
 
-		if(!empty($this->input->post('flight_efec_date'))){
-                          $this->data['efec_date'] =  date('d-m-Y',$this->input->post('flight_efec_date'));
+		if(!empty($this->input->post('sflight_efec_date'))){
+                          $this->data['efec_date'] =  date('d-m-Y',$this->input->post('sflight_efec_date'));
                 }
 
 	
-		if(!empty($this->input->post('flight_disc_date'))){
-                          $this->data['disc_date'] = date('d-m-Y',$this->input->post('flight_disc_date'));
+		if(!empty($this->input->post('sflight_disc_date'))){
+                          $this->data['disc_date'] = date('d-m-Y',$this->input->post('sflight_disc_date'));
                 }
 
-		if(!empty($this->input->post('flight_nbr_end'))){
-                          $this->data['nbr_end'] = $this->input->post('flight_nbr_end');
+		if(!empty($this->input->post('sflight_nbr_end'))){
+                          $this->data['nbr_end'] = $this->input->post('sflight_nbr_end');
                 }
 
 
-		if(!empty($this->input->post('day'))){
-                          $this->data['day'] = $this->input->post('day');
+		if(!empty($this->input->post('sday'))){
+                          $this->data['day'] = $this->input->post('sday');
                 } else {
                          $this->data['day'] = 0;
                 }
@@ -557,7 +557,7 @@ function time_dropdown($val) {
 		$userID = $this->session->userdata('loginuserID');
 		$usertypeID = $this->session->userdata('usertypeID');	  
 				
-	    $aColumns = array('MainSet.eexcl_id','MainSet.excl_reason_desc' ,'MainSet.orig_mkt_name', 'MainSet.dest_mkt_name', 
+	    $aColumns = array('MainSet.excl_grp,MainSet.eexcl_id','MainSet.excl_reason_desc' ,'MainSet.orig_mkt_name', 'MainSet.dest_mkt_name', 
         'MainSet.flight_efec_date', 'MainSet.flight_disc_date', 'MainSet.flight_dep_start', 'MainSet.flight_dep_end', 
         'MainSet.flight_nbr', 'MainSet.from_class', 'MainSet.to_class', 'Subset.frequency', 'MainSet.future_use', 'MainSet.active',
         'MainSet.orig_market_id', 'MainSet.dest_market_id','MainSet.upgrade_from_cabin_type', 'MainSet.upgrade_to_cabin_type',
@@ -619,7 +619,7 @@ function time_dropdown($val) {
 					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
 				}
 			}
-/*
+
                         if(!empty($this->input->get('origID'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.orig_market_id = '.$this->input->get('origID');
@@ -656,43 +656,47 @@ function time_dropdown($val) {
 
 		        if(!empty($this->input->get('nbrStart'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_nbr_start = '.$this->input->get('nbrStart');
+                                $sWhere .= 'MainSet.flight_nbr_start <= '.$this->input->get('nbrStart');
                         }
 
 
 			if(!empty($this->input->get('nbrEnd'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_nbr_end = '.$this->input->get('nbrEnd');
+                                $sWhere .= 'MainSet.flight_nbr_end >= '.$this->input->get('nbrEnd');
                         }
 
 
                        if(!empty($this->input->get('efecDate'))){
                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_efec_date = '.strtotime($this->input->get('efecDate'));
+                                $sWhere .= 'MainSet.flight_efec_date <= '.strtotime($this->input->get('efecDate'));
                         }
 
 
                         if(!empty($this->input->get('discDate'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_disc_date = '.strtotime($this->input->get('discDate'));
+                                $sWhere .= 'MainSet.flight_disc_date >= '.strtotime($this->input->get('discDate'));
                         }
 
 
-/*
+
 			if(!empty($this->input->get('startHrs')) && !empty($this->input->get('startMins')) 
 					&& $this->input->get('startHrs') != '-1' && $this->input->get('startMins') != '-1'){
+
+				$stime = (3600 * $this->input->get('startHrs')) + (60 * $this->input->get('startMins') );
                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_dep_start = "'.$this->input->get('startHrs').':'.$this->input->get('startMins').'"';
+                                $sWhere .= 'MainSet.flight_dep_start <= ' . $stime;
                         }
+
 
 
 			 if(!empty($this->input->get('endHrs')) && !empty($this->input->get('endMins'))
 				&& $this->input->get('endHrs') != '-1' && $this->input->get('endMins') != '-1'){
+				$stime = (3600 * $this->input->get('endHrs')) + (60 * $this->input->get('endMins') );
                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_dep_end = "'.$this->input->get('endHrs').':'.$this->input->get('endMins').'"';
+                                $sWhere .= 'MainSet.flight_dep_end >= ' . $stime;
                         }
-*/
-/*
+
+
                         if(!empty($this->input->get('discDate'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.flight_disc_date = '.strtotime($this->input->get('discDate'));
@@ -707,7 +711,7 @@ function time_dropdown($val) {
 				}
 				
 			}
-*/
+
 
 		$sQuery = "
 
@@ -748,7 +752,7 @@ LEFT JOIN (
 		$sOrder
 		$sLimit	"; 
 
-//	print_r($sQuery); exit;
+	print_r($sQuery); exit;
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
 	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
@@ -759,7 +763,11 @@ LEFT JOIN (
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+
+		$i = 0;
 	  foreach($rResult as $rule){	
+		$rule->sno = ++$i;
+		$rule->ruleno = 'Rule#'.$rule->excl_grp;
 		$rule->flight_efec_date = date('d-m-Y',$rule->flight_efec_date);
                $rule->flight_disc_date = date('d-m-Y',$rule->flight_disc_date);
 		$rule->flight_dep_start = gmdate('H:i:s', $rule->flight_dep_start);
