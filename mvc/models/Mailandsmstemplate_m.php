@@ -15,6 +15,11 @@ class Mailandsmstemplate_m extends MY_Model {
 		$query = parent::get($array, $signal);
 		return $query;
 	}
+	
+	function get_single_mailandsmstemplate($array = NULL){
+		$query = parent::get_single($array);		
+		return $query;
+	}
 
 	function get_order_by_mailandsmstemplate($array=NULL) {
 		$query = parent::get_order_by($array);

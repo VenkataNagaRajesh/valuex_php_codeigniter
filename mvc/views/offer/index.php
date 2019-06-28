@@ -1,4 +1,5 @@
 <div class="off-elg">
+	<h2 class="title-tool-bar">Offer Issuance Management</h2>
 	<div class="col-md-12 off-elg-filter-box">
 		<div class="auto-gen">
 			<a href="<?php echo base_url('offer_eligibility/generatedata') ?>">

@@ -1,14 +1,13 @@
 <div class="fclr-bar">
-
-<a href="<?php echo base_url('fclr/generatedata') ?>">
-                      <i class="fa fa-upload"></i>
-                      <?=$this->lang->line('generate_fclr')?>
-                  </a>
-
-
+<h2 class="title-tool-bar">Fare Control Range</h2>
+<div class="auto-gen">
+	<a href="<?php echo base_url('fclr/generatedata') ?>">
+        <i class="fa fa-upload"></i>
+        <?=$this->lang->line('generate_fclr')?>
+     </a>
+</div>
 <?php  if(permissionChecker('fclr_add')) {  ?>
 	<p class="card-header" data-toggle="collapse" data-target="#fclrAdd"><button type="button" class="btn btn-danger pull-right" data-placement="left" title="Add FCLR" data-toggle="tooltip" id='fclr_add_btn' ><i class="fa fa-plus"></i></button></p>
-
  <?php } ?>
 	<div class="col-md-12 fclr-table-add collapse" id="fclrAdd">
 		<form class="form-horizontal" action="#">
