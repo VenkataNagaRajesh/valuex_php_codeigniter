@@ -752,7 +752,7 @@ LEFT JOIN (
 		$sOrder
 		$sLimit	"; 
 
-	print_r($sQuery); exit;
+	//print_r($sQuery); exit;
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
 	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
