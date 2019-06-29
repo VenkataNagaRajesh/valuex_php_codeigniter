@@ -41,7 +41,26 @@ class Offer_issue extends Admin_Controller {
                 array('title' => 'Title 4', 'body' => 'Body 4'),
                 array('title' => 'Title 5', 'body' => 'Body 5')
              )
-        ); 	  
+        ); 
+       $data['first_name'] ="Lakshmi";
+       $data['last_name'] = "Amujuru";
+       $data['pnr_ref'] = "WQ12345";
+       $data = array(
+        'first_name'   => 'Lakshmi',
+        'last_name' => 'Amujuru',
+		'tomail' => "lakshmi.amujuru@sweken.com",
+		'pnr_ref' => 'WQ12345',
+		'to_cabin' => 'Business',
+		'mail_subject' => "Your Bid Accepted",
+		'card_no' => 4242,
+		'cash_paid' => $555,
+		'miles_used' => 334423,
+        'offer_list' => array(
+                array('date_start' => '09/07/2019', 'flight_no' => 'SQ1234','time' => '01:30 PM', 'origin' => 'Kuala Lumpur ','destination' => 'Cochin', 'upgrade_to' => 'Premium Eco','cash_paid' => '$299'),
+				array('date_start' => '10/07/2019', 'flight_no' => 'SQ1235','time' => '02:30 PM', 'origin' => 'Changi','destination' => 'San Francisco ', 'upgrade_to' => 'Business','cash_paid' => '$288'),
+				array('date_start' => '11/07/2019', 'flight_no' => 'SQ1236','time' => '03:30 PM', 'origin' => 'Haneda ','destination' => 'San Francisco ', 'upgrade_to' => 'Premium','cash_paid' => '$266')                
+             )
+        ); 	   
 	  $this->sendMailTemplateParser(5,$data);
 	   exit; */
 	}	
