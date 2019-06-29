@@ -2,7 +2,7 @@
 	<div class="col-md-12">
 		<h2 class="title-tool-bar">Market Zones</h2>
 	</div>
-	<div class="col-md-12 card-hea">
+	<div class="col-md-12 card-header">
 		<div class="col-md-12">
 			<p data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id='add_zone_button' class="btn btn-danger pull-right" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 		</div>
@@ -118,15 +118,11 @@
 
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="margin-bottom:-3em;">
 				<div class="title-bar">
-					<div class="col-md-2">
-						<h2>Market Zones</h2><span class="pull-right"></span>
-					</div>
-
 					<div class="col-md-2" id='reconfigure'>
 
 					 <?php if(permissionChecker('marketzone_reconfigure')) {
 					 if( isset ($reconfigure)) {?>
-                               			 <h2><a href="<?php echo base_url('trigger') ?>">
+                               			 <h2><a href="<?php echo base_url('trigger') ?>" class="btn btn-danger">
                                     			<i class="fa fa-plus"></i>
                                     			<?=$this->lang->line('generate_map_table')?>
                                 			</a>
@@ -319,102 +315,13 @@ $('#tree1').treed();
 
 $( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Value'});
 	
-	loadtreeview();
+	loadjstree();
 
 	loaddatatable();
-
-$(function() {
-  $('#mysearch').click(function() {
-    //Clear last search
-    //$("#files li").removeclass("collapsible").find("span").removeClass("highlighted");
-    //Search again
-/*
- $('.market-info-tree').find('ul').has("li").each(function () {
-            var branch = $(this); //li with children ul
-	alert($(this).text());
-            branch.prepend("<i class='indicator glyphicon " + closedClass + "'></i>");
-            branch.addClass('branch');
-            branch.on('click', function (e) {
-                if (this == e.target) {
-                    var icon = $(this).children('i:first');
-                    icon.toggleClass(openedClass + " " + closedClass);
-                    $(this).children().children().toggle();
-                }
-            })
-            branch.children().children().toggle();
-        });
-
-*/
-
-$('.market-info-tree ul li').each(function() {
-        var stext = $('#searchtxt').val();
-	var branch = $(this);
-      //  branch.("li:contains("+stext+")").css("background-color", "yellow").parent().toggle();
-        
-    //$(this).append("<a href='#somewhere'>Click Here</a>");
-  });
-});
-});
 
  });
 
 
-function loadtreeview(){
-
-data = [
-<?php foreach ($treedata as $data) {?>
-	  {
-            label: '<?php echo $data->market_name?>',
-            value: '<?php echo $data->market_name?>',
-                children: [
-        <?php $airids = explode(',',$data->airports);
-                foreach($airids as $airid) {?>
-                        {
-                        label: '<?php echo $airid?>',
-                        value: '<?php echo $airid?>',
-                        },
-                <?php }?>
-                ]},
-        <?php }?>
-        ];
-               
-var options = {
-        // Optionally provide here the jQuery element that you use as the search box for filtering the tree. simpleTree then takes control over the provided box, handling user input
-        searchBox: $('#example'),
-
-        // Search starts after at least 3 characters are entered in the search box
-        searchMinInputLength: 2,
-
-        // Number of pixels to indent each additional nesting level
-        indentSize: 25,
-
-        // Show child count badges?
-        childCountShow: true,
-
-        // Symbols for expanded and collapsed nodes that have child nodes
-        symbols: {
-            collapsed: '+',
-            expanded: '-'
-        },
-
-        // these are the CSS class names used on various occasions. If you change these names, you also need to provide the corresponding CSS class
-        css: {
-            childrenContainer: 'simpleTree-childrenContainer',
-            childCountBadge: 'simpleTree-childCountBadge badge badge-pill badge-secondary',
-            highlight: 'simpleTree-highlight',
-            indent: 'simpleTree-indent',
-            label: 'simpleTree-label',
-            mainContainer: 'simpleTree-mainContainer',
-            nodeContainer: 'simpleTree-nodeContainer',
-            selected: 'simpleTree-selected',
-            toggle: 'simpleTree-toggle'
-        }
-    };
-$('#mytree').simpleTree(options, data);
-
-
-
-}
 
 function loaddatatable() {
     $('#tztable').DataTable( {
@@ -535,7 +442,8 @@ function loaddatatable() {
         });
     });
 
-
+</script>
+<script>
 $(document).ready(function(){
 $('#amz_incl_id').trigger('change');
 $('#amz_excl_id').trigger('change');
@@ -792,3 +700,46 @@ $("#checkbox_excl").click(function(){
 	
     }
 </style>
+<script type="text/javascript">
+function loadjstree() {
+
+var treeinfo = [
+		<?php foreach ($treedata as $data) {?>
+			{'text' : '<?php echo $data->market_name?>',  
+			  'state' : {
+           			//	'opened' : true,
+           			//	'selected' : true
+         			    },
+			  'children' : [
+					<?php $airids = explode(',',$data->airports);
+					foreach($airids as $airid) {?>
+						{ 'text' : '<?php echo $airid?>', 'icon' : 'glyphicon glyphicon-pushpin' },				
+					<?php }?>
+
+					]
+			},
+			<?php }?>
+               ];
+
+$('#mytree').jstree({
+                "core": {                    
+                    'data': treeinfo
+                },
+                "plugins": ["search"],
+                "search": {
+                    "case_sensitive": false,
+		    "show_only_matches": true
+                }
+            });
+
+
+}
+ $(document).ready(function () {
+            $("#example").keyup(function () {
+                var searchString = $(this).val();
+                $('#mytree').jstree('search', searchString);
+            });
+        });
+    </script>
+
+       

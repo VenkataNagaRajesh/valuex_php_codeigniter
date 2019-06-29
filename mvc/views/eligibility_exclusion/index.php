@@ -111,7 +111,7 @@
 									<td>F</td>
 								</tr>
 								<tr>
-<input type="hidden" class="form-control" id="excl_id" name="excl_id"   value="" >
+									<input type="hidden" class="form-control" id="excl_id" name="excl_id"   value="" >
 									<td>Y</td>
 									<td class="block"></td>
 									<td><input type="checkbox" class="form-control"  name='cabin_list' value='Y-W'  > 												</td>
@@ -138,14 +138,14 @@
 				</div>
 			</div>
 			<div class="col-md-12">
-				<span class="col-md-2">
+				<span class="col-md-3">
 					<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="saverule();">ADD Rule</a>
 					<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
 				</span>
 			</div>
 		</form>
 	</div>
-	<div class="col-sm-12 off-table">
+	<div class="col-sm-12 off-filter-form">
 
 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
@@ -298,6 +298,7 @@
 
 
          </div>
+		 <div class="col-md-12  off-table">
 		 <div id="hide-table" class="col-md-12">
               <table id="ruleslist" class="table table-striped table-bordered table-hover dataTable no-footer">
                    <thead>
@@ -325,6 +326,7 @@
                     </tbody>
 				</table>
          </div>
+		 </div>
 	</div>
 </div>
 <script>
