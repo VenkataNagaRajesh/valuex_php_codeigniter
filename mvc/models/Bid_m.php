@@ -69,7 +69,14 @@ class bid_m extends MY_Model {
   public function save_card_data($data){
 	  $this->db->insert("VX_aln_card_data",$data);
 	  return $this->db->insert_id();
-  }     
+  }
+
+  public function getCardData($offer_id){
+	  $this->db->select("*")->from("VX_aln_card_data");
+	  $this->db->where('offer_id',$offer_id);
+	  $query = $this->db->get();
+	  return $query->row();
+  }  
 	
 }
 
