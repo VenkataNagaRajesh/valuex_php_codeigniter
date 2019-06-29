@@ -1,9 +1,15 @@
         <!-- header logo: style can be found in header.less -->
         <header class="header">
+		     
             <a href="<?php echo base_url('dashboard/index'); ?>" class="logo">
                 <!-- Add the class icon to your logo image or logo icon to add the margining -->
+				<?php if(count($siteinfos->photo)) {
+                echo "<img height='50' src=".base_url('uploads/images/'.$siteinfos->photo)." />";
+            } else { ?>
                 <?php if(count($siteinfos)) { echo namesorting($siteinfos->sname, 14); } ?>
+				<?php } ?>
             </a>
+			
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
                 <!-- Sidebar toggle button-->
