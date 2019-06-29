@@ -28,7 +28,7 @@
 					</div>
 					<div class="col-md-10">
 						<div class="pass-info">
-							<p>Passenger(s):<span><?php echo ucfirst($result->pax_names); ?></span>
+							<p>Passenger(s):<span><?php echo ucfirst($results[0]->pax_names); ?></span>
 							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$results[0]->pnr_ref?></span></p>
 							<div class="col-md-5">
 								<h2>Flight Information</h2>
@@ -430,6 +430,7 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 				var miles = $("#miles").slider('getValue');	
 				var pay_cash = bid_value - Math.round(miles * mile_value);
 				var flight_number = <?=$result->flight_number?>;
+				
 				var upgrade = $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]:checked').val().split('|');
 				var upgrade_type = upgrade[0];	
 				var fclr_id = upgrade[1];
