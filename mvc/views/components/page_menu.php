@@ -5,7 +5,7 @@
                 <section class="sidebar">
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
-                        <div class="image">
+                        <div class="pull-left image">
                             <img style="display:block" src="<?=base_url("uploads/images/".$this->session->userdata('photo'));
                                 ?>" class="img-circle" alt="" />
                         </div>

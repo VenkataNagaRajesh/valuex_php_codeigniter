@@ -523,7 +523,7 @@ function display_menu($nodes, &$menu) {
             }
 
             $menu .= '<li class="'.($f ? $treeView : '').$active.'">';
-                $menu .= anchor($node['link'], '<span><i class="pull-right fa '.($node['icon'] != NULL ? $node['icon'] : 'fa-home').'"></i>'. ($CI->lang->line('menu_'.$node['menuName']) != NULL ? $CI->lang->line('menu_'.$node['menuName']) : $node['menuName']).'</span> '.($f ? $leftIcon : ''));
+                $menu .= anchor($node['link'], '<span><i class="fa '.($node['icon'] != NULL ? $node['icon'] : 'fa-home').'"></i>'. ($CI->lang->line('menu_'.$node['menuName']) != NULL ? $CI->lang->line('menu_'.$node['menuName']) : $node['menuName']).'</span> '.($f ? $leftIcon : ''));
                 if ($f) {
                     $menu .= '<ul class="treeview-menu">';
                         display_menu($node['child'],$menu);
