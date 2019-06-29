@@ -105,6 +105,7 @@ class Home extends MY_Controller {
 	public function bidsuccess() {
         $offer_id = htmlentities(escapeString($this->uri->segment(3)));	
         $this->data['offer_data'] = $this->bid_m->get_offer_data($offer_id);
+		
         // print_r($this->data['offer_data']); exit;		
 		$this->data["subview"] = "home/bidsuccess";
 		$this->load->view('_layout_home', $this->data);

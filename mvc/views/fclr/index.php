@@ -106,7 +106,7 @@
 						</tr>
 					</tbody>
 				</table>
-				<div class="col-md-2 pull-right">
+				<div class="col-md-3 pull-right">
 					<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savefclr();">ADD FCLR</a>
 					<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
 				</div>
