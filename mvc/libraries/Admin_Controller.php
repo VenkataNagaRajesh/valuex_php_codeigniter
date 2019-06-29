@@ -593,32 +593,31 @@ class Admin_Controller extends MY_Controller {
 				$this->mydebug->debug($this->lang->line('mail_error'));
 			}		
 		}	
-	}
+	 }	
 	
-	public function sendMailTemplateParser($templateID,$data){
+	 public function sendMailTemplateParser($templateID,$data){
+          $this->load->library('parser');
+          $template = $this->mailandsmstemplate_m->get_single_mailandsmstemplate(array("mailandsmstemplateID"=>$templateID))->template;
+          $message = $this->parser->parse_string($template, $data);
+          $message =html_entity_decode($message);
+          $siteinfos = $this->reset_m->get_site();
+          //print_r($message);
+          if($data['tomail']) {                      
+            $subject = $data['mail_subject'];
+            $email = $data['tomail'];
+            $this->email->set_mailtype("html");
+            $this->email->from($siteinfos->email,$siteinfos->sname);
+            $this->email->to($email);
+            $this->email->subject($subject);
+            $this->email->message($message);
 		
-		$this->load->library('parser');
-		$template = $this->mailandsmstemplate_m->get_single_mailandsmstemplate(array("mailandsmstemplateID"=>$templateID))->template;
-		$message = $this->parser->parse_string($template, $data);
-		//$message = strip_tags($message);
-		//$message = preg_replace("/&#?[a-z0-9]{2,8};/i","",$message); 
-		  $message =html_entity_decode($message);
-		//print_r($message);
-		if($data->tomail) {
-			$subject = $data->mail_subject;
-			$email = $data->tomail;
-			$this->email->set_mailtype("html");
-			$this->email->from($siteinfos->email,$siteinfos->sname);
-			$this->email->to($email);
-			$this->email->subject($subject);
-			$this->email->message($message);
+            if($this->email->send()) {
+                    $this->mydebug->debug("mail sent successfully");
+            } else {
+                    $this->mydebug->debug($this->lang->line('mail_error'));
+            }
+          }
+     }
 
-			if($this->email->send()) {
-				$this->mydebug->debug("mail sent successfully");
-			} else {
-				$this->mydebug->debug($this->lang->line('mail_error'));
-			}		
-		}
-	}
 }
 
