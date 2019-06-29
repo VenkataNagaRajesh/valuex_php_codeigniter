@@ -19,6 +19,7 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("reset_m");
 		$this->load->model('acsr_m');
 		$this->load->model("airports_m");
+		$this->load->model("bid_m");
 		$language = $this->session->userdata('lang');		
 		 $this->lang->load('offer', $language);
 		/*$data['tomail'] = "lakshmi.amujuru@sweken.com";
@@ -203,19 +204,23 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 ';
 
 
-			 $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+			/*  $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
 			// $this->email->from('testsweken321@gmail.com', 'ADMIN');
 			 $this->email->to($emails_list[0]);
 			 $this->email->subject("Upgrade Cabin Offer");
 			$this->email->message($message);
-			$this->email->send();
+			$this->email->send(); */
 			
-		/* $data['tomail'] = $emails_list[0];
-		$data['mail_subject'] ="Upgrade Cabin Offer";
-		$data['first_name'] =$namelist[0];
-		$data['last_name'] = "";
-		$data['pnr_ref'] = $offer->pnr_ref;
-		$this->sendMailTemplate(1,$data); */
+	
+       $data = array(
+        'first_name'   => $namelist[0],
+        'last_name' => '',
+		'tomail' => $emails_list[0],
+		'pnr_ref' => $offer->pnr_ref,
+        'coupon_code' => $coupon_code, 		
+		'mail_subject' => "Upgrade Cabin Offer"		
+        ); 	   
+	  $this->sendMailTemplateParser('home/testtemplate',$data);	
 
 		}	
 		
@@ -427,7 +432,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 		$q = "select distinct rbd_markup, flight_number, from_city, to_city,tier_markup, (val + ((rbd_markup * val)/100)) as bid_val , 
 			offer_id,bid_submit_date , dep_date, upgrade_type, carrier_code, src_point,  dest_point, cabin FROM (
 				SELECT (bid_value + ((pf.tier_markup * bid_value)/100)) as val,pf.dep_date,bid.upgrade_type,pf.flight_number,
-				pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point
+				pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point,df.name src_point_name,dt.name dest_poin_name
 				from VX_aln_bid bid 
 				LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )  
 				LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  pf.is_processed = 1 and pf.active = 1 )
@@ -631,12 +636,32 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 ';
 
 
-                         $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                         /* $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
                         // $this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid is accepted From " .$feed->src_point.'To ' . $feed->dest_point);
                         $this->email->message($message);
-                        $this->email->send();
+                        $this->email->send(); */ 
+						  $cabin_name = $this->airports_m->get_definition_data($feed->upgrade_type)->aln_data_value;
+						 $card_data = $this->bid_m->getCardData($feed->offer_id);
+						 $card_number = substr(trim($card_data->card_number), -4);
+						 $data = array(
+							'first_name'   => $namelist[0],
+							'last_name' => '',
+							'tomail' => $emails_list[0],
+							'pnr_ref' => $passenger_data->pnr_ref,						
+							'mail_subject' => "Bid is accepted From " .$feed->src_point." To " . $feed->dest_point,
+							'card_no' => $card_number,
+							'cash_paid' => "$".$feed->cash,
+							'miles_used' => $feed->miles,
+							'flight_no' => $feed->flight_number,
+							'dep_date' => date('d-m-Y',$feed->departure_date),
+							'dep_time' => '01:30 PM',
+							'origin' => $feed->src_point_name,
+							'destination' => $feed->dest_point_name, 
+							'upgrade_to' => $cabin_name					
+						 ); 			 
+					  $this->sendMailTemplateParser('home/upgradeoffertmp',$data);	
 
 			 $array = array();
                         $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
