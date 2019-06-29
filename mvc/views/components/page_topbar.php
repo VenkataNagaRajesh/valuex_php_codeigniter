@@ -24,7 +24,7 @@
                             }
                         ?>
 
-                        <!-- Messages: style can be found in dropdown.less-->
+                        <!-- Messages: style can be found in dropdown.less
                         <?php if(permissionChecker('notice')) { ?>
                         <li class="dropdown messages-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -113,11 +113,10 @@
                                     echo '</ul>';
                                 }
                             ?>
-                        </li>
+                        </li>-->
                         <?php } ?>
-                        <?php if(isset($siteinfos->language_status) && $siteinfos->language_status == 0) { ?>
-                        <!-- Notifications: style can be found in dropdown.less -->
-                        <li class="dropdown notifications-menu">
+                         <!--<?php if(isset($siteinfos->language_status) && $siteinfos->language_status == 0) { ?>
+                       <li class="dropdown notifications-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <img class="language-img" src="<?php 
                                 $image = $this->session->userdata('lang'); 
@@ -128,7 +127,7 @@
                             <ul class="dropdown-menu">
                                 <li class="header"> <?=$this->lang->line("language")?></li>
                                 <li>
-                                    <!-- inner menu: contains the actual data -->
+                                 
                                     <ul class="menu">
                                         <li class="language" id="arabic">
                                             <a href="<?php echo base_url('language/index/arabic')?>">
@@ -315,8 +314,7 @@
                                 <li class="footer"></li>
                             </ul>
                         </li>
-                        <!-- User Account: style can be found in dropdown.less -->
-                        <?php } ?>
+                        <?php } ?>-->
                         
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">

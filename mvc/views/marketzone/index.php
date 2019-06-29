@@ -118,15 +118,11 @@
 
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="margin-bottom:-3em;">
 				<div class="title-bar">
-					<div class="col-md-2">
-						<h2>Market Zones</h2><span class="pull-right"></span>
-					</div>
-
 					<div class="col-md-2" id='reconfigure'>
 
 					 <?php if(permissionChecker('marketzone_reconfigure')) {
 					 if( isset ($reconfigure)) {?>
-                               			 <h2><a href="<?php echo base_url('trigger') ?>">
+                               			 <h2><a href="<?php echo base_url('trigger') ?>" class="btn btn-danger">
                                     			<i class="fa fa-plus"></i>
                                     			<?=$this->lang->line('generate_map_table')?>
                                 			</a>
@@ -411,9 +407,6 @@ var options = {
         }
     };
 $('#mytree').simpleTree(options, data);
-
-
-
 }
 
 function loaddatatable() {
