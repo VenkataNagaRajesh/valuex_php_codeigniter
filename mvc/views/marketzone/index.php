@@ -2,7 +2,7 @@
 	<div class="col-md-12">
 		<h2 class="title-tool-bar">Market Zones</h2>
 	</div>
-	<div class="col-md-12 card-hea">
+	<div class="col-md-12 card-header">
 		<div class="col-md-12">
 			<p data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id='add_zone_button' class="btn btn-danger pull-right" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 		</div>
@@ -442,7 +442,8 @@ function loaddatatable() {
         });
     });
 
-
+</script>
+<script>
 $(document).ready(function(){
 $('#amz_incl_id').trigger('change');
 $('#amz_excl_id').trigger('change');
