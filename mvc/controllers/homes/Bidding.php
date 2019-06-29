@@ -12,23 +12,45 @@ class Bidding extends MY_Controller {
 		 $this->load->model("offer_issue_m");
 		 $this->load->model("offer_reference_m");
 		 $this->load->model("rafeed_m");
+		 $this->load->model("reset_m");
 		 $this->load->library('session');
          $this->load->helper('form');
-         $this->load->library('form_validation');		 
+         $this->load->library('form_validation');
+         $this->load->library('email');		 
 	     $language = $this->session->userdata('lang');	  
-		$this->lang->load('bidding', $language);
+		$this->lang->load('bidding', $language);	
+		
+		/* $offer_data = $this->bid_m->get_offer_data($this->input->post("offer_id"));
+			   $data = (array)$offer_data;
+			   $data['dep_date'] = date('d/m/Y',$offer_data->dep_date);
+			   $data['cash'] = $this->input->post("cash");
+			    $this->load->library('parser');        
+			  $message = $this->parser->parse("home/bidsuccess-temp", $data);
+			  $message =html_entity_decode($message);
+			//  echo $message;
+          $siteinfos = $this->reset_m->get_site();
+			   
+		$this->email->set_mailtype("html");
+				$subject = "Your bid has been Successfully Submitted";				
+				$this->email->set_mailtype("html");
+				$this->email->from($siteinfos->email,$siteinfos->sname);
+				$this->email->to("lakshmi.amujuru@sweken.com");
+				$this->email->subject($subject);
+				$this->email->message($message);
+			    $this->email->send();
+			  exit; */
 	}
   
     public function index() {  
-       //$this->session->set_userdata('pnr_ref','WQ1235');
-       //$this->session->set_userdata('validation_check',1);	   
+      // $this->session->set_userdata('pnr_ref','WQ1235');
+      // $this->session->set_userdata('validation_check',1);	   
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
 			$this->session->unset_userdata('pnr_ref');
 		}
 		
 		$this->data['results'] = $this->bid_m->getPassengers($this->session->userdata('pnr_ref'));
-		
+		//$this->data['tomail'] = explode(',',$this->data['results'][0]->email_list)[0]; 
 		if(empty($this->data['results'])){
 			redirect(base_url('home/index'));
 		}
@@ -69,7 +91,7 @@ class Bidding extends MY_Controller {
 	}
 	
 	public function saveBidData(){
-		if($this->input->post('offer_id')){
+		if($this->input->post('offer_id')){ 
 			$data['offer_id'] = $this->input->post('offer_id');
 			$data['cash'] = $this->input->post("cash");
 			$data['bid_value'] = $this->input->post("bid_value");
@@ -101,6 +123,24 @@ class Bidding extends MY_Controller {
 			   $ref['offer_status'] = $select_status;
 			   $ref["modify_date"] = time();
 			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
+			   //send bid success mail
+			   $offer_data = $this->bid_m->get_offer_data($this->input->post("offer_id"));
+			   $data = (array)$offer_data;
+			   $data['dep_date'] = date('d/m/Y',$offer_data->dep_date);
+			   $data['cash'] = $this->input->post("cash");
+			    $this->load->library('parser');        
+			  $message = $this->parser->parse("home/bidsuccess-temp", $data);
+			  $message =html_entity_decode($message);
+			  $siteinfos = $this->reset_m->get_site();
+			   $tomail = explode(',',$offer_data[0]->email_list)[0];
+				$subject = "Your bid has been Successfully Submitted";				
+				$this->email->set_mailtype("html");
+				$this->email->from($siteinfos->email,$siteinfos->sname);
+				$this->email->to($tomail);
+				$this->email->subject($subject);
+				$this->email->message($message);
+			    $this->email->send();
+				
 			  $json['status'] = "success";
 			  $this->session->unset_userdata('validation_check');
 			  $this->session->unset_userdata('pnr_ref');

@@ -595,10 +595,11 @@ class Admin_Controller extends MY_Controller {
 		}	
 	 }	
 	
-	 public function sendMailTemplateParser($templateID,$data){
+	 public function sendMailTemplateParser($template,$data){
           $this->load->library('parser');
-          $template = $this->mailandsmstemplate_m->get_single_mailandsmstemplate(array("mailandsmstemplateID"=>$templateID))->template;
-          $message = $this->parser->parse_string($template, $data);
+         // $template = $this->mailandsmstemplate_m->get_single_mailandsmstemplate(array("mailandsmstemplateID"=>$templateID))->template;		   
+         // $message = $this->parser->parse_string($template, $data);
+		  $message = $this->parser->parse($template, $data);
           $message =html_entity_decode($message);
           $siteinfos = $this->reset_m->get_site();
           //print_r($message);
