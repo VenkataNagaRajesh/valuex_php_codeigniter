@@ -318,7 +318,7 @@ $sWhere $sOrder $sLimit";
                                                 $ext["create_userID"] = $this->session->userdata('loginuserID');
                                                  $ext["modify_userID"] = $this->session->userdata('loginuserID');
 				if($f->from_cabin == $rule->upgrade_from_cabin_type && $f->to_cabin == $rule->upgrade_to_cabin_type  &&
-						in_array($f->frequency,$rule_freq)) {
+						($f->season_id > 0 || in_array($f->frequency,$rule_freq))) {
                                                 $ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 						$ext['exclusion_id'] = $rule->eexcl_id ;
                                                  $this->offer_eligibility_m->insert_dtpfext($ext);

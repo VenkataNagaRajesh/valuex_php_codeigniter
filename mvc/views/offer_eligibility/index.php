@@ -1,6 +1,11 @@
 <div class="off-elg">
 	<h2 class="title-tool-bar">Offer Eligibility</h2>
 	<div class="col-md-12 off-elg-filter-box">
+ <a href="<?php echo base_url('offer_eligibility/generatedata') ?>">
+                                <i class="fa fa-upload"></i>
+                                <?=$this->lang->line('generate_offer_eligibility')?>
+                        </a>
+
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class="form-group">
 				<div class="col-md-3 select-form">
