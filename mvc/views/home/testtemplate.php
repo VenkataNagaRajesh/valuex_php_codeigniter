@@ -12,14 +12,14 @@
                 <div style="border: solid 1px #333;margin-top:20px;margin-left: 16.66667%;width: 66.66667%;">
                         <div style="position: relative;min-height: 1px;padding-left: 15px;padding-right: 15px;">
                                 <div style="background-image: url(http://www.valuex.sweken.com/assets/home/images/temp1-hdr-bg.jpg);margin-top: 20px;">
-                                        <h1 style="margin-bottom:8px;color: #fff;font-size: 24px;font-weight: bold;padding:12px;font-family:century gothic;"><span>Hi {first_name} {last_name}!</span><span style="float: right !important;color:#333;">Booking Reference : {pnr_ref} <b></b></span></h1>
-										<span>coupon code : {coupon_code}</span>
+                                        <h1 style="margin-bottom:8px;color: #fff;font-size: 24px;font-weight: bold;padding:12px;font-family:century gothic;"><span>Hi {first_name} {last_name}!</span><span style="float: right !important;color:#333;">Booking Reference : {pnr_ref} <b></b></span></h1>									
                                 </div>
                                 <div>
                                         <img style="width:auto;display: block;max-width: 100%;height:auto;" src="http://www.valuex.sweken.com/assets/home/images/temp1-bnr.jpg" alt="temp bnr">
                                 </div>
                         </div>
                         <div style="position: relative;min-height: 1px;padding-left: 15px;padding-right:15px;">
+						        <span>coupon code : {coupon_code}</span>
                                 <p style="margin-bottom: 10px;font-size: 14px;color: #333;font-family:century gothic;text-align:center;">
                                         With AC Bid Upgrade you can enhance your travel experince by enjoying priority. One or more of yourupcoming flight (s) are eligible for bids
                                 </p>
