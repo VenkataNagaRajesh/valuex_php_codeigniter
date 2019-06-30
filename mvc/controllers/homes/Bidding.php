@@ -20,25 +20,26 @@ class Bidding extends MY_Controller {
 	     $language = $this->session->userdata('lang');	  
 		$this->lang->load('bidding', $language);	
 		
-		/* $offer_data = $this->bid_m->get_offer_data($this->input->post("offer_id"));
-			   $data = (array)$offer_data;
-			   $data['dep_date'] = date('d/m/Y',$offer_data->dep_date);
-			   $data['cash'] = $this->input->post("cash");
-			    $this->load->library('parser');        
-			  $message = $this->parser->parse("home/bidsuccess-temp", $data);
-			  $message =html_entity_decode($message);
-			//  echo $message;
+		 /* $offer_data = $this->bid_m->get_offer_data(1);
+                          $data = (array)$offer_data;
+                           $data['dep_date'] = date('d/m/Y',$offer_data['dep_date']);
+                           $data['dep_time'] = gmdate('H:i A',$offer_data['dep_time']);
+                           $data['cash'] = 222;
+                            $this->load->library('parser');
+                          $message = $this->parser->parse("home/bidsuccess-temp", $data);
+                          $message =html_entity_decode($message);
+                        //  echo $message;
           $siteinfos = $this->reset_m->get_site();
-			   
-		$this->email->set_mailtype("html");
-				$subject = "Your bid has been Successfully Submitted";				
-				$this->email->set_mailtype("html");
-				$this->email->from($siteinfos->email,$siteinfos->sname);
-				$this->email->to("lakshmi.amujuru@sweken.com");
-				$this->email->subject($subject);
-				$this->email->message($message);
-			    $this->email->send();
-			  exit; */
+
+                $this->email->set_mailtype("html");
+                                $subject = "Your bid has been Successfully Submitted";
+                                $this->email->set_mailtype("html");
+                                $this->email->from($siteinfos->email,$siteinfos->sname);
+                                $this->email->to("lakshmi.amujuru@sweken.com");
+                                $this->email->subject($subject);
+                                $this->email->message($message);
+                            $this->email->send();
+                          exit; */
 	}
   
     public function index() {  
@@ -126,7 +127,8 @@ class Bidding extends MY_Controller {
 			   //send bid success mail
 			   $offer_data = $this->bid_m->get_offer_data($this->input->post("offer_id"));
 			   $data = (array)$offer_data;
-			   $data['dep_date'] = date('d/m/Y',$offer_data->dep_date);
+			   $data['dep_date'] = date('d/m/Y',$offer_data['dep_date']);
+			   $data['dep_time'] = gmdate('H:i A',$offer_data['dep_time']);
 			   $data['cash'] = $this->input->post("cash");
 			    $this->load->library('parser');        
 			  $message = $this->parser->parse("home/bidsuccess-temp", $data);

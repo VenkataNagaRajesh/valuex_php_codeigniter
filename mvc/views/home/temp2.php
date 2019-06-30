@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="col-md-2">
-				<img class="img-responsive" src="<?php echo base_url('assets/home/images/emir.png'); ?>" alt="logo">
+				<img class="img-responsive" src="http://www.valuex.sweken.com/assets/home/images/emir.png" alt="logo">
 			</div>
 		</div>
 	</div>
@@ -12,9 +12,9 @@
 		<div class="col-md-8 col-md-offset-2 email-temp2">
 			<div class="col-md-6">
 				<div class="header-email">
-					<img class="img-responsive" src="<?php echo base_url('assets/home/images/temp2-logo.jpg'); ?>" alt="temp bnr">
+					<img class="img-responsive" src="http://www.valuex.sweken.com/assets/home/images/temp2-logo.jpg" alt="temp bnr">
 				</div>
-				<h1>Hi [first_name] [last_name]</h1>
+				<h1>Hi {first_name} {last_name}</h1>
 				<p>
 					With AC Bid Upgrade you can enhance your travel experince by enjoying priority. One or more of yourupcoming flight (s) are eligible for bids
 				</p>
@@ -27,8 +27,8 @@
 				</div>
 			</div>
 			<div class="col-md-6 booking-ref">
-				<img class="img-responsive" src="<?php echo base_url('assets/home/images/temp2-bnr.jpg'); ?>" alt="temp2 bnr">
-				<p class="pull-right"><b>BOOKING REFERENECE: <span style="color:#ff6633;">[pnr_ref]</span></b></p>
+				<img class="img-responsive" src="http://www.valuex.sweken.com/assets/home/images/temp2-bnr.jpg" alt="temp2 bnr">
+				<p class="pull-right"><b>BOOKING REFERENECE: <span style="color:#ff6633;">{pnr_ref}</span></b></p>
 			</div>
 		</div>
 	</div>

@@ -13,6 +13,7 @@
                         <div style="position: relative;min-height: 1px;padding-left: 15px;padding-right: 15px;">
                                 <div style="background-image: url(http://www.valuex.sweken.com/assets/home/images/temp1-hdr-bg.jpg);margin-top: 20px;">
                                         <h1 style="margin-bottom:8px;color: #fff;font-size: 24px;font-weight: bold;padding:12px;font-family:century gothic;"><span>Hi {first_name} {last_name}!</span><span style="float: right !important;color:#333;">Booking Reference : {pnr_ref} <b></b></span></h1>
+										<span>coupon code : {coupon_code}</span>
                                 </div>
                                 <div>
                                         <img style="width:auto;display: block;max-width: 100%;height:auto;" src="http://www.valuex.sweken.com/assets/home/images/temp1-bnr.jpg" alt="temp bnr">

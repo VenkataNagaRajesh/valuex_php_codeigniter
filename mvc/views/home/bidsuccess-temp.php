@@ -39,11 +39,11 @@
 							<tr>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{dep_date}</td>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{carrier_code}{flight_number}</td>
-								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">13:15 pm</td>
+								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{dep_time}</td>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{from_city}</td>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{to_city}</td>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{cabin} Class</td>
-								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">cabin</td>
+								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{seat_no}</td>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">${cash} USD</td>
 							</tr>
 						</tbody>
