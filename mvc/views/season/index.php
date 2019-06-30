@@ -104,7 +104,7 @@
 		</form>
 	</div>
 	<div class="col-md-12 cal-table">
-		<div class="col-md-8">
+		<div class="col-md-8" style="padding:0;">
 			<div id="calendar1" class="cal-box"></div>
 		</div>
 		<div class="col-md-4">

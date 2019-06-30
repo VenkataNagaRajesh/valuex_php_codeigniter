@@ -3894,11 +3894,13 @@ fieldset[disabled] .btn-vk.active {
 	color:#000;
 }
 .seasons .ui-datepicker-group{
-	width:auto;
-	margin: 5px 2px;
+	width: 25%;
+	margin-left: auto;
+	margin-right: auto;
 }
 .seasons .ui-datepicker-inline{
 	width:100% !important;
+	padding: 6px;
 }
 .seasons .season-highlight .default{
 	background: none;
