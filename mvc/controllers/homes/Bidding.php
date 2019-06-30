@@ -43,8 +43,8 @@ class Bidding extends MY_Controller {
 	}
   
     public function index() {  
-       //$this->session->set_userdata('pnr_ref','WQ1235');
-       //$this->session->set_userdata('validation_check',1);	   
+       $this->session->set_userdata('pnr_ref','WQ1235');
+       $this->session->set_userdata('validation_check',1);	   
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
 			$this->session->unset_userdata('pnr_ref');
@@ -160,25 +160,57 @@ class Bidding extends MY_Controller {
 			array(
 				'field' => 'card_number', 
 				'label' => $this->lang->line("bid_card_number"), 
-				'rules' => 'trim|required|xss_clean|max_length[16]|min_length[16]'
+				'rules' => 'trim|required|max_length[16]|min_length[16]numeric|xss_clean'
+			),			
+			array(
+				'field' => 'year_expiry', 
+				'label' => "Year", 
+				'rules' => 'trim|required|max_length[02]|min_length[02]|numeric|xss_clean|callback_valYear'
 			),
 			array(
 				'field' => 'month_expiry', 
-				'label' => $this->lang->line("bid_month_expiry"), 
-				'rules' => 'trim|required|xss_clean|max_length[02]|min_length[02]'
-			),
-			array(
-				'field' => 'year_expiry', 
-				'label' => $this->lang->line("bid_year_expiry"), 
-				'rules' => 'trim|required|xss_clean|max_length[02]|min_length[02]'
+				'label' => "Month",				
+				'rules' => 'trim|required|max_length[02]|min_length[02]|numeric|xss_clean|callback_valMonth'
 			),
 			array(
 				'field' => 'cvv', 
 				'label' => $this->lang->line("bid_cvv"), 
-				'rules' => 'trim|required|xss_clean|max_length[03]|min_length[02]'
+				'rules' => 'trim|required|max_length[03]|min_length[02]|numeric|xss_clean'
 			)
 		);
 		return $rules;
+	}
+	
+	public function valMonth(){
+		$cur_month = date('m');
+		$cur_year = date('y');
+		if(empty($this->input->post('month_expiry'))){
+			$this->form_validation->set_message("valMonth", "%s is required");
+			return FALSE;
+		} else {
+			if($this->input->post('month_expiry') < $cur_month && $this->input->post('year_expiry') <= $cur_year){
+				$this->form_validation->set_message("valMonth", "%s is Expired");
+				return FALSE;
+			} else {
+				return TRUE;
+			} 		
+		}
+	}
+	
+	public function valYear(){
+		$cur_month = date('m');
+		$cur_year = date('y');
+		if(empty($this->input->post('year_expiry'))){
+			$this->form_validation->set_message("valYear", "%s is required");
+			return FALSE;
+		} else {
+			if($this->input->post('year_expiry') >= $cur_year){
+				return TRUE;
+			}else {
+				$this->form_validation->set_message("valYear", "%s is Expired");
+				return FALSE;
+			}
+		}
 	}
 	
 	public function saveCardData(){
