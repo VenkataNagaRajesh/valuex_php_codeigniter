@@ -101,7 +101,7 @@ $query = " select  SQL_CALC_FOUND_ROWS
                         INNER JOIN (
                                         select  flight_number,group_concat(distinct fqtv) as fqtv ,
                                                 group_concat(distinct dep_date) as flight_date  ,
-                                                pnr_ref,group_concat(first_name, ' ' , last_name, ':', ptc.code, ':', pax_contact_email, ':' , phone SEPARATOR '<br>' ) as p_list , 
+                                                pnr_ref,group_concat(distinct first_name, ' ' , last_name, ':', ptc.code, ':', pax_contact_email, ':' , phone SEPARATOR '<br>' ) as p_list , 
                                                 group_concat(distinct cab.aln_data_value) as from_cabin  , fc.code as from_city, tc.code as to_city, 
                                                 group_concat(distinct bs.aln_data_value) as offer_status , car.code as carrier , pf1.carrier_code
                                         from VX_aln_daily_tkt_pax_feed pf1 
