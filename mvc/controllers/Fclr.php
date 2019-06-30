@@ -582,8 +582,8 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code
 		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency)
 		     LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin)
                      LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin)
-		    INNER JOIN VX_market_airport_map smap on (smap.airport_id = fc.boarding_point ) 
-		     INNER  JOIN VX_market_airport_map dmap on (dmap.airport_id = fc.off_point)
+		     LEFT JOIN VX_market_airport_map smap on (smap.airport_id = fc.boarding_point ) 
+		     LEFT JOIN VX_market_airport_map dmap on (dmap.airport_id = fc.off_point)
 
 $sWhere $sOrder $sLimit";
 
