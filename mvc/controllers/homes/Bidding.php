@@ -43,8 +43,8 @@ class Bidding extends MY_Controller {
 	}
   
     public function index() {  
-      // $this->session->set_userdata('pnr_ref','WQ1235');
-      // $this->session->set_userdata('validation_check',1);	   
+       //$this->session->set_userdata('pnr_ref','WQ1235');
+       //$this->session->set_userdata('validation_check',1);	   
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
 			$this->session->unset_userdata('pnr_ref');
@@ -75,7 +75,7 @@ class Bidding extends MY_Controller {
         $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
 		
-        // print_r($this->data['results']); exit;	
+        //print_r($this->data['results']); exit;	
 	   
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);
@@ -127,14 +127,14 @@ class Bidding extends MY_Controller {
 			   //send bid success mail
 			   $offer_data = $this->bid_m->get_offer_data($this->input->post("offer_id"));
 			   $data = (array)$offer_data;
-			   $data['dep_date'] = date('d/m/Y',$offer_data['dep_date']);
-			   $data['dep_time'] = gmdate('H:i A',$offer_data['dep_time']);
+			   $data['dep_date'] = date('d/m/Y',$data['dep_date']);
+			   $data['dep_time'] = gmdate('H:i A',$data['dep_time']);
 			   $data['cash'] = $this->input->post("cash");
 			    $this->load->library('parser');        
 			  $message = $this->parser->parse("home/bidsuccess-temp", $data);
 			  $message =html_entity_decode($message);
 			  $siteinfos = $this->reset_m->get_site();
-			   $tomail = explode(',',$offer_data[0]->email_list)[0];
+			   $tomail = explode(',',$data[0]['email_list'])[0];
 				$subject = "Your bid has been Successfully Submitted";				
 				$this->email->set_mailtype("html");
 				$this->email->from($siteinfos->email,$siteinfos->sname);
@@ -160,22 +160,22 @@ class Bidding extends MY_Controller {
 			array(
 				'field' => 'card_number', 
 				'label' => $this->lang->line("bid_card_number"), 
-				'rules' => 'trim|required|xss_clean|max_length[16]'
+				'rules' => 'trim|required|xss_clean|max_length[16]|min_length[16]'
 			),
 			array(
 				'field' => 'month_expiry', 
 				'label' => $this->lang->line("bid_month_expiry"), 
-				'rules' => 'trim|required|xss_clean|max_length[02]'
+				'rules' => 'trim|required|xss_clean|max_length[02]|min_length[02]'
 			),
 			array(
 				'field' => 'year_expiry', 
 				'label' => $this->lang->line("bid_year_expiry"), 
-				'rules' => 'trim|required|xss_clean|max_length[02]'
+				'rules' => 'trim|required|xss_clean|max_length[02]|min_length[02]'
 			),
 			array(
 				'field' => 'cvv', 
 				'label' => $this->lang->line("bid_cvv"), 
-				'rules' => 'trim|required|xss_clean|max_length[03]'
+				'rules' => 'trim|required|xss_clean|max_length[03]|min_length[02]'
 			)
 		);
 		return $rules;
