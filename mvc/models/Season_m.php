@@ -116,5 +116,14 @@ class season_m extends MY_Model {
 		
 		return $query->result();
 	}
+	
+	public function seasonTotalCount($airlineID=null){
+		$this->db->select('count(*) count')->from('VX_aln_season');
+		if($airlineID != null){
+			$this->db->where('airline_id',$airlineID);
+		}
+		$query = $this->db->get();
+		return $query->row('count');
+	}
 }
 
