@@ -59,6 +59,10 @@ class Offer_table extends Admin_Controller {
                 )
         );
 
+
+                $this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
+		$this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
+
 		$this->data["subview"] = "offer_table/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -216,31 +220,31 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 			if(!empty($this->input->get('flightNbr'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'pf.flight_number >= '.$this->input->get('flightNbr');
+                                $sWhere .= 'MainSet.flight_number >= '.$this->input->get('flightNbr');
                         }
 
 
                         if(!empty($this->input->get('flightNbrEnd'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'pf.flight_number <= '.$this->input->get('flightNbrEnd');
+                                $sWhere .= 'MainSet.flight_number <= '.$this->input->get('flightNbrEnd');
                         }
 
 
                         if(!empty($this->input->get('depStartDate'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'pf.dep_date >= '. strtotime($this->input->get('depStartDate'));
+                                $sWhere .= 'flight_date >= '. strtotime($this->input->get('depStartDate'));
                         }
                         if(!empty($this->input->get('depEndDate'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'pf.dep_date <= '.  strtotime($this->input->get('depEndDate'));
+                                $sWhere .= 'flight_date <= '.  strtotime($this->input->get('depEndDate'));
                         }
                         if(!empty($this->input->get('fromCabin'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'from_cabin = '. $this->input->get('fromCabin');
+                                $sWhere .= 'from_cabin_id = '. $this->input->get('fromCabin');
                         }
                         if(!empty($this->input->get('toCabin'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'to_cabin = '.  $this->input->get('toCabin');
+                                $sWhere .= 'upgrade_type = '.  $this->input->get('toCabin');
                         }
 
 
@@ -250,11 +254,12 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 $sQuery = " select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
-                        MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, SubSet.offer_status  
+                        MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status,
+			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point
 
                 FROM ( 
                                 select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, 
-                                tcab.aln_data_value as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  
+                                tcab.aln_data_value as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status
                                 from  
                                         VX_aln_offer_ref oref 
                                         INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id) 
@@ -262,25 +267,30 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
 
                                         INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref 
                                                         and pf.flight_number = bid.flight_number) 
+                                        INNER JOIN VX_aln_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) 
+                                         INNER JOIN VX_aln_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type)
+					  LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
                      ) as MainSet 
 
                         
-                        INNER JOIN (
+                       INNER  JOIN (
                                         select  flight_number,group_concat(distinct fqtv) as fqtv ,
                                                 group_concat(distinct dep_date) as flight_date  ,
                                                 pnr_ref,group_concat(first_name, ' ' , last_name) as p_list , 
-                                                group_concat(distinct cab.aln_data_value) as from_cabin  , fc.code as from_city, tc.code as to_city, 
-                                                group_concat(distinct bs.aln_data_value) as offer_status , car.code as carrier 
+                                                group_concat(distinct cab.aln_data_value) as from_cabin  , fc.code as from_city, 
+						tc.code as to_city, from_city as boarding_point , to_city as off_point,
+						 group_concat(distinct pf1.cabin) as from_cabin_id, 
+                                                 car.code as carrier
+                                        
                                         from VX_aln_daily_tkt_pax_feed pf1 
-                                        LEFT JOIN VX_aln_dtpf_ext pext1 on (pext1.dtpf_id = pf1.dtpf_id )  
-                                        LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext1.booking_status AND bs.aln_data_typeID = 20) 
                                         LEFT JOIN vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
                                         LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
                                         LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13)
                                         LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
-                                        where pf1.is_processed = 1 AND  bs.alias != 'excl'  ". $sWhere. " 
+					where pf1.is_processed = 1   
                                         group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
-                   ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number) 
+                   ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number ) 
+ $sWhere 
 $sOrder $sLimit";
 
 

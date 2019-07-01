@@ -9,7 +9,7 @@
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class="form-group">
 				<div class="col-md-3 select-form">
-					<h4>Flight Number Range</h4>
+					<h4>Board/Off Point</h4>
 					<div class="col-sm-12">
 						<?php
 						$airport['0'] = 'Select Boarding Point';
@@ -24,7 +24,7 @@
 					</div>
 				</div>
 				<div class="col-md-3 select-form">
-					<h4>City</h4>
+					<h4>Cabins</h4>
 					<div class="col-sm-12">
 					<?php
                         $cabin['0'] = 'Select From Cabin';
@@ -39,7 +39,7 @@
 					</div>
 				</div>
 				<div class="col-md-3 select-form">
-					<h4>Market</h4>
+					<h4>Flight Nbr Range</h4>
 					<div class="col-sm-12">
 						<input type="text" class="form-control" placeholder="Enter Start range Flight Number" id="flight_number" name="flight_number" value="<?=set_value('flight_number',$flight_number)?>" >
 					</div>

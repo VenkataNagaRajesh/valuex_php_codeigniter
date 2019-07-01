@@ -4,33 +4,33 @@
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">	
 			<div class="form-group">
 				<div class="col-md-3 select-form">
-					<h4>City</h4>
+					<h4>Board/Off Point</h4>
 					<div class="col-sm-12">
 						<?php
-							$airport['0'] = 'Select Boarding Point';
-							ksort($airport);
-							echo form_dropdown("boarding_point", $airport,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
+							$airports['0'] = 'Select Boarding Point';
+							ksort($airports);
+							echo form_dropdown("boarding_point", $airports,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
 					 <div class="col-sm-12">
 						<?php
-							$airport['0'] = 'Select Off Point';
-							ksort($airport);
-							echo form_dropdown("off_point", $airport,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
+							$airports['0'] = 'Select Off Point';
+							ksort($airports);
+							echo form_dropdown("off_point", $airports,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
 				</div>
 				<div class="col-md-3 select-form">
 					<h4>Cabins</h4>
 					<div class="col-sm-12">
 						<?php
-							$cabin['0'] = 'Select From Cabin';
-							ksort($cabin);
-							echo form_dropdown("from_cabin", $cabin,set_value("from_cabin",$from_cabin), "id='from_cabin' class='form-control hide-dropdown-icon select2'");    ?>
+							$cabins['0'] = 'Select From Cabin';
+							ksort($cabins);
+							echo form_dropdown("from_cabin", $cabins,set_value("from_cabin",$from_cabin), "id='from_cabin' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
 					<div class="col-sm-12">
 						<?php
-							$cabin['0'] = 'Select To cabin';
-							ksort($cabin);
-							echo form_dropdown("to_cabin", $cabin,set_value("to_cabin",$to_cabin), "id='to_cabin' class='form-control hide-dropdown-icon select2'");    ?>
+							$cabins['0'] = 'Select To cabin';
+							ksort($cabins);
+							echo form_dropdown("to_cabin", $cabins,set_value("to_cabin",$to_cabin), "id='to_cabin' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
 				</div>
 				<div class="col-md-3 select-form">
