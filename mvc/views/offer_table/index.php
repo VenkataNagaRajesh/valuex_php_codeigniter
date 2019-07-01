@@ -4,7 +4,7 @@
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">	
 			<div class="form-group">
 				<div class="col-md-3 select-form">
-					<h4>City</h4>
+					<h4>Board/Off Point</h4>
 					<div class="col-sm-12">
 						<?php
 							$airports['0'] = 'Select Boarding Point';
