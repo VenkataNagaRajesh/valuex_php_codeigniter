@@ -19,13 +19,13 @@
 
 <body class="white-bg-login">
 
-    <div class="col-md-4 col-md-offset-4 marg" style="margin-top:30px;">
+    <div class="col-md-4 col-md-offset-4 marg" style="margin-top:5em;">
         <?php
             if(count($siteinfos->photo)) {
                 echo "<center><img height='50' src=".base_url('uploads/images/'.$siteinfos->photo)." /></center>";
             }
         ?>
-        <center><h4><?php echo namesorting($siteinfos->sname, 25); ?></h4></center>
+        <!--<center><h4><?php echo namesorting($siteinfos->sname, 25); ?></h4></center>-->
     </div>
 
     <?php $this->load->view($subview); ?>

@@ -1,6 +1,6 @@
 <div class="eer">
-	<h2 class="title-tool-bar" style="color:#fff;">Eligibility Exclusion Rules</h2>
-	<p class="card-header" data-toggle="collapse" data-target="#eerAdd"><button type="button" id = 'rule_add_btn' class="btn btn-danger pull-right" data-placement="left" title="Add Rule" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:95%;">Eligibility Exclusion Rules</h2>
+	<p class="card-header" data-toggle="collapse" data-target="#eerAdd"><button type="button" id = 'rule_add_btn' class="btn btn-danger pull-right" style="margin:8px 0;" data-placement="left" title="Add Rule" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="table-responsive col-md-12 collapse" id="eerAdd">
 		<div class="col-md-12"><h2>Rule Criteria</h2></div>
 		<form class="form-horizontal" id='add_rule_form' action="#">
@@ -104,33 +104,131 @@
 						<div class="cabins">
 							<table class="table">
 								<tr>
-									<td></td>
-									<td>Y</td>
-									<td>W</td>
-									<td>C</td>
-									<td>F</td>
+									<td>
+										<label class="btn btn-success">
+											<span>&nbsp;</span>
+										</label>
+									</td>
+									<td>	
+										<label class="btn btn-success">
+											<span>Y</span>
+										</label>
+									</td>
+									<td>
+										<label class="btn btn-success">
+											<span>W</span>
+										</label>
+									</td>
+									<td>
+										<label class="btn btn-success">
+											<span>C</span>
+										</label>
+									</td>
+									<td>
+										<label class="btn btn-success">
+											<span>F</span>
+										</label>
+									</td>
 								</tr>
 								<tr>
 									<input type="hidden" class="form-control" id="excl_id" name="excl_id"   value="" >
-									<td>Y</td>
-									<td class="block"></td>
-									<td><input type="checkbox" class="form-control"  name='cabin_list' value='Y-W'  > 												</td>
-									<td><input type="checkbox" class="form-control"  name='cabin_list' value='Y-C'  ></td>
-									<td><input type="checkbox" class="form-control"  name='cabin_list' value='Y-F'  ></td>
+									<td>
+										<label class="btn btn-success">
+											<span>Y</span>
+										</label>
+									</td>
+									<td class="block">
+										<label class="btn btn-success">
+											<span>&nbsp;</span>
+										</label>
+									</td>
+									<td>	
+										<div class="btn-group" data-toggle="buttons">		
+											<label class="btn btn-success">
+												<input type="checkbox" autocomplete="off" name='cabin_list' value='Y-W'>
+												<span class="glyphicon glyphicon-ok"></span>
+											</label>
+										</div>			
+									</td>
+									<td>
+										<div class="btn-group" data-toggle="buttons">		
+											<label class="btn btn-success">
+												<input type="checkbox" autocomplete="off" name='cabin_list' value='Y-C' >
+												<span class="glyphicon glyphicon-ok"></span>
+											</label>
+										</div>
+									</td>
+									<td>
+										<div class="btn-group" data-toggle="buttons">		
+											<label class="btn btn-success">
+												<input type="checkbox" autocomplete="off" name='cabin_list' value='Y-F'>
+												<span class="glyphicon glyphicon-ok"></span>
+											</label>
+										</div>
+									</td>
 								</tr>
 								<tr>
-									<td>W</td>
-									<td class="block"></td>
-									<td class="block"></td>
-									<td><input type="checkbox" class="form-control" name='cabin_list'  value='W-C'  ></td>
-									<td><input type="checkbox" class="form-control"  name='cabin_list' value='W-F'  ></td>
+									<td>
+										<label class="btn btn-success">
+											<span>W</span>
+										</label>
+									</td>
+									<td class="block">
+										<label class="btn btn-success">
+											<span>&nbsp;</span>
+										</label>
+									</td>
+									<td class="block">
+										<label class="btn btn-success">
+											<span>&nbsp;</span>
+										</label>
+									</td>
+									<td>
+										<div class="btn-group" data-toggle="buttons">		
+											<label class="btn btn-success">
+												<input type="checkbox" autocomplete="off" name='cabin_list'  value='W-C'>
+												<span class="glyphicon glyphicon-ok"></span>
+											</label>
+										</div>
+									</td>
+									<td>
+										<div class="btn-group" data-toggle="buttons">		
+											<label class="btn btn-success">
+												<input type="checkbox" autocomplete="off" name='cabin_list' value='W-F'>
+												<span class="glyphicon glyphicon-ok"></span>
+											</label>
+										</div>
+									</td>
 								</tr>
 								<tr>
-									<td>C</td>
-									<td class="block"></td>
-									<td class="block"></td>
-									<td class="block"></td>
-									<td><input type="checkbox" class="form-control"  name='cabin_list' value='C-F' ></td>
+									<td>
+										<label class="btn btn-success">
+											<span>C</span>
+										</label>
+									</td>
+									<td class="block">
+										<label class="btn btn-success">
+											<span>&nbsp;</span>
+										</label>
+									</td>
+									<td class="block">
+										<label class="btn btn-success">
+											<span>&nbsp;</span>
+										</label>
+									</td>
+									<td class="block">
+										<label class="btn btn-success">
+											<span>&nbsp;</span>
+										</label>
+									</td>
+									<td>
+										<div class="btn-group" data-toggle="buttons">		
+											<label class="btn btn-success">
+												<input type="checkbox" autocomplete="off" name='cabin_list' value='C-F'>
+												<span class="glyphicon glyphicon-ok"></span>
+											</label>
+										</div>
+									</td>
 								</tr>
 							</table>
 						</div>
@@ -622,6 +720,11 @@ function form_reset(){
   }
 
 
+</script>
+<script>
+function myFunction(x) {
+  x.classList.toggle("fa-thumbs-up");
+}
 </script>
 <script>
     $(document).ready(function(){
