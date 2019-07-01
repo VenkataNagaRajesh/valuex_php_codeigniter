@@ -6,7 +6,7 @@
 <div style="width:1170px;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;font-family:century gothic;">
 	<div>
 		<div style="width: 8.33333%;position: relative;min-height: 1px;padding-left: 15px;padding-right: 15px;float:left;">
-			<img style="width:auto;display: block;height:auto;" src="temp-images/temp2-logo.jpg" alt="logo">
+			<img style="width:auto;display: block;height:auto;" src="http://www.valuex.sweken.com/assets/home/images/temp2-logo.jpg" alt="logo">
 		</div>
 		<div style="width: 99.667%;min-height: 1px;padding-left: 15px;padding-right: 15px;">
 			<div style="background: #f5f5f5;height: 38px;margin: 16px 0;"></div>
@@ -38,8 +38,8 @@
 					  <tbody>
 							<tr>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{dep_date}</td>
-								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{flight_no}</td>
-								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">13:15 pm</td>
+		 						<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{flight_no}</td>
+								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{dep_time}</td>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{origin}</td>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{destination}</td>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{upgrade_to} Class</td>

@@ -19,30 +19,12 @@ class Bidding extends MY_Controller {
          $this->load->library('email');		 
 	     $language = $this->session->userdata('lang');	  
 		$this->lang->load('bidding', $language);	
-                      /*   $offer_data = $this->bid_m->get_offer_data(11);
-                           $data = (array)$offer_data;
-                           print_r( explode(',',$data['email_list'])[0]); exit;
-                      /*     $data['dep_date'] = date('d/m/Y',$data['dep_date']);
-                           $data['dep_time'] = gmdate('H:i A',$data['dept_time']);
-                           $data['cash'] = "lakshmi.amujuru@sweken.com";
-                            $this->load->library('parser');
-                          $message = $this->parser->parse("home/bidsuccess-temp", $data);
-                          $message =html_entity_decode($message);
-                          $siteinfos = $this->reset_m->get_site();
-                          // $tomail = explode(',',$data[0]['email_list'])[0];
-                                $subject = "Your bid has been Successfully Submitted";
-                                $this->email->set_mailtype("html");
-                                $this->email->from($siteinfos->email,$siteinfos->sname);
-                                $this->email->to("lakshmi.amujuru@sweken.com");
-                                $this->email->subject("bid Submitted");
-                                $this->email->message($message);
-                            $this->email->send();  
-                  exit; */
+      
 	}
   
     public function index() {  
-      // $this->session->set_userdata('pnr_ref','F90414');
-     //  $this->session->set_userdata('validation_check',1);	   
+      //$this->session->set_userdata('pnr_ref','WQ1235');
+      //$this->session->set_userdata('validation_check',1);	   
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
 			$this->session->unset_userdata('pnr_ref');
@@ -53,8 +35,9 @@ class Bidding extends MY_Controller {
 		if(empty($this->data['results'])){
 			redirect(base_url('home/index'));
 		}
-                
+               
 		foreach($this->data['results'] as $result ){
+			$tocabins = array();
 			$result->to_cabins = explode(',',$result->to_cabins);
 			  foreach($result->to_cabins as $value){
                 $data = explode('-',$value);
@@ -62,7 +45,7 @@ class Bidding extends MY_Controller {
                // unset($result->to_cabins[$key]);
               }
               $result->to_cabins = $tocabins;
-			
+			   
 			$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
 			$arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
 			$dteStart = new DateTime($dept); 
@@ -75,8 +58,8 @@ class Bidding extends MY_Controller {
         $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
 		
-       // print_r($this->data['results']); exit;	
-	   
+       	
+	    //print_r($this->data['results']); exit;
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);
 	}
