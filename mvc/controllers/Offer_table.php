@@ -20,9 +20,10 @@ class Offer_table extends Admin_Controller {
 		$this->load->model("reset_m");
 		$this->load->model('acsr_m');
 		$this->load->model("airports_m");
+		$this->load->model('bid_m');
 		$language = $this->session->userdata('lang');		
-		 $this->lang->load('offer_table', $language);
-		
+		$this->lang->load('offer_table', $language);
+			
 	}	
 	
 
@@ -79,14 +80,34 @@ $namelist = explode(',',$passenger_data->passengers);
                         $emails_list =  explode(',',$passenger_data->emails);
 
                         $passenger_cnt =  count($namelist);
+$offer_data = $this->bid_m->get_offer_data($offer_id);
+ $card_data = $this->bid_m->getCardData($offer_id);
+   $card_number = substr(trim($card_data->card_number), -4);		
+   $maildata = array(
+  	'first_name'   => $namelist[0],
+  	'last_name' => '',
+  	'tomail' => $emails_list[0],
+  	'pnr_ref' => $passenger_data->pnr_ref,						
+  	'mail_subject' => $msg_txt . " For Flight: " . $flight_number,
+  	'card_number' => $card_number,
+  	'cash_paid' => $offer_data->cash,
+  	'miles_used' => $offer_data->miles,
+  	'flight_no' => $offer_data->carrier_code.$offer_data->flight_number,
+  	'dep_date' => date('d-m-Y',$offer_data->dep_date),
+  	'dep_time' => gmdate('H:i A',$offer_data->dept_time),
+  	'origin' => $offer_data->from_city,
+  	'destination' => $offer_data->to_city, 
+  	'upgrade_to' => $offer_data->upgrade_type                             							
+   );						
 if( $status == 'accept' ) {
 //accept 
 $bid_status = 'bid_accepted';
 $msg_txt = "Bid is accepted";
+$template ="home/upgradeoffertmp";
 } else if ( $status == 'reject' ) { 
 $bid_status = 'bid_cancel';	
 $msg_txt = 'Bid is rejected';
-	
+$template ="home/bidreject-temp";	
 } else {
 	$this->session->set_flashdata('error', 'No Action Status');
         redirect(base_url("offer_table/view/".$offer_id));
@@ -126,6 +147,10 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                          $this->email->subject($msg_txt . " For Flight: " . $flight_number);
                         $this->email->message($message);
                         $this->email->send();
+				
+					if($template){
+					 // $this->sendMailTemplateParser($template,$maildata);
+					}	
 
                          $array = array();
                         $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
