@@ -56,11 +56,12 @@ class Bidding extends MY_Controller {
                 
 		foreach($this->data['results'] as $result ){
 			$result->to_cabins = explode(',',$result->to_cabins);
-			foreach($result->to_cabins as $key => $value){
-			  $data = explode('-',$value);
-			  $result->to_cabins[$data[1]] = $data[0];
-			  unset($result->to_cabins[$key]);
-			}
+			  foreach($result->to_cabins as $value){
+                $data = explode('-',$value);
+                $tocabins[$data[1]] = $data[0];
+               // unset($result->to_cabins[$key]);
+              }
+              $result->to_cabins = $tocabins;
 			
 			$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
 			$arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
@@ -114,7 +115,7 @@ class Bidding extends MY_Controller {
 			   $select_p_list = explode(',',$select_passengers_data->p_list);
                $unselect_p_list = explode(',',$unselect_passengers_data->p_list);
 			   
-  $this->mydebug->debug($select_passengers_data->p_list);
+               $this->mydebug->debug($select_passengers_data->p_list);
 			   $this->mydebug->debug($unselect_passengers_data->p_list);
 			   
              $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $select_status,"modify_date"=>time()),$select_p_list);
