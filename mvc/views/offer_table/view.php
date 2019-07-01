@@ -8,7 +8,6 @@
                         $offer_id = $list[0];
                         $p_cnt = count(explode('<br>',$ofr[0]->p_list));
                         $pnr_ref = array_column($ofr,'pnr_ref');
-
                 ?>
 
 			<p>
@@ -50,7 +49,8 @@
 	</div>
 	<div class="col-md-4">
 		<div class="off-status">
-			<p>Status: <b>Pending for Evaluation<b></p>
+		<?php $status_ofr = implode('<br>',array_column($ofr,'offer_status'));?>
+			<p>Status: <b><?php echo $status_ofr; ?></b></p>
 			<p><b>Offer Price</b><br>
 				<span>Total Price:</span><?php echo array_sum(array_column($ofr,'bid_value'));?><br>
 				<span>Mode:</span> 60%  Cash, 40% Miles<br>

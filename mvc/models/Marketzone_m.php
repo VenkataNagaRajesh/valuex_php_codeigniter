@@ -295,6 +295,15 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 
 	function hash($string) {
 		return parent::hash($string);
+	}
+
+    function marketzoneTotalCount($airlineID = null){
+		$this->db->select('count(*) count')->from('VX_aln_market_zone');
+		if($airlineID != null){
+			$this->db->where('airline_id',$airlineID);
+		}
+		$query = $this->db->get();
+		return $query->row('count');
 	}	
 }
 

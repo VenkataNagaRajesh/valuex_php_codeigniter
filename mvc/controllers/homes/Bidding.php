@@ -19,32 +19,30 @@ class Bidding extends MY_Controller {
          $this->load->library('email');		 
 	     $language = $this->session->userdata('lang');	  
 		$this->lang->load('bidding', $language);	
-		
-		 /* $offer_data = $this->bid_m->get_offer_data(1);
-                          $data = (array)$offer_data;
-                           $data['dep_date'] = date('d/m/Y',$offer_data['dep_date']);
-                           $data['dep_time'] = gmdate('H:i A',$offer_data['dep_time']);
-                           $data['cash'] = 222;
+                      /*   $offer_data = $this->bid_m->get_offer_data(11);
+                           $data = (array)$offer_data;
+                           print_r( explode(',',$data['email_list'])[0]); exit;
+                      /*     $data['dep_date'] = date('d/m/Y',$data['dep_date']);
+                           $data['dep_time'] = gmdate('H:i A',$data['dept_time']);
+                           $data['cash'] = "lakshmi.amujuru@sweken.com";
                             $this->load->library('parser');
                           $message = $this->parser->parse("home/bidsuccess-temp", $data);
                           $message =html_entity_decode($message);
-                        //  echo $message;
-          $siteinfos = $this->reset_m->get_site();
-
-                $this->email->set_mailtype("html");
+                          $siteinfos = $this->reset_m->get_site();
+                          // $tomail = explode(',',$data[0]['email_list'])[0];
                                 $subject = "Your bid has been Successfully Submitted";
                                 $this->email->set_mailtype("html");
                                 $this->email->from($siteinfos->email,$siteinfos->sname);
                                 $this->email->to("lakshmi.amujuru@sweken.com");
-                                $this->email->subject($subject);
+                                $this->email->subject("bid Submitted");
                                 $this->email->message($message);
-                            $this->email->send();
-                          exit; */
+                            $this->email->send();  
+                  exit; */
 	}
   
     public function index() {  
-       //$this->session->set_userdata('pnr_ref','WQ1235');
-       //$this->session->set_userdata('validation_check',1);	   
+      // $this->session->set_userdata('pnr_ref','F90414');
+     //  $this->session->set_userdata('validation_check',1);	   
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
 			$this->session->unset_userdata('pnr_ref');
@@ -55,13 +53,15 @@ class Bidding extends MY_Controller {
 		if(empty($this->data['results'])){
 			redirect(base_url('home/index'));
 		}
+                
 		foreach($this->data['results'] as $result ){
 			$result->to_cabins = explode(',',$result->to_cabins);
-			foreach($result->to_cabins as $key => $value){
-			  $data = explode('-',$value);
-			  $result->to_cabins[$data[1]] = $data[0];
-			  unset($result->to_cabins[$key]);
-			}
+			  foreach($result->to_cabins as $value){
+                $data = explode('-',$value);
+                $tocabins[$data[1]] = $data[0];
+               // unset($result->to_cabins[$key]);
+              }
+              $result->to_cabins = $tocabins;
 			
 			$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
 			$arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
@@ -75,7 +75,7 @@ class Bidding extends MY_Controller {
         $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
 		
-        //print_r($this->data['results']); exit;	
+       // print_r($this->data['results']); exit;	
 	   
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);
@@ -115,33 +115,37 @@ class Bidding extends MY_Controller {
 			   $select_p_list = explode(',',$select_passengers_data->p_list);
                $unselect_p_list = explode(',',$unselect_passengers_data->p_list);
 			   
-			 //  $this->mydebug->debug($select_passengers_data->p_list);
-			 //  $this->mydebug->debug($unselect_passengers_data->p_list);
+               $this->mydebug->debug($select_passengers_data->p_list);
+			   $this->mydebug->debug($unselect_passengers_data->p_list);
 			   
-               $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $select_status,"modify_date"=>time()),$select_p_list);
-			    $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);
+             $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $select_status,"modify_date"=>time()),$select_p_list);
+		    $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);
 			   
 			   $ref['offer_status'] = $select_status;
 			   $ref["modify_date"] = time();
 			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
 			   //send bid success mail
 			   $offer_data = $this->bid_m->get_offer_data($this->input->post("offer_id"));
-			   $data = (array)$offer_data;
-			   $data['dep_date'] = date('d/m/Y',$data['dep_date']);
-			   $data['dep_time'] = gmdate('H:i A',$data['dep_time']);
-			   $data['cash'] = $this->input->post("cash");
+			   $maildata = (array)$offer_data;
+			   $maildata['dep_date'] = date('d/m/Y',$maildata['dep_date']);
+			   $maildata['dep_time'] = gmdate('H:i A',$maildata['dept_time']);
+			   $maildata['cash'] = $this->input->post("cash");
 			    $this->load->library('parser');        
-			  $message = $this->parser->parse("home/bidsuccess-temp", $data);
+			  $message = $this->parser->parse("home/bidsuccess-temp", $maildata);
 			  $message =html_entity_decode($message);
 			  $siteinfos = $this->reset_m->get_site();
-			   $tomail = explode(',',$data[0]['email_list'])[0];
+			   $tomail = explode(',',$maildata['email_list'])[0];
+                            $this->mydebug->debug($maildata);
+                            $this->mydebug->debug("Bid Submition ToMails ID : ".$tomail);
 				$subject = "Your bid has been Successfully Submitted";				
+                                     //  $tomail = 'lakshmi.amujuru@sweken.com';
 				$this->email->set_mailtype("html");
 				$this->email->from($siteinfos->email,$siteinfos->sname);
 				$this->email->to($tomail);
 				$this->email->subject($subject);
 				$this->email->message($message);
-			    $this->email->send();
+			   $status =  $this->email->send();
+                         $this->mydebug->debug("mailstatus : ".$status);
 				
 			  $json['status'] = "success";
 			  $this->session->unset_userdata('validation_check');
@@ -160,25 +164,57 @@ class Bidding extends MY_Controller {
 			array(
 				'field' => 'card_number', 
 				'label' => $this->lang->line("bid_card_number"), 
-				'rules' => 'trim|required|xss_clean|max_length[16]|min_length[16]'
+				'rules' => 'trim|required|max_length[16]|min_length[16]|numeric|xss_clean'
+			),			
+			array(
+				'field' => 'year_expiry', 
+				'label' => "Year", 
+				'rules' => 'trim|required|max_length[02]|min_length[02]|numeric|xss_clean|callback_valYear'
 			),
 			array(
 				'field' => 'month_expiry', 
-				'label' => $this->lang->line("bid_month_expiry"), 
-				'rules' => 'trim|required|xss_clean|max_length[02]|min_length[02]'
-			),
-			array(
-				'field' => 'year_expiry', 
-				'label' => $this->lang->line("bid_year_expiry"), 
-				'rules' => 'trim|required|xss_clean|max_length[02]|min_length[02]'
+				'label' => "Month",				
+				'rules' => 'trim|required|max_length[02]|min_length[02]|numeric|xss_clean|callback_valMonth'
 			),
 			array(
 				'field' => 'cvv', 
 				'label' => $this->lang->line("bid_cvv"), 
-				'rules' => 'trim|required|xss_clean|max_length[03]|min_length[02]'
+				'rules' => 'trim|required|max_length[03]|min_length[02]|numeric|xss_clean'
 			)
 		);
 		return $rules;
+	}
+	
+	public function valMonth(){
+		$cur_month = date('m');
+		$cur_year = date('y');
+		if(empty($this->input->post('month_expiry'))){
+			$this->form_validation->set_message("valMonth", "%s is required");
+			return FALSE;
+		} else {
+			if($this->input->post('month_expiry') < $cur_month && $this->input->post('year_expiry') <= $cur_year){
+				$this->form_validation->set_message("valMonth", "%s is Expired");
+				return FALSE;
+			} else {
+				return TRUE;
+			} 		
+		}
+	}
+	
+	public function valYear(){
+		$cur_month = date('m');
+		$cur_year = date('y');
+		if(empty($this->input->post('year_expiry'))){
+			$this->form_validation->set_message("valYear", "%s is required");
+			return FALSE;
+		} else {
+			if($this->input->post('year_expiry') >= $cur_year){
+				return TRUE;
+			}else {
+				$this->form_validation->set_message("valYear", "%s is Expired");
+				return FALSE;
+			}
+		}
 	}
 	
 	public function saveCardData(){
