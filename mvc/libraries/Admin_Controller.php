@@ -603,6 +603,7 @@ class Admin_Controller extends MY_Controller {
 		  $message = $this->parser->parse($template, $data,TRUE);
           $message =html_entity_decode($message);
           $siteinfos = $this->reset_m->get_site();
+		  $this->mydebug->debug($data['tomail']);		  
           //print_r($message);
           if($data['tomail']) {                      
             $subject = $data['mail_subject'];

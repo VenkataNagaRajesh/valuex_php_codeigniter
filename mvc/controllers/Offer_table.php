@@ -141,15 +141,15 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 </html>
 ';
 
-  $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+ /*  $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
 //                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject($msg_txt . " For Flight: " . $flight_number);
                         $this->email->message($message);
-                        $this->email->send();
+                        $this->email->send(); */
 				
 					if($template){
-					 // $this->sendMailTemplateParser($template,$maildata);
+					  $this->sendMailTemplateParser($template,$maildata);
 					}	
 
                          $array = array();

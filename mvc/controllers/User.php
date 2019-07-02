@@ -205,7 +205,6 @@ class User extends Admin_Controller {
 		}
 	}
 
-
 	public function edit() {
 		$this->data['headerassets'] = array(
 			'css' => array(
