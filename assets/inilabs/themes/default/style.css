@@ -2134,7 +2134,11 @@ Component: timeline
   color: #3A87AD;
 }
 .table .odd .btn-danger, .table .even .btn-danger{
-	padding:1px 5px;
+	padding:1px 7px;
+	margin-left: 2px;
+	margin-right: 2px;
+	margin-bottom: 5px;
+	border:none;
 }
 /*
     Component: alert
@@ -4002,7 +4006,7 @@ fieldset[disabled] .btn-vk.active {
 	padding: 16px 10px;
 	border: solid 1px #333;
 	margin-bottom: 12px;
-	margin-top: 12px;
+	margin-top: 0px;
 }
 .eer .table-responsive{
 	background: #fff;
