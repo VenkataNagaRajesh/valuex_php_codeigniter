@@ -1,7 +1,7 @@
 <div class="fclr-bar">
 <?php  if(permissionChecker('fclr_add')) {  ?>
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:95%;">Fare Control Range</h2>
-	<p class="card-header" data-toggle="collapse" data-target="#fclrAdd"><button style="margin:8px 0;" type="button" class="btn btn-danger pull-right" data-placement="left" title="Add FCLR" data-toggle="tooltip" id='fclr_add_btn' ><i class="fa fa-plus"></i></button></p>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Fare Control Range</h2>
+	<p class="card-header" data-toggle="collapse" data-target="#fclrAdd"><button style="margin:1px 0;" type="button" class="btn btn-danger pull-right" data-placement="left" title="Add FCLR" data-toggle="tooltip" id='fclr_add_btn' ><i class="fa fa-plus"></i></button></p>
  <?php } ?>
 	<div class="col-md-12 fclr-table-add collapse" id="fclrAdd">
 		<form class="form-horizontal" action="#" id='fclr_add_form'>

@@ -1,6 +1,6 @@
 <div class="mzones">
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:95%;">Market Zones</h2>
-	<p class="card-header" data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id = 'add_zone_button' class="btn btn-danger pull-right" style="margin:8px 0;" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Market Zones</h2>
+	<p class="card-header" data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id = 'add_zone_button' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="col-md-12 collapse" id="mzonesAdd">
 		<div class="col-md-4">
 			<div class="srch-buttons">

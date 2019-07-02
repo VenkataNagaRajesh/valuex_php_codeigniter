@@ -1,6 +1,6 @@
 <div class="eer">
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:95%;">Eligibility Exclusion Rules</h2>
-	<p class="card-header" data-toggle="collapse" data-target="#eerAdd"><button type="button" id = 'rule_add_btn' class="btn btn-danger pull-right" style="margin:8px 0;" data-placement="left" title="Add Rule" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Eligibility Exclusion Rules</h2>
+	<p class="card-header" data-toggle="collapse" data-target="#eerAdd"><button type="button" id = 'rule_add_btn' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Rule" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="table-responsive col-md-12 collapse" id="eerAdd">
 		<div class="col-md-12"><h2>Rule Criteria</h2></div>
 		<form class="form-horizontal" id='add_rule_form' action="#">
