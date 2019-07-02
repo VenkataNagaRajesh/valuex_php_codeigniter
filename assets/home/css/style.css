@@ -19,6 +19,7 @@ body {
   color: #848484;
   font-weight: 300;
   overflow-x: hidden;
+  text-transform:capitalize;
 }
 body.fh5co-offcanvas {
   overflow: hidden;
@@ -198,20 +199,23 @@ figure {
 .bid-tab .tab-content .pass-info p span{
 	color: #ff6633;
 	margin-left: 12px;
+	text-transform: capitalize;
 }
 .bid-tab .tab-content .pass-info p{
 	font-weight:bold;
 }
-.bid-tab .tab-content .pass-info h2{
+.bid-tab .tab-content .pass-info .table thead  th{
 	background: #ff6633;
 	color: #fff;
 	font-size: 14px;
 	padding: 8px;
 	margin-bottom: 8px;
 	font-weight: bold;
+	text-align:center;
 }
 .bid-tab .tab-content .pass-info .col-md-4, .bid-tab .tab-content .pass-info .col-md-3, .bid-tab .tab-content .pass-info .col-md-5{
 	padding:0;
+	text-transform: capitalize;
 }
 .bid-tab .tab-content .pass-info .bid-info ul{
 	padding-left: 0;
@@ -224,26 +228,29 @@ figure {
 .bid-tab .tab-content .pass-info .bid-info ul li:last-child{
 	color:#ff6633;
 }
+.bid-tab .tab-content .pass-info .bid-radio{
+	width:200px;
+}
 .bid-tab .tab-content .pass-info .bid-radio label{
 	color: #333;
 	font-size: 14px;
-	padding-left: 40px;
+	padding-left: 5px;
 }
 .bid-tab .tab-content .pass-info .bid-info{
 	display: flex;
 	margin-bottom: 10px;
 	padding: 0 12px;
+	width:360px;
 }
-.bid-tab .tab-content .pass-info .bid-radio{
+/*.bid-tab .tab-content .pass-info .bid-radio{
 	margin-bottom: 3em;
-}
+}*/
 .bid-tab .tab-content .pass-info .bid-info p {
 	position: relative;
 	color: #ff6633;
 }
 .bid-tab .tab-content .pass-info .bid-info p i{
 	color:#333;
-	left: -18px;
 	position: relative;
 }
 .bid-tab .tab-content .pass-info .bid-visible{
@@ -355,7 +362,6 @@ figure {
 #offer .price-range{
 	background: #f5f5f5;
 	padding: 14px;
-	margin-bottom: 4em;
 }
 #offer .pass-info .btn-danger{
 	background: #ff6633;
@@ -379,7 +385,7 @@ figure {
     overflow: hidden;
 }
 .sw-theme-arrows > ul.step-anchor > li > a, .sw-theme-arrows > ul.step-anchor > li > a:hover {
-    color: #fff;
+    color: #333;
     text-decoration: none;
     padding: 10px 0 10px 45px;
     position: relative;
@@ -387,7 +393,7 @@ figure {
     border: 0 !important;
     border-radius: 0;
     outline-style: none;
-    background: #666;
+    background: #ddd;
 }
 
 .sw-theme-arrows > ul.step-anchor > li > a:after {
@@ -422,23 +428,23 @@ figure {
 }
 
 .sw-theme-arrows > ul.step-anchor > li.active > a {
-    border-color: #ff6633 !important;
-	color: #fff !important;
-	background: #ff6633 !important;
-}
-
-.sw-theme-arrows > ul.step-anchor > li.active > a:after {
-    border-left: 30px solid #ff6633 !important;
-}
-
-.sw-theme-arrows > ul.step-anchor > li.done > a {
     border-color: #666 !important;
 	color: #fff !important;
 	background: #666 !important;
 }
 
+.sw-theme-arrows > ul.step-anchor > li.active > a:after {
+    border-left: 30px solid #666 !important;
+}
+
+.sw-theme-arrows > ul.step-anchor > li.done > a {
+    border-color: #ddd !important;
+	color: #333 !important;
+	background: #ddd !important;
+}
+
 .sw-theme-arrows > ul.step-anchor > li.done > a:after {
-    border-left: 30px solid #666;
+    border-left: 30px solid #ddd;
  /* c3e6cb */;
 }
 
@@ -665,7 +671,6 @@ figure {
 	font-family: century gothic;
     font-weight: bold;
 }
-<<<<<<< HEAD
 .mail-bid-error {
 	margin-top:15px;
 }
