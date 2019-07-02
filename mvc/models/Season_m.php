@@ -14,7 +14,15 @@ class season_m extends MY_Model {
 	function get_seasons($array=NULL, $signal=FALSE) {
 		$query = parent::get($array, $signal);
 		return $query;
-	}	
+	}
+
+     function get_seasons_where($where){
+            $this->db->select('*')->from('VX_aln_season');
+            $this->db->where($where);
+            $query = $this->db->get();
+            return $query->result();
+        }
+	
 	
 	function getSeasons_for_triggerrun($timestamp) {
 		$sql = "SELECT * FROM VX_aln_season WHERE modify_date >= ".$timestamp;
@@ -120,7 +128,7 @@ class season_m extends MY_Model {
 	public function seasonTotalCount($airlineID=null){
 		$this->db->select('count(*) count')->from('VX_aln_season');
 		if($airlineID != null){
-			$this->db->where('airline_id',$airlineID);
+			$this->db->where('airlineID',$airlineID);
 		}
 		$query = $this->db->get();
 		return $query->row('count');
