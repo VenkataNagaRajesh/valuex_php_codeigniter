@@ -130,7 +130,7 @@ body.fixed .wrapper {
 }
 /* Content */
 .content {
-  padding: 20px 15px;
+  padding: 0px 15px;
   background: #f1f2f7;
   overflow: hidden;
 }
@@ -3871,7 +3871,7 @@ fieldset[disabled] .btn-vk.active {
 .seasons .cal-table{
 	background: #fff;
 	padding: 15px;
-	margin: 15px 0;
+	margin: 8px 0;
 	border:solid 1px #999;
 }
 .seasons .season-highlight span{
@@ -4177,6 +4177,7 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 	font-size: 18px;
 	background: #ff6633;
 	padding: 5px 15px;
+	margin: 1px 0;
 }
 .simpleTree-label:hover {
     font-weight: bold;

@@ -1,6 +1,6 @@
 <div class="seasons">
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:95%;">Seasons</h2>
-	<p class="card-header" data-toggle="collapse" data-target="#seasonAdd"><button type="button" id = 'add_season_button' class="btn btn-danger pull-right" style="margin:8px 0;" data-placement="left" title="Add Season" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Seasons</h2>
+	<p class="card-header" data-toggle="collapse" data-target="#seasonAdd"><button type="button" id = 'add_season_button' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Season" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="col-md-12 season-add-box collapse" id="seasonAdd">
 		<form class="form-horizontal" action="#">
 			<div class="form-group">
