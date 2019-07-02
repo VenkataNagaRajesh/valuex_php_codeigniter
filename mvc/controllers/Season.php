@@ -179,7 +179,7 @@ class Season extends Admin_Controller {
         $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');
 		
         if($this->session->userdata('usertypeID') == 2){
-		   $this->data['seasonslist'] = $this->season_m->get_seasons(array("airlineID" => $this->session->userdata('login_user_airlineID')));
+		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array("airlineID" => $this->session->userdata('login_user_airlineID')));
 		}else{
 		   $this->data['seasonslist'] = $this->season_m->get_seasons(); 
 		}  

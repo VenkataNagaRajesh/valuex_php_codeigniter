@@ -45,8 +45,8 @@ class Install extends CI_Controller {
 
 		$pstatus = strpos($this->uri->uri_string(), 'install');
 		if ($pstatus == FALSE && $this->config->config_install()) {
-            //redirect(site_url('signin'));
-			redirect(site_url('home/index'));
+            redirect(site_url('signin'));
+			//redirect(site_url('home/index'));
 		}
 	}
 
