@@ -3870,7 +3870,7 @@ fieldset[disabled] .btn-vk.active {
 }
 .seasons .cal-table{
 	background: #fff;
-	padding: 15px;
+	padding: 8px;
 	margin: 8px 0;
 	border:solid 1px #999;
 }
@@ -3888,7 +3888,7 @@ fieldset[disabled] .btn-vk.active {
 	margin-bottom:10px;
 }
 .seasons .ui-datepicker-title, .seasons .ui-datepicker-calendar thead tr th , .seasons .ui-datepicker-calendar tbody tr td{
-	font-size:11px;
+	font-size:10px;
 }
 .seasons .ui-datepicker-calendar tbody tr td a{
 	color:#000;
@@ -3900,7 +3900,7 @@ fieldset[disabled] .btn-vk.active {
 }
 .seasons .ui-datepicker-inline{
 	width:100% !important;
-	padding: 6px;
+	padding: 3px;
 }
 .seasons .season-highlight .default{
 	background: none;
