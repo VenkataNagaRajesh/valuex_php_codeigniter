@@ -602,19 +602,16 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 </html>
 ';
 
-
+/*
                           $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
                         //$this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid is accepted From " .$feed->src_point.'To ' . $feed->dest_point);
                         $this->email->message($message);
-<<<<<<< HEAD
                         $this->email->send(); /*
 						  $cabin_name = $this->airports_m->get_definition_data($feed->upgrade_type)->aln_data_value;
-=======
                         $this->email->send(); */ 
 						 
->>>>>>> 1f8662fe25db129a7bad9b45e59005593b2527fe
 						 $card_data = $this->bid_m->getCardData($feed->offer_id);
 						 $card_number = substr(trim($card_data->card_number), -4);
 						 $data = array(
