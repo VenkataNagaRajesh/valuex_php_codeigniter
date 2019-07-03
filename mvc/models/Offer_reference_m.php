@@ -73,6 +73,13 @@ class Offer_reference_m extends MY_Model {
             $query = $this->db->get();
             return 	$query->row();		
 		}
+		
+	function offersTotalCount($status){
+		$this->db->select('count(*) count')->from('VX_aln_offer_ref');
+		$this->db->where('offer_status',$status);
+		$query = $this->db->get();		
+		return $query->row('count');
+	}
 
 	
 }

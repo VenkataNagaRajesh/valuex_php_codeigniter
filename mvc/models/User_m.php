@@ -21,7 +21,6 @@ class user_m extends MY_Model {
 		return $query->row();
 	}
 
-
 	function get_username_byid($id){
 		$this->db->select('name');
 		$this->db->from('user');
@@ -30,6 +29,7 @@ class user_m extends MY_Model {
 		$result = $query->row();
 		return $result->name;
 	}
+	
 	function get_user_by_usertype($userID = null,$where = array()) {
 		$this->db->select('*');
 		$this->db->from('user u');
@@ -46,7 +46,6 @@ class user_m extends MY_Model {
 			return $query->result();
 		}
 	}
-
 
 	function get_user($array=NULL, $signal=FALSE) {
 		$query = parent::get($array, $signal);
@@ -79,8 +78,13 @@ class user_m extends MY_Model {
 
 	function hash($string) {
 		return parent::hash($string);
+	}
+
+    function userTotalCount(){
+		$this->db->select('count(*) count')->from('user');
+		$this->db->where('usertypeID !=',2);
+		$query = $this->db->get();		
+		return $query->row('count');
 	}	
 }
 
-/* End of file user_m.php */
-/* Location: .//D/xampp/htdocs/school/mvc/models/user_m.php */

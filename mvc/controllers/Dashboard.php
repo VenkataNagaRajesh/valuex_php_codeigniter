@@ -12,7 +12,12 @@ class Dashboard extends Admin_Controller {
 		$this->load->model("marketzone_m");
 		$this->load->model("season_m");		
 		$this->load->model("payment_m");		
-		$this->load->model("airports_m");	
+		$this->load->model("airports_m");
+        $this->load->model("client_m");	
+        $this->load->model('acsr_m');
+        $this->load->model('eligibility_exclusion_m');
+        $this->load->model('offer_reference_m');	
+        $this->load->model('rafeed_m');		
 		$language = $this->session->userdata('lang');
 		$this->lang->load('dashboard', $language);
 	}
@@ -37,12 +42,31 @@ class Dashboard extends Admin_Controller {
 		$allmenulang = pluck($this->menu_m->get_order_by_menu(), 'menuName', 'link');		
 		//$invoices	= $this->invoice_m->get_invoice();	
         $airports = $this->airports_m->TotalAirports();
+		$clients = $this->client_m->clientTotalCount(); 
+		$users = $this->user_m->userTotalCount();
+		$acsr = $this->acsr_m->acsrTotalCount();
+		$eerule = $this->eligibility_exclusion_m->EErulesTotalCount();
+		$offer_type = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+		$bid_complete_type = $this->rafeed_m->getDefIdByTypeAndAlias('bid_complete','20');
+		$offers = $this->offer_reference_m->offersTotalCount($offer_type);
+		$bid_complete = $this->offer_reference_m->offersTotalCount($bid_complete_type);
+		
+			$this->data['dashboardWidget']['sent_offer_mails']->count = $offers;
+			$this->data['dashboardWidget']['sent_offer_mails']->link = "offer_issue";
+			$this->data['dashboardWidget']['sent_offer_mails']->icon = "fa-list-alt";
+			$this->data['dashboardWidget']['sent_offer_mails']->menu = 'Offers';
+			
+			$this->data['dashboardWidget']['bid_complete']->count = $bid_complete;
+			$this->data['dashboardWidget']['bid_complete']->link = "offer_table";
+			$this->data['dashboardWidget']['bid_complete']->icon = "fa-list-alt";
+			$this->data['dashboardWidget']['bid_complete']->menu = 'Total Bids';
+			//print_r($this->data['dashboardWidget']['bid_complete_offers']); exit;
 		if($this->session->userdata('usertypeID') == 1){
 			$marketzones = $this->marketzone_m->marketzoneTotalCount();
 		} else {
 			$marketzones = $this->marketzone_m->marketzoneTotalCount($this->session->userdata('login_user_airlineID'));
 		}
-		if($this->session->userdata('usertypeID') == 1){
+		if($this->session->userdata('usertypeID') != 2){
 			$seasons = $this->season_m->seasonTotalCount();
 		} else {
 			$seasons = $this->season_m->seasonTotalCount($this->session->userdata('login_user_airlineID'));
@@ -52,8 +76,12 @@ class Dashboard extends Admin_Controller {
 		//$this->data['dashboardWidget']['feetypes'] 	= count($feetypes);		
 		//$this->data['dashboardWidget']['invoices'] 	= count($invoices);	
 		$this->data['dashboardWidget']['airports'] 	= $airports;
-        $this->data['dashboardWidget']['marketzone'] 	= $marketzones;	
-        $this->data['dashboardWidget']['season'] 	= $seasons;		
+        $this->data['dashboardWidget']['marketzone']= $marketzones;	
+        $this->data['dashboardWidget']['season'] 	= $seasons;	
+        $this->data['dashboardWidget']['clients'] 	= $clients;
+        $this->data['dashboardWidget']['users']     = $users;
+        $this->data['dashboardWidget']['acsr']      = $acsr;
+        $this->data['dashboardWidget']['eerule']    = $eerule;		
 		$this->data['dashboardWidget']['allmenu'] 	= $allmenu;
 		$this->data['dashboardWidget']['allmenulang'] 	= $allmenulang;
 		$months = array(
