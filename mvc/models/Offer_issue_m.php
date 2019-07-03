@@ -35,15 +35,16 @@ class Offer_issue_m extends MY_Model {
 
 	function getPassengerData($offerid,$flight_number) {
 
-		$this->db->select("oref.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name)  as passengers, group_concat(distinct pax_contact_email)  as emails, group_concat(distinct pext.dtpfext_id) as p_list")->from('VX_aln_daily_tkt_pax_feed pf');
+		$this->db->select("group_concat(distinct dep_date) as dep_date,oref.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name)  as passengers, group_concat(distinct pax_contact_email)  as emails, group_concat(distinct pext.dtpfext_id) as p_list, carrier_code, from_city, to_city")->from('VX_aln_daily_tkt_pax_feed pf');
 		$this->db->join('VX_aln_offer_ref oref', 'oref.pnr_ref =  pf.pnr_ref', 'LEFT');
 		$this->db->join('VX_aln_dtpf_ext pext', 'pext.dtpf_id =  pf.dtpf_id', 'LEFT');
 		$this->db->join(' vx_aln_data_defns dd', 'dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20', 'LEFT');
 		$this->db->where('offer_id',$offerid); 
 		$this->db->where('dd.alias','bid_complete');
 		$this->db->where('pf.flight_number',$flight_number);
-		$this->db->group_by('pf.pnr_ref' , 'booking_status');
+		$this->db->group_by(array('pf.pnr_ref' , 'booking_status', 'from_city','to_city','carrier_code'));
 		$query = $this->db->get();
+//var_dump($this->db->last_query());exit;
                 $passgr = $query->row();
 		
 		return $passgr;
@@ -85,13 +86,24 @@ class Offer_issue_m extends MY_Model {
 
 	}
 
+public function getCabinFromOfferID($offer_id, $flight_number) {
+	$this->db->select('upgrade_type')->from('VX_aln_bid');
+	$this->db->where('offer_id',$offer_id);
+	$this->db->where('flight_number',$flight_number);
+	$this->db->limit(1);
+	$query = $this->db->get();
+        $check = $query->row();
+	return $check->upgrade_type;
+	
 
+
+}
 public function getOfferDetailsById($id) {
 
 $query = " select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin, MainSet.to_cabin_code,
-                        MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status  , SubSet.carrier_code, MainSet.min,MainSet.max 
+                        MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status  , SubSet.carrier_code, MainSet.min,MainSet.max , SubSet.from_city_code, SubSet.to_city_code
 
                 FROM ( 
                                select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, tcab.aln_data_value as to_cabin, upgrade_type as to_cabin_code, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles, fclr.min, fclr.max , bs.aln_data_value as offer_status from  VX_aln_offer_ref oref   INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id)   LEFT JOIN vx_aln_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13)  INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  and pf.flight_number = bid.flight_number) INNER JOIN VX_aln_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) INNER JOIN VX_aln_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type) LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) WHERE  oref.offer_id = ".$id."
@@ -101,7 +113,7 @@ $query = " select  SQL_CALC_FOUND_ROWS
                         INNER JOIN (
                                         select  flight_number,group_concat(distinct fqtv) as fqtv ,
                                                 group_concat(distinct dep_date) as flight_date  ,
-                                                pnr_ref,group_concat(first_name, ' ' , last_name, ':', ptc.code, ':', pax_contact_email, ':' , phone SEPARATOR '<br>' ) as p_list , 
+                                                pnr_ref,group_concat(first_name, ' ' , last_name, ':', ptc.code, ':', pax_contact_email, ':' , phone SEPARATOR '<br>' ) as p_list ,  from_city as from_city_code, to_city as to_city_code,
                                                 group_concat(distinct cab.aln_data_value) as from_cabin  , fc.code as from_city, tc.code as to_city, 
                                                 car.code as carrier , pf1.carrier_code
                                          from VX_aln_daily_tkt_pax_feed pf1 

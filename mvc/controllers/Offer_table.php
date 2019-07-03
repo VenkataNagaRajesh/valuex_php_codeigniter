@@ -76,10 +76,31 @@ $status = htmlentities(escapeString($this->uri->segment(5)));
  
 $this->data['siteinfos'] = $this->reset_m->get_site();
   $passenger_data = $this->offer_issue_m->getPassengerData($offer_id,$flight_number);
+ // get cabin from BID tablee
+ $upgrade_cabin = $this->offer_issue_m->getCabinFromOfferID($offer_id,$flight_number);
+
 $namelist = explode(',',$passenger_data->passengers);
                         $emails_list =  explode(',',$passenger_data->emails);
 
                         $passenger_cnt =  count($namelist);
+
+// update inv feed data about processed seats count
+
+        $inv = array();
+        $inv['flight_nbr'] = $flight_number;
+        $inv['airline_id'] = $passenger_data->carrier_code;
+        $inv['departure_date'] = $passenger_data->dep_date;
+        $inv['origin_airport'] = $passenger_data->from_city;
+        $inv['dest_airport'] = $passenger_data->to_city;
+        $inv['cabin'] = $upgrade_cabin;
+        $inv['active'] = 1;
+        $seats_data = $this->invfeed_m->getEmptyCabinSeats($inv);
+        
+        $sold_seats = $seats_data->sold_seats + $passenger_cnt;
+	$upd['sold_seats'] = $sold_seats;
+	 $upd["modify_userID"] = $this->session->userdata('loginuserID');
+	$upd['modify_date'] = time();
+        $this->invfeed_m->update_entries($upd,$inv);
 $offer_data = $this->bid_m->get_offer_data($offer_id);
  $card_data = $this->bid_m->getCardData($offer_id);
    $card_number = substr(trim($card_data->card_number), -4);		
