@@ -9,8 +9,8 @@ class Dashboard extends Admin_Controller {
 		$this->load->model("setting_m");
 		$this->load->model("notice_m");
 		$this->load->model("user_m");		
-		//$this->load->model("feetypes_m");
-		//$this->load->model("invoice_m");		
+		$this->load->model("marketzone_m");
+		$this->load->model("season_m");		
 		$this->load->model("payment_m");		
 		$this->load->model("airports_m");	
 		$language = $this->session->userdata('lang');
@@ -37,11 +37,23 @@ class Dashboard extends Admin_Controller {
 		$allmenulang = pluck($this->menu_m->get_order_by_menu(), 'menuName', 'link');		
 		//$invoices	= $this->invoice_m->get_invoice();	
         $airports = $this->airports_m->TotalAirports();
+		if($this->session->userdata('usertypeID') == 1){
+			$marketzones = $this->marketzone_m->marketzoneTotalCount();
+		} else {
+			$marketzones = $this->marketzone_m->marketzoneTotalCount($this->session->userdata('login_user_airlineID'));
+		}
+		if($this->session->userdata('usertypeID') == 1){
+			$seasons = $this->season_m->seasonTotalCount();
+		} else {
+			$seasons = $this->season_m->seasonTotalCount($this->session->userdata('login_user_airlineID'));
+		}		
 		$deshboardTopWidgetUserTypeOrder = $this->session->userdata('master_permission_set');
 		
 		//$this->data['dashboardWidget']['feetypes'] 	= count($feetypes);		
 		//$this->data['dashboardWidget']['invoices'] 	= count($invoices);	
-		$this->data['dashboardWidget']['airports'] 	= $airports;	        		
+		$this->data['dashboardWidget']['airports'] 	= $airports;
+        $this->data['dashboardWidget']['marketzone'] 	= $marketzones;	
+        $this->data['dashboardWidget']['season'] 	= $seasons;		
 		$this->data['dashboardWidget']['allmenu'] 	= $allmenu;
 		$this->data['dashboardWidget']['allmenulang'] 	= $allmenulang;
 		$months = array(

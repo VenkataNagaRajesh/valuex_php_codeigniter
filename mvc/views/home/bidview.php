@@ -30,166 +30,65 @@
 						<div class="pass-info">
 							<p>Passenger(s):<span><?php echo ucfirst($results[0]->pax_names); ?></span>
 							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$results[0]->pnr_ref?></span></p>
-							<div class="col-md-5">
-								<h2>Flight Information</h2>
-								<?php foreach($results as $result){ ?>
-								<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
-									<div class="col-md-6">
-										<p><?php echo $result->from_city; ?></p>
-										<ul>
-											<li><?php echo date('d M Y',$result->dep_date); ?></li>
-											<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
-											<li><?=$result->time_diff?></li>
-											<li><?=date('H:i a',$result->dep_date+$result->dept_time)?></li>
-										</ul>
-									</div>
-									<p><i class="fa fa-fighter-jet"></i></p>
-									<div class="col-md-6">
-										<p><?php echo $result->to_city; ?></p>
-										<ul>
-											<li><?php echo date('d M Y',$result->arrival_date); ?></li>
-											<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
-											<li><?=$result->time_diff?></li>
-											<li><?=date('H:i a',$result->arrival_date+$result->arrival_time)?></li>
-										</ul>
-									</div>
-								</div>
-								<?php } ?>
-						<!--	<div class="bid-info bid-visible">
-									<div class="col-md-6">
-										<p>Los Angeles</p>
-										<ul>
-											<li>02 Jan 2016</li>
-											<li>Flight LX 41</li>
-											<li>11 hours 15 mins</li>
-											<li>02.30am-15.25pm</li>
-										</ul>
-									</div>
-									<p><i class="fa fa-fighter-jet"></i></p>
-									<div class="col-md-6">
-										<p>Zurich (ZRH)</p>
-										<ul>
-											<li>02 Jan 2016</li>
-											<li>Flight LX 41</li>
-											<li>11 hours 15 mins</li>
-											<li>02.30am-15.25pm</li>
-										</ul>
-									</div>
-								</div>
-								<div class="bid-info">
-									<div class="col-md-6">
-										<p>Los Angeles</p>
-										<ul>
-											<li>02 Jan 2016</li>
-											<li>Flight LX 41</li>
-											<li>11 hours 15 mins</li>
-											<li>02.30am-15.25pm</li>
-										</ul>
-									</div>
-									<p><i class="fa fa-fighter-jet"></i></p>
-									<div class="col-md-6">
-										<p>Zurich (ZRH)</p>
-										<ul>
-											<li>02 Jan 2016</li>
-											<li>Flight LX 41</li>
-											<li>11 hours 15 mins</li>
-											<li>02.30am-15.25pm</li>
-										</ul>
-									</div>
-								</div>
-								<div class="bid-info">
-									<div class="col-md-6">
-										<p>Los Angeles</p>
-										<ul>
-											<li>02 Jan 2016</li>
-											<li>Flight LX 41</li>
-											<li>11 hours 15 mins</li>
-											<li>02.30am-15.25pm</li>
-										</ul>
-									</div>
-									<p><i class="fa fa-fighter-jet"></i></p>
-									<div class="col-md-6">
-										<p>Zurich (ZRH)</p>
-										<ul>
-											<li>02 Jan 2016</li>
-											<li>Flight LX 41</li>
-											<li>11 hours 15 mins</li>
-											<li>02.30am-15.25pm</li>
-										</ul>
-									</div>
-								</div>-->
-							</div>
-							<div class="col-md-3">
-								<h2>Upgrade Type</h2>
-								<?php foreach($results as $result){ ?>
-									<div class="bid-radio">
-									   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
-									   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){ ?>								      
-										<label class="radio-inline">
-											<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0)?"checked":''; ?> ><?php echo $cabins[$value]; ?>
-										</label><br>
-									   <?php $i++; } } ?>									
-									</div>
-								<?php } ?>
-								<!--<div class="bid-radio bid-visible">
-									<label class="radio-inline">
-										<input type="radio" name="optradio">Premium
-									</label><br>
-									<label class="radio-inline">
-										<input type="radio" name="optradio">Business
-									</label><br>
-									<label class="radio-inline">
-										<input type="radio" name="optradio">No Bid
-									</label>
-								</div>
-								<div class="bid-radio">
-									<label class="radio-inline">
-										<input type="radio" name="optradio">Premium
-									</label><br>
-									<label class="radio-inline">
-										<input type="radio" name="optradio">Business
-									</label><br>
-									<label class="radio-inline">
-										<input type="radio" name="optradio">No Bid
-									</label>
-								</div>
-								<div class="bid-radio">
-									<label class="radio-inline">
-										<input type="radio" name="optradio">Premium
-									</label><br>
-									<label class="radio-inline">
-										<input type="radio" name="optradio">Business
-									</label><br>
-									<label class="radio-inline">
-										<input type="radio" name="optradio">No Bid
-									</label>
-								</div>-->
-							</div>
-							<div class="col-md-4">
-								<h2>Bid (s)</h2>
-								<?php foreach($results as $result){  if($result->fclr != null){ ?>
-								<div class="price-range">									
-                                    	<i class="fa fa-dollar"></i><b id="bid_min_<?=$result->flight_number?>"></b>
-       										<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[0]; ?>" data-slider-max="<?php echo explode(',',$result->max)[0]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->avg)[0]; ?>" data-slider-handle="square"min-slider-handle="200"/>
-										<i class="fa fa-dollar"></i><b id="bid_max_<?=$result->flight_number?>"></b>
-								</div>
-								<?php } } ?>
-								<!--<div class="price-range bid-visible">
-									<p>Price Range</p>
-								</div>
-								<div class="price-range">
-									<div role="main" class="ui-content">
-										<div class="jquery-script-ads"></div>
-										<label for="slider"></label>
-										<input type="range" name="sliders" id="slider1"  value="93" min="0" max="100" data-highlight="true">
-									</div>
-								</div>
-								<div class="price-range">
-									<p>Price Range</p>
-								</div>-->
-							</div>
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Flight Information</th>
+										<th>Upgrade Type</th>
+										<th>Bid (s)</th>
+									</tr>
+								</thead>
+								<tbody>
+								    <?php foreach($results as $result){ ?>
+									<tr>
+										<td>											
+											<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
+												<div class="col-md-5">
+													<p><?php echo $result->from_city; ?></p>
+													<ul>
+														<li><?php echo date('d M Y',$result->dep_date); ?></li>
+														<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
+														<li><?=$result->time_diff?></li>
+														<li><?=date('H:i a',$result->dep_date+$result->dept_time)?></li>
+													</ul>
+												</div>
+												<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-fighter-jet"></i></p></div>
+												<div class="col-md-5">
+													<p><?php echo $result->to_city; ?></p>
+													<ul>
+														<li><?php echo date('d M Y',$result->arrival_date); ?></li>
+														<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
+														<li><?=$result->time_diff?></li>
+														<li><?=date('H:i a',$result->arrival_date+$result->arrival_time)?></li>
+													</ul>
+												</div>
+											</div>											
+										</td>
+										<td style="text-align:center;">		 
+											<div class="bid-radio col-md-12">
+											   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
+											   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){ ?>								      
+												<label class="radio-inline">
+													<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0)?"checked":''; ?> ><?php echo $cabins[$value]; ?>
+												</label><br>
+											   <?php $i++; } } ?>									
+											</div>	
+										</td>
+										<td>
+											<?php if($result->fclr != null){ ?>
+												<div class="price-range col-md-12">		
+												<i class="fa fa-dollar"></i> <b id="bid_min_<?=$result->flight_number?>"></b>
+														<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[0]; ?>" data-slider-max="<?php echo explode(',',$result->max)[0]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->avg)[0]; ?>" data-slider-handle="square"min-slider-handle="200"/>
+													<i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b>
+												</div>
+											<?php }  ?>
+										</td>
+									</tr>
+									<?php } ?>
+								</tbody>
+							</table>
 							<div class="col-md-12" style="padding-right:0;">
-								<p class="pull-right">Total Bid Amount  <b style="margin-left:12px;"><i class="fa fa-dollar" id="tot"></i> </b></p>
+								<p class="pull-right">Total Bid Amount  <strong style="margin-left:12px;"> <i class="fa fa-dollar"></i> <b id="tot"></b></strong> </p>
 							</div>
 							<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button">Continue</a>
 						</div>
@@ -221,10 +120,10 @@
 							<a type="button" class="btn btn-danger btn btn-secondary sw-btn-prev"><i class="fa fa-arrow-left"></i> Back</a>
 						</div>
 						<div class="col-md-10 booking-ref">
-							<h2 class="pull-right">Booking Ref No: <?php echo $results[0]->pnr_ref; ?></h2>
+							<h2 class="pull-right"><b>Booking Ref No: <?php echo $results[0]->pnr_ref; ?></b></h2>
 						</div>
 						<div class="col-md-12">
-							<p class="pull-right">Total Bid Amount  <b style="margin-left:12px;"><i class="fa fa-dollar" id="bidtot"></i> </b></p>
+							<p class="pull-right">Total Bid Amount  <strong style="margin-left:12px;"> <i class="fa fa-dollar"></i> <b id="bidtot"></b></strong></p>
 						</div>
 						<div class="col-md-8 col-md-offset-2">
 							<div class="price-range">
@@ -266,8 +165,8 @@
 									</div>
 								</div>
 								<div class="col-md-4 actual-cash">
-									<p>Total Cash to be Paid <b><i class="fa fa-dollar" id="paid_cash"></i></b></p>
-									<p>Total Miles to be Paid : <b id="paid_miles"></b></p>
+									<p>Total Cash to be Paid <strong><i class="fa fa-dollar"></i> <b id="paid_cash"></b></strong></p>
+									<p>Total Miles to be Paid : <b id="paid_miles"></b> </p>
 									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$result->offer_id?>)">Pay Now</a>
 								</div>
 							</form>

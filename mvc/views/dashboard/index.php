@@ -44,8 +44,8 @@ function allModuleArray($usertypeID='1', $dashboardWidget) {
 
 $userArray = array(
   '1' => array(
-        'event'     => $dashboardWidget['events'],
-        'issue'     => $dashboardWidget['issues'],
+        'marketzone'     => $dashboardWidget['marketzone'],
+        'season'     => $dashboardWidget['season'],
         'airports_master'   => $dashboardWidget['airports'],
         'invoice'   => $dashboardWidget['invoices']
   )

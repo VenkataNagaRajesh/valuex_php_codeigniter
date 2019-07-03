@@ -130,7 +130,7 @@ body.fixed .wrapper {
 }
 /* Content */
 .content {
-  padding: 20px 15px;
+  padding: 0px 15px;
   background: #f1f2f7;
   overflow: hidden;
 }
@@ -2134,7 +2134,11 @@ Component: timeline
   color: #3A87AD;
 }
 .table .odd .btn-danger, .table .even .btn-danger{
-	padding:1px 5px;
+	padding:1px 7px;
+	margin-left: 2px;
+	margin-right: 2px;
+	margin-bottom: 5px;
+	border:none;
 }
 /*
     Component: alert
@@ -3870,8 +3874,8 @@ fieldset[disabled] .btn-vk.active {
 }
 .seasons .cal-table{
 	background: #fff;
-	padding: 15px;
-	margin: 15px 0;
+	padding: 8px;
+	margin: 8px 0;
 	border:solid 1px #999;
 }
 .seasons .season-highlight span{
@@ -3888,7 +3892,7 @@ fieldset[disabled] .btn-vk.active {
 	margin-bottom:10px;
 }
 .seasons .ui-datepicker-title, .seasons .ui-datepicker-calendar thead tr th , .seasons .ui-datepicker-calendar tbody tr td{
-	font-size:11px;
+	font-size:10px;
 }
 .seasons .ui-datepicker-calendar tbody tr td a{
 	color:#000;
@@ -3900,7 +3904,7 @@ fieldset[disabled] .btn-vk.active {
 }
 .seasons .ui-datepicker-inline{
 	width:100% !important;
-	padding: 6px;
+	padding: 3px;
 }
 .seasons .season-highlight .default{
 	background: none;
@@ -4002,7 +4006,7 @@ fieldset[disabled] .btn-vk.active {
 	padding: 16px 10px;
 	border: solid 1px #333;
 	margin-bottom: 12px;
-	margin-top: 12px;
+	margin-top: 0px;
 }
 .eer .table-responsive{
 	background: #fff;
@@ -4039,9 +4043,35 @@ fieldset[disabled] .btn-vk.active {
 	text-align: center;
 	color: #333;
 	font-weight: bold;
-	margin: 18px;
 	cursor: pointer;
 	background:#f5f5f5;
+	width:40px;
+	height:40px;
+}
+.eer .form-horizontal .rule-box .cabins .table tr td input[type="checkbox"] {
+    display: none;
+}
+.eer .form-horizontal .rule-box .cabins .table tr td .btn{
+    padding:0 !important;
+}
+.eer .form-horizontal .rule-box .cabins .table tr td label.btn-success{
+	background: none;
+	border: none;
+	box-shadow: none;
+	color: #333;
+	font-weight: bold;
+}
+.cabins .table tr td span.glyphicon {    			
+	opacity: 0;				
+}
+.cabins .table tr td .active span.glyphicon {				
+	opacity: 1;				
+}
+.eer .form-horizontal .rule-box .cabins .table tr td i{
+	cursor:pointer;
+}
+.eer .form-horizontal .rule-box .cabins .table tr td .form-control{
+	height:auto;
 }
 .eer .form-horizontal .rule-box .cabins .table .block{
 	background:#999;
@@ -4151,6 +4181,7 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 	font-size: 18px;
 	background: #ff6633;
 	padding: 5px 15px;
+	margin: 1px 0;
 }
 .simpleTree-label:hover {
     font-weight: bold;

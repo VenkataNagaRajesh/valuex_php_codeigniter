@@ -30,10 +30,13 @@ class user_m extends MY_Model {
 		$result = $query->row();
 		return $result->name;
 	}
-	function get_user_by_usertype($userID = null) {
+	function get_user_by_usertype($userID = null,$where = array()) {
 		$this->db->select('*');
-		$this->db->from('user');
-		$this->db->join('usertype', 'usertype.usertypeID = user.usertypeID', 'LEFT');
+		$this->db->from('user u');
+		$this->db->join('usertype ut', 'ut.usertypeID = u.usertypeID', 'LEFT');
+		if(!empty($where)){
+		    $this->db->where($where);
+		}
 		if($userID) {
 			$this->db->where(array('userID' => $userID));
 			$query = $this->db->get();

@@ -21,49 +21,7 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("airports_m");
 		$this->load->model("bid_m");
 		$language = $this->session->userdata('lang');		
-		 $this->lang->load('offer', $language);
-		/*$data['tomail'] = "lakshmi.amujuru@sweken.com";
-		$data['mail_subject'] ="Offer mail template testing";
-		$data['first_name'] ="Lakshmi";
-		$data['last_name'] = "Amujuru";
-		$data['pnr_ref'] = "WQ12345";
-		$this->sendMailTemplate(1,$data);
-		exit; */
-		
-		/* $data = array(
-        'blog_title'   => 'My Blog Title',
-        'blog_heading' => 'My Blog Heading',
-		'tomail' => "lakshmi.amujuru@sweken.com",
-		'mail_subject' => "Offer mail template testing",
-        'blog_entries' => array(
-                array('title' => 'Title 1', 'body' => 'Body 1'),
-                array('title' => 'Title 2', 'body' => 'Body 2'),
-                array('title' => 'Title 3', 'body' => 'Body 3'),
-                array('title' => 'Title 4', 'body' => 'Body 4'),
-                array('title' => 'Title 5', 'body' => 'Body 5')
-             )
-        ); 
-       $data['first_name'] ="Lakshmi";
-       $data['last_name'] = "Amujuru";
-       $data['pnr_ref'] = "WQ12345";
-       $data = array(
-        'first_name'   => 'Lakshmi',
-        'last_name' => 'Amujuru',
-		'tomail' => "lakshmi.amujuru@sweken.com",
-		'pnr_ref' => 'WQ12345',
-		'to_cabin' => 'Business',
-		'mail_subject' => "Your Bid Accepted",
-		'card_no' => 4242,
-		'cash_paid' => $555,
-		'miles_used' => 334423,
-        'offer_list' => array(
-                array('date_start' => '09/07/2019', 'flight_no' => 'SQ1234','time' => '01:30 PM', 'origin' => 'Kuala Lumpur ','destination' => 'Cochin', 'upgrade_to' => 'Premium Eco','cash_paid' => '$299'),
-				array('date_start' => '10/07/2019', 'flight_no' => 'SQ1235','time' => '02:30 PM', 'origin' => 'Changi','destination' => 'San Francisco ', 'upgrade_to' => 'Business','cash_paid' => '$288'),
-				array('date_start' => '11/07/2019', 'flight_no' => 'SQ1236','time' => '03:30 PM', 'origin' => 'Haneda ','destination' => 'San Francisco ', 'upgrade_to' => 'Premium','cash_paid' => '$266')                
-             )
-        ); 	   
-	  $this->sendMailTemplateParser(5,$data);
-	   exit; */
+		$this->lang->load('offer', $language);		
 	}	
 	
 
@@ -423,18 +381,18 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 	$full_offerlist = array();
 	$partial_offerlist = array();	
 	foreach($rResult as $data ) {
-		$q = "select distinct rbd_markup, flight_number, from_city, to_city,tier_markup, (val + ((rbd_markup * val)/100)) as bid_val , 
-			offer_id,bid_submit_date , dep_date, upgrade_type, carrier_code, src_point,  dest_point, cabin FROM (
-				SELECT (bid_value + ((pf.tier_markup * bid_value)/100)) as val,pf.dep_date,bid.upgrade_type,pf.flight_number,
-				pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point
-				from VX_aln_bid bid 
-				LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )  
-				LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  pf.is_processed = 1 and pf.active = 1 )
-				LEFT JOIN vx_aln_data_defns df on (df.vx_aln_data_defnsID = pf.from_city and df.aln_data_typeID = 1)
-				LEFT JOIN vx_aln_data_defns dt on (dt.vx_aln_data_defnsID = pf.to_city and dt.aln_data_typeID = 1)
-				WHERE bid.offer_id IN (".$data->offer_list .") AND bid.flight_number = " .$data->flight_number .
-
-		      "	) as FirstSet order by bid_val desc,tier_markup desc , rbd_markup desc,bid_submit_date desc";
+		$q = "select distinct rbd_markup, flight_number, from_city, to_city,tier_markup, (val + ((rbd_markup * val)/100)) as bid_val , offer_id,bid_submit_date , dep_date, upgrade_type, carrier_code, src_point,  dest_point, cabin,src_point_name, cash,carrier_name, miles, dest_poin_name, dept_time,upgrade_cabin FROM (
+             SELECT (bid_value + ((pf.tier_markup * bid_value)/100)) as val,pf.dep_date,bid.upgrade_type,pf.flight_number,
+             pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name, pf.dept_time, dcabin.aln_data_value as upgrade_cabin
+             from VX_aln_bid bid
+             LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )
+             LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  pf.is_processed = 1 and pf.active = 1 )
+             LEFT JOIN vx_aln_data_defns df on (df.vx_aln_data_defnsID = pf.from_city and df.aln_data_typeID = 1)
+             LEFT JOIN vx_aln_data_defns dt on (dt.vx_aln_data_defnsID = pf.to_city and dt.aln_data_typeID = 1)
+             LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code and car.aln_data_typeID = 12)
+             LEFT JOIN vx_aln_data_defns dcabin on (dcabin.vx_aln_data_defnsID = bid.upgrade_type and dcabin.aln_data_typeID = 13)
+             WHERE bid.offer_id IN (".$data->offer_list .") AND bid.flight_number = " .$data->flight_number .
+          " ) as FirstSet order by bid_val desc,tier_markup desc , rbd_markup desc,bid_submit_date desc"; 
 		$offers =  $this->install_m->run_query($q);
 		//var_dump($q);echo "<br><br>";
 		//var_dump($offers); echo "<br><br>";exit;
@@ -650,8 +608,13 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid is accepted From " .$feed->src_point.'To ' . $feed->dest_point);
                         $this->email->message($message);
+<<<<<<< HEAD
                         $this->email->send(); /*
 						  $cabin_name = $this->airports_m->get_definition_data($feed->upgrade_type)->aln_data_value;
+=======
+                        $this->email->send(); */ 
+						 
+>>>>>>> 1f8662fe25db129a7bad9b45e59005593b2527fe
 						 $card_data = $this->bid_m->getCardData($feed->offer_id);
 						 $card_number = substr(trim($card_data->card_number), -4);
 						 $data = array(
@@ -660,15 +623,16 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'tomail' => $emails_list[0],
 							'pnr_ref' => $passenger_data->pnr_ref,						
 							'mail_subject' => "Bid is accepted From " .$feed->src_point." To " . $feed->dest_point,
-							'card_no' => $card_number,
+							'card_number' => $card_number,
 							'cash_paid' => $feed->cash,
 							'miles_used' => $feed->miles,
-							'flight_no' => $feed->flight_number,
-							'dep_date' => date('d-m-Y',$feed->departure_date),
-							'dep_time' => '01:30 PM',
+							'flight_no' => $feed->carrier_name.$feed->flight_number,
+							'dep_date' => date('d-m-Y',$feed->dep_date),
+							'dep_time' => gmdate('H:i A',$feed->dept_time),
 							'origin' => $feed->src_point_name,
 							'destination' => $feed->dest_point_name, 
-							'upgrade_to' => $cabin_name					
+							'upgrade_to' => $feed->upgrade_cabin
+                             							
 						 ); 			 
 					  $this->sendMailTemplateParser('home/upgradeoffertmp',$data);	*/
 

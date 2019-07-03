@@ -74,7 +74,7 @@
                         $airlines['0'] = 'Select Carrier';
                         ksort($airlines);
 
-                                   echo form_dropdown("carrier_code", $airlines,set_value("carrer_code",$airline_code), "id='carrer_code' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("carrier_code", $airlines,set_value("carrier_code",$carrier_code), "id='carrier_code' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
 

@@ -64,8 +64,8 @@
                                         <?php echo $menu->status; ?>
                                     </td>
                                     <td data-title="">
-                                        <?php echo btn_sm_edit('menu/edit/'.$menu->menuID, 'Edit') ?>
-                                        <?php echo btn_sm_delete('menu/delete/'.$menu->menuID, 'Delete') ?>
+                                        <?php echo btn_edit('menu/edit/'.$menu->menuID, 'Edit') ?>
+                                        <?php echo btn_delete('menu/delete/'.$menu->menuID, 'Delete') ?>
                                     </td>
                                 </tr>
                             <?php $i++; }} ?>

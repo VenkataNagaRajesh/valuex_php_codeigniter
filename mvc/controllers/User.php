@@ -51,12 +51,12 @@ class User extends Admin_Controller {
 				'field' => 'jod',
 				'label' => $this->lang->line("user_jod"),
 				'rules' => 'trim|required|max_length[10]|callback_date_valid|xss_clean'
-			),
+			),			
 			array(
 				'field' => 'usertypeID',
 				'label' => $this->lang->line("user_usertype"),
 				'rules' => 'trim|required|max_length[11]|xss_clean|numeric|callback_unique_usertypeID'
-			),
+			),		
 			array(
 				'field' => 'photo',
 				'label' => $this->lang->line("user_photo"),
@@ -122,7 +122,11 @@ class User extends Admin_Controller {
 	}
 
 	public function index() {
-		$this->data['users'] = $this->user_m->get_user_by_usertype();
+		if($this->session->userdata('usertypeID') == 2){
+		$this->data['users'] = $this->user_m->get_user_by_usertype(null,array("u.usertypeID" => 5,"u.create_userID"=>$this->session->userdata('loginuserID')));
+		} else {
+		$this->data['users'] = $this->user_m->get_user_by_usertype();	
+		}
 		$this->data["subview"] = "user/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -136,9 +140,16 @@ class User extends Admin_Controller {
 				'assets/datepicker/datepicker.js'
 			)
 		);
-		$this->data['usertypes'] = $this->usertype_m->get_usertype();
+		if($this->session->userdata('usertypeID') == 2){
+		  $this->data['usertypes'] = array();
+		} else {
+		  $this->data['usertypes'] = $this->usertype_m->get_usertype();
+		}
 		if($_POST) {
 			$rules = $this->rules();
+			 if($this->session->userdata('usertypeID') == 2){
+				unset($rules[8]);
+			 }
 			$this->form_validation->set_rules($rules);
 			if ($this->form_validation->run() == FALSE) {
 				$this->data["subview"] = "user/add";
@@ -153,8 +164,7 @@ class User extends Admin_Controller {
 				$array["address"] = $this->input->post("address");
 				$array["jod"] = date("Y-m-d", strtotime($this->input->post("jod")));
 				$array["username"] = $this->input->post("username");
-				$array["password"] = $this->user_m->hash($this->input->post("password"));
-				$array["usertypeID"] = $this->input->post("usertypeID");
+				$array["password"] = $this->user_m->hash($this->input->post("password"));				
 				$array["create_date"] = date("Y-m-d h:i:s");
 				$array["modify_date"] = date("Y-m-d h:i:s");
 				$array["create_userID"] = $this->session->userdata('loginuserID');
@@ -162,7 +172,12 @@ class User extends Admin_Controller {
 				$array["create_usertype"] = $this->session->userdata('usertype');
 				$array["active"] = 1;
 				$array['photo'] = $this->upload_data['file']['file_name'];
-
+				
+                if($this->session->userdata('usertypeID') == 2){
+				 $array["usertypeID"] = 5;
+				} else {
+				 $array["usertypeID"] = $this->input->post("usertypeID");
+				}
 				// For Email
 				$this->usercreatemail($this->input->post('email'), $this->input->post('username'), $this->input->post('password'));
 
@@ -190,7 +205,6 @@ class User extends Admin_Controller {
 		}
 	}
 
-
 	public function edit() {
 		$this->data['headerassets'] = array(
 			'css' => array(
@@ -206,10 +220,15 @@ class User extends Admin_Controller {
 		if((int)$id) {
 			$this->data['user'] = $this->user_m->get_user($id);
 			if($this->data['user']) {
-				$rules = $this->rules();
+				$rules = $this->rules();				
+				if($this->session->userdata('usertypeID') == 2){				 
+				  unset($rules[8]);
+				} 
 				unset($rules[11]);
+								
 				$this->form_validation->set_rules($rules);
 				if ($this->form_validation->run() == FALSE) {
+					echo validation_errors();
 					$this->data["subview"] = "user/edit";
 					$this->load->view('_layout_main', $this->data);
 				} else {
@@ -220,11 +239,14 @@ class User extends Admin_Controller {
 					$array["email"] = $this->input->post("email");
 					$array["phone"] = $this->input->post("phone");
 					$array["address"] = $this->input->post("address");
-					$array["jod"] = date("Y-m-d", strtotime($this->input->post("jod")));
-					$array["usertypeID"] = $this->input->post("usertypeID");
+					$array["jod"] = date("Y-m-d", strtotime($this->input->post("jod")));					
 					$array["modify_date"] = date("Y-m-d h:i:s");
 					$array["username"] = $this->input->post('username');
 					$array['photo'] = $this->upload_data['file']['file_name'];
+					
+					if($this->session->userdata('usertypeID') != 2){
+					 $array["usertypeID"] = $this->input->post("usertypeID");
+					}
 
 					$this->user_m->update_user($array, $id);
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));

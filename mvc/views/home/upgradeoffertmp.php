@@ -1,12 +1,12 @@
 <div style="width:1170px;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;background: #333;">
 	<div style="margin-left:-15px;margin-right:-15px;padding:0 15px;">
-		<img style="width:100px;" src="temp-images/emir.png" alt="logo">
+		<img style="width:100px;" src="{base_url}assets/home/images/emir.png" alt="logo">
 	</div>
 </div>
 <div style="width:1170px;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;font-family:century gothic;">
 	<div>
 		<div style="width: 8.33333%;position: relative;min-height: 1px;padding-left: 15px;padding-right: 15px;float:left;">
-			<img style="width:auto;display: block;height:auto;" src="temp-images/temp2-logo.jpg" alt="logo">
+			<img style="width:auto;display: block;height:auto;" src="{base_url}assets/home/images/temp2-logo.jpg" alt="logo">
 		</div>
 		<div style="width: 99.667%;min-height: 1px;padding-left: 15px;padding-right: 15px;">
 			<div style="background: #f5f5f5;height: 38px;margin: 16px 0;"></div>
@@ -38,8 +38,8 @@
 					  <tbody>
 							<tr>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{dep_date}</td>
-								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{flight_no}</td>
-								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">13:15 pm</td>
+		 						<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{flight_no}</td>
+								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{dep_time}</td>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{origin}</td>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{destination}</td>
 								<td style="padding: 6px 10px;text-align:left;font-size:14px;color: #333;background: #f5f5f5;">{upgrade_to} Class</td>
@@ -71,9 +71,9 @@
 					<div class="share">
 						<p>Share:</p>
 						<ul style="list-style: none;padding-left: 0;">
-							<li style="float: left;margin-right: 10px;"><img style="width:39px;display: block;height:auto;" src="temp-images/fb.png" alt="fb"></li>
-							<li style="float: left;margin-right: 10px;"><img style="width:39px;display: block;height:auto;" src="temp-images/pinterest.png" alt="pinterest"></li>
-							<li style="float: left;margin-right: 10px;"><img style="width:39px;display: block;height:auto;" src="temp-images/twitter.png" alt="twitter"></li>
+							<li style="float: left;margin-right: 10px;"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/fb.png" alt="fb"></li>
+							<li style="float: left;margin-right: 10px;"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/pinterest.png" alt="pinterest"></li>
+							<li style="float: left;margin-right: 10px;"><img style="width:39px;display: block;height:auto;" src="{base_url}/assets/home/images/twitter.png" alt="twitter"></li>
 						</ul>
 					</div>
 				</div>
