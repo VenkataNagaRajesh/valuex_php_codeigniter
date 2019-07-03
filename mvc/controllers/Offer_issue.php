@@ -631,7 +631,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'upgrade_to' => $feed->upgrade_cabin
                              							
 						 ); 			 
-					  $this->sendMailTemplateParser('home/upgradeoffertmp',$data);	*/
+					  $this->sendMailTemplateParser('home/upgradeoffertmp',$data);	
 
 			 $array = array();
                         $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
