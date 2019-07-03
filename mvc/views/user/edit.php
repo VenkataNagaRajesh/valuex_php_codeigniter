@@ -187,7 +187,7 @@
                             <?php echo form_error('photo'); ?>
                         </span>
                     </div>
-
+                 <?php if($this->session->userdata('usertypeID') != 2){ ?>
                     <?php
                         if(form_error('usertypeID'))
                             echo "<div class='form-group has-error' >";
@@ -246,7 +246,7 @@
                             <?php echo form_error('usertypeID'); ?>
                         </span>
                     </div>
-
+                 <?php } ?>
                     <?php
                         if(form_error('username'))
                             echo "<div class='form-group has-error' >";

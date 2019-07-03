@@ -94,7 +94,7 @@ class Invfeed extends Admin_Controller {
 
 				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
 				$Reader = new SpreadsheetReader($file); 
-				 $header = array_map('strtolower',array("Airlline code", "Flight nbr","Dept date","Origin Airport","Destination Airport","Cabin","Empty seats","Sold seats"));	
+				 $header = array_map('strtolower',array("Airlline code", "Flight nbr","Dept date","Origin Airport","Destination Airport","Cabin","Empty seats"));	
 				$header = array_map('strtolower', $header);
 				$Sheets = $Reader -> Sheets();
 					
@@ -120,7 +120,7 @@ class Invfeed extends Admin_Controller {
                                          }
                                         } else {
                                            if($flag == 1){                                                                                      						
-					   	 if(count($Row) == 8){ //print_r($Row); exit;						
+					   	 if(count($Row) == 7){ //print_r($Row); exit;						
 							$invfeedraw = array();
 							$invfeedraw['airline'] = $Row[array_search('airline code',$import_header)];
 							$invfeedraw['flight_nbr'] = $Row[array_search('flight nbr',$import_header)];
@@ -129,9 +129,7 @@ class Invfeed extends Admin_Controller {
 							$invfeedraw['dest_airport'] = $Row[array_search('destination airport',$import_header)];
 							$invfeedraw['cabin'] =  $Row[array_search('cabin',$import_header)];
 							$invfeedraw['empty_seats'] = $Row[array_search('empty seats',$import_header)];
-							$invfeedraw['sold_seats'] = $Row[array_search('sold seats',$import_header)];
-						if($this->invfeedraw_m->checkInvFeedRaw($invfeedraw)) {
-						
+							//$invfeedraw['sold_seats'] = $Row[array_search('sold seats',$import_header)];
                                                            $invfeedraw['create_date'] = time();
                                                           $invfeedraw['modify_date'] = time();
                                                           $invfeedraw['create_userID'] = $this->session->userdata('loginuserID');
@@ -141,25 +139,32 @@ class Invfeed extends Admin_Controller {
 								$invfeed = array();
 
 	 						$invfeed['airline_id'] =  $this->airports_m->getDefIdByTypeAndCode($invfeedraw['airline'],'12'); 
-							$invfeed['invfeedraw_id'] = $invfeed_raw_id;
                                                          $invfeed['flight_nbr'] = substr($invfeedraw['flight_nbr'],2);
                                                          $invfeed['departure_date'] = strtotime(str_replace('-','/',$invfeedraw['departure_date']));
                                                          $invfeed['origin_airport'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['origin_airport'],'1');
 							 $invfeed['dest_airport'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['dest_airport'],'1');
                                                          $invfeed['cabin'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['cabin'],13);
                                                          $invfeed['empty_seats'] = $invfeedraw['empty_seats'] ;
-                                                         $invfeed['sold_seats'] =   $invfeedraw['sold_seats'];
-		
-						if($this->invfeed_m->checkInvFeed($invfeed)) {
-							
+                                                         //$invfeed['sold_seats'] =   $invfeedraw['sold_seats'];
+							$inv_feed_id = $this->invfeed_m->checkInvFeed($invfeed);
+						if($inv_feed_id) {
+							// if inv feed feed exist make it inactive
+							$invfeed['active'] = 1;
+							$update['active'] = 0;
+							$update['modify_date'] = time();
+							$update['modify_userID'] = $this->session->userdata('loginuserID');
+							$this->invfeed_m->update_entries($update,$invfeed);
+
+						 }
+
+							// insert new entry
+							$invfeed['invfeedraw_id'] = $invfeed_raw_id;	
                                                            $invfeed['create_date'] = time();
                                                           $invfeed['modify_date'] = time();
                                                           $invfeed['create_userID'] = $this->session->userdata('loginuserID');
                                                           $invfeed['modify_userID'] = $this->session->userdata('loginuserID');
 						//	print_r($rafeed);exit;
                                                         $this->invfeed_m->insert_invfeed($invfeed);
-						}
-						}
 						}
 					   	 } 						
 					   } else {

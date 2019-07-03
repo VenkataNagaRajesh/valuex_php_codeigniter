@@ -25,13 +25,14 @@ class Invfeed_m extends MY_Model {
 		$this->db->select('invfeed_id');
 		$this->db->from('VX_aln_daily_inv_feed');
 		$this->db->where($array);
+		$this->db->where('active','1');
 		$this->db->limit(1);
 		$query = $this->db->get();
                 $check = $query->row();	
 		if($check->invfeed_id) {
-		    return false ;
+		    return $check->invfeed_id;
 		} else {
-		  return true;
+		  return 0;
 		}
 			
 
@@ -52,6 +53,23 @@ class Invfeed_m extends MY_Model {
         }
 
 
+
+	function getEmptyCabinSeats($array) {
+
+		$this->db->select('empty_seats, sold_seats');
+		$this->db->from('VX_aln_daily_inv_feed');
+                $this->db->where($array);
+		$this->db->where('active','1');
+		$this->db->limit(1);
+                $query = $this->db->get();
+                $data = $query->row();
+		return  $data;
+	}
+		
+	function update_entries($update,$where) {
+		$this->db->update('VX_aln_daily_inv_feed', $update,$where);
+//		var_dump($this->db->last_query());exit;
+	}
 
 	function insert_invfeed($array) {// echo "check"; exit;
 		$error = parent::insert($array);

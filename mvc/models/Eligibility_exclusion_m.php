@@ -102,5 +102,11 @@ class Eligibility_exclusion_m extends MY_Model {
 	public function delete_eligibility_rule($id){
 		parent::delete($id);
 	}
+	
+	function EErulesTotalCount(){
+		$this->db->select('count(*) count')->from('VX_aln_eligibility_excl_rules');		
+		$query = $this->db->get();		
+		return $query->row('count');
+	}
 }
 

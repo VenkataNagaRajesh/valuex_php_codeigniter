@@ -18,7 +18,7 @@
 			$list = array_column($ofr,'offer_id');
 			$offer_id = $list[0];
 			$plist = array_column($ofr,'list');
-			$p_cnt = count(explode('<br>',$plist[0]));
+			$p_cnt = count(explode('<br>',$ofr[0]->p_list));
 			$pnr_ref = array_column($ofr,'pnr_ref');
 
 		?>
@@ -52,10 +52,10 @@
                                 {?>
                                    <tr>
                                                 <td><?=$data->carrier.$data->flight_number?></td>
-                                                <td><?php echo date('d/m/Y',$data->dep_date)?></td>
-                                                <td><?=$data->origin?></td>
-                                                <td><?=$data->destination?></td>
-						 <td><?=$data->status?></td>
+                                                <td><?php echo date('d/m/Y',$data->offer_date)?></td>
+                                                <td><?=$data->from_city?></td>
+                                                <td><?=$data->to_city?></td>
+						 <td><?=$data->offer_status?></td>
 
                                         </tr>
                                <?php }

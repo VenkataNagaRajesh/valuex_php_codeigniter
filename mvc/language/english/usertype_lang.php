@@ -2,7 +2,7 @@
 
 /* List Language  */
 $lang['panel_title'] = "Role";
-$lang['add_title'] = "Add a role";
+$lang['add_title'] = "Add Role";
 $lang['slno'] = "#";
 $lang['usertype_usertype'] = "Role";
 $lang['action'] = "Action";

@@ -42,5 +42,11 @@ class client_m extends MY_Model {
 		$query = $this->db->get();
 		return $query->row();
 	}
+	
+	function clientTotalCount(){
+		$this->db->select('count(*) count')->from('VX_aln_client');
+		$query = $this->db->get();		
+		return $query->row('count');
+	}
 		
 }

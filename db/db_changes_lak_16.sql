@@ -1,0 +1,1 @@
+update usertype set usertypeID = 5 where usertypeID = 11;

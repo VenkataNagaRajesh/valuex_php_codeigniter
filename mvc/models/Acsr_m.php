@@ -87,5 +87,11 @@ class Acsr_m extends MY_Model {
 	public function delete_acsr($id){
 		parent::delete($id);
 	}
+	
+	function acsrTotalCount(){
+		$this->db->select('count(*) count')->from('VX_aln_auto_confirm_setup_rules');		
+		$query = $this->db->get();		
+		return $query->row('count');
+	}
 }
 
