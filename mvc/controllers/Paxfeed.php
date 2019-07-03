@@ -172,7 +172,6 @@ class Paxfeed extends Admin_Controller {
 			             if ( $raw_pax_id ) {
 					$paxfeed = array();
 	 				$paxfeed['airline_code'] =  $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['airline_code'],'12');
- 					$paxfeed['dtpfraw_id' ] = $raw_pax_id;
                                         $paxfeed['pnr_ref'] = $paxfeedraw['pnr_ref'];
                                         $paxfeed['pax_nbr'] = $paxfeedraw['pax_nbr'];
                                         $paxfeed['first_name'] = $paxfeedraw['first_name'];
@@ -222,7 +221,7 @@ class Paxfeed extends Admin_Controller {
 					$paxfeed['rbd_markup'] = 0;
 				}
 					 if($this->paxfeed_m->checkPaxFeed($paxfeed)) {
-							
+							     $paxfeed['dtpfraw_id' ] = $raw_pax_id;
                                                              $paxfeed['create_date'] = time();
                                                              $paxfeed['modify_date'] = time();
                                                              $paxfeed['create_userID'] = $this->session->userdata('loginuserID');

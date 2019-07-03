@@ -84,7 +84,11 @@
 			                        $inv['flight_nbr'] = $data->flight_number;
                         			$inv['airline_id'] = $data->carrier_code;
                         			$inv['departure_date'] = $data->flight_date;
-                        			$empty_seats = $this->invfeed_m->getCabinSeatData($inv);
+						$inv['origin_airport'] = $data->from_city_code;
+						$inv['dest_airport'] = $data->to_city_code;
+						$inv['cabin'] = $data->to_cabin_code;
+			                        $seats_data = $this->invfeed_m->getEmptyCabinSeats($inv);
+                        			$empty_seats = $seats_data->empty_seats - $seats_data->sold_seats;
 				?>
 
 					<tr>
@@ -99,12 +103,12 @@
 						<td><?php echo $data->min;?></td>
 						<td><?php echo $data->max;?></td>
 						<td>3</td>
-						<td><?php echo $empty_seats[$data->to_cabin_code] ? $empty_seats[$data->to_cabin_code] : 0 ?></td>
+						<td><?php echo $empty_seats ? $empty_seats : 0 ?></td>
 
 
 						<td>
 
-				<a href="<?php echo base_url('offer_table/processbid/'.$data->offer_id.'/'.$data->flight_number.'/accept'); ?>" onclick="<?php if( $empty_seats[$data->to_cabin_code] < $p_cnt) {?> alert('Insufficient seats'); return false; <?php } ?> ; var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Completed' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"><i class="fa fa-check-circle" aria-hidden="true"></i> </a>
+				<a href="<?php echo base_url('offer_table/processbid/'.$data->offer_id.'/'.$data->flight_number.'/accept'); ?>" onclick="<?php if( $empty_seats < $p_cnt) {?> alert('Insufficient seats'); return false; <?php } ?> ; var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Completed' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"><i class="fa fa-check-circle" aria-hidden="true"></i> </a>
 
 					<a href="<?php echo base_url('offer_table/processbid/'.$data->offer_id.'/'.$data->flight_number.'/reject'); ?>"  onclick="var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Completed' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"  ><i class="fa fa-times-circle-o" aria-hidden="true"></i></a></td>
 					</tr>

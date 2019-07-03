@@ -419,20 +419,14 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 	$rResult = $this->install_m->run_query($sQuery);
 
 
-	//var_dump($rResult);exit;
+//	var_dump($rResult);exit;
 	$full_offerlist = array();
 	$partial_offerlist = array();	
 	foreach($rResult as $data ) {
-			$inv = array();
-		 	$inv['flight_nbr'] = $data->flight_number;
-                        $inv['airline_id'] = $data->carrier_code;
-			$inv['departure_date'] = $data->dep_date;
-			$empty_seats = $this->invfeed_m->getCabinSeatData($inv);
-			//var_dump($empty_seats);
 		$q = "select distinct rbd_markup, flight_number, from_city, to_city,tier_markup, (val + ((rbd_markup * val)/100)) as bid_val , 
 			offer_id,bid_submit_date , dep_date, upgrade_type, carrier_code, src_point,  dest_point, cabin FROM (
 				SELECT (bid_value + ((pf.tier_markup * bid_value)/100)) as val,pf.dep_date,bid.upgrade_type,pf.flight_number,
-				pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point,df.name src_point_name,dt.name dest_poin_name
+				pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point
 				from VX_aln_bid bid 
 				LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )  
 				LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  pf.is_processed = 1 and pf.active = 1 )
@@ -447,7 +441,17 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 		foreach ($offers as $feed ) {
 			$passenger_data = $this->offer_issue_m->getPassengerData($feed->offer_id,$feed->flight_number);	
 			//var_dump($passenger_data);exit;
-			$cabin_seats = $empty_seats[$feed->upgrade_type];
+			
+			$inv = array();
+                        $inv['flight_nbr'] = $data->flight_number;
+                        $inv['airline_id'] = $data->carrier_code;
+                        $inv['departure_date'] = $data->dep_date;
+			$inv['cabin'] = $feed->upgrade_type;
+			$inv['origin_airport'] = $feed->from_city; 
+			$inv['dest_airport'] =  $feed->to_city;
+			$inv['active'] = 1;
+                        $seats_data = $this->invfeed_m->getEmptyCabinSeats($inv);
+			$cabin_seats = $seats_data->empty_seats - $seats_data->sold_seats;
 			
 			$namelist = explode(',',$passenger_data->passengers);
 			$emails_list =  explode(',',$passenger_data->emails);
@@ -569,7 +573,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 
                          $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                        // $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                         //$this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid is rejected, No seats avaiable  From " .$feed->src_point.' To ' . $feed->dest_point);
                         $this->email->message($message);
@@ -605,7 +609,12 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 					$cutoff_time_in_secs = $cutoff_time * 3600 ;
 
 				if( ($feed->dep_date - $current_time ) > $cutoff_time_in_secs ) {	
-				$empty_seats[$feed->upgrade_type] = $cabin_seats -  $passenger_cnt;
+				//update sold seats or allocated seats in inv feed
+					$update['sold_seats'] = $seats_data->sold_seats + $passenger_cnt;
+					$update['modify_date'] = time();
+                                        $update['modify_userID'] = $this->session->userdata('loginuserID');
+
+					$this->invfeed_m->update_entries($update,$inv);
 				
 					// accept bid
 					                                                         $message = '
@@ -636,12 +645,12 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 ';
 
 
-                         /* $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                        // $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                          $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                        //$this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid is accepted From " .$feed->src_point.'To ' . $feed->dest_point);
                         $this->email->message($message);
-                        $this->email->send(); */ 
+                        $this->email->send(); /*
 						  $cabin_name = $this->airports_m->get_definition_data($feed->upgrade_type)->aln_data_value;
 						 $card_data = $this->bid_m->getCardData($feed->offer_id);
 						 $card_number = substr(trim($card_data->card_number), -4);
@@ -661,7 +670,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'destination' => $feed->dest_point_name, 
 							'upgrade_to' => $cabin_name					
 						 ); 			 
-					  $this->sendMailTemplateParser('home/upgradeoffertmp',$data);	
+					  $this->sendMailTemplateParser('home/upgradeoffertmp',$data);	*/
 
 			 $array = array();
                         $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
@@ -706,7 +715,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 
 		                         $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                        // $this->email->from('testsweken321@gmail.com', 'ADMIN');
+                         //$this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid Offer is expired  From " .$feed->src_point.'To ' . $feed->dest_point);
                         $this->email->message($message);
