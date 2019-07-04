@@ -6,8 +6,9 @@
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
                         <div class="pull-left image">
-                            <img style="display:block" src="<?=base_url("uploads/images/".$this->session->userdata('photo'));
-                                ?>" class="img-circle" alt="" />
+                            <!--<img style="display:block" src="<?=base_url("uploads/images/".$this->session->userdata('photo'));
+                                ?>" class="img-circle" alt="" />-->
+							<span class="user-icon"><i class="fa fa-user"></i></span>
                         </div>
 
                         <div class="pull-left info">

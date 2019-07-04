@@ -209,7 +209,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext
 		 boarding_point, dai.code as carrier_code , off_point, season_id,pf.flight_number, fca.code as fcabin, 
             	tca.code as tcabin, CONCAT(dfre.aln_data_value,'(',dfre.code,')') as day_of_week ,
             	pf.dep_date as departure_date, min,max,average,slider_start,from_cabin, to_cabin,
-		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id
+		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, pext.excl_grp
 		     from VX_aln_dtpf_ext pext 
 		     LEFT JOIN VX_aln_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_processed = 1 and pf.active = 1)
 		     LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)
@@ -241,7 +241,7 @@ $sWhere $sOrder $sLimit";
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
 
 			if($feed->booking_status == 'Excluded') {
-				$feed->booking_status = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->exclusion_id.'">'.$feed->booking_status.'</a>';
+				$feed->booking_status = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->excl_grp.'">'.$feed->booking_status.'</a>';
 
 			}
 			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default season";
@@ -320,7 +320,7 @@ $sWhere $sOrder $sLimit";
 				if($f->from_cabin == $rule->upgrade_from_cabin_type && $f->to_cabin == $rule->upgrade_to_cabin_type  &&
 						($f->season_id > 0 || in_array($f->frequency,$rule_freq))) {
                                                 $ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-						$ext['exclusion_id'] = $rule->eexcl_id ;
+						$ext['exclusion_id'] = $rule->eexcl_id;
                                                  $this->offer_eligibility_m->insert_dtpfext($ext);
 	
 						 

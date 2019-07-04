@@ -6,100 +6,78 @@
 	<div class="col-md-12 fclr-table-add collapse" id="fclrAdd">
 		<form class="form-horizontal" action="#" id='fclr_add_form'>
 			<div class="col-md-12">
-				<table class="table">
-					<thead>
-						<th>Board Point</th>
-						<th>Off Point</th>
-						<th>Season</th>
-						<th>Carrier</th>
-						<th>Flight Number</th>
-						<th>Frequency</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								<?php
-									$airports['0'] = 'Board Point';
-									ksort($airports);
-									echo form_dropdown("board_point", $airports,set_value("board_point"), "id='board_point' class='form-control hide-dropdown-icon select2'");
-                                ?>
-							</td>
-							<td>
-								 <?php
-									$airports['0'] = 'Off Point';
-									ksort($airports);
-									echo form_dropdown("off_point", $airports,set_value("off_point"), "id='off_point' class='form-control hide-dropdown-icon select2'");
-                                 ?>
-							</td>
-							<td>
-								<?php 
-									$seasons[0] = 'Seasons';
-									ksort($seasons);
-									echo form_dropdown("season_id", $seasons,set_value("season_id"), "id='season_id' class='form-control hide-dropdown-icon select2'");  
-                                 ?>
-							</td>
-							<td>
-								 <?php
-									$airlines[0] = 'Carrier';
-									ksort($airlines);
-									echo form_dropdown("carrier_code", $airlines,set_value("carrier_code"), "id='carrier_code' class='form-control hide-dropdown-icon select2'");
-                                  ?>
-							</td>
-							<td>
-								<input type="text" class="form-control" id="flight_number" name="flight_number" value="<?=set_value('flight_number')?>" >
-							</td>
-							<td>
-								<?php
-									$days_of_week[0] = 'Frequency';
-									ksort($days_of_week);
-									echo form_dropdown("frequency", $days_of_week, set_value("frequency"), "id='frequency' class='form-control hide-dropdown-icon select2'");
-
-								?>  
-							</td>
-						</tr>
-					</tbody>
-					<thead>
-						<th>From Cabin</th>
-						<th>To Cabin</th>
-						<th>Minimum </th>
-						<th>Maximum</th>
-						<th>Average</th>
-						<th>Slider Position</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								<?php
-									$cabins['0'] = 'From Cabin';
-									ksort($cabins);
-									echo form_dropdown("upgrade_from_cabin_type", $cabins,set_value("upgrade_from_cabin_type"), "id='upgrade_from_cabin_type' class='form-control hide-dropdown-icon select2'");
-
-								?>     
-							</td>
-							<td>
-								 <?php
-									$cabins['0'] = 'To Cabin';
-									ksort($cabins);
-									echo form_dropdown("upgrade_to_cabin_type", $cabins,set_value("upgrade_to_cabin_type"), "id='upgrade_to_cabin_type' class='form-control hide-dropdown-icon select2'");
-
-								?> 
-							</td>
-							<td>
-								<input type="text" class="form-control" id="min" name="min" value="<?=set_value('min')?>" >
-							</td>
-							<td>
-								 <input type="text" class="form-control" id="max" name="max" value="<?=set_value('max')?>" >
-							</td>
-							<td>
-								<input type="text" class="form-control" id="avg" name="avg" value="<?=set_value('avg')?>" >
-							</td>
-							<td>
-								<input type="text" class="form-control" id="slider_start" name="slider_start" value="<?=set_value('slider_start')?>" >
-							</td>
-                                        <input type="hidden" class="form-control" id="fclr_id" name="fclr_id"   value="" >
-						</tr>
-					</tbody>
-				</table>
+				<div class="form-group">
+					<div class="col-md-2">
+						<h4>Board Point</h4>
+						<?php
+							$airports['0'] = 'Board Point';
+							ksort($airports);
+							echo form_dropdown("board_point", $airports,set_value("board_point"), "id='board_point' class='form-control hide-dropdown-icon select2'"); ?>
+					</div>
+					<div class="col-md-2">
+						<h4>Off Point</h4>
+						<?php
+							$airports['0'] = 'Off Point';
+							ksort($airports);
+							echo form_dropdown("off_point", $airports,set_value("off_point"), "id='off_point' class='form-control hide-dropdown-icon select2'");?>
+					</div>
+					<div class="col-md-2">
+						<h4>Season</h4>
+						<?php 
+							$seasons[0] = 'Seasons';
+							ksort($seasons);
+							echo form_dropdown("season_id", $seasons,set_value("season_id"), "id='season_id' class='form-control hide-dropdown-icon select2'");?>
+					</div>
+					<div class="col-md-2">
+						<h4>Carrier</h4>
+						<?php
+							$airlines[0] = 'Carrier';
+							ksort($airlines);
+							echo form_dropdown("carrier_code", $airlines,set_value("carrier_code"), "id='carrier_code' class='form-control hide-dropdown-icon select2'"); ?>
+					</div>
+					<div class="col-md-2">
+						<h4>Flight Number</h4>
+						<input type="text" class="form-control" id="flight_number" name="flight_number" value="<?=set_value('flight_number')?>" >
+					</div>
+					<div class="col-md-2">
+						<h4>Frequency</h4>
+						<?php
+							$days_of_week[0] = 'Frequency';
+							ksort($days_of_week);
+							echo form_dropdown("frequency", $days_of_week, set_value("frequency"), "id='frequency' class='form-control hide-dropdown-icon select2'");?>  
+					</div>
+					<div class="col-md-2">
+						<h4>From Cabin</h4>
+						<?php
+							$cabins['0'] = 'From Cabin';
+							ksort($cabins);
+							echo form_dropdown("upgrade_from_cabin_type", $cabins,set_value("upgrade_from_cabin_type"), "id='upgrade_from_cabin_type' class='form-control hide-dropdown-icon select2'"); ?>   
+					</div>
+					<div class="col-md-2">
+						<h4>To Cabin</h4>
+						<?php
+							$cabins['0'] = 'To Cabin';
+							ksort($cabins);
+							echo form_dropdown("upgrade_to_cabin_type", $cabins,set_value("upgrade_to_cabin_type"), "id='upgrade_to_cabin_type' class='form-control hide-dropdown-icon select2'");?> 
+					</div>
+					<div class="col-md-2">
+						<h4>Minimum</h4>
+						<input type="text" class="form-control" id="min" name="min" value="<?=set_value('min')?>" >
+					</div>
+					<div class="col-md-2">
+						<h4>Maximum</h4>
+						<input type="text" class="form-control" id="max" name="max" value="<?=set_value('max')?>" >
+					</div>
+					<div class="col-md-2">
+						<h4>Average</h4>
+						<input type="text" class="form-control" id="avg" name="avg" value="<?=set_value('avg')?>" >
+					</div>
+					<div class="col-md-2">
+						<h4>Slider Position</h4>
+						<input type="text" class="form-control" id="slider_start" name="slider_start" value="<?=set_value('slider_start')?>" >
+					</div>
+					<input type="hidden" class="form-control" id="fclr_id" name="fclr_id"   value="" >
+				</div>
 				<div class="col-md-3 pull-right">
 					<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savefclr();">ADD FCLR</a>
 					<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
@@ -116,108 +94,72 @@
 		</div>
 		<form class="form-horizontal" action="#">
 			<div class="col-md-12">
-				<table class="table">
-					<thead>
-						<th>Flight No Range</th>
-						<th>Departure Date</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								<div class="col-md-6">
-<input type="text" class="form-control" placeholder="Enter Start range Flight Number" id="sflight_number" name="sflight_number" value="<?=set_value('sflight_number',$flight_number)?>" >
-
-								</div>
-								<div class="col-md-6">
-<input type="text" class="form-control" placeholder="Enter End range Flight number" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
-								</div>
-							</td>
-							<td>
-								<div class="col-md-6">
-									<div class="input-group">
-                            <input type="text" class="form-control" placeholder="Enter Dep From date" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
-
-										<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-									 </div>
-								</div>
-								<div class="col-md-6">
-									 <div class="input-group">
-  <input type="text" class="form-control" placeholder="Enter Dep To date" id="dep_to_date" name="dep_to_date" value="<?=set_value('dep_to_date',$dep_to_date)?>" >
-
-										<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-									 </div>
-								</div>
-							</td>	
-						</tr>
-					</tbody>
-				</table>
-				<table class="table">
-					<thead>
-						<th>Board/Off Point</th>
-						<th>Market</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								<div class="col-md-6">
- <?php
-                        $airports['0'] = 'Select Boarding Point';
-                        ksort($airports);
-
-                                   echo form_dropdown("boarding_point", $airports,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
-
-								</div>
-								<div class="col-md-6">
-<?php
-        $airports['0'] = 'Select Off Point';
-                        ksort($airports);
-
-                                   echo form_dropdown("soff_point", $airports,set_value("soff_point",$off_point), "id='soff_point' class='form-control hide-dropdown-icon select2'");    ?>
-
-								</div>
-							</td>
-							<td>
-								<div class="col-md-6">
-
-				<?php
-        $marketzones['0'] = 'Origin Market';
-                        ksort($marketzones);
-
-                                   echo form_dropdown("smarket", $marketzones,set_value("smarket",$smarket), "id='smarket' class='form-control hide-dropdown-icon select2'");    ?>
-
-								</div>
-								<div class="col-md-6">
-  <?php
-        $marketzones['0'] = 'Dest Market';
-                        ksort($marketzones);
-
-                                   echo form_dropdown("dmarket", $marketzones,set_value("dmarket",$dmarket), "id='dmarket' class='form-control hide-dropdown-icon select2'");    ?>
-
-								</div>
-							</td>	
-						</tr>
-					</tbody>
-				</table>
-				<table class="table">
-					<thead>
-						<th>Frequency</th>
-					</thead>
-					<tbody>
-						<tr>
-							<td>
-								<div class="col-md-6">
-<?php
- echo form_dropdown("sfrequency", $days_of_week, set_value("sfrequency",$frequency), "id='sfrequency' class='form-control select2'");
-     ?>   
-								</div>
-								<div class="col-sm-2">
-   <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
-
-								</div>
-							</td>							
-						</tr>
-					</tbody>
-				</table>
+				<div class="form-group">
+					<div class="col-md-2">
+						<h4>Flight No Range</h4>
+						<div class="col-md-12">
+							<input type="text" class="form-control" placeholder="Enter Start range Flight Number" id="sflight_number" name="sflight_number" value="<?=set_value('sflight_number',$flight_number)?>" >
+						</div>
+						<div class="col-md-12">
+							<input type="text" class="form-control" placeholder="Enter End range Flight number" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
+						</div>
+					</div>
+					<div class="col-md-3">
+						<h4>Departure Date</h4>
+						<div class="col-md-12">
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="Enter Dep From date" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<div class="input-group">
+								 <input type="text" class="form-control" placeholder="Enter Dep To date" id="dep_to_date" name="dep_to_date" value="<?=set_value('dep_to_date',$dep_to_date)?>" >
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<h4>Board/Off Point</h4>
+						<div class="col-md-12">
+							 <?php
+								$airports['0'] = 'Select Boarding Point';
+								ksort($airports); 
+                                echo form_dropdown("boarding_point", $airports,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'"); ?>
+						</div>
+						<div class="col-md-12">
+							<?php
+								$airports['0'] = 'Select Off Point';
+								ksort($airports);
+                                echo form_dropdown("soff_point", $airports,set_value("soff_point",$off_point), "id='soff_point' class='form-control hide-dropdown-icon select2'");    ?>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<h4>Market</h4>
+						<div class="col-md-12">
+							<?php
+								$marketzones['0'] = 'Origin Market';
+								ksort($marketzones);
+                                echo form_dropdown("smarket", $marketzones,set_value("smarket",$smarket), "id='smarket' class='form-control hide-dropdown-icon select2'");    ?>
+						</div>
+						<div class="col-md-12">
+							  <?php
+								$marketzones['0'] = 'Dest Market';
+								ksort($marketzones);
+                                echo form_dropdown("dmarket", $marketzones,set_value("dmarket",$dmarket), "id='dmarket' class='form-control hide-dropdown-icon select2'");    ?>
+						</div>
+					</div>
+					<div class="col-md-2">
+						<h4>Frequency</h4>
+						<div class="col-md-12">
+							<?php
+								echo form_dropdown("sfrequency", $days_of_week, set_value("sfrequency",$frequency), "id='sfrequency' class='form-control select2'");?>  
+						</div>
+						<div class="col-md-12">
+							<a href="#" type="button"  id='btn_txt' class="btn btn-danger form-control" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</form>
 	</div>
