@@ -34,7 +34,7 @@
 								<thead>
 									<tr>
 										<th>Flight Information</th>
-										<th>Upgrade Type</th>
+										<th style="text-align:left;">Upgrade Type</th>
 										<th>Bid (s)</th>
 									</tr>
 								</thead>
@@ -64,7 +64,7 @@
 												</div>
 											</div>											
 										</td>
-										<td style="text-align:center;">		 
+										<td>		 
 											<div class="bid-radio col-md-12">
 											   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
 											   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){ ?>								      
