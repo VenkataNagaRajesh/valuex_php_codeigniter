@@ -23,8 +23,8 @@ class Bidding extends MY_Controller {
 	}
   
     public function index() {  
-     // $this->session->set_userdata('pnr_ref','WQ1235');
-      //$this->session->set_userdata('validation_check',1);	   
+      //$this->session->set_userdata('pnr_ref','WQ1235');
+     //$this->session->set_userdata('validation_check',1);	   
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
 			$this->session->unset_userdata('pnr_ref');
@@ -41,7 +41,7 @@ class Bidding extends MY_Controller {
 			$result->to_cabins = explode(',',$result->to_cabins);
 			  foreach($result->to_cabins as $value){
                 $data = explode('-',$value);
-                $tocabins[$data[1]] = $data[0];
+                $tocabins[$data[1].'-'.$data[2]] = $data[0];
                // unset($result->to_cabins[$key]);
               }
               $result->to_cabins = $tocabins;
@@ -51,7 +51,7 @@ class Bidding extends MY_Controller {
 			$dteStart = new DateTime($dept); 
 			$dteEnd   = new DateTime($arrival); 
 			$dteDiff  = $dteStart->diff($dteEnd);
-			$result->time_diff = $dteDiff->format('%d days %H hours %i min'); 
+			$result->time_diff = $dteDiff->format('%d days %H hours %i min'); 			
      	}	
        // echo $interval->format('%Y years %m months %d days %H hours %i minutes %s seconds');	 exit; 
         $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();

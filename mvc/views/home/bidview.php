@@ -67,11 +67,11 @@
 										<td>		 
 											<div class="bid-radio col-md-12">
 											   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
-											   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){ ?>								      
-												<label class="radio-inline">
-													<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0)?"checked":''; ?> ><?php echo $cabins[$value]; ?>
+											   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>								      
+												<label class="radio-inline <?=($status == 1971)?"bid-visible":""?>">
+													<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0 )?"checked":''; ?> ><?php echo $cabins[$value]; ?>
 												</label><br>
-											   <?php $i++; } } ?>									
+											   <?php if($status != 1971) { $i++; } } } ?>									
 											</div>	
 										</td>
 										<td>
@@ -139,8 +139,8 @@
 										<div class="col-md-12">
 											<label for="cardNumber">Card number</label>
 											<div class="input-group">
-												<input type="tel" class="form-control" name="card_number" id="card_number"
-													placeholder="Enter Card Number" min="16" max="16"
+												<input type="number" class="form-control" name="card_number" id="card_number"
+													oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" placeholder="Enter Card Number" maxlength="16"
 												/>
 												<span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
 											</div>
@@ -149,12 +149,12 @@
 									<div class="form-group card-exp">
 										<div class="col-md-6">
 											<label for="cardExpiry">Expiry Date</label>
-											<input type="tel" class="form-control" name="month_expiry" id="month_expiry" placeholder="MM"/>
-											/ <input type="tel" class="form-control" name="year_expiry" id="year_expiry" placeholder="YY"/>
+											<input type="number" class="form-control" name="month_expiry" id="month_expiry" placeholder="MM" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2"/>
+											/ <input type="number" class="form-control" name="year_expiry" id="year_expiry" placeholder="YY" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2"/>
 										</div>
 										<div class="col-md-6">
 											<label for="cardCVC" style="position: relative;margin-left: auto;margin-right: 2em;">CVV</label>
-											<input type="tel" class="form-control pull-right" name="cvv" id="cvv" />
+											<input type="number" class="form-control pull-right" name="cvv" id="cvv" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="3" />
 										</div>
 									</div>
 									<div class="col-md-12">
@@ -217,6 +217,10 @@ $('#bid_slider_<?=$result->flight_number?>').slider({
 });
 <?php } } ?>
 
+$(".bid-visible").click(function () {   
+	 event.preventDefault();
+});
+
 $('#miles').slider({
 	tooltip: 'always',
 	formatter: function(value) {			
@@ -234,6 +238,13 @@ $('#miles').slider({
 
 <?php foreach($results as $result){   if($result->fclr != null){?> 	
 $("#bid_slider_<?=$result->flight_number?>").on("slide", function(slideEvt) {
+	var tot_avg = getTotal();
+	$("#tot").text(tot_avg);
+	$("#bidtot").text(tot_avg);	 
+    mileSliderUpdate();	
+    changeColors(<?=$result->flight_number?>);	 
+});
+$("#bid_slider_<?=$result->flight_number?>").on("click", function(slideEvt) {
 	var tot_avg = getTotal();
 	$("#tot").text(tot_avg);
 	$("#bidtot").text(tot_avg);	 
