@@ -392,7 +392,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
              LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code and car.aln_data_typeID = 12)
              LEFT JOIN vx_aln_data_defns dcabin on (dcabin.vx_aln_data_defnsID = bid.upgrade_type and dcabin.aln_data_typeID = 13)
              WHERE bid.offer_id IN (".$data->offer_list .") AND bid.flight_number = " .$data->flight_number .
-          " ) as FirstSet order by bid_val desc,tier_markup desc , rbd_markup desc,bid_submit_date desc"; 
+          " ) as FirstSet order by bid_val desc,tier_markup desc , rbd_markup desc,bid_submit_date desc,cash desc"; 
 		$offers =  $this->install_m->run_query($q);
 		//var_dump($q);echo "<br><br>";
 		//var_dump($offers); echo "<br><br>";exit;
@@ -460,7 +460,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 <td width="5%"></td>
         <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
 <h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
- Your bid is rejected.<br />
+ Your bid is rejected due to less bid price.<br />
 <br />
 <big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
 <br />
@@ -500,7 +500,9 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 			} else {
 
 
-				if ( $acsr_data->status == 'accept' && $feed->bid_val > $acsr_data->min_bid_price  && ($cabin_seats -  $passenger_cnt) <= $acsr_data->memp) {
+				if ( $acsr_data->status == 'accept' && $feed->bid_val > $acsr_data->min_bid_price ) { 
+
+				  if (($cabin_seats -  $passenger_cnt) < $acsr_data->memp) {
 					
 					                                                                  $message = '
         <html>
@@ -548,9 +550,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
                         $this->offer_eligibility_m->update_dtpfext($array,$p_list);
 
-				}
-
-			if ($acsr_data->status == 'accept' && $cabin_seats > $passenger_cnt  && ($cabin_seats -  $passenger_cnt) >= $feed->memp) {
+				} else {
 		//	echo "accepetd";
 
 				// check preference before accepting for cutoff time.
@@ -698,7 +698,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 		}
 
-
+			}
 				}
 
 
