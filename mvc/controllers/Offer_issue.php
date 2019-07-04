@@ -614,7 +614,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 						 
 						 $card_data = $this->bid_m->getCardData($feed->offer_id);
 						 $card_number = substr(trim($card_data->card_number), -4);
-						 $data = array(
+						 $e_data = array(
 							'first_name'   => $namelist[0],
 							'last_name' => '',
 							'tomail' => $emails_list[0],
@@ -631,7 +631,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'upgrade_to' => $feed->upgrade_cabin
                              							
 						 ); 			 
-					  $this->sendMailTemplateParser('home/upgradeoffertmp',$data);	*/
+					  $this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);	
 
 			 $array = array();
                         $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
