@@ -8,6 +8,10 @@
                         $offer_id = $list[0];
                         $p_cnt = count(explode('<br>',$ofr[0]->p_list));
                         $pnr_ref = array_column($ofr,'pnr_ref');
+			$total_bid_price = array_sum(array_column($ofr,'bid_value'));
+			$total_cash_paid = array_sum(array_column($ofr,'cash'));
+			$cash_percentage =  round(100 - ($total_cash_paid / $total_bid_price) * 100);
+			$miles_percentage = round(100 - $cash_percentage);
                 ?>
 
 			<p>
@@ -53,8 +57,8 @@
 			<p>Status: <b><?php echo $status_ofr; ?></b></p>
 			<p><b>Offer Price</b><br>
 				<span>Total Price:</span><?php echo array_sum(array_column($ofr,'bid_value'));?><br>
-				<span>Mode:</span> 60%  Cash, 40% Miles<br>
-				<span>Miles:</span> 50,000
+				<span>Mode:</span> <?php echo $cash_percentage;?>%  Cash, <?php echo $miles_percentage?>% Miles<br>
+				<span>Miles:</span> <?php echo array_sum(array_column($ofr,'miles'));?>
 			</p>
 		</div>
 	</div>
