@@ -52,6 +52,7 @@ class Offer_reference_m extends MY_Model {
 
 	  function update_offer_ref($data, $id = NULL) {
                 parent::update($data, $id);
+				$this->mydebug->debug($this->db->last_query);
                 return $id;
         }
 
