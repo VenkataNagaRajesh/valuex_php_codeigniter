@@ -214,7 +214,7 @@ class Bidding extends MY_Controller {
 			   $tot_bid = $this->input->post("tot_bid");
 			   $ref['offer_status'] = $select_status;
 			   $ref["modify_date"] = time();
-			   $ref["cash_percentage"] = ($ref['cash']/ $tot_bid)*100;
+			   $ref["cash_percentage"] = round((($ref['cash']/ $tot_bid)*100),2);
 			   $this->mydebug->debug("cash per :".$ref["cash_percentage"]);
 			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
 			if($id){
