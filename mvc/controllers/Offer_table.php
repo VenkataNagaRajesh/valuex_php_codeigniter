@@ -301,11 +301,11 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
                         MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status,
-			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point
+			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date
 
                 FROM ( 
                                 select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, 
-                                tcab.aln_data_value as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status
+                                tcab.aln_data_value as to_cabin, oref.pnr_ref, bid.flight_number,oref.cash, oref.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date
                                 from  
                                         VX_aln_offer_ref oref 
                                         INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id) 
@@ -360,6 +360,7 @@ $sOrder $sLimit";
 			$feed->cnt = ++$i;
 			$feed->avg_fare = $feed->bid_value;;
                         $feed->flight_date = date('d-m-Y',$feed->flight_date);
+			$feed->bid_submit_date =  date('d-m-Y H:i:s',$feed->bid_submit_date);
 			$feed->offer_date = date('d-m-Y',$feed->offer_date);
 			$feed->p_count = count(explode(',',$feed->p_list));
 			$feed->action = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
