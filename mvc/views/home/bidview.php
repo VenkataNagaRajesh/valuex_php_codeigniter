@@ -325,22 +325,23 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 	  
  }
  
- function saveBid(offer_id){  			
+ function saveBid(offer_id){
+      var miles = $("#miles").slider('getValue');
+      var tot_bid = getTotal();
+	  var pay_cash = tot_bid - Math.round(miles * mile_value);		
     $.ajax({
           async: false,
           type: 'POST',
           url: "<?=base_url('homes/bidding/saveCardData')?>",          
-		  data: {"card_number" :$('#card_number').val(),"month_expiry":$('#month_expiry').val(),"year_expiry":$('#year_expiry').val(),"cvv":$('#cvv').val(),"offer_id":offer_id},
+		  data: {"card_number" :$('#card_number').val(),"month_expiry":$('#month_expiry').val(),"year_expiry":$('#year_expiry').val(),"cvv":$('#cvv').val(),"offer_id":offer_id,"cash":pay_cash,"miles":miles,"tot_bid":tot_bid},
           dataType: "html",			
           success: function(data) {
             var cardinfo = jQuery.parseJSON(data);              		
             if(cardinfo['status'] == "success"){
 		      <?php foreach($results as $result){  if($result->fclr != null){ ?>
-				var bid_value = $("#bid_slider_<?=$result->flight_number?>").slider('getValue');  
-				var miles = $("#miles").slider('getValue');	
-				var pay_cash = bid_value - Math.round(miles * mile_value);
-				var flight_number = <?=$result->flight_number?>;
-				
+				var bid_value = $("#bid_slider_<?=$result->flight_number?>").slider('getValue');			
+				//var pay_cash = bid_value - Math.round(miles * mile_value);				
+				var flight_number = <?=$result->flight_number?>;				
 				var upgrade = $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]:checked').val().split('|');
 				var upgrade_type = upgrade[0];	
 				var fclr_id = upgrade[1];
@@ -348,7 +349,7 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 				  async: false,
 				  type: 'POST',
 				  url: "<?=base_url('homes/bidding/saveBidData')?>",          
-				  data: {"offer_id" :offer_id,"bid_value":bid_value,"miles":miles,"cash":pay_cash,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id},
+				  data: {"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id},
 				  dataType: "html",			
 				  success: function(data) {
 					var info = jQuery.parseJSON(data);              		

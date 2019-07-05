@@ -18,13 +18,13 @@ class Bidding extends MY_Controller {
          $this->load->library('form_validation');
          $this->load->library('email');		 
 	     $language = $this->session->userdata('lang');	  
-		$this->lang->load('bidding', $language);	
+		$this->lang->load('bidding', $language);       		
       
 	}
   
     public function index() {  
-      //$this->session->set_userdata('pnr_ref','WQ1235');
-     //$this->session->set_userdata('validation_check',1);	   
+      $this->session->set_userdata('pnr_ref','WQ1235');
+      $this->session->set_userdata('validation_check',1);	   
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
 			$this->session->unset_userdata('pnr_ref');
@@ -76,10 +76,8 @@ class Bidding extends MY_Controller {
 	
 	public function saveBidData(){
 		if($this->input->post('offer_id')){ 
-			$data['offer_id'] = $this->input->post('offer_id');
-			$data['cash'] = $this->input->post("cash");
-			$data['bid_value'] = $this->input->post("bid_value");
-			$data['miles'] = $this->input->post("miles");
+			$data['offer_id'] = $this->input->post('offer_id');			
+			$data['bid_value'] = $this->input->post("bid_value");			
 			$data['fclr_id'] = $this->input->post("fclr_id");
 			$data['upgrade_type'] = $this->input->post("upgrade_type");
 			$data['flight_number'] = $this->input->post("flight_number");	
@@ -102,11 +100,7 @@ class Bidding extends MY_Controller {
 			   $this->mydebug->debug($unselect_passengers_data->p_list);
 			   
              $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $select_status,"modify_date"=>time()),$select_p_list);
-		    $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);
-			   
-			   $ref['offer_status'] = $select_status;
-			   $ref["modify_date"] = time();
-			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
+		    $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);			   
 			   //send bid success mail
 			   $offer_data = $this->bid_m->get_offer_data($this->input->post("offer_id"));
 			   $maildata = (array)$offer_data;
@@ -214,6 +208,15 @@ class Bidding extends MY_Controller {
 			$data['cvv'] = $this->input->post("cvv");
             $data['date_added'] = time();			
             $id = $this->bid_m->save_card_data($data);
+			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_complete','20');
+			   $ref['cash'] = $this->input->post("cash");
+			   $ref['miles'] = $this->input->post("miles");
+			   $tot_bid = $this->input->post("tot_bid");
+			   $ref['offer_status'] = $select_status;
+			   $ref["modify_date"] = time();
+			   $ref["cash_percentage"] = ($ref['cash']/ $tot_bid)*100;
+			   $this->mydebug->debug("cash per :".$ref["cash_percentage"]);
+			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
 			if($id){
 			  $json['status'] = "success";
 		    }
