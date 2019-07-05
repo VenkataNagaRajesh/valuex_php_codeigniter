@@ -392,7 +392,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
              LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code and car.aln_data_typeID = 12)
              LEFT JOIN vx_aln_data_defns dcabin on (dcabin.vx_aln_data_defnsID = bid.upgrade_type and dcabin.aln_data_typeID = 13)
              WHERE bid.offer_id IN (".$data->offer_list .") AND bid.flight_number = " .$data->flight_number .
-          " ) as FirstSet order by bid_val desc,tier_markup desc , rbd_markup desc,bid_submit_date desc,cash_per desc"; 
+          " ) as FirstSet order by bid_val desc,tier_markup desc , rbd_markup desc,cash_per desc,bid_submit_date asc"; 
 		$offers =  $this->install_m->run_query($q);
 		//var_dump($q);echo "<br><br>";
 		//var_dump($offers); echo "<br><br>";exit;
@@ -411,6 +411,8 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
                         $seats_data = $this->invfeed_m->getEmptyCabinSeats($inv);
 			$cabin_seats = $seats_data->empty_seats - $seats_data->sold_seats;
 			
+//echo "offerId: " . $feed->offer_id . "<br>";
+//echo "seats:". $cabin_seats .  "<br> <br>";
 			$namelist = explode(',',$passenger_data->passengers);
 			$emails_list =  explode(',',$passenger_data->emails);
 

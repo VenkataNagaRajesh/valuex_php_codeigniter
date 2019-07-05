@@ -79,6 +79,7 @@
 							<th class="col-lg-1"><?=$this->lang->line('current_cabin')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('bid_cabin')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('bid_amount')?></th>
+							 <th class="col-lg-1"><?php echo "Submit Date";?></th>
 							<th class="col-lg-1"><?=$this->lang->line('pax_names')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('fqtv')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
@@ -136,6 +137,7 @@ $("#dep_to_date").datepicker();
                    {"data": "from_cabin" },
                    {"data": "to_cabin" },
                    {"data": "bid_value" },
+		     {"data": "bid_submit_date" },
 		   {"data": "p_list" },
 		   {"data": "fqtv" },
                    {"data": "pnr_ref" },
