@@ -23,14 +23,15 @@ class Bidding extends MY_Controller {
 	}
   
     public function index() {  
-     // $this->session->set_userdata('pnr_ref','WQ1235');
-     // $this->session->set_userdata('validation_check',1);	   
+      //$this->session->set_userdata('pnr_ref','F90406');
+      //$this->session->set_userdata('validation_check',1);	   
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
 			$this->session->unset_userdata('pnr_ref');
 		}
 		
 		$this->data['results'] = $this->bid_m->getPassengers($this->session->userdata('pnr_ref'));
+		//print_r($this->data['results'] ); exit;
 		//$this->data['tomail'] = explode(',',$this->data['results'][0]->email_list)[0]; 
 		if(empty($this->data['results'])){
 			redirect(base_url('home/index'));
@@ -51,15 +52,17 @@ class Bidding extends MY_Controller {
 			$dteStart = new DateTime($dept); 
 			$dteEnd   = new DateTime($arrival); 
 			$dteDiff  = $dteStart->diff($dteEnd);
-			$result->time_diff = $dteDiff->format('%d days %H hours %i min'); 			
-     	}	
+			$result->time_diff = $dteDiff->format('%d days %H hours %i min');
+            $this->data['passengers_count'] = count(explode(',',$result->pax_names)); 			
+     	}
+//$this->data['passengers_count'] = 2;		
        // echo $interval->format('%Y years %m months %d days %H hours %i minutes %s seconds');	 exit; 
         $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
         $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
 		
        	
-	    //print_r($this->data['results']); exit;
+	   // print_r($this->data['results']); exit;
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);
 	}
@@ -76,6 +79,8 @@ class Bidding extends MY_Controller {
 	
 	public function saveBidData(){
 		if($this->input->post('offer_id')){ 
+		 // $count = $this->bid_m->bid_data_count(array('offer_id'=>$this->input->post('offer_id'),'flight_number'=>$this->input->post('flight_number')));
+		 
 			$data['offer_id'] = $this->input->post('offer_id');			
 			$data['bid_value'] = $this->input->post("bid_value");			
 			$data['fclr_id'] = $this->input->post("fclr_id");
@@ -195,6 +200,7 @@ class Bidding extends MY_Controller {
 	}
 	
 	public function saveCardData(){
+	//	print_r($_POST); exit;
 		if($this->input->post('offer_id')){
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
