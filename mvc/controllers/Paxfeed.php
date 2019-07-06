@@ -61,10 +61,11 @@ class Paxfeed extends Admin_Controller {
                 }
 
 
-                $this->data['country'] = $this->rafeed_m->getCodesByType('2');
-                $this->data['city'] = $this->rafeed_m->getCodesByType('5');
+                $this->data['city'] = $this->airports_m->getDefnsCodesListByType('3');
                 $this->data['airlines'] = $this->rafeed_m->getCodesByType('12');
-
+		$this->data['country'] = $this->airports_m->getDefnsCodesListByType('2');
+		$this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
+                $this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
 
 		$this->data["subview"] = "paxfeed/index";
 		$this->load->view('_layout_main', $this->data);

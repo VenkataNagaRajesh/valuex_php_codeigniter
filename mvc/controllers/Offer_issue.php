@@ -58,6 +58,8 @@ $this->data['headerassets'] = array(
                                                 'assets/datepicker/datepicker.js'
                 )
         );
+		$this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
+                $this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
 
 	$this->data["subview"] = "offer/index";
                 $this->load->view('_layout_main', $this->data);
