@@ -3665,7 +3665,7 @@ fieldset[disabled] .btn-vk.active {
 	padding: 5px 10px;
 }
 .srch-buttons .input-group{
-	border: solid 1px #999;
+	/*border: solid 1px #999;*/
 	border-radius: 5px;
 }
 .srch-buttons .input-group input{
@@ -3824,6 +3824,7 @@ fieldset[disabled] .btn-vk.active {
 }
 .mzones{
 	color:#333;
+	margin-top: 12px;
 }
 .mzones-list-bar .title-bar{
 	margin-top:12px;
@@ -3851,6 +3852,12 @@ fieldset[disabled] .btn-vk.active {
 }
 #mzonesAdd{
 	margin-top:12px;
+}
+.mzones  .tree-box{
+	background: #fff;
+	padding: 12px 0;
+	margin-top: 12px;
+	border: solid 1px #333;
 }
 .mzones .tab-content tr td{
 	color:#333;

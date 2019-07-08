@@ -1,8 +1,8 @@
 <div class="mzones">
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Market Zones</h2>
-	<p class="card-header" data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id = 'add_zone_button' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
-	<div class="col-md-12 collapse" id="mzonesAdd">
-		<div class="col-md-4">
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:84%;margin-right:16px;">Market Zones</h2>
+	<span data-toggle="collapse" data-target="#treeview"><button type="button" class="btn btn-danger pull-right" style="margin:1px 9px;"><i class="fa fa-tree"></i> Tree View</button></span>
+	<div class="col-md-12 collapse" id="treeview">
+		<div class="col-md-8 col-md-offset-2 tree-box">
 			<div class="srch-buttons">
 				<div class="col-md-4">
 					<a href="#" type="button" class="btn btn-default">Market Zone</a>
@@ -23,7 +23,10 @@
 				<div id="mytree" class="market-info-tree"></div>
 			</div>
 		</div>
-		<div class="col-md-8">
+	</div>
+	<span class="card-header" data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id = 'add_zone_button' class="btn btn-danger" style="margin:1px 0;" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></span>
+	<div class="col-md-12 collapse" id="mzonesAdd">
+		<div class="col-md-8 col-md-offset-2">
 		<form class="form-horizontal" role="form" method="post" id='add_zone' enctype="multipart/form-data">
 			<div class="mzone-config col-md-12">
 				<div class="col-md-12 zone-info1">
