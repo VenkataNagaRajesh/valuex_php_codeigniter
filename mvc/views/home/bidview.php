@@ -67,18 +67,28 @@
 										<td>		 
 											<div class="bid-radio col-md-12">
 											   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
-											   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){ ?>								      
-												<label class="radio-inline">
-													<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0)?"checked":''; ?> ><?php echo $cabins[$value]; ?>
+											   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>								      
+												<label class="radio-inline <?=($status == 1971)?"bid-visible":""?>">
+													<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0 )?"checked":''; ?> ><?php echo $cabins[$value]; ?>
 												</label><br>
-											   <?php $i++; } } ?>									
+											   <?php if($status != 1971) { $i++; } } } ?>									
 											</div>	
 										</td>
 										<td>
-											<?php if($result->fclr != null){ ?>
+											<?php if($result->fclr != null){
+												  $i=0;
+												 foreach($result->to_cabins as $key => $value) {		 
+												  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
+												   if($status == 1992){
+													 break;  
+												   } else {
+													   $i++;
+												   }
+												 }	?>       
+											
 												<div class="price-range col-md-12">		
 												<i class="fa fa-dollar"></i> <b id="bid_min_<?=$result->flight_number?>"></b>
-														<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[0]; ?>" data-slider-max="<?php echo explode(',',$result->max)[0]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->avg)[0]; ?>" data-slider-handle="square"min-slider-handle="200"/>
+														<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->avg)[$i]; ?>" data-slider-handle="square"min-slider-handle="200"/>
 													<i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b>
 												</div>
 											<?php }  ?>
@@ -139,8 +149,8 @@
 										<div class="col-md-12">
 											<label for="cardNumber">Card number</label>
 											<div class="input-group">
-												<input type="tel" class="form-control" name="card_number" id="card_number"
-													placeholder="Enter Card Number" min="16" max="16"
+												<input type="number" class="form-control" name="card_number" id="card_number"
+													oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" placeholder="Enter Card Number" maxlength="16"
 												/>
 												<span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
 											</div>
@@ -149,12 +159,12 @@
 									<div class="form-group card-exp">
 										<div class="col-md-6">
 											<label for="cardExpiry">Expiry Date</label>
-											<input type="tel" class="form-control" name="month_expiry" id="month_expiry" placeholder="MM"/>
-											/ <input type="tel" class="form-control" name="year_expiry" id="year_expiry" placeholder="YY"/>
+											<input type="number" class="form-control" name="month_expiry" id="month_expiry" placeholder="MM" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2"/>
+											/ <input type="number" class="form-control" name="year_expiry" id="year_expiry" placeholder="YY" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2"/>
 										</div>
 										<div class="col-md-6">
 											<label for="cardCVC" style="position: relative;margin-left: auto;margin-right: 2em;">CVV</label>
-											<input type="tel" class="form-control pull-right" name="cvv" id="cvv" />
+											<input type="number" class="form-control pull-right" name="cvv" id="cvv" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="3" />
 										</div>
 									</div>
 									<div class="col-md-12">
@@ -197,14 +207,24 @@ $(document).ready(function () {
    $('#milesSlider .slider-selection').css({"background":"#0feded"});
 	   $('#milesSlider .slider-handle').css({"background":"#0feded"});	
    tot_avg = 0;
-  <?php foreach($results as $result){  if($result->fclr != null){  ?>
-    var tot_avg = tot_avg + <?=explode(',',$result->avg)[0]?>;
-    $('#bid_min_<?=$result->flight_number?>').text(<?php echo explode(',',$result->min)[0]; ?>);
-    $('#bid_max_<?=$result->flight_number?>').text(<?php echo explode(',',$result->max)[0]; ?>);
+  <?php foreach($results as $result){  if($result->fclr != null){  ?>	  
+	<?php $i=0;
+	 foreach($result->to_cabins as $key => $value) {		 
+	  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
+       if($status == 1992){
+		 break;  
+	   } else {
+		   $i++;
+	   }
+	 }	?>
+     console.log(<?=$ij?>);      	
+    $('#bid_min_<?=$result->flight_number?>').text(<?php echo explode(',',$result->min)[$i]; ?>);
+    $('#bid_max_<?=$result->flight_number?>').text(<?php echo explode(',',$result->max)[$i]; ?>);
+	var tot_avg = tot_avg + <?=explode(',',$result->avg)[$i]?>;
     changeColors(<?=$result->flight_number?>);
   <?php } } ?>  
-  $("#tot").text(tot_avg);
-  $("#bidtot").text(tot_avg);  
+  $("#tot").text(tot_avg*<?=$passengers_count?>);
+  $("#bidtot").text(tot_avg*<?=$passengers_count?>);  
   mileSliderUpdate();
  
 });
@@ -212,10 +232,14 @@ $(document).ready(function () {
 $('#bid_slider_<?=$result->flight_number?>').slider({
 	tooltip: 'always',
 	formatter: function(value) {
-		return '$'+value + ' per Passenger';
+		return '$'+value + '(<?=$passengers_count?>)';
 	}
 });
 <?php } } ?>
+
+$(".bid-visible").click(function () {   
+	 event.preventDefault();
+});
 
 $('#miles').slider({
 	tooltip: 'always',
@@ -234,6 +258,13 @@ $('#miles').slider({
 
 <?php foreach($results as $result){   if($result->fclr != null){?> 	
 $("#bid_slider_<?=$result->flight_number?>").on("slide", function(slideEvt) {
+	var tot_avg = getTotal();
+	$("#tot").text(tot_avg);
+	$("#bidtot").text(tot_avg);	 
+    mileSliderUpdate();	
+    changeColors(<?=$result->flight_number?>);	 
+});
+$("#bid_slider_<?=$result->flight_number?>").on("click", function(slideEvt) {
 	var tot_avg = getTotal();
 	$("#tot").text(tot_avg);
 	$("#bidtot").text(tot_avg);	 
@@ -272,7 +303,7 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
  function getTotal(){
 		var tot_avg = 0;
 		<?php foreach($results as $result){  if($result->fclr != null){ ?>
-		  tot_avg = tot_avg+$("#bid_slider_<?=$result->flight_number?>").slider('getValue');;
+		  tot_avg = tot_avg+$("#bid_slider_<?=$result->flight_number?>").slider('getValue')*<?=$passengers_count?>;
 		<?php } } ?>	
 		return tot_avg; 
 	}
@@ -314,22 +345,23 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 	  
  }
  
- function saveBid(offer_id){  			
+ function saveBid(offer_id){
+      var miles = $("#miles").slider('getValue');
+      var tot_bid = getTotal();
+	  var pay_cash = tot_bid - Math.round(miles * mile_value);		
     $.ajax({
           async: false,
           type: 'POST',
           url: "<?=base_url('homes/bidding/saveCardData')?>",          
-		  data: {"card_number" :$('#card_number').val(),"month_expiry":$('#month_expiry').val(),"year_expiry":$('#year_expiry').val(),"cvv":$('#cvv').val(),"offer_id":offer_id},
+		  data: {"card_number" :$('#card_number').val(),"month_expiry":$('#month_expiry').val(),"year_expiry":$('#year_expiry').val(),"cvv":$('#cvv').val(),"offer_id":offer_id,"cash":pay_cash,"miles":miles,"tot_bid":tot_bid},
           dataType: "html",			
           success: function(data) {
             var cardinfo = jQuery.parseJSON(data);              		
             if(cardinfo['status'] == "success"){
 		      <?php foreach($results as $result){  if($result->fclr != null){ ?>
-				var bid_value = $("#bid_slider_<?=$result->flight_number?>").slider('getValue');  
-				var miles = $("#miles").slider('getValue');	
-				var pay_cash = bid_value - Math.round(miles * mile_value);
-				var flight_number = <?=$result->flight_number?>;
-				
+				var bid_value = $("#bid_slider_<?=$result->flight_number?>").slider('getValue')*<?=$passengers_count?>;			
+				//var pay_cash = bid_value - Math.round(miles * mile_value);				
+				var flight_number = <?=$result->flight_number?>;				
 				var upgrade = $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]:checked').val().split('|');
 				var upgrade_type = upgrade[0];	
 				var fclr_id = upgrade[1];
@@ -337,7 +369,7 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 				  async: false,
 				  type: 'POST',
 				  url: "<?=base_url('homes/bidding/saveBidData')?>",          
-				  data: {"offer_id" :offer_id,"bid_value":bid_value,"miles":miles,"cash":pay_cash,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id},
+				  data: {"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id},
 				  dataType: "html",			
 				  success: function(data) {
 					var info = jQuery.parseJSON(data);              		

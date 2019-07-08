@@ -17,7 +17,8 @@ class Dashboard extends Admin_Controller {
         $this->load->model('acsr_m');
         $this->load->model('eligibility_exclusion_m');
         $this->load->model('offer_reference_m');	
-        $this->load->model('rafeed_m');		
+        $this->load->model('rafeed_m');	
+        $this->load->model('bid_m');		
 		$language = $this->session->userdata('lang');
 		$this->lang->load('dashboard', $language);
 	}
@@ -45,11 +46,9 @@ class Dashboard extends Admin_Controller {
 		$clients = $this->client_m->clientTotalCount(); 
 		$users = $this->user_m->userTotalCount();
 		$acsr = $this->acsr_m->acsrTotalCount();
-		$eerule = $this->eligibility_exclusion_m->EErulesTotalCount();
-		$offer_type = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
-		$bid_complete_type = $this->rafeed_m->getDefIdByTypeAndAlias('bid_complete','20');
-		$offers = $this->offer_reference_m->offersTotalCount($offer_type);
-		$bid_complete = $this->offer_reference_m->offersTotalCount($bid_complete_type);
+		$eerule = $this->eligibility_exclusion_m->EErulesTotalCount();		
+		$offers = $this->offer_reference_m->offersTotalCount();
+		$bid_complete = $this->bid_m->bidsTotalCount();
 		
 			$this->data['dashboardWidget']['sent_offer_mails']->count = $offers;
 			$this->data['dashboardWidget']['sent_offer_mails']->link = "offer_issue";

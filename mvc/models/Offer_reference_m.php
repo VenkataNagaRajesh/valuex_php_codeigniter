@@ -52,6 +52,7 @@ class Offer_reference_m extends MY_Model {
 
 	  function update_offer_ref($data, $id = NULL) {
                 parent::update($data, $id);
+				$this->mydebug->debug($this->db->last_query);
                 return $id;
         }
 
@@ -74,9 +75,8 @@ class Offer_reference_m extends MY_Model {
             return 	$query->row();		
 		}
 		
-	function offersTotalCount($status){
-		$this->db->select('count(*) count')->from('VX_aln_offer_ref');
-		$this->db->where('offer_status',$status);
+	function offersTotalCount(){
+		$this->db->select('count(*) count')->from('VX_aln_offer_ref');		
 		$query = $this->db->get();		
 		return $query->row('count');
 	}

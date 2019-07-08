@@ -103,10 +103,10 @@ public function getOfferDetailsById($id) {
 $query = " select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin, MainSet.to_cabin_code,
-                        MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status  , SubSet.carrier_code, MainSet.min,MainSet.max , SubSet.from_city_code, SubSet.to_city_code
+                        MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status  , SubSet.carrier_code, MainSet.min,MainSet.max , SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage
 
                 FROM ( 
-                               select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, tcab.aln_data_value as to_cabin, upgrade_type as to_cabin_code, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles, fclr.min, fclr.max , bs.aln_data_value as offer_status from  VX_aln_offer_ref oref   INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id)   LEFT JOIN vx_aln_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13)  INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  and pf.flight_number = bid.flight_number) INNER JOIN VX_aln_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) INNER JOIN VX_aln_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type) LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) WHERE  oref.offer_id = ".$id."
+                               select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, tcab.aln_data_value as to_cabin, upgrade_type as to_cabin_code, oref.pnr_ref, bid.flight_number,oref.cash_percentage, oref.cash, oref.miles, fclr.min, fclr.max , bs.aln_data_value as offer_status from  VX_aln_offer_ref oref   INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id)   LEFT JOIN vx_aln_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13)  INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  and pf.flight_number = bid.flight_number) INNER JOIN VX_aln_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) INNER JOIN VX_aln_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type) LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) WHERE  oref.offer_id = ".$id."
                      ) as MainSet 
 
                         
@@ -134,6 +134,20 @@ $rResult = $this->install_m->run_query($query);
 return $rResult;
 
 }
+
+
+
+	function getOfferDetailsForIssue($id) {
+
+$sql = "
+		select car.code as carrier_code ,pf.pnr_ref, pf.dep_date as flight_date ,df.code as from_city , dt.code as to_city , oref.offer_id, flight_number,group_concat(first_name,' ' , last_name) as p_list,  bs.aln_data_value as booking_status    from VX_aln_offer_ref oref LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref) LEFT JOIN VX_aln_dtpf_ext pext on (pext.dtpf_id = pf.dtpf_id)  LEFT JOIN  vx_aln_data_defns df on(df.vx_aln_data_defnsID = pf.from_city and df.aln_data_typeID = 1 )  LEFT JOIN  vx_aln_data_defns dt on(dt.vx_aln_data_defnsID = pf.to_city and dt.aln_data_typeID = 1 )  LEFT JOIN  vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status and bs.aln_data_typeID = 20 )  LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code  and car.aln_data_typeID = 12 ) where pf.is_processed = 1 and bs.alias != 'excl' AND oref.offer_id=".$id." group by pf.pnr_ref, pf.from_city, pf.to_city, pf.carrier_code ,pf.flight_number, pf.dep_date ,oref.offer_id, pext.booking_status" ;
+
+	$rResult = $this->install_m->run_query($sql);
+
+return $rResult;
+
+
+	}
 
 
         public function delete_dtpf_tracker($id){

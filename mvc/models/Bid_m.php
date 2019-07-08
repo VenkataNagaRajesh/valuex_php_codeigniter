@@ -17,7 +17,7 @@ class bid_m extends MY_Model {
   }
   
    function getPassengers($pnr_ref){
-	 $this->db->select("tpf.cabin,tpf.pnr_ref,group_concat(distinct fclr.fclr_id) fclr,group_concat(distinct fclr.to_cabin,'-',fclr.fclr_id) to_cabins,group_concat( distinct round(fclr.min)) min,group_concat( distinct round(fclr.max)) max,group_concat( distinct round(fclr.average)) avg,tpf.flight_number,tpf.dep_date, tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,c1.aln_data_value from_city,c2.aln_data_value to_city,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.miles,oref.offer_id")->from('VX_aln_daily_tkt_pax_feed tpf');	
+	 $this->db->select("tpf.cabin,tpf.pnr_ref,group_concat(distinct fclr.fclr_id) fclr,group_concat(distinct fclr.to_cabin,'-',fclr.fclr_id,'-',pfe.booking_status) to_cabins,group_concat( distinct round(fclr.min)) min,group_concat( distinct round(fclr.max)) max,group_concat( distinct round(fclr.average)) avg,tpf.flight_number,tpf.dep_date, tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,c1.aln_data_value from_city,c2.aln_data_value to_city,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.miles,oref.offer_id")->from('VX_aln_daily_tkt_pax_feed tpf');	
       $this->db->join('VX_aln_dtpf_ext pfe','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');		 
 	//  $this->db->join('vx_aln_data_defns dd','(dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20)','LEFT');
 	
@@ -45,7 +45,7 @@ class bid_m extends MY_Model {
   } 
   
    public function get_offer_data($offer_id){
-	   $this->db->select("cab.aln_data_value cabin,upcab.aln_data_value upgrade_type,tpf.seat_no,tpf.pnr_ref,tpf.dep_date,tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,tpf.flight_number,c1.aln_data_value from_city,c2.aln_data_value to_city,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,bid.cash,bid.miles")->from(' VX_aln_dtpf_ext pfe');	
+	   $this->db->select("cab.aln_data_value cabin,upcab.aln_data_value upgrade_type,tpf.seat_no,tpf.pnr_ref,tpf.dep_date,tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,tpf.flight_number,c1.aln_data_value from_city,c2.aln_data_value to_city,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.cash,oref.miles")->from(' VX_aln_dtpf_ext pfe');	
 	  $this->db->join('vx_aln_data_defns dd','(dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20)','LEFT');
 	  $this->db->join('VX_aln_daily_tkt_pax_feed tpf','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');
 	  $this->db->join('VX_aln_fare_control_range fclr','(fclr.fclr_id = pfe.fclr_id AND fclr.from_cabin=tpf.cabin)','LEFT');	
@@ -79,6 +79,12 @@ class bid_m extends MY_Model {
 	  $query = $this->db->get();
 	  return $query->row();
   } 
+  
+  function bidsTotalCount(){
+		$this->db->select('count(*) count')->from('VX_aln_bid');		
+		$query = $this->db->get();		
+		return $query->row('count');
+	}
 	
 }
 

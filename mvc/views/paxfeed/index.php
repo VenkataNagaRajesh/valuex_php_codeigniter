@@ -51,20 +51,20 @@
 
     <div class="col-sm-2">
                <?php
-                        $city['0'] = 'Select From City';
-                        ksort($city);
+                        $airports['0'] = 'Select From City';
+                        ksort($airports);
 
-                                   echo form_dropdown("from_city", $city,set_value("from_city",$from_city), "id='from_city' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("from_city", $airports,set_value("from_city",$from_city), "id='from_city' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
 
 
     <div class="col-sm-2">
                <?php
-                        $city['0'] = 'Select To City';
-                        ksort($city);
+                        $airports['0'] = 'Select To City';
+                        ksort($airports);
 
-                                   echo form_dropdown("to_city", $city,set_value("to_city",$to_city), "id='to_city' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("to_city", $airports,set_value("to_city",$to_city), "id='to_city' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
 
