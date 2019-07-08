@@ -10,7 +10,7 @@
                         $pnr_ref = array_column($ofr,'pnr_ref');
 			$total_bid_price = array_sum(array_column($ofr,'bid_value'));
 			$total_cash_paid = array_sum(array_column($ofr,'cash'));
-			$cash_percentage =  round(($total_cash_paid / $total_bid_price) * 100);
+			$cash_percentage =  $ofr[0]->cash_percentage;
 			$miles_percentage = round(100 - $cash_percentage);
                 ?>
 
