@@ -3746,12 +3746,14 @@ fieldset[disabled] .btn-vk.active {
 .mzone-config{
 	border: solid 1px #999;
 	padding: 12px 0px;
+	background: #fff;
 }
 .mzone-config h2{
 	color: #ff6633;
 	font-size: 12px;
 	font-weight: bold;
-	margin: 1px 0px 10px;
+	margin: 1px 0px 20px;
+	text-align: center;
 }
 .mzone-config .zone-info1 p{
 	background: #ddd;
@@ -3773,6 +3775,7 @@ fieldset[disabled] .btn-vk.active {
 }
 .mzone-config input{
 	margin-bottom: 10px;
+	text-transform: capitalize;
 }
 .mzone-config .zone-info1 select{
 	padding: 2px 3px;
@@ -3817,7 +3820,7 @@ fieldset[disabled] .btn-vk.active {
 }
 .table-reponsive .col-md-1{
 	padding: 0;
-	margin-top: 3em;
+	margin-top: 1em;
 }
 .table-reponsive .btn-danger{
 	width:100%;

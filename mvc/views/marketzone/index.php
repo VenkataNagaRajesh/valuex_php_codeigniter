@@ -26,13 +26,13 @@
 	</div>
 	<span class="card-header" data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id = 'add_zone_button' class="btn btn-danger" style="margin:1px 0;" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></span>
 	<div class="col-md-12 collapse" id="mzonesAdd">
-		<div class="col-md-8 col-md-offset-2">
+		<div class="col-md-12">
 		<form class="form-horizontal" role="form" method="post" id='add_zone' enctype="multipart/form-data">
 			<div class="mzone-config col-md-12">
 				<div class="col-md-12 zone-info1">
-					<h2>Market Zone Configuration<span class="pull-right">Tree View</span></h2>
+					<h2>Market Zone Configuration</h2>
 					<div class="col-md-2">
-						<p>Airline Code</p>
+						<!--<p>Airline Code</p>-->
 
 					<?php
                                                          $airlinelist[0]= 'Select Airline';
@@ -44,12 +44,12 @@
                                                    ?>
 					</div>
 					<div class="col-md-2">
-						<p>Market Name</p>
+						<!--<p>Market Name</p>-->
 
 						<input type="text" class="form-control" placeholder='market name' id="market_name" name="market_name" value="<?=set_value('market_name')?>" >
 					</div>
 					<div class="col-md-2">
-						<p>Market Level</p>
+						<!--<p>Market Level</p>-->
 					<?php $aln_datatypes['0'] = "SELECT Level ";
   			                      ksort($aln_datatypes);
 
@@ -57,9 +57,14 @@
 					?>
 					</div>
 					<div class="col-md-6">
-						<p class="col-md-10">Value</p> &nbsp; &nbsp; &nbsp; <span title="Select All" data-toggle="tooltip" data-placement="top"><input type="checkbox" id="checkbox_level"></span>
-						 <select  name="amz_level_value[]"  id="amz_level_value" class="form-control select2" multiple="multiple">
-                          </select>
+						<!--<p class="col-md-10">Value</p>-->
+						<div class="col-md-11">
+							<select  name="amz_level_value[]"  id="amz_level_value" class="form-control select2" multiple="multiple">
+							</select>
+						</div>
+						<div class="col-md-1">
+							<span title="Select All" data-toggle="tooltip" data-placement="top"><input type="checkbox" id="checkbox_level"></span>
+						</div>						
 					</div>
 				</div>
 				<div class="col-md-12 zone-info2">
@@ -70,10 +75,10 @@
                         echo form_dropdown("amz_incl_id", $aln_datatypes, set_value("amz_incl_id"), "id='amz_incl_id' class='form-control select2'");
                         ?>
 				<br>
-				<div class="col-md-10" style="padding:0;">
+				<div class="col-md-11" style="padding:0;">
 				<select  name="amz_incl_value[]"  id="amz_incl_value" class="form-control select2" multiple="multiple"></select>
 				</div>
-				<div class="col-md-2">
+				<div class="col-md-1">
 					<span title="Select All" data-toggle="tooltip" data-placement="top"> <input type="checkbox" id="checkbox_incl" ></span>
 				</div>
 
@@ -86,11 +91,11 @@
  echo form_dropdown("amz_excl_id", $aln_datatypes, set_value("amz_excl_id"), "id='amz_excl_id' class='form-control select2'");
                         ?>
 					<br>
-					<div class="col-md-10" style="padding:0;">
+					<div class="col-md-11" style="padding:0;">
 						<select  name="amz_excl_value[]"  id="amz_excl_value" class="form-control select2" multiple="multiple">
                      </select>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-1">
 						<span title="Select All" data-toggle="tooltip" data-placement="top"> <input type="checkbox" id="checkbox_excl" ></span>
 					</div>
 					</div>
@@ -132,16 +137,16 @@
 					<div class="table-reponsive col-md-12">
 						<div class="col-md-11">
 							<table class="table table-bordered table-striped table-highlight">
-								<thead>
+								<!--<thead>
 									<th>Airline Code</th>
 									<th>Select Marketzone</th>
 									<th>Select Level Type</th>
-								<!---	<th>Select Level Value</th>  -->
+								<!---	<th>Select Level Value</th>  
 									<th>Select Inclusion Type</th>
-							        <!---	<th>Select Inclusion Value</th> -->
+							        <!---	<th>Select Inclusion Value</th> 
 									<th>Select Exclusion Type</th>
-								<!---	<th>Select Exclusion Value</th> -->
-								</thead>
+								<!---	<th>Select Exclusion Value</th> 
+								</thead>-->
 								<tbody>
 									<tr>
 										<td>
