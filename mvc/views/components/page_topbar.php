@@ -12,14 +12,14 @@
 			
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
-                <!-- Sidebar toggle button-->
+                <!-- Sidebar toggle button
                 <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                </a>
-
+                </a>-->
+				 <p class="top-bar-title col-md-10">Airlines Ticket Upgrade System</p>
 
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
@@ -321,7 +321,6 @@
                             </ul>
                         </li>
                         <?php } ?>-->
-                        
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <!--<img src="<?=base_url("uploads/images/".$this->session->userdata('photo')); 
