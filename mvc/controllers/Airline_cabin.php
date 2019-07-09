@@ -15,12 +15,6 @@ class Airline_cabin extends Admin_Controller {
 	protected function rules() {
 		$rules = array(
 	
-                        array(
-                                'field' => 'name',
-                                'label' => $this->lang->line("name"),
-                                'rules' => 'trim|required|xss_clean|max_length[60]|callback_unique_name'
-                        ),
-
 			array(
 				'field' => 'airline_code',
 				'label' => $this->lang->line("airline_name"),
@@ -34,20 +28,10 @@ class Airline_cabin extends Admin_Controller {
                         ),
 
 
-			array(
-				'field' => 'airline_class[]',
-				'label' => $this->lang->line("airline_class"),
-				'rules' => 'trim|required|max_length[200]|xss_clean|callback_valLevelValue'
-			),
    		       array(
                                 'field' => 'airline_cabin',
                                 'label' => $this->lang->line("airline_cabin"),
                                 'rules' => 'trim|required|max_length[200]|xss_clean|callback_valLevelType'
-                        ),
-			array(
-                                'field' => 'photo',
-                                'label' => $this->lang->line("airline_photo"),
-                                'rules' => 'trim|max_length[200]|xss_clean|callback_photoupload'
                         ),
 
 			array(
@@ -55,28 +39,15 @@ class Airline_cabin extends Admin_Controller {
                                 'label' => $this->lang->line("airline_video"),
                                 'rules' => 'trim|max_length[200]|xss_clean'
                         ),
+			array(
+                                'field' => 'images',
+                                'label' => $this->lang->line("images"),
+                                'rules' => 'trim|max_length[200]|xss_clean'
+                        ),
+
 		);
 		return $rules;
 	}
-
- public function unique_name() {
-                $id = htmlentities(escapeString($this->uri->segment(3)));
-                if((int)$id) {
-                        $cabin = $this->airline_cabin_m->get_order_by_airlinecabin(array("name" => $this->input->post("name"), "cabin_map_id !=" => $id));
-                        if(count($cabin)) {
-                                $this->form_validation->set_message("unique_name", "%s already exists");
-                                return FALSE;
-                        }
-                        return TRUE;
-                } else {
-                        $cabin = $this->airline_cabin_m->get_order_by_airlinecabin(array("name" => $this->input->post("name")));
-                        if(count($cabin)) {
-                                $this->form_validation->set_message("unique_name", "%s already exists");
-                                return FALSE;
-                        }
-                        return TRUE;
-                }
-        }
 
 
    function valLevelType($post_string){
@@ -98,50 +69,6 @@ class Airline_cabin extends Admin_Controller {
         }
 
 
-	     public function photoupload() {
-                $id = htmlentities(escapeString($this->uri->segment(3)));
-                $airline = array();
-                if((int)$id) {
-                        $airline = $this->airline_cabin_m->get_airline_cabin_map_by_id($id);
-                }
-
-                $new_file = "defualt.png";
-                if($_FILES["photo"]['name'] !="") {
-                        $file_name = $_FILES["photo"]['name'];
-                        $random = rand(1, 10000000000000000);
-                $makeRandom = hash('sha512', $random.$this->input->post('username') . config_item("encryption_key"));
-                        $file_name_rename = $makeRandom;
-            $explode = explode('.', $file_name);
-            if(count($explode) >= 2) {
-                    $new_file = $file_name_rename.'.'.end($explode);
-                                $config['upload_path'] = "./uploads/images";
-                                $config['allowed_types'] = "gif|jpg|png";
-                                $config['file_name'] = $new_file;
-                                $config['max_size'] = '1024';
-                                $config['max_width'] = '3000';
-                                $config['max_height'] = '3000';
-                                $this->load->library('upload', $config);
-                                if(!$this->upload->do_upload("photo")) {
-                                        $this->form_validation->set_message("photoupload", $this->upload->display_errors());
-                                return FALSE;
-                                } else {
-                                        $this->upload_data['file'] =  $this->upload->data();
-                                        return TRUE;
-                                }
-                        } else {
-                                $this->form_validation->set_message("photoupload", "Invalid file");
-                        return FALSE;
-                        }
-                } else {
-                        if(count($airline)) {
-                                $this->upload_data['file'] = array('file_name' => $airline->photo);
-                                return TRUE;
-                        } else {
-                                $this->upload_data['file'] = array('file_name' => $new_file);
-                        return TRUE;
-                        }
-                }
-        }
 
 
 	public function index() {
@@ -245,25 +172,42 @@ class Airline_cabin extends Admin_Controller {
 				$this->data["subview"] = "airline_cabin/add";
 				$this->load->view('_layout_main', $this->data);
 			} else {
-				$date_now = time(); 
 
 				$array["airline_code"] = $this->input->post("airline_code");
- 				$alphas = range('A', 'Z');
-                                $arr = $this->input->post("airline_class");
-				$array["airline_class"] = implode(',', array_map(function($x) use ($alphas) { return $alphas[$x]; }, $arr));
 				$array['aircraft_id'] = $this->input->post("airline_aircraft");
 				$array["airline_cabin"] = $this->input->post("airline_cabin");
-				$array["create_date"] = $date_now;
-				$array["modify_date"] = $date_now;
+
+				$exist_id = $this->airline_cabin_m->checkAirlineCabin($array);
+				if ( $exist_id > 0 ) {
+					 $this->session->set_flashdata('error', 'Duplicate Entry');
+                                        redirect(base_url("airline_cabin/index"));
+				} else {
+				$array["create_date"] = time();
+				$array["modify_date"] = time();
 				$array["create_userID"] = $this->session->userdata('loginuserID');
 			        $array["modify_userID"] = $this->session->userdata('loginuserID');
-				$array["name"] = $this->input->post("name");
 				$array["active"] = 1;
-				//$array['photo'] = $this->upload_data['file']['file_name'];
 				$array['video_links'] = implode(',',$this->input->post("video"));
-				$this->airline_cabin_m->insert_airline_cabin($array);
-				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-				redirect(base_url("airline_cabin/index"));
+				$map_id = $this->airline_cabin_m->insert_airline_cabin($array);
+
+				if($map_id > 0 ) {
+					$msg = $this->airlinesgallery($map_id);
+					if($msg == 'success') {
+						$this->session->set_flashdata('success', $msg);
+                                		redirect(base_url("airline_cabin/index"));
+					} else {
+						$this->session->set_flashdata('error', $msg);
+                                                redirect(base_url("airline_cabin/add"));
+
+				       }
+
+				} else {
+					
+					  $this->data["subview"] = "error";
+			                $this->load->view('_layout_main', $this->data);
+
+				}
+				}
 			}
 		} else {
 			$this->data["subview"] = "airline_cabin/add";
@@ -302,6 +246,7 @@ class Airline_cabin extends Admin_Controller {
 		 $id = htmlentities(escapeString($this->uri->segment(3)));
         if((int)$id) {
             $this->data['airline'] = $this->airline_cabin_m->get_single_airline_cabin(array('cabin_map_id' => $id));
+	 $this->data['airline_cabin']->gallery = $this->airline_cabin_m->getAirlineCabinImages($id);
             if($this->data['airline']) {
                 if($_POST) {
                     $rules = $this->rules();
@@ -310,23 +255,32 @@ class Airline_cabin extends Admin_Controller {
                         $this->data["subview"] = "/airline_cabin/edit";
                         $this->load->view('_layout_main', $this->data);
                     } else { 
+
 			    $array["airline_code"] = $this->input->post("airline_code");
 			     $array['aircraft_id'] = $this->input->post("airline_aircraft");
-			    $alphas = range('A', 'Z');
-                            $arr = $this->input->post("airline_class");
-                            $array["airline_class"] = implode(',', array_map(function($x) use ($alphas) { return $alphas[$x]; }, $arr));
 			    $array["airline_cabin"] =  $this->input->post("airline_cabin");
-                            $array["modify_date"] = time();
-			    $array["modify_userID"] = $this->session->userdata('loginuserID');
-			    $array["video_links"] = implode(',',$this->input->post("video"));
-			    $array["name"] = $this->input->post("name");
-			
+				$exist_id = $this->airline_cabin_m->checkAirlineCabin($array);
+				if ( $exist_id == $id || !$exist_id ) {
+                            		$array["modify_date"] = time();
+			    		$array["modify_userID"] = $this->session->userdata('loginuserID');
+			    		$array["video_links"] = implode(',',$this->input->post("video"));
+                            		$this->airline_cabin_m->update_airline_cabin($array, $id);
+					$msg = $this->airlinesgallery($id);
+					if ( $msg == 'success' ) {
+                            			$this->session->set_flashdata('success', $msg);
+                            			redirect(base_url("airline_cabin/index"));
+					 } else {
+						$this->session->set_flashdata('error', $msg);
+						$this->data["subview"] = "/airline_cabin/edit";
+                    				$this->load->view('_layout_main', $this->data);
+					
+					}
+			   } else {
 
-                            $this->airline_cabin_m->update_airline_cabin($array, $id);
-
-
-                            $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+				$this->session->set_flashdata('error', 'Duplicate Entry');
                             redirect(base_url("airline_cabin/index"));
+
+			}
                     }
 
                 } else {
@@ -391,73 +345,66 @@ class Airline_cabin extends Admin_Controller {
 
 
 
-    public function airlinesgallery(){
-                $this->data['headerassets'] = array(
-                        'css' => array(
-                                'assets/select2/css/select2.css',
-                                'assets/select2/css/select2-bootstrap.css'
-                        ),
-                        'js' => array(
-                                'assets/select2/select2.js'
-                        )
-                );
-        $airline_cabinID = htmlentities(escapeString($this->uri->segment(3)));
-	$this->data['airline_cabinID'] = $airline_cabinID;
-	$this->data['airline_cabins_list'] =	$this->airline_cabin_m->getAirlineCabinsByName();
-       if($airline_cabinID){
-                  $this->data['airline_cabin'] = $this->airline_cabin_m->get_airline_cabin_map_by_id($airline_cabinID);
-           }
-                if($this->input->post()){
-          if($_FILES["image"]['name'] !="") {
-                          $this->mydebug->debug($_FILES["image"]['name']);
-                        $airline_cabin = $this->airline_cabin_m->getAirlineCabin($this->input->post('airline_cabinID'));
-                         $imgcount = $this->airline_cabin_m->getImagesCount($this->input->post('airline_cabinID'),$this->input->post('img_type') );
-                        if( $this->input->post('img_type') == "gallery" && $imgcount > 5){
-                          echo "Gallery Images count(8) Exceeded";
-                        } else {
-                        $airline_cabin->name = $airine_cabin->name . $_FILES["image"]['name'];
-                        $file_name = $_FILES["image"]['name'];
-                        $random = rand(1, 10000000000000000);
-                $makeRandom = hash('sha512', $random.$airline_cabin->name . config_item("encryption_key"));
-                        $file_name_rename = $makeRandom;
-            $explode = explode('.', $file_name);
-            if(count($explode) >= 2) {
-                    $new_file = $file_name_rename.'.'.end($explode);
-                                $config['upload_path'] = "./uploads/images";
-                                $config['allowed_types'] = "gif|jpg|png";
-                                $config['file_name'] = $new_file;
-                                $config['max_size'] = '1024';
-                                $config['max_width'] = '3000';
-                                $config['max_height'] = '3000';
-                                $this->load->library('upload', $config);
-                                if($this->upload->do_upload("image")) {
-                                        $this->upload_data['file'] =  $this->upload->data();
-                    $gallery= array(
-                                          'airline_cabin_map_id' => $this->input->post('airline_cabinID'),
-                                          'name' => $this->input->post('name'),
-                                         'type' => $this->input->post('img_type'),
-                                          'image' => $new_file,
+    public function airlinesgallery($map_id){
+        $airline_cabinID = $map_id;
+        if($this->input->post()){
+		$airline_cabin = $this->airline_cabin_m->getAirlineCabin($airline_cabinID);
+            $filesCount = count($_FILES['images']['name']);
+		 $imgcount = $this->airline_cabin_m->getImagesCount($airline_cabinID);
+	     if( $imgcount + $filesCount > 5){
+                                $msg = "Image Count Exceeded 5"; 
+				return $msg;
+              }
+            for($i = 0; $i < $filesCount; $i++){ 
+			//var_dump($airline_cabin);exit;
+				$airline_cabin->cabin_map_id = $airine_cabin->cabin_map_id . $_FILES["images"]['name'][$i];
+                	        $file_name = $_FILES["images"]['name'][$i];
+                        	$random = rand(1, 10000000000000000);
+                		$makeRandom = hash('sha512', $random.$airline_cabin->cabin_map_id . config_item("encryption_key"));
+                        	$file_name_rename = $makeRandom;
+            			$explode = explode('.', $file_name);
+            		if(count($explode) >= 2) {
+				$new_file = $file_name_rename.'.'.end($explode);
+					$_FILES['image']['name'] = $_FILES['images']['name'][$i];
+			 		$_FILES['image']['type'] = $_FILES['images']['type'][$i]; 
+					$_FILES['image']['tmp_name'] = $_FILES['images']['tmp_name'][$i]; 
+					$_FILES['image']['error'] = $_FILES['images']['error'][$i]; 
+					$_FILES['image']['size'] = $_FILES['images']['size'][$i]; 
+
+					$config['upload_path'] = "./uploads/images";
+					$config['allowed_types'] = 'gif|jpg|png'; 
+			 		$config['file_name'] = $new_file;
+                                	$config['max_size'] = '1024';
+                                	$config['max_width'] = '3000';
+                                	$config['max_height'] = '3000';
+                                	$this->load->library('upload', $config);
+			
+                			$this->upload->initialize($config);
+                			if($this->upload->do_upload('image')){
+                    				$fileData = $this->upload->data();
+
+					   $gallery= array(
+                                          'airline_cabin_map_id' => $map_id,
+                                          'name' => $this->input->post('name'.$i),
+                                          'image' => $fileData['file_name'],
+					  'status' => 1,
                                           'create_date' => time(),
-					  'modify_date' => time(),
+                                          'modify_date' => time(),
                                           'create_userID' => $this->session->userdata('loginuserID'),
                                           'modify_userID' => $this->session->userdata('loginuserID')
                                         );
-                   $airline_cabin_galleryID = $this->airline_cabin_m->add_airline_cabin_gallery($gallery);
-                    if($airline_cabin_galleryID){
-                                                echo "success";
-                                           $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                                        }
-                                } else {
-                                        $error = array('error' => $this->upload->display_errors());
-                                        echo $error['error'];
-                                 }
-                           }
-                          }
-                        }
-                }else{
-                  $this->data['subview'] = 'airline_cabin/airlinesgallery';
-                  $this->load->view('_layout_main',$this->data);
-                }
+					 $airline_cabin_galleryID = $this->airline_cabin_m->add_airline_cabin_gallery($gallery);
+					$msg = 'success';
+
+                		} else {
+					$msg .= $this->upload->display_errors();
+
+				}
+            		}            
+	     }
+           }
+
+		return $msg;
         }
 
         public function deleteAirlineCabinimage(){
@@ -471,7 +418,7 @@ class Airline_cabin extends Admin_Controller {
                 }
                  $this->airline_cabin_m->deleteAirlineCabinImage($cabin_imagesID);
                  $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                 redirect(base_url('airline_cabin/view/'.$airline_cabin_image->airline_cabin_map_id));
+                 redirect(base_url('airline_cabin/edit/'.$airline_cabin_image->airline_cabin_map_id));
         }
                            
 
@@ -483,7 +430,7 @@ class Airline_cabin extends Admin_Controller {
 		
                 if ((int)$id) {
                         $this->data["airline_cabin"] = $this->airline_cabin_m->getAirLineCabinDataByID($id);
-			$this->data['airline_cabin']->gallery = $this->airline_cabin_m->getAirlineCabinImages($id,'gallery');
+			$this->data['airline_cabin']->gallery = $this->airline_cabin_m->getAirlineCabinImages($id);
 
                         if($this->data["airline_cabin"]) {
                                 $this->data["subview"] = "airline_cabin/view";
@@ -502,7 +449,7 @@ class Airline_cabin extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('cabin_map_id','name','airline_code','airline_cabin','airline_class','video_links','active');
+	    $aColumns =  array('cabin_map_id','airline_code','airline_cabin','video_links','active');
                 $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -587,7 +534,7 @@ class Airline_cabin extends Admin_Controller {
                 }
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,name, airline_class,  ac.aln_data_value as airline_code , 
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.aln_data_value as airline_code , 
         acl.aln_data_value as airline_cabin, video_links, cm.active , cr.aln_data_value as aircraft_name
         from VX_aln_airline_cabin_map cm 
         LEFT JOIN vx_aln_data_defns ac on (ac.vx_aln_data_defnsID = cm.airline_code) 
@@ -609,7 +556,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,name, airline_class,  ac.aln
 		
 
                 foreach($rResult as $list){
-
+			$list->img_cnt = $this->airline_cabin_m->getImagesCount($list->cabin_map_id);
                         if(permissionChecker('airline_cabin_edit') ) {
 				$list->action = btn_edit('airline_cabin/edit/'.$list->cabin_map_id, $this->lang->line('edit'));
 			}
@@ -623,20 +570,6 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,name, airline_class,  ac.aln
 
 			}
 
-			if ( permissionChecker('airline_cabin_gallery') ) {
-			$list->action .= '<a href="'.base_url("airline_cabin/airlinesgallery/".$list->cabin_map_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Add Gallery/Brands/Brochures"> <i class="fa fa-file-image-o"></i></a>';
-
-			}
-/*
-				 $array = array(
-                                                "src" => base_url('uploads/images/'.$list->photo),
-                                                'width' => '35px',
-                                                'height' => '35px',
-                                                'class' => 'img-rounded'
-
-                                            );
-                               $list->photo =  img($array);
-*/
 			$status = $list->active;
 			
                         $list->active = "<div class='onoffswitch-small' id='".$list->cabin_map_id."'>";

@@ -17,16 +17,12 @@
 				 <div class="profile-view-tab"> 
 					 <p><span><?=$this->lang->line("airline_cabin_map_id")?> </span>: 
 								<?=$airline_cabin->cabin_map_id?></p>
-					 <p><span><?=$this->lang->line("name")?> </span>: 
-								<?=$airline_cabin->name?></p>
 					 <p><span><?=$this->lang->line("airline_name")?> </span>: 
 						<?=$airline_cabin->airline;?></p>
 					 <p><span><?=$this->lang->line("airline_aircraft")?> </span>:
 						<?=$airline_cabin->aircraft_name;?></p>
 					 <p><span><?=$this->lang->line("airline_cabin")?> </span>: 
 						<?=$airline_cabin->cabin?></p>
-					<p><span><?=$this->lang->line("airline_class")?> </span>:  
-                                                <?=$airline_cabin->airline_class;?></p>
 					<p><span><?=$this->lang->line("airline_video")?> </span>:
 <?php	
 						 if ( !empty($airline_cabin->video_links) ){
@@ -36,6 +32,7 @@
                <?php } } ?>
 
 
+						
 					 <p><span><?=$this->lang->line("airline_cabin_create_user")?> </span>: 
 							<?php echo $this->user_m->get_username_byid($airline_cabin->create_userID)?></p>
 					 <p><span><?=$this->lang->line("airline_cabin_modify_user")?> </span>:
@@ -52,30 +49,22 @@
 				</div>  
 			</div>
 		</div>
+ <div>
+                        <?php foreach($airline_cabin->gallery as $gallery){
 
+                                     $array = array(
+                                "src" => base_url('uploads/images/'.$gallery->image),
+                                        'width' => '150px',
+                                        'height' => '150px',
+                                        'class' => 'img-rounded'
+                                );
+				echo img($array);
 
-          <?php if(!empty($airline_cabin->gallery)){ ?>
-                <div class="tab-content col-md-12 adm-brands">
-                        <h2>Gallery</h2>
-                        <?php foreach($airline_cabin->gallery as $gallery){ ?>
-                        <div class="col-md-2" id="img-gallery">
-                                <div class="img-box">
-                                        <img src="<?php echo base_url('uploads/images/'.$gallery->image); ?>" class="img-responsive image">
-                                        <div class="middle">
-                                                <!--<button type="button" class="btn btn-danger btn-sm btn-gdel"><i class="fa fa-trash"></i></button>-->
-                                                <a href="<?php echo base_url('airline_cabin/deleteAirlineCabinimage/'.$gallery->cabin_images_id); ?>" onclick="return confirm('you are about to delete a record. This cannot be undone. are you sure?')" class="btn btn-danger btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-trash-o" ></i></a>
-                                        </div>
-                                </div>
+                        }?>
                         </div>
-                        <?php } ?>
-   </div>
-                <?php } ?>
+
+
   </section>
 </div>
 
-        <script>
-                $(".btn-gdel").click(function(){
-                        $("#img-gallery").remove();
-                });
-        </script>
 
