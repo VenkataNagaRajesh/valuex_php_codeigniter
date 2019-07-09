@@ -103,24 +103,6 @@
 			</div>
 		</form>
 	</div>
-	<div class="col-md-12 cal-table">
-		<div class="col-md-8" style="padding:0;">
-			<div id="calendar1" class="cal-box"></div>
-		</div>
-		<div class="col-md-4">
-			<div class="season-highlight">
-				<p>
-					<span>Season</span><span>Highlights</span><br>
-					<!--<span class="default">Default</span><span class="default-high">&nbsp;</span><br>
-					<span class="default">Summer Peak</span><span class="summer-high">&nbsp;</span><br>
-					<span class="default">Christmas Peak</span><span class="christ-high">&nbsp;</span>-->
-					<?php foreach($seasonslist as $season) { ?>
-					<span class="default"><?=$season->season_name?></span><span style="background: <?=$season->season_color?>;">&nbsp;</span>
-					<?php } ?>
-				</p>
-			</div>
-		</div>
-	</div>
 	<div class="col-md-12 season-table">
 		<p>
 	      <?php if( isset ($reconfigure) && permissionChecker('season_reconfigure')) {?>
@@ -191,6 +173,24 @@
                    </tbody>
                </table>
           </div>
+	</div>
+	<div class="col-md-12 cal-table">
+		<div class="col-md-8" style="padding:0;">
+			<div id="calendar1" class="cal-box"></div>
+		</div>
+		<div class="col-md-4">
+			<div class="season-highlight">
+				<p>
+					<span>Season</span><span>Highlights</span><br>
+					<!--<span class="default">Default</span><span class="default-high">&nbsp;</span><br>
+					<span class="default">Summer Peak</span><span class="summer-high">&nbsp;</span><br>
+					<span class="default">Christmas Peak</span><span class="christ-high">&nbsp;</span>-->
+					<?php foreach($seasonslist as $season) { ?>
+					<span class="default"><?=$season->season_name?></span><span style="background: <?=$season->season_color?>;">&nbsp;</span>
+					<?php } ?>
+				</p>
+			</div>
+		</div>
 	</div>
 </div>
 <script type="text/javascript">
