@@ -19,7 +19,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>-->
-				 <p class="top-bar-title col-md-10">Airlines Ticket Upgrade System</p>
+				 <p class="top-bar-title col-md-10">Airline Offer Management System</p>
 
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
