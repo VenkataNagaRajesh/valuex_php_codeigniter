@@ -15,23 +15,6 @@
             <div class="col-sm-10">
                 <form class="form-horizontal" role="form" method="post" id='edit_airline_cabin' enctype="multipart/form-data">
 
-		            <?php
-                        if(form_error('name'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="name" class="col-sm-2 control-label">
-                            <?=$this->lang->line("name")?>
-                        </label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="name" name="name" value="<?=set_value('name',$airline->name)?>" >
-                        </div>
-                        <span class="col-sm-4 control-label">
-
-                            <?php echo form_error('name'); ?>
-                        </span>
-                    </div>
 
                     <?php
                         if(form_error('airline_code'))
@@ -100,30 +83,45 @@
 
                     </div>
 
-                    <?php
-                        if(form_error('airline_class'))
+         <?php
+                        if(form_error('images'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="airline_class" class="col-sm-2 control-label">
-				<?=$this->lang->line("airline_class")?>
+                        <label for="images" class="col-sm-2 control-label">
+                            <?=$this->lang->line("images")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
-			<?php
-   				$alphas = range('A', 'Z');
+                        <input type="file"  name="images[]" id="images" multiple>
+			<div>
+                        <?php foreach($airline_cabin->gallery as $gallery){
 			
-                                ksort($alphas);
-			$cabins = explode(',',$airline->airline_class);
-			$list = array_keys(array_intersect($alphas,$cabins));
-                 echo form_multiselect("airline_class[]", $alphas, set_value("airline_class[]",$list), "id='airline_class' class='form-control select2'");
+                                     $array = array(
+                                "src" => base_url('uploads/images/'.$gallery->image),
+                                        'width' => '35px',
+                                        'height' => '35px',
+                                        'class' => 'img-rounded'
+                                );
+				?>
+			
+		<a href="<?php echo base_url('airline_cabin/deleteAirlineCabinimage/'.$gallery->cabin_images_id); ?>" onclick="return confirm('you are about to delete a record. This cannot be undone. are you sure?')" class="btn btn-danger btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><?php echo img($array)?></a>
 
-			?>
+
+                      <?php  }?>
+                        </div>
+
+                         <div id="images-to-upload">
+
+                        </div>
+
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('airline_class[]'); ?>
+                            <?php echo form_error('images[]'); ?>
                         </span>
-                    </div>
+		</div>
+
+
 
 
 		                    <?php
@@ -221,5 +219,33 @@ var jQueryArray = <?php echo json_encode(explode(',',$airline->video_links)); ?>
         });
 
 });
+
+var fileCollection = new Array();
+                $('#images').on('change',function(e){
+                        var files = e.target.files;
+                        $.each(files, function(i, file){
+                                //console.log(file);
+                                var file_name = file.name;
+                                var id = file_name.substr(0, file_name.lastIndexOf('.')) || file_name;
+                                
+                                fileCollection.push(file);
+                                var reader = new FileReader();
+                                reader.readAsDataURL(file);
+                                reader.onload = function(e){
+                                        var fname = 'name'+i;
+                                        var template = '<div id="'+i+'">'+                                       
+                                                '<img src="'+e.target.result+'" width="40px;"> '+
+                                                '<label>Image Title</label> <input type="text" name="'+fname+'">'+                           
+                                                ' <a class="btn btn-sm btn-danger remove" onclick="removeform('+i+')" >Remove</a>'+                                            
+                                        '</div><br>';
+                                        $('#images-to-upload').append(template);
+                                };
+                        });
+                });
+                function removeform(formid){
+                        $("#"+formid).remove();                 
+                }
+                    
+
 
 </script>

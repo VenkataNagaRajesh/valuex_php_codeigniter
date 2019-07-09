@@ -15,24 +15,6 @@
             <div class="col-sm-10">
                 <form class="form-horizontal" role="form" method="post"  enctype="multipart/form-data">
 
-		                    <?php
-                        if(form_error('name'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="name" class="col-sm-2 control-label">
-                            <?=$this->lang->line("name")?>
-                        </label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="name" name="name" value="<?=set_value('name')?>" >
-                        </div>
-                        <span class="col-sm-4 control-label">
-
-                            <?php echo form_error('name'); ?>
-                        </span>
-                    </div>
-
 		 <?php
                         if(form_error('airline_code'))
                             echo "<div class='form-group has-error' >";
@@ -97,27 +79,27 @@
                         </span>
                     </div>
 
-                    <?php
-                        if(form_error('airline_class'))
+
+         <?php
+                        if(form_error('images'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="airline_class" class="col-sm-2 control-label">
-                            <?=$this->lang->line("airline_class")?>  <span class="text-red">*</span>
+                        <label for="images" class="col-sm-2 control-label">
+                            <?=$this->lang->line("images")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
-			<?php
-			
-				$alphas = range('A', 'Z');
-				ksort($alphas);
+			<input type="file"  name="images[]" id="images" multiple>
+			 <div id="images-to-upload">
 
-				echo form_multiselect("airline_class[]", $alphas, set_value("airline_class"), "id='airline_class' class='form-control select2'");
-			?>
+                    	</div>
+
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('airline_class[]'); ?>
+                            <?php echo form_error('images[]'); ?>
                         </span>
+
                     </div>
 
 
@@ -143,6 +125,9 @@
                             <?php echo form_error('video'); ?>
                         </span>
                     </div>
+
+
+
 
 		<br>
                     <div class="form-group">
@@ -177,71 +162,7 @@ $('#remove_box').on('click', function() {
 
 });
 
-$(document).on('click', '#close-preview', function(){
-    $('.image-preview').popover('hide');
-    // Hover befor close the preview
-    $('.image-preview').hover(
-        function () {
-           $('.image-preview').popover('show');
-           $('.content').css('padding-bottom', '100px');
-        },
-         function () {
-           $('.image-preview').popover('hide');
-           $('.content').css('padding-bottom', '20px');
-        }
-    );
-});
 
-
-
-$(function() {
-    // Create the close button
-    var closebtn = $('<button/>', {
-        type:"button",
-        text: 'x',
-        id: 'close-preview',
-        style: 'font-size: initial;',
-    });
-    closebtn.attr("class","close pull-right");
-    // Set the popover default content
-    $('.image-preview').popover({
-        trigger:'manual',
-        html:true,
-        title: "<strong>Preview</strong>"+$(closebtn)[0].outerHTML,
-        content: "There's no image",
-        placement:'bottom'
-    });
-    // Clear event
-    $('.image-preview-clear').click(function(){
-        $('.image-preview').attr("data-content","").popover('hide');
-        $('.image-preview-filename').val("");
-        $('.image-preview-clear').hide();
-        $('.image-preview-input input:file').val("");
-        $(".image-preview-input-title").text("<?=$this->lang->line('airline_file_browse')?>");
-    });
-    // Create the preview image
-    $(".image-preview-input input:file").change(function (){
-        var img = $('<img/>', {
-            id: 'dynamic',
-            width:250,
-            height:200,
-            overflow:'hidden'
-        });
-                          
-       var file = this.files[0];
-        var reader = new FileReader();
-        // Set preview image into the popover data-content
-        reader.onload = function (e) {
-            $(".image-preview-input-title").text("<?=$this->lang->line('airline_file_browse')?>");
-            $(".image-preview-clear").show();
-            $(".image-preview-filename").val(file.name);
-            img.attr('src', e.target.result);
-            $(".image-preview").attr("data-content",$(img)[0].outerHTML).popover("show");
-            $('.content').css('padding-bottom', '100px');
-        }
-        reader.readAsDataURL(file);
-    });
-});
 
 
 $('#airline_code').change(function(event) {    
@@ -257,5 +178,31 @@ $.ajax({     async: false,
       });       
 });
 
+var fileCollection = new Array();
+                $('#images').on('change',function(e){
+                        var files = e.target.files;
+                        $.each(files, function(i, file){
+                                //console.log(file);
+                                var file_name = file.name;
+                                var id = file_name.substr(0, file_name.lastIndexOf('.')) || file_name;
+                                
+                                fileCollection.push(file);
+                                var reader = new FileReader();
+                                reader.readAsDataURL(file);
+                                reader.onload = function(e){
+					var fname = 'name'+i;
+                                        var template = '<div id="'+i+'">'+                                       
+                                                '<img src="'+e.target.result+'" width="40px;"> '+
+                                                '<label>Image Title</label> <input type="text" name="'+fname+'">'+                           
+                                                ' <a class="btn btn-sm btn-danger remove" onclick="removeform('+i+')" >Remove</a>'+                                            
+                                        '</div><br>';
+                                        $('#images-to-upload').append(template);
+                                };
+                        });
+                });
+                function removeform(formid){
+                        $("#"+formid).remove();                 
+                }
+                    
 
 </script>
