@@ -36,6 +36,28 @@
                         </span>
                     </div>
 
+<?php    echo "<div class='form-group' >"; ?>
+
+                <div class="col-sm-1">
+                <b style="color:orange;"><?php echo "Class";?> </b>
+                </div>
+
+                <div class="col-sm-2">
+                     <b style="color:orange;"><?php echo "Cabin";?></b>
+                </div>
+
+
+                <div class="col-sm-2">
+                        <b style="color:orange;"><?php echo "Revenue/Non-revenue";?></b>
+                </div>
+
+
+                <div class="col-sm-1">
+                       <b style="color:orange;"> <?php echo "Order";?></b>
+                </div>
+</div>
+
+
 		<?php  $alphas = range('A', 'Z');
 			foreach ($alphas as $cl) {
 

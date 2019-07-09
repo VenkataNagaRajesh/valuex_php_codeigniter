@@ -83,10 +83,24 @@ class Airline_cabin_m extends MY_Model {
                 return $query;
         }
 
+	function checkAirlineCabin($array) {
 
+		$this->db->select('*')->from('VX_aln_airline_cabin_map');
+		$this->db->where($array);
+		 $this->db->limit(1);
+                $query = $this->db->get();
+                $check = $query->row();
+                if($check->cabin_map_id) {
+                    return $check->cabin_map_id;
+                } else {
+                  return false;
+                }
+
+		
+	}
 	function insert_airline_cabin($array) {
 		$id = parent::insert($array);
-		return TRUE;
+		return $id;
 	}
 
 
@@ -125,9 +139,8 @@ class Airline_cabin_m extends MY_Model {
 
 
 
-  function getAirlineCabinImages($id,$type){	
+  function getAirlineCabinImages($id){	
           $this->db->select('*')->from('VX_aln_airline_cabin_images');
-          $this->db->where('type',$type);
           $this->db->where('airline_cabin_map_id',$id);
           $query = $this->db->get();
           return $query->result();
@@ -146,26 +159,20 @@ class Airline_cabin_m extends MY_Model {
           return TRUE;
   }
 
-  function getImagesCount($airline_cabinID,$type){
+  function getImagesCount($airline_cabinID){
           $this->db->select('count(*) as total')->from('VX_aln_airline_cabin_images');
-          $this->db->where('type',$type);
           $this->db->where('airline_cabin_map_id',$airline_cabinID);
           $query = $this->db->get();
-          return $query->row('total');
+          $result =  $query->row();
+	if($result->total > 0 ) {
+		return $result->total;
+	} else{
+		return 0;
+	}
+
   }
 
 
-  public function getAirlineCabinsByName(){
-                $this->db->select('cabin_map_id, name')->from('VX_aln_airline_cabin_map');
-                $query = $this->db->get();
-		$result = $query->result();
-		$list = array();
-		foreach ($result as $k) {
-			$list[$k->cabin_map_id] = $k->name;
-		}
-
-                return $list;
-        }
 
 	function delete_airline_cabin($id){
 		parent::delete($id);

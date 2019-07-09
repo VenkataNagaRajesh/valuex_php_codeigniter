@@ -102,7 +102,7 @@ $('.select2').select2();
 				};
 			});
 		   } else{
-				alert("select Shop and image type first");
+				alert("select Airline Cabin name");
 			} 
 		});
 		

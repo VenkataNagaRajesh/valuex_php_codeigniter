@@ -31,12 +31,6 @@
                         </a>
 		<?php } ?>
 			&nbsp;&nbsp;
-		<?php if(permissionChecker('airline_cabin_gallery')) { ?>
-                                                 <a href="<?php echo base_url('airline_cabin/airlinesgallery') ?>">
-                            <i class="fa fa-list-alt"></i>
-                            <?="Add Gallery"?>
-                        </a>
-                    <?php } ?>  
 
 		</h5>
 
@@ -85,11 +79,10 @@
                        <thead>
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-				<th class="col-lg-1"><?=$this->lang->line('name')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('airline_name')?></th>
 					<th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_cabin')?></th>
-				<th class="col-lg-1"><?=$this->lang->line('airline_class')?></th>
+				<th class="col-lg-1"><?php echo "Images Count"?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_video')?></th>
                                 <?php if(permissionChecker('airline_cabin_edit')) { ?>
                                         <th class="col-lg-1"><?=$this->lang->line('airline_cabin_status')?></th>
@@ -138,11 +131,10 @@
                     "success": fnCallback
                          } ); },      
       "columns": [{"data": "cabin_map_id" },
-		  {"data": "name"},
 		   {"data": "airline_code"},
 		  {"data": "aircraft_name"},
 		  {"data": "airline_cabin"},
-                  {"data": "airline_class" },
+		  {"data": "img_cnt"},
 		  {"data": "video_links" },
 		  {"data": "active"},
                   {"data": "action"}

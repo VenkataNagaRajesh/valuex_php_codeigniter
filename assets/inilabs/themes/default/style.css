@@ -33,9 +33,21 @@ body {
   min-height: 100%;
   background: #f1f2f7;
   font-size:12px;
+  text-transform:capitalize;
 }
 a {
   color: #707478;
+}
+.top-bar-title{
+	text-align: center;
+	margin-bottom: 0;
+	position: relative;
+	top: 6px;
+	font-weight: bold;
+	font-size: 2em;
+	text-transform: uppercase;
+	color: #ff6633;
+	letter-spacing: 6px;
 }
 a:hover,
 a:active,
@@ -3665,7 +3677,7 @@ fieldset[disabled] .btn-vk.active {
 	padding: 5px 10px;
 }
 .srch-buttons .input-group{
-	border: solid 1px #999;
+	/*border: solid 1px #999;*/
 	border-radius: 5px;
 }
 .srch-buttons .input-group input{
@@ -3746,12 +3758,14 @@ fieldset[disabled] .btn-vk.active {
 .mzone-config{
 	border: solid 1px #999;
 	padding: 12px 0px;
+	background: #fff;
 }
 .mzone-config h2{
 	color: #ff6633;
 	font-size: 12px;
 	font-weight: bold;
-	margin: 1px 0px 10px;
+	margin: 1px 0px 20px;
+	text-align: center;
 }
 .mzone-config .zone-info1 p{
 	background: #ddd;
@@ -3773,6 +3787,7 @@ fieldset[disabled] .btn-vk.active {
 }
 .mzone-config input{
 	margin-bottom: 10px;
+	text-transform: capitalize;
 }
 .mzone-config .zone-info1 select{
 	padding: 2px 3px;
@@ -3817,13 +3832,14 @@ fieldset[disabled] .btn-vk.active {
 }
 .table-reponsive .col-md-1{
 	padding: 0;
-	margin-top: 3em;
+	margin-top: 1em;
 }
 .table-reponsive .btn-danger{
 	width:100%;
 }
 .mzones{
 	color:#333;
+	margin-top: 12px;
 }
 .mzones-list-bar .title-bar{
 	margin-top:12px;
@@ -3851,6 +3867,12 @@ fieldset[disabled] .btn-vk.active {
 }
 #mzonesAdd{
 	margin-top:12px;
+}
+.mzones  .tree-box{
+	background: #fff;
+	padding: 12px 0;
+	margin-top: 12px;
+	border: solid 1px #333;
 }
 .mzones .tab-content tr td{
 	color:#333;

@@ -19,7 +19,7 @@ $lang['airline_cabin_create_date'] = 'Create Date';
 $lang['airline_cabin_modify_date'] = 'Modify Date';
 $lang['airline_cabin_create_user'] = 'Create By';
 $lang['airline_cabin_modify_user'] = 'Modify By';
-
+$lang['images']= 'Images';
 
 $lang['action'] = "Action";
 $lang['airline_cabin_status'] = 'Status';
