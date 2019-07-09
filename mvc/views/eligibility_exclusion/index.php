@@ -681,9 +681,8 @@ $.ajax({
                 $('#future_use').trigger('change');
 
 		var cab = ruleinfo['cabins'].split(',');
-
 		$.each(cab, function (index, value) {
-  			$('input[name="cabin_list"][value="' + value.toString() + '"]').prop("checked", true);
+			$('input[type=checkbox][name="cabin_list"][value="' + value.toString() + '"]').prop("checked", true).parent().addClass("active");
 		});	
 
 		
@@ -703,11 +702,12 @@ $.ajax({
 
 function form_reset(){    
           var $inputs = $('#add_rule_form :input'); 
-          $inputs.each(function (index)
-       {
-          $(this).val("");  
-       });
-
+          $('#desc').val("");  
+	  $('#flight_nbr_start').val("");
+	  $('#flight_nbr_end').val("");
+	  $('#flight_efec_date').val("");
+          $('#flight_disc_date').val("");
+          
            $("#carrier").val(0).trigger('change');
 	   $("#orig_market_id").val(0).trigger('change');
 	   $("#dest_market_id").val(0).trigger('change');
@@ -717,6 +717,13 @@ function form_reset(){
 	   $("#flight_dep_start_mins").val('00').trigger('change');
 	   $("#flight_dep_end_hrs").val('00').trigger('change');
            $("#flight_dep_end_mins").val('00').trigger('change');
+
+	 $.each($('input[type=checkbox][name=cabin_list]'), function(){            
+			$('input[type=checkbox][name="cabin_list"]').parent().removeClass("active");
+			 $('input[type=checkbox][name="cabin_list"]').prop("checked", false);
+			
+            });
+
   }
 
 
