@@ -339,7 +339,7 @@ function loaddatatable() {
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
-      "columns": [{"data": "sno" },
+      "columns": [{"data": "market_id" },
 		  {"data": "market_name"},
 		  {"data": "airline_name"},
                   {"data": "lname" },

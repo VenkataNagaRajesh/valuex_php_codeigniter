@@ -652,9 +652,7 @@ on MainSet.market_id = SubSet.market_id
                 "aaData" => array()
             );
 
-		$sno = 1;
                 foreach($rResult as $marketzone){
-			$marketzone->sno = $sno++;
                         if(permissionChecker('marketzone_edit') ) {
 				//$marketzone->action .= btn_edit('marketzone/edit/'.$marketzone->market_id, $this->lang->line('edit'));
 				$marketzone->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_market"  data-placement="top" onclick="editzone('.$marketzone->market_id.')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></a>';
