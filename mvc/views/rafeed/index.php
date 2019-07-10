@@ -118,6 +118,7 @@
                         <th class="col-lg-1"><?=$this->lang->line('day_of_week')?></th>
 			 <th class="col-lg-1"><?=$this->lang->line('operating_airline_code')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('marketing_airline_code')?></th>
+			<th class="col-lg-1"><?php echo "Carrier Code";?></th>
                         <th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
                          <th class="col-lg-1"><?=$this->lang->line('office_id')?></th>
                          <th class="col-lg-1"><?=$this->lang->line('channel')?></th>
@@ -181,6 +182,7 @@
 
                                   {"data": "operating_airline_code"},
 				 {"data": "marketing_airline_code" },
+				 {"data": "carrier_code" },
 				 {"data": "flight_number" },
                                   {"data": "office_id"},
 				    {"data": "channel" },
