@@ -582,7 +582,7 @@ SELECT SQL_CALC_FOUND_ROWS MainSet.market_id,MainSet.market_name,MainSet.lname, 
 FROM
 (
               select  mz.market_id, mz.market_name ,dtl.alias as lname,dti.alias as iname, dte.alias as ename , mz.active as active, 
-			mz.amz_level_id as level_id, mz.amz_incl_id as incl_id, mz.amz_excl_id as excl_id , dd.aln_data_value as airline_name,
+			mz.amz_level_id as level_id, mz.amz_incl_id as incl_id, mz.amz_excl_id as excl_id , dd.code as airline_name,
 			mz.airline_id as airlineID
 	      from VX_aln_market_zone mz 
 	      LEFT JOIN vx_aln_data_types dtl on (dtl.vx_aln_data_typeID = mz.amz_level_id) 
@@ -598,7 +598,7 @@ LEFT JOIN (
 			(         
 
 				 SELECT        m.market_id  as market_id  , 
-						COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS level 
+						COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS level 
 						FROM VX_aln_market_zone m 
 						LEFT OUTER JOIN  vx_aln_data_defns c ON 
 						(find_in_set(c.vx_aln_data_defnsID, m.amz_level_name) AND m.amz_level_id in (1,2,3,4,5)) 
@@ -610,7 +610,7 @@ LEFT JOIN (
 
 			(          
 				 SELECT        m.market_id  as market_id  , 
-                                                COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS incl
+                                                COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS incl
                                                 FROM VX_aln_market_zone m 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, m.amz_incl_name) AND m.amz_incl_id in (1,2,3,4,5)) 
@@ -623,7 +623,7 @@ LEFT JOIN (
 			(
 
 				  SELECT        m.market_id  as market_id  , 
-                                                COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS excl 
+                                                COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS excl 
                                                 FROM VX_aln_market_zone m 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, m.amz_excl_name) AND m.amz_excl_id in (1,2,3,4,5)) 
@@ -665,6 +665,56 @@ on MainSet.market_id = SubSet.market_id
 			if (permissionChecker('marketzone_delete') ) {                                        				
 			 $marketzone->action .= btn_delete('marketzone/delete/'.$marketzone->market_id, $this->lang->line('delete'));
 			}
+			$lstr = explode(',',$marketzone->levelname);
+				
+			$i = 1;
+			$marketzone->levelname  = '';
+			foreach($lstr as $label) {
+   				$marketzone->levelname .= $label;
+
+   				if($i < count($lstr)) {
+      				$marketzone->levelname .= ", ";
+  				 }
+
+   				if($i%4==0) {
+       				$marketzone->levelname .= "<br>"; // or echo "\n";
+   				}    
+   				$i++;
+			}
+
+			$i = 1;
+			$istr = explode(',',$marketzone->inclname);
+                        $marketzone->inclname  = '';
+                        foreach($istr as $label) {
+                                $marketzone->inclname .= $label;
+                        
+                                if($i < count($istr)) {
+                                $marketzone->inclname .= ", ";
+                                 }
+                        
+                                if($i%4==0) {
+                                $marketzone->inclname .= "<br>"; // or echo "\n";
+                                }    
+                                $i++;
+                        }
+
+
+			$estr = explode(',',$marketzone->exclname);
+			$i = 1;
+                        $marketzone->exclname  = '';
+                        foreach($estr as $label) {
+                                $marketzone->exclname .= $label;
+                        
+                                if($i < count($estr)) {
+                                $marketzone->exclname .= ", ";
+                                 }
+                        
+                                if($i%4==0) {
+                                $marketzone->exclname .= "<br>"; // or echo "\n";
+                                }    
+                                $i++;
+                        }
+
 
 
 			$status = $marketzone->active;
