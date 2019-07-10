@@ -1,0 +1,1 @@
+insert into vx_aln_data_defns set alias='no_bid',aln_data_typeID = 20,aln_data_value = 'No Bid',parentID=0,create_userID=1,modify_userID=1,active=1,create_date=1554788423,modify_date=1554788423;
