@@ -325,7 +325,7 @@
 
 	   <div class="col-sm-2">
                <?php
-                        $class_list['0'] = 'Select From Class';
+                        $class_list['0'] = 'Select From Cabin';
                         foreach ($class_type as $class) {
                                 $class_list[$class->vx_aln_data_defnsID] = $class->aln_data_value;
                         }
@@ -339,7 +339,7 @@
 
 	     <div class="col-sm-2">
                <?php
-                        $class_list['0'] = 'Select To Class';
+                        $class_list['0'] = 'Select To Cabin';
 			ksort($class_list);
 
                                    echo form_dropdown("sto_class", $class_list,set_value("sto_class",$toclass), "id='sto_class' class='form-control hide-dropdown-icon select2'");    ?>
