@@ -62,7 +62,7 @@
                 <?php endif; ?>
             </div>
         </div>
-		<div class="col-sm-9 col-md-10 table-container">
+		<div class="col-sm-9 col-md-10 table-container" style="display:none">
 		    <?php if(is_null($logs)){ ?>
                 <div>
                     <br><br>
@@ -82,7 +82,7 @@
                 <?php } ?>
             </div>
 		</div>
-        <div class="col-sm-9 col-md-10 table-container" style="display:none">
+        <div class="col-sm-9 col-md-10 table-container" >
             <?php if(is_null($logs)): ?>
                 <div>
                     <br><br>
