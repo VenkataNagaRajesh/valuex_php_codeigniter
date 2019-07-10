@@ -21,6 +21,7 @@ spl_autoload_register(function($classname) {
 
 
 $route['version'] = "app/version";
+$route['logs'] = "logViewerController/index";
 /*
 | -------------------------------------------------------------------------
 | URI ROUTING

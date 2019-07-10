@@ -64,13 +64,36 @@ class bid_m extends MY_Model {
    } 
   
   public function save_bid_data($data){
-	  $this->db->insert("VX_aln_bid",$data);
-	  return $this->db->insert_id();
+	  $this->db->select('*')->from('VX_aln_bid');
+	  $this->db->where('offer_id',$data['offer_id']);
+	  $this->db->where('flight_number',$data['flight_number']);
+	  $query = $this->db->get();
+	  $bid_data = $query->row();
+	  if(empty($bid_data)){
+	   $this->db->insert("VX_aln_bid",$data);
+	   $id = $this->db->insert_id();
+	  } else {
+		$this->db->where('bid_id',$bid_data->bid_id);
+		$this->db->update('VX_aln_bid',$data);
+        $id = $bid_data->bid_id;		
+	  }
+	  return $id;
   } 
   
-  public function save_card_data($data){
-	  $this->db->insert("VX_aln_card_data",$data);
-	  return $this->db->insert_id();
+  public function save_card_data($data){	  
+	  $this->db->select('*')->from('VX_aln_card_data');
+	  $this->db->where('offer_id',$data['offer_id']);	 
+	  $query = $this->db->get();
+	  $card_data = $query->row();
+	  if(empty($card_data)){
+	   $this->db->insert("VX_aln_card_data",$data);
+	   $id = $this->db->insert_id();
+	  } else {
+		$this->db->where('card_id',$card_data->card_id);
+		$this->db->update('VX_aln_card_data',$data);
+        $id = $card_data->card_id;		
+	  }
+	  return $id;
   }
 
   public function getCardData($offer_id){

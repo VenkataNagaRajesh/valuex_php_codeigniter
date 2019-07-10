@@ -327,7 +327,7 @@ class Rafeed extends Admin_Controller {
 			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS rafeed_id,ticket_number, coupon_number, dc.code as booking_country , 
 				CONCAT(dfre.aln_data_value,'(',dfre.code,')' ) as day_of_week,  
-			   dci.code as  booking_city, dico.code as issuance_country, dici.code as issuance_city,
+			   dci.code as  booking_city, dico.code as issuance_country, dici.code as issuance_city,dcar.code as carrier_code,
 			    dai.code as operating_airline_code, dam.code as marketing_airline_code, flight_number, dbp.code as boarding_point, 
                            dop.code as off_point,  dcla.code as cabin ,  departure_date, prorated_price, class,
                            office_id, channel, dpax.code as pax_type ,rf.active  ,rf.airline_code, rf.fare_basis
@@ -338,6 +338,7 @@ class Rafeed extends Admin_Controller {
                           LEFT JOIN vx_aln_data_defns dici on  (dici.vx_aln_data_defnsID = rf.issuance_city)
                           LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.operating_airline_code)  
 			  LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code)
+			  LEFT JOIN vx_aln_data_defns dcar on (dcar.vx_aln_data_defnsID = rf.carrier)
                           LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = rf.boarding_point)  
                           LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = rf.off_point) 
                            LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) 

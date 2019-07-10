@@ -36,6 +36,7 @@
 										<th>Flight Information</th>
 										<th style="text-align:left;">Upgrade Type</th>
 										<th>Bid (s)</th>
+										<th>Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -92,6 +93,12 @@
 													<i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b>
 												</div>
 											<?php }  ?>
+										</td>
+										<td>
+										  <div class="<?=($result->fclr == null)?"bid-visible":""?>">
+										  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="1" checked/>Yes <br>
+										  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="0"/>No
+										  </div>
 										</td>
 									</tr>
 									<?php } ?>
@@ -365,11 +372,12 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 				var upgrade = $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]:checked').val().split('|');
 				var upgrade_type = upgrade[0];	
 				var fclr_id = upgrade[1];
+				var bid_action = $('input[type=radio][name=bid_action_<?=$result->flight_number?>]:checked').val();
 				$.ajax({
 				  async: false,
 				  type: 'POST',
 				  url: "<?=base_url('homes/bidding/saveBidData')?>",          
-				  data: {"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id},
+				  data: {"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id,'bid_action':bid_action},
 				  dataType: "html",			
 				  success: function(data) {
 					var info = jQuery.parseJSON(data);              		
@@ -390,5 +398,6 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
  } 
  
 </script>
+
 
 

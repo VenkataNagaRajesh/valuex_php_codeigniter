@@ -37,7 +37,7 @@
 					<?php
                                                          $airlinelist[0]= 'Select Airline';
                                                      foreach($airlines as $airline){
-                                                                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                                                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->aln_data_value.'('.$airline->code.')';
                                                          }
 							ksort($airlinelist);
                                                    echo form_dropdown("airline_id", $airlinelist,set_value("airline_id"), "id='airline_id' class='form-control hide-dropdown-icon select2'");
@@ -141,21 +141,16 @@
 									<th>Airline Code</th>
 									<th>Select Marketzone</th>
 									<th>Select Level Type</th>
-								<!---	<th>Select Level Value</th>  
+									<th>Select Level Value</th>  
 									<th>Select Inclusion Type</th>
-							        <!---	<th>Select Inclusion Value</th> 
+							        	<th>Select Inclusion Value</th> 
 									<th>Select Exclusion Type</th>
-								<!---	<th>Select Exclusion Value</th> 
+									<th>Select Exclusion Value</th> 
 								</thead>-->
 								<tbody>
 									<tr>
 										<td>
 											     <?php                         
-										$airlinelist[0]= 'Select Airline Code'; 
-                       			 					foreach($airlines as $airline){     
-
-						                            $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
-		                					 } 			                       
 
 				 echo form_dropdown("sairline_id", $airlinelist,set_value("sairline_id"), "id='sairline_id' class='form-control hide-dropdown-icon select2'");?>                                                
 										</td>
@@ -224,7 +219,7 @@
 					   <tr>
 							<th><?=$this->lang->line('slno')?></th>
 							<th><?=$this->lang->line('market_name')?></th>
-							<th><?=$this->lang->line('airline_code')?></th>
+							<th><?php echo "Airline";?></th>
 							<th><?=$this->lang->line('level_type')?></th>
 							<th><?=$this->lang->line('amz_level_value')?></th>
 							<th><?=$this->lang->line('amz_incl_type')?></th>
