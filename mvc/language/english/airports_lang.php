@@ -32,3 +32,4 @@ $lang['master_longitude'] = 'Longitude';
 $lang['airport_created_user'] = 'Created By';
 $lang['airport_created_date'] = 'Create Date';
 $lang['download_airport_format'] = 'Upload Format';
+$lang['view_upload_log'] = "View Upload Log";
