@@ -1,0 +1,1 @@
+insert into permissions set description='Log Data',name='logdata';

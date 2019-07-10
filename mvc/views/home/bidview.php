@@ -96,8 +96,8 @@
 										</td>
 										<td>
 										  <div class="<?=($result->fclr == null)?"bid-visible":""?>">
-										  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="1" checked/>Yes <br>
-										  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="0"/>No
+										  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="1" checked/> Yes <br>
+										  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="0"/> No
 										  </div>
 										</td>
 									</tr>

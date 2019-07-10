@@ -7,7 +7,8 @@
 
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
-        <link rel="SHORTCUT ICON" href="<?=base_url("uploads/images/$siteinfos->photo")?>" />
+        <!--<link rel="SHORTCUT ICON" href="<?=base_url("uploads/images/$siteinfos->photo")?>" />-->
+		<link rel="SHORTCUT ICON" href="<?=base_url("uploads/images/favicon.png") ?>"/>
 
         <link rel="stylesheet" href="<?=base_url('assets/pace/pace.css')?>">
 
