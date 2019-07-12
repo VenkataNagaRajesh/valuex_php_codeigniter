@@ -179,7 +179,7 @@ class Season extends Admin_Controller {
         $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');
 		
         if($this->session->userdata('usertypeID') == 2){
-		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array("airlineID" => $this->session->userdata('login_user_airlineID')));
+		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
 		}else{
 		   $this->data['seasonslist'] = $this->season_m->get_seasons(); 
 		}  
@@ -597,7 +597,7 @@ class Season extends Admin_Controller {
 		   " CONCAT(dd.code,'_',dd.aln_data_value) like '%".$this->input->get('airlinecode')."%'";		 
 	     }		 
 			
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = s.airlineID LEFT JOIN VX_aln_client c ON c.airlineID = s.airlineID 
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_dest_levelID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = s.airlineID LEFT JOIN VX_aln_client c ON c.userID = s.create_userID 
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
@@ -643,17 +643,25 @@ class Season extends Admin_Controller {
 			$dest_where = explode(',',$season->ams_dest_level_value);
 			if($season->orig_type == 17){
 			   $orig_values = $this->marketzone_m->get_marketzones($orig_where); 
-               $orig_level_values = implode(',',array_map(function ($object) { return $object->market_name; }, $orig_values));			   
+               $orig_level_values = implode(', ',array_map(function ($object) { return $object->market_name; }, $orig_values));			   
 			} else {
                $orig_values = $this->airports_m->getDefinitionList($orig_where);
-			   $orig_level_values = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $orig_values));
+			   if($season->orig_type == 4 || $season->orig_type == 5){
+			   $orig_level_values = implode(', ',array_map(function ($object) { return $object->aln_data_value; }, $orig_values));
+			   } else {
+			    $orig_level_values = implode(', ',array_map(function ($object) { return $object->code; }, $orig_values));
+			   }
 			}
 			if($season->dest_type == 17){
 			  $dest_values = $this->marketzone_m->get_marketzones($dest_where);
-			  $dest_level_values = implode(',',array_map(function ($object) { return $object->market_name; }, $dest_values));
+			  $dest_level_values = implode(', ',array_map(function ($object) { return $object->market_name; }, $dest_values));
 			} else {
               $dest_values = $this->airports_m->getDefinitionList($dest_where);
-              $dest_level_values = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $dest_values));			  
+			   if($season->dest_type == 4 || $season->dest_type == 5){
+              $dest_level_values = implode(', ',array_map(function ($object) { return $object->aln_data_value; }, $dest_values));
+			   } else {
+              $dest_level_values = implode(', ',array_map(function ($object) { return $object->code; }, $dest_values));
+			   }			  
 			}
            
 			
@@ -661,6 +669,8 @@ class Season extends Admin_Controller {
            $season->orig_level_values = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$orig_level_values.'"><i class="fa fa-list"></i></a>';
 		   $season->dest_level_values = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$dest_level_values.'"><i class="fa fa-list"></i></a>';
 		   
+		    $season->orig_level_values = $orig_level_values;
+			$season->dest_level_values = $dest_level_values;
 		   //$season->season_color = '<span style="background: '.$season->season_color.'"></span>';
 			
 			$output['aaData'][] = $season;				
@@ -670,7 +680,9 @@ class Season extends Admin_Controller {
    
     public function searchAirlineCode(){
 	  if(!empty($_GET['search'])){
+		
 		 $search_info = $this->season_m->searchAirlineCode($_GET['search']);        			 
+	
 		} else {
 			$search_info = array();
 		}		

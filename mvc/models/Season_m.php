@@ -16,9 +16,14 @@ class season_m extends MY_Model {
 		return $query;
 	}
 
-     function get_seasons_where($where){
+     function get_seasons_where($where=null,$wherein=null){
             $this->db->select('*')->from('VX_aln_season');
-            $this->db->where($where);
+			if(!empty($where)){
+              $this->db->where($where);
+			}
+			if($wherein != null){
+				$this->db->where_in('airlineID',$wherein);
+			}
             $query = $this->db->get();
             return $query->result();
         }
@@ -82,8 +87,8 @@ class season_m extends MY_Model {
                 $this->db->select('VX_aln_seasonID,season_name');
                 $this->db->from('VX_aln_season');
                 $this->db->where('active','1');
-				if($airlineID){
-					$this->db->where('airlineID',$airlineID);
+				if($this->session->userdata('usertypeID') == 2){
+					$this->db->where('create_userID',$this->session->userdata('loginuserID'));
 				}
                 $query = $this->db->get();
 			    $result = $query->result();
@@ -114,21 +119,26 @@ class season_m extends MY_Model {
 	}
 	
 	public function searchAirlineCode($string){
-		$query = "SELECT CONCAT(`code`, '_', `aln_data_value`) search from vx_aln_data_defns where aln_data_typeID = 12 AND CONCAT(`code`, '_', `aln_data_value`) like '%".$string."%' limit 5";
+		$query = "SELECT CONCAT(`code`, '_', `aln_data_value`) search from vx_aln_data_defns WHERE ";
 		/* $this->db->select("CONCAT(`aln_data_value`, '_', `code`) search")->from('vx_aln_data_defns');
 		$this->db->where('aln_data_typeID',12);
 		$this->db->like("CONCAT(aln_data_value, '_', code)",$string);
 		$query = $this->db->get(); */
+		if($this->session->userdata('usertypeID') == 2){
+			$airlineIDs = implode(',',$this->session->userdata('login_user_airlineID'));
+			$query .= "vx_aln_data_defnsID IN (".$airlineIDs.") AND ";
+		}
+         $query .= " aln_data_typeID = 12 AND CONCAT(`code`, '_', `aln_data_value`) like '%".$string."%' limit 5";		
 		$query = $this->db->query($query);
 		//print_r($this->db->last_query()); 
 		
 		return $query->result();
 	}
 	
-	public function seasonTotalCount($airlineID=null){
+	public function seasonTotalCount($airlineIDs=array()){
 		$this->db->select('count(*) count')->from('VX_aln_season');
-		if($airlineID != null){
-			$this->db->where('airlineID',$airlineID);
+		if(!empty($airlineID)){
+			$this->db->where('airlineID',$airlineIDs);
 		}
 		$query = $this->db->get();
 		return $query->row('count');

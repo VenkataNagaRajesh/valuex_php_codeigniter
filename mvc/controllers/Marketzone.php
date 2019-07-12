@@ -169,8 +169,8 @@ class Marketzone extends Admin_Controller {
                            } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 }
-        if($this->session->userdata('usertypeID') == 2){
-		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
+        if($this->session->userdata('usertypeID') == 2){ 
+		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,$this->session->userdata('login_user_airlineID'));
 		} else {
 		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones();
 		}
@@ -181,7 +181,7 @@ class Marketzone extends Admin_Controller {
 		  }
 
 		if($userTypeID == 2){
-		$this->data['treedata'] = $this->marketzone_m->getAirportsMarketData(array($this->session->userdata('login_user_airlineID')));
+		$this->data['treedata'] = $this->marketzone_m->getAirportsMarketData($this->session->userdata('login_user_airlineID'));
 		} else {
 
 			 $this->data['treedata'] = $this->marketzone_m->getAirportsMarketData();
@@ -571,10 +571,8 @@ class Marketzone extends Admin_Controller {
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 		if($userTypeID == 2){
-                     // $airlines = $this->airline_m->getClientAirline($userID, 1);
 			 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                        // $sWhere .= 'MainSet.airlineID = '.$airlines->airlineID;
-						$sWhere .= 'MainSet.airlineID = '.$this->session->userdata('login_user_airlineID');			
+			$sWhere .= 'MainSet.airlineID IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';			
                 } 
 
 $sQuery = "

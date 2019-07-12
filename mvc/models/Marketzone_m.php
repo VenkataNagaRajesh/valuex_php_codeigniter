@@ -274,7 +274,7 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
         }
 
 
-	function getAirportsMarketData($airline_in = array()) {
+	function getAirportsMarketData($airline_in = array()) { 
 	
 	  $sql  =  "select  mz.market_name, group_concat(dd.aln_data_value , '(' ,dd.code,')'  )   as airports
 		    from VX_market_airport_map map 
@@ -303,10 +303,10 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 		return parent::hash($string);
 	}
 
-    function marketzoneTotalCount($airlineID = null){
+    function marketzoneTotalCount($airlineIDs = array()){
 		$this->db->select('count(*) count')->from('VX_aln_market_zone');
-		if($airlineID != null){
-			$this->db->where('airline_id',$airlineID);
+		if(!empty($airlineID)){
+			$this->db->where_in('airline_id',$airlineIDs);
 		}
 		$query = $this->db->get();
 		return $query->row('count');

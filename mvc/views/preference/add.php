@@ -4,7 +4,7 @@
         <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>       
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li><a href="<?=base_url("preference/index")?>"></i> <?=$this->lang->line('menu_preference')?></a></li>
+            <li><a href="<?=base_url("preference/index")?>"></i> <?php //echo$this->lang->line('menu_preference');?>Back</a></li>
             <li class="active"><?=$this->lang->line('menu_add')?> <?=$this->lang->line('menu_preference')?></li>
         </ol>
     </div><!-- /.box-header -->

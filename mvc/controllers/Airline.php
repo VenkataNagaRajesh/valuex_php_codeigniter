@@ -24,6 +24,16 @@ class Airline extends Admin_Controller {
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_unique_name'
 			),
 			array(
+				'field' => 'aircraft', 
+				'label' => $this->lang->line("airline_aircraft"), 
+				'rules' => 'trim|required|xss_clean|max_length[150]'
+			),
+			array(
+				'field' => 'seat_capacity', 
+				'label' => $this->lang->line("airline_seat_capacity"), 
+				'rules' => 'trim|required|xss_clean|max_length[50]|callback_valSeatCapacity'
+			),
+			array(
 				'field' => 'code', 
 				'label' => $this->lang->line("airline_code"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_unique_code'
@@ -33,23 +43,37 @@ class Airline extends Admin_Controller {
 		return $rules;
 	}
 	
+	function valSeatCapacity($post_string){
+		if(empty($post_string)){
+		$this->form_validation->set_message("valSeatCapacity", "%s is Required");
+		return FALSE;	
+	  } else {		
+			  if(preg_match('/(\d+)-(\d+)/', $post_string) || preg_match('/^(\d+)$/', $post_string)){
+				  return TRUE;
+			  } else {
+				$this->form_validation->set_message("valSeatCapacity", "%s Format Not Matched");
+				  return FALSE;  
+			 }
+		  }
+		   return TRUE;
+	}
+	
+	
 	protected function flightrules() {
 		$rules = array(
 		   array(
 				'field' => 'airlineID', 
 				'label' => $this->lang->line("airline_name"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_valAirline'
-			),
+			),			
 			array(
 				'field' => 'flights', 
 				'label' => $this->lang->line("airline_flights"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_valFlights'
-			)	
-			
+			)		
 		);
 		return $rules;
 	}
-	
 	
 	function valAirline($post_string){		
 	  if($post_string == '0'){
@@ -81,7 +105,7 @@ class Airline extends Admin_Controller {
 	public function unique_name($post_string) {
       $id = htmlentities(escapeString($this->uri->segment(3)));
       if((int)$id) {
-             $airline =  $this->airline_m->get_single_airline(array('vx_aln_data_defnsID !='=>$id,'aln_data_value'=>$post_string));
+             $airline =  $this->airline_m->get_single_airline(array('vx_aln_data_defnsID !='=>$id,'aln_data_value'=>$post_string,'aln_data_typeID' => 12));
               if(count($airline)) {
                       $this->form_validation->set_message("unique_name", "%s already exists");
                       return FALSE;
@@ -101,19 +125,19 @@ class Airline extends Admin_Controller {
 	public function unique_code($post_string) {
       $id = htmlentities(escapeString($this->uri->segment(3)));
       if((int)$id) {
-             $airline =  $this->airline_m->get_single_airline(array('vx_aln_data_defnsID !='=>$id,'code'=>$post_string));
-              if(count($airline)) {
-                      $this->form_validation->set_message("unique_code", "%s already exists");
-                      return FALSE;
-              }
-              return TRUE;
+         $airline =  $this->airline_m->get_single_airline(array('vx_aln_data_defnsID !='=>$id,'code'=>$post_string));
+          if(count($airline)) {
+                  $this->form_validation->set_message("unique_code", "%s already exists");
+                  return FALSE;
+          }
+          return TRUE;
       } else {
-              $airline =  $this->airline_m->get_single_airline(array('code'=>$post_string,'aln_data_typeID' => 12));            
-              if(count($airline)) {
-                      $this->form_validation->set_message("unique_code", "%s already exists");
-                      return FALSE;
-              }
-              return TRUE;
+         $airline =  $this->airline_m->get_single_airline(array('code'=>$post_string,'aln_data_typeID' => 12));     
+         if(count($airline)) {
+                 $this->form_validation->set_message("unique_code", "%s already exists");
+                 return FALSE;
+         }
+         return TRUE;
       }
     }
 	
@@ -140,12 +164,19 @@ class Airline extends Admin_Controller {
 				if($_POST) {	
                    $rules = $this->rules();
 				   $this->form_validation->set_rules($rules);
-				   if ($this->form_validation->run() == FALSE) { 
+				   if ($this->form_validation->run() == FALSE) { //echo validation_errors();
 				   	$this->data["subview"] = "airline/edit";
 				   	$this->load->view('_layout_main', $this->data);			
-				   } else {				
+				   } else {	
+                        $aircraftID = $this->airports_m->checkData($this->input->post('aircraft'),21); 
+						if($aircraftID == $this->data['airline']->parentID && $this->data['airline']->seatID != null ){
+							$this->airline_m->updateSeatCapacity($this->input->post('seat_capacity'),$this->data['airline']->seatID);
+						} else {
+     						$seat_capacityID = $this->airports_m->checkData($this->input->post('seat_capacity'),22,$aircraftID);
+						}						
 						$data['aln_data_value'] = $this->input->post('airline');
 						$data['code'] = $this->input->post('code');
+						$data['parentID'] = $aircraftID;
 						//$data['active'] = $this->input->post('active');						
 						$data['modify_date'] = time();					
 						$data['modify_userID'] = $this->session->userdata('loginuserID'); 
@@ -363,7 +394,7 @@ class Airline extends Admin_Controller {
 							   }								
 							                               				  
 							 } else {
-								//echo "Airport :".$airport." already  existed";								 
+								$this->mydebug->airlines_log("Airline :".$airline['name']." already  existed");								 
 							} 
 						  }else{
 							$this->mydebug->airlines_log("Airline Code must be UNIQUE ".$airline['name'].' - '.$airline['code']);
@@ -490,7 +521,7 @@ class Airline extends Admin_Controller {
 		  $sGroup = " GROUP BY vx_aln_data_defnsID ";  
          $ss = "select d.*,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID where d.aln_data_typeID = 12 group by d.vx_aln_data_defnsID"  ;
 		   
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS d.* from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID	
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS d.*,ac.aln_data_value as aircraft,sc.aln_data_value as seat_capacity ,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID LEFT JOIN vx_aln_data_defns ac ON (ac.vx_aln_data_defnsID = d.parentID AND ac.aln_data_typeID = 21) LEFT JOIN vx_aln_data_defns sc ON (sc.parentID = ac.vx_aln_data_defnsID AND sc.aln_data_typeID = 22) 
 		$sWhere
         $sGroup		
 		$sOrder		
@@ -532,8 +563,8 @@ class Airline extends Admin_Controller {
 			$airline->active .= "<label for='myonoffswitch".$airline->vx_aln_data_defnsID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>"; 
             $flights = $this->airline_m->getFlights($airline->vx_aln_data_defnsID);			
             $flights_data = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $flights));
-			 $airline->flights = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$flights_data.'"><i class="fa fa-list"></i></a>';
-			 $airline->flightss = $flights;
+			// $airline->flights = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$flights_data.'"><i class="fa fa-list"></i></a>';
+			// $airline->flightss = $flights;
 			$output['aaData'][] = $airline;				
 		}
 		echo json_encode( $output );
@@ -563,6 +594,16 @@ class Airline extends Admin_Controller {
 		} else {
 			echo "Error";
 		}
+	}
+	
+	function getAirline(){
+		if($this->input->post('airlineID')){
+			$json['data'] = $this->airline_m->getAirlineData($this->input->post('airlineID'));
+		} else {
+			$json['data'] = "Send ID";
+		}		
+		$this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($json)); 
 	}
 
 }

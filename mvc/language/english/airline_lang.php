@@ -33,3 +33,5 @@ $lang['download_format'] ='Upload Format';
 $lang['select_airline'] = 'Select Airline';
 $lang['airline'] = 'Airline';
 $lang['add_flights'] = 'Add Flights';
+$lang['airline_aircraft'] = 'Aircraft';
+$lang['airline_seat_capacity'] = 'Seat Capacity';

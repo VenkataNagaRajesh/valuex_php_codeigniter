@@ -6,6 +6,7 @@ class Logdata extends Admin_Controller {
 
 	public function __construct() {
 		parent::__construct(); 
+		require APPPATH.'libraries/CILogViewer/CILogViewer.php';
 		$this->logViewer = new \CILogViewer\CILogViewer();
 		//...
 	}

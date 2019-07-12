@@ -6,7 +6,7 @@
 
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li><a href="<?=base_url("user/index")?>"><?=$this->lang->line('menu_user')?></a></li>
+            <li><a href="<?=base_url("user/index")?>"><?php //echo$this->lang->line('menu_user'); ?>Back</a></li>
             <li class="active"><?=$this->lang->line('menu_edit')?> <?=$this->lang->line('menu_user')?></li>
         </ol>
     </div><!-- /.box-header -->

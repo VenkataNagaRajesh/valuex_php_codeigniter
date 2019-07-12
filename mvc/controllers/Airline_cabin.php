@@ -524,14 +524,13 @@ class Airline_cabin extends Admin_Controller {
                         }
 
 
-	            $userTypeID = $this->session->userdata('usertypeID');
+                $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
                 if($userTypeID == 2){
-                      $airlines= $this->airline_m->getClientAirline($userID, 1);
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                         $sWhere .= 'cm.airline_code = '.$airlines->airlineID;
-
+                        $sWhere .= 'cm.airline_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                        
                 }
+
 
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.aln_data_value as airline_code , 

@@ -275,14 +275,16 @@ $sWhere $sOrder $sLimit";
 
 		$this->paxfeed_m->update_paxfeed(array('is_processed' => '1'), $feed->dtpf_id);
 		$cabin = $this->airline_cabin_class_m->getCabinFromClassForCarrier($feed->carrier_code,$feed->class);
+		/*
 		$array = array();
 		$array['from_city'] = $feed->from_city;
 		$array['to_city'] = $feed->to_city;
 		$array['flight_number'] = $feed->flight_number;
 		$array['dep_date'] = $feed->dep_date;
 		$array['carrier'] = $feed->carrier_code;
-		//$array['dep_time'] = $feed->dep_time;
-		$rules = $this->eligibility_exclusion_m->apply_exclusion_rules($array);
+		//$array['dep_time'] = $feed->dep_time;*/
+		//$rules = $this->eligibility_exclusion_m->apply_exclusion_rules($array);
+			
 			$upgrade = array();
 			$upgrade['boarding_point'] = $feed->from_city;
                         $upgrade['off_point'] = $feed->to_city;
@@ -300,9 +302,94 @@ $sWhere $sOrder $sLimit";
 			}
 
 			$upgrade['from_cabin'] = $feed->cabin;
-
                          $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+			 foreach($data as $f) {
 
+				$rules = $this->eligibility_exclusion_m->apply_exclusion_rules();
+				 $ext = array();
+                                                $ext['dtpf_id'] = $feed->dtpf_id;
+                                                $ext['fclr_id'] = $f->fclr_id;
+                                                $ext["create_date"] = time();
+                                                $ext["modify_date"] = time();
+                                                $ext["create_userID"] = $this->session->userdata('loginuserID');
+                                                $ext["modify_userID"] = $this->session->userdata('loginuserID');
+				$matched = 0;
+				if(count($rules) > 0 ) {
+					foreach ( $rules  as $rule ) {
+						$query = $this->eligibility_exclusion_m->apply_exclusion_rules(1);
+						$query .= ' AND eexcl_id = ' .$rule->eexcl_id;
+	
+						if ($rule->orig_level != NULL) {
+							$query .= ' AND  (FIND_IN_SET('.$feed->from_city.', orig_level))';
+						}
+						if ($rule->dest_level != NULL) {
+							$query .= ' AND  (FIND_IN_SET('.$feed->to_city.',dest_level))';
+
+						}
+
+						if($rule->frequency != '0' ) {
+
+							$query .= ' AND (FIND_IN_SET('.$f->frequency.',frequency))';
+
+						}
+
+						if($rule->flight_efec_date != 0 AND $rule->flight_disc_date != 0 ){
+
+							$date_format =  date('d-m', $feed->dep_date);
+					                $current_year =  date("Y");
+                					$prv_year = $current_year - 1;
+                 					$current_yr_date = strtotime($date_format.'-'.$current_year);
+                 					$old_yr_date = strtotime($date_format.'-'.$prv_year);
+
+							$query .= " AND ((flight_efec_date <= ".$current_yr_date." AND flight_disc_date >= " . $current_yr_date . ") OR (flight_efec_date <= ".$old_yr_date." AND flight_disc_date >= "  . $old_yr_date.")) ";
+	
+						}
+
+						if($rule->carrier != 0 ) {
+							$query .= " AND  (carrier = ".$feed->carrier_code. ")";
+	
+						}
+	
+						if($rule->flight_nbr_start != '0' AND $rule->flight_nbr_end != 0 ) {
+							$query .= " AND  (flight_nbr_start <= ". $feed->flight_number. " and flight_nbr_end >= " . $feed->flight_number. ")";
+
+						}
+						
+						if($rule->upgrade_from_cabin_type != 0  AND $rule->upgrade_to_cabin_type != 0 ) {
+							$query .= " AND ( upgrade_from_cabin_type = " .$f->from_cabin. "  AND upgrade_to_cabin_type = " .$f->to_cabin. " ) ";
+						}
+
+
+						if($rule->flight_dep_start != 0 AND $rule->flight_dep_end != 0 ) {
+
+							$query .= " AND (flight_dep_start <= ".$feed->dept_time." and flight_dep_end >= ".$feed->dept_time.")";
+						}
+
+							$result = $this->install_m->run_query($query);
+							if(count($result) > 0 ) {	
+								$matched = $result[0]->eexcl_id;
+								break;
+							  }
+					}
+
+					if($matched > 0 ) {
+						$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
+                                                $ext['exclusion_id'] = $result[0]->eexcl_id;
+                                                $this->offer_eligibility_m->insert_dtpfext($ext);
+
+					}else {
+							$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
+                                                                $this->offer_eligibility_m->insert_dtpfext($ext);
+
+					}
+
+				}else {
+			        	$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
+					$this->offer_eligibility_m->insert_dtpfext($ext);
+				}
+			 }
+
+/*	
 		if(count($rules) > 0 ) {
 			// rule matches partially check for the cabins that are excluded
 			foreach($rules as $rule ) {
@@ -350,7 +437,7 @@ $sWhere $sOrder $sLimit";
 
 					}	
 	        }
-
+		*/
 
 	}
 

@@ -21,8 +21,8 @@
 				  <a href="<?php echo base_url('airports_master/downloadFormat') ?>" class="btn btn-danger">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('download_airport_format')?>
-                  </a>
-				 <?php } ?>
+                  </a>&nbsp;&nbsp;
+			    <?php } ?>
               </h5>
 			  <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>
@@ -61,12 +61,12 @@
                  <thead>
                     <tr>
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-                        <th class="col-lg-2"><?=$this->lang->line('master_airport')?></th>
+                        <!--<th class="col-lg-2"><?=$this->lang->line('master_airport')?></th>-->
 						<th class="col-lg-1"><?=$this->lang->line('master_code')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('master_city')?></th>
+						<!--<th class="col-lg-1"><?=$this->lang->line('master_city')?></th>-->
 						<th class="col-lg-1"><?=$this->lang->line('master_citycode')?></th>
-						<!--<th class="col-lg-1"><?=$this->lang->line('master_state')?></th>-->
-						<th class="col-lg-1"><?=$this->lang->line('master_country')?></th>
+						<!--<th class="col-lg-1"><?=$this->lang->line('master_state')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('master_country')?></th>-->
 						<th class="col-lg-1"><?=$this->lang->line('master_countrycode')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('master_region')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('master_area')?></th>						
@@ -107,12 +107,12 @@
                     "success": fnCallback
 			 } ); },	  
       "columns": [{"data": "vx_amdID" },
-                  {"data": "airport" },
+                 // {"data": "airport" },
 				  {"data": "code"},
-				  {"data": "city" },
+				  //{"data": "city" },
 				  {"data": "citycode" },
 				 // {"data": "state" },
-				  {"data": "country" },
+				  //{"data": "country" },
 				  {"data": "countrycode" },
 				  {"data": "region" },
                   {"data": "area"},

@@ -10,7 +10,7 @@ class Airports_master extends Admin_Controller {
 		$this->load->model("season_m");
 		$this->load->model("season_airport_map_m");
 		$language = $this->session->userdata('lang');
-		$this->lang->load('airports', $language);
+		$this->lang->load('airports', $language);		
     }	
 	
 	protected function rules() {

@@ -4,7 +4,7 @@
         <h3 class="box-title"><i class="fa fa-users"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li><a href="<?=base_url("client/index")?>"><?=$this->lang->line('menu_airline_client')?></a></li>
+            <li><a href="<?=base_url("client/index")?>">Back</a></li>
             <li class="active"><?=$this->lang->line('menu_add')?> <?=$this->lang->line('menu_airline_client')?></li>
         </ol>
     </div><!-- /.box-header -->
@@ -23,13 +23,17 @@
                             <?=$this->lang->line("client_airline")?><span class="text-red">*</span>
                        </label>
                         <div class="col-sm-6">
+						      <select name="airlineID[]" id="airlineID" class="form-control select2" multiple="multiple">
+						 
                             <?php 
                               $airlines[0]=$this->lang->line("client_select_airline");					
 							   foreach($airlinelist as $airline){
-								  $airlines[$airline->vx_aln_data_defnsID] = $airline->airline_name;
+								 // $airlines[$airline->vx_aln_data_defnsID] = $airline->airline_name;
+								 echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->airline_name.'</option>';
 							  } 
-							  echo form_dropdown("airlineID", $airlines,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'");
+							 // echo form_dropdown("airlineID", $airlines,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'");
 							?>
+							 </select>
                         </div>
 						<span class="col-sm-4 control-label">
                             <?php echo form_error('airlineID'); ?>
@@ -239,6 +243,12 @@
 <script type="text/javascript">
 $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: "Select airline"});
+				 
+$(document).ready(function(){	
+	var airlines = [<?php echo implode(',',$this->input->post("airlineID")); ?>];
+	$('#airlineID').val(airlines).trigger('change');  
+});
+				 
 $(document).on('click', '#close-preview', function(){
     $('.image-preview').popover('hide');
     // Hover befor close the preview

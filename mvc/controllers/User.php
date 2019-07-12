@@ -125,7 +125,7 @@ class User extends Admin_Controller {
 		if($this->session->userdata('usertypeID') == 2){
 		$this->data['users'] = $this->user_m->get_user_by_usertype(null,array("u.usertypeID" => 5,"u.create_userID"=>$this->session->userdata('loginuserID')));
 		} else {
-		$this->data['users'] = $this->user_m->get_user_by_usertype();	
+		$this->data['users'] = $this->user_m->getUsers();	
 		}
 		$this->data["subview"] = "user/index";
 		$this->load->view('_layout_main', $this->data);
