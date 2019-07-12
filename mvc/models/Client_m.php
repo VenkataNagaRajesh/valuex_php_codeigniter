@@ -35,10 +35,16 @@ class client_m extends MY_Model {
 		parent::delete($id);
 	}
 	
-    function getClientData($id){
-		$this->db->select('c.*,d.aln_data_value airline')->from('VX_aln_client c');
-		$this->db->join('vx_aln_data_defns d','d.vx_aln_data_defnsID = c.airlineID','LEFT');
-		$this->db->where('c.VX_aln_clientID',$id);
+    function getClientData($id=null,$userID = null){
+		$this->db->select('c.*,group_concat(d.aln_data_value) airlines,group_concat(ca.airlineID) airlineIDs')->from('VX_aln_client c');
+		$this->db->join('VX_client_airline ca','ca.clientID=c.VX_aln_clientID','LEFT');
+		$this->db->join('vx_aln_data_defns d','d.vx_aln_data_defnsID = ca.airlineID','LEFT');
+		if($id != null){
+		  $this->db->where('c.VX_aln_clientID',$id);
+		}
+		if($userID != null){
+		  $this->db->where('c.userID',$userID);	
+		}
 		$query = $this->db->get();
 		return $query->row();
 	}
@@ -47,6 +53,19 @@ class client_m extends MY_Model {
 		$this->db->select('count(*) count')->from('VX_aln_client');
 		$query = $this->db->get();		
 		return $query->row('count');
+	}
+	
+	function insert_client_airline($data){
+		$this->db->insert('VX_client_airline',$data);
+	}
+	
+	function delete_client_airline($clientID,$airlineIDs =array()){
+		if(!empty($airlineIDs)){
+		  $this->db->where_in('airlineID',$airlineIDs);
+		}
+		$this->db->where('clientID',$clientID);
+		$this->db->delete('VX_client_airline');		
+		return TRUE;
 	}
 		
 }

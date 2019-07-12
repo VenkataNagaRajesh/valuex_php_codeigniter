@@ -10,7 +10,7 @@ class Client extends Admin_Controller {
 		$this->load->model('airline_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('client', $language);
-		$usertype = 2;
+		$usertype = 2; 
 	}
 
 	protected function rules() {
@@ -38,7 +38,7 @@ class Client extends Admin_Controller {
 			array(
 				'field' => 'airlineID',
 				'label' => $this->lang->line("client_airline"),
-				'rules' => 'trim|required|max_length[10]|xss_clean|callback_validate_airline'
+				'rules' => 'trim|max_length[10]|xss_clean|callback_valAirlines'
 			),			
 			array(
 				'field' => 'photo',
@@ -62,6 +62,15 @@ class Client extends Admin_Controller {
 			),
 		);
 		return $rules;
+	}
+	
+	public function valAirlines(){
+		if(count($this->input->post('airlineID')) > 0){
+			return TRUE;
+		} else {
+			$this->form_validation->set_message("valAirlines", "%s Required");
+			return FALSE;
+		}
 	}
 	
 	public function validate_airline() {
@@ -221,16 +230,25 @@ class Client extends Admin_Controller {
 				$client["address"] = $this->input->post("address");				
 				$client["username"] = $this->input->post("username");
 				$client["password"] = $this->user_m->hash($this->input->post("password"));
-                $client["airlineID"] = $this->input->post("airlineID");				
+               // $client["airlineID"] = $this->input->post("airlineID");				
 				$client["create_date"] = time();
 				$client["modify_date"] = time();
 				$client["create_userID"] = $this->session->userdata('loginuserID');
 				$client["modify_userID"] = $this->session->userdata('loginuserID');
 				$client["active"] = $this->input->post("active");	
 				$client['photo'] = $this->upload_data['file']['file_name'];
-				$client['mail_logo'] = $this->upload_data['mail_logo']['file_name'];
-				//print_r($client); exit;
-				 $this->client_m->insert_client($client);
+				$client['mail_logo'] = $this->upload_data['mail_logo']['file_name'];				
+				$this->client_m->insert_client($client);				 
+				 $clientID = $this->db->insert_id();
+				 $link['clientID'] = $clientID;
+				 $link["create_date"] = time();
+				 $link["modify_date"] = time();
+				 $link["create_userID"] = $this->session->userdata('loginuserID');
+				 $link["modify_userID"] = $this->session->userdata('loginuserID');
+				 foreach($this->input->post('airlineID') as $airlineID){
+				  $link['airlineID'] = $airlineID;
+				  $this->client_m->insert_client_airline($link);
+				 }
 			 }
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("client/index"));
@@ -256,7 +274,7 @@ class Client extends Admin_Controller {
 
 		$id = htmlentities(escapeString($this->uri->segment(3))); 
 		if((int)$id) {
-			$this->data['client'] = $this->client_m->get_single_client(array('VX_aln_clientID' => $id));	
+			$this->data['client'] = $this->client_m->getClientData($id); //print_r($this->data['client'] ); exit;	
 			if($this->data['client']) {
 				$this->data['airlinelist'] = $this->airline_m->getAirlinesData();	
 				$rules = $this->rules();
@@ -280,13 +298,34 @@ class Client extends Admin_Controller {
 					$client["phone"] = $this->input->post("phone");
 					$client["address"] = $this->input->post("address");				
 					$client["username"] = $this->input->post("username");					
-					$client["airlineID"] = $this->input->post("airlineID");					
+					//$client["airlineID"] = $this->input->post("airlineID");					
 					$client["modify_date"] = time();
 					$client["create_userID"] = $this->session->userdata('loginuserID');					
 					$client["active"] = $this->input->post("active");	
 					$client['photo'] = $this->upload_data['file']['file_name'];
 					$client['mail_logo'] = $this->upload_data['mail_logo']['file_name'];
 					 $this->client_m->update_client($client,$id);
+					 $airlines = array();
+					 if(!empty($this->data['client']->airlineIDs)){
+					 $airlines = explode(',',$this->data['client']->airlineIDs);
+					 }
+					 $delete_list = array_diff($airlines,$this->input->post('airlineID'));
+					 if(!empty($delete_list)){
+					 $this->client_m->delete_client_airline($id,$delete_list);
+					 }
+					 $insert_list = array_diff($this->input->post('airlineID'),$airlines);
+					// print_r( $insert_list); exit;
+					  if(!empty($insert_list)){
+					  $link['clientID'] = $id;					
+					  $link["modify_date"] = time();
+                      $link["create_date"] = time();
+                      $link["create_userID"] = $this->session->userdata('loginuserID');					  
+					  $link["modify_userID"] = $this->session->userdata('loginuserID');
+					  foreach($insert_list as $airlineID){
+					   $link['airlineID'] = $airlineID;
+					   $this->client_m->insert_client_airline($link);
+					  }
+					 }
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url("client/index"));
 				}
@@ -317,6 +356,7 @@ class Client extends Admin_Controller {
 				}
 				$this->user_m->delete_user($id);
 				$this->client_m->delete_client($id);
+				$this->client_m->delete_client_airline($id);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("client/index"));
 			} else {
@@ -472,7 +512,7 @@ class Client extends Admin_Controller {
 		$userID = $this->session->userdata('loginuserID');
 		$usertypeID = $this->session->userdata('usertypeID');	  
 				
-	    $aColumns = array('c.VX_aln_clientID','c.photo','c.name','c.email','c.photo','c.airlineID','c.active');
+	    $aColumns = array('c.VX_aln_clientID','c.photo','c.name','c.email','c.photo','c.phone','dd.code','c.active');
 	
 		$sLimit = "";
 		
@@ -503,6 +543,7 @@ class Client extends Admin_Controller {
 				}
 			}
 			$sWhere = "";
+			$sHaving = "";
 			if ( $_GET['sSearch'] != "" )
 			{
 				$sWhere = "WHERE (";
@@ -512,6 +553,7 @@ class Client extends Admin_Controller {
 				}
 				$sWhere = substr_replace( $sWhere, "", -3 );
 				$sWhere .= ')';
+				$sHaving = " HAVING airline_name LIKE '%".$_GET['sSearch']."%'";
 			}
 			
 			/* Individual column filtering */
@@ -535,9 +577,12 @@ class Client extends Admin_Controller {
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                 $sWhere .= 'c.userID = '.$this->session->userdata('loginuserID');	
 			}
-		
-		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,dd.aln_data_value airline_name FROM VX_aln_client c LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = c.airlineID
-			$sWhere			
+			
+		    $sGroupby = " GROUP BY c.VX_aln_clientID";
+		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,group_concat(dd.code) airline_name FROM VX_aln_client c LEFT JOIN VX_client_airline ca ON ca.clientID = VX_aln_clientID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
+			$sWhere	
+            $sGroupby
+            $sHaving			
 			$sOrder
 			$sLimit	"; 
 		//print_r($sQuery); exit;

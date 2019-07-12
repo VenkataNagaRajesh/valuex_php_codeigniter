@@ -40,8 +40,10 @@ class Airline_m extends MY_Model {
 	}
 	
 	public function getAirlineData($id){
-		$this->db->select('dd.*,dd.aln_data_value airline_name,dd.code,u.name modify_by,GROUP_CONCAT(d.aln_data_value SEPARATOR ", ") flights')->from('vx_aln_data_defns dd');	
-        $this->db->join('vx_aln_data_defns d','d.parentID = dd.vx_aln_data_defnsID','LEFT');			
+		$this->db->select('dd.*,dd.aln_data_value airline_name,dd.code,u.name modify_by,ac.aln_data_value as aircraft,sc.vx_aln_data_defnsID seatID,sc.aln_data_value as seat_capacity,GROUP_CONCAT(d.aln_data_value SEPARATOR ", ") flights')->from('vx_aln_data_defns dd');	
+        $this->db->join('vx_aln_data_defns d','d.parentID = dd.vx_aln_data_defnsID AND d.aln_data_typeID = 16','LEFT');
+		$this->db->join('vx_aln_data_defns ac','ac.vx_aln_data_defnsID = dd.parentID AND ac.aln_data_typeID = 21','LEFT');
+        $this->db->join('vx_aln_data_defns sc','sc.parentID = dd.parentID AND sc.aln_data_typeID = 22','LEFT');		
 		$this->db->join('user u','u.userID = dd.modify_userID','LEFT');	
         $this->db->where('dd.aln_data_typeID',12);
 		$this->db->where('dd.vx_aln_data_defnsID',$id);		
@@ -58,9 +60,10 @@ class Airline_m extends MY_Model {
 	}
 	
 	public function getClientAirline($userID, $getrow=NULL){
-		$this->db->select('dd.*,dd.aln_data_value airline_name,c.airlineID')->from('VX_aln_client c');
+		$this->db->select('dd.*,dd.aln_data_value airline_name,ca.airlineID')->from('VX_aln_client c');
 		//$this->db->join('VX_aln_airline a','a.VX_aln_airlineID = c.airlineID','LEFT');
-		$this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = c.airlineID','LEFT');
+		$this->db->join('VX_client_airline ca','ca.clientID = c.VX_aln_clientID','LEFT');
+		$this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = ca.airlineID','LEFT');
 		$this->db->where('c.userID',$userID);
 		$query = $this->db->get();
 
@@ -147,6 +150,10 @@ class Airline_m extends MY_Model {
 		$query = $this->db->get();
 		return $query->result();
 	}	
-	
+	public function updateSeatCapacity($seat_capacity,$seatID){
+		$this->db->where('vx_aln_data_defnsID',$seatID);
+		$this->db->where('aln_data_typeID',22);
+		$this->db->update('vx_aln_data_defns',array('aln_data_value'=>$seat_capacity));
+	}
 }
 

@@ -38,6 +38,24 @@
                         </span>
                     </div>
 					
+					<div class='form-group' >
+                        <label for="flights" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_aircraft")?>
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="aircraft" name="aircraft" value="<?=set_value('aircraft')?>" readonly >
+                        </div>                       
+                    </div>
+					
+					<div class='form-group' >
+                        <label for="flights" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_seat_capacity")?>
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="seat_capacity" name="seat_capacity" value="<?=set_value('seat_capacity')?>" readonly >
+                        </div>                       
+                    </div>
+					
                     <?php 
                         if(form_error('flights')) 
                             echo "<div class='form-group has-error' >";
@@ -51,7 +69,7 @@
                             <input type="text" class="form-control" id="flights" name="flights" value="<?=set_value('flights')?>" >
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error(flights); ?>
+                            <?php echo form_error('flights'); ?>
                         </span>
                     </div>
 
@@ -60,11 +78,36 @@
                             <input type="submit" class="btn btn-success" value="<?=$this->lang->line("add_flights")?>" >
                         </div>
                     </div>
-
                 </form>
-
-
             </div>
         </div>
     </div>
 </div>
+<script>
+$(document).ready(function(){
+	 var airlineID = $('#airlineID').val();
+	  if(airlineID != 0){
+	   $('#airlineID').trigger('change');
+	  }
+});
+ $('#airlineID').change( function(){
+	 var airlineID = $(this).val();
+	  if(airlineID == 0){
+		$('#aircraft').val('');  
+		$('#seat_capacity').val(''); 		
+	  } else {
+		  $.ajax({ 
+			 async: false,            
+			 type: 'POST',            
+			 url: "<?=base_url('airline/getAirline')?>",            
+			 data: {"airlineID": airlineID},            
+			 dataType: "html",                                  
+			 success: function(data) {
+				info = JSON.parse(data); //console.log(info['data'].aircraft);			  			 
+			   $('#aircraft').val(info['data'].aircraft);
+			   $('#seat_capacity').val(info['data'].seat_capacity);
+			 }
+		  });
+	 }
+ }); 
+</script>

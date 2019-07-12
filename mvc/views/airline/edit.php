@@ -31,6 +31,40 @@
                     </div>
 					
 					<?php 
+                        if(form_error('aircraft')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="aircraft" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_aircraft")?>
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="aircraft" name="aircraft" value="<?=set_value('aircraft', $airline->aircraft)?>">
+                        </div>                        
+                       <span class="col-sm-4 control-label">
+                            <?php echo form_error('aircraft'); ?>
+                        </span>
+                    </div>
+					
+					<?php 
+                        if(form_error('seat_capacity')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="seat_capacity" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_seat_capacity")?>
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="seat_capacity" name="seat_capacity" value="<?=set_value('seat_capacity', $airline->seat_capacity)?>">
+                        </div>                        
+                       <span class="col-sm-4 control-label">
+                            <?php echo form_error('seat_capacity'); ?>
+                       </span>
+                    </div>
+					
+					<?php 
                         if(form_error('code')) 
                             echo "<div class='form-group has-error' >";
                         else     
@@ -44,7 +78,7 @@
                         </div>                        
                        <span class="col-sm-4 control-label">
                             <?php echo form_error('code'); ?>
-                        </span>
+                       </span>
                     </div>
 					
                     <div class="form-group">
@@ -58,112 +92,4 @@
     </div>
 </div>
 
-<script>
-$( ".select2" ).select2();
 
-$(document).ready(function (){	
-	 var countryID = $('#countryID').val();
-	 var stateID = <?php echo $airport->stateID; ?>;	
-	 var regionID = <?=$airport->regionID?>;
-	 var areaID = <?=$airport->areaID?>;
-    if(stateID === null || countryID == null) {
-        $('#stateID').val(0);
-    } else {
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportStates')?>",          
-		   data: {"countryID" :countryID , "stateID": stateID},
-            dataType: "html",			
-            success: function(data) {
-               $('#stateID').html(data);
-            }
-        }); 		
-	}
-	
-	if(stateID === null || regionID == null) {
-        $('#regionID').val(0);
-    } else {
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportRegions')?>",          
-		   data: {"regionID" :regionID , "stateID": stateID},
-            dataType: "html",			
-            success: function(data) {
-               $('#regionID').html(data);
-            }
-        }); 		
-	}
-	
-	if(regionID === null || areaID == null) {
-        $('#areaID').val(0);
-    } else {
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportAreas')?>",          
-		   data: {"regionID" :regionID , "areaID": areaID},
-            dataType: "html",			
-            success: function(data) {
-               $('#areaID').html(data);
-            }
-        }); 		
-	}
-});
-
-$('#countryID').on('change',function(event) {
-   var countryID = $(this).val();
- if(countryID == null) {
-        $('#stateID').val(0);
-    } else {
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportStates')?>",          
-		   data: {"countryID" :countryID},
-            dataType: "html",			
-            success: function(data) {
-               $('#stateID').html(data);
-            }
-        }); 		
-	}
-});	
-
-$('#stateID').on('change',function(e) {
-	e.preventDefault();
-   var stateID = $(this).val();   
-	if(stateID === null) {
-        $('#regionID').val(0);
-    } else {
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportRegions')?>",          
-		   data: {"stateID": stateID},
-            dataType: "html",			
-            success: function(data) {
-               $('#regionID').html(data);
-            }
-        }); 		
-	}
-});
-
-$('#regionID').on('change', function(event) {
-   var regionID = $(this).val();
-	if(regionID === null) {
-        $('#areaID').val(0);
-    } else { console.log(regionID);   
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportAreas')?>",          
-		   data: {"regionID" :regionID},
-            dataType: "html",			
-            success: function(data) {
-               $('#areaID').html(data);
-            }
-        }); 		
-	}
-});
-</script>

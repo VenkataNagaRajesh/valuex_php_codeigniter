@@ -46,6 +46,15 @@ class user_m extends MY_Model {
 			return $query->result();
 		}
 	}
+	
+	function getUsers(){
+		$this->db->select('*');
+		$this->db->from('user u');
+		$this->db->join('usertype ut', 'ut.usertypeID = u.usertypeID', 'LEFT');
+		$this->db->where('u.usertypeID !=',2);
+		$query = $this->db->get();
+		return $query->result();		
+	}
 
 	function get_user($array=NULL, $signal=FALSE) {
 		$query = parent::get($array, $signal);

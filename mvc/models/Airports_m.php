@@ -129,7 +129,7 @@ public function getDefnsCodesListByType($type) {
 
   
   public function getDefinitionList($wherein){
-	  $this->db->select('aln_data_value')->from('vx_aln_data_defns');
+	  $this->db->select('aln_data_value,code')->from('vx_aln_data_defns');
 	  $this->db->where_in('vx_aln_data_defnsID',$wherein);
 	  $query = $this->db->get();
 	  return $query->result();

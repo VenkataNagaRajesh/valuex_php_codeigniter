@@ -23,8 +23,8 @@ class Bidding extends MY_Controller {
 	}
   
     public function index() {  
-      //$this->session->set_userdata('pnr_ref','F90406');
-      //$this->session->set_userdata('validation_check',1);	   
+      $this->session->set_userdata('pnr_ref','F90488');
+      $this->session->set_userdata('validation_check',1);	   
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
 			$this->session->unset_userdata('pnr_ref');
@@ -77,10 +77,9 @@ class Bidding extends MY_Controller {
         $this->output->set_output(json_encode($json));
 	}
 	
-	public function saveBidData(){
-		if($this->input->post('offer_id')){ 
-		 // $count = $this->bid_m->bid_data_count(array('offer_id'=>$this->input->post('offer_id'),'flight_number'=>$this->input->post('flight_number')));
-		 
+	public function saveBidData(){		
+		if($this->input->post('offer_id')){ 		
+		  if($this->input->post('bid_action') == 1){
 			$data['offer_id'] = $this->input->post('offer_id');			
 			$data['bid_value'] = $this->input->post("bid_value");			
 			$data['fclr_id'] = $this->input->post("fclr_id");
@@ -100,9 +99,9 @@ class Bidding extends MY_Controller {
 			   
 			   $select_p_list = explode(',',$select_passengers_data->p_list);
                $unselect_p_list = explode(',',$unselect_passengers_data->p_list);
-			   
+			  /*  $this->mydebug->debug("selected and un selected list");
                $this->mydebug->debug($select_passengers_data->p_list);
-			   $this->mydebug->debug($unselect_passengers_data->p_list);
+			   $this->mydebug->debug($unselect_passengers_data->p_list); */
 			   
              $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $select_status,"modify_date"=>time()),$select_p_list);
 		    $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);			   
@@ -117,8 +116,8 @@ class Bidding extends MY_Controller {
 			  $message =html_entity_decode($message);
 			  $siteinfos = $this->reset_m->get_site();
 			   $tomail = explode(',',$maildata['email_list'])[0];
-                            $this->mydebug->debug($maildata);
-                            $this->mydebug->debug("Bid Submition ToMails ID : ".$tomail);
+                            /* $this->mydebug->debug($maildata);
+                            $this->mydebug->debug("Bid Submition ToMails ID : ".$tomail); */
 				$subject = "Your bid has been Successfully Submitted";				
                                      //  $tomail = 'lakshmi.amujuru@sweken.com';
 				$this->email->set_mailtype("html");
@@ -127,12 +126,21 @@ class Bidding extends MY_Controller {
 				$this->email->subject($subject);
 				$this->email->message($message);
 			   $status =  $this->email->send();
-                         $this->mydebug->debug("mailstatus : ".$status);
+                       //  $this->mydebug->debug("mailstatus : ".$status);
 				
 			  $json['status'] = "success";
 			  $this->session->unset_userdata('validation_check');
 			  $this->session->unset_userdata('pnr_ref');
-    	  }			
+    	    }	
+		  } else {
+			 $extention_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail'); 
+			 $no_bid_Status = $this->rafeed_m->getDefIdByTypeAndAlias('no_bid','20');
+			// $this->mydebug->debug("extension list");
+			  $p_list = explode(',',$extention_data->p_list);
+			 // $this->mydebug->debug($extention_data->p_list);		 
+			   
+              $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $no_bid_Status,"modify_date"=>time()),$p_list);
+		  }		  
 		}else{
 			$json['status'] = "send offer_id";
 		}
@@ -174,12 +182,17 @@ class Bidding extends MY_Controller {
 			$this->form_validation->set_message("valMonth", "%s is required");
 			return FALSE;
 		} else {
+		  if($this->input->post('month_expiry') > 12){
+			$this->form_validation->set_message("valMonth", "%s is invalid");
+				return FALSE;  
+		  } else {
 			if($this->input->post('month_expiry') < $cur_month && $this->input->post('year_expiry') <= $cur_year){
 				$this->form_validation->set_message("valMonth", "%s is Expired");
 				return FALSE;
 			} else {
 				return TRUE;
-			} 		
+			} 
+          }			
 		}
 	}
 	
