@@ -1,5 +1,5 @@
 <div class="box">
-  <div class="box-header">
+  <div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa fa-sitemap"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
@@ -20,7 +20,7 @@
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
           <div class='form-group'>
             <div class="col-sm-2">
-             <?php $slist = array("0" => "Select Season");               
+             <?php $slist = array("0" => "Season");               
 					   foreach($seasonslist as $season){
 						  $slist[] = $season;
 						}							
@@ -34,7 +34,7 @@
             </div>
 			
 			<div class="col-sm-2">
-			 <?php  $list['0'] = "Select Airport";
+			 <?php  $list['0'] = " Airport";
 			     foreach($airports_list as $alist ) {
 				    $list[$alist->vx_aln_data_defnsID] = $alist->aln_data_value;
 			     }
@@ -42,7 +42,7 @@
             </div>
 			
             <div class="col-sm-2">
-              <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
+              <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
             </div>			
           </div>
         </form>		

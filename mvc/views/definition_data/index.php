@@ -8,18 +8,18 @@
             <li class="active"><?=$this->lang->line('menu_defdata')?></li>
         </ol>
     </div><!-- /.box-header -->
+	<h5 class="page-header">                        
+		<?php if(permissionChecker('definition_data_add')) { ?>
+         <a href="<?php echo base_url('definition_data/add') ?>" data-toggle="tooltip" data-title="Add Data" data-placement="left" class="btn btn-danger">
+             <i class="fa fa-plus" ></i>
+             <!--<?=$this->lang->line('add_defdata')?>-->
+         </a>
+		<?php } ?>
+    </h5>	
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">              
-              <h5 class="page-header">                        
-					<?php if(permissionChecker('definition_data_add')) { ?>
-                  <a href="<?php echo base_url('definition_data/add') ?>">
-                      <i class="fa fa-plus"></i>
-                      <?=$this->lang->line('add_defdata')?>
-                  </a>
-				 <?php } ?>
-              </h5>			 				
+            <div class="col-sm-12">              		 				
             <div id="hide-table">
                <table id="defdata" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>

@@ -8,25 +8,21 @@
             <li class="active"><?=$this->lang->line('menu_datatype')?></li>
         </ol>
     </div><!-- /.box-header -->
+	 <?php 
+         $usertype = $this->session->userdata("usertype");
+         if(permissionChecker('usertype_add')) { ?>
+         <h5 class="page-header">
+             <a href="<?php echo base_url('datatype/add') ?>" data-toggle="tooltip" data-title="Add Datatype" data-placement="left" class="btn btn-danger">
+                 <i class="fa fa-plus"></i> 
+                 <!--<?=$this->lang->line('add_title')?>-->
+             </a>
+         </h5>
+    <?php } ?>
     <!-- form start -->
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">
-
-                <?php 
-                    $usertype = $this->session->userdata("usertype");
-                    if(permissionChecker('usertype_add')) {
-                ?>
-                    <h5 class="page-header">
-                        <a href="<?php echo base_url('datatype/add') ?>">
-                            <i class="fa fa-plus"></i> 
-                            <?=$this->lang->line('add_title')?>
-                        </a>
-                    </h5>
-                <?php } ?>
-
-
-                <div id="hide-table">
+				<div id="hide-table">
                     <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                         <thead>
                             <tr>

@@ -35,7 +35,7 @@
 						<!--<p>Airline Code</p>-->
 
 					<?php
-                                                         $airlinelist[0]= 'Select Airline';
+                                                         $airlinelist[0]= 'Airline';
                                                      foreach($airlines as $airline){
                                                                  $airlinelist[$airline->vx_aln_data_defnsID] = $airline->aln_data_value.'('.$airline->code.')';
                                                          }
@@ -50,7 +50,7 @@
 					</div>
 					<div class="col-md-2">
 						<!--<p>Market Level</p>-->
-					<?php $aln_datatypes['0'] = "SELECT Level ";
+					<?php $aln_datatypes['0'] = "Level ";
   			                      ksort($aln_datatypes);
 
 			echo form_dropdown("amz_level_id", $aln_datatypes, set_value("amz_level_id"), "id='amz_level_id' class='form-control select2'");
@@ -58,7 +58,7 @@
 					</div>
 					<div class="col-md-6">
 						<!--<p class="col-md-10">Value</p>-->
-						<div class="col-md-11">
+						<div class="col-md-11" style="padding:0;">
 							<select  name="amz_level_value[]"  id="amz_level_value" class="form-control select2" multiple="multiple">
 							</select>
 						</div>
@@ -70,7 +70,7 @@
 				<div class="col-md-12 zone-info2">
 					<div class="col-md-6">
 						<?php
-					 $aln_datatypes['0'] = "SELECT Inclusion Level";
+					 $aln_datatypes['0'] = "Inclusion Level";
                                               ksort($aln_datatypes);
                         echo form_dropdown("amz_incl_id", $aln_datatypes, set_value("amz_incl_id"), "id='amz_incl_id' class='form-control select2'");
                         ?>
@@ -86,7 +86,7 @@
 					</div>
 					<div class="col-md-6">
 				                    <?php
-						 $aln_datatypes['0'] = "SELECT Exclusion Level";
+						 $aln_datatypes['0'] = "Exclusion Level";
                                               ksort($aln_datatypes);
  echo form_dropdown("amz_excl_id", $aln_datatypes, set_value("amz_excl_id"), "id='amz_excl_id' class='form-control select2'");
                         ?>
@@ -156,7 +156,7 @@
 										</td>
 										<td>
 								
-               <?php $marketlist = array("0" => "Select Marketzone");
+               <?php $marketlist = array("0" => "Marketzone");
                    foreach($marketzones as $marketzone){
                                                                  
 				$marketlist[$marketzone->market_id] = $marketzone->market_name;
@@ -165,7 +165,7 @@
                 
 										</td>
 										<td>
-							<?php 			$aln_datatypes['0'] = "Select Level Type";                         ksort($aln_datatypes); 			echo form_dropdown("samz_level_id", $aln_datatypes,set_value("samz_level_id",$levelID), "id='samz_level_id' class='form-control hide-dropdown-icon select2'");    ?>
+							<?php 			$aln_datatypes['0'] = "Level Type";                         ksort($aln_datatypes); 			echo form_dropdown("samz_level_id", $aln_datatypes,set_value("samz_level_id",$levelID), "id='samz_level_id' class='form-control hide-dropdown-icon select2'");    ?>
 										</td>
 									<!--	<td>
 											<select class="form-control" id="inc-level">
@@ -177,7 +177,7 @@
 										</td>	-->
 										<td>
 
-								  <?php                         $aln_datatypes['0'] = "Select Inclusion Type ";                         ksort($aln_datatypes);                         echo form_dropdown("samz_incl_id", $aln_datatypes,set_value("samz_incl_id",$inclID), "id='samz_incl_id' class='form-control hide-dropdown-icon select2'");    ?> 
+								  <?php                         $aln_datatypes['0'] = "Inclusion Type ";                         ksort($aln_datatypes);                         echo form_dropdown("samz_incl_id", $aln_datatypes,set_value("samz_incl_id",$inclID), "id='samz_incl_id' class='form-control hide-dropdown-icon select2'");    ?> 
 										</td>
 									<!--	<td>
 											<select class="form-control" id="inc-level">
@@ -189,7 +189,7 @@
 										</td>-->
 										<td>
 
-		 			<?php                         $aln_datatypes['0'] = "Select Exclusion Type ";                         ksort($aln_datatypes);                         echo form_dropdown("samz_excl_id", $aln_datatypes,set_value("samz_excl_id",$exclID), "id='samz_excl_id' class='form-control hide-dropdown-icon select2'");    ?> 
+		 			<?php                         $aln_datatypes['0'] = "Exclusion Type ";                         ksort($aln_datatypes);                         echo form_dropdown("samz_excl_id", $aln_datatypes,set_value("samz_excl_id",$exclID), "id='samz_excl_id' class='form-control hide-dropdown-icon select2'");    ?> 
 										</td>
 									<!--	<td>
 											<select class="form-control" id="inc-level">
@@ -310,7 +310,7 @@ $('#tree1').treed();
 <script type="text/javascript">
   $(document).ready(function() {
 
-$( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Value'});
+$( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
 	
 	loadjstree();
 

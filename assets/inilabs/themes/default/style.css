@@ -163,9 +163,15 @@ h6,
   font-family: century gothic;
 }
 /* Page Header */
-.page-header {
+/*.page-header {
   margin: 10px 0 20px 0;
   padding: 0px 0px 16px;
+  font-size: 22px;
+  border: none;
+}*/
+.page-header {
+  margin: 10px 0 0;
+  padding: 0px;
   font-size: 22px;
   border: none;
 }
@@ -1451,6 +1457,7 @@ body > .header .logo .icon {
   border-radius: 3px;
   width: 100%;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  margin-top:10px;
 }
 .box.box-primary {
   border-top-color: #3c8dbc;
@@ -1471,7 +1478,7 @@ body > .header .logo .icon {
   max-height: 300px;
   overflow: auto;
 }
-.box .box-header {
+/*.box .box-header {
   position: relative;
   background-color: #23292F;
   -webkit-border-top-left-radius: 3px;
@@ -1488,6 +1495,20 @@ body > .header .logo .icon {
   border-bottom-left-radius: 0;
   border-bottom: 0px solid #f4f4f4;
   color: #444;
+}*/
+.box .box-header {
+  position: relative;
+  background-color: #ff6633;
+  color: #333;
+  width:96%;
+  float:left;
+  margin-right: 9px;
+  margin-bottom: 12px;
+}
+input.btn-success{
+	color: #fff;
+	background-color: #ff6633 !important;
+	border-color: #ff6633 !important;
 }
 .box .box-header:before,
 .box .box-header:after {
@@ -1502,7 +1523,7 @@ body > .header .logo .icon {
 .box .box-header > .ion,
 .box .box-header .box-title {
   display: inline-block;
-  padding: 15px;
+  padding: 7px;
   margin: 0;
   font-size: 14px;
   font-weight: 400;
@@ -1532,6 +1553,7 @@ body > .header .logo .icon {
   border-top-right-radius: 0;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
+  padding-top: 6px;
 }
 .box .box-body > table,
 .box .box-body > .table {
@@ -3668,6 +3690,9 @@ fieldset[disabled] .btn-vk.active {
     color: #ffffff !important;
 }
 /*my custom styles*/
+.onoffswitch-small-inner::before {
+	background:#109610 !important;
+}
 .srch-buttons .btn-default{
 	background: #fff;
 	color: #ff6633;
@@ -4392,6 +4417,6 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 }
 .jstree-container-ul .jstree-anchor{
 	white-space: normal;
-	display: inline-table;;
+	display: inline-table;
 	font-weight:bold;
 }
