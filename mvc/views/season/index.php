@@ -189,6 +189,12 @@
 					<span class="default"><?=$season->season_name?></span><span style="background: <?=$season->season_color?>;">&nbsp;</span>
 					<?php } ?>
 				</p>
+				<select name="color_season" id="color_season">
+				 <option value="0">Select Season</option>
+				 <?php foreach($seasonslist as $season){
+                  echo '<option value="'.$season->VX_aln_seasonID.'">'.$season->season_name.'</option>';  
+				 } ?>
+				</select>
 			</div>
 		</div>
 	</div>
@@ -199,13 +205,22 @@
      var eventDates = {}; var season = {}; var name = {};
     
    
-   <?php foreach ($seasonslist as $season){
-          foreach($season->dates as $date){	   ?>       
+   <?php //$_POST['color_season']=10; 
+       foreach ($seasonslist as $season){
+	      if($_POST['color_season'] > 0){
+			 if($season->VX_aln_seasonID == $_POST['color_season']){
+				foreach($season->dates as $date){	?> 
+                eventDates[ new Date( '<?=$date?>' )] = new Date( '<?=$date?>' ).toString();
+		        season[ new Date( '<?=$date?>' )] = "<?=$season->VX_aln_seasonID?>";
+			    name[ new Date( '<?=$date?>' )] = "<?=$season->season_name?>";  
+		  <?php } }				 
+		  } else {
+           foreach($season->dates as $date){  ?>       
 	       eventDates[ new Date( '<?=$date?>' )] = new Date( '<?=$date?>' ).toString();
 		    season[ new Date( '<?=$date?>' )] = "<?=$season->VX_aln_seasonID?>";
 			name[ new Date( '<?=$date?>' )] = "<?=$season->season_name?>";
 			 
-    <?php } ?>
+	 <?php } } ?>
 	    $("<style> .season<?=$season->VX_aln_seasonID?> { color:#fffff !important;  background:<?=$season->season_color?> !important;} </style>").appendTo("head");
     <?php } ?>  
     //console.log(event);
@@ -230,7 +245,11 @@
 		
     });
 	
-	
+  $('#color_season').change(function(){
+	 // seasoncalender();
+	 location.reload(true);
+  });
+  
 </script>
 <script>
 $(document).ready(function() {	 
