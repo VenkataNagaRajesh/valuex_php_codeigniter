@@ -52,12 +52,12 @@ class Eligibility_exclusion extends Admin_Controller {
 			array(
                  		'field' => 'flight_nbr_start',
                  		'label' => $this->lang->line("flight_nbr_start"),
-                 		'rules' => 'trim|integer|max_length[4]|min_length[4]|xss_clean'
+                 		'rules' => 'trim|integer|max_length[4]|min_length[4]|xss_clean|callback_FlightNbrStartCheck'
             		),
 			array(
           		       'field' => 'flight_nbr_end',
                  		'label' => $this->lang->line("flight_nbr_end"),
-                 		'rules' => 'trim|integer|max_length[4]|min_length[4]|xss_clean'
+                 		'rules' => 'trim|integer|max_length[4]|min_length[4]|xss_clean|callback_FlightNbrEndCheck'
             		),
 			array(
                  		'field' => 'frequency',
@@ -67,12 +67,12 @@ class Eligibility_exclusion extends Admin_Controller {
 			array(
                 		 'field' => 'flight_efec_date',
                 		 'label' => $this->lang->line("flight_efec_date"),
-                 		'rules' => 'trim|max_length[200]|xss_clean|callback_validateDate'
+                 		'rules' => 'trim|max_length[200]|xss_clean|callback_validateEfecDate'
             		),
 			array(
                			  'field' => 'flight_disc_date',
                  		'label' => $this->lang->line("flight_disc_date"),
-                 		'rules' => 'trim|max_length[200]|xss_clean|callback_validateDate'
+                 		'rules' => 'trim|max_length[200]|xss_clean|callback_validateDiscDate'
             		),
 			array(
                                  'field' => 'flight_dep_start_hrs',
@@ -107,21 +107,78 @@ class Eligibility_exclusion extends Admin_Controller {
 		);
 		return $rules;
 	}
+
+
 	
 
-function validateDate(){
+function validateEfecDate(){
  $efec = strtotime($this->input->post("flight_efec_date"));
 $disc = strtotime($this->input->post("flight_disc_date"));
 
+if( $efec == '' AND $disc != '' ) {
+	$this->form_validation->set_message("validateEfecDate", "Flight Effective date should be selected");
+        return false;
+}else{
+	return true;
+}
+
+
+}
+
+
+function validateDiscDate(){
+ $efec = strtotime($this->input->post("flight_efec_date"));
+$disc = strtotime($this->input->post("flight_disc_date"));
+
+if( $efec != '' AND $disc == '' ) {
+        $this->form_validation->set_message("validateDiscDate", "Flight Discontinue date should be selected");
+        return false;
+}
+
 if($disc < $efec ) {
-  $this->form_validation->set_message("validateDate", "Flight discontinue date should be ahead of effective date ");
-	return false;
+  $this->form_validation->set_message("validateDiscDate", "Flight discontinue date should be ahead of effective date ");
+        return false;
 } else {
- 	return true;
+        return true;
 }
 
 
 }
+
+
+function FlightNbrStartCheck(){
+$start = $this->input->post("flight_nbr_start");
+$end = $this->input->post("flight_nbr_end");
+
+if( $start == '' AND $end != '' ) {
+        $this->form_validation->set_message("FlightNbrStartCheck", "Flight Nbr start required");
+        return false;
+}else{
+	return true;
+
+}
+
+}
+
+
+function FlightNbrEndCheck(){
+$start = $this->input->post("flight_nbr_start");
+$end = $this->input->post("flight_nbr_end");
+
+if( $start != '' AND $end == '' ) {
+        $this->form_validation->set_message("FlightNbrEndCheck", "Flight nbr end required");
+        return false;
+}
+
+if($end < $start ) {
+  $this->form_validation->set_message("FlightNbrEndCheck", "Flight end number should be more than start ");
+        return false;
+} else {
+        return true;
+}
+
+}
+
 
 function valFrequency($num)
 {
