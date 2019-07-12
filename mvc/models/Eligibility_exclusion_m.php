@@ -50,7 +50,7 @@ class Eligibility_exclusion_m extends MY_Model {
         return $time_arr;
         }
 
-
+/*
 	function apply_exclusion_rules($array) {
 
 		$date_format =  date('d-m', $array['dep_date']);
@@ -79,10 +79,65 @@ class Eligibility_exclusion_m extends MY_Model {
 		}
 		return $result;
 	}
+*/
+
+
+	function apply_exclusion_rules($param = 0) {
+/*
+	$date_format =  date('d-m', $array['dep_date']);
+                $current_year =  date("Y");
+                $prv_year = $current_year - 1;
+                 $current_yr_date = strtotime($date_format.'-'.$current_year);
+                 $old_yr_date = strtotime($date_format.'-'.$prv_year);
+*/
+
+
+		if ( $param == 0 ) {
+		
+		$query = "select eexcl_id,excl_grp, orig_level, dest_level,frequency, flight_efec_date, flight_disc_date, carrier, flight_dep_start, flight_dep_end , flight_nbr_start, flight_nbr_end, upgrade_from_cabin_type, upgrade_to_cabin_type, active ";
+		} else {
+
+			$query =  "select eexcl_id " ;
+
+		}
+
+		$query .= "  from (SELECT        ex.*, IFNULL(group_concat(distinct cc.airportID) , group_concat(distinct mapo.airport_id))  as orig_level, IFNULL(group_concat(distinct c.airportID) ,group_concat(distinct map.airport_id)) as dest_level FROM VX_aln_eligibility_excl_rules ex LEFT OUTER JOIN  vx_aln_master_data c ON (
+(find_in_set(c.countryID, ex.dest_level_value) AND ex.dest_level_id  = 2) OR
+(find_in_set(c.cityID, ex.dest_level_value) AND ex.dest_level_id  = 3) OR
+(find_in_set(c.airportID, ex.dest_level_value) AND ex.dest_level_id  = 1) OR
+(find_in_set(c.regionID, ex.dest_level_value) AND ex.dest_level_id  = 4) OR
+(find_in_set(c.areaID, ex.dest_level_value) AND ex.dest_level_id  = 5) 
+  ) LEFT OUTER JOIN VX_market_airport_map map on (find_in_set(map.market_id, ex.dest_level_value) AND ex.dest_level_id  = 17) LEFT OUTER JOIN  vx_aln_master_data cc ON ((find_in_set(cc.countryID, ex.orig_level_value) AND ex.orig_level_id  = 2) OR
+(find_in_set(cc.cityID, ex.orig_level_value) AND ex.orig_level_id  = 3) OR
+(find_in_set(cc.airportID, ex.orig_level_value) AND ex.orig_level_id  = 1) OR
+(find_in_set(cc.regionID, ex.orig_level_value) AND ex.orig_level_id  = 4) OR
+(find_in_set(cc.areaID, ex.orig_level_value) AND ex.orig_level_id  = 5) )
+LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, ex.orig_level_value) AND ex.orig_level_id  = 17) group by ex.eexcl_id) as SubSet  WHERE active = 1  ";
+
+/*
+
+"  AND   find_in_set(".$array['from_city'].", orig_level) OR  find_in_set(".$array['to_city'].", dest_level) OR (flight_nbr_start <= ". $array['flight_number'] . " and flight_nbr_end >= " . $array['flight_number']. ") OR ((flight_efec_date <= ".$current_yr_date." AND flight_disc_date >= " . $current_yr_date . ") OR (flight_efec_date <= ".$old_yr_date." AND flight_disc_date >= "  . $old_yr_date.")) OR carrier = ".$array['carrier']." OR find_in_set(".$array['frequency'].", frequency) AND (upgrade_from_cabin_type = ".$array['from_cabin']." AND upgrade_to_cabin_type = ".$array['to_cabin'].") OR  (flight_dep_start <= ".$array['dep_time']." and flight_dep_end >= ".$array['dep_time'].")"; */
+		//var_dump($query);exit;
+		if($param == 0 ) {
+			 $result = $this->install_m->run_query($query);
+		 	return $result;
+		} else{
+			return $query;	
+		}
+	}
 
 	function getDataForEditRule($grp_id) {
 
-	 $sql = "select  excl_grp, group_concat(df.code ,'-', dt.code  ) as cabins ,excl_reason_desc, orig_market_id ,dest_market_id ,flight_efec_date, flight_disc_date, flight_dep_start, flight_dep_end, flight_nbr_start, flight_nbr_end, carrier, frequency , future_use  from VX_aln_eligibility_excl_rules ex LEFT JOIN  vx_aln_data_defns df on (df.vx_aln_data_defnsID = ex.upgrade_from_cabin_type )  LEFT JOIN vx_aln_data_defns dt on (dt.vx_aln_data_defnsID = ex.upgrade_to_cabin_type )  where excl_grp = " . $grp_id. "  group by excl_reason_desc, orig_market_id ,dest_market_id ,flight_efec_date, flight_disc_date, flight_dep_start, flight_dep_end, flight_nbr_start, flight_nbr_end, carrier, frequency , future_use";
+	 $sql = "select  excl_grp, group_concat(df.code ,'-', dt.code  ) as cabins ,
+		excl_reason_desc, orig_level_id, dest_level_id, orig_level_value, 
+		dest_level_value ,flight_efec_date, flight_disc_date, flight_dep_start, 
+		flight_dep_end, flight_nbr_start, flight_nbr_end, carrier, frequency 
+		  from VX_aln_eligibility_excl_rules ex 
+		LEFT JOIN  vx_aln_data_defns df on (df.vx_aln_data_defnsID = ex.upgrade_from_cabin_type )  
+		LEFT JOIN vx_aln_data_defns dt on (dt.vx_aln_data_defnsID = ex.upgrade_to_cabin_type )  
+		where excl_grp = " . $grp_id. "  group by excl_reason_desc, 
+		 orig_level_id, dest_level_id, orig_level_value, dest_level_value ,flight_efec_date, flight_disc_date, flight_dep_start, 
+		flight_dep_end, flight_nbr_start, flight_nbr_end, carrier, frequency";
 		$result = $this->install_m->run_query($sql);
 		return $result[0];
 

@@ -7,7 +7,10 @@ $lang['slno'] = "#";
 $lang['action'] = "Action";
 
 $lang['desc'] = 'Reason Description';
-$lang['orig_market'] = 'Origin Market';
+$lang['orig_level_id'] = 'Origin Level';
+$lang['orig_level_value'] = 'Origin Level Value';
+$lang['dest_level_id'] = 'Dest Level';
+$lang['dest_level_value'] = 'Dest Level Value';
 $lang['carrier'] = 'Carrier';
 $lang['dest_market'] = 'Destination Market';
 $lang['flight_nbr_start'] = 'Flight Number Start';
