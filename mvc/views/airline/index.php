@@ -64,9 +64,11 @@
                  <thead>
                     <tr>
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-                        <th class="col-lg-2"><?=$this->lang->line('airline_name')?></th>
+                        <!--<th class="col-lg-2"><?=$this->lang->line('airline_name')?></th>-->
 						<th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('airline_flights_ids')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('airline_seat_capacity')?></th>
+						<th class="col-lg-6"><?=$this->lang->line('airline_flights_ids')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('airline_active')?></th>
                         <?php if(permissionChecker('airline_edit') || permissionChecker('airline_delete')) { ?>
                         <th class="col-lg-1"><?=$this->lang->line('action')?></th>
@@ -89,8 +91,10 @@
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('airline/server_processing'); ?>",
       "columns": [{"data": "vx_aln_data_defnsID" },
-                  {"data": "aln_data_value" },
+                  //{"data": "aln_data_value" },
 				  {"data": "code" },
+				  {"data": "aircraft"},
+				  {"data":"seat_capacity"},
 				  {"data": "flights" },
 				  {"data": "active"},
                   {"data": "action"}

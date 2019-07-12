@@ -3,7 +3,7 @@
         <div class="col-sm-6">
             <ol class="breadcrumb">            
               <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>             
-              <li><a href="<?=base_url("preference/index")?>"><?=$this->lang->line('menu_preference')?></a></li>             
+              <li><a href="<?=base_url("preference/index")?>"><?php //echo$this->lang->line('menu_preference');?>Back</a></li>             
               <li class="active"><?=$this->lang->line('view')?> <?=$this->lang->line('menu_preference')?></li>            
             </ol>
          </div>

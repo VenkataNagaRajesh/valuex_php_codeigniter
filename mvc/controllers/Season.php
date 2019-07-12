@@ -643,24 +643,24 @@ class Season extends Admin_Controller {
 			$dest_where = explode(',',$season->ams_dest_level_value);
 			if($season->orig_type == 17){
 			   $orig_values = $this->marketzone_m->get_marketzones($orig_where); 
-               $orig_level_values = implode(',',array_map(function ($object) { return $object->market_name; }, $orig_values));			   
+               $orig_level_values = implode(', ',array_map(function ($object) { return $object->market_name; }, $orig_values));			   
 			} else {
                $orig_values = $this->airports_m->getDefinitionList($orig_where);
 			   if($season->orig_type == 4 || $season->orig_type == 5){
-			   $orig_level_values = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $orig_values));
+			   $orig_level_values = implode(', ',array_map(function ($object) { return $object->aln_data_value; }, $orig_values));
 			   } else {
-			    $orig_level_values = implode(',',array_map(function ($object) { return $object->code; }, $orig_values));
+			    $orig_level_values = implode(', ',array_map(function ($object) { return $object->code; }, $orig_values));
 			   }
 			}
 			if($season->dest_type == 17){
 			  $dest_values = $this->marketzone_m->get_marketzones($dest_where);
-			  $dest_level_values = implode(',',array_map(function ($object) { return $object->market_name; }, $dest_values));
+			  $dest_level_values = implode(', ',array_map(function ($object) { return $object->market_name; }, $dest_values));
 			} else {
               $dest_values = $this->airports_m->getDefinitionList($dest_where);
 			   if($season->dest_type == 4 || $season->dest_type == 5){
-              $dest_level_values = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $dest_values));
+              $dest_level_values = implode(', ',array_map(function ($object) { return $object->aln_data_value; }, $dest_values));
 			   } else {
-              $dest_level_values = implode(',',array_map(function ($object) { return $object->code; }, $dest_values));
+              $dest_level_values = implode(', ',array_map(function ($object) { return $object->code; }, $dest_values));
 			   }			  
 			}
            
