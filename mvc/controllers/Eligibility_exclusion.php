@@ -19,47 +19,60 @@ class Eligibility_exclusion extends Admin_Controller {
 				'rules' => 'trim|required|xss_clean|max_length[200]'
 			),
 			array(
-				'field' => 'orig_market_id',
-				'label' => $this->lang->line("orig_market"),
-				'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+				'field' => 'orig_level_id',
+				'label' => $this->lang->line("orig_level_id"),
+				'rules' => 'trim|max_length[200]|xss_clean'
 			),
    		    array(
-                		'field' => 'dest_market_id',
-                		'label' => $this->lang->line("dest_market"),
-                		'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                		'field' => 'orig_level_value',
+                		'label' => $this->lang->line("orig_level_value"),
+                		'rules' => 'trim|max_length[200]|xss_clean'
                        ),
+
+			  array(
+                                'field' => 'dest_level_id',
+                                'label' => $this->lang->line("dest_level_id"),
+                                'rules' => 'trim|max_length[200]|xss_clean'
+                        ),
+                    array(
+                                'field' => 'dest_level_value',
+                                'label' => $this->lang->line("dest_level_value"),
+                                'rules' => 'trim|max_length[200]|xss_clean'
+                       ),
+
+
 
 			 array(
                                 'field' => 'carrier',
                                 'label' => $this->lang->line("carrier"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                                'rules' => 'trim|max_length[200]|xss_clean'
                        ),
 
 
 			array(
                  		'field' => 'flight_nbr_start',
                  		'label' => $this->lang->line("flight_nbr_start"),
-                 		'rules' => 'trim|required|integer|max_length[200]|xss_clean'
+                 		'rules' => 'trim|integer|max_length[4]|min_length[4]|xss_clean'
             		),
 			array(
           		       'field' => 'flight_nbr_end',
                  		'label' => $this->lang->line("flight_nbr_end"),
-                 		'rules' => 'trim|required|integer|max_length[200]|xss_clean'
+                 		'rules' => 'trim|integer|max_length[4]|min_length[4]|xss_clean'
             		),
 			array(
-                 		'field' => 'frequency[]',
+                 		'field' => 'frequency',
                  		'label' => $this->lang->line("frequency"),
-                 		'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                 		'rules' => 'trim|max_length[200]|xss_clean|callback_valFrequency'
             		),
 			array(
                 		 'field' => 'flight_efec_date',
                 		 'label' => $this->lang->line("flight_efec_date"),
-                 		'rules' => 'trim|required|max_length[200]|xss_clean'
+                 		'rules' => 'trim|max_length[200]|xss_clean|callback_validateDate'
             		),
 			array(
                			  'field' => 'flight_disc_date',
                  		'label' => $this->lang->line("flight_disc_date"),
-                 		'rules' => 'trim|required|max_length[200]|xss_clean'
+                 		'rules' => 'trim|max_length[200]|xss_clean|callback_validateDate'
             		),
 			array(
                                  'field' => 'flight_dep_start_hrs',
@@ -87,21 +100,46 @@ class Eligibility_exclusion extends Admin_Controller {
 
                        array(
                                 'field' => 'cabin_list[]',
-                                'label' => 'cabin_list',
+                                'label' => 'Cabin Exclusion',
                                 'rules' => 'trim|required|max_length[200]|xss_clean|callback_valOrigLevelValue'
                        ),
-
-			 array(
-                                  'field' => 'future_use',
-                                'label' => $this->lang->line("future_use"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean'
-                        ),
-
 
 		);
 		return $rules;
 	}
 	
+
+function validateDate(){
+ $efec = strtotime($this->input->post("flight_efec_date"));
+$disc = strtotime($this->input->post("flight_disc_date"));
+
+if($disc < $efec ) {
+  $this->form_validation->set_message("validateDate", "Flight discontinue date should be ahead of effective date ");
+	return false;
+} else {
+ 	return true;
+}
+
+
+}
+
+function valFrequency($num)
+{
+
+	$arr = str_split($num);
+    if (count($arr) > 7 )
+    {
+	$this->form_validation->set_message("valFrequency", "%s must be 7 digits");
+         return false;
+    }else if (count($arr) != count(array_unique($arr))){
+		$this->form_validation->set_message("valFrequency", "%s contains duplicate values");
+		return false;
+	}
+    else
+    {
+	return true;
+    }
+}
 	function valMarket($post_string){		
 	  if($post_string == '0'){
 		 $this->form_validation->set_message("valMarket", "%s is required");
@@ -178,11 +216,6 @@ class Eligibility_exclusion extends Admin_Controller {
                 }
 
 
-                if(!empty($this->input->post('sfuture_use'))){
-                          $this->data['future_use'] = $this->input->post('sfuture_use');
-                } else {
-                         $this->data['future_use'] = 1;
-                }
 
 
 		if(!empty($this->input->post('sflight_nbr_start'))){
@@ -223,6 +256,11 @@ class Eligibility_exclusion extends Admin_Controller {
 		$this->data['class_type'] = $this->airports_m->getDefns('13');
 		  $this->data['hrs'] = $this->eligibility_exclusion_m->time_dropdown('24',1);
            $this->data['mins'] = $this->eligibility_exclusion_m->time_dropdown('60',5);
+		$types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
+                  foreach($types as $type){
+                        $this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
+                  }
+
 
 
 		$this->data["subview"] = "eligibility_exclusion/index";
@@ -269,7 +307,6 @@ class Eligibility_exclusion extends Admin_Controller {
 				$array['frequency'] = implode(',',$this->input->post("frequency"));
 				$array['upgrade_from_cabin_type'] = $this->input->post("upgrade_from_cabin_type");
 				$array['upgrade_to_cabin_type'] = $this->input->post("upgrade_to_cabin_type");
-				$array["future_use"] = $this->input->post("future_use");
 				$array["carrier"] = $this->input->post("carrier");
 				$array["create_date"] = time();
 				$array["modify_date"] = time();
@@ -293,15 +330,24 @@ class Eligibility_exclusion extends Admin_Controller {
                 $id = $this->input->post('excl_grp_id');
                 if((int)$id) {
                         $rule = $this->eligibility_exclusion_m->getDataForEditRule($id);
-			$rule->flight_efec_date = date('d-m-Y',$rule->flight_efec_date);
-                  	$rule->flight_disc_date = date('d-m-Y',$rule->flight_disc_date);
+			$rule->flight_efec_date = $rule->flight_efec_date ? date('d-m-Y',$rule->flight_efec_date) : '';
+                  	$rule->flight_disc_date = $rule->flight_disc_date ? date('d-m-Y',$rule->flight_disc_date) : '';
 			$st_arr = explode(':',gmdate('H:i:s', $rule->flight_dep_start));
 			$rule->flight_dep_start_hrs = $st_arr[0];
 			$rule->flight_dep_start_mins  = $st_arr[1];
-
 			$st_arr = explode(':',gmdate('H:i:s', $rule->flight_dep_end));
                         $rule->flight_dep_end_hrs = $st_arr[0];
                         $rule->flight_dep_end_mins  = $st_arr[1];
+			$rule->orig_level_value = $rule->orig_level_value ? $rule->orig_level_value : '';
+			$rule->dest_level_value = $rule->dest_level_value ? $rule->dest_level_value : '';
+
+			$freq = $this->airports_m->getDefnsCodesListByType('14');
+			if($rule->frequency != 0 ) {
+			 $arr = explode(',',$rule->frequency);
+		  	    $rule->frequency = implode('',array_map(function($x) use ($freq) { return $freq[$x]; }, $arr));
+			    
+			
+			}
 			
 
                 }
@@ -323,8 +369,10 @@ public function save() {
                                 $json['status'] = validation_errors();
 	
 				$json['errors'] = array(
-                'orig_market_id' => form_error('orig_market_id'),
-                'dest_market_id' => form_error('dest_market_id'),
+                'orig_level_id' => form_error('orig_level_id'),
+                'dest_level_id' => form_error('dest_level_id'),
+		'orig_level_value' => form_error('orig_level_value'),
+                'dest_level_value' => form_error('dest_level_value'),
                 'carrier' => form_error('carrier'),
                 'flight_efec_date' => form_error('flight_efec_date'),
                                 'flight_disc_date' => form_error('flight_disc_date'),
@@ -334,23 +382,32 @@ public function save() {
                                 'flight_dep_end_mins' => form_error('flight_dep_end_mins'),
                                 'flight_nbr_start' => form_error('flight_nbr_start'),
                                 'flight_nbr_end' => form_error('flight_nbr_end'),
-				'frequency' => form_error('frequency[]'),
+				'frequency' => form_error('frequency'),
 				'cabin_list' => form_error('cabin_list'),
                 );
 
                         } else {
 				  $cabins = $this->input->post("cabin_list");
 				 $array["excl_reason_desc"] = $this->input->post("desc");
-                                $array["orig_market_id"] = $this->input->post("orig_market_id");
-                                $array["dest_market_id"] = $this->input->post("dest_market_id");
-                                $array["flight_nbr_start"] = $this->input->post("flight_nbr_start");
-                                 $array["flight_nbr_end"] = $this->input->post("flight_nbr_end");
+                                $array["orig_level_id"] = $this->input->post("orig_level_id") ? $this->input->post("orig_level_id") : 0;
+                                $array["dest_level_id"] = $this->input->post("dest_level_id") ? $this->input->post("dest_level_id") : 0;
+				$orig_level_value = $this->input->post("orig_level_value") ? $this->input->post("orig_level_value") : 0;					$dest_level_value = $this->input->post("dest_level_value") ? $this->input->post("dest_level_value") : 0;
+				 $array["orig_level_value"] = implode(',',$orig_level_value) ;
+                                $array["dest_level_value"] = implode(',',$dest_level_value);
+
+                                $array["flight_nbr_start"] = $this->input->post("flight_nbr_start") ? $this->input->post("flight_nbr_start") : 0;
+                                 $array["flight_nbr_end"] = $this->input->post("flight_nbr_end") ? $this->input->post("flight_nbr_end") : 0;
                                 $array["flight_efec_date"] = strtotime($this->input->post("flight_efec_date"));
                                 $array["flight_disc_date"] = strtotime($this->input->post("flight_disc_date"));
                                 $array['flight_dep_start'] = (3600 * $this->input->post("flight_dep_start_hrs")) + (60 * $this->input->post("flight_dep_start_mins"));
                                   $array['flight_dep_end'] = (3600 * $this->input->post("flight_dep_end_hrs"))  + ( 60 * $this->input->post("flight_dep_end_mins"));
-                                $array['frequency'] = implode(',',$this->input->post("frequency"));
-                                $array["future_use"] = $this->input->post("future_use");
+
+					$freq = $this->airports_m->getDefnsCodesListByType('14');
+					$frstr = $this->input->post("frequency") ? $this->input->post("frequency") : 0; 
+					if ( $frstr != '0') {
+						$arr = str_split($frstr);
+						$array["frequency"]  = implode(',',array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr));				
+					}
                                 $array["carrier"] = $this->input->post("carrier");
 
                                  if( $excl_grp_id) {
@@ -367,7 +424,7 @@ public function save() {
                                                 $this->eligibility_exclusion_m->insert_eligibility_rule($array);
                                         }
 
-					$this->eligibility_exclusion_m->update_eligibility_rule($array, $excl_grp_id);
+					//$this->eligibility_exclusion_m->update_eligibility_rule($array, $excl_grp_id);
                                         $json['action'] = 'edit';
 			
  				  } else {
@@ -452,7 +509,6 @@ public function save() {
                                 $array['frequency'] = implode(',',$this->input->post("frequency"));
                                 $array['upgrade_from_cabin_type'] = $this->input->post("upgrade_from_cabin_type");
                                 $array['upgrade_to_cabin_type'] = $this->input->post("upgrade_to_cabin_type");
-                                $array["future_use"] = $this->input->post("future_use");
 				$array["carrier"] = $this->input->post("carrier");
                                 $array["modify_date"] = time();
                                $array["modify_userID"] = $this->session->userdata('loginuserID');
@@ -559,8 +615,8 @@ function time_dropdown($val) {
 				
 	    $aColumns = array('MainSet.excl_grp,MainSet.eexcl_id','MainSet.excl_reason_desc' ,'MainSet.orig_mkt_name', 'MainSet.dest_mkt_name', 
         'MainSet.flight_efec_date', 'MainSet.flight_disc_date', 'MainSet.flight_dep_start', 'MainSet.flight_dep_end', 
-        'MainSet.flight_nbr', 'MainSet.from_class', 'MainSet.to_class', 'Subset.frequency', 'MainSet.future_use', 'MainSet.active',
-        'MainSet.orig_market_id', 'MainSet.dest_market_id','MainSet.upgrade_from_cabin_type', 'MainSet.upgrade_to_cabin_type',
+        'MainSet.flight_nbr', 'MainSet.from_class', 'MainSet.to_class', 'Subset.frequency',  'MainSet.active',
+        'MainSet.orig_level_id', 'MainSet.dest_level_id','MainSet.upgrade_from_cabin_type', 'MainSet.upgrade_to_cabin_type',
 	'MainSet.flight_nbr_start','MainSet.flight_nbr_end');
 	
 		$sLimit = "";
@@ -622,11 +678,11 @@ function time_dropdown($val) {
 
                         if(!empty($this->input->get('origID'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.orig_market_id = '.$this->input->get('origID');
+                                $sWhere .= 'MainSet.orig_level_id = '.$this->input->get('origID');
                         }
                         if(!empty($this->input->get('destID'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.dest_market_id = '.$this->input->get('destID');
+                                $sWhere .= 'MainSet.dest_level_id = '.$this->input->get('destID');
                         }
 
 
@@ -646,11 +702,6 @@ function time_dropdown($val) {
                         if(!empty($this->input->get('toClass'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.upgrade_to_cabin_type = '.$this->input->get('toClass');
-                        }
-
-			if(!empty($this->input->get('futureuse'))){
-                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.future_use = '.$this->input->get('futureuse');
                         }
 
 
@@ -715,38 +766,67 @@ function time_dropdown($val) {
 
 		$sQuery = "
 
-SELECT  SQL_CALC_FOUND_ROWS MainSet.eexcl_id,MainSet.excl_reason_desc ,MainSet.orig_mkt_name, MainSet.dest_mkt_name, 
+SELECT SQL_CALC_FOUND_ROWS MainSet.eexcl_id,MainSet.excl_reason_desc , 
         MainSet.flight_efec_date, MainSet.flight_disc_date, MainSet.flight_dep_start, MainSet.flight_dep_end, 
-        MainSet.flight_nbr, MainSet.from_class, MainSet.to_class, Subset.frequency, MainSet.future_use, MainSet.active,
-        MainSet.orig_market_id, MainSet.dest_market_id , Subset.dayslist , MainSet.upgrade_from_cabin_type, MainSet.upgrade_to_cabin_type,
+        MainSet.flight_nbr, MainSet.from_class, MainSet.to_class, SubSet.frequency, MainSet.active,
+        MainSet.orig_level, MainSet.dest_level, SubSet.orig_level_value, SubSet.dest_level_value , SubSet.dayslist , MainSet.upgrade_from_cabin_type, MainSet.upgrade_to_cabin_type,
         MainSet.flight_nbr_start, MainSet.flight_nbr_end , MainSet.carrier_code, MainSet.excl_grp
 
-FROM (     
-
-              select eexcl_id,excl_reason_desc, ex.orig_market_id , ex.dest_market_id ,oz.market_name as orig_mkt_name, dz.market_name as dest_mkt_name, 
+FROM
+(
+           select eexcl_id,excl_reason_desc, orig.alias as orig_level,dest.alias as dest_level,
               flight_efec_date, flight_disc_date, flight_dep_start, flight_dep_end, CONCAT(flight_nbr_start,'-',flight_nbr_end) 
-              as flight_nbr,fc.aln_data_value as from_class , tc.aln_data_value as to_class, future_use, ex.active , 
-              ex.upgrade_from_cabin_type, ex.upgrade_to_cabin_type  ,ex.flight_nbr_start, ex.flight_nbr_end, car.code as carrier_code, ex.excl_grp
+              as flight_nbr,fc.aln_data_value as from_class , tc.aln_data_value as to_class,  ex.active , 
+              ex.upgrade_from_cabin_type, ex.upgrade_to_cabin_type  ,ex.flight_nbr_start,
+	      ex.flight_nbr_end, car.code as carrier_code, ex.excl_grp
               from VX_aln_eligibility_excl_rules ex 
-
-              LEFT JOIN VX_aln_market_zone oz on (oz.market_id = ex.orig_market_id) 
-              LEFT JOIN VX_aln_market_zone dz on (dz.market_id = ex.dest_market_id)  
+	       LEFT JOIN vx_aln_data_types orig on (orig.vx_aln_data_typeID = ex.orig_level_id) 
+              LEFT JOIN vx_aln_data_types dest on (dest.vx_aln_data_typeID = ex.dest_level_id) 
               LEFT JOIN  vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type AND fc.aln_data_typeID = 13) 
               LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID  = ex.upgrade_to_cabin_type AND fc.aln_data_typeID = 13)
-	      LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID  = ex.carrier AND car.aln_data_typeID = 12)
-) as MainSet 
+              LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID  = ex.carrier AND car.aln_data_typeID = 12)
+
+) as MainSet
+
 LEFT JOIN (
-              select
-                        FirstSet.frequency,FirstSet.eexcl_id, FirstSet.dayslist
+                select FirstSet.eexcl_id, FirstSet.orig_level as orig_level_value,  SecondSet.dest_level as dest_level_value,ThirdSet.frequency, ThirdSet.dayslist 
                 from 
                         (         
-                              select mf.eexcl_id ,group_concat(c.aln_data_value) as frequency  , mf.frequency as dayslist
-
-                             from  VX_aln_eligibility_excl_rules mf 
-                             LEFT join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, mf.frequency) group by mf.eexcl_id 
+						SELECT       ex.eexcl_id as eexcl_id  , 
+                                                COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS orig_level 
+                                                FROM VX_aln_eligibility_excl_rules ex 
+                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                (find_in_set(c.vx_aln_data_defnsID, ex.orig_level_value) AND ex.orig_level_id in (1,2,3,4,5)) 
+                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                ON (find_in_set(mm.market_id, ex.orig_level_value) AND ex.orig_level_id = 17) group by 							ex.eexcl_id
                         ) as FirstSet  
-) as Subset on (MainSet.eexcl_id = Subset.eexcl_id) 
+                LEFT join 
 
+                        (       
+						SELECT       ex.eexcl_id as eexcl_id  , 
+                                                COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS dest_level 
+                                                FROM VX_aln_eligibility_excl_rules ex 
+                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                (find_in_set(c.vx_aln_data_defnsID, ex.dest_level_value) AND ex.dest_level_id in (1,2,3,4,5)) 
+                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                ON (find_in_set(mm.market_id, ex.dest_level_value) AND ex.dest_level_id = 17) group by 							ex.eexcl_id
+                        ) as SecondSet
+
+
+                        on FirstSet.eexcl_id = SecondSet.eexcl_id
+
+
+			 LEFT JOIN 
+                        (
+ 					select mf.eexcl_id ,group_concat(c.code) as frequency  , mf.frequency as dayslist
+	            		        from  VX_aln_eligibility_excl_rules mf 
+                                         LEFT join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, mf.frequency) group by mf.eexcl_id   
+                        ) as ThirdSet
+
+                        on ThirdSet.eexcl_id = FirstSet.eexcl_id
+
+
+		) as SubSet on (MainSet.eexcl_id = SubSet.eexcl_id)
 
 		$sWhere			
 		$sOrder
@@ -764,16 +844,35 @@ LEFT JOIN (
 		"aaData" => array()
 	  );
 
-		$i = 0;
 	  foreach($rResult as $rule){	
-		$rule->sno = ++$i;
 		$rule->ruleno = 'Rule#'.$rule->excl_grp;
-		$rule->flight_efec_date = date('d-m-Y',$rule->flight_efec_date);
-               $rule->flight_disc_date = date('d-m-Y',$rule->flight_disc_date);
-		$rule->flight_dep_start = gmdate('H:i:s', $rule->flight_dep_start);
-		$rule->flight_dep_end = gmdate('H:i:s', $rule->flight_dep_end);
+		$rule->flight_efec_date = $rule->flight_efec_date ? date('d-m-Y',$rule->flight_efec_date) : 'NA';
+               $rule->flight_disc_date = $rule->flight_disc_date ? date('d-m-Y',$rule->flight_disc_date) : 'NA';
+		$rule->flight_dep_start = $rule->flight_dep_start ? gmdate('H:i:s', $rule->flight_dep_start) : 'NA';
+		$rule->flight_dep_end = $rule->flight_dep_end ? gmdate('H:i:s', $rule->flight_dep_end) : 'NA';
+
+		$rule->orig_level = $rule->orig_level ? $rule->orig_level : 'NA';
+		$rule->dest_level = $rule->dest_level ? $rule->dest_level : 'NA';
+		$rule->orig_level_value = $rule->orig_level_value ? $rule->orig_level_value : 'NA';
+                $rule->dest_level_value = $rule->dest_level_value ? $rule->dest_level_value : 'NA';
+		$rule->carrier_code = $rule->carrier_code ? $rule->carrier_code : 'NA';
+
+		if($rule->flight_nbr == '0-0') {
+			$rule->flight_nbr = 'NA';
+		}
+		
+
+		if ( $rule->frequency != '' ) {
+			$freq = explode(',',$rule->frequency);
+			ksort($freq);
+			$arr = array('1','2','3','4','5','6','7');
+			$rule->frequency = implode('',array_map(function($x) use ($freq) { if(in_array($x,$freq)) return $x; else return '.'; }, $arr));
+				
+		} else {
+			$rule->frequency = 'NA';
+		}
+		
 		  
-		  $rule->future_use = ($rule->future_use)?"yes":"no";
 		  
 		  if(permissionChecker('eligibility_exclusion_edit')){ 			
  $rule->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_rule"  data-placement="top" onclick="editrule('.$rule->excl_grp.')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></a>';
