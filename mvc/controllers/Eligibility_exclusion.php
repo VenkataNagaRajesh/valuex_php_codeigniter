@@ -62,7 +62,7 @@ class Eligibility_exclusion extends Admin_Controller {
 			array(
                  		'field' => 'frequency',
                  		'label' => $this->lang->line("frequency"),
-                 		'rules' => 'trim|max_length[200]|xss_clean|callback_valFrequency'
+                 		'rules' => 'trim|max_length[7]|xss_clean|callback_valFrequency'
             		),
 			array(
                 		 'field' => 'flight_efec_date',
@@ -182,8 +182,15 @@ if($end < $start ) {
 
 function valFrequency($num)
 {
-
 	$arr = str_split($num);
+	$freq = range(1,7);
+	foreach($arr as $a ) {
+		if( !in_array($a, $freq) ) {
+			$this->form_validation->set_message("valFrequency", "%s must be in 1-7");
+			return false;
+		}
+
+	}
     if (count($arr) > 7 )
     {
 	$this->form_validation->set_message("valFrequency", "%s must be 7 digits");

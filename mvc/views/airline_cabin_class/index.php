@@ -128,7 +128,7 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
-      "columns": [{"data": "sno" },
+      "columns": [{"data": "map_id" },
 		  {"data": "carrier_name"},
 		   {"data": "airline_cabin"},
                   {"data": "airline_class" },

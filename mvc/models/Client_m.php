@@ -45,6 +45,9 @@ class client_m extends MY_Model {
 		if($userID != null){
 		  $this->db->where('c.userID',$userID);	
 		}
+		
+			
+		$this->db->group_by('c.VX_aln_clientID');
 		$query = $this->db->get();
 		return $query->row();
 	}

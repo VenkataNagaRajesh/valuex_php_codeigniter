@@ -571,10 +571,8 @@ class Marketzone extends Admin_Controller {
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 		if($userTypeID == 2){
-                     // $airlines = $this->airline_m->getClientAirline($userID, 1);
 			 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                        // $sWhere .= 'MainSet.airlineID = '.$airlines->airlineID;
-						$sWhere .= 'MainSet.airlineID = '.$this->session->userdata('login_user_airlineID');			
+			$sWhere .= 'MainSet.airlineID IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';			
                 } 
 
 $sQuery = "
