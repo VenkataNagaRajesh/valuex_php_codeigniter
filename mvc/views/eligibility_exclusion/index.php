@@ -13,28 +13,15 @@
 					<div class="col-md-3">
 						<label class="control-label">Origin Level</label>
 						<div class="col-md-6">
-<<<<<<< HEAD
-							<?php
-								$marketzones['0'] = ' Origin';
-								ksort($marketzones);
-								echo form_dropdown("orig_market_id", $marketzones,set_value("orig_market_id"), "id='orig_market_id' class='form-control hide-dropdown-icon select2'");?>
-=======
 		  <?php $aln_datatypes['0'] = "SELECT Level ";
                                               ksort($aln_datatypes);
 
                         echo form_dropdown("orig_level_id", $aln_datatypes, set_value("orig_level_id"), "id='orig_level_id' class='form-control select2'");
                                         ?>
->>>>>>> branch 'master' of https://gitlab.com/sweken-dev/valuex.git
 						</div>
 						<div class="col-md-6">
-<<<<<<< HEAD
-							 <?php
-								$marketzones['0'] = ' Dest';
-								echo form_dropdown("dest_market_id", $marketzones,set_value("dest_market_id"), "id='dest_market_id' class='form-control hide-dropdown-icon select2'"); ?>
-=======
 					<select  name="orig_level_value[]"  id="orig_level_value" class="form-control select2" multiple="multiple">
                                                         </select>
->>>>>>> branch 'master' of https://gitlab.com/sweken-dev/valuex.git
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -103,21 +90,8 @@
 					<div class="col-md-2">
 						<label class="control-label">Frequency</label>
 
-<<<<<<< HEAD
-
-							echo form_multiselect("frequency[]", $days_of_week, set_value("frequency"), "id='frequency' class='form-control select2'");  ?>  
-					</div>
-					<!--<div class="col-md-1">	
-						<label class="control-label" style="font-size:10px;padding:5px 3px;">Future Use</label>
-						 <?php
-							 $toggle[1] = "Yes";
-							  $toggle[0] = "No";
-							  echo form_dropdown("future_use", $toggle,set_value("future_use",1), "id='future_use' class='form-control hide-dropdown-icon'");?>
-					</div>-->
-=======
 		 <input type="text" class="form-control" placeholder="Frequency" id="frequency" name="frequency" value="<?=set_value('frequency')?>" >
 					</div>
->>>>>>> branch 'master' of https://gitlab.com/sweken-dev/valuex.git
 
 				</div>
 			</div>
@@ -404,20 +378,6 @@
 
                  </div>
 
-<<<<<<< HEAD
-		 <!--<div class="col-sm-2">
-                            <?php
-
-						$toggle['-1'] = ' future use';
-                                                          $toggle[1] = "Yes";
-                                                          $toggle[0] = "No";
-                                                          echo form_dropdown("sfuture_use", $toggle,set_value("sfuture_use",$future_use), "id='sfuture_use' class='form-control hide-dropdown-icon select2'");
-                                                        ?>
-                        </div>-->
-=======
->>>>>>> branch 'master' of https://gitlab.com/sweken-dev/valuex.git
-                                  
-
                 <div class="col-sm-2">
 		<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#ruleslist').dataTable().fnDestroy();;loaddatatable();">Filter</a>
 
@@ -593,7 +553,6 @@ function loaddatatable() {
       }
   }); 
 $( ".select2" ).select2({closeOnSelect:false,
-                         placeholder: " Frequency"});
                          placeholder: "Level Value"});
 
 $("#flight_efec_date").datepicker();
