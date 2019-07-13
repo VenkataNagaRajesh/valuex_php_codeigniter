@@ -216,6 +216,7 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 		  
 		 $this->db->select('vx_aln_data_defnsID, aln_data_value')->from('vx_aln_data_defns');
          	 $this->db->where('aln_data_typeID',$id);
+		$this->db->order_by('aln_data_value');
          	$query = $this->db->get();
          	$result =  $query->result();
 		return $result;
