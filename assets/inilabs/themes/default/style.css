@@ -4067,9 +4067,7 @@ fieldset[disabled] .btn-vk.active {
 .fclr-bar  .table-responsive .form-group .col-md-12{
 	padding:0;
 }
-.fclr-bar .table-responsive  .form-group .form-control{
-	margin-bottom:10px;
-}
+
 .fclr-bar .fclr-table-add thead th{
 	border-right:solid 3px #fff;
 }
@@ -4104,7 +4102,7 @@ fieldset[disabled] .btn-vk.active {
 .eer .form-horizontal .form-group .form-control{
 	margin-bottom:12px;
 }
-.eer .form-horizontal .form-group .col-md-6{
+.eer .form-horizontal .form-group .col-md-6, .eer .form-horizontal .form-group .col-md-4 .col-md-3{
 	padding:0;
 }
 .eer .form-horizontal .rule-box ul{
@@ -4116,6 +4114,11 @@ fieldset[disabled] .btn-vk.active {
 }
 .eer .form-horizontal .rule-box .cabins{
 	margin-bottom:20px;
+}
+.eer .form-horizontal .rule-box .cabins p{
+	color:#333;
+	font-weight:bold;
+	text-align:center;
 }
 .eer .form-horizontal .rule-box .cabins .table tr td{
 	border: solid 7px #ddd;
@@ -4208,6 +4211,9 @@ fieldset[disabled] .btn-vk.active {
 	overflow: auto;
 }
 /*tree code*/
+.form-group .select-form .form-control, .form-group .input-group{
+	margin-bottom:15px;
+}
 #mytree{
 	border: solid 1px #999;
 	margin: 12px 0;
