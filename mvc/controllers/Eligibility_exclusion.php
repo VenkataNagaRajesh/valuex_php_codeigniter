@@ -396,10 +396,10 @@ function valFrequency($num)
                         $rule = $this->eligibility_exclusion_m->getDataForEditRule($id);
 			$rule->flight_efec_date = $rule->flight_efec_date ? date('d-m-Y',$rule->flight_efec_date) : '';
                   	$rule->flight_disc_date = $rule->flight_disc_date ? date('d-m-Y',$rule->flight_disc_date) : '';
-			$st_arr = explode(':',gmdate('H:i:s', $rule->flight_dep_start));
+			$st_arr = explode(':',gmdate('H:i', $rule->flight_dep_start));
 			$rule->flight_dep_start_hrs = $st_arr[0];
 			$rule->flight_dep_start_mins  = $st_arr[1];
-			$st_arr = explode(':',gmdate('H:i:s', $rule->flight_dep_end));
+			$st_arr = explode(':',gmdate('H:i', $rule->flight_dep_end));
                         $rule->flight_dep_end_hrs = $st_arr[0];
                         $rule->flight_dep_end_mins  = $st_arr[1];
 			$rule->orig_level_value = $rule->orig_level_value ? $rule->orig_level_value : '';
@@ -912,8 +912,8 @@ LEFT JOIN (
 		$rule->ruleno = 'Rule#'.$rule->excl_grp;
 		$rule->flight_efec_date = $rule->flight_efec_date ? date('d-m-Y',$rule->flight_efec_date) : 'NA';
                $rule->flight_disc_date = $rule->flight_disc_date ? date('d-m-Y',$rule->flight_disc_date) : 'NA';
-		$rule->flight_dep_start = $rule->flight_dep_start ? gmdate('H:i:s', $rule->flight_dep_start) : 'NA';
-		$rule->flight_dep_end = $rule->flight_dep_end ? gmdate('H:i:s', $rule->flight_dep_end) : 'NA';
+		$rule->flight_dep_start = $rule->flight_dep_start ? gmdate('H:i', $rule->flight_dep_start) : 'NA';
+		$rule->flight_dep_end = $rule->flight_dep_end ? gmdate('H:i', $rule->flight_dep_end) : 'NA';
 
 		$rule->orig_level = $rule->orig_level ? $rule->orig_level : 'NA';
 		$rule->dest_level = $rule->dest_level ? $rule->dest_level : 'NA';
