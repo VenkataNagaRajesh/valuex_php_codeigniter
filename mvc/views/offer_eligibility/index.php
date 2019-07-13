@@ -1,7 +1,7 @@
 <div class="off-elg">
 	<h2 class="title-tool-bar">Offer Eligibility</h2>
 	<div class="col-md-12 off-elg-filter-box">
- <a href="<?php echo base_url('offer_eligibility/generatedata') ?>">
+ <a href="<?php echo base_url('offer_eligibility/generatedata') ?>" class="btn btn-danger">
                                 <i class="fa fa-upload"></i>
                                 <?=$this->lang->line('generate_offer_eligibility')?>
                         </a>

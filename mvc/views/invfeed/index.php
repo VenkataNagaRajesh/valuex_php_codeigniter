@@ -1,5 +1,5 @@
 <div class="box">
-    <div class="box-header">
+    <div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
 
         <ol class="breadcrumb">
@@ -13,14 +13,14 @@
             <div class="col-sm-12">              
               <h5 class="page-header">                        
 		<?php if(permissionChecker('invfeed_upload')) { ?>
-                  <a href="<?php echo base_url('invfeed/upload') ?>">
+                  <a href="<?php echo base_url('invfeed/upload') ?>" class="btn btn-danger">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('upload_invfeed')?>
 
                   </a>
 
 		&nbsp;&nbsp;
-                           <a href="<?php echo base_url('invfeed/downloadFormat') ?>">
+                           <a href="<?php echo base_url('invfeed/downloadFormat') ?>" class="btn btn-danger">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('download_format')?>
                   </a>
@@ -33,7 +33,7 @@
 
 			 <div class="col-sm-2">
                <?php
-                        $airports['0'] = 'Select Origin Airport';
+                        $airports['0'] = ' Origin Airport';
                         ksort($airports);
 
                                    echo form_dropdown("origin_airport", $airports,set_value("origin_airport",$origin_airport), "id='origin_airport' class='form-control hide-dropdown-icon select2'");    ?>
@@ -43,7 +43,7 @@
 
 	    <div class="col-sm-2">
                <?php
-                        $airports['0'] = 'Select Dest Airport';
+                        $airports['0'] = ' Dest Airport';
                         ksort($airports);
 
                                    echo form_dropdown("dest_airport", $airports,set_value("dest_airport",$dest_airport), "id='dest_airport' class='form-control hide-dropdown-icon select2'");    ?>
@@ -52,7 +52,7 @@
 
  <div class="col-sm-2">
                <?php
-                        $airlines['0'] = 'Select Airlines';
+                        $airlines['0'] = ' Airlines';
                         ksort($airlines);
 
                                    echo form_dropdown("airline_code", $airlines,set_value("airline_code",$airline_code), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
@@ -62,7 +62,7 @@
 
     <div class="col-sm-2">
                <?php
-                        $cabins['0'] = 'Select Cabin';
+                        $cabins['0'] = ' Cabin';
                         ksort($class);
 
                                    echo form_dropdown("cabin", $cabins,set_value("cabin",$cabin), "id='cabin' class='form-control hide-dropdown-icon select2'");    ?>
@@ -70,7 +70,7 @@
                 </div>
 
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                 </div>	             				
 			  </div>
 			 </form>			

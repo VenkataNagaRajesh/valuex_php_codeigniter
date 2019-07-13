@@ -35,6 +35,9 @@ body {
   font-size:12px;
   text-transform:capitalize;
 }
+.content input{
+	text-transform:capitalize;
+}
 a {
   color: #707478;
 }
@@ -4186,7 +4189,13 @@ fieldset[disabled] .btn-vk.active {
 	color: #ff6633;
 	font-size: 14px;
 	padding: 8px 15px;
-	margin: 15px 0;
+	margin: 10px 0;
+}
+.off-elg-filter-box .btn-danger{
+	margin: 10px 0 2px;
+}
+.off-elg h2{
+	margin:10px 0;
 }
 .off-elg .form-horizontal .form-group .select-form .form-control{
 	margin-bottom:15px;
@@ -4198,7 +4207,7 @@ fieldset[disabled] .btn-vk.active {
 	margin-bottom:15px;
 }
 .off-elg .form-horizontal .form-group .btn-danger{
-	margin:15px 0px;
+	margin:8px 0px;
 }
 .off-elg .off-elg-filter-box{
 	border:solid 1px #999;
@@ -4436,4 +4445,7 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 	white-space: normal;
 	display: inline-table;
 	font-weight:bold;
+}
+.box-body .form-group{
+	margin-bottom:0;
 }

@@ -369,7 +369,7 @@
                                   
 
                 <div class="col-sm-2">
-		<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#ruleslist').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+		<a href="#" type="button"  id='btn_txt' class="form-control btn btn-danger" onclick="$('#ruleslist').dataTable().fnDestroy();;loaddatatable();">Filter</a>
 
                 </div>
 
