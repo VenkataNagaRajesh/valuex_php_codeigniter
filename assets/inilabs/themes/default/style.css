@@ -1534,7 +1534,10 @@ input.btn-success{
 
 }
 .box .box-header a {
-  color: #CCCCCC;
+  color: #fff;
+}
+.box .box-header .breadcrumb .active{
+	color:#fff;
 }
 .box .box-header > .box-tools {
   padding: 5px 10px 5px 5px;
