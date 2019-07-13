@@ -55,7 +55,8 @@
                   <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                 </div>	             				
 			  </div>
-			 </form>				
+			 </form>
+			<div class="col-md-12">			 
             <div id="hide-table">
                <table id="master" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>
@@ -80,6 +81,7 @@
                  </tbody>
               </table>
             </div>
+			</div>
           </div>
        </div>
    </div>
