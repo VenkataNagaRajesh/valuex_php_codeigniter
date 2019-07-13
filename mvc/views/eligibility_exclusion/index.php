@@ -285,7 +285,6 @@
                         <input type="text" class="form-control" id="sflight_disc_date" name="sflight_disc_date"  placeholder=' flight discontinue Date' value="<?=set_value('sflight_disc_date',$disc_date)?>" >
                 </div>
 </div></div>
-<br> 
 <div class='form-group'>
 <div class='col-sm-12'>
   <div class="col-sm-2">
@@ -346,7 +345,6 @@
 
                 </div>
 </div></div>
-<br>
 <div class='form-group'>
 <div class="col-sm-12">
 
