@@ -42,7 +42,7 @@
 					<div class="col-md-3">
 						<label class="control-label">Carrier</label>
 						<?php
-							$carriers[0] = ' Carrier';
+							$carriers[0] = 'Select Carrier';
 							ksort($carriers);
 							  echo form_dropdown("carrier", $carriers,set_value("carrier"), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
 
@@ -100,6 +100,7 @@
 					<div class="col-md-9">
 						<ul>
 							<!--<li>Rule Action<br>Flights to be considered upgrade offer</li> -->
+							<li style="margin-bottom:10em;">Cabin Exclusion</li>
 							<!--<li>Cutoff time for offer acceptance</li>-->
 						</ul>
 					</div>
@@ -108,7 +109,6 @@
 
 						<div class="cabins">
 							<table class="table">
-								<p style="text-align:center;"><b>Cabin Exclusion</b></p>
 								<tr>
 									<td>
 										<label class="btn btn-success">
@@ -256,7 +256,7 @@
 		<div class="col-sm-12">
                            <div class="col-sm-2">
                <?php 
-			$marketzones['0'] = ' Origin Market';
+			$marketzones['0'] = 'Select Origin Market';
 			ksort($marketzones);
 
                                    echo form_dropdown("sorig_market_id", $marketzones,set_value("sorig_market_id",$origmarketID), "id='sorig_market_id' class='form-control hide-dropdown-icon select2'");    ?>
@@ -264,31 +264,31 @@
                 </div>
 
 <div class="col-sm-2">
-               <?php $marketzones['0'] = ' Destination Market';
+               <?php $marketzones['0'] = 'Select Destination Market';
 			ksort($marketzones);
                                    echo form_dropdown("sdest_market_id", $marketzones,set_value("sdest_market_id",$destmarketID), "id='sdest_market_id' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
 
 		                <div class="col-sm-2">
-                        <input type="text" class="form-control" id="sflight_nbr_start" name="sflight_nbr_start"  placeholder=' flight nbr start' value="<?=set_value('sflight_nbr_start',$nbr_start)?>" >
+                        <input type="text" class="form-control" id="sflight_nbr_start" name="sflight_nbr_start"  placeholder='Select flight nbr start' value="<?=set_value('sflight_nbr_start',$nbr_start)?>" >
                 </div>
 
 
 
                 <div class="col-sm-2">
-                        <input type="text" class="form-control" id="sflight_nbr_end" name="sflight_nbr_end"  placeholder=' flight nbr end' value="<?=set_value('sflight_nbr_end',$nbr_end)?>" >
+                        <input type="text" class="form-control" id="sflight_nbr_end" name="sflight_nbr_end"  placeholder='Select flight nbr end' value="<?=set_value('sflight_nbr_end',$nbr_end)?>" >
                 </div>
 
 
                            <div class="col-sm-2">
-                        <input type="text" class="form-control" id="sflight_efec_date" name="sflight_efec_date"  placeholder=' flight Effective Date' value="<?=set_value('sflight_efec_date',$efec_date)?>" >
+                        <input type="text" class="form-control" id="sflight_efec_date" name="sflight_efec_date"  placeholder='Select flight Effective Date' value="<?=set_value('sflight_efec_date',$efec_date)?>" >
                 </div>
 
 
 
                 <div class="col-sm-2">
-                        <input type="text" class="form-control" id="sflight_disc_date" name="sflight_disc_date"  placeholder=' flight discontinue Date' value="<?=set_value('sflight_disc_date',$disc_date)?>" >
+                        <input type="text" class="form-control" id="sflight_disc_date" name="sflight_disc_date"  placeholder='Select flight discontinue Date' value="<?=set_value('sflight_disc_date',$disc_date)?>" >
                 </div>
 </div></div>
 <br> 
@@ -296,7 +296,7 @@
 <div class='col-sm-12'>
   <div class="col-sm-2">
                            <?php
-				$hrs['-1'] = ' Departure Start Hrs';
+				$hrs['-1'] = 'Select Departure Start Hrs';
 				ksort($hrs);
 
                                     echo form_dropdown("sflight_dep_start_hrs", $hrs,set_value("sflight_dep_start_hrs"), "id='sflight_dep_start_hrs' class='form-control hide-dropdown-icon select2'");
@@ -304,7 +304,7 @@
                                 </div>
                                 <div class="col-sm-2">
                 <?php
-				$mins['-1'] = ' Departure start Mins';
+				$mins['-1'] = 'Select Departure start Mins';
 				ksort($mins);
                                                     echo form_dropdown("sflight_dep_start_mins", $mins,set_value("sflight_dep_start_mins"), "id='sflight_dep_start_mins' class='form-control hide-dropdown-icon select2'");
 
@@ -312,7 +312,7 @@
                                 </div>
   <div class="col-sm-2">
                            <?php
-		 $hrs['-1'] = ' Departure End Hrs';
+		 $hrs['-1'] = 'Select Departure End Hrs';
                                 ksort($hrs);
 
                                     echo form_dropdown("sflight_dep_end_hrs", $hrs,set_value("sflight_dep_end_hrs"), "id='sflight_dep_end_hrs' class='form-control hide-dropdown-icon select2'");
@@ -321,7 +321,7 @@
                                 <div class="col-sm-2">
                 <?php
 
-			 $mins['-1'] = ' Departure End Mins';
+			 $mins['-1'] = 'Select Departure End Mins';
                                 ksort($mins);
                                                     echo form_dropdown("sflight_dep_end_mins", $mins,set_value("sflight_dep_end_mins"), "id='sflight_dep_end_mins' class='form-control hide-dropdown-icon select2'");
 
@@ -331,7 +331,7 @@
 
 	   <div class="col-sm-2">
                <?php
-                        $class_list['0'] = ' From Cabin';
+                        $class_list['0'] = 'Select From Cabin';
                         foreach ($class_type as $class) {
                                 $class_list[$class->vx_aln_data_defnsID] = $class->aln_data_value;
                         }
@@ -345,7 +345,7 @@
 
 	     <div class="col-sm-2">
                <?php
-                        $class_list['0'] = ' To Cabin';
+                        $class_list['0'] = 'Select To Cabin';
 			ksort($class_list);
 
                                    echo form_dropdown("sto_class", $class_list,set_value("sto_class",$toclass), "id='sto_class' class='form-control hide-dropdown-icon select2'");    ?>
@@ -370,13 +370,15 @@
           <div class="col-sm-2">
 
                         <?php
-                        $status['-1'] = ' Status';
+                        $status['-1'] = 'Select Status';
                         $status['1'] = 'Active';
                         $status['0'] = 'In Active';
                         echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 
 
                  </div>
+
+                                  
 
                 <div class="col-sm-2">
 		<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#ruleslist').dataTable().fnDestroy();;loaddatatable();">Filter</a>
