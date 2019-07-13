@@ -11,47 +11,19 @@
 						<input type="text" placeholder="Enter Name" class="form-control" id="desc" name="desc" value="<?=set_value('desc')?>" >
 					</div>
 					<div class="col-md-3">
-						<label class="control-label">Origin Level</label>
+						<label class="control-label">Origin & Destination</label>
 						<div class="col-md-6">
-<<<<<<< HEAD
 							<?php
 								$marketzones['0'] = ' Origin';
 								ksort($marketzones);
 								echo form_dropdown("orig_market_id", $marketzones,set_value("orig_market_id"), "id='orig_market_id' class='form-control hide-dropdown-icon select2'");?>
-=======
-		  <?php $aln_datatypes['0'] = "SELECT Level ";
-                                              ksort($aln_datatypes);
-
-                        echo form_dropdown("orig_level_id", $aln_datatypes, set_value("orig_level_id"), "id='orig_level_id' class='form-control select2'");
-                                        ?>
->>>>>>> branch 'master' of https://gitlab.com/sweken-dev/valuex.git
 						</div>
 						<div class="col-md-6">
-<<<<<<< HEAD
 							 <?php
 								$marketzones['0'] = ' Dest';
 								echo form_dropdown("dest_market_id", $marketzones,set_value("dest_market_id"), "id='dest_market_id' class='form-control hide-dropdown-icon select2'"); ?>
-=======
-					<select  name="orig_level_value[]"  id="orig_level_value" class="form-control select2" multiple="multiple">
-                                                        </select>
->>>>>>> branch 'master' of https://gitlab.com/sweken-dev/valuex.git
 						</div>
 					</div>
-					<div class="col-md-3">
-                                                <label class="control-label">Destination Level</label>
-                                                <div class="col-md-6">
-                  <?php $aln_datatypes['0'] = "SELECT Level ";
-                                              ksort($aln_datatypes);
-
-                        echo form_dropdown("dest_level_id", $aln_datatypes, set_value("dest_level_id"), "id='dest_level_id' class='form-control select2'");
-                                        ?>
-                                                </div>
-                                                <div class="col-md-6">
-                                        <select  name="dest_level_value[]"  id="dest_level_value" class="form-control select2" multiple="multiple">
-                                                        </select>
-                                                </div>
-                                        </div>
-
 					<div class="col-md-3">
 						<label class="control-label">Carrier</label>
 						<?php
@@ -102,8 +74,8 @@
 					</div>
 					<div class="col-md-2">
 						<label class="control-label">Frequency</label>
+						<?php
 
-<<<<<<< HEAD
 
 							echo form_multiselect("frequency[]", $days_of_week, set_value("frequency"), "id='frequency' class='form-control select2'");  ?>  
 					</div>
@@ -114,10 +86,6 @@
 							  $toggle[0] = "No";
 							  echo form_dropdown("future_use", $toggle,set_value("future_use",1), "id='future_use' class='form-control hide-dropdown-icon'");?>
 					</div>-->
-=======
-		 <input type="text" class="form-control" placeholder="Frequency" id="frequency" name="frequency" value="<?=set_value('frequency')?>" >
-					</div>
->>>>>>> branch 'master' of https://gitlab.com/sweken-dev/valuex.git
 
 				</div>
 			</div>
@@ -404,7 +372,6 @@
 
                  </div>
 
-<<<<<<< HEAD
 		 <!--<div class="col-sm-2">
                             <?php
 
@@ -414,8 +381,6 @@
                                                           echo form_dropdown("sfuture_use", $toggle,set_value("sfuture_use",$future_use), "id='sfuture_use' class='form-control hide-dropdown-icon select2'");
                                                         ?>
                         </div>-->
-=======
->>>>>>> branch 'master' of https://gitlab.com/sweken-dev/valuex.git
                                   
 
                 <div class="col-sm-2">
@@ -439,21 +404,20 @@
 							<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
 							<th class="col-lg-1">Rule#</th>
 							<th class="col-lg-1"><?=$this->lang->line('desc')?></th>
-							<th class="col-lg-1"><?php echo "Origin Level";?></th>
-                            				<th class="col-lg-1"><?php echo "Orig Level Value";?></th>
-							<th class="col-lg-1"><?php echo "Dest Level";?></th>
-                            				<th class="col-lg-1"><?php echo "Dest Level Value";?></th>
+							<th class="col-lg-1"><?=$this->lang->line('orig_market')?></th>
+                            <th class="col-lg-1"><?=$this->lang->line('dest_market')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_efec_date')?></th>
-                            				<th class="col-lg-1"><?=$this->lang->line('flight_disc_date')?></th>
+                            <th class="col-lg-1"><?=$this->lang->line('flight_disc_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_dep_start')?></th>
-                            				<th class="col-lg-1"><?=$this->lang->line('flight_dep_end')?></th>
+                            <th class="col-lg-1"><?=$this->lang->line('flight_dep_end')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_nbr_range')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('upgrade_from')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('upgrade_to')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('frequency')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('future_use')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('rule_status')?></th> 
-                            				<th class="col-lg-2"><?=$this->lang->line('action')?></th>
+                            <th class="col-lg-2"><?=$this->lang->line('action')?></th>
                        </tr>
                    </thead>
                     <tbody>                            
@@ -484,6 +448,7 @@ function loaddatatable() {
                    {"name": "nbrEnd","value": $("#sflight_nbr_end").val()},
 		   {"name": "efecDate","value": $("#sflight_efec_date").val()},
                    {"name": "discDate","value": $("#sflight_disc_date").val()},
+		   {"name": "futureuse","value": $("#sfuture_use").val()},
 
 		   {"name": "startHrs","value": $("#sflight_dep_start_hrs").val()},
                    {"name": "startMins","value": $("#sflight_dep_start_mins").val()},
@@ -497,13 +462,11 @@ function loaddatatable() {
                     "data": aoData,
                     "success": fnCallback
                          } ); }, 
-      "columns": [{"data": "eexcl_id" },
+      "columns": [{"data": "sno" },
 		  {"data": "ruleno" },
                   {"data": "excl_reason_desc" },
-                                  {"data": "orig_level" },
-                                  {"data": "orig_level_value" },	
-				{"data": "dest_level" },
-                                  {"data": "dest_level_value" },
+                                  {"data": "orig_mkt_name" },
+                                  {"data": "dest_mkt_name" },
 				  {"data": "carrier_code" },
                                   {"data": "flight_efec_date" }, 
                   {"data": "flight_disc_date"},
@@ -513,6 +476,7 @@ function loaddatatable() {
                                   {"data": "from_class"},
                                          {"data": "to_class" },
                                   {"data": "frequency"},
+                                  {"data": "future_use"},
 				  {"data": "active"},
                   {"data": "action"}
 
@@ -594,7 +558,6 @@ function loaddatatable() {
   }); 
 $( ".select2" ).select2({closeOnSelect:false,
                          placeholder: " Frequency"});
-                         placeholder: "Level Value"});
 
 $("#flight_efec_date").datepicker();
 $("#flight_disc_date").datepicker();
@@ -615,10 +578,8 @@ $.ajax({
           async: false,
           type: 'POST',
           url: "<?=base_url('eligibility_exclusion/save')?>",          
-                  data: {"orig_level_id" :$('#orig_level_id').val(),
-                         "dest_level_id":$('#dest_level_id').val(),
-			 "orig_level_value" :$('#orig_level_value').val(),
-                         "dest_level_value":$('#dest_level_value').val(),
+                  data: {"orig_market_id" :$('#orig_market_id').val(),
+                         "dest_market_id":$('#dest_market_id').val(),
 			 "desc":$('#desc').val(),
                          "carrier":$('#carrier').val(),
                          "flight_efec_date":$('#flight_efec_date').val(),
@@ -631,6 +592,7 @@ $.ajax({
                           "flight_nbr_end":$('#flight_nbr_end').val(),
                           "frequency":$('#frequency').val(),
 				"cabin_list":favorite,
+                          "future_use":$('#future_use').val(),
                            "excl_id":$('#excl_id').val(),
 			   },
 
@@ -681,30 +643,15 @@ $.ajax({
           dataType: "html",                     
           success: function(data) {
                 var ruleinfo = jQuery.parseJSON(data);
-		form_reset();
                 $('#btn_txt').text('Update Rule');
 		$('#desc').val(ruleinfo['excl_reason_desc']);
-                $('#orig_level_id').val(ruleinfo['orig_level_id']);
-                $('#orig_level_id').trigger('change');
-
-		if( ruleinfo['orig_level_value'] != '') {
-		var orig = ruleinfo['orig_level_value'].split(',');
-                $('#orig_level_value').val(orig).trigger('change');
-		}
-
-                $('#dest_level_id').val(ruleinfo['dest_level_id']);
-                $('#dest_level_id').trigger('change');
-
-
-		if( ruleinfo['dest_level_value'] != '' ) {
-		var dest = ruleinfo['dest_level_value'].split(',');
-                $('#dest_level_value').val(dest).trigger('change');
-		}
-
+                $('#orig_market_id').val(ruleinfo['orig_market_id']);
+                $('#orig_market_id').trigger('change');
+                $('#dest_market_id').val(ruleinfo['dest_market_id']);
+                $('#orig_market_id').trigger('change');
 		$('#carrier').val(ruleinfo['carrier']);
                 $('#carrier').trigger('change');
 
-		
                 $('#flight_efec_date').val(ruleinfo['flight_efec_date']);
 		$('#flight_efec_date').trigger('change');
 
@@ -722,22 +669,16 @@ $.ajax({
                 $('#flight_dep_end_mins').val(ruleinfo['flight_dep_end_mins']);
                 $('#flight_dep_end_mins').trigger('change');
 
-		if ( ruleinfo['flight_nbr_start'] == '0' ) {	
-			ruleinfo['flight_nbr_start'] = '';
-		}
-		$('#flight_nbr_start').val(ruleinfo['flight_nbr_start']);
-		
-	       if ( ruleinfo['flight_nbr_end'] == '0' ) {    
-                        ruleinfo['flight_nbr_end'] = '';
-                }
 
+		$('#flight_nbr_start').val(ruleinfo['flight_nbr_start']);
 		$('#flight_nbr_end').val(ruleinfo['flight_nbr_end']);
 
-		if (ruleinfo['frequency'] == '0') {
-			ruleinfo['frequency'] = '';
-		}
+		var freq = ruleinfo['frequency'].split(',');
+                $('#frequency').val(freq).trigger('change');
 
-                $('#frequency').val(ruleinfo['frequency']);;
+
+		$('#future_use').val(ruleinfo['future_use']);
+                $('#future_use').trigger('change');
 
 		var cab = ruleinfo['cabins'].split(',');
 		$.each(cab, function (index, value) {
@@ -766,13 +707,12 @@ function form_reset(){
 	  $('#flight_nbr_end').val("");
 	  $('#flight_efec_date').val("");
           $('#flight_disc_date').val("");
-	 $('#frequency').val('');
           
            $("#carrier").val(0).trigger('change');
-	   $("#orig_level_id").val(0).trigger('change');
-	   $("#dest_level_id").val(0).trigger('change');
-           $("#orig_level_value").val(0).trigger('change');
-	   $("#dest_level_value").val(0).trigger('change');
+	   $("#orig_market_id").val(0).trigger('change');
+	   $("#dest_market_id").val(0).trigger('change');
+           $("#frequency").val(0).trigger('change');
+	   $("#future_use").val(0).trigger('change');
 	   $("#flight_dep_start_hrs").val('00').trigger('change');
 	   $("#flight_dep_start_mins").val('00').trigger('change');
 	   $("#flight_dep_end_hrs").val('00').trigger('change');
@@ -789,33 +729,6 @@ function form_reset(){
 
 </script>
 <script>
-$('#orig_level_id').change(function(event) {    
-        $('#orig_level_value').val(null).trigger('change')
-  var level_id = $(this).val();                 
-$.ajax({     async: false,            
-             type: 'POST',            
-             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-             data: "id=" + level_id,            
-             dataType: "html",                                  
-             success: function(data) {               
-             $('#orig_level_value').html(data); }        
-      });       
-});
-
-$('#dest_level_id').change(function(event) {    
-        $('#dest_level_value').val(null).trigger('change')
-  var level_id = $(this).val();                 
-$.ajax({     async: false,            
-             type: 'POST',            
-             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-             data: "id=" + level_id,            
-             dataType: "html",                                  
-             success: function(data) {               
-             $('#dest_level_value').html(data); }        
-      });       
-});
-
-
 function myFunction(x) {
   x.classList.toggle("fa-thumbs-up");
 }
