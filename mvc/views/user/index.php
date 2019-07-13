@@ -1,29 +1,25 @@
 
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa fa-users"></i> <?=$this->lang->line('panel_title')?></h3>
-
-       
+        <h3 class="box-title"><i class="fa fa-users"></i> <?=$this->lang->line('panel_title')?></h3>      
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active"><?=$this->lang->line('menu_user')?></li>
         </ol>
     </div><!-- /.box-header -->
+	 <?php 
+           if(permissionChecker('user_add')) {  ?>
+           <h5 class="page-header">
+               <a href="<?php echo base_url('user/add') ?>" data-toggle="tooltip" data-title="Add USer" data-placement="left" class="btn btn-danger">
+                   <i class="fa fa-plus"></i> 
+                   <!--<?=$this->lang->line('add_title')?>-->
+               </a>
+           </h5>
+     <?php } ?>
     <!-- form start -->
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">
-                <?php 
-                    if(permissionChecker('user_add')) {
-                ?>
-                    <h5 class="page-header">
-                        <a href="<?php echo base_url('user/add') ?>">
-                            <i class="fa fa-plus"></i> 
-                            <?=$this->lang->line('add_title')?>
-                        </a>
-                    </h5>
-                <?php } ?>
-
                 <div id="hide-table">
                     <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                         <thead>

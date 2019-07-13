@@ -8,26 +8,27 @@
             <li class="active"><?=$this->lang->line('menu_airline')?></li>
         </ol>
     </div><!-- /.box-header -->
+	 <h5 class="page-header">     
+		 <a href="<?php echo base_url('airline/addFlights') ?>" data-toggle="tooltip" data-title="Add Flights" data-placement="left" class="btn btn-danger">
+             <i class="fa fa-plus"></i>
+             <!--<?=$this->lang->line('add_flights')?>-->
+         </a>
+	 </h5>
     <!-- form start -->
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">              
-              <h5 class="page-header">                        
+              <h5 class="page-hdr">                        
 					<?php if(permissionChecker('airline_upload')) { ?>
-                  <a href="<?php echo base_url('airline/upload') ?>">
+                  <a href="<?php echo base_url('airline/upload') ?>" class="btn btn-danger">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('upload_airline')?>
                   </a>
 				  &nbsp;&nbsp;
-				  <a href="<?php echo base_url('airline/downloadFormat') ?>">
+				  <a href="<?php echo base_url('airline/downloadFormat') ?>" class="btn btn-danger">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('download_format')?>
-                  </a>
-				  &nbsp;&nbsp;
-				   <a href="<?php echo base_url('airline/addFlights') ?>">
-                      <i class="fa fa-plus"></i>
-                      <?=$this->lang->line('add_flights')?>
-                  </a>
+                  </a>				  
 				  <?php } ?>
               </h5>
 			<!--  <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   

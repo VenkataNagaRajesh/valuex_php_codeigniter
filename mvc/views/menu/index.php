@@ -2,26 +2,21 @@
 <div class="box">
     <div class="box-header">
         <h3 class="box-title"><i class="fa fa-signal"></i> Menu Management</h3>
-
-
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active">Menu Management</li>
         </ol>
     </div><!-- /.box-header -->
+	<h5 class="page-header">
+         <a href="<?php echo base_url('menu/add') ?>" data-toggle="tooltip" data-title="Add Menu" data-placement="left" class="btn btn-danger">
+             <i class="fa fa-plus"></i>
+         </a>
+     </h5>
     <!-- form start -->
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">
-
-                <h5 class="page-header">
-                    <a href="<?php echo base_url('menu/add') ?>">
-                        <i class="fa fa-plus"></i>
-                        Add Menu
-                    </a>
-                </h5>
-
-                 <div id="hide-table">
+				<div id="hide-table">
                     <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                         <thead>
                             <tr>

@@ -1,6 +1,6 @@
 
 <div class="box">
-    <div class="box-header">
+    <div class="box-header"  style="width:100%">
         <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>      
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
@@ -83,7 +83,7 @@
 					
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
-                            <input type="submit" class="btn btn-success" value="<?=$this->lang->line("update_airline")?>" >
+                            <input type="submit" class="btn btn-danger" value="<?=$this->lang->line("update_airline")?>" >
                         </div>
                     </div>	
 				</form>
