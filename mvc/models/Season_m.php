@@ -28,6 +28,15 @@ class season_m extends MY_Model {
             return $query->result();
         }
 	
+
+	function get_seasons_for_airline($id){
+
+		 $this->db->select('*')->from('VX_aln_season');
+		 $this->db->where('airlineID',$id);
+		$query = $this->db->get();
+            return $query->result();
+
+	}
 	
 	function getSeasons_for_triggerrun($timestamp) {
 		$sql = "SELECT * FROM VX_aln_season WHERE modify_date >= ".$timestamp;
