@@ -95,7 +95,7 @@
 		<form class="form-horizontal" action="#">
 			<div class="col-md-12">
 				<div class="form-group">
-					<div class="col-md-2">
+					<div class="col-md-2 select-form">
 						<h4>Flight No Range</h4>
 						<div class="col-md-12">
 							<input type="text" class="form-control" placeholder="Enter Start range Flight Number" id="sflight_number" name="sflight_number" value="<?=set_value('sflight_number',$flight_number)?>" >
@@ -119,22 +119,22 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-2 select-form">
 						<h4>Board/Off Point</h4>
 						<div class="col-md-12">
 							 <?php
-								$airports['0'] = 'Select Boarding Point';
+								$airports['0'] = ' Boarding Point';
 								ksort($airports); 
                                 echo form_dropdown("boarding_point", $airports,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'"); ?>
 						</div>
 						<div class="col-md-12">
 							<?php
-								$airports['0'] = 'Select Off Point';
+								$airports['0'] = ' Off Point';
 								ksort($airports);
                                 echo form_dropdown("soff_point", $airports,set_value("soff_point",$off_point), "id='soff_point' class='form-control hide-dropdown-icon select2'");    ?>
 						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3 select-form">
 						<h4>Market</h4>
 						<div class="col-md-12">
 							<?php
@@ -149,7 +149,7 @@
                                 echo form_dropdown("dmarket", $marketzones,set_value("dmarket",$dmarket), "id='dmarket' class='form-control hide-dropdown-icon select2'");    ?>
 						</div>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-2 select-form">
 						<h4>Frequency</h4>
 						<div class="col-md-12">
 							<?php

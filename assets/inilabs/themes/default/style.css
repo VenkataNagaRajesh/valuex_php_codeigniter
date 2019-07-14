@@ -35,6 +35,9 @@ body {
   font-size:12px;
   text-transform:capitalize;
 }
+.content input{
+	text-transform:capitalize;
+}
 a {
   color: #707478;
 }
@@ -1534,7 +1537,10 @@ input.btn-success{
 
 }
 .box .box-header a {
-  color: #CCCCCC;
+  color: #fff;
+}
+.box .box-header .breadcrumb .active{
+	color:#fff;
 }
 .box .box-header > .box-tools {
   padding: 5px 10px 5px 5px;
@@ -4067,9 +4073,7 @@ fieldset[disabled] .btn-vk.active {
 .fclr-bar  .table-responsive .form-group .col-md-12{
 	padding:0;
 }
-.fclr-bar .table-responsive  .form-group .form-control{
-	margin-bottom:10px;
-}
+
 .fclr-bar .fclr-table-add thead th{
 	border-right:solid 3px #fff;
 }
@@ -4090,7 +4094,7 @@ fieldset[disabled] .btn-vk.active {
 .eer .table-responsive{
 	background: #fff;
 	border: solid 1px #999;
-	margin: 18px 0;
+	margin: 0 0 10px;
 	padding: 12px 0;
 }
 .eer .form-horizontal .form-group label{
@@ -4104,7 +4108,7 @@ fieldset[disabled] .btn-vk.active {
 .eer .form-horizontal .form-group .form-control{
 	margin-bottom:12px;
 }
-.eer .form-horizontal .form-group .col-md-6{
+.eer .form-horizontal .form-group .col-md-6, .eer .form-horizontal .form-group .col-md-4 .col-md-3{
 	padding:0;
 }
 .eer .form-horizontal .rule-box ul{
@@ -4117,6 +4121,11 @@ fieldset[disabled] .btn-vk.active {
 .eer .form-horizontal .rule-box .cabins{
 	margin-bottom:20px;
 }
+.eer .form-horizontal .rule-box .cabins p{
+	color:#333;
+	font-weight:bold;
+	text-align:center;
+}
 .eer .form-horizontal .rule-box .cabins .table tr td{
 	border: solid 7px #ddd;
 	text-align: center;
@@ -4126,6 +4135,9 @@ fieldset[disabled] .btn-vk.active {
 	background:#f5f5f5;
 	width:40px;
 	height:40px;
+}
+.eer .form-group{
+	margin-bottom:0;
 }
 .eer .form-horizontal .rule-box .cabins .table tr td input[type="checkbox"] {
     display: none;
@@ -4177,7 +4189,13 @@ fieldset[disabled] .btn-vk.active {
 	color: #ff6633;
 	font-size: 14px;
 	padding: 8px 15px;
-	margin: 15px 0;
+	margin: 10px 0;
+}
+.off-elg-filter-box .btn-danger{
+	margin: 10px 0 2px;
+}
+.off-elg h2{
+	margin:10px 0;
 }
 .off-elg .form-horizontal .form-group .select-form .form-control{
 	margin-bottom:15px;
@@ -4189,7 +4207,7 @@ fieldset[disabled] .btn-vk.active {
 	margin-bottom:15px;
 }
 .off-elg .form-horizontal .form-group .btn-danger{
-	margin:15px 0px;
+	margin:8px 0px;
 }
 .off-elg .off-elg-filter-box{
 	border:solid 1px #999;
@@ -4205,6 +4223,9 @@ fieldset[disabled] .btn-vk.active {
 	overflow: auto;
 }
 /*tree code*/
+.form-group .select-form .form-control, .form-group .input-group{
+	margin-bottom:15px;
+}
 #mytree{
 	border: solid 1px #999;
 	margin: 12px 0;
@@ -4244,7 +4265,9 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
     color: gray;
     cursor: default !important;
 }
-
+.rafeed-filter-btn{
+	margin-top:12px !important;
+}
 .simpleTree-label {
     display: inline-block;
     padding: .2rem .25rem;
@@ -4253,6 +4276,9 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
     border: 1px solid transparent;
 	color: #333;
 	font-weight: bold;
+}
+#hide-table{
+	overflow: auto;
 }
 .title-tool-bar{
 	color: #fff;
@@ -4419,4 +4445,7 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 	white-space: normal;
 	display: inline-table;
 	font-weight:bold;
+}
+.box-body .form-group{
+	margin-bottom:0;
 }

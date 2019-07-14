@@ -1,5 +1,5 @@
 <div class="box">
-    <div class="box-header">
+    <div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
 
         <ol class="breadcrumb">
@@ -14,13 +14,13 @@
 
               <h5 class="page-header">                        
 		<?php if(permissionChecker('rafeed_upload')) { ?>
-                  <a href="<?php echo base_url('rafeed/upload') ?>">
+                  <a href="<?php echo base_url('rafeed/upload') ?>" class="btn btn-danger">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('upload_rafeed')?>
                   </a>
 		
 		   &nbsp;&nbsp;
-                                  <a href="<?php echo base_url('rafeed/downloadFormat') ?>">
+                                  <a href="<?php echo base_url('rafeed/downloadFormat') ?>" class="btn btn-danger">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('download_rafeed_format')?>
                   </a>
@@ -33,7 +33,7 @@
 
 			 <div class="col-sm-2">
                <?php
-                        $country['0'] = 'Select Booking Country';
+                        $country['0'] = ' Booking Country';
                         ksort($country);
 
                                    echo form_dropdown("booking_country", $country,set_value("booking_country",$booking_country), "id='booking_country' class='form-control hide-dropdown-icon select2'");    ?>
@@ -43,7 +43,7 @@
 
 	    <div class="col-sm-2">
                <?php
-                        $city['0'] = 'Select Booking City';
+                        $city['0'] = ' Booking City';
                         ksort($city);
 
                                    echo form_dropdown("booking_city", $city,set_value("booking_city",$booking_city), "id='booking_city' class='form-control hide-dropdown-icon select2'");    ?>
@@ -53,7 +53,7 @@
 
     <div class="col-sm-2">
                <?php
-                        $airport['0'] = 'Select Boarding Point';
+                        $airport['0'] = ' Boarding Point';
                         ksort($airport);
 
                                    echo form_dropdown("boarding_point", $airport,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
@@ -63,7 +63,7 @@
 
     <div class="col-sm-2">
                <?php
-                        $airport['0'] = 'Select Off Point';
+                        $airport['0'] = ' Off Point';
                         ksort($airport);
 
                                    echo form_dropdown("off_point", $airport,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
@@ -73,7 +73,7 @@
 
 <div class="col-sm-2">
                <?php
-                        $airlines['0'] = 'Select Carrier';
+                        $airlines['0'] = ' Carrier';
                         ksort($airlines);
 
                                    echo form_dropdown("airline_code", $airlines,set_value("airline_code",$airline_code), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
@@ -83,15 +83,14 @@
 
     <div class="col-sm-2">
                <?php
-                        $cabin['0'] = 'Select Cabin';
+                        $cabin['0'] = ' Cabin';
                         ksort($cabin);
 
                                    echo form_dropdown("class", $cabin,set_value("class",$cla), "id='class' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
-
-                <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
+                <div class="col-sm-2 pull-right">
+                  <button type="submit" class="form-control btn btn-danger rafeed-filter-btn" name="filter" id="filter">Filter</button>
                 </div>	             				
 			  </div>
 			 </form>			

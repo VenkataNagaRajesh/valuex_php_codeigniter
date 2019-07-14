@@ -28,7 +28,7 @@
 			<div class='form-group'>
                 			
 			   <div class="col-sm-2">			   
-                 <?php $alist = array("0" => "Select Area");               
+                 <?php $alist = array("0" => " Area");               
                    foreach($areaslist as $area){
 					 $alist[$area->vx_aln_data_defnsID] = $area->aln_data_value;
 				   }							
@@ -55,7 +55,8 @@
                   <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                 </div>	             				
 			  </div>
-			 </form>				
+			 </form>
+			<div class="col-md-12">			 
             <div id="hide-table">
                <table id="master" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>
@@ -72,7 +73,7 @@
 						<th class="col-lg-1"><?=$this->lang->line('master_area')?></th>						
 						<th class="col-lg-1"><?=$this->lang->line('master_active')?></th>
                         <?php if(permissionChecker('airports_master_edit') || permissionChecker('airports_master_delete')) { ?>
-                        <th style="width:86px;" class="col-lg-2"><?=$this->lang->line('action')?></th>
+                        <th class="col-lg-2"><?=$this->lang->line('action')?></th>
                         <?php } ?>
                     </tr>
                  </thead>
@@ -80,6 +81,7 @@
                  </tbody>
               </table>
             </div>
+			</div>
           </div>
        </div>
    </div>

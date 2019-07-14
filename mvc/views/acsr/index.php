@@ -6,28 +6,23 @@
             <li class="active"><?=$this->lang->line('menu_acsr')?></li>
         </ol>
     </div><!-- /.box-header -->
+	<h5 class="page-header">
+		<?php  if(permissionChecker('acsr_add')) {  ?>
+        <a href="<?php echo base_url('acsr/add') ?>" data-toggle="tooltip" data-title="Add Rule" data-placement="left" class="btn btn-danger">
+            <i class="fa fa-plus"></i> 
+        </a>
+		<?php } ?>						 
+	</h5>
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-2">               
-                    <h5 class="page-header">
-					    <?php  if(permissionChecker('acsr_add')) {  ?>
-                        <a href="<?php echo base_url('acsr/add') ?>">
-                            <i class="fa fa-plus"></i> 
-                            <?=$this->lang->line('add_title')?>
-                        </a>
-						 <?php } ?>
-						 
-                    </h5>
-
-	  </div>
 	<div class="col-sm-12">
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
 		<div class="col-sm-12">
                            <div class="col-sm-2">
                <?php 
-			$marketzones['0'] = 'Select Origin Market';
+			$marketzones['0'] = ' Origin Market';
 			ksort($marketzones);
 
                                    echo form_dropdown("orig_market_id", $marketzones,set_value("orig_market_id",$origmarketID), "id='orig_market_id' class='form-control hide-dropdown-icon select2'");    ?>
@@ -35,31 +30,31 @@
                 </div>
 
 <div class="col-sm-2">
-               <?php $marketzones['0'] = 'Select Destination Market';
+               <?php $marketzones['0'] = ' Destination Market';
 			ksort($marketzones);
                                    echo form_dropdown("dest_market_id", $marketzones,set_value("dest_market_id",$destmarketID), "id='dest_market_id' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
 
 		                <div class="col-sm-2">
-                        <input type="text" class="form-control" id="flight_nbr_start" name="flight_nbr_start"  placeholder='Select flight nbr start' value="<?=set_value('flight_nbr_start',$nbr_start)?>" >
+                        <input type="text" class="form-control" id="flight_nbr_start" name="flight_nbr_start"  placeholder=' flight nbr start' value="<?=set_value('flight_nbr_start',$nbr_start)?>" >
                 </div>
 
 
 
                 <div class="col-sm-2">
-                        <input type="text" class="form-control" id="flight_nbr_end" name="flight_nbr_end"  placeholder='Select flight nbr end' value="<?=set_value('flight_nbr_end',$nbr_end)?>" >
+                        <input type="text" class="form-control" id="flight_nbr_end" name="flight_nbr_end"  placeholder=' flight nbr end' value="<?=set_value('flight_nbr_end',$nbr_end)?>" >
                 </div>
 
 
                            <div class="col-sm-2">
-                        <input type="text" class="form-control" id="flight_dep_date_start" name="flight_dep_date_start"  placeholder='Select flight Dep Date Start' value="<?=set_value('flight_dep_date_start',$dep_date_start)?>" >
+                        <input type="text" class="form-control" id="flight_dep_date_start" name="flight_dep_date_start"  placeholder=' flight Dep Date Start' value="<?=set_value('flight_dep_date_start',$dep_date_start)?>" >
                 </div>
 
 
 
                 <div class="col-sm-2">
-                        <input type="text" class="form-control" id="flight_dep_date_end" name="flight_dep_date_end"  placeholder='Select flight Dep Date End' value="<?=set_value('flight_dep_date_end',$dep_date_end)?>" >
+                        <input type="text" class="form-control" id="flight_dep_date_end" name="flight_dep_date_end"  placeholder=' flight Dep Date End' value="<?=set_value('flight_dep_date_end',$dep_date_end)?>" >
                 </div>
 </div></div>
 <br> 
@@ -67,7 +62,7 @@
 <div class='col-sm-12'>
   <div class="col-sm-2">
                            <?php
-				$hrs['-1'] = 'Select Departure Start Hrs';
+				$hrs['-1'] = ' Departure Start Hrs';
 				ksort($hrs);
 
                                     echo form_dropdown("flight_dep_start_hrs", $hrs,set_value("flight_dep_start_hrs"), "id='flight_dep_start_hrs' class='form-control hide-dropdown-icon select2'");
@@ -75,7 +70,7 @@
                                 </div>
                                 <div class="col-sm-2">
                 <?php
-				$mins['-1'] = 'Select Departure start Mins';
+				$mins['-1'] = ' Departure start Mins';
 				ksort($mins);
                                                     echo form_dropdown("flight_dep_start_mins", $mins,set_value("flight_dep_start_mins"), "id='flight_dep_start_mins' class='form-control hide-dropdown-icon select2'");
 
@@ -83,7 +78,7 @@
                                 </div>
   <div class="col-sm-2">
                            <?php
-		 $hrs['-1'] = 'Select Departure End Hrs';
+		 $hrs['-1'] = ' Departure End Hrs';
                                 ksort($hrs);
 
                                     echo form_dropdown("flight_dep_end_hrs", $hrs,set_value("flight_dep_end_hrs"), "id='flight_dep_end_hrs' class='form-control hide-dropdown-icon select2'");
@@ -92,7 +87,7 @@
                                 <div class="col-sm-2">
                 <?php
 
-			 $mins['-1'] = 'Select Departure End Mins';
+			 $mins['-1'] = ' Departure End Mins';
                                 ksort($mins);
                                                     echo form_dropdown("flight_dep_end_mins", $mins,set_value("flight_dep_end_mins"), "id='flight_dep_end_mins' class='form-control hide-dropdown-icon select2'");
 
@@ -102,7 +97,7 @@
 
 	   <div class="col-sm-2">
                <?php
-                        $cabin_list['0'] = 'Select From Cabin';
+                        $cabin_list['0'] = ' From Cabin';
                         foreach ($cabin_type as $cabin) {
                                 $cabin_list[$cabin->vx_aln_data_defnsID] = $cabin->aln_data_value;
                         }
@@ -116,7 +111,7 @@
 
 	     <div class="col-sm-2">
                <?php
-                        $cabin_list['0'] = 'Select To Cabin';
+                        $cabin_list['0'] = ' To Cabin';
 			ksort($cabin_list);
 
                                    echo form_dropdown("to_cabin", $cabin_list,set_value("to_cabin",$tocabin), "id='to_cabin' class='form-control hide-dropdown-icon select2'");    ?>
@@ -144,7 +139,7 @@
           <div class="col-sm-2">
 
                         <?php
-                        $status['-1'] = 'Select Status';
+                        $status['-1'] = ' Status';
                         $status['1'] = 'Active';
                         $status['0'] = 'In Active';
                         echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
@@ -155,7 +150,7 @@
 		 <div class="col-sm-2">
                             <?php
 
-						$toggle['-1'] = 'Select future use';
+						$toggle['-1'] = ' future use';
                                                           $toggle[1] = "Yes";
                                                           $toggle[0] = "No";
                                                           echo form_dropdown("future_use", $toggle,set_value("future_use",$future_use), "id='future_use' class='form-control hide-dropdown-icon select2'");
@@ -164,7 +159,7 @@
                                   
 
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                 </div>
 
 </div>
@@ -337,7 +332,7 @@ $(document).ready(function() {
       }
   }); 
 $( ".select2" ).select2({closeOnSelect:false,
-                         placeholder: "Select Frequency"});
+                         placeholder: "Frequency"});
 
 $("#flight_dep_date_start").datepicker();
 $("#flight_dep_date_end").datepicker();
