@@ -115,7 +115,7 @@
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form">		   
 			<div class='form-group'>			 
 				<div class="col-sm-2">			   
-				<?php $slist = array("0" => "Select Season");               
+				<?php $slist = array("0" => " Season");               
 				   foreach($seasonslist as $season){
 					  $slist[$season->VX_aln_seasonID] = $season->season_name;
 					}							
@@ -125,14 +125,14 @@
 				  <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>
 				</div>
 				<div class="col-sm-2">			   
-				  <?php $olist = array("0" => "Select Origin Level");               
+				  <?php $olist = array("0" => " Origin Level");               
 				  foreach($types as $type){
 					  $olist[$type->vx_aln_data_typeID] = $type->alias;
 					}							
 				  echo form_dropdown("origID", $olist,set_value("origID",$origID), "id='origID' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>                				
 				<div class="col-sm-2">
-					<?php $dlist = array("0" => "Select Destination");               
+					<?php $dlist = array("0" => " Destination");               
 				   foreach($types as $type){
 					  $dlist[$type->vx_aln_data_typeID] = $type->alias;
 					}							
@@ -190,7 +190,7 @@
 					<?php } ?>
 				</p>
 				<select name="color_season" id="color_season">
-				 <option value="0">Select Season</option>
+				 <option value="0">Season</option>
 				 <?php foreach($seasonslist as $season){
                   echo '<option value="'.$season->VX_aln_seasonID.'">'.$season->season_name.'</option>';  
 				 } ?>
@@ -411,7 +411,7 @@ $("#ams_season_end_date").datepicker();
 $('#season_color').colorpicker({});
 
 $( ".select2" ).select2({closeOnSelect:false,
-		         placeholder: "Select a value"});
+		         placeholder: " value"});
 				 
 $(document).ready(function(){
 	$('#ams_orig_levelID').trigger('change');

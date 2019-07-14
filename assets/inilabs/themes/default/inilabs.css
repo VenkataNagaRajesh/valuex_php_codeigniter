@@ -140,7 +140,7 @@ label {
   font-weight: 300;
 }
 .table-bordered > tbody > tr > td {
-  color: #707070;
+  color: #333;
 }
 .table-bordered > thead > tr > th,
 .table-bordered > tbody > tr > td {

@@ -3678,7 +3678,7 @@ fieldset[disabled] .btn-vk.active {
   padding: 15px;
   color: #444;
   border-top: 1px solid #DDDDDD;
-  /*position: fixed;*/
+  position: fixed;
   bottom: 0px;
   left: 0px;
   right: 0px;
@@ -3698,6 +3698,9 @@ fieldset[disabled] .btn-vk.active {
 /*my custom styles*/
 .onoffswitch-small-inner::before {
 	background:#109610 !important;
+}
+.pref-setting input{
+	margin:8px 0;
 }
 .srch-buttons .btn-default{
 	background: #fff;
@@ -4447,5 +4450,8 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 	font-weight:bold;
 }
 .box-body .form-group{
-	margin-bottom:0;
+	margin-bottom:10px;
+}
+.box-body .form-horizontal{
+	padding: 0 12px;
 }
