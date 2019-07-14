@@ -189,10 +189,10 @@
 					<span class="default"><?=$season->season_name?></span><span style="background: <?=$season->season_color?>;">&nbsp;</span>
 					<?php } ?>
 				</p>
-				<select name="color_season" id="color_season">
-				 <option value="0">Season</option>
-				 <?php foreach($seasonslist as $season){
-                  echo '<option value="'.$season->VX_aln_seasonID.'">'.$season->season_name.'</option>';  
+				<select name="color_season" id="color_airline_season">
+				 <option value="0">Select Airlines</option>
+				 <?php foreach($airlines as $airline){
+                  echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->airline_name.'</option>';  
 				 } ?>
 				</select>
 			</div>
@@ -201,28 +201,30 @@
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function() {	
+	seasoncalender('<?php echo json_encode($seasonslist)?>');
+	//alert('<?php echo json_encode($seasonslist)?>');
+	
+
+});
+
+function seasoncalender (seasonlist = '[]') {
+	var season_data = jQuery.parseJSON(seasonlist);
+
         // An array of dates
      var eventDates = {}; var season = {}; var name = {};
-    
-   
-   <?php //$_POST['color_season']=10; 
-       foreach ($seasonslist as $season){
-	      if($_POST['color_season'] > 0){
-			 if($season->VX_aln_seasonID == $_POST['color_season']){
-				foreach($season->dates as $date){	?> 
-                eventDates[ new Date( '<?=$date?>' )] = new Date( '<?=$date?>' ).toString();
-		        season[ new Date( '<?=$date?>' )] = "<?=$season->VX_aln_seasonID?>";
-			    name[ new Date( '<?=$date?>' )] = "<?=$season->season_name?>";  
-		  <?php } }				 
-		  } else {
-           foreach($season->dates as $date){  ?>       
-	       eventDates[ new Date( '<?=$date?>' )] = new Date( '<?=$date?>' ).toString();
-		    season[ new Date( '<?=$date?>' )] = "<?=$season->VX_aln_seasonID?>";
-			name[ new Date( '<?=$date?>' )] = "<?=$season->season_name?>";
+
+
+	
+	 //$_POST['color_season']=10; 
+             for(var i=0; i<season_data.length; i++){
+		for ( var k=0 ; k<season_data[i]['dates'].length; k++){	
+	       eventDates[ new Date( season_data[i]['dates'][k] )] = new Date( season_data[i]['dates'][k] ).toString();
+		    season[ new Date( season_data[i]['dates'][k] )] = season_data[i]['VX_aln_seasonID'];
+			name[ new Date( season_data[i]['dates'][k] )] = season_data[i]['season_name'] ;
 			 
-	 <?php } } ?>
-	    $("<style> .season<?=$season->VX_aln_seasonID?> { color:#fffff !important;  background:<?=$season->season_color?> !important;} </style>").appendTo("head");
-    <?php } ?>  
+	   } 
+	    $("<style> .season"+season_data[i]['VX_aln_seasonID'] + " { color:#fffff !important;  background:"+season_data[i]['season_color'] + " !important;} </style>").appendTo("head");
+     }   
     //console.log(event);
        
         jQuery('#calendar1').datepicker({		    
@@ -243,12 +245,27 @@
             }
         }); 
 		
-    });
+    }
 	
-  $('#color_season').change(function(){
-	 // seasoncalender();
-	 location.reload(true);
-  });
+
+$('#color_airline_season').change(function(event) {    
+	//alert('here');
+	var airline_id = $(this).val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('season/getSeasonsForAirline')?>",            
+             data: "id=" + airline_id,            
+             dataType: "html",                                  
+             success: function(data) {               
+		$("#calendar1").datepicker("destroy");
+		seasoncalender(data);
+              }        
+      });       
+});
+ 
+
+
+
   
 </script>
 <script>
@@ -518,6 +535,9 @@ $("#dest_all").click(function(){
 				form_reset();
 				$("#seasonslist").dataTable().fnDestroy();
 				loaddatatable();
+				$("#calendar1").datepicker("destroy");
+				seasoncalender(JSON.stringify(seasoninfo['season_list']));
+
 			} else {				
 				alert($(status).text());
 			    $.each(seasoninfo['errors'], function(key, value) {
