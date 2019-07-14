@@ -701,7 +701,7 @@ class Season extends Admin_Controller {
 		   
 		    $season->orig_level_values = $orig_level_values;
 			$season->dest_level_values = $dest_level_values;
-		   //$season->season_color = '<span style="background: '.$season->season_color.'"></span>';
+		   $season->season_color = '<p class="season-list-color" style="background: '.$season->season_color.'"></p>';
 			
 			$output['aaData'][] = $season;				
 		}

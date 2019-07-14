@@ -4455,3 +4455,8 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 .box-body .form-horizontal{
 	padding: 0 12px;
 }
+.season-list-color{
+	width: 68px;
+	height: 28px;
+	margin-bottom: 0;
+}
