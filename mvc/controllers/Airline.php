@@ -563,7 +563,7 @@ class Airline extends Admin_Controller {
 			$airline->active .= "<label for='myonoffswitch".$airline->vx_aln_data_defnsID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>"; 
             $flights = $this->airline_m->getFlights($airline->vx_aln_data_defnsID);			
             $flights_data = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $flights));
-			// $airline->flights = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$flights_data.'"><i class="fa fa-list"></i></a>';
+			$airline->flights = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$flights_data.'"><i class="fa fa-list"></i></a>';
 			// $airline->flightss = $flights;
 			$output['aaData'][] = $airline;				
 		}
