@@ -377,7 +377,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 
 	//var_dump($sQuery);exit;
 	$rResult = $this->install_m->run_query($sQuery);
-
+      
 
 //	var_dump($rResult);exit;
 	$full_offerlist = array();
@@ -449,9 +449,9 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
 			echo "<br> cabincnt = " .$cabin_seats;
 			echo "<br>  passen cnt = " . $passenger_cnt;
 			echo "<br> memp = " .  $acsr_data->memp;	
-			echo "<br>";
-			//var_dump($acsr_data);	echo "<br>";exit;*/
-			if(($acsr_data->status == 'accept' && $feed->bid_val < $acsr_data->min_bid_price)  || $acsr_data->status == 'reject' ) {			
+			echo "<br>";*/
+			//var_dump($acsr_data);	echo "<br>";exit;
+			if(($acsr_data->status == 'reject' && $feed->bid_val < $acsr_data->min_bid_price) ) {			
 					// send mail min bid value not met
 					// update pf entry status and VX_aln_offer_ref status as bid not accepted
 		//		echo "rejected ---<br>";
@@ -502,8 +502,10 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 
 			} else {
-
-
+			/*
+				echo $acsr_data->status . "<br>";
+				echo $feed->bid_val . "<br>";
+				echo $acsr_data->min_bid_price . "<br>";exit;*/
 				if ( $acsr_data->status == 'accept' && $feed->bid_val > $acsr_data->min_bid_price ) { 
 
 				  if (($cabin_seats -  $passenger_cnt) < $acsr_data->memp) {
@@ -711,9 +713,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 			}
 			
+		redirect(base_url("offer_table/index"));
 
-	  $this->data["subview"] = "offer_table/index";
-                $this->load->view('_layout_main', $this->data);
 
 		}		
 		

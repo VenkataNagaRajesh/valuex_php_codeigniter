@@ -52,12 +52,12 @@ class Eligibility_exclusion extends Admin_Controller {
 			array(
                  		'field' => 'flight_nbr_start',
                  		'label' => $this->lang->line("flight_nbr_start"),
-                 		'rules' => 'trim|integer|max_length[4]|min_length[4]|xss_clean|callback_FlightNbrStartCheck'
+                 		'rules' => 'trim|integer|max_length[4]|xss_clean|callback_FlightNbrStartCheck'
             		),
 			array(
           		       'field' => 'flight_nbr_end',
                  		'label' => $this->lang->line("flight_nbr_end"),
-                 		'rules' => 'trim|integer|max_length[4]|min_length[4]|xss_clean|callback_FlightNbrEndCheck'
+                 		'rules' => 'trim|integer|max_length[4]|xss_clean|callback_FlightNbrEndCheck'
             		),
 			array(
                  		'field' => 'frequency',
@@ -857,7 +857,7 @@ LEFT JOIN (
                 from 
                         (         
 						SELECT       ex.eexcl_id as eexcl_id  , 
-                                                COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS orig_level 
+                                                COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS orig_level 
                                                 FROM VX_aln_eligibility_excl_rules ex 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, ex.orig_level_value) AND ex.orig_level_id in (1,2,3,4,5)) 
@@ -868,7 +868,7 @@ LEFT JOIN (
 
                         (       
 						SELECT       ex.eexcl_id as eexcl_id  , 
-                                                COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS dest_level 
+                                                COALESCE(group_concat(c.code), group_concat(c.aln_data_value), group_concat(mm.market_name) )  AS dest_level 
                                                 FROM VX_aln_eligibility_excl_rules ex 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, ex.dest_level_value) AND ex.dest_level_id in (1,2,3,4,5)) 

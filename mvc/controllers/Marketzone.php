@@ -598,7 +598,7 @@ LEFT JOIN (
 			(         
 
 				 SELECT        m.market_id  as market_id  , 
-						COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS level , COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) ) as level_d_name
+						COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS level , COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) ) as level_d_name
 						FROM VX_aln_market_zone m 
 						LEFT OUTER JOIN  vx_aln_data_defns c ON 
 						(find_in_set(c.vx_aln_data_defnsID, m.amz_level_name) AND m.amz_level_id in (1,2,3,4,5)) 
@@ -610,7 +610,7 @@ LEFT JOIN (
 
 			(          
 				 SELECT        m.market_id  as market_id  , 
-                                                COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS incl, COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) ) as incl_d_name
+                                                COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS incl, COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) ) as incl_d_name
                                                 FROM VX_aln_market_zone m 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, m.amz_incl_name) AND m.amz_incl_id in (1,2,3,4,5)) 
@@ -623,7 +623,7 @@ LEFT JOIN (
 			(
 
 				  SELECT        m.market_id  as market_id  , 
-                                                COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS excl , COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name)) as excl_d_name 
+                                                COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS excl , COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name)) as excl_d_name 
                                                 FROM VX_aln_market_zone m 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, m.amz_excl_name) AND m.amz_excl_id in (1,2,3,4,5)) 

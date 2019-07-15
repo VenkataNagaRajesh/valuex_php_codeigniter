@@ -449,7 +449,7 @@ class Airline_cabin extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('cabin_map_id','airline_code','airline_cabin','video_links','active');
+	    $aColumns =  array('ac.aln_data_value','airline_cabin','video_links','cr.aln_data_value','ac.code','acl.aln_data_value');
                 $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -533,7 +533,7 @@ class Airline_cabin extends Admin_Controller {
 
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.aln_data_value as airline_code , 
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , ac.aln_data_value as a_code, 
         acl.aln_data_value as airline_cabin, video_links, cm.active , cr.aln_data_value as aircraft_name
         from VX_aln_airline_cabin_map cm 
         LEFT JOIN vx_aln_data_defns ac on (ac.vx_aln_data_defnsID = cm.airline_code) 
