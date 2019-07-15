@@ -142,11 +142,8 @@
 					<?php $activestatus[1]="Active";	$activestatus[0]="In Active";				
 				  echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
-				<div class="col-sm-1">
-				  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Search</button>
-				</div>	
-				<div class="col-md-1">
-					<button data-toggle="collapse" data-target="#seasonList" type="button" class="form-control btn btn-danger"><i class="fa fa-table"></i> List</button>
+				<div class="col-sm-2">
+				  <button type="submit" class="btn btn-danger" name="filter" id="filter">Search</button> <button data-toggle="collapse" data-target="#seasonList" type="button" class="btn btn-danger"><i class="fa fa-table"></i> View</button>
 				</div>			
 			</div>
 		</form>
@@ -185,6 +182,12 @@
 		</div>
 		<div class="col-md-4">
 			<div class="season-highlight">
+				<p><select style="width:85%;" name="color_season" id="color_airline_season" class="form-control">
+				 <option value="0">Airlines</option>
+				 <?php foreach($airlines as $airline){
+                  echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->airline_name.'</option>';  
+				 } ?>
+				</select></p>
 				<p>
 					<span>Season</span><span>Highlights</span><br>
 					<!--<span class="default">Default</span><span class="default-high">&nbsp;</span><br>
@@ -194,12 +197,6 @@
 					<span class="default"><?=$season->season_name?></span><span style="background: <?=$season->season_color?>;">&nbsp;</span>
 					<?php } ?>
 				</p>
-				<select name="color_season" id="color_airline_season">
-				 <option value="0">Select Airlines</option>
-				 <?php foreach($airlines as $airline){
-                  echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->airline_name.'</option>';  
-				 } ?>
-				</select>
 			</div>
 		</div>
 	</div>
