@@ -147,16 +147,6 @@
 
                  </div>
 
-		 <div class="col-sm-2">
-                            <?php
-
-						$toggle['-1'] = ' future use';
-                                                          $toggle[1] = "Yes";
-                                                          $toggle[0] = "No";
-                                                          echo form_dropdown("future_use", $toggle,set_value("future_use",$future_use), "id='future_use' class='form-control hide-dropdown-icon select2'");
-                                                        ?>
-                        </div>
-                                  
 
                 <div class="col-sm-2">
                   <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
@@ -171,13 +161,14 @@
 </div>
 <br> <br>
 
-                <div id="hide-table">
                     <table id="ruleslist" class="table table-striped table-bordered table-hover dataTable no-footer">
                         <thead>
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-				<th class="col-lg-1"><?=$this->lang->line('orig_market')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('dest_market')?></th>
+				<th class="col-lg-1"><?=$this->lang->line('orig_level_id')?></th>
+				<th class="col-lg-4"><?=$this->lang->line('orig_level_value')?></th>
+                                <th class="col-lg-1"><?=$this->lang->line('dest_level_id')?></th>
+				<th class="col-lg-4" ><?=$this->lang->line('dest_level_value')?></th>
 				 <th class="col-lg-1"><?=$this->lang->line('carrier_code')?></th>
 			       <th class="col-lg-1"><?=$this->lang->line('flight_dep_date_start')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('flight_dep_date_end')?></th>
@@ -190,7 +181,6 @@
 				<th class="col-lg-1"><?=$this->lang->line('memp')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('min_bid_price')?></th>
 				 <th class="col-lg-1"><?=$this->lang->line('frequency')?></th>
-				<th class="col-lg-1"><?=$this->lang->line('future_use')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('action_type')?></th>
 				 <th class="col-lg-1"><?=$this->lang->line('rule_status')?></th> 
                                 <th class="col-lg-2"><?=$this->lang->line('action')?></th>
@@ -199,7 +189,6 @@
                         <tbody>                            
                         </tbody>
                     </table>
-                </div>
             </div>
         </div>
     </div>
@@ -221,7 +210,6 @@ $(document).ready(function() {
                    {"name": "nbrEnd","value": $("#flight_nbr_end").val()},
 		   {"name": "depDateStart","value": $("#flight_dep_date_start").val()},
                    {"name": "depDateEnd","value": $("#flight_dep_date_end").val()},
-		   {"name": "futureuse","value": $("#future_use").val()},
 
 		   {"name": "startHrs","value": $("#flight_dep_start_hrs").val()},
                    {"name": "startMins","value": $("#flight_dep_start_mins").val()},
@@ -236,8 +224,10 @@ $(document).ready(function() {
                     "success": fnCallback
                          } ); }, 
       "columns": [{"data": "acsr_id" },
-                                  {"data": "orig_mkt_name" },
-                                  {"data": "dest_mkt_name" },
+                                  {"data": "orig_level" },
+                                  {"data": "orig_level_value" },
+				  {"data": "dest_level" },
+                                  {"data": "dest_level_value" },
 				  {"data": "carrier" },
                                   {"data": "flight_dep_date_start" }, 
                   {"data": "flight_dep_date_end"},
@@ -250,7 +240,6 @@ $(document).ready(function() {
 				  {"data": "memp" },
                                   {"data": "min_bid_price"},
                                   {"data": "frequency"},
-                                  {"data": "future_use"},
 				  {"data": "action_typ" },
 				  {"data": "active"},
                   {"data": "action"}
