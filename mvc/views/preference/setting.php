@@ -1,5 +1,5 @@
 <div class="box">
-    <div class="box-header">
+    <div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa fa-gears"></i> <?=$this->lang->line('panel_title')?></h3>        <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active"><?=$this->lang->line('menu_preference')?></li>
@@ -9,7 +9,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">
-                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+                <form class="form-horizontal pref-setting" role="form" method="post" enctype="multipart/form-data">
 				   <?php foreach($preferences as $pref) { if($pref->active == 1) { ?>
                     <?php
                         if(form_error('prefvalue-'.$pref->VX_aln_preferenceID)) 

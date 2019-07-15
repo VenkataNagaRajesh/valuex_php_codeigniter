@@ -147,7 +147,6 @@
 
                  </div>
 
-
                 <div class="col-sm-2">
                   <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                 </div>

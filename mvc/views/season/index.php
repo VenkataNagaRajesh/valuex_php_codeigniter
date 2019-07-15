@@ -115,7 +115,7 @@
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form">		   
 			<div class='form-group'>			 
 				<div class="col-sm-2">			   
-				<?php $slist = array("0" => "Select Season");               
+				<?php $slist = array("0" => " Season");               
 				   foreach($seasonslist as $season){
 					  $slist[$season->VX_aln_seasonID] = $season->season_name;
 					}							
@@ -125,14 +125,14 @@
 				  <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>
 				</div>
 				<div class="col-sm-2">			   
-				  <?php $olist = array("0" => "Select Origin Level");               
+				  <?php $olist = array("0" => " Origin Level");               
 				  foreach($types as $type){
 					  $olist[$type->vx_aln_data_typeID] = $type->alias;
 					}							
 				  echo form_dropdown("origID", $olist,set_value("origID",$origID), "id='origID' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>                				
 				<div class="col-sm-2">
-					<?php $dlist = array("0" => "Select Destination");               
+					<?php $dlist = array("0" => " Destination");               
 				   foreach($types as $type){
 					  $dlist[$type->vx_aln_data_typeID] = $type->alias;
 					}							
@@ -142,37 +142,42 @@
 					<?php $activestatus[1]="Active";	$activestatus[0]="In Active";				
 				  echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
-				<div class="col-sm-2">
+				<div class="col-sm-1">
 				  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Search</button>
-				</div>	             				
+				</div>	
+				<div class="col-md-1">
+					<button data-toggle="collapse" data-target="#seasonList" type="button" class="form-control btn btn-danger"><i class="fa fa-table"></i> List</button>
+				</div>			
 			</div>
 		</form>
-        <div id="hide-table">
-            <table id="seasonslist" class="table table-striped table-bordered table-hover dataTable no-footer">
-                <thead>
-					<tr>
-                        <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
-						<!--<th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>-->
-						<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('orig_level_value')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('dest_level')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('dest_level_value')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('season_start_date')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('season_end_date')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('is_return_inclusive')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('season_color')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('season_active')?></th>
-                        <?php if(permissionChecker('season_edit') || permissionChecker('season_delete')) { ?>
-                        <th class="col-lg-2"><?=$this->lang->line('action')?></th>
-                           <?php } ?>
-                      </tr>
-                   </thead>
-                   <tbody>                            
-                   </tbody>
-               </table>
-          </div>
+		<div id="seasonList"  class="collapse">
+			<div id="hide-table">
+				<table id="seasonslist" class="table table-striped table-bordered table-hover dataTable no-footer" style="width:100%;">
+					<thead>
+						<tr>
+							<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
+							<!--<th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>-->
+							<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('orig_level_value')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('dest_level')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('dest_level_value')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('season_start_date')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('season_end_date')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('is_return_inclusive')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('season_color')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('season_active')?></th>
+							<?php if(permissionChecker('season_edit') || permissionChecker('season_delete')) { ?>
+							<th class="col-lg-2"><?=$this->lang->line('action')?></th>
+							   <?php } ?>
+						  </tr>
+					   </thead>
+					   <tbody>                            
+					   </tbody>
+				   </table>
+			  </div>
+		  </div>
 	</div>
 	<div class="col-md-12 cal-table">
 		<div class="col-md-8" style="padding:0;">
@@ -428,7 +433,7 @@ $("#ams_season_end_date").datepicker();
 $('#season_color').colorpicker({});
 
 $( ".select2" ).select2({closeOnSelect:false,
-		         placeholder: "Select a value"});
+		         placeholder: " value"});
 				 
 $(document).ready(function(){
 	$('#ams_orig_levelID').trigger('change');
