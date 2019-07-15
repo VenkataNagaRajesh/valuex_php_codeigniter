@@ -152,9 +152,8 @@
 				<table id="seasonslist" class="table table-striped table-bordered table-hover dataTable no-footer" style="width:100%;">
 					<thead>
 						<tr>
-							<th class="col-lg-1" colspan="3"><?=$this->lang->line('slno')?></th>
+							<th class="col-lg-1" ><?=$this->lang->line('slno')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
-							<!--<th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>-->
 							<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('orig_level_value')?></th>
@@ -164,7 +163,9 @@
 							<th class="col-lg-1"><?=$this->lang->line('season_end_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('is_return_inclusive')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season_color')?></th>
+							<?php if(permissionChecker('season_edit')) {?>
 							<th class="col-lg-1"><?=$this->lang->line('season_active')?></th>
+							<?php }?>
 							<?php if(permissionChecker('season_edit') || permissionChecker('season_delete')) { ?>
 							<th class="col-lg-2"><?=$this->lang->line('action')?></th>
 							   <?php } ?>
