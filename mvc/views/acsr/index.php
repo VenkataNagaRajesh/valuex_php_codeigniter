@@ -147,15 +147,15 @@
 
                  </div>
 
-		 <div class="col-sm-2">
+		 <!--<div class="col-sm-2">
                             <?php
 
-						//$toggle['-1'] = ' future use';
+						$toggle['-1'] = ' future use';
                                                           $toggle[1] = "Yes";
                                                           $toggle[0] = "No";
                                                           echo form_dropdown("future_use", $toggle,set_value("future_use",$future_use), "id='future_use' class='form-control hide-dropdown-icon select2'");
                                                         ?>
-                        </div>
+                        </div>-->
                                   
 
                 <div class="col-sm-2">
