@@ -98,27 +98,50 @@
 					<div class="col-md-2 select-form">
 						<h4>Flight No Range</h4>
 						<div class="col-md-12">
-							<input type="text" class="form-control" placeholder="Enter Start range Flight Number" id="sflight_number" name="sflight_number" value="<?=set_value('sflight_number',$flight_number)?>" >
+							<input type="text" class="form-control" placeholder="Start range" id="sflight_number" name="sflight_number" value="<?=set_value('sflight_number',$flight_number)?>" >
 						</div>
 						<div class="col-md-12">
-							<input type="text" class="form-control" placeholder="Enter End range Flight number" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
+							<input type="text" class="form-control" placeholder="End range" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
 						</div>
 					</div>
-					<div class="col-md-3">
-						<h4>Departure Date</h4>
+					<div class="col-md-2 select-form">
+						<h4>Season and Carrier</h4>
 						<div class="col-md-12">
-							<div class="input-group">
-								<input type="text" class="form-control" placeholder="Enter Dep From date" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
-								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-							</div>
+		 <?php
+                                                        $seasons['0'] = 'Season';
+                                                        ksort($seasons);
+                                                        echo form_dropdown("sseason_id", $seasons,set_value("sseason_id",$sseason_id), "id='sseason_id' class='form-control hide-dropdown-icon select2'"); ?>
+
 						</div>
 						<div class="col-md-12">
-							<div class="input-group">
-								 <input type="text" class="form-control" placeholder="Enter Dep To date" id="dep_to_date" name="dep_to_date" value="<?=set_value('dep_to_date',$dep_to_date)?>" >
-								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-							</div>
+
+		 <?php
+                                                        $airlines['0'] = 'Carrier';
+                                                        ksort($airlines);
+                                                        echo form_dropdown("scarrier", $airlines,set_value("scarrier",$scarrier_id), "id='scarrier' class='form-control hide-dropdown-icon select2'"); ?>
+
 						</div>
 					</div>
+
+					  <div class="col-md-2 select-form">
+                                                <h4>Cabins</h4>
+                                                <div class="col-md-12">
+				 <?php
+                                                        $cabins['0'] = 'From Cabin';
+                                                        ksort($cabins);
+                                                        echo form_dropdown("sfrom_cabin", $cabins,set_value("sfrom_cabin",$sfrom_cabin), "id='sfrom_cabin' class='form-control hide-dropdown-icon select2'"); ?>
+
+                                                </div>
+                                                <div class="col-md-12">
+
+				   <?php
+                                                        $cabins['0'] = 'To Cabin';
+                                                        ksort($cabins);
+                                                        echo form_dropdown("sto_cabin", $cabins,set_value("sto_cabin",$sto_cabin), "id='sto_cabin' class='form-control hide-dropdown-icon select2'"); ?>
+
+                                                </div>
+                                        </div>
+
 					<div class="col-md-2 select-form">
 						<h4>Board/Off Point</h4>
 						<div class="col-md-12">
@@ -134,7 +157,7 @@
                                 echo form_dropdown("soff_point", $airports,set_value("soff_point",$off_point), "id='soff_point' class='form-control hide-dropdown-icon select2'");    ?>
 						</div>
 					</div>
-					<div class="col-md-3 select-form">
+					<div class="col-md-2 select-form">
 						<h4>Market</h4>
 						<div class="col-md-12">
 							<?php
@@ -152,8 +175,8 @@
 					<div class="col-md-2 select-form">
 						<h4>Frequency</h4>
 						<div class="col-md-12">
-							<?php
-								echo form_dropdown("sfrequency", $days_of_week, set_value("sfrequency",$frequency), "id='sfrequency' class='form-control select2'");?>  
+	
+		<input type="text" class="form-control" placeholder='frequency' id="sfrequency" name="sfrequency" value="<?=set_value('sfrequency')?>" >
 						</div>
 						<div class="col-md-12">
 							<a href="#" type="button"  id='btn_txt' class="btn btn-danger form-control" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
@@ -217,6 +240,11 @@ function loaddatatable() {
 			{"name": "frequency","value": $("#sfrequency").val()},
 		  {"name": "smarket","value": $("#smarket").val()},
                    {"name": "dmarket","value": $("#dmarket").val()},
+		  {"name": "sfrom_cabin","value": $("#sfrom_cabin").val()},
+                   {"name": "sto_cabin","value": $("#sto_cabin").val()},
+			 {"name": "sseason_id","value": $("#sseason_id").val()},
+                   {"name": "scarrier","value": $("#scarrier").val()},
+
                   
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {

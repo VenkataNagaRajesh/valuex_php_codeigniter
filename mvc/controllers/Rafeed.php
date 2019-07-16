@@ -8,7 +8,9 @@ class Rafeed extends Admin_Controller {
 		$this->load->model("airline_cabin_m");
 		$this->load->model('airports_m');
 		$this->load->model("season_m");
+		$this->load->model("airline_m");
 		$language = $this->session->userdata('lang');
+		
 		$this->lang->load('rafeed', $language);	
 	}	
 	
@@ -60,12 +62,47 @@ class Rafeed extends Admin_Controller {
                 }
 		
 
+
+		 if(!empty($this->input->post('flight_range'))){
+                   $this->data['flight_range'] = $this->input->post('flight_range');
+                } else {
+                  $this->data['flight_range'] = '';
+                }
+
+                if(!empty($this->input->post('frequency'))){
+                $this->data['frequency'] = $this->input->post('frequency');
+                } else {
+                    $this->data['frequency'] = '';
+                }
+
+
+		 if(!empty($this->input->post('start_date'))){
+                   $this->data['start_date'] = date('d-m-Y',$this->input->post('start_date'));
+                } else {
+                  $this->data['start_date'] = '';
+                }
+
+                if(!empty($this->input->post('end_date'))){
+                $this->data['end_date'] = date('d-m-Y',$this->input->post('end_date'));
+                } else {
+                    $this->data['end_date'] = 0;
+                }
+
 		//print_r( $this->data['stateID']); exit;
 		$this->data['country'] = $this->rafeed_m->getCodesByType('2');
 		$this->data['city'] = $this->rafeed_m->getCodesByType('3');
-		$this->data['airlines'] = $this->rafeed_m->getCodesByType('12');
+		//$this->data['airlines'] = $this->rafeed_m->getCodesByType('12');
 		$this->data['airport'] = $this->rafeed_m->getCodesByType('1');
 		$this->data['cabin'] = $this->rafeed_m->getCodesByType('13');
+
+               $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                        $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+                           } else {
+                   $this->data['airlines'] = $this->airline_m->getAirlinesData();
+                }
+
 
 		$this->data["subview"] = "rafeed/index";
 		$this->load->view('_layout_main', $this->data);
@@ -231,8 +268,11 @@ class Rafeed extends Admin_Controller {
 		$usertypeID = $this->session->userdata('usertypeID');	  
 
 
+
+	$aColumns = array('rafeed_id','airline_code','ticket_number','coupon_number','dc.code','dci.code','dico.code','dici.code','dbp.code','dop.code','prorated_price','dcla.code','class','fare_basis','rf.departure_date','day_of_week','dai.code', 'dam.code','dcar.code','rf.flight_number','office_id','channel','dpax.code','rf.active','dfre.aln_data_value' , 'dc.aln_data_value', 'dci.aln_data_value', 'dico.aln_data_value',
+                                'dici.aln_data_value', 'dai.aln_data_value', 'dam.aln_data_value', 'dcar.aln_data_value', 'dbp.aln_data_value',
+                                'dop.aln_data_value','dcla.aln_data_value');
 		
-	    $aColumns = array('rafeed_id','ticket_number', 'coupon_number', 'booking_country', 'booking_city', 'issuance_country', 'issuance_city','boarding_point', 'off_point', 'cabin', 'class', 'departure_date', 'prorated_price', 'operating_airline_code', 'marketing_airline_code', 'rf.active');
 	
 		$sLimit = "";
 		
@@ -247,12 +287,12 @@ class Rafeed extends Admin_Controller {
 				{
 					if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
 					{
-						if($_GET['iSortCol_0'] == 8){
-							$sOrder .= " (s.order_no*-1) DESC ,";
-						} else {
+						//if($_GET['iSortCol_0'] == 8){
+						//	$sOrder .= " (s.order_no*-1) DESC ,";
+						//} else {
 						 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
 							".$_GET['sSortDir_'.$i] .", ";
-						}
+						//}
 					}
 				}				
 				  $sOrder = substr_replace( $sOrder, "", -2 );
@@ -324,9 +364,56 @@ class Rafeed extends Admin_Controller {
 
 
 
+			if(!empty($this->input->get('flight_range'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+				$num_arr = explode('-',$this->input->get('flight_range'));
+
+				if ( $num_arr[0] > 0 AND $num_arr[1] > 0 ) {
+					$sWhere .= 'rf.flight_number >= '.$num_arr[0]. ' AND rf.flight_number <= ' . $num_arr[1];
+				} else if($num_arr[0] > 0 ) {
+					$sWhere .= 'rf.flight_number ='. $num_arr[0];
+					
+				}
+			
+                        }
+
+
+			 if(!empty($this->input->get('start_date'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'rf.departure_date >= '. strtotime($this->input->get('start_date'));
+                        }
+                        if(!empty($this->input->get('end_date'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'rf.departure_date <= '.  strtotime($this->input->get('end_date'));
+                        }
+
+
+
+			if(!empty($this->input->get('frequency'))){
+				$frstr = $this->input->get('frequency');
+				$freq = $this->airports_m->getDefnsCodesListByType('14');
+				 if ( $frstr != '0') {
+                                        $arr = str_split($frstr);
+					$freq_str = implode(',',array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr));
+					$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                        $sWhere .= 'rf.day_of_week IN ('.$freq_str.') ';
+				  }
+					
+                        }
+
+		  $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                         $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                        $sWhere .= 'rf.carrier IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                
+                }
+
+
 			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS rafeed_id,ticket_number, coupon_number, dc.code as booking_country , 
-				CONCAT(dfre.aln_data_value,'(',dfre.code,')' ) as day_of_week,  
+				dfre.code as day_of_week,  dfre.aln_data_value , dc.aln_data_value, dci.aln_data_value, dico.aln_data_value,
+				dici.aln_data_value, dai.aln_data_value, dam.aln_data_value, dcar.aln_data_value, dbp.aln_data_value,
+				dop.aln_data_value,dcla.aln_data_value,
 			   dci.code as  booking_city, dico.code as issuance_country, dici.code as issuance_city,dcar.code as carrier_code,
 			    dai.code as operating_airline_code, dam.code as marketing_airline_code, flight_number, dbp.code as boarding_point, 
                            dop.code as off_point,  dcla.code as cabin ,  departure_date, prorated_price, class,

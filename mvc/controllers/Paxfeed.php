@@ -172,7 +172,7 @@ class Paxfeed extends Admin_Controller {
 
 			             if ( $raw_pax_id ) {
 					$paxfeed = array();
-	 				$paxfeed['airline_code'] =  $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['airline_code'],'12');
+	 				$paxfeed['airline_code'] = $paxfeedraw['airline_code'];
                                         $paxfeed['pnr_ref'] = $paxfeedraw['pnr_ref'];
                                         $paxfeed['pax_nbr'] = $paxfeedraw['pax_nbr'];
                                         $paxfeed['first_name'] = $paxfeedraw['first_name'];
@@ -365,14 +365,13 @@ $aColumns = array('dtpf_id', 'flight_nbr', 'dep_date', 'from_city', 'to_city', '
 
 			dtpf_id,first_name, last_name, pnr_ref, pax_nbr,flight_number,ptc.code as ptc, fqtv, seg_nbr, dep_date, class ,dt.code as to_city,
 			df.code as from_city, pax_contact_email, phone, cou.code as booking_country, cit.code as booking_city, office_id, 
-			da.code as airline_code , channel, dca.code as carrier_code, dcab.aln_data_value as cabin, pax.arrival_time,
+			pax.airline_code , channel, dca.code as carrier_code, dcab.aln_data_value as cabin, pax.arrival_time,
 			pax.dept_time, pax.arrival_date,
 			pax.active  FROM VX_aln_daily_tkt_pax_feed pax 
 			LEFT JOIN vx_aln_data_defns df on (df.vx_aln_data_defnsID = pax.from_city) 
 			LEFT JOIN vx_aln_data_defns dt on  (dt.vx_aln_data_defnsID = pax.to_city) 
 			LEFT JOIN vx_aln_data_defns cou  on (cou.vx_aln_data_defnsID = pax.booking_country) 
                         LEFT JOIN vx_aln_data_defns cit on  (cit.vx_aln_data_defnsID = pax.booking_city) 
-			LEFT JOIN  vx_aln_data_defns da on (da.vx_aln_data_defnsID = pax.airline_code)  
 			LEFT JOIN  vx_aln_data_defns dca on (dca.vx_aln_data_defnsID = pax.carrier_code)	
 			LEFT JOIN  vx_aln_data_defns dcab on (dcab.vx_aln_data_defnsID = pax.cabin)
 			LEFT JOIN  vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = pax.ptc)
