@@ -473,8 +473,8 @@ class Fclr extends Admin_Controller {
 		$usertypeID = $this->session->userdata('usertypeID');	  
 
 
+	 $aColumns = array('fclr_id','dbp.code','dop.code','dai.code','flight_number','season_name','sea.ams_season_start_date', 'sea.ams_season_end_date','dfre.code','fca.code','tca.code','average','min','max','slider_start','fc.active','dop.code','dbp.code','dai.code','dfre.aln_data_value', 'dop.aln_data_value', 'dbp.aln_data_value', 'dai.aln_data_value', 'fca.aln_data_value', 'tca.aln_data_value');
 		
-	    $aColumns = array('fclr_id','flight_number','boarding_point','off_point','dop.code','dbp.code','dai.code','dfre.aln_data_value', 'dop.aln_data_value', 'dbp.aln_data_value', 'dai.aln_data_value', 'fca.aln_data_value', 'tca.aln_data_value','sea.season_name');
 	
 		$sLimit = "";
 		
@@ -489,12 +489,8 @@ class Fclr extends Admin_Controller {
 				{
 					if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
 					{
-						if($_GET['iSortCol_0'] == 8){
-							$sOrder .= " (s.order_no*-1) DESC ,";
-						} else {
 						 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
 							".$_GET['sSortDir_'.$i] .", ";
-						}
 					}
 				}				
 				  $sOrder = substr_replace( $sOrder, "", -2 );
@@ -626,7 +622,7 @@ class Fclr extends Admin_Controller {
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code as carrier_code , off_point, 
 		season_id,flight_number, fca.code as fcabin, sea.season_name,
-            	tca.code as tcabin,  dfre.code as day_of_week , fc.active,
+            	tca.code as tcabin,  dfre.code as day_of_week , fc.active, sea.ams_season_start_date as start_date, sea.ams_season_end_date as end_date,
             	min,max,average,slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point,
 		dfre.aln_data_value, dop.aln_data_value, dbp.aln_data_value, dai.aln_data_value, fca.aln_data_value, tca.aln_data_value
@@ -663,7 +659,7 @@ $sWhere $sOrder $sLimit";
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip"  data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
 
 			
-			if ( $feed->season_id > 0 ) {
+			/*if ( $feed->season_id > 0 ) {
 				$season = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$feed->season_id));
 				$feed->season_id =  $season->season_name ;
 				$feed->start_date = date('d-m-Y',$season->ams_season_start_date);
@@ -672,7 +668,12 @@ $sWhere $sOrder $sLimit";
 				 $feed->season_id = 'default season';
 				$feed->start_date = 'NA';
 				$feed->end_date = 'NA';
-			}
+			}*/
+
+
+			$feed->season_id = ($feed->season_name) ? ($feed->season_name) : 'default season';
+			$feed->start_date = ($feed->start_date) ? date('d-m-Y',$feed->start_date) : 'NA';
+			$feed->end_date = $feed->end_date ? date('d-m-Y',$feed->end_date) : 'NA';
 
                   if(permissionChecker('fclr_edit')){
 
