@@ -55,18 +55,25 @@
 						<label class="control-label">Departure Start & End Time: HRS & Mins</label>
 						<div class="col-md-3">
 							<?php
+							$hrs['-1'] = 'Start Hrs';
+							ksort($hrs);
+							
 								echo form_dropdown("flight_dep_start_hrs", $hrs,set_value("flight_dep_start_hrs"), "id='flight_dep_start_hrs' class='form-control hide-dropdown-icon select2'");?>
 						</div>
 						<div class="col-md-3">
 							 <?php
+							 $mins['-1'] = 'Start Mins';
+							 ksort($mins);
 							 echo form_dropdown("flight_dep_start_mins", $mins,set_value("flight_dep_start_mins"), "id='flight_dep_start_mins' class='form-control hide-dropdown-icon select2'"); ?>
 						</div>
 						<div class="col-md-3">
 							<?php
+								$hrs['-1'] = 'End Hrs';
 								echo form_dropdown("flight_dep_end_hrs", $hrs,set_value("flight_dep_end_hrs"), "id='flight_dep_end_hrs' class='form-control hide-dropdown-icon select2'");?>
 						</div>
 						<div class="col-md-3">
 							 <?php
+								 $mins['-1'] = 'End Mins';
 								echo form_dropdown("flight_dep_end_mins", $mins,set_value("flight_dep_end_mins"), "id='flight_dep_end_mins' class='form-control hide-dropdown-icon select2'");?>
 						</div>
 					</div>
@@ -246,17 +253,15 @@
 		<div class="col-sm-12">
                            <div class="col-sm-2">
                <?php 
-			$marketzones['0'] = ' Origin Market';
-			ksort($marketzones);
+                        $carriers[0] = ' Carrier';
+                        ksort($carriers);
 
-                                   echo form_dropdown("sorig_market_id", $marketzones,set_value("sorig_market_id",$origmarketID), "id='sorig_market_id' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("scarrier", $carriers,set_value("scarrier",$scarrier), "id='scarrier' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
 
 <div class="col-sm-2">
-               <?php $marketzones['0'] = ' Destination Market';
-			ksort($marketzones);
-                                   echo form_dropdown("sdest_market_id", $marketzones,set_value("sdest_market_id",$destmarketID), "id='sdest_market_id' class='form-control hide-dropdown-icon select2'");    ?>
+<input type="text" placeholder="Frequency" class="form-control" id="sfrequency" name="sfrequency" value="<?=set_value('sfrequency')?>" >
 
                 </div>
 
@@ -322,7 +327,7 @@
                <?php
                         $class_list['0'] = ' From Cabin';
                         foreach ($class_type as $class) {
-                                $class_list[$class->vx_aln_data_defnsID] = $class->aln_data_value;
+                                $class_list[$class->vx_aln_data_defnsID] = $class->code;
                         }
 
 			ksort($class_type);
@@ -344,14 +349,6 @@
 <div class='form-group'>
 <div class="col-sm-12">
 
-		 <div class="col-sm-2">
-
-                        <?php
-                 echo form_multiselect("sday[]", $days_of_week, set_value("sday"), "id='sday' class='form-control select2'");
-
-                        ?>
-
-                 </div>
 
 
 
@@ -427,9 +424,8 @@ function loaddatatable() {
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('eligibility_exclusion/server_processing'); ?>",   
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
-       aoData.push({"name": "origID","value": $("#sorig_market_id").val()},
-                   {"name": "destID","value": $("#sdest_market_id").val()},
-		   {"name": "day","value": $("#sday").val()},
+       aoData.push({"name": "scarrier","value": $("#scarrier").val()},
+		   {"name": "sfrequency","value": $("#sfrequency").val()},
 		   {"name": "fromClass","value": $("#sfrom_class").val()},
 		   {"name": "toClass","value": $("#sto_class").val()},
 		    {"name": "nbrStart","value": $("#sflight_nbr_start").val()},
@@ -724,10 +720,10 @@ function form_reset(){
 	   $("#dest_level_id").val(0).trigger('change');
            $("#orig_level_value").val(0).trigger('change');
 	   $("#dest_level_value").val(0).trigger('change');
-	   $("#flight_dep_start_hrs").val('00').trigger('change');
-	   $("#flight_dep_start_mins").val('00').trigger('change');
-	   $("#flight_dep_end_hrs").val('00').trigger('change');
-           $("#flight_dep_end_mins").val('00').trigger('change');
+	   $("#flight_dep_start_hrs").val('-1').trigger('change');
+	   $("#flight_dep_start_mins").val('-1').trigger('change');
+	   $("#flight_dep_end_hrs").val('-1').trigger('change');
+           $("#flight_dep_end_mins").val('-1').trigger('change');
 
 	 $.each($('input[type=checkbox][name=cabin_list]'), function(){            
 			$('input[type=checkbox][name="cabin_list"]').parent().removeClass("active");
