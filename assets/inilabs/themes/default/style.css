@@ -3698,6 +3698,10 @@ fieldset[disabled] .btn-vk.active {
 /*my custom styles*/
 .onoffswitch-small-inner::before {
 	background:#109610 !important;
+	text-align: left;
+}
+.onoffswitch-small {
+	margin:0 auto;
 }
 .pref-setting input{
 	margin:8px 0;
@@ -4290,6 +4294,15 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 }
 #hide-table{
 	overflow: auto;
+}
+#hide-table table tr th{
+	font-weight:bold;
+	text-align:center;
+	white-space: nowrap;
+	
+}
+#hide-table table tr td{
+	text-align:center;
 }
 .title-tool-bar{
 	color: #fff;
