@@ -133,9 +133,9 @@
                 if($(this).attr('class') == 'active') {
                     $(this).parents('li').addClass('active');
                 }
-
-              
+                             
             });
+			
         </script>
     </body>
 </html>
