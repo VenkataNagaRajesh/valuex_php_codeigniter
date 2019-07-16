@@ -152,7 +152,7 @@
 				<table id="seasonslist" class="table table-striped table-bordered table-hover dataTable no-footer" style="width:100%;">
 					<thead>
 						<tr>
-							<th class="col-lg-1" colspan="3"><?=$this->lang->line('slno')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
 							<!--<th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>-->
 							<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
