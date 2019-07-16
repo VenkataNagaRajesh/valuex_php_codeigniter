@@ -14,49 +14,100 @@
             <div class="col-sm-8">
                 <form class="form-horizontal" role="form" method="post">
 
-                   <?php
-                        if(form_error('orig_market_id'))
+					
+
+			<?php
+                        $aln_datatypes['0'] = "Origin Level";
+                        ksort($aln_datatypes);
+                      ?>
+                 <?php
+                        if(form_error('orig_level_id'))
                             echo "<div class='form-group has-error' >";
                         else
-                            echo "<div class='form-group'>";
+                            echo "<div class='form-group' >";
                     ?>
-                        <label for="orig_market_id" class="col-sm-2 control-label">
-                            <?=$this->lang->line('orig_market')?>
+                        <label for="orig_level_id" class="col-sm-2 control-label">
+                            <?=$this->lang->line("orig_level_id")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
                         <?php
-			$marketzones['0'] = 'Select Market';
-			ksort($marketzones);
-                          echo form_dropdown("orig_market_id", $marketzones,set_value("orig_market_id"), "id='orig_market_id' class='form-control hide-dropdown-icon select2'");
-                                                   ?>
-
+                        echo form_dropdown("orig_level_id", $aln_datatypes, set_value("orig_level_id"), "id='orig_level_id' class='form-control select2'");
+                        ?>
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('orig_market_id'); ?>
+                            <?php echo form_error('orig_level_id'); ?>
                         </span>
                     </div>
 
-					
-					<?php 
-                        if(form_error('dest_market_id')) 
+
+			
+				 <?php
+                        if(form_error('orig_level_value'))
                             echo "<div class='form-group has-error' >";
-                        else     
-                            echo "<div class='form-group'>";
+                        else
+                            echo "<div class='form-group' >";
                     ?>
-                        <label for="dest_market_id" class="col-sm-2 control-label">
-                            <?=$this->lang->line('dest_market')?>
+                        <label for="orig_level_value" class="col-sm-2 control-label">
+                            <?=$this->lang->line("orig_level_value")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
-			<?php 
-			  echo form_dropdown("dest_market_id", $marketzones,set_value("dest_market_id"), "id='dest_market_id' class='form-control hide-dropdown-icon select2'");  
-                                                   ?>
-
+                                 <select  name="orig_level_value[]"  id="orig_level_value" class="form-control select2" multiple="multiple">
+                                </select>
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('dest_market_id'); ?>
+                            <?php echo form_error('orig_level_value[]'); ?>
+                        </span>
+                        <span> <input type="checkbox" id="checkbox_src_level" >Select All
                         </span>
                     </div>
-					
+
+
+
+			                        <?php
+                        $aln_datatypes['0'] = "Dest Level";
+                        ksort($aln_datatypes);
+                      ?>
+                 <?php
+                        if(form_error('dest_level_id'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="dest_level_id" class="col-sm-2 control-label">
+                            <?=$this->lang->line("dest_level_id")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-6">
+                        <?php
+                        echo form_dropdown("dest_level_id", $aln_datatypes, set_value("dest_level_id"), "id='dest_level_id' class='form-control select2'");
+                        ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('dest_level_id'); ?>
+                        </span>
+                    </div>
+
+
+			                                 <?php
+                        if(form_error('dest_level_value'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="dest_level_value" class="col-sm-2 control-label">
+                            <?=$this->lang->line("dest_level_value")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-6">
+                                 <select  name="dest_level_value[]"  id="dest_level_value" class="form-control select2" multiple="multiple">
+                                </select>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('dest_level_value[]'); ?>
+                        </span>
+                        <span> <input type="checkbox" id="checkbox_dest_level" >Select All
+                        </span>
+                    </div>
+
+
 
 	               <?php
                         if(form_error('carrier_code'))
@@ -170,16 +221,20 @@
                             <?=$this->lang->line('flight_dep_time_start');?>
                         </label>
                         <div class="col-sm-6">
-				<div class="col-sm-3">
-				Hrs:
+				<div class="col-sm-4">
+			
                            <?php
+				$hrs['-1'] = 'Hrs';
+				ksort($hrs);
 
                                     echo form_dropdown("flight_dep_start_hrs", $hrs,set_value("flight_dep_start_hrs"), "id='flight_dep_start_hrs' class='form-control hide-dropdown-icon select2'");
                                  ?>
 				</div>
-				<div class="col-sm-3">
-					Mins:
+				<div class="col-sm-4">
 		<?php
+
+					$mins['-1'] = 'Mins';
+						ksort($mins);
 		                                    echo form_dropdown("flight_dep_start_mins", $mins,set_value("flight_dep_start_mins"), "id='flight_dep_start_mins' class='form-control hide-dropdown-icon select2'");
 
 		?>
@@ -200,15 +255,13 @@
                             <?=$this->lang->line('flight_dep_time_end')?>
                         </label>
                         <div class="col-sm-6">
-				<div class="col-sm-3">
-				Hrs:
+				<div class="col-sm-4">
                            <?php
                                      echo form_dropdown("flight_dep_end_hrs", $hrs,set_value("flight_dep_end_hrs"), "id='flight_dep_end_hrs' class='form-control hide-dropdown-icon select2'");
                                                    ?>
 				</div>
 
-				  <div class="col-sm-3">
-				Mins:
+				  <div class="col-sm-4">
                            <?php
                                      echo form_dropdown("flight_dep_end_mins", $mins,set_value("flight_dep_end_mins"), "id='flight_dep_end_mins' class='form-control hide-dropdown-icon select2'");
                                                    ?>
@@ -254,15 +307,10 @@
                             <?=$this->lang->line('frequency');?>
                         </label>
                         <div class="col-sm-6">
-<?php
-			foreach($days_of_week as $day ) {
-				$days[$day->vx_aln_data_defnsID] = $day->aln_data_value;
-			}
-		 echo form_multiselect("frequency[]", $days, set_value("frequency"), "id='frequency' class='form-control select2'");
-
-     ?>                   </div>
+			<input type="text" class="form-control" id="frequency" name="frequency" value="<?=set_value('frequency')?>" >
+                       </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('frequency[]'); ?>
+                            <?php echo form_error('frequency'); ?>
                         </span>
                     </div>
 
@@ -386,26 +434,6 @@
 		
 
 
-					<?php 
-                        if(form_error('future_use')) 
-                            echo "<div class='form-group has-error' >";
-                        else     
-                           echo "<div class='form-group' >";
-                    ?>
-					   <label for="future_use" class="col-sm-2 control-label">
-                            <?=$this->lang->line('future_use');?><span class="text-red">*</span>
-                       </label>
-                        <div class="col-sm-6">
-                            <?php 
-							  $toggle[1] = "Yes";
-							  $toggle[0] = "No";
-							  echo form_dropdown("future_use", $toggle,set_value("future_use",1), "id='future_use' class='form-control hide-dropdown-icon'");
-							?>
-                        </div>
-						<span class="col-sm-4 control-label">
-                            <?php echo form_error('future_use'); ?>
-                        </span>
-                    </div>
 					
 
                     <div class="form-group">
@@ -420,10 +448,91 @@
 </div>
 <script>
 $( ".select2" ).select2({closeOnSelect:false,
-		         placeholder: "Select Frequency"});
+		         placeholder: "Select Level Value"});
 				
+
+$(document).ready(function(){
+$('#amz_incl_id').trigger('change');
+$('#amz_excl_id').trigger('change');
+$('#amz_level_id').trigger('change');
+        var level = [<?php echo implode(',',$this->input->post("amz_level_value")); ?>];
+        $('#amz_level_value').val(level).trigger('change');
+
+        var incl = [<?php echo implode(',',$this->input->post("amz_incl_value")); ?>];
+        $('#amz_incl_value').val(incl).trigger('change');
+
+        var excl = [<?php echo implode(',',$this->input->post("amz_excl_value")); ?>];
+        $('#amz_excl_value').val(excl).trigger('change');
+
+});
+
+$("#checkbox_src_level").click(function(){
+    if($("#checkbox_src_level").is(':checked') ){
+        $("#orig_level_value > option").prop("selected","selected");
+        $("#orig_level_value").trigger("change");
+    }else{
+        $("#orig_level_value > option").removeAttr("selected");
+         $("#orig_level_value").trigger("change");
+     }
+});
+
+
+$("#checkbox_dest_level").click(function(){
+    if($("#checkbox_dest_level").is(':checked') ){
+        $("#dest_level_value > option").prop("selected","selected");
+        $("#dest_level_value").trigger("change");
+    }else{
+        $("#dest_level_value > option").removeAttr("selected");
+         $("#dest_level_value").trigger("change");
+     }
+});
+
+
+
+$('#orig_level_id').change(function(event) {    
+        $('#orig_level_value').val(null).trigger('change')
+  var orig_id = $(this).val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+             data: "id=" + orig_id,            
+             dataType: "html",                                  
+             success: function(data) {               
+             $('#orig_level_value').html(data); }        
+      });       
+});
+
+
+
+$('#dest_level_id').change(function(event) {    
+        $('#dest_level_value').val(null).trigger('change');
+  var dest_id = $(this).val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+             data: "id=" + dest_id,            
+             dataType: "html",                                  
+             success: function(data) {               
+             $('#dest_level_value').html(data); }        
+      });       
+});
+
+
 $("#flight_dep_date_start").datepicker();
 $("#flight_dep_date_end").datepicker();
+
+
+$(document).ready(function(){
+$('#orig_level_id').trigger('change');
+$('#dest_level_id').trigger('change');
+        var orig = [<?php echo implode(',',$this->input->post("orig_level_value")); ?>];
+        $('#orig_level_value').val(level).trigger('change');
+
+        var dest = [<?php echo implode(',',$this->input->post("dest_level_value")); ?>];
+        $('#dest_level_value').val(dest).trigger('change');
+
+
+});
 
 
 </script>

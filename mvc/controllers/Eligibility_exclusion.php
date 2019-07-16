@@ -52,27 +52,27 @@ class Eligibility_exclusion extends Admin_Controller {
 			array(
                  		'field' => 'flight_nbr_start',
                  		'label' => $this->lang->line("flight_nbr_start"),
-                 		'rules' => 'trim|integer|max_length[4]|min_length[4]|xss_clean'
+                 		'rules' => 'trim|integer|max_length[4]|xss_clean|callback_FlightNbrStartCheck'
             		),
 			array(
           		       'field' => 'flight_nbr_end',
                  		'label' => $this->lang->line("flight_nbr_end"),
-                 		'rules' => 'trim|integer|max_length[4]|min_length[4]|xss_clean'
+                 		'rules' => 'trim|integer|max_length[4]|xss_clean|callback_FlightNbrEndCheck'
             		),
 			array(
                  		'field' => 'frequency',
                  		'label' => $this->lang->line("frequency"),
-                 		'rules' => 'trim|max_length[200]|xss_clean|callback_valFrequency'
+                 		'rules' => 'trim|max_length[7]|xss_clean|callback_valFrequency'
             		),
 			array(
                 		 'field' => 'flight_efec_date',
                 		 'label' => $this->lang->line("flight_efec_date"),
-                 		'rules' => 'trim|max_length[200]|xss_clean|callback_validateDate'
+                 		'rules' => 'trim|max_length[200]|xss_clean|callback_validateEfecDate'
             		),
 			array(
                			  'field' => 'flight_disc_date',
                  		'label' => $this->lang->line("flight_disc_date"),
-                 		'rules' => 'trim|max_length[200]|xss_clean|callback_validateDate'
+                 		'rules' => 'trim|max_length[200]|xss_clean|callback_validateDiscDate'
             		),
 			array(
                                  'field' => 'flight_dep_start_hrs',
@@ -107,26 +107,90 @@ class Eligibility_exclusion extends Admin_Controller {
 		);
 		return $rules;
 	}
+
+
 	
 
-function validateDate(){
+function validateEfecDate(){
  $efec = strtotime($this->input->post("flight_efec_date"));
 $disc = strtotime($this->input->post("flight_disc_date"));
 
+if( $efec == '' AND $disc != '' ) {
+	$this->form_validation->set_message("validateEfecDate", "Flight Effective date should be selected");
+        return false;
+}else{
+	return true;
+}
+
+
+}
+
+
+function validateDiscDate(){
+ $efec = strtotime($this->input->post("flight_efec_date"));
+$disc = strtotime($this->input->post("flight_disc_date"));
+
+if( $efec != '' AND $disc == '' ) {
+        $this->form_validation->set_message("validateDiscDate", "Flight Discontinue date should be selected");
+        return false;
+}
+
 if($disc < $efec ) {
-  $this->form_validation->set_message("validateDate", "Flight discontinue date should be ahead of effective date ");
-	return false;
+  $this->form_validation->set_message("validateDiscDate", "Flight discontinue date should be ahead of effective date ");
+        return false;
 } else {
- 	return true;
+        return true;
 }
 
 
 }
+
+
+function FlightNbrStartCheck(){
+$start = $this->input->post("flight_nbr_start");
+$end = $this->input->post("flight_nbr_end");
+
+if( $start == '' AND $end != '' ) {
+        $this->form_validation->set_message("FlightNbrStartCheck", "Flight Nbr start required");
+        return false;
+}else{
+	return true;
+
+}
+
+}
+
+
+function FlightNbrEndCheck(){
+$start = $this->input->post("flight_nbr_start");
+$end = $this->input->post("flight_nbr_end");
+
+if( $start != '' AND $end == '' ) {
+        $this->form_validation->set_message("FlightNbrEndCheck", "Flight nbr end required");
+        return false;
+}
+
+if($end < $start ) {
+  $this->form_validation->set_message("FlightNbrEndCheck", "Flight end number should be more than start ");
+        return false;
+} else {
+        return true;
+}
+
+}
+
 
 function valFrequency($num)
 {
-
 	$arr = str_split($num);
+	$freq = range(1,7);
+	foreach($arr as $a ) {
+		if( !in_array($a, $freq) ) {
+			$this->form_validation->set_message("valFrequency", "%s must be in 1-7");
+			return false;
+		}
+
+	}
     if (count($arr) > 7 )
     {
 	$this->form_validation->set_message("valFrequency", "%s must be 7 digits");
@@ -332,10 +396,10 @@ function valFrequency($num)
                         $rule = $this->eligibility_exclusion_m->getDataForEditRule($id);
 			$rule->flight_efec_date = $rule->flight_efec_date ? date('d-m-Y',$rule->flight_efec_date) : '';
                   	$rule->flight_disc_date = $rule->flight_disc_date ? date('d-m-Y',$rule->flight_disc_date) : '';
-			$st_arr = explode(':',gmdate('H:i:s', $rule->flight_dep_start));
+			$st_arr = explode(':',gmdate('H:i', $rule->flight_dep_start));
 			$rule->flight_dep_start_hrs = $st_arr[0];
 			$rule->flight_dep_start_mins  = $st_arr[1];
-			$st_arr = explode(':',gmdate('H:i:s', $rule->flight_dep_end));
+			$st_arr = explode(':',gmdate('H:i', $rule->flight_dep_end));
                         $rule->flight_dep_end_hrs = $st_arr[0];
                         $rule->flight_dep_end_mins  = $st_arr[1];
 			$rule->orig_level_value = $rule->orig_level_value ? $rule->orig_level_value : '';
@@ -793,7 +857,7 @@ LEFT JOIN (
                 from 
                         (         
 						SELECT       ex.eexcl_id as eexcl_id  , 
-                                                COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS orig_level 
+                                                COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS orig_level 
                                                 FROM VX_aln_eligibility_excl_rules ex 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, ex.orig_level_value) AND ex.orig_level_id in (1,2,3,4,5)) 
@@ -804,7 +868,7 @@ LEFT JOIN (
 
                         (       
 						SELECT       ex.eexcl_id as eexcl_id  , 
-                                                COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS dest_level 
+                                                COALESCE(group_concat(c.code), group_concat(c.aln_data_value), group_concat(mm.market_name) )  AS dest_level 
                                                 FROM VX_aln_eligibility_excl_rules ex 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, ex.dest_level_value) AND ex.dest_level_id in (1,2,3,4,5)) 
@@ -848,8 +912,8 @@ LEFT JOIN (
 		$rule->ruleno = 'Rule#'.$rule->excl_grp;
 		$rule->flight_efec_date = $rule->flight_efec_date ? date('d-m-Y',$rule->flight_efec_date) : 'NA';
                $rule->flight_disc_date = $rule->flight_disc_date ? date('d-m-Y',$rule->flight_disc_date) : 'NA';
-		$rule->flight_dep_start = $rule->flight_dep_start ? gmdate('H:i:s', $rule->flight_dep_start) : 'NA';
-		$rule->flight_dep_end = $rule->flight_dep_end ? gmdate('H:i:s', $rule->flight_dep_end) : 'NA';
+		$rule->flight_dep_start = $rule->flight_dep_start ? gmdate('H:i', $rule->flight_dep_start) : 'NA';
+		$rule->flight_dep_end = $rule->flight_dep_end ? gmdate('H:i', $rule->flight_dep_end) : 'NA';
 
 		$rule->orig_level = $rule->orig_level ? $rule->orig_level : 'NA';
 		$rule->dest_level = $rule->dest_level ? $rule->dest_level : 'NA';

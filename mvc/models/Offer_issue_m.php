@@ -35,14 +35,17 @@ class Offer_issue_m extends MY_Model {
 
 	function getPassengerData($offerid,$flight_number) {
 
-		$this->db->select("group_concat(distinct dep_date) as dep_date,oref.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name)  as passengers, group_concat(distinct pax_contact_email)  as emails, group_concat(distinct pext.dtpfext_id) as p_list, carrier_code, from_city, to_city")->from('VX_aln_daily_tkt_pax_feed pf');
+		$this->db->select("group_concat(distinct dep_date) as dep_date,oref.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name)  as passengers, group_concat(distinct pax_contact_email)  as emails, group_concat(distinct pext.dtpfext_id) as p_list, carrier_code, from_city, to_city, group_concat(distinct dept_time) as dept_time, car.code as carrier_c, fc.code as from_city_name, tc.code as to_city_name")->from('VX_aln_daily_tkt_pax_feed pf');
 		$this->db->join('VX_aln_offer_ref oref', 'oref.pnr_ref =  pf.pnr_ref', 'LEFT');
 		$this->db->join('VX_aln_dtpf_ext pext', 'pext.dtpf_id =  pf.dtpf_id', 'LEFT');
 		$this->db->join(' vx_aln_data_defns dd', 'dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20', 'LEFT');
+		$this->db->join(' vx_aln_data_defns car', 'car.vx_aln_data_defnsID = pf.carrier_code AND car.aln_data_typeID = 12', 'LEFT');
+		$this->db->join(' vx_aln_data_defns fc', 'fc.vx_aln_data_defnsID = pf.from_city AND fc.aln_data_typeID = 1', 'LEFT');
+		$this->db->join(' vx_aln_data_defns tc', 'tc.vx_aln_data_defnsID = pf.to_city AND tc.aln_data_typeID = 1', 'LEFT');
 		$this->db->where('offer_id',$offerid); 
 		$this->db->where('dd.alias','bid_complete');
 		$this->db->where('pf.flight_number',$flight_number);
-		$this->db->group_by(array('pf.pnr_ref' , 'booking_status', 'from_city','to_city','carrier_code'));
+		$this->db->group_by(array('pf.pnr_ref' , 'booking_status', 'from_city','to_city','carrier_code','carrier_c', 'from_city_name','to_city_name'));
 		$query = $this->db->get();
 //var_dump($this->db->last_query());exit;
                 $passgr = $query->row();
@@ -88,14 +91,16 @@ class Offer_issue_m extends MY_Model {
 
 	}
 
-public function getCabinFromOfferID($offer_id, $flight_number) {
-	$this->db->select('upgrade_type')->from('VX_aln_bid');
-	$this->db->where('offer_id',$offer_id);
-	$this->db->where('flight_number',$flight_number);
+public function getBidInfoFromOfferID($offer_id, $flight_number) {
+	$this->db->select(' bid.*, oref.*, dd.aln_data_value as upgrade_cabin_name')->from('VX_aln_bid bid');
+	 $this->db->join('VX_aln_offer_ref oref', 'oref.offer_id =  bid.offer_id', 'LEFT');
+	$this->db->join('vx_aln_data_defns dd', 'dd.vx_aln_data_defnsID = bid.upgrade_type AND dd.aln_data_typeID = 13', 'LEFT');
+	$this->db->where('bid.offer_id',$offer_id);
+	$this->db->where('bid.flight_number',$flight_number);
 	$this->db->limit(1);
 	$query = $this->db->get();
         $check = $query->row();
-	return $check->upgrade_type;
+	return $check;
 	
 
 

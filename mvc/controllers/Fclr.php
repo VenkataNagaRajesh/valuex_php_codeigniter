@@ -432,6 +432,23 @@ class Fclr extends Admin_Controller {
                 }
 
 
+		if(!empty($this->input->post('sfrom_cabin'))){
+                   $this->data['sfrom_cabin'] = $this->input->post('sfrom_cabin');
+                } else {
+                  $this->data['sfrom_cabin'] = 0;
+                }
+
+
+
+		if(!empty($this->input->post('sto_cabin'))){
+                   $this->data['sto_cabin'] = $this->input->post('sto_cabin');
+                } else {
+                  $this->data['sto_cabin'] = 0;
+                }
+
+
+
+
            $this->data['seasons'] = $this->season_m->getSeasonsList();
 
 
@@ -457,7 +474,7 @@ class Fclr extends Admin_Controller {
 
 
 		
-	    $aColumns = array('fclr_id','flight_number','boarding_point','off_point');
+	    $aColumns = array('fclr_id','flight_number','boarding_point','off_point','dop.code','dbp.code','dai.code','dfre.aln_data_value', 'dop.aln_data_value', 'dbp.aln_data_value', 'dai.aln_data_value', 'fca.aln_data_value', 'tca.aln_data_value','sea.season_name');
 	
 		$sLimit = "";
 		
@@ -540,7 +557,7 @@ class Fclr extends Admin_Controller {
                                 $sWhere .= 'flight_number <= '.$this->input->get('flightNbrEnd');
                         }
 
-
+			/*
 			if(!empty($this->input->get('depStartDate'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'departure_date >= '. strtotime($this->input->get('depStartDate'));
@@ -548,14 +565,9 @@ class Fclr extends Admin_Controller {
                         if(!empty($this->input->get('depEndDate'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'departure_date <= '.  strtotime($this->input->get('depEndDate'));
-                        }
+                        }*/
 
 			
-		      if(!empty($this->input->get('frequency') )){
-				  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'fc.frequency = '.$this->input->get('frequency');
-
-                        }
 
 
 			if(!empty($this->input->get('smarket'))){
@@ -568,13 +580,57 @@ class Fclr extends Admin_Controller {
                         }
 
 
+
+			 if(!empty($this->input->get('sfrom_cabin'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'fc.from_cabin = '. $this->input->get('sfrom_cabin');
+                        }
+                        if(!empty($this->input->get('sto_cabin'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'fc.to_cabin = '.  $this->input->get('sto_cabin');
+                        }
+
+
+		       if(!empty($this->input->get('sseason_id'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'fc.season_id = '. $this->input->get('sseason_id');
+                        }
+                        if(!empty($this->input->get('scarrier'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'fc.carrier_code = '.  $this->input->get('scarrier');
+                        }
+
+
+                       if(!empty($this->input->get('frequency'))){
+                               $frstr = $this->input->get('frequency');
+                                $freq = $this->airports_m->getDefnsCodesListByType('14');
+                                 if ( $frstr != '0') {
+                                        $arr = str_split($frstr);
+                                        $freq_str = implode(',',array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr));
+                                        $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                        $sWhere .= 'fc.frequency IN ('.$freq_str.') ';
+                                  }
+
+                        }
+
+                  $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                         $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                        $sWhere .= 'fc.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
+                }
+
+
 			
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code as carrier_code , off_point, season_id,flight_number, concat(fca.aln_data_value,' (',fca.code,')') as fcabin, 
-            concat(tca.aln_data_value,' (',tca.code,')') as tcabin, CONCAT(dfre.aln_data_value,' (',dfre.code,')') as day_of_week , fc.active,
-            min,max,average,slider_start,from_cabin, to_cabin,
-		dbp.code as source_point , dop.code as dest_point
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code as carrier_code , off_point, 
+		season_id,flight_number, fca.code as fcabin, sea.season_name,
+            	tca.code as tcabin,  dfre.code as day_of_week , fc.active,
+            	min,max,average,slider_start,from_cabin, to_cabin,
+		dbp.code as source_point , dop.code as dest_point,
+		dfre.aln_data_value, dop.aln_data_value, dbp.aln_data_value, dai.aln_data_value, fca.aln_data_value, tca.aln_data_value
+		
                     FROM VX_aln_fare_control_range  fc
                      LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = fc.boarding_point) 
 		     LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = fc.off_point)    
@@ -582,6 +638,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code
 		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency)
 		     LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin)
                      LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin)
+		     LEFT JOIN VX_aln_season sea on (sea.VX_aln_seasonID = fc.season_id )
 		     LEFT JOIN VX_market_airport_map smap on (smap.airport_id = fc.boarding_point ) 
 		     LEFT JOIN VX_market_airport_map dmap on (dmap.airport_id = fc.off_point)
 

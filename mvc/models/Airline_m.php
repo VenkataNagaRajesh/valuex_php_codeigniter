@@ -80,7 +80,8 @@ class Airline_m extends MY_Model {
 	public function getClientAirlineArr($userID){
                 $this->db->select('dd.*,dd.aln_data_value airline_name')->from('VX_aln_client c');
                 //$this->db->join('VX_aln_airline a','a.VX_aln_airlineID = c.airlineID','LEFT');
-                $this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = c.airlineID','LEFT');
+		$this->db->join('VX_client_airline ca','ca.clientID = c.VX_aln_clientID','LEFT');
+                $this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = ca.airlineID','LEFT');
                 $this->db->where('c.userID',$userID);
                 $query = $this->db->get();
 

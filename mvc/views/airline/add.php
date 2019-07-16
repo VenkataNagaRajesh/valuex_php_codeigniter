@@ -1,6 +1,6 @@
 
 <div class="box">
-    <div class="box-header">
+    <div class="box-header"  style="width:100%">
         <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
 
        
@@ -75,7 +75,7 @@
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
-                            <input type="submit" class="btn btn-success" value="<?=$this->lang->line("add_flights")?>" >
+                            <input type="submit" class="btn btn-danger" value="<?=$this->lang->line("add_flights")?>" >
                         </div>
                     </div>
                 </form>

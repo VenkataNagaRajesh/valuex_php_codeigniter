@@ -8,26 +8,27 @@
             <li class="active"><?=$this->lang->line('menu_airline')?></li>
         </ol>
     </div><!-- /.box-header -->
+	 <h5 class="page-header">     
+		 <a href="<?php echo base_url('airline/addFlights') ?>" data-toggle="tooltip" data-title="Add Flights" data-placement="left" class="btn btn-danger">
+             <i class="fa fa-plus"></i>
+             <!--<?=$this->lang->line('add_flights')?>-->
+         </a>
+	 </h5>
     <!-- form start -->
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">              
-              <h5 class="page-header">                        
+              <h5 class="page-hdr">                        
 					<?php if(permissionChecker('airline_upload')) { ?>
-                  <a href="<?php echo base_url('airline/upload') ?>">
+                  <a href="<?php echo base_url('airline/upload') ?>" class="btn btn-danger">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('upload_airline')?>
                   </a>
 				  &nbsp;&nbsp;
-				  <a href="<?php echo base_url('airline/downloadFormat') ?>">
+				  <a href="<?php echo base_url('airline/downloadFormat') ?>" class="btn btn-danger">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('download_format')?>
-                  </a>
-				  &nbsp;&nbsp;
-				   <a href="<?php echo base_url('airline/addFlights') ?>">
-                      <i class="fa fa-plus"></i>
-                      <?=$this->lang->line('add_flights')?>
-                  </a>
+                  </a>				  
 				  <?php } ?>
               </h5>
 			<!--  <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
@@ -68,7 +69,7 @@
 						<th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('airline_seat_capacity')?></th>
-						<th class="col-lg-6"><?=$this->lang->line('airline_flights_ids')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('airline_flights_ids')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('airline_active')?></th>
                         <?php if(permissionChecker('airline_edit') || permissionChecker('airline_delete')) { ?>
                         <th class="col-lg-1"><?=$this->lang->line('action')?></th>

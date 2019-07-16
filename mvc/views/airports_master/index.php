@@ -1,8 +1,7 @@
 
 <div class="box">
-    <div class="box-header">
+    <div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
-
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active"><?=$this->lang->line('menu_airports_master')?></li>
@@ -14,12 +13,12 @@
             <div class="col-sm-12">              
               <h5 class="page-header">                        
 					<?php if(permissionChecker('airports_master_upload')) { ?>
-                  <a href="<?php echo base_url('airports_master/upload') ?>">
+                  <a href="<?php echo base_url('airports_master/upload') ?>" class="btn btn-danger">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('upload_airports')?>
                   </a>
 				  &nbsp;&nbsp;
-				  <a href="<?php echo base_url('airports_master/downloadFormat') ?>">
+				  <a href="<?php echo base_url('airports_master/downloadFormat') ?>" class="btn btn-danger">
                       <i class="fa fa-upload"></i>
                       <?=$this->lang->line('download_airport_format')?>
                   </a>&nbsp;&nbsp;
@@ -29,7 +28,7 @@
 			<div class='form-group'>
                 			
 			   <div class="col-sm-2">			   
-                 <?php $alist = array("0" => "Select Area");               
+                 <?php $alist = array("0" => " Area");               
                    foreach($areaslist as $area){
 					 $alist[$area->vx_aln_data_defnsID] = $area->aln_data_value;
 				   }							
@@ -53,10 +52,11 @@
 			    
                  
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                 </div>	             				
 			  </div>
-			 </form>				
+			 </form>
+			<div class="col-md-12">			 
             <div id="hide-table">
                <table id="master" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>
@@ -81,6 +81,7 @@
                  </tbody>
               </table>
             </div>
+			</div>
           </div>
        </div>
    </div>

@@ -385,17 +385,14 @@ class Airline_cabin_class extends Admin_Controller {
                         }
 
 
-			
+
                $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
                 if($userTypeID == 2){
-                      $airlines= $this->airline_m->getClientAirline($userID, 1);
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                         $sWhere .= 'cm.carrier = '.$airlines->airlineID;
-
+                        $sWhere .= 'cm.carrier IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                  
                 }
 
-  
 
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, airline_class,  ac.aln_data_value as carrier_name, cm.carrier , 
@@ -417,9 +414,9 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, airline_class,  ac.aln_data_value
             );
 
 		
-			$i = 1;
+		
                 foreach($rResult as $list){
-			$list->sno = $i++;
+
 		   $list->is_revenue = ($list->is_revenue)?"yes":"no";
                         if(permissionChecker('airline_cabin_class_edit') ) {
 				$list->action = btn_edit('airline_cabin_class/edit/'.$list->carrier, $this->lang->line('edit'));

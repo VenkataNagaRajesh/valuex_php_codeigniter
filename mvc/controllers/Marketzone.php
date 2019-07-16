@@ -480,7 +480,7 @@ class Marketzone extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('MainSet.market_id','MainSet.market_name','MainSet.lname','MainSet.iname', 'MainSet.ename','SubSet.inclname','SubSet.exclname', 'SubSet.levelname', 'MainSet.airline_name', 'MainSet.airlineID');
+	    $aColumns =  array('MainSet.market_id','MainSet.market_name','MainSet.lname','MainSet.iname', 'MainSet.ename','SubSet.inclname','SubSet.exclname', 'SubSet.levelname', 'MainSet.airline_name', 'MainSet.airlineID','SubSet.level_d_name', 'SubSet.incl_d_name' , 'SubSet.excl_d_name','MainSet.airline_full_name');
                 $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -571,19 +571,19 @@ class Marketzone extends Admin_Controller {
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 		if($userTypeID == 2){
-                     // $airlines = $this->airline_m->getClientAirline($userID, 1);
 			 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                        // $sWhere .= 'MainSet.airlineID = '.$airlines->airlineID;
-						$sWhere .= 'MainSet.airlineID = '.$this->session->userdata('login_user_airlineID');			
+			$sWhere .= 'MainSet.airlineID IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';			
                 } 
 
 $sQuery = "
-SELECT SQL_CALC_FOUND_ROWS MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active ,MainSet.level_id, MainSet.incl_id, MainSet.excl_id,MainSet.airline_name, MainSet.airlineID
+SELECT SQL_CALC_FOUND_ROWS MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active ,MainSet.level_id, MainSet.incl_id, MainSet.excl_id,MainSet.airline_name, MainSet.airlineID,
+SubSet.level_d_name, SubSet.incl_d_name , SubSet.excl_d_name, MainSet.airline_full_name
+
 FROM
 (
               select  mz.market_id, mz.market_name ,dtl.alias as lname,dti.alias as iname, dte.alias as ename , mz.active as active, 
-			mz.amz_level_id as level_id, mz.amz_incl_id as incl_id, mz.amz_excl_id as excl_id , dd.code as airline_name,
-			mz.airline_id as airlineID
+			mz.amz_level_id as level_id, mz.amz_incl_id as incl_id, mz.amz_excl_id as excl_id , dd.code as airline_name, 
+			dd.aln_data_value as airline_full_name,mz.airline_id as airlineID
 	      from VX_aln_market_zone mz 
 	      LEFT JOIN vx_aln_data_types dtl on (dtl.vx_aln_data_typeID = mz.amz_level_id) 
 	      LEFT JOIN vx_aln_data_types dti on (dti.vx_aln_data_typeID = mz.amz_incl_id)  
@@ -593,12 +593,12 @@ FROM
 
 LEFT JOIN (
 		select
-    			FirstSet.market_id, FirstSet.level as levelname, ThirdSet.excl as exclname, SecondSet.incl as inclname
+    			FirstSet.market_id, FirstSet.level as levelname, ThirdSet.excl as exclname, SecondSet.incl as inclname, FirstSet.level_d_name, SecondSet.incl_d_name , ThirdSet.excl_d_name
 		from 
 			(         
 
 				 SELECT        m.market_id  as market_id  , 
-						COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS level 
+						COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS level , COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) ) as level_d_name
 						FROM VX_aln_market_zone m 
 						LEFT OUTER JOIN  vx_aln_data_defns c ON 
 						(find_in_set(c.vx_aln_data_defnsID, m.amz_level_name) AND m.amz_level_id in (1,2,3,4,5)) 
@@ -610,7 +610,7 @@ LEFT JOIN (
 
 			(          
 				 SELECT        m.market_id  as market_id  , 
-                                                COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS incl
+                                                COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS incl, COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) ) as incl_d_name
                                                 FROM VX_aln_market_zone m 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, m.amz_incl_name) AND m.amz_incl_id in (1,2,3,4,5)) 
@@ -623,7 +623,7 @@ LEFT JOIN (
 			(
 
 				  SELECT        m.market_id  as market_id  , 
-                                                COALESCE(group_concat(c.code),group_concat(mm.market_name) )  AS excl 
+                                                COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS excl , COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name)) as excl_d_name 
                                                 FROM VX_aln_market_zone m 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, m.amz_excl_name) AND m.amz_excl_id in (1,2,3,4,5)) 

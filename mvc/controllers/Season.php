@@ -178,6 +178,9 @@ class Season extends Admin_Controller {
         }
         $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');
 		
+                $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+
         if($this->session->userdata('usertypeID') == 2){
 		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
 		}else{
@@ -190,13 +193,30 @@ class Season extends Admin_Controller {
            }			
        //print_r($this->data['seasonslist']); exit;
 		$this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
-			if($usertypeID == 2){
+			if($userTypeID == 2){
 			  $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
 		   } else {
 			   $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		   }
 		$this->data["subview"] = "season/index";
 		$this->load->view('_layout_main', $this->data);		
+	}
+
+
+	function getSeasonsForAirline(){
+		$airlineid = $this->input->post('id');
+		$seasonslist = $this->season_m->get_seasons_for_airline($airlineid);
+
+		foreach($seasonslist as $season){
+             	    $season->ams_season_start_date = date('m/d/Y',$season->ams_season_start_date);
+                    $season->ams_season_end_date = date('m/d/Y',$season->ams_season_end_date);
+            	    $season->dates = $this->createDateRange($season->ams_season_start_date,$season->ams_season_end_date);
+                }
+
+
+		 $this->output->set_content_type('application/json');
+	         $this->output->set_output(json_encode($seasonslist));
+
 	}
 	
 	function createDateRange($startDate, $endDate, $format = "m/d/Y"){
@@ -324,6 +344,19 @@ class Season extends Admin_Controller {
 					$this->season_m->insert_season($array);
 				 }			
 				
+
+				 if($this->session->userdata('usertypeID') == 2){
+			                   $seasonslist = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
+                		}else{
+                   				$seasonslist = $this->season_m->get_seasons();
+                		}
+                  			 foreach($seasonslist as $season){
+				             $season->ams_season_start_date = date('m/d/Y',$season->ams_season_start_date);
+			                    $season->ams_season_end_date = date('m/d/Y',$season->ams_season_end_date);
+				            $season->dates = $this->createDateRange($season->ams_season_start_date,$season->ams_season_end_date);
+				           }
+
+					$json['season_list'] = $seasonslist;
 			      // insert entry in trigger table for mapping table generation
 		         
 				$tarray['table_name'] = 'VX_aln_season';
@@ -671,7 +704,7 @@ class Season extends Admin_Controller {
 		   
 		    $season->orig_level_values = $orig_level_values;
 			$season->dest_level_values = $dest_level_values;
-		   //$season->season_color = '<span style="background: '.$season->season_color.'"></span>';
+		   $season->season_color = '<p class="season-list-color" style="background: '.$season->season_color.'"></p>';
 			
 			$output['aaData'][] = $season;				
 		}

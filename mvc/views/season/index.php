@@ -115,7 +115,7 @@
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form">		   
 			<div class='form-group'>			 
 				<div class="col-sm-2">			   
-				<?php $slist = array("0" => "Select Season");               
+				<?php $slist = array("0" => " Season");               
 				   foreach($seasonslist as $season){
 					  $slist[$season->VX_aln_seasonID] = $season->season_name;
 					}							
@@ -125,14 +125,14 @@
 				  <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>
 				</div>
 				<div class="col-sm-2">			   
-				  <?php $olist = array("0" => "Select Origin Level");               
+				  <?php $olist = array("0" => " Origin Level");               
 				  foreach($types as $type){
 					  $olist[$type->vx_aln_data_typeID] = $type->alias;
 					}							
 				  echo form_dropdown("origID", $olist,set_value("origID",$origID), "id='origID' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>                				
 				<div class="col-sm-2">
-					<?php $dlist = array("0" => "Select Destination");               
+					<?php $dlist = array("0" => " Destination");               
 				   foreach($types as $type){
 					  $dlist[$type->vx_aln_data_typeID] = $type->alias;
 					}							
@@ -143,36 +143,39 @@
 				  echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
 				<div class="col-sm-2">
-				  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Search</button>
-				</div>	             				
+				  <button type="submit" class="btn btn-danger" name="filter" id="filter">Search</button> <button data-toggle="collapse" data-target="#seasonList" type="button" class="btn btn-danger"><i class="fa fa-table"></i> View</button>
+				</div>			
 			</div>
 		</form>
-        <div id="hide-table">
-            <table id="seasonslist" class="table table-striped table-bordered table-hover dataTable no-footer">
-                <thead>
-					<tr>
-                        <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
-						<!--<th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>-->
-						<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('orig_level_value')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('dest_level')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('dest_level_value')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('season_start_date')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('season_end_date')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('is_return_inclusive')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('season_color')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('season_active')?></th>
-                        <?php if(permissionChecker('season_edit') || permissionChecker('season_delete')) { ?>
-                        <th class="col-lg-2"><?=$this->lang->line('action')?></th>
-                           <?php } ?>
-                      </tr>
-                   </thead>
-                   <tbody>                            
-                   </tbody>
-               </table>
-          </div>
+		<div id="seasonList"  class="collapse">
+			<div id="hide-table">
+				<table id="seasonslist" class="table table-striped table-bordered table-hover dataTable no-footer" style="width:100%;">
+					<thead>
+						<tr>
+							<th class="col-lg-1" ><?=$this->lang->line('slno')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('orig_level_value')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('dest_level')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('dest_level_value')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('season_start_date')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('season_end_date')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('is_return_inclusive')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('season_color')?></th>
+							<?php if(permissionChecker('season_edit')) {?>
+							<th class="col-lg-1"><?=$this->lang->line('season_active')?></th>
+							<?php }?>
+							<?php if(permissionChecker('season_edit') || permissionChecker('season_delete')) { ?>
+							<th class="col-lg-2"><?=$this->lang->line('action')?></th>
+							   <?php } ?>
+						  </tr>
+					   </thead>
+					   <tbody>                            
+					   </tbody>
+				   </table>
+			  </div>
+		  </div>
 	</div>
 	<div class="col-md-12 cal-table">
 		<div class="col-md-8" style="padding:0;">
@@ -180,6 +183,12 @@
 		</div>
 		<div class="col-md-4">
 			<div class="season-highlight">
+				<p><select style="width:85%;" name="color_season" id="color_airline_season" class="form-control">
+				 <option value="0">Airlines</option>
+				 <?php foreach($airlines as $airline){
+                  echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->airline_name.'</option>';  
+				 } ?>
+				</select></p>
 				<p>
 					<span>Season</span><span>Highlights</span><br>
 					<!--<span class="default">Default</span><span class="default-high">&nbsp;</span><br>
@@ -189,40 +198,36 @@
 					<span class="default"><?=$season->season_name?></span><span style="background: <?=$season->season_color?>;">&nbsp;</span>
 					<?php } ?>
 				</p>
-				<select name="color_season" id="color_season">
-				 <option value="0">Select Season</option>
-				 <?php foreach($seasonslist as $season){
-                  echo '<option value="'.$season->VX_aln_seasonID.'">'.$season->season_name.'</option>';  
-				 } ?>
-				</select>
 			</div>
 		</div>
 	</div>
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function() {	
+	seasoncalender('<?php echo json_encode($seasonslist)?>');
+	//alert('<?php echo json_encode($seasonslist)?>');
+	
+
+});
+
+function seasoncalender (seasonlist = '[]') {
+	var season_data = jQuery.parseJSON(seasonlist);
+
         // An array of dates
      var eventDates = {}; var season = {}; var name = {};
-    
-   
-   <?php //$_POST['color_season']=10; 
-       foreach ($seasonslist as $season){
-	      if($_POST['color_season'] > 0){
-			 if($season->VX_aln_seasonID == $_POST['color_season']){
-				foreach($season->dates as $date){	?> 
-                eventDates[ new Date( '<?=$date?>' )] = new Date( '<?=$date?>' ).toString();
-		        season[ new Date( '<?=$date?>' )] = "<?=$season->VX_aln_seasonID?>";
-			    name[ new Date( '<?=$date?>' )] = "<?=$season->season_name?>";  
-		  <?php } }				 
-		  } else {
-           foreach($season->dates as $date){  ?>       
-	       eventDates[ new Date( '<?=$date?>' )] = new Date( '<?=$date?>' ).toString();
-		    season[ new Date( '<?=$date?>' )] = "<?=$season->VX_aln_seasonID?>";
-			name[ new Date( '<?=$date?>' )] = "<?=$season->season_name?>";
+
+
+	
+	 //$_POST['color_season']=10; 
+             for(var i=0; i<season_data.length; i++){
+		for ( var k=0 ; k<season_data[i]['dates'].length; k++){	
+	       eventDates[ new Date( season_data[i]['dates'][k] )] = new Date( season_data[i]['dates'][k] ).toString();
+		    season[ new Date( season_data[i]['dates'][k] )] = season_data[i]['VX_aln_seasonID'];
+			name[ new Date( season_data[i]['dates'][k] )] = season_data[i]['season_name'] ;
 			 
-	 <?php } } ?>
-	    $("<style> .season<?=$season->VX_aln_seasonID?> { color:#fffff !important;  background:<?=$season->season_color?> !important;} </style>").appendTo("head");
-    <?php } ?>  
+	   } 
+	    $("<style> .season"+season_data[i]['VX_aln_seasonID'] + " { color:#fffff !important;  background:"+season_data[i]['season_color'] + " !important;} </style>").appendTo("head");
+     }   
     //console.log(event);
        
         jQuery('#calendar1').datepicker({		    
@@ -243,12 +248,27 @@
             }
         }); 
 		
-    });
+    }
 	
-  $('#color_season').change(function(){
-	 // seasoncalender();
-	 location.reload(true);
-  });
+
+$('#color_airline_season').change(function(event) {    
+	//alert('here');
+	var airline_id = $(this).val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('season/getSeasonsForAirline')?>",            
+             data: "id=" + airline_id,            
+             dataType: "html",                                  
+             success: function(data) {               
+		$("#calendar1").datepicker("destroy");
+		seasoncalender(data);
+              }        
+      });       
+});
+ 
+
+
+
   
 </script>
 <script>
@@ -411,7 +431,7 @@ $("#ams_season_end_date").datepicker();
 $('#season_color').colorpicker({});
 
 $( ".select2" ).select2({closeOnSelect:false,
-		         placeholder: "Select a value"});
+		         placeholder: " value"});
 				 
 $(document).ready(function(){
 	$('#ams_orig_levelID').trigger('change');
@@ -518,6 +538,9 @@ $("#dest_all").click(function(){
 				form_reset();
 				$("#seasonslist").dataTable().fnDestroy();
 				loaddatatable();
+				$("#calendar1").datepicker("destroy");
+				seasoncalender(JSON.stringify(seasoninfo['season_list']));
+
 			} else {				
 				alert($(status).text());
 			    $.each(seasoninfo['errors'], function(key, value) {

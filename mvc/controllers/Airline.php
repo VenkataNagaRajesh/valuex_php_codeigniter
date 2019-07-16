@@ -518,7 +518,7 @@ class Airline extends Admin_Controller {
                   $sWhere .= 'd.vx_aln_data_defnsID = '.$this->session->userdata('login_user_airlineID');		
             } 		   
 		  
-		  $sGroup = " GROUP BY vx_aln_data_defnsID ";  
+		  $sGroup = " GROUP BY vx_aln_data_defnsID, aircraft, seat_capacity ";  
          $ss = "select d.*,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID where d.aln_data_typeID = 12 group by d.vx_aln_data_defnsID"  ;
 		   
 		$sQuery = "SELECT SQL_CALC_FOUND_ROWS d.*,ac.aln_data_value as aircraft,sc.aln_data_value as seat_capacity ,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID LEFT JOIN vx_aln_data_defns ac ON (ac.vx_aln_data_defnsID = d.parentID AND ac.aln_data_typeID = 21) LEFT JOIN vx_aln_data_defns sc ON (sc.parentID = ac.vx_aln_data_defnsID AND sc.aln_data_typeID = 22) 
@@ -563,7 +563,7 @@ class Airline extends Admin_Controller {
 			$airline->active .= "<label for='myonoffswitch".$airline->vx_aln_data_defnsID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>"; 
             $flights = $this->airline_m->getFlights($airline->vx_aln_data_defnsID);			
             $flights_data = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $flights));
-			// $airline->flights = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$flights_data.'"><i class="fa fa-list"></i></a>';
+			$airline->flights = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$flights_data.'"><i class="fa fa-list"></i></a>';
 			// $airline->flightss = $flights;
 			$output['aaData'][] = $airline;				
 		}

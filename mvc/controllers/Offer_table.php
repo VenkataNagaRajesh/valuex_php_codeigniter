@@ -77,7 +77,8 @@ $status = htmlentities(escapeString($this->uri->segment(5)));
 $this->data['siteinfos'] = $this->reset_m->get_site();
   $passenger_data = $this->offer_issue_m->getPassengerData($offer_id,$flight_number);
  // get cabin from BID tablee
- $upgrade_cabin = $this->offer_issue_m->getCabinFromOfferID($offer_id,$flight_number);
+ $offer_data = $this->offer_issue_m->getBidInfoFromOfferID($offer_id,$flight_number);
+  $upgrade_cabin =  $offer_data->upgrade_type;
 
 $namelist = explode(',',$passenger_data->passengers);
                         $emails_list =  explode(',',$passenger_data->emails);
@@ -101,25 +102,7 @@ $namelist = explode(',',$passenger_data->passengers);
 	 $upd["modify_userID"] = $this->session->userdata('loginuserID');
 	$upd['modify_date'] = time();
         $this->invfeed_m->update_entries($upd,$inv);
-$offer_data = $this->bid_m->get_offer_data($offer_id);
- $card_data = $this->bid_m->getCardData($offer_id);
-   $card_number = substr(trim($card_data->card_number), -4);		
-   $maildata = array(
-  	'first_name'   => $namelist[0],
-  	'last_name' => '',
-  	'tomail' => $emails_list[0],
-  	'pnr_ref' => $passenger_data->pnr_ref,						
-  	'mail_subject' => $msg_txt . " For Flight: " . $flight_number,
-  	'card_number' => $card_number,
-  	'cash_paid' => $offer_data->cash,
-  	'miles_used' => $offer_data->miles,
-  	'flight_no' => $offer_data->carrier_code.$offer_data->flight_number,
-  	'dep_date' => date('d-m-Y',$offer_data->dep_date),
-  	'dep_time' => gmdate('H:i A',$offer_data->dept_time),
-  	'origin' => $offer_data->from_city,
-  	'destination' => $offer_data->to_city, 
-  	'upgrade_to' => $offer_data->upgrade_type                             							
-   );						
+
 if( $status == 'accept' ) {
 //accept 
 $bid_status = 'bid_accepted';
@@ -135,6 +118,27 @@ $template ="home/bidreject-temp";
 
 }
 
+
+// $offer_data = $this->bid_m->get_offer_data($offer_id);
+ $card_data = $this->bid_m->getCardData($offer_id);
+   $card_number = substr(trim($card_data->card_number), -4);
+   $maildata = array(
+        'first_name'   => $namelist[0],
+        'last_name' => '',
+        'tomail' => $emails_list[0],
+        'pnr_ref' => $passenger_data->pnr_ref,
+        'mail_subject' => $msg_txt . " For Flight: ". $passenger_data->carrier_c . $flight_number,
+        'card_number' => $card_number,
+        'cash_paid' => $offer_data->cash,
+        'miles_used' => $offer_data->miles,
+        'flight_no' => $passenger_data->carrier_c.$passenger_data->flight_number,
+        'dep_date' => date('d-m-Y',$passenger_data->dep_date),
+        'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
+        'origin' => $passenger_data->from_city_name,
+        'destination' => $passenger_data->to_city_name,
+        'upgrade_to' => $offer_data->upgrade_cabin_name
+   );
+//var_dump($maildata);exit;
                                                                                                  $message = '
         <html>
         <body>

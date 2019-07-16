@@ -53,7 +53,7 @@ class Market_airport extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('mz.market_name','ma.aln_data_value','mc.aln_data_value','ms.aln_data_value',
+	    $aColumns =  array('mz.market_name','ma.aln_data_value','mc.aln_data_value','mct.aln_data_value',
             'mr.aln_data_value' ,'mar.aln_data_value' ,'ma.code','m.active');
                 $sLimit = "";
 

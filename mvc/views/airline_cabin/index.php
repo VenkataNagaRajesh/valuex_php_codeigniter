@@ -8,6 +8,15 @@
             <li class="active"><?=$this->lang->line('menu_airline_cabin')?></li>           
         </ol>
     </div><!-- /.box-header -->
+	<h5 class="page-header">
+			<?php
+                    if(permissionChecker('airline_cabin_add')) {
+                ?>
+                        <a href="<?php echo base_url('airline_cabin/add') ?>" data-toggle="tooltip" data-title="Add Airline Cabin" data-placement="left" class="btn btn-danger">
+                            <i class="fa fa-plus"></i>
+                        </a>
+			<?php } ?>
+	</h5>
     <!-- form start -->
     <div class="box-body">
         <div class="row">
@@ -20,24 +29,12 @@
 	<br/> <br/>
 
 
-                    <h5 class="page-header">
+                    
 
-                <?php
-                    if(permissionChecker('airline_cabin_add')) {
-                ?>
-                        <a href="<?php echo base_url('airline_cabin/add') ?>">
-                            <i class="fa fa-plus"></i>
-                            <?=$this->lang->line('add_title')?>
-                        </a>
-		<?php } ?>
-			&nbsp;&nbsp;
-
-		</h5>
-
-       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 10px;">
                       <div class='form-group'>
                            <div class="col-sm-2">
-               <?php $airlinesdata['0'] = "Select Airlines";
+               <?php $airlinesdata['0'] = " Airlines";
 			ksort($airlinesdata);
                                    echo form_dropdown("airline_code", $airlinesdata,set_value("airline_code",$airliineID), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
@@ -45,7 +42,7 @@
 
 			<?php
 			
-                        $airlinecabins['0'] = "Select Cabin";
+                        $airlinecabins['0'] = " Cabin";
 			ksort($airlinecabins);
                         echo form_dropdown("airline_cabin", $airlinecabins,set_value("airline_cabin",$cabinID), "id='airline_cabin' class='form-control hide-dropdown-icon select2'");    ?>
 
@@ -55,7 +52,7 @@
 		 <div class="col-sm-2">
 
                         <?php
-                        $map_status['-1'] = 'Select Status';
+                        $map_status['-1'] = ' Status';
                         $map_status['1'] = 'Active';
                         $map_status['0'] = 'In Active';
                         echo form_dropdown("active", $map_status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
@@ -65,7 +62,7 @@
 
 
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                 </div>
                           </div>
                          </form>
