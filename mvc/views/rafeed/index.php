@@ -73,10 +73,16 @@
 
 <div class="col-sm-2">
                <?php
-                        $airlines['0'] = ' Carrier';
-                        ksort($airlines);
 
-                                   echo form_dropdown("airline_code", $airlines,set_value("airline_code",$airline_code), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
+                                                     
+			foreach($airlines as $airline){
+                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->aln_data_value.'('.$airline->code.')';
+                                                         }
+
+                        $airlinelist['0'] = ' Carrier';
+                        ksort($airlinelist);
+
+                                   echo form_dropdown("airline_code", $airlinelist,set_value("airline_code",$airline_code), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
 
@@ -89,6 +95,38 @@
                                    echo form_dropdown("class", $cabin,set_value("class",$cla), "id='class' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
+
+<div class="col-sm-2">
+		 <input type="text" class="form-control" placeholder='flight range' id="flight_range" name="flight_range" value="<?=set_value('flight_range')?>" >
+
+
+                </div>
+
+
+<div class="col-sm-2">
+                 <input type="text" class="form-control" placeholder='Start Date' id="start_date" name="start_date" value="<?=set_value('start_date')?>" >
+
+
+                </div>
+
+
+                <div class="col-sm-2">
+                 <input type="text" class="form-control" placeholder='End Date' id="end_date" name="end_date" value="<?=set_value('end_date')?>" >
+
+
+                </div>
+
+		<div class="col-sm-2">
+ <input type="text" class="form-control" placeholder='frequency' id="frequency" name="frequency" value="<?=set_value('frequency')?>" >
+
+                </div>
+
+
+
+
+
+
+
                 <div class="col-sm-2 pull-right">
                   <button type="submit" class="form-control btn btn-danger rafeed-filter-btn" name="filter" id="filter">Filter</button>
                 </div>	             				
@@ -152,7 +190,12 @@
                    {"name": "boardPoint","value": $("#boarding_point").val()},
                    {"name": "offPoint","value": $("#offPoint").val()},
                    {"name": "Class","value": $("#class").val()},
+			{"name": "frequency","value": $("#frequency").val()},
                     {"name": "airLine","value": $("#airline_code").val()},
+		   {"name": "flight_range","value": $("#flight_range").val()},
+		  {"name": "start_date","value": $("#start_date").val()},
+		  {"name": "end_date","value": $("#end_date").val()},
+
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -267,5 +310,8 @@
   }); 
 
 $( ".select2" ).select2();
+
+$("#start_date").datepicker();
+$("#end_date").datepicker();
 
  </script>
