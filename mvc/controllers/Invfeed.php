@@ -8,6 +8,7 @@ class Invfeed extends Admin_Controller {
 		$this->load->model('rafeed_m');
 		$this->load->model("invfeedraw_m");
 		$this->load->model("airline_cabin_m");
+		$this->load->model("airline_m");
 		$this->load->model('airports_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('invfeed', $language);	
@@ -53,8 +54,17 @@ class Invfeed extends Admin_Controller {
 
 		//print_r( $this->data['stateID']); exit;
 		$this->data['airports'] = $this->rafeed_m->getCodesByType('1');
-		$this->data['airlines'] = $this->airline_cabin_m->getAirlines();;
-		$this->data['cabins'] = $this->airline_cabin_m->getAirlineCabins();
+
+		 $this->data['cabins'] = $this->rafeed_m->getCodesByType('13');
+
+               $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                        $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+                           } else {
+                   $this->data['airlines'] = $this->airline_m->getAirlinesData();
+                }
+
 
 		$this->data["subview"] = "invfeed/index";
 		$this->load->view('_layout_main', $this->data);
@@ -203,8 +213,7 @@ class Invfeed extends Admin_Controller {
 
 
 		
-$aColumns = array('invfeed_id', 'flight_nbr', 'departure_date', 'origin_airport', 'sold_seats', 'empty_seats',
-                        'dest_airport', 'cabin', 'airline_code', 'inv.active');
+$aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','dc.code', 'departure_date', 'empty_seats','sold_seats', 'inv.active','da.aln_data_value','do.aln_data_value','ds.aln_data_value','dc.aln_data_value');
 	
 		$sLimit = "";
 		
@@ -219,12 +228,8 @@ $aColumns = array('invfeed_id', 'flight_nbr', 'departure_date', 'origin_airport'
 				{
 					if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
 					{
-						if($_GET['iSortCol_0'] == 8){
-							$sOrder .= " (s.order_no*-1) DESC ,";
-						} else {
 						 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
 							".$_GET['sSortDir_'.$i] .", ";
-						}
 					}
 				}				
 				  $sOrder = substr_replace( $sOrder, "", -2 );
@@ -282,14 +287,32 @@ $aColumns = array('invfeed_id', 'flight_nbr', 'departure_date', 'origin_airport'
                                 $sWhere .= 'inv.cabin = '.$this->input->get('Cabin');
                         }
 
+			if(!empty($this->input->get('flight_range'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $num_arr = explode('-',$this->input->get('flight_range'));
+
+                                if ( $num_arr[0] > 0 AND $num_arr[1] > 0 AND $num_arr[1] > $num_arr[0]) {
+                                        $sWhere .= 'inv.flight_nbr >= '.$num_arr[0]. ' AND inv.flight_nbr <= ' . $num_arr[1];
+                                } else if($num_arr[0] > 0 ) {
+                                        $sWhere .= 'inv.flight_nbr ='. $num_arr[0];
+
+                                }
+
+                        }
+
+
+                         if(!empty($this->input->get('start_date'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'inv.departure_date = '. strtotime($this->input->get('start_date'));
+                        }
+
 
 			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
-
-			invfeed_id, flight_nbr, departure_date, concat(do.aln_data_value,'(',do.code,')') as origin_airport, 
+			invfeed_id, flight_nbr, departure_date, do.code as origin_airport, 
 		        departure_date, sold_seats, empty_seats,
-			concat(ds.aln_data_value,'(',ds.code,')') as dest_airport, dc.aln_data_value as cabin, 
-			concat(da.aln_data_value,'(',da.code,')')  as airline_code ,
+			ds.code as dest_airport, dc.code as cabin, 
+			da.code as airline_code ,
 			inv.active   FROM VX_aln_daily_inv_feed inv  
 			LEFT JOIN vx_aln_data_defns do on (do.vx_aln_data_defnsID = inv.origin_airport) 
 			LEFT JOIN vx_aln_data_defns ds on  (ds.vx_aln_data_defnsID = inv.dest_airport) 

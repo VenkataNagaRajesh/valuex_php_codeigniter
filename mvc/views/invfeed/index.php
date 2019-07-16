@@ -52,10 +52,15 @@
 
  <div class="col-sm-2">
                <?php
-                        $airlines['0'] = ' Airlines';
-                        ksort($airlines);
 
-                                   echo form_dropdown("airline_code", $airlines,set_value("airline_code",$airline_code), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
+	foreach($airlines as $airline){
+                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                                         }
+
+                        $airlinelist['0'] = ' Carrier';
+                        ksort($airlinelist);
+
+                                   echo form_dropdown("airline_code", $airlinelist,set_value("airline_code",$airline_code), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
 
@@ -63,11 +68,23 @@
     <div class="col-sm-2">
                <?php
                         $cabins['0'] = ' Cabin';
-                        ksort($class);
+                        ksort($cabins);
 
                                    echo form_dropdown("cabin", $cabins,set_value("cabin",$cabin), "id='cabin' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
+
+	<div class="col-sm-2">
+                 <input type="text" class="form-control" placeholder='flight range' id="flight_range" name="flight_range" value="<?=set_value('flight_range')?>" >
+
+
+                </div>
+<div class="col-sm-2">
+                 <input type="text" class="form-control" placeholder='Departure Date' id="start_date" name="start_date" value="<?=set_value('start_date')?>" >
+
+
+                </div>
+
 
                 <div class="col-sm-2">
                   <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
@@ -115,6 +132,8 @@
                    {"name": "destAirport","value": $("#dest_airport").val()},
                    {"name": "Cabin","value": $("#cabin").val()},
                     {"name": "airLine","value": $("#airline_code").val()},
+		    {"name": "flight_range","value": $("#flight_range").val()},
+			 {"name": "start_date","value": $("#start_date").val()},
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -214,5 +233,5 @@
   }); 
 
 $( ".select2" ).select2();
-
+$("#start_date").datepicker();
  </script>

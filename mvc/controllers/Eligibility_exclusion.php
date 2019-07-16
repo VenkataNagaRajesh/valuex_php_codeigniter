@@ -7,6 +7,7 @@ class Eligibility_exclusion extends Admin_Controller {
 		$this->load->model("airports_m");
 		$this->load->model('marketzone_m');
 		$this->load->model('eligibility_exclusion_m');
+		$this->load->model('airline_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('eligibility_exclusion', $language);	
 	}
@@ -314,7 +315,16 @@ function valFrequency($num)
                     	$this->data['active'] = '1';
                 }
 
-		$this->data['carriers'] = $this->airports_m->getDefnsListByType('12');
+		//$this->data['carriers'] = $this->airports_m->getDefnsListByType('12');
+
+		 $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
+                           } else {
+                   $this->data['carriers'] = $this->airline_m->getAirlinesData();
+                }
+
 		$this->data['marketzones'] = $this->marketzone_m->getMarketzones();
 		 $this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14');
 		$this->data['class_type'] = $this->airports_m->getDefns('13');

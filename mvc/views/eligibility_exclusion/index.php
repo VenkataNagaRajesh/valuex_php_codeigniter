@@ -35,9 +35,17 @@
 					<div class="col-md-3">
 						<label class="control-label">Carrier</label>
 						<?php
-							$carriers[0] = ' Carrier';
-							ksort($carriers);
-							echo form_dropdown("carrier", $carriers,set_value("carrier"), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
+
+					 foreach($carriers as $airline){
+                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                                         }
+
+                        $airlinelist['0'] = ' Carrier';
+                        ksort($airlinelist);
+
+
+
+							echo form_dropdown("carrier", $airlinelist,set_value("carrier"), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
 
 					</div>
 				</div>
@@ -256,7 +264,7 @@
                         $carriers[0] = ' Carrier';
                         ksort($carriers);
 
-                                   echo form_dropdown("scarrier", $carriers,set_value("scarrier",$scarrier), "id='scarrier' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("scarrier", $airlinelist,set_value("scarrier",$scarrier), "id='scarrier' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
 
