@@ -480,8 +480,10 @@ class Marketzone extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('MainSet.market_id','MainSet.market_name','MainSet.lname','MainSet.iname', 'MainSet.ename','SubSet.inclname','SubSet.exclname', 'SubSet.levelname', 'MainSet.airline_name', 'MainSet.airlineID','SubSet.level_d_name', 'SubSet.incl_d_name' , 'SubSet.excl_d_name','MainSet.airline_full_name');
-                $sLimit = "";
+
+$aColumns =  array('MainSet.market_id','MainSet.market_name','MainSet.airline_name','MainSet.lname', 'SubSet.levelname', 'MainSet.iname', 'SubSet.inclname','MainSet.ename', 'SubSet.exclname', 'MainSet.airlineID','SubSet.level_d_name', 'SubSet.incl_d_name' , 'SubSet.excl_d_name','MainSet.airline_full_name');
+
+			  $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
                         {
@@ -494,12 +496,12 @@ class Marketzone extends Admin_Controller {
                                 {
                                         if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
                                         {
-                                                if($_GET['iSortCol_0'] == 8){
-                                                        $sOrder .= " (s.order_no*-1) DESC ,";
-                                                } else { 
+                                                //if($_GET['iSortCol_0'] == 8){
+                                                  //      $sOrder .= " (s.order_no*-1) DESC ,";
+                                                //} else { 
                                                  $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
                                                         ".$_GET['sSortDir_'.$i] .", ";
-                                                }
+                                                //}
                                         }
                                 }                               
                                   $sOrder = substr_replace( $sOrder, "", -2 );
