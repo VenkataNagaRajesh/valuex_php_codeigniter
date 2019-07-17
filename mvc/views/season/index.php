@@ -143,11 +143,12 @@
 				  echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
 				<div class="col-sm-2">
-				  <button type="submit" class="btn btn-danger" name="filter" id="filter">Search</button> <button data-toggle="collapse" data-target="#seasonList" type="button" class="btn btn-danger"><i class="fa fa-table"></i> View</button>
+				 <button type="submit" class="btn btn-danger form-control" name="filter" id="filter">Search</button>
+				 <!-- <button data-toggle="collapse" data-target="#seasonList" type="button" class="form-control btn btn-danger"><i class="fa fa-table"></i> View</button>-->
 				</div>			
 			</div>
 		</form>
-		<div id="seasonList"  class="collapse">
+
 			<div id="hide-table">
 				<table id="seasonslist" class="table table-striped table-bordered table-hover dataTable no-footer" style="width:100%;">
 					<thead>
@@ -175,7 +176,6 @@
 					   </tbody>
 				   </table>
 			  </div>
-		  </div>
 	</div>
 	<div class="col-md-12 cal-table">
 		<div class="col-md-8" style="padding:0;">
