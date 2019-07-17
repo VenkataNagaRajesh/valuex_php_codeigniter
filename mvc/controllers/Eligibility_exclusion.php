@@ -858,14 +858,6 @@ function time_dropdown($val) {
 
 
 
-			if(!empty($this->input->get('day') )){
-				$days = explode(',',$this->input->get('day'));
-				foreach($days as $day){
-					$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-					$sWhere .= 'FIND_IN_SET("'.$day.'",Subset.dayslist)';
-				}
-				
-			}
 
 
 		 if(!empty($this->input->get('sfrequency'))){

@@ -13,6 +13,8 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model('paxfeed_m');
 		$this->load->model("marketzone_m");
 		$this->load->model("fclr_m");
+		$this->load->model("season_m");
+		$this->load->model("airports_m");
 		$language = $this->session->userdata('lang');
 		//$this->load->library('encrypt');
 		$this->lang->load('offer_eligibility', $language);	
@@ -83,11 +85,22 @@ class Offer_eligibility extends Admin_Controller {
 
 		$this->data['country'] = $this->rafeed_m->getCodesByType('2');
 		$this->data['city'] = $this->rafeed_m->getCodesByType('5');
-		$this->data['airlines'] = $this->rafeed_m->getCodesByType('12');
+		$this->data['carriers'] = $this->rafeed_m->getCodesByType('12');
 		$this->data['airport'] = $this->rafeed_m->getCodesByType('1');
 		$this->data['cabin'] = $this->rafeed_m->getCodesByType('13');
 		$this->data['flights'] = $this->rafeed_m->getNamesByType('16');
+		$this->data['status'] = $this->rafeed_m->getNamesByType('20');
 		
+
+	$userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+
+        if($this->session->userdata('usertypeID') == 2){
+                   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
+                }else{
+                   $this->data['seasonslist'] = $this->season_m->get_seasons();
+                }
+
 		$this->data["subview"] = "offer_eligibility/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -100,7 +113,10 @@ class Offer_eligibility extends Admin_Controller {
 
 
 		
-	    $aColumns = array('dtpfext_id','flight_number','departure_date','boarding_point','off_point');
+	    $aColumns = array('dtpfext_id','pext.dtpf_id','pext.fclr_id','sea.season_name','dbp.code','dop.code','pf.dep_date','dai.code','pf.flight_number',
+			 'fca.code','tca.code','dfre.code','fc.average','fc.min','fc.max','fc.slider_start',
+			 'bs.aln_data_value','dbp.aln_data_value','dop.aln_data_value','dai.aln_data_value','fca.aln_data_value',
+			 'tca.aln_data_value','dfre.aln_data_value');
 	
 		$sLimit = "";
 		
@@ -115,12 +131,8 @@ class Offer_eligibility extends Admin_Controller {
 				{
 					if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
 					{
-						if($_GET['iSortCol_0'] == 8){
-							$sOrder .= " (s.order_no*-1) DESC ,";
-						} else {
 						 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
 							".$_GET['sSortDir_'.$i] .", ";
-						}
 					}
 				}				
 				  $sOrder = substr_replace( $sOrder, "", -2 );
@@ -202,18 +214,60 @@ class Offer_eligibility extends Admin_Controller {
                         }
 
 
+			if(!empty($this->input->get('frequency'))){
+                               $frstr = $this->input->get('frequency');
+                                $freq = $this->airports_m->getDefnsCodesListByType('14');
+                                 if ( $frstr != '0') {
+                                        $arr = str_split($frstr);
+                                        $freq_str = implode(',',array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr));
+					$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+					$sWhere .= ' pf.frequency IN ( '.$freq_str.' )';
+                                  }
+
+                        }
+
+
+			if(!empty($this->input->get('booking_status'))){
+				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= ' pext.booking_status = '.  $this->input->get('booking_status');
+                        }
+
+
+			  if(!empty($this->input->get('carrier'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= ' pf.carrier_code = '.  $this->input->get('carrier');
+                        }
+
+
+			if(!empty($this->input->get('season'))){
+                               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= ' fc.season_id = '.  $this->input->get('season');
+                        }
+
 			
+
+
+
+
+		                  $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                         $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                        $sWhere .= 'pf.carrier IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
+                }
+	
 
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext_id ,
 		 boarding_point, dai.code as carrier_code , off_point, season_id,pf.flight_number, fca.code as fcabin, 
-            	tca.code as tcabin, CONCAT(dfre.aln_data_value,'(',dfre.code,')') as day_of_week ,
+            	tca.code as tcabin, dfre.code as day_of_week , sea.season_name,
             	pf.dep_date as departure_date, min,max,average,slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, ex.excl_grp
 		     from VX_aln_dtpf_ext pext 
 		     LEFT JOIN VX_aln_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_processed = 1 and pf.active = 1)
 		     LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)
 		     LEFT JOIN VX_aln_eligibility_excl_rules ex on (pext.exclusion_id = ex.eexcl_id)
+		     LEFT JOIN VX_aln_season sea on (sea.VX_aln_seasonID = fc.season_id )
                      LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
 		     LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
 		     LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = pf.carrier_code AND dai.aln_data_typeID = 12)
