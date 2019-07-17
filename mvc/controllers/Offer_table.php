@@ -63,6 +63,7 @@ class Offer_table extends Admin_Controller {
 
                 $this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
 		$this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
+		$this->data['status'] =  $this->airports_m->getDefnsListByType('20');
 
 		$this->data["subview"] = "offer_table/index";
 		$this->load->view('_layout_main', $this->data);
@@ -197,7 +198,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 
 
-            $aColumns = array('MainSet.offer_id');
+            $aColumns = array('MainSet.offer_id','MainSet.offer_date', 'SubSet.carrier','MainSet.flight_number', 'SubSet.flight_date' , 'SubSet.from_city', 'SubSet.to_city', 'SubSet.from_cabin','MainSet.to_cabin', 'MainSet.bid_value','MainSet.bid_submit_date','SubSet.p_list','SubSet.fqtv','MainSet.pnr_ref','1','MainSet.bid_value','MainSet.cash', 'MainSet.miles','MainSet.offer_status','SubSet.from_city_name', 'SubSet.to_city_name');
 
                 $sLimit = "";
 
@@ -212,12 +213,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                                 {
                                         if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
                                         {
-                                                if($_GET['iSortCol_0'] == 8){
-                                                        $sOrder .= " (s.order_no*-1) DESC ,";
-                                                } else {
                                                  $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
                                                         ".$_GET['sSortDir_'.$i] .", ";
-                                                }
                                         }
                                 }
                                   $sOrder = substr_replace( $sOrder, "", -2 );
@@ -294,9 +291,32 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                         }
                         if(!empty($this->input->get('toCabin'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+		                $sWhere .= 'upgrade_type = '.  $this->input->get('toCabin');
+                        }
+
+			 if(!empty($this->input->get('toCabin'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'upgrade_type = '.  $this->input->get('toCabin');
                         }
 
+
+
+                        if(!empty($this->input->get('offer_status'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.booking_status = '.  $this->input->get('offer_status');
+                        }
+
+
+		       if(!empty($this->input->get('pnr_ref'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.pnr_ref = "'.  $this->input->get('pnr_ref') . '"';
+                        }
+
+
+			 if(!empty($this->input->get('offer_id'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.offer_id = '.  $this->input->get('offer_id');
+                        }
 
 
 
@@ -305,11 +325,11 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
                         MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status,
-			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date
+			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name
 
                 FROM ( 
                                 select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, 
-                                tcab.aln_data_value as to_cabin, oref.pnr_ref, bid.flight_number,oref.cash, oref.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date
+                                tcab.code as to_cabin, oref.pnr_ref, bid.flight_number,oref.cash, oref.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status
                                 from  
                                         VX_aln_offer_ref oref 
                                         INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id) 
@@ -327,8 +347,9 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
                                         select  flight_number,group_concat(distinct fqtv) as fqtv ,
                                                 group_concat(distinct dep_date) as flight_date  ,
                                                 pnr_ref,group_concat(first_name, ' ' , last_name) as p_list , 
-                                                group_concat(distinct cab.aln_data_value) as from_cabin  , fc.code as from_city, 
-						tc.code as to_city, from_city as boarding_point , to_city as off_point,
+                                                group_concat(distinct cab.code) as from_cabin  , fc.code as from_city, 
+						tc.code as to_city, from_city as boarding_point , to_city as off_point, 
+						fc.aln_data_value as from_city_name, tc.aln_data_value as to_city_name,
 						 group_concat(distinct pf1.cabin) as from_cabin_id, 
                                                  car.code as carrier
                                         
@@ -359,9 +380,7 @@ $sOrder $sLimit";
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
           );
-		$i = 0;
                 foreach ($rResult as $feed ) {
-			$feed->cnt = ++$i;
 			$feed->avg_fare = $feed->bid_value;;
                         $feed->flight_date = date('d-m-Y',$feed->flight_date);
 			$feed->bid_submit_date =  date('d-m-Y H:i:s',$feed->bid_submit_date);
