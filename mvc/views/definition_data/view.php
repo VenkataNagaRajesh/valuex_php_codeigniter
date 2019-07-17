@@ -15,10 +15,10 @@
 			<h1><?=$this->lang->line("defdata_information")?></h1>
 			<div class="row">				
 				 <div class="profile-view-tab"> 
-					 <p><span><?=$this->lang->line("defdata_type")?> </span>: <?=$defdata->type?></p>
+					 <p><span><?=$this->lang->line("defdata_type")?> </span>: <?=$defdata->type_alias?></p>
 					 <p><span><?=$this->lang->line("defdata_value")?> </span>: <?=$defdata->aln_data_value?></p>
-					 <p><span><?=$this->lang->line("defdata_parent")?> </span>: <?=$defdata->parent?></p>
-					 <p><span><?=$this->lang->line("defdata_code")?> </span>: <?=$defdata->code?></p>
+					 <p><span><?=$this->lang->line("defdata_parent")?> </span>: <?=($defdata->parent=='NUL')?'':$defdata->parent?></p>
+					 <p><span><?=$this->lang->line("defdata_code")?> </span>: <?=($defdata->code=='NUL')?'':$defdata->code?></p>
 					 <p><span><?=$this->lang->line("defdata_active")?> </span>: <?=$defdata->active?></p>
 					 <p><span><?=$this->lang->line("defdata_user")?> </span>: <?=$defdata->modify_by?></p>
 					 <p><span><?=$this->lang->line("defdata_date")?> </span>: <?=date('d-m-Y',$defdata->modify_date)?></p>				 

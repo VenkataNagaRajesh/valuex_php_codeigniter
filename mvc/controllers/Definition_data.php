@@ -385,7 +385,8 @@ class Definition_data extends Admin_Controller {
 			}	
 			
 			$defdata->active .= "<label for='myonoffswitch".$defdata->vx_aln_data_defnsID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";         
-           
+             $defdata->code = ($defdata->code=='NUL')?'':$defdata->code;
+
 			$output['aaData'][] = $defdata;				
 		}
 		echo json_encode( $output );

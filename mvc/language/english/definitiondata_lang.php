@@ -2,7 +2,7 @@
 
 /* List Language  */
 $lang['panel_title'] = "Data Definitions";
-$lang['add_title'] = "Add Data";
+$lang['add_title'] = "Add";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
 
@@ -23,6 +23,6 @@ $lang['defdata_latitude'] = 'Latitude';
 $lang['defdata_longitude'] = 'Longitude';
 $lang['defdata_user'] = 'Create User';
 $lang['defdata_date'] = 'Date';
-$lang['add_defdata'] = 'Add Data';
-$lang['update_defdata'] = 'Update Data';
+$lang['add_defdata'] = 'Add';
+$lang['update_defdata'] = 'Update';
 $lang['defdata_information'] = 'Data Definition';

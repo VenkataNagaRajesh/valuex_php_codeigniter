@@ -72,7 +72,16 @@ class Airports_master extends Admin_Controller {
 	   }
 	}
 
-	public function index() {		
+	public function index() {
+         $this->data['headerassets'] = array(
+			'css' => array(
+				'assets/select2/css/select2.css',
+				'assets/select2/css/select2-bootstrap.css'
+			),
+			'js' => array(
+				'assets/select2/select2.js'
+			)
+		);		
 		$this->data['areaslist'] = $this->airports_m->getDefns(5);
 		if(!empty($this->input->post('countryID'))){
 		  $this->data['countryID'] = $this->input->post('countryID');

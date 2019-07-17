@@ -35,17 +35,17 @@
 				   echo form_dropdown("areaID", $alist,set_value("areaID",$areaID), "id='areaID' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
 				 <div class="col-sm-2">
-                    <select name="regionID" id="regionID" class="form-control" placeholder="Region">
+                    <select name="regionID" id="regionID" class="form-control select2" placeholder="Region">
 				   
 				    </select>
                  </div>
 				<div class="col-sm-2">
-                 	<select name="countryID" id="countryID" class="form-control" placeholder="Country">
+                 	<select name="countryID" id="countryID" class="form-control select2" placeholder="Country">
 				   
 				    </select>	
                  </div>
                  <div class="col-sm-2">			   
-                   <select name="cityID" id="cityID" class="form-control" placeholder="City">
+                   <select name="cityID" id="cityID" class="form-control select2" placeholder="City">
 				   
 				   </select>
                  </div>              				
@@ -87,6 +87,7 @@
    </div>
 </div>
 <script>
+$( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
  $(document).ready(function() {	 
 	 var countryID = <?=$countryID?>;	
 	 var regionID =<?=$regionID?>;
@@ -129,6 +130,7 @@
     $("#areaID").trigger("change");
 	$("#regionID").trigger("change");
 	$("#countryID").trigger("change");
+	$("#cityID").trigger("change");
   });
  
   
@@ -206,14 +208,14 @@
     var cityID = <?php echo $cityID; ?>;   
    if(countryID == null) {
         $('#cityID').val(0);
-    } else {
+    } else { 
         $.ajax({
             async: false,
             type: 'POST',
             url: "<?=base_url('general/getAirportCities')?>",          
 		   data: {"countryID" :countryID,"cityID":cityID},
             dataType: "html",			
-            success: function(data) {
+            success: function(data) { console.log(data);
                $('#cityID').html(data);
             }
         }); 		

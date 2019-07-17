@@ -222,7 +222,7 @@ class Season extends Admin_Controller {
 	function createDateRange($startDate, $endDate, $format = "m/d/Y"){
 		$begin = new DateTime($startDate);
 		$end = new DateTime($endDate);
-
+         $end->modify('+1 day');
 		$interval = new DateInterval('P1D'); // 1 Day
 		$dateRange = new DatePeriod($begin, $interval, $end);
 

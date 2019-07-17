@@ -190,7 +190,7 @@ public function getDefnsCodesListByType($type) {
   }
   
   public function get_definition_data($id){
-	  $this->db->select('dd.*,dd1.aln_data_value parent,u.name modify_by,t.name type')->from('vx_aln_data_defns dd');
+	  $this->db->select('dd.*,dd1.aln_data_value parent,u.name modify_by,t.name type,t.alias type_alias')->from('vx_aln_data_defns dd');
 	  $this->db->join('vx_aln_data_defns dd1','dd1.vx_aln_data_defnsID = dd.parentID','LEFT');
 	  $this->db->join('vx_aln_data_types t','t.vx_aln_data_typeID = dd.aln_data_typeID','LEFT');
 	  $this->db->join('user u','u.userID = dd.modify_userID','LEFT');
