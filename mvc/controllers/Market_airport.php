@@ -32,11 +32,32 @@ class Market_airport extends Admin_Controller {
                   $this->data['marketID'] = 0;
                 }
                 if(!empty($this->input->post('airport_id'))){
-                $this->data['airportID'] = $this->input->post('airort_id');
+                $this->data['airportID'] = $this->input->post('airport_id');
                 } else {
                   $this->data['airportID'] = 0;
                 }
 
+
+
+		if(!empty($this->input->post('country_id'))){
+                $this->data['countryID'] = $this->input->post('country_id');
+                } else {
+                  $this->data['countryID'] = 0;
+                }
+
+
+		if(!empty($this->input->post('region_id'))){
+                $this->data['regionID'] = $this->input->post('region_id');
+                } else {
+                  $this->data['regionID'] = 0;
+                }
+
+
+		if(!empty($this->input->post('city_id'))){
+                $this->data['cityID'] = $this->input->post('city_id');
+                } else {
+                  $this->data['cityID'] = 0;
+                }
 
 		 if($this->session->userdata('usertypeID') == 2){
                   $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,$this->session->userdata('login_user_airlineID'));
@@ -46,6 +67,11 @@ class Market_airport extends Admin_Controller {
 
 
 		$this->data['airports_list'] = $this->airports_m->getDefnsCodesListByType('1');
+		$this->data['country_list'] = $this->airports_m->getDefnsCodesListByType('2');
+		$this->data['city_list'] = $this->airports_m->getDefnsCodesListByType('3');
+		$this->data['region_list'] = $this->airports_m->getDefnsCodesListByType('4');
+		
+
 		$this->data["subview"] = "market_airport/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -56,8 +82,7 @@ class Market_airport extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('mz.market_name','ma.aln_data_value','mc.aln_data_value','mct.aln_data_value',
-            'mr.aln_data_value' ,'mar.aln_data_value' ,'ma.code','m.active');
+	    $aColumns =  array('mz.market_id','mz.market_name','ma.code','mct.code','mc.code','mr.aln_data_value' ,'mar.aln_data_value','ma.aln_data_value','mct.aln_data_value','mc.aln_data_value');
                 $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -122,6 +147,24 @@ class Market_airport extends Admin_Controller {
                       		$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
               			$sWhere .= 'mam.airport_id = '.$this->input->get('airportID');
                 	}
+
+
+			if(!empty($this->input->get('cityID'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'm.cityID = '.$this->input->get('cityID');
+                        }
+
+			if(!empty($this->input->get('countryID'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'm.countryID = '.$this->input->get('countryID');
+                        }
+
+
+			if(!empty($this->input->get('regionID'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'm.regionID = '.$this->input->get('regionID');
+                        }
+
 
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');

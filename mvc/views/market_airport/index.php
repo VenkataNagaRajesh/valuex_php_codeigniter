@@ -37,6 +37,43 @@
 
                  </div>
 
+		 <div class="col-sm-2">
+
+                        <?php
+
+                        $city_list['0'] = "City";
+                        echo form_dropdown("city_id", $city_list,set_value("city_id",$cityID), "id='city_id' class='form-control hide-dropdown-icon select2'");    ?>
+
+
+                 </div>
+
+
+
+
+		 <div class="col-sm-2">
+
+                        <?php
+
+                        $country_list['0'] = "Country";
+                        echo form_dropdown("country_id", $country_list,set_value("country_id",$countryID), "id='country_id' class='form-control hide-dropdown-icon select2'");    ?>
+
+
+                 </div>
+
+
+
+
+	 <div class="col-sm-2">
+
+                        <?php
+
+                        $region_list['0'] = "Region";
+                        echo form_dropdown("region_id", $region_list,set_value("region_id",$regionID), "id='region_id' class='form-control hide-dropdown-icon select2'");    ?>
+
+
+                 </div>
+
+
 
                 <div class="col-sm-2">
                   <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
@@ -87,7 +124,11 @@
       "sAjaxSource": "<?php echo base_url('market_airport/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "marketID","value": $("#market_id").val()},
-		   {"name": "airportID","value": $("#airport_id").val()})
+		   {"name": "airportID","value": $("#airport_id").val()},
+			{"name": "countryID","value": $("#country_id").val()},
+			{"name": "cityID","value": $("#city_id").val()},
+			{"name": "regionID","value": $("#region_id").val()},
+			)
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
                     "type": "GET",
