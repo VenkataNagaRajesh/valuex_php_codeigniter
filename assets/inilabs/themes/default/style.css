@@ -695,8 +695,8 @@ body > .header .logo .icon {
   padding: 0;
 }
 .sidebar .sidebar-menu > li > a {
-  font-size: 14px;
-  color: #A4B1C2;
+  font-size: 13px;
+  color: #f5f5f5;
   padding: 10px 5px 10px 15px;
   display: block;
 }
@@ -719,7 +719,7 @@ body > .header .logo .icon {
 .sidebar .sidebar-menu .treeview-menu > li > a {
   display: block;
   margin: 0px 0px;
-  font-size: 14px;
+  font-size: 13px;
   padding:  10px 5px 10px 42px;
 }
 .sidebar .sidebar-menu .treeview-menu > li > a > .fa,
@@ -2762,7 +2762,7 @@ Component: timeline
   text-decoration: none;
 }
 .skin-blue .treeview-menu > li > a {
-  color: #777;
+  color: #f5f5f5;
 }
 .skin-blue .treeview-menu > li.active > a,
 .skin-blue .treeview-menu > li > a:hover {
@@ -3671,14 +3671,14 @@ fieldset[disabled] .btn-vk.active {
   margin-top: 10px;
   margin-bottom: 20px;
   border-radius: 3px;
-  boder: 1px solid #F24E56;
+  border: 1px solid #F24E56;
 }
 .main-footer {
   background: #fff;
   padding: 15px;
   color: #444;
   border-top: 1px solid #DDDDDD;
-  position: fixed;
+  position: relative;
   bottom: 0px;
   left: 0px;
   right: 0px;
