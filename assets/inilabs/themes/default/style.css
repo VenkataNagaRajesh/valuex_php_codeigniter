@@ -4280,9 +4280,6 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
     color: gray;
     cursor: default !important;
 }
-.rafeed-filter-btn{
-	margin-top:12px !important;
-}
 .simpleTree-label {
     display: inline-block;
     padding: .2rem .25rem;
@@ -4480,4 +4477,7 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 	width: 68px;
 	height: 28px;
 	margin-bottom: 0;
+}
+.rafeed  .form-group .form-control{
+	margin-bottom:10px;
 }

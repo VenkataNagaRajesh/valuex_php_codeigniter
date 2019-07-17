@@ -57,7 +57,6 @@
                         <input type="text" class="form-control" id="flight_dep_date_end" name="flight_dep_date_end"  placeholder=' flight Dep Date End' value="<?=set_value('flight_dep_date_end',$dep_date_end)?>" >
                 </div>
 </div></div>
-<br> 
 <div class='form-group'>
 <div class='col-sm-12'>
   <div class="col-sm-2">
@@ -118,7 +117,7 @@
 
                 </div>
 </div></div>
-<br>
+
 <div class='form-group'>
 <div class="col-sm-12">
 
@@ -169,7 +168,8 @@
 
 </div>
 <br> <br>
-
+				<div class="col-md-12">
+					<div id="hide-table">
                     <table id="ruleslist" class="table table-striped table-bordered table-hover dataTable no-footer">
                         <thead>
                             <tr>
@@ -198,6 +198,8 @@
                         <tbody>                            
                         </tbody>
                     </table>
+					</div>
+					</div>
             </div>
         </div>
     </div>

@@ -8,7 +8,7 @@
         </ol>
     </div><!-- /.box-header -->
     <!-- form start -->
-    <div class="box-body">
+    <div class="box-body rafeed">
         <div class="row">
             <div class="col-sm-12">              
 
@@ -128,7 +128,7 @@
 
 
                 <div class="col-sm-2 pull-right">
-                  <button type="submit" class="form-control btn btn-danger rafeed-filter-btn" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                 </div>	             				
 			  </div>
 			 </form>			
