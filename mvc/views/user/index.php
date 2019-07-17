@@ -10,7 +10,7 @@
 	 <?php 
            if(permissionChecker('user_add')) {  ?>
            <h5 class="page-header">
-               <a href="<?php echo base_url('user/add') ?>" data-toggle="tooltip" data-title="Add USer" data-placement="left" class="btn btn-danger">
+               <a href="<?php echo base_url('user/add') ?>" data-toggle="tooltip" data-title="Add User" data-placement="left" class="btn btn-danger">
                    <i class="fa fa-plus"></i> 
                    <!--<?=$this->lang->line('add_title')?>-->
                </a>

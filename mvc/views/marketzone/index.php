@@ -213,7 +213,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="col-md-12">
-			<div class="tab-content table-responsive">
+			<div class="tab-content table-responsive" id="hide-table">
 				<table id="tztable" class="table table-bordered dataTable no-footer">
 				  <thead>
 					   <tr>

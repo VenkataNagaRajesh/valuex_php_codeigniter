@@ -268,10 +268,11 @@ class Rafeed extends Admin_Controller {
 		$usertypeID = $this->session->userdata('usertypeID');	  
 
 
-		
-	    $aColumns = array('rafeed_id','fare_basis','ticket_number', 'coupon_number', 'booking_country', 'booking_city', 'issuance_country', 'issuance_city','boarding_point', 'off_point', 'cabin', 'class', 'departure_date', 'prorated_price', 'operating_airline_code', 'marketing_airline_code', 'rf.active','dfre.aln_data_value' , 'dc.aln_data_value', 'dci.aln_data_value', 'dico.aln_data_value',
+
+	$aColumns = array('rafeed_id','airline_code','ticket_number','coupon_number','dc.code','dci.code','dico.code','dici.code','dbp.code','dop.code','prorated_price','dcla.code','class','fare_basis','rf.departure_date','day_of_week','dai.code', 'dam.code','dcar.code','rf.flight_number','office_id','channel','dpax.code','rf.active','dfre.aln_data_value' , 'dc.aln_data_value', 'dci.aln_data_value', 'dico.aln_data_value',
                                 'dici.aln_data_value', 'dai.aln_data_value', 'dam.aln_data_value', 'dcar.aln_data_value', 'dbp.aln_data_value',
                                 'dop.aln_data_value','dcla.aln_data_value');
+		
 	
 		$sLimit = "";
 		
@@ -286,12 +287,12 @@ class Rafeed extends Admin_Controller {
 				{
 					if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
 					{
-						if($_GET['iSortCol_0'] == 8){
-							$sOrder .= " (s.order_no*-1) DESC ,";
-						} else {
+						//if($_GET['iSortCol_0'] == 8){
+						//	$sOrder .= " (s.order_no*-1) DESC ,";
+						//} else {
 						 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
 							".$_GET['sSortDir_'.$i] .", ";
-						}
+						//}
 					}
 				}				
 				  $sOrder = substr_replace( $sOrder, "", -2 );
@@ -367,7 +368,7 @@ class Rafeed extends Admin_Controller {
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 				$num_arr = explode('-',$this->input->get('flight_range'));
 
-				if ( $num_arr[0] > 0 AND $num_arr[1] > 0 ) {
+				if ( $num_arr[0] > 0 AND $num_arr[1] > 0 AND $num_arr[1] > $num_arr[0]) {
 					$sWhere .= 'rf.flight_number >= '.$num_arr[0]. ' AND rf.flight_number <= ' . $num_arr[1];
 				} else if($num_arr[0] > 0 ) {
 					$sWhere .= 'rf.flight_number ='. $num_arr[0];

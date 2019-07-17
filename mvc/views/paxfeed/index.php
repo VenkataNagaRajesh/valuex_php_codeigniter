@@ -51,7 +51,7 @@
 
     <div class="col-sm-2">
                <?php
-                        $airports['0'] = ' From City';
+                        $airports['0'] = ' Board Point';
                         ksort($airports);
 
                                    echo form_dropdown("from_city", $airports,set_value("from_city",$from_city), "id='from_city' class='form-control hide-dropdown-icon select2'");    ?>
@@ -61,7 +61,7 @@
 
     <div class="col-sm-2">
                <?php
-                        $airports['0'] = ' To City';
+                        $airports['0'] = ' Off Point';
                         ksort($airports);
 
                                    echo form_dropdown("to_city", $airports,set_value("to_city",$to_city), "id='to_city' class='form-control hide-dropdown-icon select2'");    ?>
@@ -76,7 +76,59 @@
 
                                    echo form_dropdown("carrier_code", $airlines,set_value("carrier_code",$carrier_code), "id='carrier_code' class='form-control hide-dropdown-icon select2'");    ?>
 
+
                 </div>
+
+ <div class="col-sm-2">
+ <input type="text" class="form-control" placeholder='frequency' id="frequency" name="frequency" value="<?=set_value('frequency')?>" >
+
+                </div>
+
+<div class="col-sm-2">
+ <input type="text" class="form-control" placeholder='Flight range' id="flight_range" name="flight_range" value="<?=set_value('flight_range')?>" >
+
+                </div>
+
+
+
+ <div class="col-sm-2">
+               <?php
+                        $pax_type['0'] = ' Pax Type';
+                        ksort($pax_type);
+
+                                   echo form_dropdown("pax_type", $pax_type,set_value("pax_type"), "id='pax_type' class='form-control hide-dropdown-icon select2'");    ?>
+
+                </div>
+
+
+
+    <div class="col-sm-2">
+               <?php
+
+			$tier_arr = array('1' => '1', '2' =>'2', '3' => '3');
+                        $tier_arr['0'] = ' Tier';
+                        ksort($tier_arr);
+
+                                   echo form_dropdown("tier", $tier_arr,set_value("tier"), "id='tier' class='form-control hide-dropdown-icon select2'");    ?>
+
+                </div>
+
+
+
+<div class="col-sm-2">
+                 <input type="text" class="form-control" placeholder='Dep Start Date' id="start_date" name="start_date" value="<?=set_value('start_date')?>" >
+
+
+                </div>
+
+
+                <div class="col-sm-2">
+                 <input type="text" class="form-control" placeholder='Dep End Date' id="end_date" name="end_date" value="<?=set_value('end_date')?>" >
+
+
+                </div>
+
+
 
 
 
@@ -106,9 +158,10 @@
 			<th class="col-lg-1"><?=$this->lang->line('arrival_time')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('class')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('cabin')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('from_city')?></th>
-
-                        <th class="col-lg-1"><?=$this->lang->line('to_city')?></th>
+                        <th class="col-lg-1">Board Point</th>
+                        <th class="col-lg-1">Off Point</th>
+			<th class="col-lg-1">Tier</th>
+			<th class="col-lg-1">Frequency</th>
                          <th class="col-lg-1"><?=$this->lang->line('pax_contact_email')?></th>
 			 <th class="col-lg-1"><?=$this->lang->line('phone')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('booking_country')?></th>
@@ -144,6 +197,12 @@
                    {"name": "bookingCity","value": $("#booking_city").val()},
                    {"name": "fromCity","value": $("#from_city").val()},
                    {"name": "toCity","value": $("#to_city").val()},
+		   {"name": "pax_type","value": $("#pax_type").val()},
+		   {"name": "tier","value": $("#tier").val()},
+		   {"name": "flight_range","value": $("#flight_range").val()},
+		   {"name": "start_date","value": $("#start_date").val()},
+		   {"name": "end_date","value": $("#end_date").val()},
+		   {"name": "frequency","value": $("#frequency").val()},
                     {"name": "carrierCode","value": $("#carrier_code").val()},
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
@@ -160,7 +219,7 @@
 				  {"data": "pax_nbr"},
                                   {"data": "first_name" },
 				{"data": "last_name"},
-                                  {"data": "ptc" },
+                                  {"data": "ptc_code" },
                                 {"data": "fqtv"},
                                  {"data": "carrier_code" },
 				{"data": "seg_nbr" },
@@ -172,8 +231,9 @@
 				 {"data": "class" },
 				 {"data": "cabin" },
 				{"data": "from_city" },
-				
                                   {"data": "to_city" },
+				 {"data": "tier" },
+				{"data": "frequency" },
                                   {"data": "pax_contact_email"},
 
                                   {"data": "phone"},
@@ -262,5 +322,6 @@
   }); 
 
 $( ".select2" ).select2();
-
+$('#start_date').datepicker();
+$('#end_date').datepicker();
  </script>

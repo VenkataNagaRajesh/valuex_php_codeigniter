@@ -7,6 +7,7 @@ class Eligibility_exclusion extends Admin_Controller {
 		$this->load->model("airports_m");
 		$this->load->model('marketzone_m');
 		$this->load->model('eligibility_exclusion_m');
+		$this->load->model('airline_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('eligibility_exclusion', $language);	
 	}
@@ -314,7 +315,16 @@ function valFrequency($num)
                     	$this->data['active'] = '1';
                 }
 
-		$this->data['carriers'] = $this->airports_m->getDefnsListByType('12');
+		//$this->data['carriers'] = $this->airports_m->getDefnsListByType('12');
+
+		 $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
+                           } else {
+                   $this->data['carriers'] = $this->airline_m->getAirlinesData();
+                }
+
 		$this->data['marketzones'] = $this->marketzone_m->getMarketzones();
 		 $this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14');
 		$this->data['class_type'] = $this->airports_m->getDefns('13');
@@ -396,12 +406,23 @@ function valFrequency($num)
                         $rule = $this->eligibility_exclusion_m->getDataForEditRule($id);
 			$rule->flight_efec_date = $rule->flight_efec_date ? date('d-m-Y',$rule->flight_efec_date) : '';
                   	$rule->flight_disc_date = $rule->flight_disc_date ? date('d-m-Y',$rule->flight_disc_date) : '';
-			$st_arr = explode(':',gmdate('H:i', $rule->flight_dep_start));
-			$rule->flight_dep_start_hrs = $st_arr[0];
-			$rule->flight_dep_start_mins  = $st_arr[1];
+			 if($rule->flight_dep_start != '-1' ) {
+					$st_arr = explode(':',gmdate('H:i', $rule->flight_dep_start));
+					$rule->flight_dep_start_hrs = $st_arr[0];
+					$rule->flight_dep_start_mins  = $st_arr[1];
+			}else {
+					$rule->flight_dep_start_hrs = '-1';
+					$rule->flight_dep_start_mins = '-1';
+			}
+
+			if($rule->flight_dep_end != '-1' ) {
 			$st_arr = explode(':',gmdate('H:i', $rule->flight_dep_end));
                         $rule->flight_dep_end_hrs = $st_arr[0];
                         $rule->flight_dep_end_mins  = $st_arr[1];
+			}else{
+				$rule->flight_dep_end_hrs = '-1';
+				 $rule->flight_dep_end_mins = '-1';
+			}
 			$rule->orig_level_value = $rule->orig_level_value ? $rule->orig_level_value : '';
 			$rule->dest_level_value = $rule->dest_level_value ? $rule->dest_level_value : '';
 
@@ -463,8 +484,41 @@ public function save() {
                                  $array["flight_nbr_end"] = $this->input->post("flight_nbr_end") ? $this->input->post("flight_nbr_end") : 0;
                                 $array["flight_efec_date"] = strtotime($this->input->post("flight_efec_date"));
                                 $array["flight_disc_date"] = strtotime($this->input->post("flight_disc_date"));
-                                $array['flight_dep_start'] = (3600 * $this->input->post("flight_dep_start_hrs")) + (60 * $this->input->post("flight_dep_start_mins"));
-                                  $array['flight_dep_end'] = (3600 * $this->input->post("flight_dep_end_hrs"))  + ( 60 * $this->input->post("flight_dep_end_mins"));
+//                                $array['flight_dep_start'] = (3600 * $this->input->post("flight_dep_start_hrs")) + (60 * $this->input->post("flight_dep_start_mins"));
+  //                                $array['flight_dep_end'] = (3600 * $this->input->post("flight_dep_end_hrs"))  + ( 60 * $this->input->post("flight_dep_end_mins"));
+
+					$start_hrs = $this->input->post("flight_dep_start_hrs");
+                                $start_mins = $this->input->post("flight_dep_start_mins");
+                                if ( $start_hrs != '-1' && $start_mins != '-1' ) {
+                                        $array['flight_dep_start'] = (3600 * $start_hrs) + (60 * $start_mins);
+                                } else  if ( $start_hrs != '-1' && $start_mins == '-1' ) {
+
+                                        $array['flight_dep_start'] = (3600 * $start_hrs) ;
+                                } else if ($start_hrs == '-1' && $start_mins != '-1') {
+                                        $array['flight_dep_start'] = (60 * $start_mins) ;
+
+                                }else{
+                                         $array['flight_dep_start'] = '-1';
+                                }
+
+
+
+                                $end_hrs = $this->input->post("flight_dep_end_hrs");
+                                $end_mins = $this->input->post("flight_dep_end_mins");
+                                if ( $end_hrs != '-1' && $end_mins != '-1' ) {
+                                        $array['flight_dep_end'] = (3600 * $end_hrs) + (60 * $end_mins);
+                                } else  if ( $end_hrs != '-1' && $end_mins == '-1' ) {
+
+                                        $array['flight_dep_end'] = (3600 * $end_hrs) ;
+                                } else if ($end_hrs == '-1' && $end_mins != '-1') {
+                                        $array['flight_dep_end'] = (60 * $end_mins) ;
+
+                                }else{
+                                         $array['flight_dep_end'] = '-1';
+                                }
+
+
+
 
 					$freq = $this->airports_m->getDefnsCodesListByType('14');
 					$frstr = $this->input->post("frequency") ? $this->input->post("frequency") : 0; 
@@ -676,12 +730,10 @@ function time_dropdown($val) {
 	function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
 		$usertypeID = $this->session->userdata('usertypeID');	  
+
+
+	$aColumns = array('MainSet.eexcl_id','MainSet.excl_grp','MainSet.excl_reason_desc','MainSet.orig_level', 'SubSet.orig_level_value','MainSet.dest_level', 'SubSet.dest_level_value' ,'MainSet.carrier_code','MainSet.flight_efec_date', 'MainSet.flight_disc_date','MainSet.flight_dep_start', 'MainSet.flight_dep_end','MainSet.flight_nbr','MainSet.from_class','MainSet.to_class','SubSet.frequency','SubSet.orig_full_name', 'SubSet.dest_full_name', 'MainSet.active');
 				
-	    $aColumns = array('MainSet.excl_grp,MainSet.eexcl_id','MainSet.excl_reason_desc' ,'MainSet.orig_mkt_name', 'MainSet.dest_mkt_name', 
-        'MainSet.flight_efec_date', 'MainSet.flight_disc_date', 'MainSet.flight_dep_start', 'MainSet.flight_dep_end', 
-        'MainSet.flight_nbr', 'MainSet.from_class', 'MainSet.to_class', 'Subset.frequency',  'MainSet.active',
-        'MainSet.orig_level_id', 'MainSet.dest_level_id','MainSet.upgrade_from_cabin_type', 'MainSet.upgrade_to_cabin_type',
-	'MainSet.flight_nbr_start','MainSet.flight_nbr_end');
 	
 		$sLimit = "";
 		
@@ -696,12 +748,8 @@ function time_dropdown($val) {
 				{
 					if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
 					{
-						if($_GET['iSortCol_0'] == 8){
-							$sOrder .= " (s.order_no*-1) DESC ,";
-						} else {
 						 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
 							".$_GET['sSortDir_'.$i] .", ";
-						}
 					}
 				}				
 				  $sOrder = substr_replace( $sOrder, "", -2 );
@@ -740,13 +788,9 @@ function time_dropdown($val) {
 				}
 			}
 
-                        if(!empty($this->input->get('origID'))){
-                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.orig_level_id = '.$this->input->get('origID');
-                        }
-                        if(!empty($this->input->get('destID'))){
+                        if(!empty($this->input->get('scarrier'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.dest_level_id = '.$this->input->get('destID');
+                                $sWhere .= 'MainSet.carrier = '.$this->input->get('scarrier');
                         }
 
 
@@ -812,10 +856,6 @@ function time_dropdown($val) {
                         }
 
 
-                        if(!empty($this->input->get('discDate'))){
-                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_disc_date = '.strtotime($this->input->get('discDate'));
-                        }
 
 
 			if(!empty($this->input->get('day') )){
@@ -828,21 +868,44 @@ function time_dropdown($val) {
 			}
 
 
+		 if(!empty($this->input->get('sfrequency'))){
+                               $frstr = $this->input->get('sfrequency');
+                                $freq = $this->airports_m->getDefnsCodesListByType('14');
+                                 if ( $frstr != '0') {
+                                        $arr = str_split($frstr);
+                                        $freq_str = array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr);                                       
+					foreach($freq_str as $day){
+						$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+						$sWhere .= 'FIND_IN_SET("'.$day.'",SubSet.dayslist)';
+					}
+                                  }
+
+                        }
+
+                  $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                         $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                        $sWhere .= 'MainSet.carrier IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
+                }
+
+
 		$sQuery = "
 
 SELECT SQL_CALC_FOUND_ROWS MainSet.eexcl_id,MainSet.excl_reason_desc , 
         MainSet.flight_efec_date, MainSet.flight_disc_date, MainSet.flight_dep_start, MainSet.flight_dep_end, 
         MainSet.flight_nbr, MainSet.from_class, MainSet.to_class, SubSet.frequency, MainSet.active,
-        MainSet.orig_level, MainSet.dest_level, SubSet.orig_level_value, SubSet.dest_level_value , SubSet.dayslist , MainSet.upgrade_from_cabin_type, MainSet.upgrade_to_cabin_type,
-        MainSet.flight_nbr_start, MainSet.flight_nbr_end , MainSet.carrier_code, MainSet.excl_grp
+        MainSet.orig_level, MainSet.dest_level, SubSet.orig_level_value, SubSet.dest_level_value , SubSet.dayslist , MainSet.upgrade_from_cabin_type, MainSet.upgrade_to_cabin_type,MainSet.carrier,
+        MainSet.flight_nbr_start, MainSet.flight_nbr_end , MainSet.carrier_code, MainSet.excl_grp,
+	SubSet.orig_full_name, SubSet.dest_full_name, MainSet.active
 
 FROM
 (
            select eexcl_id,excl_reason_desc, orig.alias as orig_level,dest.alias as dest_level,
               flight_efec_date, flight_disc_date, flight_dep_start, flight_dep_end, CONCAT(flight_nbr_start,'-',flight_nbr_end) 
-              as flight_nbr,fc.aln_data_value as from_class , tc.aln_data_value as to_class,  ex.active , 
+              as flight_nbr,fc.code as from_class , tc.code as to_class,  ex.active , 
               ex.upgrade_from_cabin_type, ex.upgrade_to_cabin_type  ,ex.flight_nbr_start,
-	      ex.flight_nbr_end, car.code as carrier_code, ex.excl_grp
+	      ex.flight_nbr_end, car.code as carrier_code, ex.excl_grp,ex.carrier
               from VX_aln_eligibility_excl_rules ex 
 	       LEFT JOIN vx_aln_data_types orig on (orig.vx_aln_data_typeID = ex.orig_level_id) 
               LEFT JOIN vx_aln_data_types dest on (dest.vx_aln_data_typeID = ex.dest_level_id) 
@@ -853,11 +916,11 @@ FROM
 ) as MainSet
 
 LEFT JOIN (
-                select FirstSet.eexcl_id, FirstSet.orig_level as orig_level_value,  SecondSet.dest_level as dest_level_value,ThirdSet.frequency, ThirdSet.dayslist 
+                select FirstSet.eexcl_id, FirstSet.orig_level as orig_level_value,  SecondSet.dest_level as dest_level_value,ThirdSet.frequency, ThirdSet.dayslist , FirstSet.orig_full_name, SecondSet.dest_full_name
                 from 
                         (         
 						SELECT       ex.eexcl_id as eexcl_id  , 
-                                                COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS orig_level 
+                                                COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS orig_level, group_concat(c.aln_data_value) as orig_full_name
                                                 FROM VX_aln_eligibility_excl_rules ex 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, ex.orig_level_value) AND ex.orig_level_id in (1,2,3,4,5)) 
@@ -868,7 +931,7 @@ LEFT JOIN (
 
                         (       
 						SELECT       ex.eexcl_id as eexcl_id  , 
-                                                COALESCE(group_concat(c.code), group_concat(c.aln_data_value), group_concat(mm.market_name) )  AS dest_level 
+                                                COALESCE(group_concat(c.code), group_concat(c.aln_data_value), group_concat(mm.market_name) )  AS dest_level ,  group_concat(c.aln_data_value) as dest_full_name
                                                 FROM VX_aln_eligibility_excl_rules ex 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, ex.dest_level_value) AND ex.dest_level_id in (1,2,3,4,5)) 
@@ -896,7 +959,7 @@ LEFT JOIN (
 		$sOrder
 		$sLimit	"; 
 
-	//print_r($sQuery); exit;
+//	print_r($sQuery); exit;
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
 	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
@@ -912,8 +975,20 @@ LEFT JOIN (
 		$rule->ruleno = 'Rule#'.$rule->excl_grp;
 		$rule->flight_efec_date = $rule->flight_efec_date ? date('d-m-Y',$rule->flight_efec_date) : 'NA';
                $rule->flight_disc_date = $rule->flight_disc_date ? date('d-m-Y',$rule->flight_disc_date) : 'NA';
-		$rule->flight_dep_start = $rule->flight_dep_start ? gmdate('H:i', $rule->flight_dep_start) : 'NA';
-		$rule->flight_dep_end = $rule->flight_dep_end ? gmdate('H:i', $rule->flight_dep_end) : 'NA';
+		if ( $rule->flight_dep_start != '-1'){
+			$rule->flight_dep_start = gmdate('H:i', $rule->flight_dep_start);
+		}else {
+			$rule->flight_dep_start = 'NA';
+		}
+
+
+		 if ( $rule->flight_dep_end != '-1'){
+                        $rule->flight_dep_end = gmdate('H:i', $rule->flight_dep_end);
+                }else {
+                        $rule->flight_dep_end = 'NA';
+                }
+
+
 
 		$rule->orig_level = $rule->orig_level ? $rule->orig_level : 'NA';
 		$rule->dest_level = $rule->dest_level ? $rule->dest_level : 'NA';
