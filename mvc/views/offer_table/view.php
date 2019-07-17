@@ -59,7 +59,8 @@
 			<p><b>Offer Price</b><br>
 				<span>Total Price:</span><?php echo array_sum(array_column($ofr,'bid_value'));?><br>
 				<span>Mode:</span> <?php echo $cash_percentage;?>%  Cash, <?php echo $miles_percentage?>% Miles<br>
-				<span>Miles:</span> <?php echo array_sum(array_column($ofr,'miles'));?>
+				<span>Miles:</span> <?php echo array_sum(array_column($ofr,'miles'));?> <br>
+				<span>Cash:</span> <?php echo array_sum(array_column($ofr,'cash'));?>
 			</p>
 		</div>
 	</div>
