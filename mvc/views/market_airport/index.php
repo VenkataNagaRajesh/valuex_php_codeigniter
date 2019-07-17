@@ -31,11 +31,8 @@
 
 			<?php
 			
-                        $list['0'] = "Airport";
-			foreach($airports_list as $alist ) {
-				$list[$alist->vx_aln_data_defnsID] = $alist->aln_data_value;
-			}
-                        echo form_dropdown("airport_id", $list,set_value("airport_id",$airportID), "id='airport_id' class='form-control hide-dropdown-icon select2'");    ?>
+                        $airports_list['0'] = "Airport";
+                        echo form_dropdown("airport_id", $airports_list,set_value("airport_id",$airportID), "id='airport_id' class='form-control hide-dropdown-icon select2'");    ?>
 
 
                  </div>
