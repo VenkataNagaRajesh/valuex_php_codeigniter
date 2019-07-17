@@ -37,8 +37,9 @@
 				
 				foreach ($ps_data as $pp ) {
 					$p = explode(':', $pp);
+					$tier_array = array('1' => 'Platinum', '2' => 'Gold', '3' => 'Silver','4' => 'Bronze');
 					?>
-				<li><span><?php echo $p[0];?></span><span><?php echo $p[1];?></span><span>12345678</span><span>Gold</span></li>
+				<li><span><?php echo $p[0];?></span><span><?php echo $p[1];?></span><span><?php echo $p[4];?></span><span><?php echo $tier_array[$p[5]];?></span></li>
 				<?php }?>
 			</ul>
 
@@ -58,7 +59,8 @@
 			<p><b>Offer Price</b><br>
 				<span>Total Price:</span><?php echo array_sum(array_column($ofr,'bid_value'));?><br>
 				<span>Mode:</span> <?php echo $cash_percentage;?>%  Cash, <?php echo $miles_percentage?>% Miles<br>
-				<span>Miles:</span> <?php echo array_sum(array_column($ofr,'miles'));?>
+				<span>Miles:</span> <?php echo array_sum(array_column($ofr,'miles'));?> <br>
+				<span>Cash:</span> <?php echo array_sum(array_column($ofr,'cash'));?>
 			</p>
 		</div>
 	</div>
@@ -104,8 +106,8 @@
 						<td><?php echo $data->from_cabin;?></td>
 						<td><?php echo $data->to_cabin;?></td>
 						<td><?php echo $data->bid_value;?></td>
-						<td><?php echo $data->min;?></td>
-						<td><?php echo $data->max;?></td>
+						<td><?php echo $p_cnt * $data->min;?></td>
+						<td><?php echo $p_cnt * $data->max;?></td>
 						<td>3</td>
 						<td><?php echo $empty_seats ? $empty_seats : 0 ?></td>
 

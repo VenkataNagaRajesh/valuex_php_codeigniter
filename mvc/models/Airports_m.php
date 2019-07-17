@@ -79,7 +79,7 @@ class Airports_m extends MY_Model {
   }
   
   public function getDefns($type = null,$parent = null){
-	  $this->db->select('vx_aln_data_defnsID,aln_data_typeID,aln_data_value')->from('vx_aln_data_defns'); 	 
+	  $this->db->select('vx_aln_data_defnsID,aln_data_typeID,aln_data_value,code')->from('vx_aln_data_defns'); 	 
 	  if($type != null){
 		$this->db->where('aln_data_typeID',$type);
 	  } else {

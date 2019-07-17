@@ -368,7 +368,7 @@ class Rafeed extends Admin_Controller {
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 				$num_arr = explode('-',$this->input->get('flight_range'));
 
-				if ( $num_arr[0] > 0 AND $num_arr[1] > 0 ) {
+				if ( $num_arr[0] > 0 AND $num_arr[1] > 0 AND $num_arr[1] > $num_arr[0]) {
 					$sWhere .= 'rf.flight_number >= '.$num_arr[0]. ' AND rf.flight_number <= ' . $num_arr[1];
 				} else if($num_arr[0] > 0 ) {
 					$sWhere .= 'rf.flight_number ='. $num_arr[0];

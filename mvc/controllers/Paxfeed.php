@@ -66,6 +66,7 @@ class Paxfeed extends Admin_Controller {
 		$this->data['country'] = $this->airports_m->getDefnsCodesListByType('2');
 		$this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
                 $this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
+		$this->data['pax_type'] =  $this->airports_m->getDefnsCodesListByType('18');
 
 		$this->data["subview"] = "paxfeed/index";
 		$this->load->view('_layout_main', $this->data);
@@ -108,7 +109,7 @@ class Paxfeed extends Admin_Controller {
 
 
 
-	$header = array_map("strtolower", array("Airline Code","PNR ref","Pax nbr","first name","last name","ptc","FQTV","seg nbr","carrier code","flight nbr","dept date","arrival date","dept time", "arrival time","class","from city","to city","PAX contact email","Phone","Booking country","booking city","office-id","channel","tier markup"));	
+	$header = array_map("strtolower", array("Airline Code","PNR ref","Pax nbr","first name","last name","ptc","FQTV","seg nbr","carrier code","flight nbr","dept date","arrival date","dept time", "arrival time","class","board point","off point","PAX contact email","Phone","Booking country","booking city","office-id","channel","tier markup"));	
 		$header = array_map('strtolower', $header);
 
 
@@ -151,8 +152,8 @@ class Paxfeed extends Admin_Controller {
 				      $paxfeedraw['dept_time'] = $Row[array_search('dept time',$import_header)];
 				      $paxfeedraw['arrival_time'] = $Row[array_search('arrival time',$import_header)];
                                       $paxfeedraw['class'] = $Row[array_search('class',$import_header)];
-                                      $paxfeedraw['from_city'] = $Row[array_search('from city',$import_header)];
-                                      $paxfeedraw['to_city'] = $Row[array_search('to city',$import_header)];
+                                      $paxfeedraw['from_city'] = $Row[array_search('board point',$import_header)];
+                                      $paxfeedraw['to_city'] = $Row[array_search('off point',$import_header)];
                                       $paxfeedraw['phone'] = $Row[array_search('phone',$import_header)];
                                       $paxfeedraw['pax_contact_email'] = $Row[array_search('pax contact email',$import_header)];
                                       $paxfeedraw['booking_country'] =  $Row[array_search('booking country',$import_header)];
@@ -183,6 +184,10 @@ class Paxfeed extends Admin_Controller {
 				        $paxfeed['carrier_code'] =  $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['carrier_code'],'12');
                                         $paxfeed['flight_number'] =  substr($paxfeedraw['flight_number'], 2);
                                         $paxfeed['dep_date'] = strtotime(str_replace('-','/',$paxfeedraw['dep_date']));
+					$day_of_week = date('w', $paxfeed['dep_date']);
+                                        $day = ($day_of_week)?$day_of_week:7;
+					$paxfeed['frequency']  = $this->airports_m->getDefIdByTypeAndCode($day,'14');
+
 					 $paxfeed['arrival_date'] = strtotime(str_replace('-','/',$paxfeedraw['arrival_date']));
 					$paxfeed['dept_time'] = $this->convertTimeToSeconds($paxfeedraw['dept_time']);
 					 $paxfeed['arrival_time'] = $this->convertTimeToSeconds($paxfeedraw['arrival_time']);
@@ -215,6 +220,8 @@ class Paxfeed extends Admin_Controller {
 				} else {
 					$paxfeed['tier_markup'] = 0;
 				}
+
+				$paxfeed['tier'] = $paxfeedraw["tier_markup"];
 
 				if ( $cabin->cabin_code != '') {
 				$paxfeed['rbd_markup'] = $this->preference_m->get_preference_value_bycode('RBD_'.$cabin->cabin_code,'7');
@@ -270,8 +277,11 @@ class Paxfeed extends Admin_Controller {
 
 
 		
-$aColumns = array('dtpf_id', 'flight_nbr', 'dep_date', 'from_city', 'to_city', 'class',
-                        'booking_country','booking_city', 'carrier_code', 'airline_code', 'pax.active');
+$aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'last_name','ptc.code','fqtv','dca.code','seg_nbr',
+		   'flight_number','dep_date','dept_time','arrival_date','arrival_time','class', 'dcab.code','df.code','dt.code',
+			'tier','dfre.code','pax_contact_email','phone','cou.code','cit.code','office_id','channel','pax.active',
+			'ptc.aln_data_value','dca.aln_data_value','dcab.aln_data_value','df.aln_data_value','dt.aln_data_value',
+			'dfre.aln_data_value','cou.aln_data_value','cit.aln_data_value');
 	
 		$sLimit = "";
 		
@@ -286,12 +296,8 @@ $aColumns = array('dtpf_id', 'flight_nbr', 'dep_date', 'from_city', 'to_city', '
 				{
 					if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
 					{
-						if($_GET['iSortCol_0'] == 8){
-							$sOrder .= " (s.order_no*-1) DESC ,";
-						} else {
 						 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
 							".$_GET['sSortDir_'.$i] .", ";
-						}
 					}
 				}				
 				  $sOrder = substr_replace( $sOrder, "", -2 );
@@ -357,19 +363,75 @@ $aColumns = array('dtpf_id', 'flight_nbr', 'dep_date', 'from_city', 'to_city', '
 
                         }
 
+			 if(!empty($this->input->get('tier'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'pax.tier = '.$this->input->get('tier');
+
+                        }
+
+
+
+                        if(!empty($this->input->get('pax_type'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'pax.ptc = '.$this->input->get('pax_type');
+
+
+                        }
+
+
+			if(!empty($this->input->get('start_date'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'pax.dep_date >= '. strtotime($this->input->get('start_date'));
+                        }
+                        if(!empty($this->input->get('end_date'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'pax.dep_date <= '.  strtotime($this->input->get('end_date'));
+                        }
+
+
+			 if(!empty($this->input->get('flight_range'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $num_arr = explode('-',$this->input->get('flight_range'));
+
+                                if ( $num_arr[0] > 0 AND $num_arr[1] > 0 AND $num_arr[1] > $num_arr[0]) {
+                                        $sWhere .= 'pax.flight_number >= '.$num_arr[0]. ' AND pax.flight_number <= ' . $num_arr[1];
+                                } else if($num_arr[0] > 0 ) {
+                                        $sWhere .= 'pax.flight_number ='. $num_arr[0];
+
+                                }
+
+                        }
+
+
+			
+
+
+		         if(!empty($this->input->get('frequency'))){
+                                $frstr = $this->input->get('frequency');
+                                $freq = $this->airports_m->getDefnsCodesListByType('14');
+                                 if ( $frstr != '0') {
+                                        $arr = str_split($frstr);
+                                        $freq_str = implode(',',array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr));
+                                        $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                        $sWhere .= 'pax.frequency IN ('.$freq_str.') ';
+                                  }
+
+                        }
+
 
 
 
 			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
 
-			dtpf_id,first_name, last_name, pnr_ref, pax_nbr,flight_number,ptc.code as ptc, fqtv, seg_nbr, dep_date, class ,dt.code as to_city,
+			dtpf_id,first_name, last_name, pnr_ref, pax_nbr,flight_number, pax.ptc ,ptc.code as ptc_code, fqtv, seg_nbr, dep_date, class ,dt.code as to_city,
 			df.code as from_city, pax_contact_email, phone, cou.code as booking_country, cit.code as booking_city, office_id, 
-			pax.airline_code , channel, dca.code as carrier_code, dcab.aln_data_value as cabin, pax.arrival_time,
-			pax.dept_time, pax.arrival_date,
+			pax.airline_code , channel, dca.code as carrier_code, dcab.code as cabin, pax.arrival_time,
+			pax.dept_time, pax.arrival_date,pax.frequency,pax.tier,dfre.code as frequency,
 			pax.active  FROM VX_aln_daily_tkt_pax_feed pax 
 			LEFT JOIN vx_aln_data_defns df on (df.vx_aln_data_defnsID = pax.from_city) 
 			LEFT JOIN vx_aln_data_defns dt on  (dt.vx_aln_data_defnsID = pax.to_city) 
+		        LEFT JOIN vx_aln_data_defns dfre on  (dfre.vx_aln_data_defnsID = pax.frequency)
 			LEFT JOIN vx_aln_data_defns cou  on (cou.vx_aln_data_defnsID = pax.booking_country) 
                         LEFT JOIN vx_aln_data_defns cit on  (cit.vx_aln_data_defnsID = pax.booking_city) 
 			LEFT JOIN  vx_aln_data_defns dca on (dca.vx_aln_data_defnsID = pax.carrier_code)	
@@ -394,7 +456,6 @@ $aColumns = array('dtpf_id', 'flight_nbr', 'dep_date', 'from_city', 'to_city', '
 		$feed->arrival_date = date('d/m/Y',$feed->arrival_date);
 		$feed->dept_time = gmdate("H:i:s", $feed->dept_time);
 		$feed->arrival_time = gmdate("H:i:s", $feed->arrival_time);
-		
 
 		  if(permissionChecker('paxfeed_delete')){
 		   $feed->action .= btn_delete('paxfeed/delete/'.$feed->dtpf_id, $this->lang->line('delete'));			 
