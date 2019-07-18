@@ -124,7 +124,7 @@
 
 					 <?php if(permissionChecker('marketzone_reconfigure')) {
 					 if( isset ($reconfigure)) {?>
-                               			 <h2><a href="<?php echo base_url('trigger') ?>" class="btn btn-danger">
+                               			 <h2><a href="<?php echo base_url('trigger/marketzone_trigger') ?>" class="btn btn-danger">
                                     			<i class="fa fa-plus"></i>
                                     			<?=$this->lang->line('generate_map_table')?>
                                 			</a>
@@ -567,7 +567,7 @@ function savezone() {
                         loaddatatable();
                         if (zoneinfo['has_reconf_perm'] && zoneinfo['reconfigure']) {
                                 <?php
-                                        $link = '<h2><a href="'.base_url('trigger').'" class="btn btn-danger"> <i class="fa fa-plus"></i> '.$this->lang->line('generate_map_table').' </a></h2>';
+                                        $link = '<h2><a href="'.base_url('trigger/marketzone_trigger').'" class="btn btn-danger"> <i class="fa fa-plus"></i> '.$this->lang->line('generate_map_table').' </a></h2>';
 
                                   ?>
 
