@@ -1,5 +1,5 @@
 <div class="off-elg">
-	<h2 class="title-tool-bar">Offer Issuance Management</h2>
+	<h2 class="title-tool-bar">Offer Details</h2>
 	<div class="col-md-12 off-elg-filter-box">
 		<div class="auto-gen">
 			<a href="<?php echo base_url('offer_eligibility/generatedata') ?>">
@@ -91,8 +91,8 @@
 							<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('booking_status')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('details')?></th>
+							<th class="col-lg-1">Offer Status</th>
+							<th class="col-lg-1">Bid Info</th>
 						</tr>
 					 </thead>
 					 <tbody>                          
@@ -137,10 +137,10 @@ $("#dep_to_date").datepicker();
 		   {"data": "source_point" },
                    {"data": "dest_point" },
                    {"data": "departure_date" },
-                   {"data": "carrier_code" },
+                   {"data": "carrier" },
                    {"data": "flight_number" },
                 {"data": "booking_status" },
-		{"data": "action" }
+		{"data": "bid_info" }
 
 				  ],			     
      dom: 'B<"clear">lfrtip',

@@ -1,5 +1,5 @@
 <div class="off-elg">
-	<h2 class="title-tool-bar">Offer Management</h2>
+	<h2 class="title-tool-bar">Bid Details</h2>
 	<div class="col-md-12 off-elg-filter-box">
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">	
 			<div class="form-group">
