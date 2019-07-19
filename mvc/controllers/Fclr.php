@@ -367,6 +367,8 @@ class Fclr extends Admin_Controller {
 
 	public function index() {
 
+	  $fclr_id = htmlentities(escapeString($this->uri->segment(3)));
+
 	$this->data['headerassets'] = array(
                 'css' => array(
                         'assets/select2/css/select2.css',
@@ -380,7 +382,10 @@ class Fclr extends Admin_Controller {
         );
 
 
-
+		if ($fclr_id > 0 ) {
+			$this->data['sfclr_id'] = $fclr_id;
+		
+		}
 		
 		if(!empty($this->input->post('boarding_point'))){	
 		   $this->data['boarding_point'] = $this->input->post('boarding_point');
@@ -553,6 +558,12 @@ class Fclr extends Admin_Controller {
                                 $sWhere .= 'flight_number <= '.$this->input->get('flightNbrEnd');
                         }
 
+
+			if(!empty($this->input->get('sfclr_id'))){
+                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'fclr_id = '.$this->input->get('sfclr_id');
+                        }
+
 			/*
 			if(!empty($this->input->get('depStartDate'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
@@ -640,7 +651,6 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code
 
 $sWhere $sOrder $sLimit";
 
-//print_r($sQuery);exit;
 
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";

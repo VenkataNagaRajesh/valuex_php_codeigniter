@@ -19,6 +19,7 @@ class Paxfeed extends Admin_Controller {
 	
 	public function index() {
 
+		$pf_id = htmlentities(escapeString($this->uri->segment(3)));
 		 $this->data['headerassets'] = array(
                         'css' => array(
                                 'assets/select2/css/select2.css',
@@ -30,8 +31,10 @@ class Paxfeed extends Admin_Controller {
                 );
 
 
-		
-		
+		 if($pf_id > 0){
+                  $this->data['pf_id'] = $pf_id;
+                }
+	
 		  if(!empty($this->input->post('booking_country'))){
                   $this->data['booking_country'] = $this->input->post('booking_country');
                 } else {
@@ -355,6 +358,13 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
                                 $sWhere .= 'pax.from_city = '.$this->input->get('fromCity');
 
                         }
+
+			 if(!empty($this->input->get('pf_id'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'pax.dtpf_id = '.$this->input->get('pf_id');
+
+                        }
+
 
 
 			if(!empty($this->input->get('toCity'))){
