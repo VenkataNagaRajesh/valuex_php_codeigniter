@@ -353,7 +353,13 @@ function loaddatatable() {
 				  ],			   
 	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
 	dom: 'B<"clear">lfrtip',
-    buttons: [ 'copy', 'csv', 'excel','pdf' ]
+    buttons: [ 'copy', 'csv', 'excel','pdf' ],
+	"autoWidth": false,
+     "columnDefs": [ { "width": "30px", "targets": 0 },
+                     { "width": "130px", "targets": 1 },
+                     { "width": "50px", "targets": 2 },
+					 { "width": "60px", "targets": 9 }					 
+				 ]
     });
 }  
    $('#tztable tbody').on('mouseover', 'tr', function () {
