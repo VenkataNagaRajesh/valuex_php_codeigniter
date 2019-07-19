@@ -7,6 +7,7 @@ class Datatype extends Admin_Controller {
 		$this->load->model("datatype_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('datatype', $language);	
+		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"datatype"))->icon;
 	}
 
 	public function index() {

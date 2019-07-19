@@ -220,7 +220,9 @@ class Trigger extends Admin_Controller {
 			$this->trigger_m->update_trigger($tarray,'VX_aln_market_zone');
 
 		}
-		*/
+
+        $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+	*/
 		redirect(base_url("marketzone/index"));
 	}
 
@@ -320,6 +322,7 @@ class Trigger extends Admin_Controller {
 			$tarray['isReconfigured'] = '0';
 			$this->trigger_m->update_trigger($tarray,'VX_aln_season');
 		} 
+		$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 		redirect(base_url("season/index"));
 	}
 	

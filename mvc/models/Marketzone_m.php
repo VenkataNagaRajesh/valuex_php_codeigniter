@@ -329,10 +329,10 @@ group by mz.market_id";
 		return parent::hash($string);
 	}
 
-    function marketzoneTotalCount($airlineIDs = array()){
+    function marketzoneTotalCount(){
 		$this->db->select('count(*) count')->from('VX_aln_market_zone');
-		if(!empty($airlineID)){
-			$this->db->where_in('airline_id',$airlineIDs);
+		if($this->session->userdata('usertypeID') == 2){		
+			$this->db->where('create_userID',$this->session->userdata('loginuserID'));
 		}
 		$query = $this->db->get();
 		return $query->row('count');

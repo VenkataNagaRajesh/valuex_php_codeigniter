@@ -10,7 +10,8 @@ class Airports_master extends Admin_Controller {
 		$this->load->model("season_m");
 		$this->load->model("season_airport_map_m");
 		$language = $this->session->userdata('lang');
-		$this->lang->load('airports', $language);		
+		$this->lang->load('airports', $language);
+        $this->data['icon'] = $this->menu_m->getMenu(array("link"=>"airports_master"))->icon;       	
     }	
 	
 	protected function rules() {
@@ -72,7 +73,16 @@ class Airports_master extends Admin_Controller {
 	   }
 	}
 
-	public function index() {		
+	public function index() {
+         $this->data['headerassets'] = array(
+			'css' => array(
+				'assets/select2/css/select2.css',
+				'assets/select2/css/select2-bootstrap.css'
+			),
+			'js' => array(
+				'assets/select2/select2.js'
+			)
+		);		
 		$this->data['areaslist'] = $this->airports_m->getDefns(5);
 		if(!empty($this->input->post('countryID'))){
 		  $this->data['countryID'] = $this->input->post('countryID');
@@ -154,7 +164,9 @@ class Airports_master extends Admin_Controller {
 		if((int)$id) {
 			$this->data['airport'] = $this->airports_m->get_airportmaster($id);
 			if($this->data['airport']) {
-				$this->airports_m->delete_airport($id,$this->data['airport']->airportID);
+				$data['active'] = 0 ;
+				$this->airports_m->update_master_data($data, $id);
+				//$this->airports_m->delete_airport($id,$this->data['airport']->airportID);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("airports_master/index"));
 			} else {
@@ -524,6 +536,10 @@ class Airports_master extends Admin_Controller {
 			if($this->input->get('countryID') > 0){
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
               $sWhere .= 'm.countryID = '.$this->input->get('countryID');		 
+	        }
+            if(isset($_GET['active']) && $this->input->get('active') != 2){ 
+		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              $sWhere .= 'm.active = '.$this->input->get('active');		 
 	        }			
 			/* if($this->input->get('stateID') > 0){
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
@@ -545,6 +561,7 @@ class Airports_master extends Admin_Controller {
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+	  $i=1;
 	  foreach($rResult as $airport){		 	
 		  if(permissionChecker('airports_master_edit')){ 			
 			$airport->action = btn_edit('airports_master/edit/'.$airport->vx_amdID, $this->lang->line('edit'));
@@ -565,8 +582,9 @@ class Airports_master extends Admin_Controller {
 			}	
 			
 			$airport->active .= "<label for='myonoffswitch".$airport->vx_amdID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";         
-           
-			$output['aaData'][] = $airport;				
+            $airport->temp_id = $i;
+			$output['aaData'][] = $airport;
+            $i++;			
 		}
 		echo json_encode( $output );
 	}

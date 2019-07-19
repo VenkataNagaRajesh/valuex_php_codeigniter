@@ -222,7 +222,7 @@ class Season extends Admin_Controller {
 	function createDateRange($startDate, $endDate, $format = "m/d/Y"){
 		$begin = new DateTime($startDate);
 		$end = new DateTime($endDate);
-
+         $end->modify('+1 day');
 		$interval = new DateInterval('P1D'); // 1 Day
 		$dateRange = new DatePeriod($begin, $interval, $end);
 
@@ -368,6 +368,7 @@ class Season extends Admin_Controller {
 			
 			    $this->trigger_m->insert_trigger($tarray);				
 				$json['status'] = "success";
+				$json['has_reconf_perm'] = permissionChecker('season_reconfigure');
 			}
 		} else {
 			$json['status'] = "no data";
@@ -503,9 +504,23 @@ class Season extends Admin_Controller {
           $season = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
 		  $season->ams_season_start_date=date('d-m-Y',$season->ams_season_start_date);
 		  $season->ams_season_end_date=date('d-m-Y',$season->ams_season_end_date);
-        }	 		
-		$this->output->set_content_type('application/json');
+		   $season->dates = $this->createDateRange($season->ams_season_start_date,$season->ams_season_end_date);
+        }	
+        $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($season));
+	}
+	
+	public function getSeasonInfo() {
+		$id = $this->input->post('season_id');
+		if((int)$id) {
+          $season = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
+		  $season->ams_season_start_date=date('d-m-Y',$season->ams_season_start_date);
+		  $season->ams_season_end_date=date('d-m-Y',$season->ams_season_end_date);
+		   $season->dates = $this->createDateRange($season->ams_season_start_date,$season->ams_season_end_date);
+        }	
+          $seasons[] = $season; 		
+		$this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($seasons));
 	}
   
     function active() {

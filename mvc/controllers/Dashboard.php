@@ -60,16 +60,11 @@ class Dashboard extends Admin_Controller {
 			$this->data['dashboardWidget']['bid_complete']->icon = "fa-list-alt";
 			$this->data['dashboardWidget']['bid_complete']->menu = 'Total Bids';
 			//print_r($this->data['dashboardWidget']['bid_complete_offers']); exit;
-		if($this->session->userdata('usertypeID') == 1){
+		
 			$marketzones = $this->marketzone_m->marketzoneTotalCount();
-		} else {
-			$marketzones = $this->marketzone_m->marketzoneTotalCount($this->session->userdata('login_user_airlineID'));
-		}
-		if($this->session->userdata('usertypeID') != 2){
+			
 			$seasons = $this->season_m->seasonTotalCount();
-		} else {
-			$seasons = $this->season_m->seasonTotalCount($this->session->userdata('login_user_airlineID'));
-		}		
+			
 		$deshboardTopWidgetUserTypeOrder = $this->session->userdata('master_permission_set');
 		
 		//$this->data['dashboardWidget']['feetypes'] 	= count($feetypes);		

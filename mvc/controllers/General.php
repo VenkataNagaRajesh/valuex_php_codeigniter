@@ -11,15 +11,15 @@ class General extends Admin_Controller {
 	
 	public function getAirportCountries(){
 		$countryID = $this->input->post('countryID');		
-		$regionID = $this->input->post('regionID');		
+		$regionID = $this->input->post('regionID');	
+        echo '<option value="0">Select Country</option>';		
 	    if($regionID){
-		   $countries = $this->airports_m->getDefns(2,$regionID);		
-			echo '<option value="0">Select Country</option>';
+		   $countries = $this->airports_m->getDefns(2,$regionID);					
 			foreach ($countries as $country) {
 				if($country->vx_aln_data_defnsID == $countryID){
-					echo '<option value="'.$country->vx_aln_data_defnsID.'" selected>'.$country->aln_data_value.'</option>';
+					echo '<option value="'.$country->vx_aln_data_defnsID.'" selected>'.$country->aln_data_value.'('.$country->code.')'.'</option>';
 				}else{
-				   echo '<option value="'.$country->vx_aln_data_defnsID.'" >'.$country->aln_data_value.'</option>';
+				   echo '<option value="'.$country->vx_aln_data_defnsID.'" >'.$country->aln_data_value.'('.$country->code.')'.'</option>';
 				}
 			}
 		}		
@@ -27,15 +27,16 @@ class General extends Admin_Controller {
 	
 	public function getAirportCities(){
 		$countryID = $this->input->post('countryID');		
-		$cityID = $this->input->post('cityID');		
+		$cityID = $this->input->post('cityID');	
+        echo '<option value="0">Select City</option>';		
 	    if($countryID){
 		   $cities = $this->airports_m->getDefns(3,$countryID);		
-			echo '<option value="0">Select City</option>';
+			
 			foreach ($cities as $city) {
 				if($city->vx_aln_data_defnsID == $cityID){
-					echo '<option value="'.$city->vx_aln_data_defnsID.'" selected>'.$city->aln_data_value.'</option>';
+					echo '<option value="'.$city->vx_aln_data_defnsID.'" selected>'.$city->aln_data_value.'('.$city->code.')'.'</option>';
 				}else{
-				   echo '<option value="'.$city->vx_aln_data_defnsID.'" >'.$city->aln_data_value.'</option>';
+				   echo '<option value="'.$city->vx_aln_data_defnsID.'" >'.$city->aln_data_value.'('.$city->code.')'.'</option>';
 				}
 			}
 		}		
@@ -44,9 +45,10 @@ class General extends Admin_Controller {
 	public function getAirportRegions(){
 		$regionID = $this->input->post('regionID');
 		$areaID = $this->input->post('areaID');	
+			echo '<option value="0">Select Region</option>';
 	    if($areaID){
 		   $regions = $this->airports_m->getDefns(4,$areaID);		
-			echo '<option value="0">Select Region</option>';
+		
 			foreach ($regions as $region) {
 				if($region->vx_aln_data_defnsID == $regionID){
 					echo '<option value="'.$region->vx_aln_data_defnsID.'" selected>'.$region->aln_data_value.'</option>';
@@ -59,10 +61,11 @@ class General extends Admin_Controller {
 	
 	public function getAirportAreas(){
 		$regionID = $this->input->post('regionID');
-		$areaID = $this->input->post('areaID');	
+		$areaID = $this->input->post('areaID');
+echo '<option value="0">Select Area</option>';		
 	    if($regionID ){
 		   $areas = $this->airports_m->getDefns(5,$regionID);
-           echo '<option value="0">Select Area</option>';		   
+           		   
 			foreach ($areas as $area) {
 				if($area->vx_aln_data_defnsID == $areaID){
 					echo '<option value="'.$area->vx_aln_data_defnsID.'" selected>'.$area->aln_data_value.'</option>';
@@ -74,9 +77,10 @@ class General extends Admin_Controller {
 	}
 	
 	public function getParentlist(){
-		$type = $this->input->post('type');		
+		$type = $this->input->post('type');	
+ echo '<option value="0">Select Parent</option>';			
 	    if($type ){
-		   echo '<option value="0">Select Parent</option>';	
+		  
 		   if($type != 1 && $type != 2){
 		   $parentlist = $this->airports_m->getDefns($type-1);          	   
 			foreach ($parentlist as $parent) {

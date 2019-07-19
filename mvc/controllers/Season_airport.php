@@ -9,6 +9,7 @@ class Season_airport extends Admin_Controller {
 		$this->load->model("airports_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('season_airport', $language);
+		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"season_airport"))->icon;
 	}
 
 	public function index() {
@@ -116,9 +117,10 @@ class Season_airport extends Admin_Controller {
 			
 		   if($this->session->userdata('usertypeID') == 2){  
                $seasonslist = $this->season_m->getSeasonsList($this->session->userdata('login_user_airlineID'));
-			 // $markets = array_column($marketzones, 'market_id'); 	   
+			 // $markets = array_column($marketzones, 'market_id'); 
 			   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'sap.seasonID IN ('.implode(', ', array_keys($seasonslist)).')';		
+              $sWhere .= 'sap.seasonID IN ('.implode(', ', array_keys($seasonslist)).')';	
+			  
             }
 
             $sQuery="SELECT SQL_CALC_FOUND_ROWS s.season_name,sap.*,ma.aln_data_value airport,mc.aln_data_value country,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active FROM ".$table." sap 

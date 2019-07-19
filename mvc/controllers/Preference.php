@@ -8,6 +8,7 @@ class Preference extends Admin_Controller {
 		$this->load->model("airports_m");		
 		$language = $this->session->userdata('lang');
 		$this->lang->load('preference', $language);	
+		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"preference"))->icon;
 	}
 
 	public function index() {		
