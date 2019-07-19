@@ -306,11 +306,23 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
      });
 });
 <?php } } ?>
-
+$('input[type=radio][name=bid_action_<?=$result->flight_number?>]').click(function(){
+	 if($(this).val() == 0){
+	   $("#bid_slider_<?=$result->flight_number?>").slider('disable'); 
+	 } else {
+	   $("#bid_slider_<?=$result->flight_number?>").slider('enable');  
+	 }
+	var tot_avg = getTotal();
+	$("#tot").text(tot_avg);
+	$("#bidtot").text(tot_avg);
+});
  function getTotal(){
 		var tot_avg = 0;
 		<?php foreach($results as $result){  if($result->fclr != null){ ?>
-		  tot_avg = tot_avg+$("#bid_slider_<?=$result->flight_number?>").slider('getValue')*<?=$passengers_count?>;
+		   var action = $('input[type=radio][name=bid_action_<?=$result->flight_number?>]:checked').val();		  
+		  if(action == 1){	
+		   tot_avg = tot_avg+$("#bid_slider_<?=$result->flight_number?>").slider('getValue')*<?=$passengers_count?>;
+		  }
 		<?php } } ?>	
 		return tot_avg; 
 	}
