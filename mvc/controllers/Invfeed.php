@@ -11,7 +11,8 @@ class Invfeed extends Admin_Controller {
 		$this->load->model("airline_m");
 		$this->load->model('airports_m');
 		$language = $this->session->userdata('lang');
-		$this->lang->load('invfeed', $language);	
+		$this->lang->load('invfeed', $language);
+        $this->data['icon'] = $this->menu_m->getMenu(array("link"=>"invfeed"))->icon;			
 	}	
 	
 	

@@ -1,6 +1,6 @@
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa icon-reset_password"></i> <?=$this->lang->line('panel_title')?></h3>
+        <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
 
        
         <ol class="breadcrumb">
