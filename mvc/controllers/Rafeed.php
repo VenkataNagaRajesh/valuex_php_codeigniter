@@ -12,6 +12,7 @@ class Rafeed extends Admin_Controller {
 		$language = $this->session->userdata('lang');
 		
 		$this->lang->load('rafeed', $language);	
+		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"rafeed"))->icon;
 	}	
 	
 	

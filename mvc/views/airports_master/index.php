@@ -130,7 +130,9 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
-            ] 	 
+            ] ,
+     "autoWidth": false,
+     "columnDefs": [ { "width": "20px", "targets": 0 } ]			
     }); 
   
     $("#areaID").trigger("change");

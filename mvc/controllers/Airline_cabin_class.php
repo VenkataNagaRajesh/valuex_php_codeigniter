@@ -9,9 +9,9 @@ class Airline_cabin_class extends Admin_Controller {
 		$this->load->model('airports_m');
 		$this->load->model('airline_m');
 		$this->load->model('user_m');
-
 		$language = $this->session->userdata('lang');
 		$this->lang->load('airline_cabin_class', $language);
+		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"airline_cabin_class"))->icon;
 	}
 
 	protected function rules() {
