@@ -117,6 +117,7 @@
 							<th class="col-lg-1"><?=$this->lang->line('season')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
+							<th class="col-lg-1">PNR Ref</th>
 							<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
@@ -176,6 +177,7 @@ $("#dep_to_date").datepicker();
 		   {"data": "season_id" },
 		   {"data": "source_point" },
 	           {"data": "dest_point" },
+		   {"data": "pnr_ref" },
 		   {"data": "departure_date" },
 		   {"data": "carrier_code" },
 		   {"data": "flight_number" },

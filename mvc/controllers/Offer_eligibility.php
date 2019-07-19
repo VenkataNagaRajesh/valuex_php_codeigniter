@@ -113,10 +113,10 @@ class Offer_eligibility extends Admin_Controller {
 
 
 		
-	    $aColumns = array('dtpfext_id','pext.dtpf_id','pext.fclr_id','sea.season_name','dbp.code','dop.code','pf.dep_date','dai.code','pf.flight_number',
+	    $aColumns = array('dtpfext_id','pext.dtpf_id','pext.fclr_id','sea.season_name','dbp.code','dop.code','pf.pnr_ref','pf.dep_date','dai.code','pf.flight_number',
 			 'fca.code','tca.code','dfre.code','fc.average','fc.min','fc.max','fc.slider_start',
 			 'bs.aln_data_value','dbp.aln_data_value','dop.aln_data_value','dai.aln_data_value','fca.aln_data_value',
-			 'tca.aln_data_value','dfre.aln_data_value');
+			 'tca.aln_data_value','dfre.aln_data_value','pf.pnr_ref');
 	
 		$sLimit = "";
 		
@@ -262,7 +262,8 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext
 		 boarding_point, dai.code as carrier_code , off_point, season_id,pf.flight_number, fca.code as fcabin, 
             	tca.code as tcabin, dfre.code as day_of_week , sea.season_name,
             	pf.dep_date as departure_date, min,max,average,slider_start,from_cabin, to_cabin,
-		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, ex.excl_grp
+		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, ex.excl_grp,
+		pf.pnr_ref
 		     from VX_aln_dtpf_ext pext 
 		     LEFT JOIN VX_aln_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_processed = 1 and pf.active = 1)
 		     LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)
@@ -299,6 +300,10 @@ $sWhere $sOrder $sLimit";
 				$feed->booking_status = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->excl_grp.'">'.$feed->booking_status.'</a>';
 
 			}
+
+			$feed->fclr_id = '<a target="_new" style="color:blue;" href="'.base_url('fclr/index/'.$feed->fclr_id).'"  >'.$feed->fclr_id.'</a>';
+			$feed->dtpf_id = '<a target="_new" style="color:blue;" href="'.base_url('paxfeed/index/'.$feed->dtpf_id).'"  >'.$feed->dtpf_id.'</a>';
+
 			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default season";
 			$feed->departure_date = date('d-m-Y',$feed->departure_date);
                                 $output['aaData'][] = $feed;

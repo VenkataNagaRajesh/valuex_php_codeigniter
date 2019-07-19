@@ -100,6 +100,11 @@
 
                 </div>
 
+<div class="col-sm-2">
+ <input type="text" class="form-control" placeholder='Pax ID' id="pf_id" name="pf_id" value="<?=set_value('pf_id',$pf_id)?>" >
+
+                </div>
+
 
 
     <div class="col-sm-2">
@@ -203,6 +208,7 @@
 		   {"name": "start_date","value": $("#start_date").val()},
 		   {"name": "end_date","value": $("#end_date").val()},
 		   {"name": "frequency","value": $("#frequency").val()},
+		   {"name": "pf_id","value": $("#pf_id").val()},
                     {"name": "carrierCode","value": $("#carrier_code").val()},
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
