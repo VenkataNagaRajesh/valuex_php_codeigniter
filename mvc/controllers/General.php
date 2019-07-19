@@ -17,9 +17,9 @@ class General extends Admin_Controller {
 		   $countries = $this->airports_m->getDefns(2,$regionID);					
 			foreach ($countries as $country) {
 				if($country->vx_aln_data_defnsID == $countryID){
-					echo '<option value="'.$country->vx_aln_data_defnsID.'" selected>'.$country->aln_data_value.'</option>';
+					echo '<option value="'.$country->vx_aln_data_defnsID.'" selected>'.$country->aln_data_value.'('.$country->code.')'.'</option>';
 				}else{
-				   echo '<option value="'.$country->vx_aln_data_defnsID.'" >'.$country->aln_data_value.'</option>';
+				   echo '<option value="'.$country->vx_aln_data_defnsID.'" >'.$country->aln_data_value.'('.$country->code.')'.'</option>';
 				}
 			}
 		}		
@@ -34,9 +34,9 @@ class General extends Admin_Controller {
 			
 			foreach ($cities as $city) {
 				if($city->vx_aln_data_defnsID == $cityID){
-					echo '<option value="'.$city->vx_aln_data_defnsID.'" selected>'.$city->aln_data_value.'</option>';
+					echo '<option value="'.$city->vx_aln_data_defnsID.'" selected>'.$city->aln_data_value.'('.$city->code.')'.'</option>';
 				}else{
-				   echo '<option value="'.$city->vx_aln_data_defnsID.'" >'.$city->aln_data_value.'</option>';
+				   echo '<option value="'.$city->vx_aln_data_defnsID.'" >'.$city->aln_data_value.'('.$city->code.')'.'</option>';
 				}
 			}
 		}		

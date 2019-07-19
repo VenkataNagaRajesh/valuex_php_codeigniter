@@ -9,6 +9,7 @@ class Event_status extends Admin_Controller {
 		$this->load->model('user_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('event_status', $language);
+		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"event_status"))->icon;
 	}
 
 	protected function rules() {

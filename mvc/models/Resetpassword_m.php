@@ -17,9 +17,8 @@ class Resetpassword_m extends MY_Model {
 
 	function update_resetpassword($table, $data=NULL, $tableID, $userID ) {
 		$this->db->update($table, $data, $tableID." = ". $userID);
+		//print_r($this->db->last_query()); exit;
 		return TRUE;
 	}
 }
 
-/* End of file classes_m.php */
-/* Location: .//D/xampp/htdocs/school/mvc/models/classes_m.php */

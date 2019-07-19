@@ -8,6 +8,7 @@ class Market_airport extends Admin_Controller {
 		$this->load->model("airports_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('market_airport', $language);
+		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"market_airport"))->icon;
 	}
 
 

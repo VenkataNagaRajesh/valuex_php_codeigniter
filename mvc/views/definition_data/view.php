@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-sm-6">
             <ol class="breadcrumb">            
-              <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>             
+              <li><a href="<?=base_url("dashboard/index")?>"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('menu_dashboard')?></a></li>             
               <li><a href="<?=base_url("definition_data/index")?>"><?php //echo $this->lang->line('menu_defdata'); ?>Back</a></li>             
               <li class="active"><?=$this->lang->line('view')?></li>            
             </ol>

@@ -40,14 +40,17 @@ class Airline_m extends MY_Model {
 	}
 	
 	public function getAirlineData($id){
-		$this->db->select('dd.*,dd.aln_data_value airline_name,dd.code,u.name modify_by,ac.aln_data_value as aircraft,sc.vx_aln_data_defnsID seatID,sc.aln_data_value as seat_capacity,GROUP_CONCAT(d.aln_data_value SEPARATOR ", ") flights')->from('vx_aln_data_defns dd');	
+		$this->db->select('dd.*,dd.aln_data_value airline_name,dd.code,u.name modify_by,group_concat( distinct ac.aln_data_value,"/",sc.aln_data_value) as aircraft_seat_capacity,GROUP_CONCAT(d.aln_data_value SEPARATOR ", ") flights')->from('vx_aln_data_defns dd');	
         $this->db->join('vx_aln_data_defns d','d.parentID = dd.vx_aln_data_defnsID AND d.aln_data_typeID = 16','LEFT');
-		$this->db->join('vx_aln_data_defns ac','ac.vx_aln_data_defnsID = dd.parentID AND ac.aln_data_typeID = 21','LEFT');
-        $this->db->join('vx_aln_data_defns sc','sc.parentID = dd.parentID AND sc.aln_data_typeID = 22','LEFT');		
+		$this->db->join('VX_airline_aircraft aa','aa.airlineID = dd.vx_aln_data_defnsID','LEFT');
+		$this->db->join('vx_aln_data_defns ac','ac.vx_aln_data_defnsID = aa.aircraftID AND ac.aln_data_typeID = 21','LEFT');
+        $this->db->join('vx_aln_data_defns sc','sc.parentID = aa.aircraftID AND sc.aln_data_typeID = 22','LEFT');		
 		$this->db->join('user u','u.userID = dd.modify_userID','LEFT');	
         $this->db->where('dd.aln_data_typeID',12);
-		$this->db->where('dd.vx_aln_data_defnsID',$id);		
+		$this->db->where('dd.vx_aln_data_defnsID',$id);	
+        $this->db->group_by('dd.vx_aln_data_defnsID');		
 		$query = $this->db->get();
+		//print_r($this->db->last_query()); exit;
 		return $query->row();
 	}
 	
@@ -66,9 +69,8 @@ class Airline_m extends MY_Model {
 		$this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = ca.airlineID','LEFT');
 		$this->db->where('c.userID',$userID);
 		$query = $this->db->get();
-
 		if ($getrow == 1) {
-                	return $query->row();
+            return $query->row();
 		} else {
 			return $query->result();
 		}
@@ -97,9 +99,9 @@ class Airline_m extends MY_Model {
 
 	
 	public function checkAirline($airline){
-		$check = $this->db->get_where('vx_aln_data_defns',array('aln_data_typeID' => 12,'aln_data_value' => $airline['name']))->row();
+		$check = $this->db->get_where('vx_aln_data_defns',array('aln_data_typeID' => 12,'code' => $airline['code']))->row();
 		if(!empty($check)){
-			$data->existed = 1;
+			//$data->existed = 1;
 			$data->id = $check->vx_aln_data_defnsID;
 			return $data;
 		}else{
@@ -114,13 +116,33 @@ class Airline_m extends MY_Model {
 			);
 		  $this->db->insert('vx_aln_data_defns',$array);
 			if ($this->db->affected_rows() > 0){
-				$data->existed = 0;
+				//$data->existed = 0;
 				$data->id = $this->db->insert_id();
 				 return $data;
 			} else {
 				 return FALSE; 
 			}
 		}
+	}
+	
+	public function linkAirlineAircraft($airlineID,$aircraftID){
+		$this->db->select("count(*) count")->from('VX_airline_aircraft');
+		$this->db->where("airlineID",$airlineID);
+		$this->db->where("aircraftID",$aircraftID);
+		$query = $this->db->get();
+		$count = $query->row('count');
+		$this->mydebug->debug($count);
+		if($count == 0){
+			$link['airlineID'] = $airlineID;
+			$link['aircraftID'] = $aircraftID;
+			$link['create_date'] = time();
+			$link['modify_date'] = time();
+			$link['create_userID'] = $this->session->userdata('loginuserID');
+			$link['modify_userID'] = $this->session->userdata('loginuserID');
+			$this->db->insert('VX_airline_aircraft',$link);
+			$this->mydebug->debug($this->db->last_query());
+		}
+		return TRUE;
 	}
 	
 	public function add_airline($airline){

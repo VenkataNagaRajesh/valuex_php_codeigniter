@@ -5,7 +5,10 @@ class Airports_m extends MY_Model {
   public function checkData($data,$type,$parent = null,$code=null){
 	$this->db->select('*')->from('vx_aln_data_defns');
 	  $this->db->where(array('aln_data_value'=>$data,'aln_data_typeID'=> $type));
-	  $query = $this->db->get();	
+	  if($parent != null){
+		  $this->db->where('parentID',$parent);
+	  }
+	  $query = $this->db->get();	$this->mydebug->debug($this->db->last_query());
 	  if (count($query->result()) > 0) {
        return $query->row('vx_aln_data_defnsID');
       } else {
@@ -21,7 +24,7 @@ class Airports_m extends MY_Model {
 		);
       $this->db->insert('vx_aln_data_defns',$array);
 	 // $this->mydebug->debug($data);
-	 //$this->mydebug->debug($this->db->last_query());
+	 $this->mydebug->debug($this->db->last_query());
 	  if ($this->db->affected_rows() > 0){
 	     return $this->db->insert_id();
 	  } else {

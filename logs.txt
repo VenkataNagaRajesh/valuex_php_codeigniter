@@ -1,500 +1,296 @@
-cash per :78.77
-UPDATE `VX_aln_offer_ref` SET `cash` = '3139', `miles` = '361669', `offer_status` = '1987', `modify_date` = 1562677569, `cash_percentage` = 78.77
-WHERE `offer_id` = 84
-post data
-Array
-(
-    [offer_id] => 84
-    [bid_value] => 1450
-    [flight_number] => 1234
-    [upgrade_type] => 964
-    [fclr_id] => 29
-    [bid_action] => 0
-)
-
-extension list
-157,158,159,160,161
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3411', `modify_date` = 1562677570
-WHERE `dtpfext_id` IN('157', '158', '159', '160', '161')
-post data
-Array
-(
-    [offer_id] => 84
-    [bid_value] => 1155
-    [flight_number] => 1235
-    [upgrade_type] => 964
-    [fclr_id] => 31
-    [bid_action] => 1
-)
-
-selected and un selected list
-162,163,164,165,166
-
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1562677570
-WHERE `dtpfext_id` IN('162', '163', '164', '165', '166')
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1562677570
-WHERE `dtpfext_id` IN('')
-Array
-(
-    [cabin] => Economy
-    [upgrade_type] => Premium ECO
-    [seat_no] => 1294
-    [pnr_ref] => WQ1235
-    [dep_date] => 29/05/2019
-    [arrival_date] => 1559154600
-    [dept_time] => 37800
-    [arrival_time] => 59400
-    [carrier_code] => SQ
-    [flight_number] => 1234
-    [from_city] => Kuala Lumpur International Airport
-    [to_city] => Cochin International Airport
-    [booking_status] => 3411
-    [pf_list] => 157,158,159,160,161,162,163,164,165,166,167,168,169,170,171
-    [email_list] => testsweken321@gmail.com
-    [pax_names] => Salini g, pinky g, sweety g, varshi g, rishi g, pinky a, sweety m, varshi p, rishi a
-    [cash] => 
-    [miles] => 361669
-    [dep_time] => 10:30 AM
-)
-
-Bid Submition ToMails ID : testsweken321@gmail.com
-mailstatus : 
-post data
-Array
-(
-    [offer_id] => 84
-    [bid_value] => 1380
-    [flight_number] => 1236
-    [upgrade_type] => 964
-    [fclr_id] => 30
-    [bid_action] => 1
-)
-
-selected and un selected list
-167,168,169,170,171
-
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1562677571
-WHERE `dtpfext_id` IN('167', '168', '169', '170', '171')
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1562677572
-WHERE `dtpfext_id` IN('')
-Array
-(
-    [cabin] => Economy
-    [upgrade_type] => Premium ECO
-    [seat_no] => 1294
-    [pnr_ref] => WQ1235
-    [dep_date] => 29/05/2019
-    [arrival_date] => 1559154600
-    [dept_time] => 37800
-    [arrival_time] => 59400
-    [carrier_code] => SQ
-    [flight_number] => 1234
-    [from_city] => Kuala Lumpur International Airport
-    [to_city] => Cochin International Airport
-    [booking_status] => 3411
-    [pf_list] => 157,158,159,160,161,162,163,164,165,166,167,168,169,170,171
-    [email_list] => testsweken321@gmail.com
-    [pax_names] => Salini g, pinky g, sweety g, varshi g, rishi g, pinky a, sweety m, varshi p, rishi a
-    [cash] => 
-    [miles] => 361669
-    [dep_time] => 10:30 AM
-)
-
-Bid Submition ToMails ID : testsweken321@gmail.com
-mailstatus : 
-cash per :100
-UPDATE `VX_aln_offer_ref` SET `cash` = '3660', `miles` = '0', `offer_status` = '1987', `modify_date` = 1562678607, `cash_percentage` = 100
-WHERE `offer_id` = 84
-post data
-Array
-(
-    [offer_id] => 84
-    [bid_value] => 1290
-    [flight_number] => 1234
-    [upgrade_type] => 964
-    [fclr_id] => 29
-    [bid_action] => 1
-)
-
-selected and un selected list
-157,158,159,160,161
-
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1562678608
-WHERE `dtpfext_id` IN('157', '158', '159', '160', '161')
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1562678608
-WHERE `dtpfext_id` IN('')
-Array
-(
-    [cabin] => Economy
-    [upgrade_type] => Premium ECO
-    [seat_no] => 1294
-    [pnr_ref] => WQ1235
-    [dep_date] => 29/05/2019
-    [arrival_date] => 1559154600
-    [dept_time] => 37800
-    [arrival_time] => 59400
-    [carrier_code] => SQ
-    [flight_number] => 1234
-    [from_city] => Kuala Lumpur International Airport
-    [to_city] => Cochin International Airport
-    [booking_status] => 1987
-    [pf_list] => 157,158,159,160,161,162,163,164,165,166,167,168,169,170,171
-    [email_list] => testsweken321@gmail.com
-    [pax_names] => Salini g, pinky g, sweety g, varshi g, rishi g, pinky a, sweety m, varshi p, rishi a
-    [cash] => 
-    [miles] => 0
-    [dep_time] => 10:30 AM
-)
-
-Bid Submition ToMails ID : testsweken321@gmail.com
-mailstatus : 
-post data
-Array
-(
-    [offer_id] => 84
-    [bid_value] => 1000
-    [flight_number] => 1235
-    [upgrade_type] => 964
-    [fclr_id] => 31
-    [bid_action] => 1
-)
-
-selected and un selected list
-162,163,164,165,166
-
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1562678608
-WHERE `dtpfext_id` IN('162', '163', '164', '165', '166')
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1562678609
-WHERE `dtpfext_id` IN('')
-Array
-(
-    [cabin] => Economy
-    [upgrade_type] => Premium ECO
-    [seat_no] => 1294
-    [pnr_ref] => WQ1235
-    [dep_date] => 29/05/2019
-    [arrival_date] => 1559154600
-    [dept_time] => 37800
-    [arrival_time] => 59400
-    [carrier_code] => SQ
-    [flight_number] => 1234
-    [from_city] => Kuala Lumpur International Airport
-    [to_city] => Cochin International Airport
-    [booking_status] => 1987
-    [pf_list] => 157,158,159,160,161,162,163,164,165,166,167,168,169,170,171
-    [email_list] => testsweken321@gmail.com
-    [pax_names] => Salini g, pinky g, sweety g, varshi g, rishi g, pinky a, sweety m, varshi p, rishi a
-    [cash] => 
-    [miles] => 0
-    [dep_time] => 10:30 AM
-)
-
-Bid Submition ToMails ID : testsweken321@gmail.com
-mailstatus : 
-post data
-Array
-(
-    [offer_id] => 84
-    [bid_value] => 1370
-    [flight_number] => 1236
-    [upgrade_type] => 964
-    [fclr_id] => 30
-    [bid_action] => 1
-)
-
-selected and un selected list
-167,168,169,170,171
-
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1562678609
-WHERE `dtpfext_id` IN('167', '168', '169', '170', '171')
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1562678609
-WHERE `dtpfext_id` IN('')
-Array
-(
-    [cabin] => Economy
-    [upgrade_type] => Premium ECO
-    [seat_no] => 1294
-    [pnr_ref] => WQ1235
-    [dep_date] => 29/05/2019
-    [arrival_date] => 1559154600
-    [dept_time] => 37800
-    [arrival_time] => 59400
-    [carrier_code] => SQ
-    [flight_number] => 1234
-    [from_city] => Kuala Lumpur International Airport
-    [to_city] => Cochin International Airport
-    [booking_status] => 1987
-    [pf_list] => 157,158,159,160,161,162,163,164,165,166,167,168,169,170,171
-    [email_list] => testsweken321@gmail.com
-    [pax_names] => Salini g, pinky g, sweety g, varshi g, rishi g, pinky a, sweety m, varshi p, rishi a
-    [cash] => 
-    [miles] => 0
-    [dep_time] => 10:30 AM
-)
-
-Bid Submition ToMails ID : testsweken321@gmail.com
-mailstatus : 
-cash per :72.69
-UPDATE `VX_aln_offer_ref` SET `cash` = '2882', `miles` = '462868', `offer_status` = '1987', `modify_date` = 1562678755, `cash_percentage` = 72.69
-WHERE `offer_id` = 84
-post data
-Array
-(
-    [offer_id] => 84
-    [bid_value] => 1530
-    [flight_number] => 1234
-    [upgrade_type] => 964
-    [fclr_id] => 29
-    [bid_action] => 1
-)
-
-selected and un selected list
-157,158,159,160,161
-
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1562678755
-WHERE `dtpfext_id` IN('157', '158', '159', '160', '161')
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1562678755
-WHERE `dtpfext_id` IN('')
-Array
-(
-    [cabin] => Economy
-    [upgrade_type] => Premium ECO
-    [seat_no] => 1294
-    [pnr_ref] => WQ1235
-    [dep_date] => 29/05/2019
-    [arrival_date] => 1559154600
-    [dept_time] => 37800
-    [arrival_time] => 59400
-    [carrier_code] => SQ
-    [flight_number] => 1234
-    [from_city] => Kuala Lumpur International Airport
-    [to_city] => Cochin International Airport
-    [booking_status] => 1987
-    [pf_list] => 157,158,159,160,161,162,163,164,165,166,167,168,169,170,171
-    [email_list] => testsweken321@gmail.com
-    [pax_names] => Salini g, pinky g, sweety g, varshi g, rishi g, pinky a, sweety m, varshi p, rishi a
-    [cash] => 
-    [miles] => 462868
-    [dep_time] => 10:30 AM
-)
-
-Bid Submition ToMails ID : testsweken321@gmail.com
-mailstatus : 
-post data
-Array
-(
-    [offer_id] => 84
-    [bid_value] => 1175
-    [flight_number] => 1235
-    [upgrade_type] => 964
-    [fclr_id] => 31
-    [bid_action] => 1
-)
-
-selected and un selected list
-162,163,164,165,166
-
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1562678756
-WHERE `dtpfext_id` IN('162', '163', '164', '165', '166')
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1562678756
-WHERE `dtpfext_id` IN('')
-Array
-(
-    [cabin] => Economy
-    [upgrade_type] => Premium ECO
-    [seat_no] => 1294
-    [pnr_ref] => WQ1235
-    [dep_date] => 29/05/2019
-    [arrival_date] => 1559154600
-    [dept_time] => 37800
-    [arrival_time] => 59400
-    [carrier_code] => SQ
-    [flight_number] => 1234
-    [from_city] => Kuala Lumpur International Airport
-    [to_city] => Cochin International Airport
-    [booking_status] => 1987
-    [pf_list] => 157,158,159,160,161,162,163,164,165,166,167,168,169,170,171
-    [email_list] => testsweken321@gmail.com
-    [pax_names] => Salini g, pinky g, sweety g, varshi g, rishi g, pinky a, sweety m, varshi p, rishi a
-    [cash] => 
-    [miles] => 462868
-    [dep_time] => 10:30 AM
-)
-
-Bid Submition ToMails ID : testsweken321@gmail.com
-mailstatus : 
-post data
-Array
-(
-    [offer_id] => 84
-    [bid_value] => 1260
-    [flight_number] => 1236
-    [upgrade_type] => 964
-    [fclr_id] => 30
-    [bid_action] => 1
-)
-
-selected and un selected list
-167,168,169,170,171
-
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1562678757
-WHERE `dtpfext_id` IN('167', '168', '169', '170', '171')
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1562678757
-WHERE `dtpfext_id` IN('')
-Array
-(
-    [cabin] => Economy
-    [upgrade_type] => Premium ECO
-    [seat_no] => 1294
-    [pnr_ref] => WQ1235
-    [dep_date] => 29/05/2019
-    [arrival_date] => 1559154600
-    [dept_time] => 37800
-    [arrival_time] => 59400
-    [carrier_code] => SQ
-    [flight_number] => 1234
-    [from_city] => Kuala Lumpur International Airport
-    [to_city] => Cochin International Airport
-    [booking_status] => 1987
-    [pf_list] => 157,158,159,160,161,162,163,164,165,166,167,168,169,170,171
-    [email_list] => testsweken321@gmail.com
-    [pax_names] => Salini g, pinky g, sweety g, varshi g, rishi g, pinky a, sweety m, varshi p, rishi a
-    [cash] => 
-    [miles] => 462868
-    [dep_time] => 10:30 AM
-)
-
-Bid Submition ToMails ID : testsweken321@gmail.com
-mailstatus : 
-cash per :100
-UPDATE `VX_aln_offer_ref` SET `cash` = '4025', `miles` = '0', `offer_status` = '1987', `modify_date` = 1562678806, `cash_percentage` = 100
-WHERE `offer_id` = 84
-post data
-Array
-(
-    [offer_id] => 84
-    [bid_value] => 1490
-    [flight_number] => 1234
-    [upgrade_type] => 964
-    [fclr_id] => 29
-    [bid_action] => 1
-)
-
-selected and un selected list
-157,158,159,160,161
-
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1562678806
-WHERE `dtpfext_id` IN('157', '158', '159', '160', '161')
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1562678806
-WHERE `dtpfext_id` IN('')
-Array
-(
-    [cabin] => Economy
-    [upgrade_type] => Premium ECO
-    [seat_no] => 1294
-    [pnr_ref] => WQ1235
-    [dep_date] => 29/05/2019
-    [arrival_date] => 1559154600
-    [dept_time] => 37800
-    [arrival_time] => 59400
-    [carrier_code] => SQ
-    [flight_number] => 1234
-    [from_city] => Kuala Lumpur International Airport
-    [to_city] => Cochin International Airport
-    [booking_status] => 1987
-    [pf_list] => 157,158,159,160,161,162,163,164,165,166,167,168,169,170,171
-    [email_list] => testsweken321@gmail.com
-    [pax_names] => Salini g, pinky g, sweety g, varshi g, rishi g, pinky a, sweety m, varshi p, rishi a
-    [cash] => 
-    [miles] => 0
-    [dep_time] => 10:30 AM
-)
-
-Bid Submition ToMails ID : testsweken321@gmail.com
-mailstatus : 
-post data
-Array
-(
-    [offer_id] => 84
-    [bid_value] => 1160
-    [flight_number] => 1235
-    [upgrade_type] => 964
-    [fclr_id] => 31
-    [bid_action] => 1
-)
-
-selected and un selected list
-162,163,164,165,166
-
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1562678807
-WHERE `dtpfext_id` IN('162', '163', '164', '165', '166')
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1562678807
-WHERE `dtpfext_id` IN('')
-Array
-(
-    [cabin] => Economy
-    [upgrade_type] => Premium ECO
-    [seat_no] => 1294
-    [pnr_ref] => WQ1235
-    [dep_date] => 29/05/2019
-    [arrival_date] => 1559154600
-    [dept_time] => 37800
-    [arrival_time] => 59400
-    [carrier_code] => SQ
-    [flight_number] => 1234
-    [from_city] => Kuala Lumpur International Airport
-    [to_city] => Cochin International Airport
-    [booking_status] => 1987
-    [pf_list] => 157,158,159,160,161,162,163,164,165,166,167,168,169,170,171
-    [email_list] => testsweken321@gmail.com
-    [pax_names] => Salini g, pinky g, sweety g, varshi g, rishi g, pinky a, sweety m, varshi p, rishi a
-    [cash] => 
-    [miles] => 0
-    [dep_time] => 10:30 AM
-)
-
-Bid Submition ToMails ID : testsweken321@gmail.com
-mailstatus : 
-post data
-Array
-(
-    [offer_id] => 84
-    [bid_value] => 1375
-    [flight_number] => 1236
-    [upgrade_type] => 964
-    [fclr_id] => 30
-    [bid_action] => 1
-)
-
-selected and un selected list
-167,168,169,170,171
-
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1562678808
-WHERE `dtpfext_id` IN('167', '168', '169', '170', '171')
-UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1562678808
-WHERE `dtpfext_id` IN('')
-Array
-(
-    [cabin] => Economy
-    [upgrade_type] => Premium ECO
-    [seat_no] => 1294
-    [pnr_ref] => WQ1235
-    [dep_date] => 29/05/2019
-    [arrival_date] => 1559154600
-    [dept_time] => 37800
-    [arrival_time] => 59400
-    [carrier_code] => SQ
-    [flight_number] => 1234
-    [from_city] => Kuala Lumpur International Airport
-    [to_city] => Cochin International Airport
-    [booking_status] => 1987
-    [pf_list] => 157,158,159,160,161,162,163,164,165,166,167,168,169,170,171
-    [email_list] => testsweken321@gmail.com
-    [pax_names] => Salini g, pinky g, sweety g, varshi g, rishi g, pinky a, sweety m, varshi p, rishi a
-    [cash] => 
-    [miles] => 0
-    [dep_time] => 10:30 AM
-)
-
-Bid Submition ToMails ID : testsweken321@gmail.com
-mailstatus : 
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 'Boeing 777 300'
+AND `aln_data_typeID` = 21
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = '301 - 552'
+AND `aln_data_typeID` = 22
+1
+1
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = '15'
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 16
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 17
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 18
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 19
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 20
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 21
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = '50'
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 51
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 52
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 53
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 54
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 55
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 56
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 57
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 58
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 59
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 60
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 61
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 62
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 63
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 64
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 65
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 66
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 67
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 68
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 69
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 70
+AND `aln_data_typeID` = 16
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 'Boeing 777 300'
+AND `aln_data_typeID` = 21
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 'Boeing 777 300'
+AND `aln_data_typeID` = 21
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = '301 - 552'
+AND `aln_data_typeID` = 22
+AND `parentID` = '10840'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES ('301 - 552', 22, NULL, 1563446208, 1563446208, '1', '1', '10840')
+1
+1
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = '15'
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 16
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 17
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 18
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 19
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (19, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 20
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (20, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 21
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (21, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = '50'
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES ('50', 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 51
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (51, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 52
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (52, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 53
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (53, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 54
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (54, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 55
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (55, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 56
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 57
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 58
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 59
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 60
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 61
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 62
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (62, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 63
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (63, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 64
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (64, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 65
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (65, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 66
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (66, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 67
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (67, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 68
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (68, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 69
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (69, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT *
+FROM `vx_aln_data_defns`
+WHERE `aln_data_value` = 70
+AND `aln_data_typeID` = 16
+AND `parentID` = '10841'
+INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (70, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')

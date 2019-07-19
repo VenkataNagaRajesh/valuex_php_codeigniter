@@ -1,13 +1,16 @@
 
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
+        <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
 
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active"><?=$this->lang->line('menu_defdata')?></li>
         </ol>
     </div><!-- /.box-header -->
+	<div class="box-body">
+      <div class="row">
+         <div class="col-sm-12"> 
 	<h5 class="page-header">                        
 		<?php if(permissionChecker('definition_data_add')) { ?>
          <a href="<?php echo base_url('definition_data/add') ?>" data-toggle="tooltip" data-title="Add Data" data-placement="left" class="btn btn-danger">
@@ -15,10 +18,23 @@
              <!--<?=$this->lang->line('add_defdata')?>-->
          </a>
 		<?php } ?>
-    </h5>	
+    </h5>
+     <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
+			<div class='form-group'>
+                <div class="col-sm-2">			   
+                 <?php $typelist = array("0" => "Select Type");               
+                  		foreach($types as $type){
+						  $typelist[$type->vx_aln_data_typeID] = $type->alias;	
+						}				
+				   echo form_dropdown("aln_data_typeID", $typelist,set_value("aln_data_typeID",$aln_data_typeID), "id='aln_data_typeID' class='form-control hide-dropdown-icon select2'");    ?>
+                </div>	
+				<div class="col-sm-2">
+                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                </div>
+            </div>				
+	 </form>
     <!-- form start -->
-    <div class="box-body">
-        <div class="row">
+    
             <div class="col-sm-12">              		 				
             <div id="hide-table">
                <table id="defdata" class="table table-striped table-bordered table-hover dataTable no-footer">
@@ -42,13 +58,23 @@
           </div>
        </div>
    </div>
+  </div>
 </div>
 <script>
  $(document).ready(function() {	 
     $('#defdata').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
-      "sAjaxSource": "<?php echo base_url('definition_data/server_processing'); ?>",      	  
+      "sAjaxSource": "<?php echo base_url('definition_data/server_processing'); ?>",  
+      "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
+       aoData.push({"name": "aln_data_typeID","value": $("#aln_data_typeID").val()} ) //pushing custom parameters
+                oSettings.jqXHR = $.ajax( {
+                    "dataType": 'json',
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+			 } ); },	  
       "columns": [{"data": "vx_aln_data_defnsID" },
                   {"data": "datatype" },
 				  {"data": "aln_data_value" },

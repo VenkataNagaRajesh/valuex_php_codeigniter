@@ -8,56 +8,93 @@
 
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class="form-group">
-				<div class="col-md-3 select-form">
+				<div class="col-md-2 select-form">
 					<h4>Board/Off Point</h4>
 					<div class="col-sm-12">
 						<?php
-						$airport['0'] = 'Select Boarding Point';
+						$airport['0'] = 'Boarding Point';
 						ksort($airport);
 						echo form_dropdown("boarding_point", $airport,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
 					<div class="col-sm-12">
 						<?php
-							$airport['0'] = 'Select Off Point';
+							$airport['0'] = 'Off Point';
 							ksort($airport);
 							echo form_dropdown("off_point", $airport,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
 				</div>
-				<div class="col-md-3 select-form">
+				<div class="col-md-2 select-form">
 					<h4>Cabins</h4>
 					<div class="col-sm-12">
 					<?php
-                        $cabin['0'] = 'Select From Cabin';
+                        $cabin['0'] = 'From Cabin';
                         ksort($cabin);
 						echo form_dropdown("from_cabin", $cabin,set_value("from_cabin",$from_cabin), "id='from_cabin' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
 					<div class="col-sm-12">
 						<?php
-							$cabin['0'] = 'Select To cabin';
+							$cabin['0'] = 'To Cabin';
 							ksort($cabin);
 							echo form_dropdown("to_cabin", $cabin,set_value("to_cabin",$to_cabin), "id='to_cabin' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
 				</div>
-				<div class="col-md-3 select-form">
+
+
+		 <div class="col-md-2 select-form">
+                                        <h4>Season & Frequency</h4>
+                                        <div class="col-sm-12">
+                                        <?php
+
+				 $slist = array("0" => " Season");
+                                   foreach($seasonslist as $season){
+                                          $slist[$season->VX_aln_seasonID] = $season->season_name;
+                                        }
+
+                                                echo form_dropdown("season", $slist,set_value("season"), "id='season' class='form-control hide-dropdown-icon select2'");    ?>
+                                        </div>
+                                        <div class="col-sm-12">
+		<input type="text" class="form-control" placeholder='frequency' id="frequency" name="frequency" value="<?=set_value('frequency')?>" >
+                                        </div>
+                                </div>
+
+
+<div class="col-md-2 select-form">
+                                        <h4>Carrier & Status</h4>
+                                        <div class="col-sm-12">
+                                        <?php
+                        $carriers['0'] = 'Carrier';
+                        ksort($carriers);
+                                                echo form_dropdown("carrier", $carriers,set_value("carrier"), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
+                                        </div>
+                                        <div class="col-sm-12">
+                                                <?php
+                                                        $status['0'] = 'Booking Status';
+                                                        ksort($status);
+                                                        echo form_dropdown("booking_status", $status,set_value("booking_status"), "id='booking_status' class='form-control hide-dropdown-icon select2'");    ?>
+                                        </div>
+                                </div>
+
+
+				<div class="col-md-2 select-form">
 					<h4>Flight Nbr Range</h4>
 					<div class="col-sm-12">
-						<input type="text" class="form-control" placeholder="Enter Start range Flight Number" id="flight_number" name="flight_number" value="<?=set_value('flight_number',$flight_number)?>" >
+						<input type="text" class="form-control" placeholder="Start range" id="flight_number" name="flight_number" value="<?=set_value('flight_number',$flight_number)?>" >
 					</div>
 					<div class="col-sm-12">
-						<input type="text" class="form-control" placeholder="Enter End range Flight number" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
+						<input type="text" class="form-control" placeholder="End range" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
 					</div>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-2">
 					<h4>Departure Date Range</h4>
 					<div class="col-sm-12">
 						 <div class="input-group">
-							<input type="text" class="form-control" placeholder="Enter Dep From date" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
+							<input type="text" class="form-control" placeholder="Dep Start" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
 							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 						</div>
 					</div>
 					<div class="col-sm-12">
 						<div class="input-group">
-							<input type="text" class="form-control" placeholder="Enter Dep To date" id="dep_to_date" name="dep_to_date" value="<?=set_value('dep_to_date',$dep_to_date)?>" >
+							<input type="text" class="form-control" placeholder="Dep End" id="dep_to_date" name="dep_to_date" value="<?=set_value('dep_to_date',$dep_to_date)?>" >
 							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 						</div>
 					</div>
@@ -119,6 +156,10 @@ $("#dep_to_date").datepicker();
                    {"name": "depEndDate","value": $("#dep_to_date").val()},
 		  {"name": "fromCabin","value": $("#from_cabin").val()},
                    {"name": "toCabin","value": $("#to_cabin").val()},
+		    {"name": "frequency","value": $("#frequency").val()},
+			 {"name": "booking_status","value": $("#booking_status").val()},
+			{"name": "season","value": $("#season").val()},
+                   {"name": "carrier","value": $("#carrier").val()},
                   
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {

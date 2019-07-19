@@ -7,9 +7,16 @@ class Definition_data extends Admin_Controller {
 		$this->load->model("airports_m");		
 		$language = $this->session->userdata('lang');
 		$this->lang->load('definitiondata', $language);	
+		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"definition_data"))->icon; 
 	}
 
 	public function index() {
+		$this->data['types'] = $this->airports_m->getDefdataTypes();
+		if(!empty($this->input->post('aln_data_typeID'))){	
+		   $this->data['aln_data_typeID'] = $this->input->post('aln_data_typeID');
+		} else {
+		  $this->data['aln_data_typeID'] = 0;
+		}
 		$this->data["subview"] = "definition_data/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
@@ -348,7 +355,10 @@ class Definition_data extends Admin_Controller {
 					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
 				}
 			}
-			
+		   if($this->input->get('aln_data_typeID') > 0 ){
+		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              $sWhere .= 'dd.aln_data_typeID = '.$this->input->get('aln_data_typeID');		 
+	        }	
 			
 		$sQuery = "SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
 		$sWhere			

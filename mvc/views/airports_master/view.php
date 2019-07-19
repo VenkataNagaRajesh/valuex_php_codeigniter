@@ -16,8 +16,7 @@
 			<div class="row">				
 				 <div class="profile-view-tab"> 
 					 <p><span><?=$this->lang->line("master_airport")?> </span>: <?=$airport->airport?></p>
-					 <p><span><?=$this->lang->line("master_country")?> </span>: <?=$airport->country?></p>
-					 <p><span><?=$this->lang->line("master_state")?> </span>: <?=$airport->state?></p>
+					 <p><span><?=$this->lang->line("master_country")?> </span>: <?=$airport->country?></p>				
 					 <p><span><?=$this->lang->line("master_region")?> </span>: <?=$airport->region?></p>
 					 <p><span><?=$this->lang->line("master_area")?> </span>: <?=$airport->area?></p>
 					 <p><span><?=$this->lang->line("master_code")?> </span>: <?=$airport->code?></p>

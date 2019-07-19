@@ -1,7 +1,7 @@
 
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
+        <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
 
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
@@ -69,10 +69,10 @@
 						<th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('airline_seat_capacity')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('airline_flights_ids')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('airline_active')?></th>
+						<!--<th class="col-lg-1"><?=$this->lang->line('airline_flights_ids')?></th>-->
+						<th class="col-lg-1 noExport"><?=$this->lang->line('airline_active')?></th>
                         <?php if(permissionChecker('airline_edit') || permissionChecker('airline_delete')) { ?>
-                        <th class="col-lg-1"><?=$this->lang->line('action')?></th>
+                        <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
                         <?php } ?>
                     </tr>
                  </thead>
@@ -96,7 +96,7 @@
 				  {"data": "code" },
 				  {"data": "aircraft"},
 				  {"data":"seat_capacity"},
-				  {"data": "flights" },
+				 // {"data": "flights" },
 				  {"data": "active"},
                   {"data": "action"}
 				  ],			     

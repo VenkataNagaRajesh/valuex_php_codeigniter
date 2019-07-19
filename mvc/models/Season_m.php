@@ -32,7 +32,7 @@ class season_m extends MY_Model {
 	function get_seasons_for_airline($id){
 
 		 $this->db->select('*')->from('VX_aln_season');
-		 $this->db->where('airlineID',$id);
+		if($id != 0){ $this->db->where('airlineID',$id); }
 		$query = $this->db->get();
             return $query->result();
 
@@ -51,7 +51,7 @@ class season_m extends MY_Model {
 	}
 
 	function get_single_season($array=NULL) {
-		$query = parent::get_single($array);
+		$query = parent::get_single($array); 
 		return $query;
 	}
 
