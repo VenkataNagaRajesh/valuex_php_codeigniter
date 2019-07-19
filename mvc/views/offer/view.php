@@ -11,7 +11,7 @@
  </div>
 	 <div class="col-sm-12">
                 <div id="hide-table">
-		<h3><?=$this->lang->line("offer_information")?></h3>
+		<h3>Offer Information</h3>
 
 		<?php 
 
@@ -47,6 +47,8 @@
                         <th><?=$this->lang->line("flight_date")?> </th>
                         <th><?=$this->lang->line("origin")?></th>
                         <th><?=$this->lang->line("destination")?></th>
+			<th>From Cabin</th>
+			<th>To Cabin</th>			
                         <th><?=$this->lang->line("status")?></th>
 
                         </tr>
@@ -56,10 +58,12 @@
                                 foreach($ofr as $data)
                                 {?>
                                    <tr>
-                                                <td><?=$data->carrier_code.$data->flight_number?></td>
+                                                <td><?=$data->carrier.$data->flight_number?></td>
                                                 <td><?php echo date('d/m/Y',$data->flight_date)?></td>
                                                 <td><?=$data->from_city?></td>
                                                 <td><?=$data->to_city?></td>
+						 <td><?=$data->from_cabin?></td>
+						 <td><?=$data->to_cabin?></td>
 						 <td><?=$data->booking_status?></td>
 
                                         </tr>

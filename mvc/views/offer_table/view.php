@@ -15,7 +15,7 @@
                 ?>
 
 			<p>
-				<span>Offer Detail Page</span>
+				<span>Offer AND BID Information</span>
 				<span>Offer Id:<?php echo $ofr[0]->offer_id?></span>
 				<span>Request:<?php echo date('d/m/Y',$ofr[0]->offer_date)?></span>
 			</p>
