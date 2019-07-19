@@ -116,7 +116,7 @@ class Offer_eligibility extends Admin_Controller {
 	    $aColumns = array('dtpfext_id','pext.dtpf_id','pext.fclr_id','sea.season_name','dbp.code','dop.code','pf.dep_date','dai.code','pf.flight_number',
 			 'fca.code','tca.code','dfre.code','fc.average','fc.min','fc.max','fc.slider_start',
 			 'bs.aln_data_value','dbp.aln_data_value','dop.aln_data_value','dai.aln_data_value','fca.aln_data_value',
-			 'tca.aln_data_value','dfre.aln_data_value');
+			 'tca.aln_data_value','dfre.aln_data_value','pf.pnr_ref');
 	
 		$sLimit = "";
 		

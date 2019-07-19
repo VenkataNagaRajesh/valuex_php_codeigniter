@@ -373,7 +373,7 @@ class Marketzone extends Admin_Controller {
    public function getSubdataTypes(){
 	
 	$id = $this->input->post('id');
-	
+	$airline_id = $this->input->post('airline_id');
 	if($this->input->post('sub_id')){
               $sub_id = $this->input->post('sub_id');
          }else{
@@ -381,11 +381,7 @@ class Marketzone extends Admin_Controller {
         }
 	if ( isset($id)){
 		if($id == 17){
-		  if($this->session->userdata('usertypeID') == 2){
-		    $result = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
-		  } else {
-		    $result = $this->marketzone_m->get_marketzones();
-		  }
+			$result = $this->marketzone_m->get_marketzones(null,$airline_id);
 		   foreach ($result as $market) {                               
                echo "<option value=\"$market->market_id\">",$market->market_name,"</option>";
             }

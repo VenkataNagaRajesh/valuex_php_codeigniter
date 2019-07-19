@@ -457,13 +457,35 @@ $('#amz_level_id').trigger('change');
 });
 
 
+$('#airline_id').change(function(event) {
+	$('#amz_level_id').trigger('change');
+	$('#amz_excl_id').trigger('change');
+	$('#amz_incl_id').trigger('change');
+
+});
+
 $('#amz_level_id').change(function(event) {    
-        $('#amz_level_value').val(null).trigger('change')
+        $('#amz_level_value').val(null).trigger('change');
   var level_id = $(this).val();                 
+  var airline_id = $('#airline_id').val();
+	if( level_id == '17' ) {
+		if($('#airline_id').val() == '0') {
+			alert('select Airline');
+			$("#amz_level_id").val(0);
+                           $('#amz_level_id').trigger('change');
+
+			return false;
+		}
+	}
+	
 $.ajax({     async: false,            
              type: 'POST',            
              url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-             data: "id=" + level_id,            
+
+	     data: {
+                           "id":level_id,
+			   "airline_id":airline_id
+				},
              dataType: "html",                                  
              success: function(data) {               
              $('#amz_level_value').html(data); }        
@@ -473,10 +495,23 @@ $.ajax({     async: false,
 $('#amz_incl_id').change(function(event) {    
         $('#amz_incl_value').val(null).trigger('change');
   var incl_id = $(this).val();                 
+   var airline_id = $('#airline_id').val();
+	 if( incl_id == '17' ) {
+                if($('#airline_id').val() == '0') {
+                        alert('select Airline');
+			$('#amz_incl_id').val('0').trigger('change');
+                        return false;
+                }
+        }
+
 $.ajax({     async: false,            
              type: 'POST',            
              url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-             data: "id=" + incl_id,            
+	      data: {
+                           "id":incl_id,
+                           "airline_id":airline_id
+                                },
+
              dataType: "html",                                  
              success: function(data) {               
              $('#amz_incl_value').html(data); }        
@@ -488,10 +523,23 @@ $.ajax({     async: false,
 $('#amz_excl_id').change(function(event) {    
         $('#amz_excl_value').val(null).trigger('change');
   var excl_id = $(this).val();                 
+   var airline_id = $('#airline_id').val();
+	 if( excl_id == '17' ) {
+                if($('#airline_id').val() == '0') {
+                        alert('select Airline');
+			 $('#amz_excl_id').val('0').trigger('change');
+                        return false;
+                }
+        }
+
 $.ajax({     async: false,            
              type: 'POST',            
              url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-             data: "id=" + excl_id,            
+	 data: {
+                           "id":excl_id,
+                           "airline_id":airline_id
+                                },
+
              dataType: "html",                                  
              success: function(data) {               
              $('#amz_excl_value').html(data); }        
