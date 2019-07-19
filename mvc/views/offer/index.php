@@ -21,30 +21,28 @@
 					<h4>Board/Off Point</h4>
 					<div class="col-sm-12">
 						<?php
-							$airports['0'] = 'Select Boarding Point';
+							$airports['0'] = 'Boarding Point';
 							ksort($airports);
 							echo form_dropdown("boarding_point", $airports,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");   ?>
 					</div>
 					 <div class="col-sm-12">
 						<?php
-							$airports['0'] = 'Select Off Point';
+							$airports['0'] = 'Off Point';
 							ksort($airports);
 							echo form_dropdown("off_point", $airports,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");     ?>
 					</div>
 				</div>
 				<div class="col-md-3 select-form">
-					<h4>Cabins</h4>
+					<h4>PNR Ref and Carrier</h4>
 					<div class="col-sm-12">
-						<?php
-							$cabins['0'] = 'Select From Cabin';
-							ksort($cabins);
-							echo form_dropdown("from_cabin", $cabins,set_value("from_cabin",$from_cabin), "id='from_cabin' class='form-control hide-dropdown-icon select2'");   ?>
+	<input type="text" class="form-control" placeholder="Pnr ref" id="pnr_ref" name="pnr_ref" value="<?=set_value('pnr_ref')?>" >
+
 					</div>
 					<div class="col-sm-12">
 						<?php
-							$cabins['0'] = 'Select To cabin';
-							ksort($cabins);
-							echo form_dropdown("to_cabin", $cabins,set_value("to_cabin",$to_cabin), "id='to_cabin' class='form-control hide-dropdown-icon select2'");     ?>
+							$carrier['0'] = 'Carrier';
+							ksort($carrier);
+							echo form_dropdown("carrier", $carrier,set_value("carrier",$car), "id='carrier' class='form-control hide-dropdown-icon select2'");     ?>
 					</div>
 				</div>
 				<div class="col-md-3 select-form">
@@ -119,6 +117,8 @@ $("#dep_to_date").datepicker();
                    {"name": "offPoint","value": $("#off_point").val()},
 		    {"name": "depStartDate","value": $("#dep_from_date").val()},
                    {"name": "depEndDate","value": $("#dep_to_date").val()},
+		    {"name": "pnr_ref","value": $("#pnr_ref").val()},
+		   {"name": "carrier","value": $("#carrier").val()},
 		  {"name": "fromCabin","value": $("#from_cabin").val()},
                    {"name": "toCabin","value": $("#to_cabin").val()},
                   

@@ -60,6 +60,7 @@ $this->data['headerassets'] = array(
         );
 		$this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
                 $this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
+		 $this->data['carrier'] =  $this->airports_m->getDefnsCodesListByType('12');
 
 	$this->data["subview"] = "offer/index";
                 $this->load->view('_layout_main', $this->data);
@@ -211,7 +212,7 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 
 
 
-            $aColumns = array('offer_id','SubSet.passenger_list','pnr_ref','SubSet.from_city', 'SubSet.to_city','SubSet.flight_date',
+            $aColumns = array('MainSet.offer_id','SubSet.passenger_list','MainSet.pnr_ref','SubSet.from_city', 'SubSet.to_city','SubSet.flight_date',
 				'SubSet.carrier', 'SubSet.flight_number','SubSet.from_city_name', 'SubSet.to_city_name');
 
                 $sLimit = "";
@@ -304,13 +305,13 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'SubSet.flight_date <= '.  strtotime($this->input->get('depEndDate'));
                         }
-                        if(!empty($this->input->get('fromCabin'))){
+                        if(!empty($this->input->get('carrier'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'from_cabin = '. $this->input->get('fromCabin');
+                                $sWhere .= 'SubSet.carrier_code = '. $this->input->get('carrier');
                         }
-                        if(!empty($this->input->get('toCabin'))){
+                        if(!empty($this->input->get('pnr_ref'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'to_cabin = '.  $this->input->get('toCabin');
+                                $sWhere .= 'MainSet.pnr_ref = "'.  $this->input->get('pnr_ref'). '"';
                         }
 
 
