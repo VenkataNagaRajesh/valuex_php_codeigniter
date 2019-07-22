@@ -43,4 +43,17 @@ class Mydebug {
          fwrite($file,'ERROR - '.date('Y-m-d H:m:s')." --> ".$msg."\n");
        }
 
+	  public function rafeed_log($logs)
+        {
+
+       	$file = fopen(APPPATH.'/logs/log-rafeed.txt','a+');
+         if (is_array($logs)) {
+             $msg = print_r($logs,1);
+         } else {
+             $msg = $logs;
+         }
+         fwrite($file,'ERROR - '.date('Y-m-d H:m:s')." --> ".$msg."\n");
+       }
+
+
 }

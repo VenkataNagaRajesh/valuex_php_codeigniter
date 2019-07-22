@@ -85,7 +85,7 @@
 					</div>
 				</div>
 				<div class="col-md-2">
-					<h4>Departure Date Range</h4>
+					<h4>Dep Date Range</h4>
 					<div class="col-sm-12">
 						 <div class="input-group">
 							<input type="text" class="form-control" placeholder="Dep Start" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >

@@ -158,6 +158,7 @@ class Rafeed extends Admin_Controller {
 			   if(move_uploaded_file($file, APPPATH."/uploads/".$_FILES['file']['name'])){		
 
 				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
+				 $this->mydebug->rafeed_log("Processing the excel file " . $_FILES['file']['name'] );
 				$Reader = new SpreadsheetReader($file); 
 				$header = array_map('strtolower', array("Airline Code","Ticket Number", "Coupon Number", "Carrier","Flight Number","Boarding Point","Off Point","CPN Value","Class","Flight Date","Fare Basis","Cabin","Booking Country","Booking City","Issuance Country","Issuance City","Marketing Airline Code","Operating Airline Code","OfficeID","Channel","Pax Type"));
                                  $header = array_map('strtolower', $header);
@@ -168,7 +169,9 @@ class Rafeed extends Admin_Controller {
 			foreach ($Sheets as $Index => $Name){                 					
 			   $Reader -> ChangeSheet($Index);
 			   $i = 0;
+			  $column = 0;
 			   foreach ($Reader as $Row){
+				$column++;
 			//	print_r($Row);exit;
 				if($i == 0){ // header checking						
 					
@@ -176,18 +179,29 @@ class Rafeed extends Admin_Controller {
 				  $Row = array_map('trim', $Row);
 				   $import_header = array_map('strtolower', $Row);
 				  if(count(array_diff($header,$import_header)) == 0){
+					$this->mydebug->rafeed_log("Header matched for " . $_FILES['file']['name'] );
+					$this->mydebug->rafeed_log("Processing records.. " );
 						 $flag = 1;
 				   }				  
 				 } else {
 				      if($flag == 1){ 						   										
-				   if(count($Row) == 21){ //print_r($Row); exit;
+				   if(count($Row) == 21){ 
+					$this->mydebug->rafeed_log("coulmns count matched , uploading data for row " . $column);
 					$rafeed = array();
 					$num =  explode('E',$Row[array_search('ticket number',$import_header)]);
 					$num1 = explode('.',$num[0]);
-	 			      $rafeed['ticket_number'] =  $num1[0];
+	 			        $rafeed['ticket_number'] =  $num1[0];
+					if(!ctype_digit($rafeed['ticket_number']) || strlen($rafeed['ticket_number']) != '13'){
+						$this->mydebug->rafeed_log("Ticket Number should be integer and 13 digits in row " . $column);
+                                                continue;
+					}
 				      $rafeed['coupon_number'] = $Row[array_search('coupon number',$import_header)];
 				      $rafeed['prorated_price'] = $Row[array_search('cpn value',$import_header)];
 				      $rafeed['airline_code'] = $Row[array_search('airline code',$import_header)];
+				      if(!is_numeric($rafeed['airline_code']) || strlen($rafeed['airline_code']) != 3){
+						$this->mydebug->rafeed_log("Airline Code should be 3 digits  and integer in row " . $column);
+						continue;
+					}
 				      $rafeed['fare_basis'] = $Row[array_search('fare basis',$import_header)];
    				      $rafeed['carrier'] = 
 					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('carrier',$import_header)],'12');
@@ -206,7 +220,19 @@ class Rafeed extends Admin_Controller {
 					     $this->airports_m->getDefIdByTypeAndCode($Row[array_search('off point',$import_header)],'1');
 				      $rafeed['cabin'] = 
 					     $this->airports_m->getDefIdByTypeAndCode($Row[array_search('cabin',$import_header)],'13');
+					$cabin_arr = array('Y','W','C','F');
+					if(!in_array($Row[array_search('cabin',$import_header)],$cabin_arr)){
+						$this->mydebug->rafeed_log("cabin should in Y,W,C,F " . $column);
+						continue;
+					}
   				      $rafeed['class'] = $Row[array_search('class',$import_header)];
+					$class_arr = range('A','Z');
+					 if(!in_array($rafeed['class'],$class_arr)){
+                                                $this->mydebug->rafeed_log("class should be in A-Z " . $column);
+                                                continue;
+                                        }
+
+					
 				      $rafeed['departure_date'] =  
 					     strtotime(str_replace('-','/',$Row[array_search('flight date',$import_header)]));
 				      $day_of_week = date('w', $rafeed['departure_date']);
@@ -225,16 +251,38 @@ class Rafeed extends Admin_Controller {
 					//var_dump($rafeed);exit;
 						if($this->rafeed_m->checkRaFeed($rafeed)) {
 								
-                                                           $rafeed['create_date'] = time();
+							$insert_flag = 1;
+							foreach ($rafeed as $k=>$v) {
+								if($k != 'day_of_week' && $k != 'season_id') {
+									if($v == '' ){
+									$this->mydebug->rafeed_log("There is null value column ".$k. " in row " . $column);
+									$insert_flag = 0;
+								}
+								}
+							 }
+
+							if ( $insert_flag == '1' ) {
+                                                          $rafeed['create_date'] = time();
                                                           $rafeed['modify_date'] = time();
                                                           $rafeed['create_userID'] = $this->session->userdata('loginuserID');
                                                           $rafeed['modify_userID'] = $this->session->userdata('loginuserID');
 						//	print_r($rafeed);exit;
-                                                        $this->rafeed_m->insert_rafeed($rafeed);
+                                                       		 $this->rafeed_m->insert_rafeed($rafeed);
+								$this->mydebug->rafeed_log("uploaded row " . $column);
+							} else {
+
+								$this->mydebug->rafeed_log("Not proper data for  row " . $column);
+							}
+						}else{
+							$this->mydebug->rafeed_log("Duplicate Entry");
 						}
 
 					   	 } 						
+						else{
+							$this->mydebug->rafeed_log("coulmns count didn't match for " . $column);
+						}
 					   } else {
+						$this->mydebug->rafeed_log("Header mismatch");
 						   print_r("mismatch");
 					   }
 					 }
