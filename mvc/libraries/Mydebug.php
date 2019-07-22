@@ -43,7 +43,7 @@ class Mydebug {
          fwrite($file,'ERROR - '.date('Y-m-d H:m:s')." --> ".$msg."\n");
        }
 
-	  public function rafeed_log($logs)
+	  public function rafeed_log($logs, $flag = 0)
         {
 
        	$file = fopen(APPPATH.'/logs/log-rafeed.txt','a+');
@@ -52,7 +52,15 @@ class Mydebug {
          } else {
              $msg = $logs;
          }
-         fwrite($file,'ERROR - '.date('Y-m-d H:m:s')." --> ".$msg."\n");
+
+	if ($flag == '0' ) {
+		
+		$tag = 'INFO - '.date('Y-m-d H:m:s');
+	} else {
+
+		$tag = 'ERROR - '.date('Y-m-d H:m:s');
+	}
+         fwrite($file,$tag. " --> ".$msg."\n");
        }
 
 
