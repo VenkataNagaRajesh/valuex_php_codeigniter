@@ -143,7 +143,7 @@
 			  </div>
 			 </form>			
             <div id="hide-table">
-               <table id="rafeedtable" class="table table-striped table-bordered table-hover dataTable no-footer">
+               <table id="paxfeedtable" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>
                     <tr>
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
@@ -175,10 +175,10 @@
                          <th class="col-lg-1"><?=$this->lang->line('channel')?></th>
 			
 			
-		 <th class="col-lg-1"><?=$this->lang->line('active')?></th>
+		 <th class="col-lg-1 noExport"><?=$this->lang->line('active')?></th>
 
 	<?php if(permissionChecker('paxfeed_delete')){?>
-                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
 						<?php }?>
                     </tr>
                  </thead>
@@ -193,7 +193,7 @@
 <script>
  $(document).ready(function() {	 
 	
-    $('#rafeedtable').DataTable( {
+    $('#paxfeedtable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('paxfeed/server_processing'); ?>",
@@ -264,7 +264,7 @@
   });
  
   
-   $('#rafeedtable tbody').on('mouseover', 'tr', function () {
+   $('#paxfeedtable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
         html: true
@@ -273,7 +273,7 @@
   
   var status = '';
   var id = 0;
- $('#rafeedtable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
+ $('#paxfeedtable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");

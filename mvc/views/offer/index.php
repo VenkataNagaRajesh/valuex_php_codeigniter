@@ -78,7 +78,7 @@
 	<div class="col-md-12 off-elg-table">
 		<div class="col-md-12">
 			<div id="hide-table">
-				<table id="rafeedtable" class="table table-bordered">
+				<table id="offertable" class="table table-bordered">
 					 <thead>
 						<tr>
 							<th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
@@ -106,7 +106,7 @@
 $("#dep_from_date").datepicker();
 $("#dep_to_date").datepicker();
 
-    $('#rafeedtable').DataTable( {
+    $('#offertable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('offer_issue/server_processing'); ?>",
@@ -159,7 +159,7 @@ $("#dep_to_date").datepicker();
   });
  
   
-   $('#rafeedtable tbody').on('mouseover', 'tr', function () {
+   $('#offertable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
         html: true
@@ -168,7 +168,7 @@ $("#dep_to_date").datepicker();
   
   var status = '';
   var id = 0;
- $('#rafeedtable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
+ $('#offertable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");
