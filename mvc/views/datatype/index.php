@@ -30,7 +30,7 @@
                                 <th class="col-lg-4"><?=$this->lang->line('datatype_name')?></th>
 								<th class="col-lg-4"><?=$this->lang->line('datatype_alias')?></th>
                                 <?php if(permissionChecker('usertype_edit') || permissionChecker('usertype_delete')) { ?>
-                                <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
                             </tr>
                         </thead>

@@ -77,16 +77,16 @@
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('airline_name')?></th>
-					<th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
+					            <th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_cabin')?></th>
-				<th class="col-lg-1"><?php echo "Images Count"?></th>
+				                <th class="col-lg-1"><?php echo "Images Count"?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_video')?></th>
                                 <?php if(permissionChecker('airline_cabin_edit')) { ?>
-                                        <th class="col-lg-1"><?=$this->lang->line('airline_cabin_status')?></th>
+                                  <th class="col-lg-1 noExport"><?=$this->lang->line('airline_cabin_status')?></th>
                                 <?php } ?>
 
                                  <?php if(permissionChecker('airline_cabin_edit') || permissionChecker('airline_cabin_view') ||  permissionChecker('airline_cabin_delete')) { ?>
-                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
 
 	
@@ -139,7 +139,24 @@
 				  ],			   
 	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
 	dom: 'B<"clear">lfrtip',
-    buttons: [ 'copy', 'csv', 'excel','pdf' ]
+   // buttons: [ 'copy', 'csv', 'excel','pdf' ]
+     buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export'} },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } }                
+            ] ,
+	 "autoWidth": false,
+     "columnDefs": [ { "width": "20px", "targets": 0 },{"targets":5,
+	                 render: function ( data, type, row, meta ) {
+                       console.log(type);						 
+						if(type == 'export'){
+                          return $(data).attr("href");
+						} else {
+						  return data;	
+						}                      
+                   }} ]
+	 
     });
   });
   

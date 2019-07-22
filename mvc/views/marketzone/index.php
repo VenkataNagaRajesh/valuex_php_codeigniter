@@ -227,10 +227,10 @@
 							<th><?=$this->lang->line('amz_excl_type')?></th>
 							<th><?=$this->lang->line('amz_excl_value')?></th>
 							 <?php if(permissionChecker('marketzone_edit')) { ?>
-								 <th><?=$this->lang->line('marketzone_status')?></th>
+								 <th class="noExport"><?=$this->lang->line('marketzone_status')?></th>
 							<?php } ?>                       
 							<?php if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_view') ||  permissionChecker('marketzone_detete')) { ?>
-						   <th><?=$this->lang->line('action')?></th>
+						   <th class="noExport"><?=$this->lang->line('action')?></th>
 						   <?php } ?>
 					   </tr>
 				   </thead>
@@ -353,7 +353,13 @@ function loaddatatable() {
 				  ],			   
 	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
 	dom: 'B<"clear">lfrtip',
-    buttons: [ 'copy', 'csv', 'excel','pdf' ],
+   // buttons: [ 'copy', 'csv', 'excel','pdf' ],
+    buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] ,
 	"autoWidth": false,
      "columnDefs": [ { "width": "30px", "targets": 0 },
                      { "width": "130px", "targets": 1 },

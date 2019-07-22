@@ -74,11 +74,11 @@
 					<th class="col-lg-1"><?=$this->lang->line('next_status')?></th>
 					<th class="col-lg-1"><?=$this->lang->line('isInternalStatus')?></th>
                                 <?php if(permissionChecker('event_status_edit')) { ?>
-                                        <th class="col-lg-1"><?=$this->lang->line('event_status')?></th>
+                                        <th class="col-lg-1 noExport"><?=$this->lang->line('event_status')?></th>
                                 <?php } ?>
 
                                  <?php if(permissionChecker('event_status_edit') || permissionChecker('event_status_delete')) { ?>
-                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
 
 	
@@ -130,7 +130,13 @@
 				  ],			   
 	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
 	dom: 'B<"clear">lfrtip',
-    buttons: [ 'copy', 'csv', 'excel','pdf' ]
+   // buttons: [ 'copy', 'csv', 'excel','pdf' ]
+    buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] ,
     });
   });
   

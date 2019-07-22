@@ -23,16 +23,16 @@
                         <thead>
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('client_photo')?></th>
+                                <th class="col-lg-1 noExport"><?=$this->lang->line('client_photo')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_name')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_email')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('client_phone')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_airline')?></th>
                                 <?php if(permissionChecker('client_edit')) { ?>
-                                <th class="col-lg-1"><?=$this->lang->line('client_status')?></th>
+                                <th class="col-lg-1 noExport"><?=$this->lang->line('client_status')?></th>
                                 <?php } ?>
                                 <?php if(permissionChecker('client_edit') || permissionChecker('client_delete') || permissionChecker('client_view')) { ?>
-                                <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
                             </tr>
                         </thead>
@@ -61,7 +61,13 @@
                   {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
-     buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+     //buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+	 buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] ,
     });
   }); 
   

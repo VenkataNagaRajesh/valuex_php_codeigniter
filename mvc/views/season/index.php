@@ -167,12 +167,12 @@
 							<th class="col-lg-1"><?=$this->lang->line('season_start_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season_end_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('is_return_inclusive')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('season_color')?></th>
+							<th class="col-lg-1 noExport"><?=$this->lang->line('season_color')?></th>
 							<?php if(permissionChecker('season_edit')) {?>
-							<th class="col-lg-1"><?=$this->lang->line('season_active')?></th>
+							<th class="col-lg-1 noExport"><?=$this->lang->line('season_active')?></th>
 							<?php }?>
 							<?php if(permissionChecker('season_edit') || permissionChecker('season_delete')) { ?>
-							<th class="col-lg-2"><?=$this->lang->line('action')?></th>
+							<th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
 							   <?php } ?>
 						  </tr>
 					   </thead>
@@ -220,8 +220,6 @@ function seasoncalender (seasonlist = '[]') {
 
         // An array of dates
      var eventDates = {}; var season = {}; var name = {};
-
-
 	
 	 //$_POST['color_season']=10; 
              for(var i=0; i<season_data.length; i++){
@@ -236,10 +234,7 @@ function seasoncalender (seasonlist = '[]') {
 	   } 
 	    $("<style> .season"+season_data[i]['VX_aln_seasonID'] + " { color:#fffff !important;  background:"+season_data[i]['season_color'] + " !important;} </style>").appendTo("head");
      }   
-    //console.log(event);
-       console.log(eventDates);
-	   console.log(season);
-	   console.log(name);
+   
         jQuery('#calendar1').datepicker({		    
            // changeMonth: true,
            // changeYear: true,
@@ -290,8 +285,6 @@ function getCalenderBySeason(season){
          }
 	 });
 }
-
-
   
 </script>
 <script>
@@ -331,7 +324,13 @@ $(document).ready(function() {
                   {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
-     buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+     //buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+	  buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] ,
     });
   }); 
   
