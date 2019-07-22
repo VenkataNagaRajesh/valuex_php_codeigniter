@@ -138,7 +138,7 @@ class Invfeed extends Admin_Controller {
 							$this->mydebug->invfeed_log("coulmns count matched , uploading data for row " . $column , 0);
 							$invfeedraw = array();
 							$invfeedraw['airline'] = $Row[array_search('airline code',$import_header)];
-							if(strlen($invfeedraw['airline']) != '2'){
+							if(strlen($invfeedraw['airline']) != '2' || !ctype_alpha($invfeedraw['airline'])){
 								 $this->mydebug->invfeed_log("Carrier code should be 2 charcters " . $column , 1);
 								 continue;
 							}
@@ -150,14 +150,14 @@ class Invfeed extends Admin_Controller {
 							}
 							$invfeedraw['departure_date'] = $Row[array_search('dept date',$import_header)];
 							 $invfeedraw['origin_airport'] = $Row[array_search('origin airport',$import_header)];
-							 if(strlen($invfeedraw['origin_airport']) != '3'){
+							 if(strlen($invfeedraw['origin_airport']) != '3' || !ctype_alpha($invfeedraw['origin_airport'])){
 
 									 $this->mydebug->invfeed_log("Origin Airport  should be 3 charcters " . $column , 1);
 								continue;
 							}
 							$invfeedraw['dest_airport'] = $Row[array_search('destination airport',$import_header)];
 
-							if (strlen($invfeedraw['dest_airport']) != '3'){
+							if (strlen($invfeedraw['dest_airport']) != '3' || !ctype_alpha($invfeedraw['dest_airport'])){
 
 							 $this->mydebug->invfeed_log("Dest Airport should be 3 charcters " . $column , 1);
                                                                 continue;
@@ -201,7 +201,7 @@ class Invfeed extends Admin_Controller {
                                                          }
 
 							if ($insert_flag == 0 ) {
-								$this->mydebug->invfeed_log("Not proper data for row " . $column, 1);
+								$this->mydebug->invfeed_log("Improper data for row " . $column, 1);
 								continue;
 
 							} else {

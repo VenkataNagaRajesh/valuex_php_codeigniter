@@ -86,6 +86,26 @@ class Mydebug {
        }
 
 
+     public function paxfeed_log($logs, $flag = 0)
+        {
+
+        $file = fopen(APPPATH.'/logs/log-paxfeed.php','a+');
+         if (is_array($logs)) {
+             $msg = print_r($logs,1);
+         } else {
+             $msg = $logs;
+         }
+
+        if ($flag == '0' ) {
+
+                $tag = 'INFO - '.date('Y-m-d H:m:s');
+        } else {
+
+                $tag = 'ERROR - '.date('Y-m-d H:m:s');
+        }
+         fwrite($file,$tag. " --> ".$msg."\n");
+       }
+
 
 
 

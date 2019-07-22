@@ -21,6 +21,8 @@ class Paxfeed_m extends MY_Model {
 		return $query;
 	}
 
+
+
 	function checkPaxFeed($array){
 		$this->db->select('dtpf_id');
 		$this->db->from('VX_aln_daily_tkt_pax_feed');
