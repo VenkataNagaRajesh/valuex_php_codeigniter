@@ -272,6 +272,7 @@ class Rafeed extends Admin_Controller {
 							} else {
 
 								$this->mydebug->rafeed_log("Not proper data for  row " . $column, 1);
+								continue;
 							}
 						}else{
 							$this->mydebug->rafeed_log("Duplicate Entry", 1);
