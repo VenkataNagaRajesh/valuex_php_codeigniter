@@ -251,20 +251,28 @@ class Rafeed extends Admin_Controller {
 					//var_dump($rafeed);exit;
 						if($this->rafeed_m->checkRaFeed($rafeed)) {
 								
+							$insert_flag = 1;
 							foreach ($rafeed as $k=>$v) {
 								if($k != 'day_of_week' && $k != 'season_id') {
 									if($v == '' ){
 									$this->mydebug->rafeed_log("There is null value column ".$k. " in row " . $column);
+									$insert_flag = 0;
 								}
 								}
 							 }
+
+							if ( $insert_flag == '1' ) {
                                                           $rafeed['create_date'] = time();
                                                           $rafeed['modify_date'] = time();
                                                           $rafeed['create_userID'] = $this->session->userdata('loginuserID');
                                                           $rafeed['modify_userID'] = $this->session->userdata('loginuserID');
 						//	print_r($rafeed);exit;
-                                                        $this->rafeed_m->insert_rafeed($rafeed);
-							$this->mydebug->rafeed_log("uploaded row " . $column);
+                                                       		 $this->rafeed_m->insert_rafeed($rafeed);
+								$this->mydebug->rafeed_log("uploaded row " . $column);
+							} else {
+
+								$this->mydebug->rafeed_log("Not proper data for  row " . $column);
+							}
 						}else{
 							$this->mydebug->rafeed_log("Duplicate Entry");
 						}
