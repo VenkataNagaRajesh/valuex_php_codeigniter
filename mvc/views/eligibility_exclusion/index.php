@@ -408,8 +408,8 @@
 							<th class="col-lg-1"><?=$this->lang->line('upgrade_from')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('upgrade_to')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('frequency')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('rule_status')?></th> 
-                            				<th class="col-lg-2"><?=$this->lang->line('action')?></th>
+							<th class="col-lg-1 noExport"><?=$this->lang->line('rule_status')?></th> 
+                            				<th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                        </tr>
                    </thead>
                     <tbody>                            
@@ -475,7 +475,13 @@ function loaddatatable() {
                                   ],                       
         //"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']  
         dom: 'B<"clear">lfrtip',
-    buttons: [ 'copy', 'csv', 'excel','pdf' ]
+   // buttons: [ 'copy', 'csv', 'excel','pdf' ]
+    buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ]
     });
   
 }

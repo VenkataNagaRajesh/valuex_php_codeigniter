@@ -162,10 +162,10 @@
 			<th class="col-lg-1"><?=$this->lang->line('pax_type')?></th>
 			
 			
-		 <th class="col-lg-1"><?=$this->lang->line('active')?></th>
+		 <th class="col-lg-1 noExport"><?=$this->lang->line('active')?></th>
 
 	<?php if(permissionChecker('rafeed_delete') || permissionChecker('rafeed_view')){?>
-                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
 						<?php }?>
                     </tr>
                  </thead>
@@ -233,7 +233,13 @@
 				  {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
-     buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+    // buttons: [ 'copy', 'csv', 'excel','pdf' ]	
+   	 buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] 
     });
 	
 	

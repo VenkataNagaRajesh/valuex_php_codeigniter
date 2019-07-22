@@ -28,7 +28,7 @@
                                 <th class="col-lg-2"><?=$this->lang->line('slno')?></th>
                                 <th class="col-lg-8"><?=$this->lang->line('usertype_usertype')?></th>
                                 <?php if(permissionChecker('usertype_edit') || permissionChecker('usertype_delete')) { ?>
-                                <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
                             </tr>
                         </thead>

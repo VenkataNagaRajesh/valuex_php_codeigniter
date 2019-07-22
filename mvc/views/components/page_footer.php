@@ -28,14 +28,20 @@
         $(document).ready(function() {
           $('#example3, #example1, #example2').DataTable( {
               dom: 'Bfrtip',
-              buttons: [
+             /*  buttons: [
                   'copyHtml5',
                   'excelHtml5',
                   'csvHtml5',
                   'pdfHtml5'
-              ],
+              ], */
+			   buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] ,
               search: false
-          } );
+          } );		 
         } );
 	 /* $('.dataTable').DataTable( {
 		 buttons: [{
