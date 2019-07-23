@@ -339,6 +339,17 @@ class Definition_data extends Admin_Controller {
 				$sWhere .= ')';
 			}
 			
+			if ( $_GET['search'] != "" )
+			{
+				$sWhere = "WHERE (";
+				for ( $i=0 ; $i<count($aColumns) ; $i++ )
+				{
+					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['search']."%' OR ";
+				}
+				$sWhere = substr_replace( $sWhere, "", -3 );
+				$sWhere .= ')';
+			}
+			
 			/* Individual column filtering */
 			for ( $i=0 ; $i<count($aColumns) ; $i++ )
 			{
@@ -359,12 +370,20 @@ class Definition_data extends Admin_Controller {
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
               $sWhere .= 'dd.aln_data_typeID = '.$this->input->get('aln_data_typeID');		 
 	        }	
-			
+			$this->mydebug->debug("where  : ".$sWhere);
 		$sQuery = "SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
 		$sWhere			
-		$sOrder
-		$sLimit	"; 
-	
+		$sOrder 
+		";
+        
+         $ses['server_fname'] = 'definition_data' ;
+		 $ses['server_query'] = $sQuery;
+		 $ses['server_columns'] = array('#','Type','Name','Parent','Code');
+		 $ses['server_rows'] = array('vx_aln_data_defnsID','datatype','aln_data_value','parent','code');
+		 $this->session->set_userdata($ses);
+		
+		$sQuery .= $sLimit ;
+		$this->mydebug->debug($sQuery);
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
 	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
@@ -399,8 +418,110 @@ class Definition_data extends Admin_Controller {
 
 			$output['aaData'][] = $defdata;				
 		}
+		
+		if(isset($_REQUEST['export'])){
+			 ob_start();		 
+				 $this->load->library("excel");
+				  $object = new PHPExcel();
+				  
+				  $object->setActiveSheetIndex(0); 
+				  
+				  $table_columns = array('#','Type','Name','Parent','Code');
+
+				  $column = 0;
+
+				  foreach($table_columns as $field)
+				  {
+				   $object->getActiveSheet()->setCellValueByColumnAndRow($column, 1, $field);
+				   $column++;
+				  }
+						  
+
+				 $sQuery =$this->session->userdata("server_query"); 			
+				 $results = $this->install_m->run_query($sQuery);
+				 
+				  $excel_row = 2;
+				 $server_rows = $this->session->userdata("server_rows");	
+				  foreach($output['aaData'] as $row)  {
+					foreach($server_rows as $key => $value){ 
+					 $row_data = ($row->$value =='NUL')?'':$row->$value;
+					 $object->getActiveSheet()->setCellValueByColumnAndRow($key, $excel_row,$row_data);  
+					}
+				   $excel_row++;
+				  }  
+					
+				  $object_writer = PHPExcel_IOFactory::createWriter($object, 'Excel5');
+				  header('Content-Type: application/vnd.ms-excel');
+				  header('Content-Disposition: attachment;filename="myexport.xls"');
+				  $object_writer->save('php://output');
+				  //force_download( $object_writer, null);
+				  $xlsData = ob_get_contents();
+			  ob_end_clean();
+					$response =  array(
+							'op' => 'ok',
+							'file' => "data:application/vnd.ms-excel;base64,".base64_encode($xlsData)
+						);
+
+					die(json_encode($response));
+			//$res['status'] = "success";			
+		//	echo json_encode( $res );
+		} else {	
 		echo json_encode( $output );
+		}
 	}
+	
+	public function exportall(){
+		$this->exportdata();
+		
+		echo "success";
+	}
+	
+	 function exportdatatest($data,$columns,$server_rows){ 
+        ob_start();		 
+		 $this->load->library("excel");
+		  $object = new PHPExcel();
+		  
+		  $object->setActiveSheetIndex(0); 
+		  
+		  $table_columns = $this->session->userdata('server_columns');
+
+		  $column = 0;
+
+		  foreach($columns as $field)
+		  {
+		   $object->getActiveSheet()->setCellValueByColumnAndRow($column, 1, $field);
+		   $column++;
+		  }
+		  		  
+
+		 $sQuery =$this->session->userdata("server_query"); 			
+		 $results = $this->install_m->run_query($sQuery);
+		 
+		  $excel_row = 2;
+		 $server_rows = $this->session->userdata("server_rows");	
+		  foreach($data as $row)  {
+			foreach($server_rows as $key => $value){ 
+			 $row_data = ($row->$value =='NUL')?'':$row->$value;
+			 $object->getActiveSheet()->setCellValueByColumnAndRow($key, $excel_row,$row_data);  
+			}
+		   $excel_row++;
+		  }  
+            
+		  $object_writer = PHPExcel_IOFactory::createWriter($object, 'Excel5');
+		  header('Content-Type: application/vnd.ms-excel');
+		  header('Content-Disposition: attachment;filename="myexport.xls"');
+		  $object_writer->save('php://output');
+		  force_download( $object_writer, null);
+		  $xlsData = ob_get_contents();
+          ob_end_clean();
+			$response =  array(
+					'op' => 'ok',
+					'file' => "data:application/vnd.ms-excel;base64,".base64_encode($xlsData)
+				);
+
+			die(json_encode($response));
+		  return true;
+	 }
 
 }
 

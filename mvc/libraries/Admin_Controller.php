@@ -621,6 +621,42 @@ class Admin_Controller extends MY_Controller {
             }
           }
      }
+	 
+	 function exportdata(){
+		  $this->load->library("excel");
+		  $object = new PHPExcel();
+		  
+		  $object->setActiveSheetIndex(0); 
+		  
+		  $table_columns = $this->session->userdata('server_columns');
+
+		  $column = 0;
+
+		  foreach($table_columns as $field)
+		  {
+		   $object->getActiveSheet()->setCellValueByColumnAndRow($column, 1, $field);
+		   $column++;
+		  }
+
+		 $sQuery =$this->session->userdata("server_query"); 			
+		 $results = $this->install_m->run_query($sQuery);
+		 
+		 $excel_row = 2;
+		 $server_rows = $this->session->userdata("server_rows");	
+		  foreach($results as $row)  {
+			foreach($server_rows as $key => $value){ 
+			 $row_data = ($row->$value =='NUL')?'':$row->$value;
+			 $object->getActiveSheet()->setCellValueByColumnAndRow($key, $excel_row,$row_data);  
+			}
+		   $excel_row++;
+		  } 
+
+		  $object_writer = PHPExcel_IOFactory::createWriter($object, 'Excel5');
+		  header('Content-Type: application/vnd.ms-excel');
+		  header('Content-Disposition: attachment;filename='.$this->session->userdata('server_fname').'.xls');
+		  $object_writer->save('php://output');
+		  force_download( $object_writer, null);
+	 }
 
 }
 
