@@ -90,7 +90,7 @@
                             echo "<div class='form-group' >";
                     ?>
                         <label for="images" class="col-sm-2 control-label">
-                            <?=$this->lang->line("images")?> <span class="text-red">*</span>
+                            <?=$this->lang->line("images")?> 
                         </label>
                         <div class="col-sm-6">
                         <input type="file"  name="images[]" id="images" multiple>
@@ -169,7 +169,7 @@ $('#airline_code').change(function(event) {
   var airline_id = $(this).val();                 
 $.ajax({     async: false,            
              type: 'POST',            
-             url: "<?=base_url('airline_cabin/getAircrafts')?>",            
+             url: "<?=base_url('airline_cabin/getAircraftTypes')?>",            
              data: "id=" + airline_id,            
              dataType: "html",                                  
              success: function(data) {               

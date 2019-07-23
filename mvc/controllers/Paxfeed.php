@@ -398,7 +398,7 @@ class Paxfeed extends Admin_Controller {
 						//	print_r($rafeed);exit;
                                                               $this->paxfeed_m->insert_paxfeed($paxfeed);
 
-							    $this->mydebug->paxfeed_log("Inserted pax record for row " . $column, 1);
+							    $this->mydebug->paxfeed_log("Inserted pax record for row " . $column, 0);
 						   }
 					}
 			}

@@ -50,7 +50,7 @@
                         <div class="col-sm-6"> 
 
 			 <select  name="airline_aircraft"  id="airline_aircraft" class="form-control select2" >
-				<option value="0">Select Aircraft</option>
+				<option value="0">Select AircraftType</option>
                                 </select>
 
                         </div>
@@ -145,6 +145,11 @@
 <script type="text/javascript">
 $(document).ready(function(){
 $('#airline_code').trigger('change');
+
+/* var ac = <?php echo $this->input->post("airline_aircraft"); ?>;
+        $('#airline_aircraft').val(ac).trigger('change');*/
+
+
 $( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Class'
 		         });
 var i = 1;
@@ -170,7 +175,7 @@ $('#airline_code').change(function(event) {
   var airline_id = $(this).val();                 
 $.ajax({     async: false,            
              type: 'POST',            
-             url: "<?=base_url('airline_cabin/getAircrafts')?>",            
+             url: "<?=base_url('airline_cabin/getAircraftTypes')?>",            
              data: "id=" + airline_id,            
              dataType: "html",                                  
              success: function(data) {               
