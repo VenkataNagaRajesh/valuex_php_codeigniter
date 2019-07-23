@@ -16,14 +16,12 @@
 			<div class="row">				
 				 <div class="profile-view-tab"> 
 					 <p><span><?=$this->lang->line("master_airport")?> </span>: <?=$airport->airport?></p>
-					 <p><span><?=$this->lang->line("master_country")?> </span>: <?=$airport->country?></p>
-					 <p><span><?=$this->lang->line("master_state")?> </span>: <?=$airport->state?></p>
+					 <p><span><?=$this->lang->line("master_country")?> </span>: <?=$airport->country?></p>				
 					 <p><span><?=$this->lang->line("master_region")?> </span>: <?=$airport->region?></p>
 					 <p><span><?=$this->lang->line("master_area")?> </span>: <?=$airport->area?></p>
 					 <p><span><?=$this->lang->line("master_code")?> </span>: <?=$airport->code?></p>
-					 <p><span><?=$this->lang->line("master_active")?> </span>: <?=$airport->active?></p>
-					 <p><span><?=$this->lang->line("master_latitude")?> </span>: <?=$airport->lat?></p>
-					 <p><span><?=$this->lang->line("master_longitude")?> </span>: <?=$airport->lng?></p>
+					 <p><span><?=$this->lang->line("master_active")?> </span>: <?=($airport->active)?'YES':'NO'?></p>
+					
 					 <p><span><?=$this->lang->line("airport_created_user")?> </span>: <?=$airport->modify_by?></p>
 					 <p><span><?=$this->lang->line("airport_created_date")?> </span>: <?=date('d/m/Y',$airport->modify_date)?></p>
 					 

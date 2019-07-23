@@ -9,11 +9,8 @@ class Airline extends Admin_Controller {
 		$this->load->model("market_airport_map_m");
 		$this->load->model("airline_m");
 		$language = $this->session->userdata('lang');
-		$this->lang->load('airline', $language); 
-         //$seat_capacityID = $this->airports_m->checkData('228 – 254',22,432);       
-         //print_r($seat_capacityID); exit;	
-       
-
+		$this->lang->load('airline', $language);
+        $this->data['icon'] = $this->menu_m->getMenu(array("link"=>"airports_master"))->icon; 		
 	}	
 	
 	protected function rules() {
@@ -57,7 +54,6 @@ class Airline extends Admin_Controller {
 		  }
 		   return TRUE;
 	}
-	
 	
 	protected function flightrules() {
 		$rules = array(
@@ -282,8 +278,8 @@ class Airline extends Admin_Controller {
 				 for($i=$from;$i<=$to;$i++){									
 					   $flights[] = $i; 									
 				 }
-                }                             						
-			    foreach($flights as $flight)  {	                      							  
+                }                          						
+			    foreach($flights as $flight){           							  
 			     $id = $this->airports_m->checkData($flight,16,$this->input->post('airlineID'));	 
 			    }								
 			  }					
@@ -345,12 +341,15 @@ class Airline extends Admin_Controller {
                             $val_status = $this->validateAirline($airline);                            
 						  if($val_status){
                             $validate_code = $this->airline_m->get_single_airline(array('code'=>$Row[$airline_code_key]));							  
-						   if(count($validate_code) < 1){
-                              $airline['aircraftID'] = $this->airports_m->checkData($Row[$aircraft_type_key],21);
+						  //if(count($validate_code) < 1){
+                              $aircraftID = $this->airports_m->checkData($Row[$aircraft_type_key],21);
 							  $seat_capacity = str_replace('-',' - ',$Row[$seat_capacity_key]);
-							  $seat_capacityID = $this->airports_m->checkData($seat_capacity,22,$airline['aircraftID']);	   
-                              $checkairline = $this->airline_m->add_airline($airline);					 
-							 if($checkairline->id){	 					  
+							  $seat_capacityID = $this->airports_m->checkData($seat_capacity,22,$aircraftID);	   
+                              //$checkairline = $this->airline_m->add_airline($airline);
+							  $checkairline = $this->airline_m->checkAirline($airline);	
+                               $airline_aircraftID = $this->airline_m->linkAirlineAircraft($checkairline->id,$aircraftID);							  
+							 if($checkairline->id){
+                                $this->airline_m->linkAirlineAircraft($checkairline->id,$aircraftID);						 
 							  $flights_array = explode(',',$Row[$flightno_key]); 
 							  foreach($flights_array as $flights_data){  	
 							 $code =null;$from=null;$to=null; $flights = array();
@@ -396,9 +395,9 @@ class Airline extends Admin_Controller {
 							 } else {
 								$this->mydebug->airlines_log("Airline :".$airline['name']." already  existed");								 
 							} 
-						  }else{
+						 /*  }else{
 							$this->mydebug->airlines_log("Airline Code must be UNIQUE ".$airline['name'].' - '.$airline['code']);
-						  }
+						  } */
 						}  						 
 					   } else {
 						   $this->mydebug->airlines_log("file format no matched file name : ".$_FILES['file']['name']);
@@ -518,10 +517,10 @@ class Airline extends Admin_Controller {
                   $sWhere .= 'd.vx_aln_data_defnsID = '.$this->session->userdata('login_user_airlineID');		
             } 		   
 		  
-		  $sGroup = " GROUP BY vx_aln_data_defnsID, aircraft, seat_capacity ";  
+		  $sGroup = " GROUP BY d.vx_aln_data_defnsID ";  
          $ss = "select d.*,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID where d.aln_data_typeID = 12 group by d.vx_aln_data_defnsID"  ;
 		   
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS d.*,ac.aln_data_value as aircraft,sc.aln_data_value as seat_capacity ,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID LEFT JOIN vx_aln_data_defns ac ON (ac.vx_aln_data_defnsID = d.parentID AND ac.aln_data_typeID = 21) LEFT JOIN vx_aln_data_defns sc ON (sc.parentID = ac.vx_aln_data_defnsID AND sc.aln_data_typeID = 22) 
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS d.*,group_concat( distinct ac.aln_data_value,'/',sc.aln_data_value) as aircraft_seat_capacity,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID LEFT JOIN VX_airline_aircraft aa ON aa.airlineID = d.vx_aln_data_defnsID LEFT JOIN vx_aln_data_defns ac ON (ac.vx_aln_data_defnsID = aa.aircraftID AND ac.aln_data_typeID = 21) LEFT JOIN vx_aln_data_defns sc ON (sc.parentID = aa.aircraftID AND sc.aln_data_typeID = 22) 
 		$sWhere
         $sGroup		
 		$sOrder		
@@ -565,6 +564,16 @@ class Airline extends Admin_Controller {
             $flights_data = implode(',',array_map(function ($object) { return $object->aln_data_value; }, $flights));
 			$airline->flights = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="'.$flights_data.'"><i class="fa fa-list"></i></a>';
 			// $airline->flightss = $flights;
+			$aircraft_seat_capacity = explode(',',$airline->aircraft_seat_capacity);
+			$aircraft =array(); $seat_capacity = array();
+			foreach($aircraft_seat_capacity as $asc){				
+				$info = explode('/',$asc);
+				$aircraft[] = $info[0];
+                $seat_capacity[] = $info[1];				
+			}
+			//$airline->aircraft = implode('/',$airline->aircraft_seat_capacity);
+			$airline->aircraft = implode(',',$aircraft);
+			$airline->seat_capacity = implode(',',$seat_capacity);
 			$output['aaData'][] = $airline;				
 		}
 		echo json_encode( $output );
@@ -601,7 +610,18 @@ class Airline extends Admin_Controller {
 			$json['data'] = $this->airline_m->getAirlineData($this->input->post('airlineID'));
 		} else {
 			$json['data'] = "Send ID";
-		}		
+		}
+		$aircraft =array(); $seat_capacity = array();
+		$aircraft_seat_capacity = explode(',',$json['data']->aircraft_seat_capacity);
+		$this->mydebug->debug($aircraft_seat_capacity);
+		 foreach($aircraft_seat_capacity as $asc){
+            $this->mydebug->debug($asc);			 
+		    $info = explode('/',$asc);
+			$aircraft[] = $info[0];
+            $seat_capacity[] = $info[1]; 
+         }				
+		$json['data']->aircraft = implode(',',$aircraft);
+		$json['data']->seat_capacity = implode(',',$seat_capacity);
 		$this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($json)); 
 	}

@@ -2,7 +2,7 @@
 
 /* List Language  */
 $lang['panel_title'] = "Data Definitions";
-$lang['add_title'] = "Add Data";
+$lang['add_title'] = "Add";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
 

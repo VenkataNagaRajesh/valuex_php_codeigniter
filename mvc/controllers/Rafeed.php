@@ -12,6 +12,7 @@ class Rafeed extends Admin_Controller {
 		$language = $this->session->userdata('lang');
 		
 		$this->lang->load('rafeed', $language);	
+		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"rafeed"))->icon;
 	}	
 	
 	
@@ -157,6 +158,7 @@ class Rafeed extends Admin_Controller {
 			   if(move_uploaded_file($file, APPPATH."/uploads/".$_FILES['file']['name'])){		
 
 				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
+				 $this->mydebug->rafeed_log("Processing the excel file " . $_FILES['file']['name'] , 0);
 				$Reader = new SpreadsheetReader($file); 
 				$header = array_map('strtolower', array("Airline Code","Ticket Number", "Coupon Number", "Carrier","Flight Number","Boarding Point","Off Point","CPN Value","Class","Flight Date","Fare Basis","Cabin","Booking Country","Booking City","Issuance Country","Issuance City","Marketing Airline Code","Operating Airline Code","OfficeID","Channel","Pax Type"));
                                  $header = array_map('strtolower', $header);
@@ -167,7 +169,9 @@ class Rafeed extends Admin_Controller {
 			foreach ($Sheets as $Index => $Name){                 					
 			   $Reader -> ChangeSheet($Index);
 			   $i = 0;
+			  $column = 0;
 			   foreach ($Reader as $Row){
+				$column++;
 			//	print_r($Row);exit;
 				if($i == 0){ // header checking						
 					
@@ -175,65 +179,206 @@ class Rafeed extends Admin_Controller {
 				  $Row = array_map('trim', $Row);
 				   $import_header = array_map('strtolower', $Row);
 				  if(count(array_diff($header,$import_header)) == 0){
+					$this->mydebug->rafeed_log("Header matched for " . $_FILES['file']['name'] , 0);
+					$this->mydebug->rafeed_log("Processing records.. ", 0 );
 						 $flag = 1;
 				   }				  
 				 } else {
 				      if($flag == 1){ 						   										
-				   if(count($Row) == 21){ //print_r($Row); exit;
+				   if(count($Row) == 21){ 
+					$this->mydebug->rafeed_log("coulmns count matched , uploading data for row " . $column , 0);
 					$rafeed = array();
 					$num =  explode('E',$Row[array_search('ticket number',$import_header)]);
 					$num1 = explode('.',$num[0]);
-	 			      $rafeed['ticket_number'] =  $num1[0];
+	 			        $rafeed['ticket_number'] =  $num1[0];
+					if(!ctype_digit($rafeed['ticket_number']) || strlen($rafeed['ticket_number']) != '13'){
+						$this->mydebug->rafeed_log("Ticket Number should be integer and 13 digits in row " . $column, 1);
+                                                continue;
+					}
 				      $rafeed['coupon_number'] = $Row[array_search('coupon number',$import_header)];
+					if(!is_numeric($rafeed['coupon_number']) || strlen($rafeed['coupon_number']) >= '2'){
+                                                $this->mydebug->rafeed_log("Coupon should be integer and single digit in row " . $column, 1);
+                                                continue;
+                                        }
+
+
 				      $rafeed['prorated_price'] = $Row[array_search('cpn value',$import_header)];
+					if(!is_numeric($rafeed['prorated_price'])){
+                                                $this->mydebug->rafeed_log("PRice should be numeric in row " . $column, 1);
+                                                continue;
+                                        }
+	
+					
 				      $rafeed['airline_code'] = $Row[array_search('airline code',$import_header)];
+				      if(!is_numeric($rafeed['airline_code']) || strlen($rafeed['airline_code']) != 3){
+						$this->mydebug->rafeed_log("Airline Code should be 3 digits  and integer in row " . $column, 1);
+						continue;
+					}
 				      $rafeed['fare_basis'] = $Row[array_search('fare basis',$import_header)];
+					$carrier = $Row[array_search('carrier',$import_header)];
    				      $rafeed['carrier'] = 
-					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('carrier',$import_header)],'12');
+					    $this->airports_m->getDefIdByTypeAndCode($carrier,'12');
+
+					if(strlen($carrier) >= 3 || !ctype_alpha($carrier)){
+                                                $this->mydebug->rafeed_log("Carrier should  be 2 alpha code in row " . $column, 1);
+                                                continue;
+                                        }
+
+					$booking_country = $Row[array_search('booking country',$import_header)];
 				      $rafeed['booking_country'] = 
-					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('booking country',$import_header)],'2');
+					    $this->airports_m->getDefIdByTypeAndCode($booking_country,'2');
+
+					  if(strlen($booking_country) >= 3 || !ctype_alpha($booking_country)){
+                                                $this->mydebug->rafeed_log("Boking country should be 2 alpha code in row " . $column, 1);
+                                                continue;
+                                        }
+
+					$booking_city = $Row[array_search('booking city',$import_header)];
 				      $rafeed['booking_city'] = 
-					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('booking city',$import_header)],'3');
+					    $this->airports_m->getDefIdByTypeAndCode($booking_city,'3');
+	
+
+					if(strlen($booking_city) >= 4 || !ctype_alpha($booking_city)){
+                                                $this->mydebug->rafeed_log("Boking city should be 3 alpha code in row " . $column, 1);
+                                                continue;
+                                        }
+
+					$issuance_country = $Row[array_search('issuance country',$import_header)];
 				      $rafeed['issuance_country'] = 
-					   $this->airports_m->getDefIdByTypeAndCode($Row[array_search('issuance country',$import_header)],'2');
+					   $this->airports_m->getDefIdByTypeAndCode($issuance_country,'2');
+
+					 if(strlen($issuance_country) >= 3 || !ctype_alpha($issuance_country)){
+                                                $this->mydebug->rafeed_log("Issueance country should be 2 alpha code in row " . $column, 1);
+                                                continue;
+                                        }
+
+					$issuance_city = $Row[array_search('issuance city',$import_header)];
                                       $rafeed['issuance_city'] = 
-					     $this->airports_m->getDefIdByTypeAndCode($Row[array_search('issuance city',$import_header)],'3');
+					     $this->airports_m->getDefIdByTypeAndCode($issuance_city,'3');
+
+					 if(strlen($issuance_city) >= 4 || !ctype_alpha($issuance_city)){
+                                                $this->mydebug->rafeed_log("Issueance city should be 3 alpha code in row " . $column, 1);
+                                                continue;
+                                        }
+
+					$boarding_point = $Row[array_search('boarding point',$import_header)];
+
 				      $rafeed['boarding_point'] =
-					     $this->airports_m->getDefIdByTypeAndCode($Row[array_search('boarding point',$import_header)],'1');
+					     $this->airports_m->getDefIdByTypeAndCode($boarding_point,'1');
+
+					if(strlen($boarding_point) >= 4 || !ctype_alpha($boarding_point)){
+                                                $this->mydebug->rafeed_log(" Boarding point should be 3 alpha code in row " . $column, 1);
+                                                continue;
+                                        }
+
+					$off_point = $Row[array_search('off point',$import_header)];
 
 				      $rafeed['off_point'] =
-					     $this->airports_m->getDefIdByTypeAndCode($Row[array_search('off point',$import_header)],'1');
+					     $this->airports_m->getDefIdByTypeAndCode($off_point,'1');
+                                       if(strlen($off_point) >= 4 || !ctype_alpha($off_point)){
+                                                $this->mydebug->rafeed_log("Off point should be 3 alpha code in row " . $column, 1);
+                                                continue;
+                                        }
+					$cabin = $Row[array_search('cabin',$import_header)];
 				      $rafeed['cabin'] = 
-					     $this->airports_m->getDefIdByTypeAndCode($Row[array_search('cabin',$import_header)],'13');
+					     $this->airports_m->getDefIdByTypeAndCode($cabin,'13');
+					$cabin_arr = array('Y','W','C','F');
+					if(!in_array($cabin,$cabin_arr)){
+						$this->mydebug->rafeed_log("cabin should in Y,W,C,F " . $column, 1);
+						continue;
+					}
   				      $rafeed['class'] = $Row[array_search('class',$import_header)];
+					$class_arr = range('A','Z');
+					 if(!in_array($rafeed['class'],$class_arr)){
+                                                $this->mydebug->rafeed_log("class should be in A-Z " . $column, 1);
+                                                continue;
+                                        }
+
+					
 				      $rafeed['departure_date'] =  
 					     strtotime(str_replace('-','/',$Row[array_search('flight date',$import_header)]));
 				      $day_of_week = date('w', $rafeed['departure_date']);
 				      $day = ($day_of_week)?$day_of_week:7;
 				      $rafeed['day_of_week'] = $this->airports_m->getDefIdByTypeAndCode($day,'14');
+
+					$marketing_airline_code = $Row[array_search('marketing airline code',$import_header)];
 				      $rafeed['marketing_airline_code'] = 
-					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('marketing airline code',$import_header)],'12');
+					    $this->airports_m->getDefIdByTypeAndCode($marketing_airline_code,'12');
+
+				 if(strlen($marketing_airline_code) >= 3 || !ctype_alpha($marketing_airline_code)){
+                                                $this->mydebug->rafeed_log("MKT airine should be 2 alpha code in row " . $column, 1);
+                                                continue;
+                                        }
+
+					$operating_airline_code = $Row[array_search('operating airline code',$import_header)];
                                       $rafeed['operating_airline_code']= 
-					    $this->airports_m->getDefIdByTypeAndCode($Row[array_search('operating airline code',$import_header)],'12');
+					    $this->airports_m->getDefIdByTypeAndCode($operating_airline_code,'12');
+
+
+					 if(strlen($operating_airline_code) >= 3 || !ctype_alpha($operating_airline_code)){
+                                                $this->mydebug->rafeed_log("Operating airline should be 2 alpha code in row " . $column, 1);
+                                                continue;
+                                        }
 					$season_id = $this->season_m->getSeasonForDateANDAirlineID($rafeed['departure_date'],$rafeed['carrier'],$rafeed['boarding_point'],$rafeed['off_point']);
 				     $rafeed['season_id'] = $season_id; 
 					$rafeed['flight_number'] = substr($Row[array_search('flight number',$import_header)], 2);
+
+					if(strlen($rafeed['flight_number']) >= 7 ){
+                                                $this->mydebug->rafeed_log("Flight number should not be more than 6 AlphaNumeric code in row " . $column, 1);
+                                                continue;
+                                        }
+
                                       $rafeed['office_id'] = $Row[array_search('officeid',$import_header)];
 				      $rafeed['channel']= $Row[array_search('channel',$import_header)];
-                                      $rafeed['pax_type'] =  $this->airports_m->getDefIdByTypeAndCode($Row[array_search('pax type',$import_header)],'18');
+					$pax_type = $Row[array_search('pax type',$import_header)];
+                                      $rafeed['pax_type'] =  $this->airports_m->getDefIdByTypeAndCode($pax_type,'18');
+
+					 if(strlen($pax_type) >= 4 || !ctype_alpha($pax_type)){
+                                                $this->mydebug->rafeed_log("Pax type code should be 2 alpha code in row " . $column, 1);
+                                                continue;
+                                        }
+
 					//var_dump($rafeed);exit;
 						if($this->rafeed_m->checkRaFeed($rafeed)) {
 								
-                                                           $rafeed['create_date'] = time();
+							$insert_flag = 1;
+							foreach ($rafeed as $k=>$v) {
+								if($k != 'day_of_week' && $k != 'season_id') {
+									if($v == '' ){
+									$this->mydebug->rafeed_log("There is null value column ".$k. " in row " . $column, 1);
+									$insert_flag = 0;
+								}
+								}
+							 }
+
+							if ( $insert_flag == '1' ) {
+                                                          $rafeed['create_date'] = time();
                                                           $rafeed['modify_date'] = time();
                                                           $rafeed['create_userID'] = $this->session->userdata('loginuserID');
                                                           $rafeed['modify_userID'] = $this->session->userdata('loginuserID');
 						//	print_r($rafeed);exit;
-                                                        $this->rafeed_m->insert_rafeed($rafeed);
+                                                       		 $insert_id = $this->rafeed_m->insert_rafeed($rafeed);
+								if ( $insert_id ) {
+								$this->mydebug->rafeed_log("uploaded row " . $column , 0);
+								} else{
+
+									$this->mydebug->rafeed_log("Record not inserted for row " . $column , 0);
+								}
+							} else {
+
+								$this->mydebug->rafeed_log("Not proper data for  row " . $column, 1);
+								continue;
+							}
+						}else{
+							$this->mydebug->rafeed_log("Duplicate Entry", 1);
 						}
 
 					   	 } 						
+						else{
+							$this->mydebug->rafeed_log("coulmns count didn't match for " . $column, '1');
+						}
 					   } else {
+						$this->mydebug->rafeed_log("Header mismatch", 1);
 						   print_r("mismatch");
 					   }
 					 }

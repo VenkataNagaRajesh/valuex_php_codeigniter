@@ -1,8 +1,7 @@
 
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa icon-template"></i> <?=$this->lang->line('panel_title')?></h3>
-
+        <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active"><?=$this->lang->line('menu_datatype')?></li>
@@ -30,7 +29,7 @@
                                 <th class="col-lg-4"><?=$this->lang->line('datatype_name')?></th>
 								<th class="col-lg-4"><?=$this->lang->line('datatype_alias')?></th>
                                 <?php if(permissionChecker('usertype_edit') || permissionChecker('usertype_delete')) { ?>
-                                <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
                             </tr>
                         </thead>

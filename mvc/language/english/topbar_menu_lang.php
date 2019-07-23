@@ -171,12 +171,12 @@ $lang['menu_rafeed'] = 'Revenue Accouting Feed';
 $lang['menu_invfeed'] = 'INV feed';
 $lang['menu_datatype'] = 'Datatype';
 $lang['menu_airline_cabin_class'] = 'Carrier Cabin Class Mapping'; 
-$lang['menu_paxfeed'] = 'Daily Tkt Pax Feed';
+$lang['menu_paxfeed'] = 'PAX Feed';
 $lang['menu_fclr'] = 'Fare Control Range';
 $lang['menu_acsr'] = 'Auto Confirm SetUp Rule';
 $lang['menu_offer_eligibility'] = 'Offer Eligibility';
 $lang['menu_event_status'] = 'Event Status';
 
-$lang['menu_offer_issue'] = 'Offer Issueance Management';
-$lang['menu_offer_table'] = 'Offer Management';
+$lang['menu_offer_issue'] = 'Offer';
+$lang['menu_offer_table'] = 'Bid';
 /* End Update Menu */

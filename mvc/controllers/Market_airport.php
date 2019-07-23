@@ -8,6 +8,7 @@ class Market_airport extends Admin_Controller {
 		$this->load->model("airports_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('market_airport', $language);
+		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"market_airport"))->icon;
 	}
 
 
@@ -32,17 +33,46 @@ class Market_airport extends Admin_Controller {
                   $this->data['marketID'] = 0;
                 }
                 if(!empty($this->input->post('airport_id'))){
-                $this->data['airportID'] = $this->input->post('airort_id');
+                $this->data['airportID'] = $this->input->post('airport_id');
                 } else {
                   $this->data['airportID'] = 0;
                 }
 
-		if($this->session->userdata('usertypeID') == 2){
-		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
-		} else {
-		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones();
-		}
-		$this->data['airports_list'] = $this->airports_m->getDefns('1');
+
+
+		if(!empty($this->input->post('country_id'))){
+                $this->data['countryID'] = $this->input->post('country_id');
+                } else {
+                  $this->data['countryID'] = 0;
+                }
+
+
+		if(!empty($this->input->post('region_id'))){
+                $this->data['regionID'] = $this->input->post('region_id');
+                } else {
+                  $this->data['regionID'] = 0;
+                }
+
+
+		if(!empty($this->input->post('city_id'))){
+                $this->data['cityID'] = $this->input->post('city_id');
+                } else {
+                  $this->data['cityID'] = 0;
+                }
+
+		 if($this->session->userdata('usertypeID') == 2){
+                  $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,$this->session->userdata('login_user_airlineID'));
+                } else {
+                  $this->data['marketzones'] = $this->marketzone_m->get_marketzones();
+                }
+
+
+		$this->data['airports_list'] = $this->airports_m->getDefnsCodesListByType('1');
+		$this->data['country_list'] = $this->airports_m->getDefnsCodesListByType('2');
+		$this->data['city_list'] = $this->airports_m->getDefnsCodesListByType('3');
+		$this->data['region_list'] = $this->airports_m->getDefnsCodesListByType('4');
+		
+
 		$this->data["subview"] = "market_airport/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -53,8 +83,7 @@ class Market_airport extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('mz.market_name','ma.aln_data_value','mc.aln_data_value','mct.aln_data_value',
-            'mr.aln_data_value' ,'mar.aln_data_value' ,'ma.code','m.active');
+	    $aColumns =  array('mz.market_id','mz.market_name','ma.code','mct.code','mc.code','mr.aln_data_value' ,'mar.aln_data_value','ma.aln_data_value','mct.aln_data_value','mc.aln_data_value');
                 $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -121,16 +150,33 @@ class Market_airport extends Admin_Controller {
                 	}
 
 
-                if($this->session->userdata('usertypeID') == 2){  
-                   $marketzones = $this->marketzone_m->get_marketzones(null,array($this->session->userdata('login_user_airlineID')));
-				   $markets = array_column($marketzones, 'market_id'); 	   
-			      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                  $sWhere .= 'mz.market_id IN ('.implode(', ', $markets).')';		
-                } 
+			if(!empty($this->input->get('cityID'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'm.cityID = '.$this->input->get('cityID');
+                        }
+
+			if(!empty($this->input->get('countryID'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'm.countryID = '.$this->input->get('countryID');
+                        }
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS mz.market_id,mz.market_name,ma.aln_data_value airport,mc.aln_data_value country, 
-		mct.aln_data_value as city,
+			if(!empty($this->input->get('regionID'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'm.regionID = '.$this->input->get('regionID');
+                        }
+
+
+                $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                         $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                        $sWhere .= 'mz.airline_id IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                
+                }
+
+
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS mz.market_id,mz.market_name,ma.code airport,mc.code country, 
+		mct.code as city,
             mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active FROM VX_aln_market_zone mz 
             JOIN VX_market_airport_map mam on (mam.market_id = mz.market_id) 
 

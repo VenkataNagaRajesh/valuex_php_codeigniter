@@ -107,9 +107,15 @@ class Rafeed_m extends MY_Model {
 
 
 	function insert_rafeed($array) {// echo "check"; exit;
-		$error = parent::insert($array);
-//		print_r($this->db->last_query); exit;
-		return TRUE;
+
+		  $this->db->insert('VX_aln_ra_feed',$array);
+                if ($this->db->affected_rows() > 0){
+                             return $this->db->insert_id();
+                } else {
+                        return FALSE;
+                }
+
+
 	}
 
 	function update_rafeed($data, $id = NULL) {

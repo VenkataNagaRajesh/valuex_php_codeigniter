@@ -1,5 +1,5 @@
 <div class="off-elg">
-	<h2 class="title-tool-bar">Offer Management</h2>
+	<h2 class="title-tool-bar">Bid Details</h2>
 	<div class="col-md-12 off-elg-filter-box">
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">	
 			<div class="form-group">
@@ -111,7 +111,7 @@
 							<th class="col-lg-1"><?=$this->lang->line('cash')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('miles')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_status')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('details')?></th>
+							<th class="col-lg-1 noExport"><?=$this->lang->line('details')?></th>
 						</tr>
 					 </thead>
 					 <tbody>                          
@@ -177,7 +177,13 @@ $("#dep_to_date").datepicker();
 
 				  ],			     
      dom: 'B<"clear">lfrtip',
-     buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+     //buttons: [ 'copy', 'csv', 'excel','pdf' ]
+      buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ]	 
     });
 	
 	

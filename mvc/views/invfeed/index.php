@@ -1,6 +1,6 @@
 <div class="box">
     <div class="box-header" style="width:100%;">
-        <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
+        <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
 
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
@@ -105,10 +105,10 @@
 						 <th class="col-lg-1"><?=$this->lang->line('empty_seats')?></th>
                                                 <th class="col-lg-1"><?=$this->lang->line('sold_seats')?></th>
 						
-						 <th class="col-lg-1"><?=$this->lang->line('active')?></th>
+						 <th class="col-lg-1 noExport"><?=$this->lang->line('active')?></th>
 
 						<?php if(permissionChecker('invfeed_delete') || permissionChecker('invfeed_view')){?>
-                                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
+                                                <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
 						<?php }?>
                     </tr>
                  </thead>
@@ -156,7 +156,13 @@
 				  {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
-     buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+    // buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+	 buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] 
     });
 	
 	

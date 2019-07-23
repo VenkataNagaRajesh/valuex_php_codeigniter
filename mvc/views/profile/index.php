@@ -40,94 +40,28 @@
         </div>
         <div class="panel-body profile-view-dis">
             <h1><?=$this->lang->line("personal_information")?></h1>
-            <?php if($usertypeID == 3) { ?>
+           
                 <div class="row">
                     <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_registerNO")?> </span>: <?=$user->registerNO?></p>
+                        <p><span><?=$this->lang->line("profile_name")?> </span>: <?=$user->name?></p>
                     </div>
                     <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_roll")?> </span>: <?=$user->roll?></p>
+                        <p><span><?=$this->lang->line("profile_email")?> </span>:<?=$user->email?></p>
                     </div>
                     <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_section")?> </span>: <?php if(count($section)) { echo $section[$user->sectionID];} ?></p>
+                        <p><span><?=$this->lang->line("profile_username")?> </span>: <?=$user->username?></p>
                     </div>
                     <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_dob")?> </span>: 
-                        <?php if($user->dob) { echo date("d M Y", strtotime($user->dob)); } ?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_sex")?> </span>: <?=$user->sex?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_bloodgroup")?> </span>: <?php if(isset($allbloodgroup[$user->bloodgroup])) { echo $user->bloodgroup; } ?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_religion")?> </span>: <?=$user->religion?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_email")?> </span>: <?=$user->email?></p>
+                        <p><span><?=$this->lang->line("profile_usertype")?> </span>: <?=$usertype[$user->usertypeID]?></p>
                     </div>
                     <div class="profile-view-tab">
                         <p><span><?=$this->lang->line("profile_phone")?> </span>: <?=$user->phone?></p>
                     </div>
                     <div class="profile-view-tab">
                         <p><span><?=$this->lang->line("profile_address")?> </span>: <?=$user->address?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_state")?> </span>: <?=$user->state?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_country")?> </span>: <?php if(isset($allcountry[$user->country])) { echo $allcountry[$user->country]; } ?></p>
-                    </div>
+                    </div>                   
                 </div>
-            <?php } elseif($usertypeID == 4) { ?>
-                <div class="row">
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_father_name")?> </span>: <?=$user->father_name?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_father_profession")?> </span>: <?=$user->father_profession?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_mother_name")?> </span>: <?=$user->mother_name?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_mother_profession")?> </span>: <?=$user->mother_profession?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_phone")?> </span>: <?=$user->phone?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_address")?> </span>: <?=$user->address?></p>
-                    </div>
-                </div>
-            <?php } else { ?>
-                <div class="row">
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_dob")?> </span>: <?php if($user->dob) { echo date("d M Y", strtotime($user->dob)); } ?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_jod")?> </span>: <?php if($user->jod) { echo date("d M Y", strtotime($user->jod)); } ?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_sex")?> </span>: <?=$user->sex?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_religion")?> </span>: <?=$user->religion?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_phone")?> </span>: <?=$user->phone?></p>
-                    </div>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_address")?> </span>: <?=$user->address?></p>
-                    </div>
-                    <?php if($usertypeID == 2) { ?>
-                    <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_designation")?> </span>: <?=$user->designation?></p>
-                    </div>
-                    <?php } ?>
-                </div>
-            <?php } ?>
+         
         </div>
     </section>
 </div>

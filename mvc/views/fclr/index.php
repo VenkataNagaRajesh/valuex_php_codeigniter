@@ -173,11 +173,16 @@
 						</div>
 					</div>
 					<div class="col-md-2 select-form">
-						<h4>Frequency</h4>
+						<h4>Frequency & FCLR ID</h4>
 						<div class="col-md-12">
 	
 		<input type="text" class="form-control" placeholder='frequency' id="sfrequency" name="sfrequency" value="<?=set_value('sfrequency')?>" >
 						</div>
+
+			  <div class="col-md-12">
+
+                <input type="text" class="form-control" placeholder='FCLR ID' id="sfclr_id" name="sfclr_id" value="<?=set_value('sfclr_id',$sfclr_id)?>" >
+                                                </div>
 						<div class="col-md-12">
 							<a href="#" type="button"  id='btn_txt' class="btn btn-danger form-control" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
 						</div>
@@ -206,8 +211,8 @@
 						<th class="col-lg-1"><?=$this->lang->line('min')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('max')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('slider_start')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('fclr_status')?></th>
-                        <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+						<th class="col-lg-1 noExport"><?=$this->lang->line('fclr_status')?></th>
+                        <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                     </tr>
                  </thead>
                  <tbody>                          
@@ -243,6 +248,7 @@ function loaddatatable() {
 		  {"name": "sfrom_cabin","value": $("#sfrom_cabin").val()},
                    {"name": "sto_cabin","value": $("#sto_cabin").val()},
 			 {"name": "sseason_id","value": $("#sseason_id").val()},
+			{"name": "sfclr_id","value": $("#sfclr_id").val()},
                    {"name": "scarrier","value": $("#scarrier").val()},
 
                   
@@ -274,7 +280,13 @@ function loaddatatable() {
                   {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
-     buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+    // buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+	 buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] 
     });
 	
 	

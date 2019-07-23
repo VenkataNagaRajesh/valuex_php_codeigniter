@@ -11,7 +11,8 @@ class Invfeed extends Admin_Controller {
 		$this->load->model("airline_m");
 		$this->load->model('airports_m');
 		$language = $this->session->userdata('lang');
-		$this->lang->load('invfeed', $language);	
+		$this->lang->load('invfeed', $language);
+        $this->data['icon'] = $this->menu_m->getMenu(array("link"=>"invfeed"))->icon;			
 	}	
 	
 	
@@ -108,7 +109,7 @@ class Invfeed extends Admin_Controller {
 				$header = array_map('strtolower', $header);
 				$Sheets = $Reader -> Sheets();
 					
-
+			$this->mydebug->invfeed_log("Processing the excel file " . $_FILES['file']['name'] , 0);
 	
                         //      print_r(count($header)); exit;
                                 $Sheets = $Reader -> Sheets();
@@ -118,26 +119,60 @@ class Invfeed extends Admin_Controller {
                                    $Reader -> ChangeSheet($Index);
                                    $i = 0;
                  //$time_start = microtime(true);                                          
+				$column = 0;
                                   foreach ($Reader as $Row){
+					$column++;
                                     //  print_r($Row);exit;
                                         if($i == 0){ // header checking                                         
-
+						
                                           $flag = 0 ;
 					 $Row = array_map('trim', $Row);
                                          $import_header = array_map('strtolower', $Row);
                                          if(count(array_diff($header,$import_header)) == 0 ){
+						$this->mydebug->invfeed_log("Header Matched for " . $_FILES['file']['name'] , 0);
                                                  $flag = 1;
                                          }
                                         } else {
                                            if($flag == 1){                                                                                      						
 					   	 if(count($Row) == 7){ //print_r($Row); exit;						
+							$this->mydebug->invfeed_log("coulmns count matched , uploading data for row " . $column , 0);
 							$invfeedraw = array();
 							$invfeedraw['airline'] = $Row[array_search('airline code',$import_header)];
+							if(strlen($invfeedraw['airline']) != '2' || !ctype_alpha($invfeedraw['airline'])){
+								 $this->mydebug->invfeed_log("Carrier code should be 2 charcters " . $column , 1);
+								 continue;
+							}
 							$invfeedraw['flight_nbr'] = $Row[array_search('flight nbr',$import_header)];
+							if(strlen($invfeedraw['flight_nbr']) >= '7'){
+
+								 $this->mydebug->invfeed_log("Flight number should not be more than 6 charcters " . $column , 1);
+                                                                continue;
+							}
 							$invfeedraw['departure_date'] = $Row[array_search('dept date',$import_header)];
 							 $invfeedraw['origin_airport'] = $Row[array_search('origin airport',$import_header)];
+							 if(strlen($invfeedraw['origin_airport']) != '3' || !ctype_alpha($invfeedraw['origin_airport'])){
+
+									 $this->mydebug->invfeed_log("Origin Airport  should be 3 charcters " . $column , 1);
+								continue;
+							}
 							$invfeedraw['dest_airport'] = $Row[array_search('destination airport',$import_header)];
+
+							if (strlen($invfeedraw['dest_airport']) != '3' || !ctype_alpha($invfeedraw['dest_airport'])){
+
+							 $this->mydebug->invfeed_log("Dest Airport should be 3 charcters " . $column , 1);
+                                                                continue;
+
+							}
+
+							$cabin_arr = array('Y','W','C','F');
+
 							$invfeedraw['cabin'] =  $Row[array_search('cabin',$import_header)];
+							if(!in_array($invfeedraw['cabin'],$cabin_arr)){
+
+								$this->mydebug->invfeed_log("Cabin should be in Y,W,C,F " . $column , 1);
+                                                                continue;
+
+							}
 							$invfeedraw['empty_seats'] = $Row[array_search('empty seats',$import_header)];
 							//$invfeedraw['sold_seats'] = $Row[array_search('sold seats',$import_header)];
                                                            $invfeedraw['create_date'] = time();
@@ -146,7 +181,8 @@ class Invfeed extends Admin_Controller {
                                                           $invfeedraw['modify_userID'] = $this->session->userdata('loginuserID');
 								$invfeed_raw_id = $this->invfeedraw_m->insert_invfeedraw($invfeedraw);
 							if($invfeed_raw_id) {
-								$invfeed = array();
+							 $this->mydebug->invfeed_log("Inserted raw field for row " . $column , 0);	
+							$invfeed = array();
 
 	 						$invfeed['airline_id'] =  $this->airports_m->getDefIdByTypeAndCode($invfeedraw['airline'],'12'); 
                                                          $invfeed['flight_nbr'] = substr($invfeedraw['flight_nbr'],2);
@@ -155,6 +191,21 @@ class Invfeed extends Admin_Controller {
 							 $invfeed['dest_airport'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['dest_airport'],'1');
                                                          $invfeed['cabin'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['cabin'],13);
                                                          $invfeed['empty_seats'] = $invfeedraw['empty_seats'] ;
+
+                                                        $insert_flag = 1;
+                                                        foreach ($invfeed as $k=>$v) {
+                                                                        if($v == '' ){
+                                                                        $this->mydebug->invfeed_log("There is null value column ".$k. " in row " . $column, 1);
+                                                                        $insert_flag = 0;
+                                                                }
+                                                         }
+
+							if ($insert_flag == 0 ) {
+								$this->mydebug->invfeed_log("Improper data for row " . $column, 1);
+								continue;
+
+							} else {
+
                                                          //$invfeed['sold_seats'] =   $invfeedraw['sold_seats'];
 							$inv_feed_id = $this->invfeed_m->checkInvFeed($invfeed);
 						if($inv_feed_id) {
@@ -164,8 +215,7 @@ class Invfeed extends Admin_Controller {
 							$update['modify_date'] = time();
 							$update['modify_userID'] = $this->session->userdata('loginuserID');
 							$this->invfeed_m->update_entries($update,$invfeed);
-
-						 }
+						  }
 
 							// insert new entry
 							$invfeed['invfeedraw_id'] = $invfeed_raw_id;	
@@ -174,7 +224,15 @@ class Invfeed extends Admin_Controller {
                                                           $invfeed['create_userID'] = $this->session->userdata('loginuserID');
                                                           $invfeed['modify_userID'] = $this->session->userdata('loginuserID');
 						//	print_r($rafeed);exit;
-                                                        $this->invfeed_m->insert_invfeed($invfeed);
+
+		                                           $insert_id = $this->invfeed_m->insert_invfeed($invfeed);
+							if($insert_id) {
+							 	$this->mydebug->invfeed_log("Inserted data for row " . $column, 0);
+							} else{ 
+								$this->mydebug->invfeed_log("Not created record, check data " . $column, 0);
+							}
+
+						}
 						}
 					   	 } 						
 					   } else {

@@ -23,8 +23,8 @@ class Bidding extends MY_Controller {
 	}
   
     public function index() {  
-     $this->session->set_userdata('pnr_ref','F90488');
-     $this->session->set_userdata('validation_check',1);	   
+     // $this->session->set_userdata('pnr_ref','F90487');
+     // $this->session->set_userdata('validation_check',1);	   
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
 			$this->session->unset_userdata('pnr_ref');
@@ -140,6 +140,7 @@ class Bidding extends MY_Controller {
 			 // $this->mydebug->debug($extention_data->p_list);		 
 			   
               $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $no_bid_Status,"modify_date"=>time()),$p_list);
+			  $json['status'] = "success";
 		  }		  
 		}else{
 			$json['status'] = "send offer_id";
@@ -233,7 +234,11 @@ class Bidding extends MY_Controller {
 			   $tot_bid = $this->input->post("tot_bid");
 			   $ref['offer_status'] = $select_status;
 			   $ref["modify_date"] = time();
-			   $ref["cash_percentage"] = round((($ref['cash']/ $tot_bid)*100),2);
+			   if($tot_bid != 0){
+			    $ref["cash_percentage"] = round((($ref['cash']/ $tot_bid)*100),2);
+			   } else {
+				$ref["cash_percentage"] = 0;   
+			   }
 			   $this->mydebug->debug("cash per :".$ref["cash_percentage"]);
 			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
 			if($id){

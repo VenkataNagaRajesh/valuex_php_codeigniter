@@ -5,7 +5,10 @@ class Airports_m extends MY_Model {
   public function checkData($data,$type,$parent = null,$code=null){
 	$this->db->select('*')->from('vx_aln_data_defns');
 	  $this->db->where(array('aln_data_value'=>$data,'aln_data_typeID'=> $type));
-	  $query = $this->db->get();	
+	  if($parent != null){
+		  $this->db->where('parentID',$parent);
+	  }
+	  $query = $this->db->get();	$this->mydebug->debug($this->db->last_query());
 	  if (count($query->result()) > 0) {
        return $query->row('vx_aln_data_defnsID');
       } else {
@@ -21,7 +24,7 @@ class Airports_m extends MY_Model {
 		);
       $this->db->insert('vx_aln_data_defns',$array);
 	 // $this->mydebug->debug($data);
-	 //$this->mydebug->debug($this->db->last_query());
+	 $this->mydebug->debug($this->db->last_query());
 	  if ($this->db->affected_rows() > 0){
 	     return $this->db->insert_id();
 	  } else {
@@ -190,7 +193,7 @@ public function getDefnsCodesListByType($type) {
   }
   
   public function get_definition_data($id){
-	  $this->db->select('dd.*,dd1.aln_data_value parent,u.name modify_by,t.name type')->from('vx_aln_data_defns dd');
+	  $this->db->select('dd.*,dd1.aln_data_value parent,u.name modify_by,t.name type,t.alias type_alias')->from('vx_aln_data_defns dd');
 	  $this->db->join('vx_aln_data_defns dd1','dd1.vx_aln_data_defnsID = dd.parentID','LEFT');
 	  $this->db->join('vx_aln_data_types t','t.vx_aln_data_typeID = dd.aln_data_typeID','LEFT');
 	  $this->db->join('user u','u.userID = dd.modify_userID','LEFT');

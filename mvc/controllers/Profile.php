@@ -1,29 +1,17 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Profile extends Admin_Controller {
-/*
-| -----------------------------------------------------
-| PRODUCT NAME: 	INILABS SCHOOL MANAGEMENT SYSTEM
-| -----------------------------------------------------
-| AUTHOR:			INILABS TEAM
-| -----------------------------------------------------
-| EMAIL:			info@inilabs.net
-| -----------------------------------------------------
-| COPYRIGHT:		RESERVED BY INILABS IT
-| -----------------------------------------------------
-| WEBSITE:			http://inilabs.net
-| -----------------------------------------------------
-*/
+
 	function __construct() {
 		parent::__construct();
 		$this->load->model('usertype_m');
-		$this->load->model('section_m');
-		$this->load->model("student_m");
-		$this->load->model("parents_m");
-		$this->load->model("teacher_m");
+		//$this->load->model('section_m');
+		//$this->load->model("student_m");
+		//$this->load->model("parents_m");
+		//$this->load->model("teacher_m");
 		$this->load->model("user_m");
-		$this->load->model("systemadmin_m");
-		$this->load->model('studentrelation_m');
+		//$this->load->model("systemadmin_m");
+		//$this->load->model('studentrelation_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('profile', $language);
 	}
@@ -31,22 +19,13 @@ class Profile extends Admin_Controller {
 	public function index() {
 		$usertypeID = $this->session->userdata("usertypeID");
 		$username = $this->session->userdata('username');
-		if($usertypeID == 1) {
-			$this->data['user'] = $this->systemadmin_m->get_single_systemadmin(array('username' => $username));
-		} elseif($usertypeID == 2) {
-			$this->data['user'] = $this->teacher_m->get_single_teacher(array('username' => $username));
-		} elseif($usertypeID == 3) {
-			$this->data['user'] = $this->student_m->get_single_student(array('username' => $username));
-			$this->data['section'] = pluck($this->section_m->get_section(), 'section', 'sectionID'); 
-			$this->data['classes'] = pluck($this->classes_m->get_classes(), 'classes', 'classesID');
-		} elseif($usertypeID == 4) {
-			$this->data['user'] = $this->parents_m->get_single_parents(array("username" => $username));
-		} else {
-			$this->data['user'] = $this->user_m->get_single_user(array("username" => $username));
-		}
 		
+			$this->data['user'] = $this->user_m->get_single_user(array("username" => $username));
+		
+	
 		$this->data['usertypeID'] =$usertypeID;
 		$this->data['usertype'] = pluck($this->usertype_m->get_usertype(), 'usertype', 'usertypeID');
+		//print_r($this->data['usertype']); exit;
 		if($this->data['user']) {
 			$this->data["subview"] = "profile/index";
 			$this->load->view('_layout_main', $this->data);
@@ -156,11 +135,11 @@ class Profile extends Admin_Controller {
 		$passUserData = array();
 		$username = $this->session->userdata('username');
 		if($username) {
-			$tables = array('student' => 'student', 'parents' => 'parents', 'teacher' => 'teacher', 'user' => 'user', 'systemadmin' => 'systemadmin');
+			$tables = array('user' => 'user');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $table) {
-				$user = $this->student_m->get_single_username($table, array('username' => $username ));
+				$user = $this->user_m->get_single_username($table, array('username' => $username ));
 				if(count($user)) {
 					$this->form_validation->set_message("unique_email", "%s already exists");
 					$passUserData = $user;
@@ -229,28 +208,11 @@ class Profile extends Admin_Controller {
 		$usertypeID = $this->session->userdata('usertypeID');
 		$username = $this->session->userdata('username');
 		$this->data['usertypeID'] = $usertypeID;
-		if($usertypeID == 1) {
-			$rules = $this->rules();
-			unset($rules[7], $rules[8], $rules[9], $rules[10], $rules[12], $rules[13], $rules[14], $rules[15], $rules[16]);
-			$this->data['user'] = $this->systemadmin_m->get_single_systemadmin(array('username' => $username));
-		} elseif($usertypeID == 2) {
-			$rules = $this->rules();
-			unset($rules[7], $rules[8], $rules[9], $rules[10], $rules[12], $rules[13], $rules[14], $rules[15], $rules[16]);
-			$this->data['user'] = $this->teacher_m->get_single_teacher(array('username' => $username));
-		} elseif($usertypeID == 3) {
-			$rules = $this->rules();
-			unset($rules[11], $rules[12], $rules[13], $rules[14], $rules[15], $rules[16]);
-			$this->data['user'] = $this->student_m->get_single_student(array('username' => $username));
-		} elseif($usertypeID == 4) {
-			$rules = $this->rules();
-			unset($rules[1], $rules[2], $rules[6], $rules[7], $rules[8], $rules[9], $rules[11], $rules[12]);
-			$this->data['user'] = $this->parents_m->get_single_parents(array('username' => $username));
-		} else {
+		
 			$rules = $this->rules();
 			unset($rules[7], $rules[8], $rules[9], $rules[10], $rules[12], $rules[13], $rules[14], $rules[15], $rules[16]);
 			$this->data['user'] = $this->user_m->get_single_user(array('username' => $username));
-		}
-
+		
 
 		if($_POST) {
 			$this->form_validation->set_rules($rules);
@@ -315,7 +277,7 @@ class Profile extends Admin_Controller {
 		if($this->input->post('email')) {
 			$username = $this->session->userdata('username');
 			if($username) {
-				$tables = array('student' => 'student', 'parents' => 'parents', 'teacher' => 'teacher', 'user' => 'user', 'systemadmin' => 'systemadmin');
+				$tables = array('user' => 'user');
 				$array = array();
 				$i = 0;
 				foreach ($tables as $table) {

@@ -1,6 +1,6 @@
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
+        <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active"><?=$this->lang->line('menu_acsr')?></li>
@@ -191,8 +191,8 @@
                                 <th class="col-lg-1"><?=$this->lang->line('min_bid_price')?></th>
 				 <th class="col-lg-1"><?=$this->lang->line('frequency')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('action_type')?></th>
-				 <th class="col-lg-1"><?=$this->lang->line('rule_status')?></th> 
-                                <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+				 <th class="col-lg-1 noExport"><?=$this->lang->line('rule_status')?></th> 
+                                <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                             </tr>
                         </thead>
                         <tbody>                            
@@ -258,7 +258,13 @@ $(document).ready(function() {
                                   ],                       
         //"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']  
         dom: 'B<"clear">lfrtip',
-    buttons: [ 'copy', 'csv', 'excel','pdf' ]
+  //  buttons: [ 'copy', 'csv', 'excel','pdf' ]
+   buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] 
     });
   });
   

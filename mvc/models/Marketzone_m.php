@@ -163,13 +163,52 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 
 
 	function getMarketzones_for_triggerrun($timestamp) {
-		$sql = "SELECT * FROM VX_aln_market_zone
+		$sql = "SELECT market_id FROM VX_aln_market_zone
                               WHERE modify_date >= ".$timestamp." AND active = 1 ";
 		$marketzones = $this->install_m->run_query($sql);
+			  
+		$list = array_column($marketzones,'market_id');
 
-		  $list = array_column($marketzones,'market_id');
-                $matchset = [];
-                foreach ($list as $id ) {
+		return $list;
+
+	}
+
+
+
+	function getAirportsDataForMktZones($list){
+
+
+	 $sQuery =  "SELECT        mz.market_id, COALESCE(group_concat(distinct c.airportID) ,group_concat(distinct mapl.airport_id)) as level_value , COALESCE(group_concat(distinct cc.airportID) , group_concat(distinct mapi.airport_id))  as incl_value, COALESCE(group_concat(distinct ce.airportID) , group_concat(distinct mape.airport_id))  as excl_value FROM VX_aln_market_zone mz LEFT OUTER JOIN  vx_aln_master_data c ON (
+(find_in_set(c.countryID, mz.amz_level_name) AND mz.amz_level_id  = 2) OR
+(find_in_set(c.cityID, mz.amz_level_name) AND mz.amz_level_id  = 3) OR
+(find_in_set(c.airportID, mz.amz_level_name) AND mz.amz_level_id  = 1) OR
+(find_in_set(c.regionID, mz.amz_level_name) AND mz.amz_level_id  = 4) OR
+(find_in_set(c.areaID, mz.amz_level_name) AND mz.amz_level_id  = 5) 
+  ) LEFT OUTER JOIN VX_market_airport_map mapl on (find_in_set(mapl.market_id, mz.amz_level_name) AND mz.amz_level_id  = 17) LEFT OUTER JOIN  vx_aln_master_data cc ON ((find_in_set(cc.countryID, mz.amz_incl_name) AND mz.amz_incl_id  = 2) OR
+(find_in_set(cc.cityID, mz.amz_incl_name) AND mz.amz_incl_id  = 3) OR
+(find_in_set(cc.airportID, mz.amz_incl_name) AND mz.amz_incl_id  = 1) OR
+(find_in_set(cc.regionID, mz.amz_incl_name) AND mz.amz_incl_id  = 4) OR
+(find_in_set(cc.areaID, mz.amz_incl_name) AND mz.amz_incl_id  = 5) )
+LEFT OUTER JOIN VX_market_airport_map mapi on (find_in_set(mapi.market_id, mz.amz_incl_name) AND mz.amz_incl_id  = 17) 
+LEFT OUTER JOIN  vx_aln_master_data ce ON ((find_in_set(ce.countryID, mz.amz_excl_name) AND mz.amz_excl_id  = 2) OR
+(find_in_set(ce.cityID, mz.amz_excl_name) AND mz.amz_excl_id  = 3) OR
+(find_in_set(ce.airportID, mz.amz_excl_name) AND mz.amz_excl_id  = 1) OR
+(find_in_set(ce.regionID, mz.amz_excl_name) AND mz.amz_excl_id  = 4) OR
+(find_in_set(ce.areaID, mz.amz_excl_name) AND mz.amz_excl_id  = 5) )
+LEFT OUTER JOIN VX_market_airport_map mape on (find_in_set(mape.market_id, mz.amz_excl_name) AND mz.amz_excl_id  = 17)
+
+ WHERE mz.active = 1 AND mz.market_id IN (" .implode(',',$list) . " )
+group by mz.market_id";   
+	
+	$result = $this->install_m->run_query($sQuery);
+	return $result;
+	}
+
+
+	function getSubmarketsForList($list){
+		$matchset = array();
+		
+		foreach ($list as $id ) {
 
                         $sql = "SELECT market_id FROM VX_aln_market_zone WHERE active = 1 AND
                                 amz_level_id = 17 AND FIND_IN_SET(".$id.",amz_level_name) OR
@@ -179,22 +218,8 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 
                         $matchset = array_merge($matchset,array_column($newlist,'market_id'));
                 }
-
-
-                 $this->db->select('*')->from('VX_aln_market_zone');
-                 $this->db->where_in('market_id',$list);
-
-                if (count($matchset) > 0 ) {
-                        $this->db->or_where_in('market_id',$matchset);
-                }
-
-                $query = $this->db->get();
-                $result =  $query->result();
-
-                //      print_r($this->db->last_query()); exit;
-                //      var_dump($result);exit;
-                return $result;
-
+		
+		return $matchset;
 	}
 	
 	function getMarkets_for_triggerrun($timestamp) {
@@ -304,10 +329,10 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 		return parent::hash($string);
 	}
 
-    function marketzoneTotalCount($airlineIDs = array()){
+    function marketzoneTotalCount(){
 		$this->db->select('count(*) count')->from('VX_aln_market_zone');
-		if(!empty($airlineID)){
-			$this->db->where_in('airline_id',$airlineIDs);
+		if($this->session->userdata('usertypeID') == 2){		
+			$this->db->where('create_userID',$this->session->userdata('loginuserID'));
 		}
 		$query = $this->db->get();
 		return $query->row('count');

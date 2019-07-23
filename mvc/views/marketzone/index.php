@@ -124,7 +124,7 @@
 
 					 <?php if(permissionChecker('marketzone_reconfigure')) {
 					 if( isset ($reconfigure)) {?>
-                               			 <h2><a href="<?php echo base_url('trigger') ?>" class="btn btn-danger">
+                               			 <h2><a href="<?php echo base_url('trigger/marketzone_trigger') ?>" class="btn btn-danger">
                                     			<i class="fa fa-plus"></i>
                                     			<?=$this->lang->line('generate_map_table')?>
                                 			</a>
@@ -227,10 +227,10 @@
 							<th><?=$this->lang->line('amz_excl_type')?></th>
 							<th><?=$this->lang->line('amz_excl_value')?></th>
 							 <?php if(permissionChecker('marketzone_edit')) { ?>
-								 <th><?=$this->lang->line('marketzone_status')?></th>
+								 <th class="noExport"><?=$this->lang->line('marketzone_status')?></th>
 							<?php } ?>                       
 							<?php if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_view') ||  permissionChecker('marketzone_detete')) { ?>
-						   <th><?=$this->lang->line('action')?></th>
+						   <th class="noExport"><?=$this->lang->line('action')?></th>
 						   <?php } ?>
 					   </tr>
 				   </thead>
@@ -353,7 +353,19 @@ function loaddatatable() {
 				  ],			   
 	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
 	dom: 'B<"clear">lfrtip',
-    buttons: [ 'copy', 'csv', 'excel','pdf' ]
+   // buttons: [ 'copy', 'csv', 'excel','pdf' ],
+    buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] ,
+	"autoWidth": false,
+     "columnDefs": [ { "width": "30px", "targets": 0 },
+                     { "width": "130px", "targets": 1 },
+                     { "width": "50px", "targets": 2 },
+					 { "width": "60px", "targets": 9 }					 
+				 ]
     });
 }  
    $('#tztable tbody').on('mouseover', 'tr', function () {
@@ -457,13 +469,35 @@ $('#amz_level_id').trigger('change');
 });
 
 
+$('#airline_id').change(function(event) {
+	$('#amz_level_id').trigger('change');
+	$('#amz_excl_id').trigger('change');
+	$('#amz_incl_id').trigger('change');
+
+});
+
 $('#amz_level_id').change(function(event) {    
-        $('#amz_level_value').val(null).trigger('change')
+        $('#amz_level_value').val(null).trigger('change');
   var level_id = $(this).val();                 
+  var airline_id = $('#airline_id').val();
+	if( level_id == '17' ) {
+		if($('#airline_id').val() == '0') {
+			alert('select Airline');
+			$("#amz_level_id").val(0);
+                           $('#amz_level_id').trigger('change');
+
+			return false;
+		}
+	}
+	
 $.ajax({     async: false,            
              type: 'POST',            
              url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-             data: "id=" + level_id,            
+
+	     data: {
+                           "id":level_id,
+			   "airline_id":airline_id
+				},
              dataType: "html",                                  
              success: function(data) {               
              $('#amz_level_value').html(data); }        
@@ -473,10 +507,23 @@ $.ajax({     async: false,
 $('#amz_incl_id').change(function(event) {    
         $('#amz_incl_value').val(null).trigger('change');
   var incl_id = $(this).val();                 
+   var airline_id = $('#airline_id').val();
+	 if( incl_id == '17' ) {
+                if($('#airline_id').val() == '0') {
+                        alert('select Airline');
+			$('#amz_incl_id').val('0').trigger('change');
+                        return false;
+                }
+        }
+
 $.ajax({     async: false,            
              type: 'POST',            
              url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-             data: "id=" + incl_id,            
+	      data: {
+                           "id":incl_id,
+                           "airline_id":airline_id
+                                },
+
              dataType: "html",                                  
              success: function(data) {               
              $('#amz_incl_value').html(data); }        
@@ -488,10 +535,23 @@ $.ajax({     async: false,
 $('#amz_excl_id').change(function(event) {    
         $('#amz_excl_value').val(null).trigger('change');
   var excl_id = $(this).val();                 
+   var airline_id = $('#airline_id').val();
+	 if( excl_id == '17' ) {
+                if($('#airline_id').val() == '0') {
+                        alert('select Airline');
+			 $('#amz_excl_id').val('0').trigger('change');
+                        return false;
+                }
+        }
+
 $.ajax({     async: false,            
              type: 'POST',            
              url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-             data: "id=" + excl_id,            
+	 data: {
+                           "id":excl_id,
+                           "airline_id":airline_id
+                                },
+
              dataType: "html",                                  
              success: function(data) {               
              $('#amz_excl_value').html(data); }        
@@ -567,7 +627,7 @@ function savezone() {
                         loaddatatable();
                         if (zoneinfo['has_reconf_perm'] && zoneinfo['reconfigure']) {
                                 <?php
-                                        $link = '<h2><a href="'.base_url('trigger').'" class="btn btn-danger"> <i class="fa fa-plus"></i> '.$this->lang->line('generate_map_table').' </a></h2>';
+                                        $link = '<h2><a href="'.base_url('trigger/marketzone_trigger').'" class="btn btn-danger"> <i class="fa fa-plus"></i> '.$this->lang->line('generate_map_table').' </a></h2>';
 
                                   ?>
 

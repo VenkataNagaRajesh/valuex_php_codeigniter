@@ -2,7 +2,7 @@
 	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Seasons</h2>
 	<p class="card-header" data-toggle="collapse" data-target="#seasonAdd"><button type="button" id = 'add_season_button' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Season" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="col-md-12 season-add-box collapse" id="seasonAdd">
-		<form class="form-horizontal" action="#">
+		<form class="form-horizontal" action="#" id="season_form">
 			<div class="form-group">
 				<div class="row">
 					<div class="col-md-3 select-form">
@@ -104,14 +104,18 @@
 		</form>
 	</div>
 	<div class="col-md-12 season-table">
-		<p>
-	      <?php if( isset ($reconfigure) && permissionChecker('season_reconfigure')) {?>
-                   <a href="<?php echo base_url('trigger/season_trigger') ?>" class="btn btn-danger">
+	   <div id='season_reconfigure'>
+
+					 <?php if(permissionChecker('season_reconfigure')) {
+					 if( isset ($reconfigure)) {?>
+                               			<a href="<?php echo base_url('trigger/season_trigger') ?>" class="btn btn-danger">
                        <i class="fa fa-plus"></i>
                        <?=$this->lang->line('generate_map_table')?>
                    </a>
-           <?php } ?>
-		</p>
+                        <?php } }?>
+
+       </div>
+		
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form">		   
 			<div class='form-group'>			 
 				<div class="col-sm-2">			   
@@ -143,7 +147,7 @@
 				  echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
 				<div class="col-sm-2">
-				 <button type="submit" class="btn btn-danger form-control" name="filter" id="filter">Search</button>
+				 <button type="button" class="btn btn-danger form-control" name="filter" id="filter"  onclick="$('#seasonslist').dataTable().fnDestroy();;loaddatatable();">Search</button>
 				 <!-- <button data-toggle="collapse" data-target="#seasonList" type="button" class="form-control btn btn-danger"><i class="fa fa-table"></i> View</button>-->
 				</div>			
 			</div>
@@ -163,12 +167,12 @@
 							<th class="col-lg-1"><?=$this->lang->line('season_start_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season_end_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('is_return_inclusive')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('season_color')?></th>
+							<th class="col-lg-1 noExport"><?=$this->lang->line('season_color')?></th>
 							<?php if(permissionChecker('season_edit')) {?>
-							<th class="col-lg-1"><?=$this->lang->line('season_active')?></th>
+							<th class="col-lg-1 noExport"><?=$this->lang->line('season_active')?></th>
 							<?php }?>
 							<?php if(permissionChecker('season_edit') || permissionChecker('season_delete')) { ?>
-							<th class="col-lg-2"><?=$this->lang->line('action')?></th>
+							<th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
 							   <?php } ?>
 						  </tr>
 					   </thead>
@@ -186,7 +190,7 @@
 				<p><select style="width:85%;" name="color_season" id="color_airline_season" class="form-control">
 				 <option value="0">Airlines</option>
 				 <?php foreach($airlines as $airline){
-                  echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->airline_name.'</option>';  
+                  echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->airline_name.'('.$airline->code.')'.'</option>';  
 				 } ?>
 				</select></p>
 				<p>
@@ -195,7 +199,7 @@
 					<span class="default">Summer Peak</span><span class="summer-high">&nbsp;</span><br>
 					<span class="default">Christmas Peak</span><span class="christ-high">&nbsp;</span>-->
 					<?php foreach($seasonslist as $season) { ?>
-					<span class="default"><?=$season->season_name?></span><span style="background: <?=$season->season_color?>;">&nbsp;</span>
+					<span class="default" onclick="getCalenderBySeason(<?=$season->VX_aln_seasonID?>)"><?=$season->season_name?></span><span style="background: <?=$season->season_color?>;" onclick="getCalenderBySeason(<?=$season->VX_aln_seasonID?>)">&nbsp;</span>
 					<?php } ?>
 				</p>
 			</div>
@@ -211,29 +215,31 @@
 });
 
 function seasoncalender (seasonlist = '[]') {
+	
 	var season_data = jQuery.parseJSON(seasonlist);
 
         // An array of dates
      var eventDates = {}; var season = {}; var name = {};
-
-
 	
 	 //$_POST['color_season']=10; 
              for(var i=0; i<season_data.length; i++){
 		for ( var k=0 ; k<season_data[i]['dates'].length; k++){	
 	       eventDates[ new Date( season_data[i]['dates'][k] )] = new Date( season_data[i]['dates'][k] ).toString();
 		    season[ new Date( season_data[i]['dates'][k] )] = season_data[i]['VX_aln_seasonID'];
+			if(name[ new Date( season_data[i]['dates'][k] )]){
+				name[ new Date( season_data[i]['dates'][k] )] = name[ new Date( season_data[i]['dates'][k] )]+'+'+season_data[i]['season_name'] ;
+			} else {
 			name[ new Date( season_data[i]['dates'][k] )] = season_data[i]['season_name'] ;
-			 
+			}			
 	   } 
 	    $("<style> .season"+season_data[i]['VX_aln_seasonID'] + " { color:#fffff !important;  background:"+season_data[i]['season_color'] + " !important;} </style>").appendTo("head");
      }   
-    //console.log(event);
-       
+   
         jQuery('#calendar1').datepicker({		    
            // changeMonth: true,
            // changeYear: true,
-            numberOfMonths: [3,4],            			
+            numberOfMonths: [3,4],  
+            defaultDate: new Date(new Date().getFullYear(), 0, 1),			
 		    beforeShowDay: function( date ) {					
                 var highlight = eventDates[date];
 				var color = "";
@@ -254,7 +260,7 @@ function seasoncalender (seasonlist = '[]') {
 $('#color_airline_season').change(function(event) {    
 	//alert('here');
 	var airline_id = $(this).val();                 
-$.ajax({     async: false,            
+    $.ajax({ async: false,            
              type: 'POST',            
              url: "<?=base_url('season/getSeasonsForAirline')?>",            
              data: "id=" + airline_id,            
@@ -266,9 +272,19 @@ $.ajax({     async: false,
       });       
 });
  
-
-
-
+function getCalenderBySeason(season){
+	$.ajax({
+          async: false,
+          type: 'POST',
+          url: "<?=base_url('season/getSeasonInfo')?>",          
+          data: {"season_id":season},
+          dataType: "html",                     
+          success: function(data) {
+            $("#calendar1").datepicker("destroy");			  
+            seasoncalender(data);			
+         }
+	 });
+}
   
 </script>
 <script>
@@ -308,7 +324,13 @@ $(document).ready(function() {
                   {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
-     buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+     //buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+	  buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] ,
     });
   }); 
   
@@ -500,7 +522,8 @@ $("#dest_all").click(function(){
 	  var $inputs = $('#season_form :input'); 
 	  $inputs.each(function (index)
        {
-          $(this).val("");  
+          $(this).val(""); 
+         $(this).parent().removeClass('has-error'); 		  
        });
 	   $("#airlineID").removeAttr("selected");
 	   $('#airlineID').trigger('change');
@@ -537,10 +560,15 @@ $("#dest_all").click(function(){
 				alert(status);
 				form_reset();
 				$("#seasonslist").dataTable().fnDestroy();
-				loaddatatable();
+				loaddatatable();				
 				$("#calendar1").datepicker("destroy");
 				seasoncalender(JSON.stringify(seasoninfo['season_list']));
+                  if (seasoninfo['has_reconf_perm']) {
+                    <?php
+                    $link = '<h2><a href="'.base_url('trigger/season_trigger').'" class="btn btn-danger"> <i class="fa fa-plus"></i> '.$this->lang->line('generate_map_table').' </a></h2>';   ?>
 
+                  $('#season_reconfigure').html('<?php echo $link?>');
+                        }
 			} else {				
 				alert($(status).text());
 			    $.each(seasoninfo['errors'], function(key, value) {

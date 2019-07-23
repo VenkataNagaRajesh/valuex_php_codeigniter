@@ -226,7 +226,7 @@ $(document).ready(function () {
 		   $i++;
 	   }
 	 }	?>
-     console.log(<?=$ij?>);      	
+       	
     $('#bid_min_<?=$result->flight_number?>').text(<?php echo explode(',',$result->min)[$i]; ?>);
     $('#bid_max_<?=$result->flight_number?>').text(<?php echo explode(',',$result->max)[$i]; ?>);
 	var tot_avg = tot_avg + <?=explode(',',$result->avg)[$i]?>;
@@ -280,6 +280,19 @@ $("#bid_slider_<?=$result->flight_number?>").on("click", function(slideEvt) {
     mileSliderUpdate();	
     changeColors(<?=$result->flight_number?>);	 
 });
+//action click
+$('input[type=radio][name=bid_action_<?=$result->flight_number?>]').click(function(){
+	 if($(this).val() == 0){
+	   $("#bid_slider_<?=$result->flight_number?>").slider('disable'); 
+	 } else {
+	   $("#bid_slider_<?=$result->flight_number?>").slider('enable');  
+	 }
+	var tot_avg = getTotal();
+	$("#tot").text(tot_avg);
+	$("#bidtot").text(tot_avg);
+	mileSliderUpdate();
+});
+
 <?php } } ?>
 
 <?php foreach($results as $result){  if($result->fclr != null){ ?>
@@ -312,10 +325,13 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
  function getTotal(){
 		var tot_avg = 0;
 		<?php foreach($results as $result){  if($result->fclr != null){ ?>
-		  tot_avg = tot_avg+$("#bid_slider_<?=$result->flight_number?>").slider('getValue')*<?=$passengers_count?>;
-		<?php } } ?>	
-		return tot_avg; 
-	}
+		   var action = $('input[type=radio][name=bid_action_<?=$result->flight_number?>]:checked').val();		  
+		  if(action == 1){	
+		   tot_avg = tot_avg+$("#bid_slider_<?=$result->flight_number?>").slider('getValue')*<?=$passengers_count?>;
+		  }
+		<?php } } ?>
+      return tot_avg; 
+ }
 
  function changeColors(id){
 	 var value = $("#bid_slider_"+id).slider('getValue');	

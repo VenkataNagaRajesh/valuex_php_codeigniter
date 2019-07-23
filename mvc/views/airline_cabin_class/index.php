@@ -1,6 +1,6 @@
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa fa-sitemap"></i> <?=$this->lang->line('panel_title')?></h3>
+        <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
            
@@ -79,11 +79,11 @@
                                 <th class="col-lg-1"><?=$this->lang->line('is_revenue')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('order')?></th>
                                 <?php if(permissionChecker('airline_cabin_class_edit')) { ?>
-                                        <th class="col-lg-1"><?=$this->lang->line('airline_cabin_status')?></th>
+                                        <th class="col-lg-1 noExport"><?=$this->lang->line('airline_cabin_status')?></th>
                                 <?php } ?>
 
                                  <?php if(permissionChecker('airline_cabin_class_edit') || permissionChecker('airline_cabin_class_view') ||  permissionChecker('airline_cabin_class_delete')) { ?>
-                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
 
 	
@@ -136,7 +136,15 @@
 				  ],			   
 	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
 	dom: 'B<"clear">lfrtip',
-    buttons: [ 'copy', 'csv', 'excel','pdf' ]
+    //buttons: [ 'copy', 'csv', 'excel','pdf' ]
+	 buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] ,
+	 "autoWidth": false,
+     "columnDefs": [ { "width": "20px", "targets": 0 },{ "width": "30px", "targets": 5 } ]
     });
   });
   

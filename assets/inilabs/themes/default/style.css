@@ -4481,3 +4481,20 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 .rafeed  .form-group .form-control{
 	margin-bottom:10px;
 }
+/* Jquery DataTable Custom width for column*/
+table{
+  margin: 0 auto;
+  width: 100%;
+  clear: both;
+  border-collapse: collapse;
+  word-wrap:break-word; 
+}
+#master{
+	table-layout: fixed; 
+}
+#tztable{
+   table-layout: fixed;	
+}
+#rafeedtable{
+   table-layout: fixed;
+}

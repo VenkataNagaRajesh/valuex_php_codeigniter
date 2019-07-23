@@ -12,7 +12,7 @@ class Menu_m extends MY_Model {
 	}
 
 	function get_menu($array=NULL, $signal=FALSE) {
-		$query = parent::get($array, $signal);
+		$query = parent::get($array, $signal);		
 		return $query;
 	}
 
@@ -33,6 +33,13 @@ class Menu_m extends MY_Model {
 
 	public function delete_menu($id){
 		parent::delete($id);
+	}
+	
+	public function getMenu($where){
+	   $this->db->select("*")->from("menu");
+	   $this->db->where($where);
+	   $query = $this->db->get();
+	   return $query->row();
 	}
 }
 

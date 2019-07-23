@@ -25,15 +25,15 @@
                         <thead>
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-                                <th class="col-lg-2"><?=$this->lang->line('user_photo')?></th>
+                                <th class="col-lg-2 noExport"><?=$this->lang->line('user_photo')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('user_name')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('user_email')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('user_usertype')?></th>
                                 <?php if(permissionChecker('user_edit')) { ?>
-                                <th class="col-lg-1"><?=$this->lang->line('user_status')?></th>
+                                <th class="col-lg-1 noExport"><?=$this->lang->line('user_status')?></th>
                                 <?php } ?>
                                 <?php if(permissionChecker('user_edit') || permissionChecker('user_delete') || permissionChecker('user_view')) { ?>
-                                <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
                             </tr>
                         </thead>

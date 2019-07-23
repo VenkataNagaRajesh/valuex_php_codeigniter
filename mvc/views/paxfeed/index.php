@@ -1,6 +1,6 @@
 <div class="box">
     <div class="box-header" style="width:100%;">
-        <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
+        <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
 
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
@@ -100,6 +100,11 @@
 
                 </div>
 
+<div class="col-sm-2">
+ <input type="text" class="form-control" placeholder='Pax ID' id="pf_id" name="pf_id" value="<?=set_value('pf_id',$pf_id)?>" >
+
+                </div>
+
 
 
     <div class="col-sm-2">
@@ -138,7 +143,7 @@
 			  </div>
 			 </form>			
             <div id="hide-table">
-               <table id="rafeedtable" class="table table-striped table-bordered table-hover dataTable no-footer">
+               <table id="paxfeedtable" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>
                     <tr>
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
@@ -170,10 +175,10 @@
                          <th class="col-lg-1"><?=$this->lang->line('channel')?></th>
 			
 			
-		 <th class="col-lg-1"><?=$this->lang->line('active')?></th>
+		 <th class="col-lg-1 noExport"><?=$this->lang->line('active')?></th>
 
 	<?php if(permissionChecker('paxfeed_delete')){?>
-                                <th class="col-lg-1"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
 						<?php }?>
                     </tr>
                  </thead>
@@ -188,7 +193,7 @@
 <script>
  $(document).ready(function() {	 
 	
-    $('#rafeedtable').DataTable( {
+    $('#paxfeedtable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('paxfeed/server_processing'); ?>",
@@ -203,6 +208,7 @@
 		   {"name": "start_date","value": $("#start_date").val()},
 		   {"name": "end_date","value": $("#end_date").val()},
 		   {"name": "frequency","value": $("#frequency").val()},
+		   {"name": "pf_id","value": $("#pf_id").val()},
                     {"name": "carrierCode","value": $("#carrier_code").val()},
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
@@ -245,14 +251,20 @@
 				  {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
-     buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+    // buttons: [ 'copy', 'csv', 'excel','pdf' ]
+        buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] 	
     });
 	
 	
   });
  
   
-   $('#rafeedtable tbody').on('mouseover', 'tr', function () {
+   $('#paxfeedtable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
         html: true
@@ -261,7 +273,7 @@
   
   var status = '';
   var id = 0;
- $('#rafeedtable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
+ $('#paxfeedtable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");

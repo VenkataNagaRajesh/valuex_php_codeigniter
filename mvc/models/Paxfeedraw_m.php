@@ -29,9 +29,9 @@ class Paxfeedraw_m extends MY_Model {
 		$query = $this->db->get();
                 $check = $query->row();	
 		if($check->dtpfraw_id) {
-		    return false ;
+		    return $check->dtpfraw_id ;
 		} else {
-		  return true;
+		  return false;
 		}
 			
 

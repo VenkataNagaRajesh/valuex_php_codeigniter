@@ -85,7 +85,7 @@
 					</div>
 				</div>
 				<div class="col-md-2">
-					<h4>Departure Date Range</h4>
+					<h4>Dep Date Range</h4>
 					<div class="col-sm-12">
 						 <div class="input-group">
 							<input type="text" class="form-control" placeholder="Dep Start" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
@@ -108,7 +108,7 @@
 	<div class="col-md-12 off-elg-table">
 		<div class="col-md-12">
 			<div id="hide-table">
-				<table id="rafeedtable" class="table table-bordered">
+				<table id="eligibilitytable" class="table table-bordered">
 					<thead>
 						<tr>
 							<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
@@ -117,6 +117,7 @@
 							<th class="col-lg-1"><?=$this->lang->line('season')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
+							<th class="col-lg-1">PNR Ref</th>
 							<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
@@ -143,7 +144,7 @@
 $("#dep_from_date").datepicker();
 $("#dep_to_date").datepicker();
 
-    $('#rafeedtable').DataTable( {
+    $('#eligibilitytable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('offer_eligibility/server_processing'); ?>",
@@ -176,6 +177,7 @@ $("#dep_to_date").datepicker();
 		   {"data": "season_id" },
 		   {"data": "source_point" },
 	           {"data": "dest_point" },
+		   {"data": "pnr_ref" },
 		   {"data": "departure_date" },
 		   {"data": "carrier_code" },
 		   {"data": "flight_number" },
@@ -196,7 +198,7 @@ $("#dep_to_date").datepicker();
   });
  
   
-   $('#rafeedtable tbody').on('mouseover', 'tr', function () {
+   $('#eligibilitytable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
         html: true
@@ -205,7 +207,7 @@ $("#dep_to_date").datepicker();
   
   var status = '';
   var id = 0;
- $('#rafeedtable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
+ $('#eligibilitytable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");

@@ -1,7 +1,7 @@
 
 <div class="box">
     <div class="box-header" style="width:100%;">
-        <h3 class="box-title"><i class="fa fa-plane"></i> <?=$this->lang->line('panel_title')?></h3>
+        <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active"><?=$this->lang->line('menu_airports_master')?></li>
@@ -26,8 +26,12 @@
               </h5>
 			  <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>
-                			
-			   <div class="col-sm-2">			   
+                <div class="col-sm-2">			   
+                 <?php $status = array("1" => "Active","0" => "InActive","2" => "Status");               
+                  						
+				   echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
+                </div>			
+			    <div class="col-sm-2">			   
                  <?php $alist = array("0" => " Area");               
                    foreach($areaslist as $area){
 					 $alist[$area->vx_aln_data_defnsID] = $area->aln_data_value;
@@ -35,17 +39,17 @@
 				   echo form_dropdown("areaID", $alist,set_value("areaID",$areaID), "id='areaID' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
 				 <div class="col-sm-2">
-                    <select name="regionID" id="regionID" class="form-control" placeholder="Region">
+                    <select name="regionID" id="regionID" class="form-control select2" placeholder="Region">
 				   
 				    </select>
                  </div>
 				<div class="col-sm-2">
-                 	<select name="countryID" id="countryID" class="form-control" placeholder="Country">
+                 	<select name="countryID" id="countryID" class="form-control select2" placeholder="Country">
 				   
 				    </select>	
                  </div>
                  <div class="col-sm-2">			   
-                   <select name="cityID" id="cityID" class="form-control" placeholder="City">
+                   <select name="cityID" id="cityID" class="form-control select2" placeholder="City">
 				   
 				   </select>
                  </div>              				
@@ -71,9 +75,9 @@
 						<th class="col-lg-1"><?=$this->lang->line('master_countrycode')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('master_region')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('master_area')?></th>						
-						<th class="col-lg-1"><?=$this->lang->line('master_active')?></th>
+						<th class="col-lg-1 noExport"><?=$this->lang->line('master_active')?></th>
                         <?php if(permissionChecker('airports_master_edit') || permissionChecker('airports_master_delete')) { ?>
-                        <th class="col-lg-2"><?=$this->lang->line('action')?></th>
+                        <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                         <?php } ?>
                     </tr>
                  </thead>
@@ -87,20 +91,75 @@
    </div>
 </div>
 <script>
+$( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
+
+var oldExportAction = function (self, e, dt, button, config) {  console.log("bbbbbb");
+    if (button[0].className.indexOf('buttons-excel') >= 0) {
+        if ($.fn.dataTable.ext.buttons.excelHtml5.available(dt, config)) {
+            $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config);
+        }
+        else {
+            $.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt, button, config);
+        }
+    } else if (button[0].className.indexOf('buttons-print') >= 0) {
+        $.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
+    }
+};
+
+var newExportAction = function (e, dt, button, config) {
+    var self = this;
+    var oldStart = dt.settings()[0]._iDisplayStart;
+ console.log("hhhhhh");
+    dt.one('preXhr', function (e, s, data) {
+        // Just this once, load all data from the server...
+        data.start = 0;
+        data.length = 2147483647;
+
+        dt.one('preDraw', function (e, settings) {
+            // Call the original action function 
+            oldExportAction(self, e, dt, button, config);
+
+            dt.one('preXhr', function (e, s, data) {
+                // DataTables thinks the first item displayed is index 0, but we're not drawing that.
+                // Set the property to what it was before exporting.
+                settings._iDisplayStart = oldStart;
+                data.start = oldStart;
+            });
+
+            // Reload the grid with the original page. Otherwise, API functions like table.cell(this) don't work properly.
+            setTimeout(dt.ajax.reload, 0);
+
+            // Prevent rendering of the full data to the DOM
+            return false;
+        });
+    });
+
+    // Requery the server with the new one-time export settings
+    dt.ajax.reload();
+};
+
  $(document).ready(function() {	 
 	 var countryID = <?=$countryID?>;	
 	 var regionID =<?=$regionID?>;
 	 var areaID = <?=$areaID?>; 
 	 
+	 $("#areaID").trigger("change");
+	$("#regionID").trigger("change");
+	$("#countryID").trigger("change");
+	$("#cityID").trigger("change");
+	 
     $('#master').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+      "lengthMenu": [[10,20, 100, -1], [10, 20,100, "All"]],
+      "pageLength": 10,	  
       "sAjaxSource": "<?php echo base_url('airports_master/server_processing'); ?>",
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "countryID","value": $("#countryID").val()},
 	   {"name": "regionID","value": $("#regionID").val()},
 	   {"name": "areaID","value": $("#areaID").val()},
-	   {"name": "cityID","value": $("#cityID").val()}) //pushing custom parameters
+	   {"name": "cityID","value": $("#cityID").val()},
+	   {"name": "active","value": $("#active").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
                     "type": "GET",
@@ -108,27 +167,28 @@
                     "data": aoData,
                     "success": fnCallback
 			 } ); },	  
-      "columns": [{"data": "vx_amdID" },
-                 // {"data": "airport" },
-				  {"data": "code"},
-				  //{"data": "city" },
-				  {"data": "citycode" },
-				 // {"data": "state" },
-				  //{"data": "country" },
+      "columns": [{"data": "temp_id" },                
+				  {"data": "code"},				
+				  {"data": "citycode" },				
 				  {"data": "countrycode" },
 				  {"data": "region" },
-                  {"data": "area"},
-                  				  
+                  {"data": "area"},                  				  
                   {"data": "active"},
                   {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',	
-     buttons: [ 'copy', 'csv', 'excel','pdf' ]	
+    // buttons: [ 'copy', 'csv', 'excel','pdf' ],	
+     buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', action: newExportAction, exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ] ,
+     "autoWidth": false,
+     "columnDefs": [ { "width": "20px", "targets": 0 } ]			
     }); 
   
-    $("#areaID").trigger("change");
-	$("#regionID").trigger("change");
-	$("#countryID").trigger("change");
+    
   });
  
   
@@ -206,14 +266,14 @@
     var cityID = <?php echo $cityID; ?>;   
    if(countryID == null) {
         $('#cityID').val(0);
-    } else {
+    } else { 
         $.ajax({
             async: false,
             type: 'POST',
             url: "<?=base_url('general/getAirportCities')?>",          
 		   data: {"countryID" :countryID,"cityID":cityID},
             dataType: "html",			
-            success: function(data) {
+            success: function(data) { 
                $('#cityID').html(data);
             }
         }); 		

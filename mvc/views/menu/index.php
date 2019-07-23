@@ -28,7 +28,7 @@
                                 <th class="col-lg-1">Menu Pull</th>
                                 <th class="col-lg-1">Priority</th>
                                 <th class="col-lg-1">Status</th>
-                                <th class="col-lg-2">Action</th>
+                                <th class="col-lg-2 noExport">Action</th>
                             </tr>
                         </thead>
                         <tbody>

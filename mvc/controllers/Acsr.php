@@ -10,7 +10,8 @@ class Acsr extends Admin_Controller {
 		$this->load->model('season_m');
 		$this->load->model('eligibility_exclusion_m');
 		$language = $this->session->userdata('lang');
-		$this->lang->load('acsr', $language);	
+		$this->lang->load('acsr', $language);
+        $this->data['icon'] = $this->menu_m->getMenu(array("link"=>"acsr"))->icon;			
 	}
 
 	protected function rules() {

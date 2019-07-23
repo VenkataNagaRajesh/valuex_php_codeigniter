@@ -145,13 +145,20 @@ return $rResult;
 
 
 	function getOfferDetailsForIssue($id) {
-
+/*
 $sql = "
 		select car.code as carrier_code ,pf.pnr_ref, pf.dep_date as flight_date ,df.code as from_city , dt.code as to_city , oref.offer_id, flight_number,group_concat(first_name,' ' , last_name) as p_list,  bs.aln_data_value as booking_status    from VX_aln_offer_ref oref LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref) LEFT JOIN VX_aln_dtpf_ext pext on (pext.dtpf_id = pf.dtpf_id)  LEFT JOIN  vx_aln_data_defns df on(df.vx_aln_data_defnsID = pf.from_city and df.aln_data_typeID = 1 )  LEFT JOIN  vx_aln_data_defns dt on(dt.vx_aln_data_defnsID = pf.to_city and dt.aln_data_typeID = 1 )  LEFT JOIN  vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status and bs.aln_data_typeID = 20 )  LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code  and car.aln_data_typeID = 12 ) where pf.is_processed = 1 and bs.alias != 'excl' AND oref.offer_id=".$id." group by pf.pnr_ref, pf.from_city, pf.to_city, pf.carrier_code ,pf.flight_number, pf.dep_date ,oref.offer_id, pext.booking_status" ;
 
+*/
+
+
+
+$sql = " select  SQL_CALC_FOUND_ROWS MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin, MainSet.to_cabin , MainSet.cash, MainSet.miles, MainSet.booking_status, SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number FROM (  select distinct oref.offer_id, tcab.aln_data_value as to_cabin , oref.create_date as offer_date ,pf.flight_number, bs.aln_data_value as booking_status, oref.pnr_ref,oref.cash_percentage, oref.cash, oref.miles from  VX_aln_offer_ref oref  LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref) INNER JOIN VX_aln_dtpf_ext pext on (pext.dtpf_id = pf.dtpf_id) LEFT JOIN VX_aln_fare_control_range fc on (fc.fclr_id = pext.fclr_id) LEFT JOIN vx_aln_data_defns tcab on (tcab.vx_aln_data_defnsID = fc.to_cabin AND tcab.aln_data_typeID = 13)  LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)     WHERE  oref.offer_id = ".$id.") as MainSet     INNER JOIN (select  flight_number,  group_concat(distinct dep_date) as flight_date  , pnr_ref,group_concat(first_name, ' ' , last_name  ) as p_list ,  from_city as from_city_code, to_city as to_city_code, group_concat(distinct cab.aln_data_value) as from_cabin  , fc.code as from_city, tc.code as to_city, car.code as carrier , pf1.carrier_code from VX_aln_daily_tkt_pax_feed pf1  LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = pf1.ptc AND ptc.aln_data_typeID = 18) LEFT JOIN vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1) LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1) LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13) LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12) where pf1.is_processed = 1  group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number )";
+
+
 	$rResult = $this->install_m->run_query($sql);
 
-return $rResult;
+	return $rResult;
 
 
 	}

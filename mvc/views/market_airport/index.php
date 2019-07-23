@@ -1,7 +1,7 @@
 
 <div class="box">
     <div class="box-header" style="width:100%;">
-        <h3 class="box-title"><i class="fa fa-map-signs"></i> <?=$this->lang->line('panel_title')?></h3>
+        <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
            
@@ -31,14 +31,48 @@
 
 			<?php
 			
-                        $list['0'] = "Airport";
-			foreach($airports_list as $alist ) {
-				$list[$alist->vx_aln_data_defnsID] = $alist->aln_data_value;
-			}
-                        echo form_dropdown("airport_id", $list,set_value("airport_id",$airportID), "id='airport_id' class='form-control hide-dropdown-icon select2'");    ?>
+                        $airports_list['0'] = "Airport";
+                        echo form_dropdown("airport_id", $airports_list,set_value("airport_id",$airportID), "id='airport_id' class='form-control hide-dropdown-icon select2'");    ?>
 
 
                  </div>
+
+		 <div class="col-sm-2">
+
+                        <?php
+
+                        $city_list['0'] = "City";
+                        echo form_dropdown("city_id", $city_list,set_value("city_id",$cityID), "id='city_id' class='form-control hide-dropdown-icon select2'");    ?>
+
+
+                 </div>
+
+
+
+
+		 <div class="col-sm-2">
+
+                        <?php
+
+                        $country_list['0'] = "Country";
+                        echo form_dropdown("country_id", $country_list,set_value("country_id",$countryID), "id='country_id' class='form-control hide-dropdown-icon select2'");    ?>
+
+
+                 </div>
+
+
+
+
+	 <div class="col-sm-2">
+
+                        <?php
+
+                        $region_list['0'] = "Region";
+                        echo form_dropdown("region_id", $region_list,set_value("region_id",$regionID), "id='region_id' class='form-control hide-dropdown-icon select2'");    ?>
+
+
+                 </div>
+
 
 
                 <div class="col-sm-2">
@@ -90,7 +124,11 @@
       "sAjaxSource": "<?php echo base_url('market_airport/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "marketID","value": $("#market_id").val()},
-		   {"name": "airportID","value": $("#airport_id").val()})
+		   {"name": "airportID","value": $("#airport_id").val()},
+			{"name": "countryID","value": $("#country_id").val()},
+			{"name": "cityID","value": $("#city_id").val()},
+			{"name": "regionID","value": $("#region_id").val()},
+			)
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
                     "type": "GET",

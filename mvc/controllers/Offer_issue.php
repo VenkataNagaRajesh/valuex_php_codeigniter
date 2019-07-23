@@ -60,6 +60,7 @@ $this->data['headerassets'] = array(
         );
 		$this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
                 $this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
+		 $this->data['carrier'] =  $this->airports_m->getDefnsCodesListByType('12');
 
 	$this->data["subview"] = "offer/index";
                 $this->load->view('_layout_main', $this->data);
@@ -211,7 +212,8 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 
 
 
-            $aColumns = array('ofr.offer_id','flight_number');
+            $aColumns = array('MainSet.offer_id','SubSet.passenger_list','MainSet.pnr_ref','SubSet.from_city', 'SubSet.to_city','SubSet.flight_date',
+				'SubSet.carrier', 'SubSet.flight_number','SubSet.from_city_name', 'SubSet.to_city_name');
 
                 $sLimit = "";
 
@@ -275,52 +277,73 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 
                         if(!empty($this->input->get('boardPoint'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'boarding_point = '.$this->input->get('boardPoint');
+                                $sWhere .= 'SubSet.from_city_code = '.$this->input->get('boardPoint');
                         }
                         if(!empty($this->input->get('offPoint'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'off_point = '.$this->input->get('offPoint');
+                                $sWhere .= 'SubSet.to_city_code = '.$this->input->get('offPoint');
                         }
 
 			if(!empty($this->input->get('flightNbr'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'pf.flight_number >= '.$this->input->get('flightNbr');
+                                $sWhere .= 'SubSet.flight_number >= '.$this->input->get('flightNbr');
+
                         }
 
 
                         if(!empty($this->input->get('flightNbrEnd'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'pf.flight_number <= '.$this->input->get('flightNbrEnd');
+                                $sWhere .= 'SubSet.flight_number <= '.$this->input->get('flightNbrEnd');
                         }
 
 
                         if(!empty($this->input->get('depStartDate'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'pf.dep_date >= '. strtotime($this->input->get('depStartDate'));
+                                $sWhere .= 'SubSet.flight_date >= '. strtotime($this->input->get('depStartDate'));
                         }
                         if(!empty($this->input->get('depEndDate'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'pf.dep_date <= '.  strtotime($this->input->get('depEndDate'));
+                                $sWhere .= 'SubSet.flight_date <= '.  strtotime($this->input->get('depEndDate'));
                         }
-                        if(!empty($this->input->get('fromCabin'))){
+                        if(!empty($this->input->get('carrier'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'from_cabin = '. $this->input->get('fromCabin');
+                                $sWhere .= 'SubSet.carrier_code = '. $this->input->get('carrier');
                         }
-                        if(!empty($this->input->get('toCabin'))){
+                        if(!empty($this->input->get('pnr_ref'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'to_cabin = '.  $this->input->get('toCabin');
+                                $sWhere .= 'MainSet.pnr_ref = "'.  $this->input->get('pnr_ref'). '"';
                         }
 
 
 
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrier_code, group_concat(distinct pf.to_city ) as off_point ,group_concat(distinct pf.from_city) as board_point, group_concat( distinct bs.aln_data_value) as booking_status ,group_concat(distinct dbp.code) as source_point , group_concat(distinct dep_date) as departure_date , group_concat(distinct dop.code) as dest_point ,group_concat(distinct  pf.flight_number)  as flight_number , offer_id  , ofr.pnr_ref  ,group_concat( distinct first_name , ' ' , last_name SEPARATOR '<br>' ) as passenger_list   from VX_aln_offer_ref ofr  LEFT JOIN  VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = ofr.pnr_ref) LEFT JOIN VX_aln_dtpf_ext pext  on (pext.dtpf_id = pf.dtpf_id) LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)  LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1) LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = fc.carrier_code AND dai.aln_data_typeID = 12)  LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency AND dfre.aln_data_typeID = 14)  LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13) LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13)           LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)  where pf.is_processed = 1 and pf.active = 1  and bs.aln_data_value != 'Excluded'  ". $sWhere. " group by ofr.pnr_ref, ofr.offer_id
- $sOrder $sLimit";
- 
+$sQuery = " 
+ select  SQL_CALC_FOUND_ROWS  
+                        MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , 
+                        SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.passenger_list, SubSet.from_cabin,
+                          MainSet.cash, MainSet.miles,  SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number, SubSet.from_city_name, SubSet.to_city_name
 
-/*$sQuery = "   select ofr.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name SEPARATOR '<br>')  as list from VX_aln_offer_ref ofr  LEFT JOIN  VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = ofr.pnr_ref)  group by ofr.pnr_ref";
-*/
+                FROM (  select distinct oref.offer_id, oref.create_date as offer_date , oref.pnr_ref,oref.cash_percentage, oref.cash, oref.miles from  VX_aln_offer_ref oref  
+                     ) as MainSet 
+                        INNER JOIN (
+                                        select  flight_number,
+                                                group_concat(distinct dep_date) as flight_date  ,
+                                                pnr_ref,group_concat(first_name, ' ' , last_name SEPARATOR '<br>' ) as passenger_list ,  from_city as from_city_code, to_city as to_city_code, 
+                                                group_concat(distinct cab.aln_data_value) as from_cabin  , fc.aln_data_value as from_city_name, fc.code as from_city, tc.code as to_city, tc.aln_data_value as to_city_name,
+                                                car.code as carrier , pf1.carrier_code
+                                         from VX_aln_daily_tkt_pax_feed pf1 
+                                        LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = pf1.ptc AND ptc.aln_data_typeID = 18)
+                                        LEFT JOIN vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
+                                        LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
+                                        LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13)
+                                        LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
+                                        where pf1.is_processed = 1  
+                                       group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
+                   ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref ) 
+$sWhere $sOrder $sLimit";
+
+
 //print_r($sQuery);exit;
 
         $rResult = $this->install_m->run_query($sQuery);
@@ -334,18 +357,15 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS group_concat(distinct dai.code) as carrie
           );
                 foreach ($rResult as $feed ) {
 
-                        $boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->board_point));
-                        $feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
-                         $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
-                        $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
-
-                        if($feed->booking_status == 'Excluded') {
-                                $feed->booking_status = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->exclusion_id.'">'.$feed->booking_status.'</a>';
-
-                        }
+                        $boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->from_city_code));
+                        $feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->from_city.'</a>';
+                         $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->to_city_code));
+                        $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->to_city.'</a>';
+			
+			$feed->booking_status = btn_view('offer_issue/view/'.$feed->offer_id, $this->lang->line('view'));
                         $feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default season";
-                        $feed->departure_date = date('d-m-Y',$feed->departure_date);
-			$feed->action = btn_view('offer_issue/view/'.$feed->offer_id, $this->lang->line('view'));
+                        $feed->departure_date = date('d-m-Y',$feed->flight_date);
+			$feed->bid_info = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
 
                                 $output['aaData'][] = $feed;
 

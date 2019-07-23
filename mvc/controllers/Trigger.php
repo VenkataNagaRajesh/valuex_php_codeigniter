@@ -15,8 +15,77 @@ class Trigger extends Admin_Controller {
 		$this->lang->load('marketzone', $language);
 	}
 
-	public function index() {
+
+        public function marketzone_trigger() {
+	
+
 		$timestamp = $this->trigger_m->get_trigger_time('VX_aln_market_zone');
+                if (isset($timestamp)) {
+			//get list of markets that are modified
+			$list = $this->marketzone_m->getMarketzones_for_triggerrun($timestamp);
+			if (count($list) > 0){
+				$mzdata = $this->marketzone_m->getAirportsDataForMktZones($list);
+				$this->process_marketzones($mzdata);
+				// now check for the case above marketzones are part of any other zones
+				$sublist = $this->marketzone_m->getSubmarketsForList($list);	
+				if(count($sublist) > 0 ){
+					$subdata = $this->marketzone_m->getAirportsDataForMktZones($sublist);
+					$this->process_marketzones($subdata);
+				}
+				
+		    }
+			//update market type seasons
+                        $this->update_market_seasons();
+                        //update trigger table 
+                        $tarray['modify_date'] = time();
+                        $tarray['isReconfigured'] = '0';
+                        $tarray['modify_userID'] = $this->session->userdata('loginuserID');
+                        $this->trigger_m->update_trigger($tarray,'VX_aln_market_zone');
+
+		}
+
+		redirect(base_url("marketzone/index"));
+	}
+
+
+	public function process_marketzones($mzdata){
+
+		 foreach($mzdata as $marketzone){
+                                // now we have level, incl, excl list for each zone
+                                // check and insert in map table
+
+                                $level_list = explode(',',$marketzone->level_value);
+                                $incl_list = explode(',',$marketzone->incl_value);
+                                $excl_list = explode(',',$marketzone->excl_value);
+
+                                $remlist =  array_diff(array_unique(array_merge($level_list,$incl_list)),$excl_list);
+                                  $isNewentry = $this->market_airport_map_m->check_mappingdata($marketzone->market_id);
+                                if (!$isNewentry) {
+                                        $oldlist = $this->market_airport_map_m->get_market_airport_mapdata($marketzone->market_id);
+                                        $removelist = array_diff($oldlist,$remlist);
+                                        if(!empty($removelist)) {
+                                                $this->market_airport_map_m->remove_old_entriesbyid($marketzone->market_id,$removelist);
+                                        }
+                                        $finallist = array_diff($remlist,$oldlist);
+
+                                } else {
+                                        $finallist = $remlist;
+                                } 
+
+                                        
+                                //insert entries to mapping table
+                                foreach($finallist as $airportid) {
+                                       $array["market_id"] = $marketzone->market_id;;
+                                       $array["airport_id"] = $airportid;
+                                       $this->market_airport_map_m->insert_marketairport_mapid($array);
+                                }
+
+                          }
+
+	}
+
+	public function index() {
+	/*	$timestamp = $this->trigger_m->get_trigger_time('VX_aln_market_zone');
 		if (isset($timestamp)) {
 		      $data = $this->marketzone_m->getMarketzones_for_triggerrun($timestamp);
 			foreach($data as $marketzone){
@@ -152,6 +221,8 @@ class Trigger extends Admin_Controller {
 
 		}
 
+        $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+	*/
 		redirect(base_url("marketzone/index"));
 	}
 
@@ -251,6 +322,7 @@ class Trigger extends Admin_Controller {
 			$tarray['isReconfigured'] = '0';
 			$this->trigger_m->update_trigger($tarray,'VX_aln_season');
 		} 
+		$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 		redirect(base_url("season/index"));
 	}
 	
