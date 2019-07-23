@@ -357,8 +357,13 @@ class Rafeed extends Admin_Controller {
                                                           $rafeed['create_userID'] = $this->session->userdata('loginuserID');
                                                           $rafeed['modify_userID'] = $this->session->userdata('loginuserID');
 						//	print_r($rafeed);exit;
-                                                       		 $this->rafeed_m->insert_rafeed($rafeed);
+                                                       		 $insert_id = $this->rafeed_m->insert_rafeed($rafeed);
+								if ( $insert_id ) {
 								$this->mydebug->rafeed_log("uploaded row " . $column , 0);
+								} else{
+
+									$this->mydebug->rafeed_log("Record not inserted for row " . $column , 0);
+								}
 							} else {
 
 								$this->mydebug->rafeed_log("Not proper data for  row " . $column, 1);

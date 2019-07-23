@@ -225,8 +225,12 @@ class Invfeed extends Admin_Controller {
                                                           $invfeed['modify_userID'] = $this->session->userdata('loginuserID');
 						//	print_r($rafeed);exit;
 
-		                                           $this->invfeed_m->insert_invfeed($invfeed);
-							 $this->mydebug->invfeed_log("Inserted data for row " . $column, 0);
+		                                           $insert_id = $this->invfeed_m->insert_invfeed($invfeed);
+							if($insert_id) {
+							 	$this->mydebug->invfeed_log("Inserted data for row " . $column, 0);
+							} else{ 
+								$this->mydebug->invfeed_log("Not created record, check data " . $column, 0);
+							}
 
 						}
 						}

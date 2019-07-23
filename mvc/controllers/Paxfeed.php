@@ -396,9 +396,13 @@ class Paxfeed extends Admin_Controller {
                                                              $paxfeed['create_userID'] = $this->session->userdata('loginuserID');
                                                              $paxfeed['modify_userID'] = $this->session->userdata('loginuserID');
 						//	print_r($rafeed);exit;
-                                                              $this->paxfeed_m->insert_paxfeed($paxfeed);
+                                                              $insert_id = $this->paxfeed_m->insert_paxfeed($paxfeed);
+								if ( $insert_id ) {
 
 							    $this->mydebug->paxfeed_log("Inserted pax record for row " . $column, 0);
+								} else{
+									$this->mydebug->paxfeed_log("Not inserted pax record for row " . $column .' not a valid data ', 1);
+								}
 						   }
 					}
 			}
