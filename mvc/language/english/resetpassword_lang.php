@@ -12,5 +12,5 @@ $lang['resetpassword_re_password'] = 'Re Enter Password';
 
 /* Add Language */
 
-$lang['resetpassword'] = 'Rseset Password';
+$lang['resetpassword'] = 'Reset Password';
 $lang['update_class'] = 'Update Class';

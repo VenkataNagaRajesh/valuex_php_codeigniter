@@ -1,7 +1,7 @@
 
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa fa-signal"></i>Menu Management</h3>
+        <h3 class="box-title"><i class="fa fa-bars"></i> Menu Management</h3>
 
 
         <ol class="breadcrumb">

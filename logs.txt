@@ -1,296 +1,140 @@
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 'Boeing 777 300'
-AND `aln_data_typeID` = 21
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = '301 - 552'
-AND `aln_data_typeID` = 22
-1
-1
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = '15'
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 16
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 17
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 18
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 19
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 20
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 21
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = '50'
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 51
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 52
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 53
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 54
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 55
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 56
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 57
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 58
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 59
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 60
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 61
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 62
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 63
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 64
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 65
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 66
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 67
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 68
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 69
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 70
-AND `aln_data_typeID` = 16
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 'Boeing 777 300'
-AND `aln_data_typeID` = 21
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 'Boeing 777 300'
-AND `aln_data_typeID` = 21
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = '301 - 552'
-AND `aln_data_typeID` = 22
-AND `parentID` = '10840'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES ('301 - 552', 22, NULL, 1563446208, 1563446208, '1', '1', '10840')
-1
-1
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = '15'
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 16
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 17
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 18
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 19
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (19, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 20
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (20, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 21
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (21, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = '50'
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES ('50', 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 51
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (51, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 52
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (52, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 53
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (53, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 54
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (54, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 55
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (55, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 56
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 57
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 58
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 59
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 60
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 61
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 62
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (62, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 63
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (63, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 64
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (64, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 65
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (65, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 66
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (66, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 67
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (67, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 68
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (68, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 69
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (69, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
-SELECT *
-FROM `vx_aln_data_defns`
-WHERE `aln_data_value` = 70
-AND `aln_data_typeID` = 16
-AND `parentID` = '10841'
-INSERT INTO `vx_aln_data_defns` (`aln_data_value`, `aln_data_typeID`, `code`, `create_date`, `modify_date`, `create_userID`, `modify_userID`, `parentID`) VALUES (70, 16, NULL, 1563446209, 1563446209, '1', '1', '10841')
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+					
+		 
+		
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+					
+		 
+		
+where  : 
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+					
+		 
+		
+where  :  WHERE dd.aln_data_typeID = 
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		 WHERE dd.aln_data_typeID = 			
+		 
+		
+where  :  WHERE dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		 WHERE dd.aln_data_typeID = 16			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  :  WHERE dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		 WHERE dd.aln_data_typeID = 16			
+		 
+		
+where  : WHERE (dd.vx_aln_data_defnsID LIKE '%d%' OR t.name LIKE '%d%' OR dd.aln_data_value LIKE '%d%' OR dd1.aln_data_value LIKE '%d%' OR dd.code LIKE '%d%' OR dd.active LIKE '%d%' ) AND dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		WHERE (dd.vx_aln_data_defnsID LIKE '%d%' OR t.name LIKE '%d%' OR dd.aln_data_value LIKE '%d%' OR dd1.aln_data_value LIKE '%d%' OR dd.code LIKE '%d%' OR dd.active LIKE '%d%' ) AND dd.aln_data_typeID = 16			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  : WHERE (dd.vx_aln_data_defnsID LIKE '%dd%' OR t.name LIKE '%dd%' OR dd.aln_data_value LIKE '%dd%' OR dd1.aln_data_value LIKE '%dd%' OR dd.code LIKE '%dd%' OR dd.active LIKE '%dd%' ) AND dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		WHERE (dd.vx_aln_data_defnsID LIKE '%dd%' OR t.name LIKE '%dd%' OR dd.aln_data_value LIKE '%dd%' OR dd1.aln_data_value LIKE '%dd%' OR dd.code LIKE '%dd%' OR dd.active LIKE '%dd%' ) AND dd.aln_data_typeID = 16			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  :  WHERE dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		 WHERE dd.aln_data_typeID = 16			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  :  WHERE dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		 WHERE dd.aln_data_typeID = 16			
+		 
+		
+where  :  WHERE dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		 WHERE dd.aln_data_typeID = 16			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  : WHERE (dd.vx_aln_data_defnsID LIKE '%d%' OR t.name LIKE '%d%' OR dd.aln_data_value LIKE '%d%' OR dd1.aln_data_value LIKE '%d%' OR dd.code LIKE '%d%' OR dd.active LIKE '%d%' ) AND dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		WHERE (dd.vx_aln_data_defnsID LIKE '%d%' OR t.name LIKE '%d%' OR dd.aln_data_value LIKE '%d%' OR dd1.aln_data_value LIKE '%d%' OR dd.code LIKE '%d%' OR dd.active LIKE '%d%' ) AND dd.aln_data_typeID = 16			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  : WHERE (dd.vx_aln_data_defnsID LIKE '%ddd%' OR t.name LIKE '%ddd%' OR dd.aln_data_value LIKE '%ddd%' OR dd1.aln_data_value LIKE '%ddd%' OR dd.code LIKE '%ddd%' OR dd.active LIKE '%ddd%' ) AND dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		WHERE (dd.vx_aln_data_defnsID LIKE '%ddd%' OR t.name LIKE '%ddd%' OR dd.aln_data_value LIKE '%ddd%' OR dd1.aln_data_value LIKE '%ddd%' OR dd.code LIKE '%ddd%' OR dd.active LIKE '%ddd%' ) AND dd.aln_data_typeID = 16			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  : WHERE (dd.vx_aln_data_defnsID LIKE '%dd%' OR t.name LIKE '%dd%' OR dd.aln_data_value LIKE '%dd%' OR dd1.aln_data_value LIKE '%dd%' OR dd.code LIKE '%dd%' OR dd.active LIKE '%dd%' ) AND dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		WHERE (dd.vx_aln_data_defnsID LIKE '%dd%' OR t.name LIKE '%dd%' OR dd.aln_data_value LIKE '%dd%' OR dd1.aln_data_value LIKE '%dd%' OR dd.code LIKE '%dd%' OR dd.active LIKE '%dd%' ) AND dd.aln_data_typeID = 16			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  : WHERE (dd.vx_aln_data_defnsID LIKE '%d%' OR t.name LIKE '%d%' OR dd.aln_data_value LIKE '%d%' OR dd1.aln_data_value LIKE '%d%' OR dd.code LIKE '%d%' OR dd.active LIKE '%d%' ) AND dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		WHERE (dd.vx_aln_data_defnsID LIKE '%d%' OR t.name LIKE '%d%' OR dd.aln_data_value LIKE '%d%' OR dd1.aln_data_value LIKE '%d%' OR dd.code LIKE '%d%' OR dd.active LIKE '%d%' ) AND dd.aln_data_typeID = 16			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  :  WHERE dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		 WHERE dd.aln_data_typeID = 16			
+		 
+		
+where  :  WHERE dd.aln_data_typeID = 16
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		 WHERE dd.aln_data_typeID = 16			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  : 
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+					
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  :  WHERE dd.aln_data_typeID = 17
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		 WHERE dd.aln_data_typeID = 17			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  :  WHERE dd.aln_data_typeID = 2
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		 WHERE dd.aln_data_typeID = 2			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  :  WHERE dd.aln_data_typeID = 4
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		 WHERE dd.aln_data_typeID = 4			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  : WHERE (dd.vx_aln_data_defnsID LIKE '%A%' OR t.name LIKE '%A%' OR dd.aln_data_value LIKE '%A%' OR dd1.aln_data_value LIKE '%A%' OR dd.code LIKE '%A%' OR dd.active LIKE '%A%' ) AND dd.aln_data_typeID = 4
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		WHERE (dd.vx_aln_data_defnsID LIKE '%A%' OR t.name LIKE '%A%' OR dd.aln_data_value LIKE '%A%' OR dd1.aln_data_value LIKE '%A%' OR dd.code LIKE '%A%' OR dd.active LIKE '%A%' ) AND dd.aln_data_typeID = 4			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  : WHERE (dd.vx_aln_data_defnsID LIKE '%As%' OR t.name LIKE '%As%' OR dd.aln_data_value LIKE '%As%' OR dd1.aln_data_value LIKE '%As%' OR dd.code LIKE '%As%' OR dd.active LIKE '%As%' ) AND dd.aln_data_typeID = 4
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		WHERE (dd.vx_aln_data_defnsID LIKE '%As%' OR t.name LIKE '%As%' OR dd.aln_data_value LIKE '%As%' OR dd1.aln_data_value LIKE '%As%' OR dd.code LIKE '%As%' OR dd.active LIKE '%As%' ) AND dd.aln_data_typeID = 4			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  : WHERE (dd.vx_aln_data_defnsID LIKE '%Asia%' OR t.name LIKE '%Asia%' OR dd.aln_data_value LIKE '%Asia%' OR dd1.aln_data_value LIKE '%Asia%' OR dd.code LIKE '%Asia%' OR dd.active LIKE '%Asia%' ) AND dd.aln_data_typeID = 4
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		WHERE (dd.vx_aln_data_defnsID LIKE '%Asia%' OR t.name LIKE '%Asia%' OR dd.aln_data_value LIKE '%Asia%' OR dd1.aln_data_value LIKE '%Asia%' OR dd.code LIKE '%Asia%' OR dd.active LIKE '%Asia%' ) AND dd.aln_data_typeID = 4			
+		ORDER BY  dd.vx_aln_data_defnsID
+							asc 
+		LIMIT 0,10
+where  : WHERE (dd.vx_aln_data_defnsID LIKE '%Asia%' OR t.name LIKE '%Asia%' OR dd.aln_data_value LIKE '%Asia%' OR dd1.aln_data_value LIKE '%Asia%' OR dd.code LIKE '%Asia%' OR dd.active LIKE '%Asia%' ) AND dd.aln_data_typeID = 4
+SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		WHERE (dd.vx_aln_data_defnsID LIKE '%Asia%' OR t.name LIKE '%Asia%' OR dd.aln_data_value LIKE '%Asia%' OR dd1.aln_data_value LIKE '%Asia%' OR dd.code LIKE '%Asia%' OR dd.active LIKE '%Asia%' ) AND dd.aln_data_typeID = 4			
+		 
+		
