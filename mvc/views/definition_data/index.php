@@ -65,6 +65,8 @@
     $('#defdata').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+	  "lengthMenu": [[10,20, 100, -1], [10,20,100, "All"]],
+      "pageLength": 10,
       "sAjaxSource": "<?php echo base_url('definition_data/server_processing'); ?>",  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "aln_data_typeID","value": $("#aln_data_typeID").val()} ) //pushing custom parameters
@@ -88,7 +90,8 @@
      buttons: [
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } ,modifier: {search: 'applied',
+                    order: 'applied' } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
      ] 	 
     });
