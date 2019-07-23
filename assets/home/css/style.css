@@ -111,7 +111,8 @@ figure {
 	vertical-align: middle;
 	color: #ff6633;
 	font-weight: bold;
-	font-size:38px;
+	font-size:30px;
+	text-align: center;
 	text-transform:uppercase;
 }
 .pnr-box {
@@ -761,6 +762,50 @@ figure {
 	text-transform: uppercase;
 	font-weight: bold;
 	width: 50%;
+}
+@media screen and (max-width: 767px) {
+	.nav-tabs > li {
+		float:none;
+	}
+	#offer .pull-right, #payment .pull-right{
+		display: table;
+		float: none !important;
+		margin-left: 0;
+	}
+	#offer .table{
+		overflow:auto;
+		cursor:pointer;
+	}
+	.bid-tab .side-image img {
+		height:auto;
+	}
+	.bid-tab #payment .back-btn {
+		margin-right: 0;
+		padding-left: 0;
+		padding-right: 0;
+	}
+	.bid-tab #payment h2 {
+		padding:10px;
+	}
+	.payment-box {
+		padding: 12px 0;
+		margin: 12px 0;
+	}
+	.payment-box .col-md-8 {
+		padding:0;
+	}
+	.card-exp .col-md-6{
+		float:left;
+	}
+	.form-group {
+		margin-bottom: 8px;
+	}
+	.payment-box .actual-cash {
+		margin-top:0;
+	}
+	#payment .pay-info {
+		margin: 6px 0;
+	}
 }
 .simple-rating i{
 	color: #ff6633;

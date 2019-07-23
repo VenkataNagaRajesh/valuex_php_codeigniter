@@ -30,80 +30,82 @@
 						<div class="pass-info">
 							<p>Passenger(s):<span><?php echo ucfirst($results[0]->pax_names); ?></span>
 							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$results[0]->pnr_ref?></span></p>
-							<table class="table">
-								<thead>
-									<tr>
-										<th>Flight Information</th>
-										<th style="text-align:left;">Upgrade Type</th>
-										<th>Bid (s)</th>
-										<th>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-								    <?php foreach($results as $result){ ?>
-									<tr>
-										<td>											
-											<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
-												<div class="col-md-5">
-													<p><?php echo $result->from_city; ?></p>
-													<ul>
-														<li><?php echo date('d M Y',$result->dep_date); ?></li>
-														<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
-														<li><?=$result->time_diff?></li>
-														<li><?=date('H:i a',$result->dep_date+$result->dept_time)?></li>
-													</ul>
-												</div>
-												<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-fighter-jet"></i></p></div>
-												<div class="col-md-5">
-													<p><?php echo $result->to_city; ?></p>
-													<ul>
-														<li><?php echo date('d M Y',$result->arrival_date); ?></li>
-														<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
-														<li><?=$result->time_diff?></li>
-														<li><?=date('H:i a',$result->arrival_date+$result->arrival_time)?></li>
-													</ul>
-												</div>
-											</div>											
-										</td>
-										<td>		 
-											<div class="bid-radio col-md-12">
-											   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
-											   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>								      
-												<label class="radio-inline <?=($status == 1971)?"bid-visible":""?>">
-													<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0 )?"checked":''; ?> ><?php echo $cabins[$value]; ?>
-												</label><br>
-											   <?php if($status != 1971) { $i++; } } } ?>									
-											</div>	
-										</td>
-										<td>
-											<?php if($result->fclr != null){
-												  $i=0;
-												 foreach($result->to_cabins as $key => $value) {		 
-												  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
-												   if($status == 1992){
-													 break;  
-												   } else {
-													   $i++;
-												   }
-												 }	?>       
-											
-												<div class="price-range col-md-12">		
-												<i class="fa fa-dollar"></i> <b id="bid_min_<?=$result->flight_number?>"></b>
-														<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->avg)[$i]; ?>" data-slider-handle="square"min-slider-handle="200"/>
-													<i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b>
-												</div>
-											<?php }  ?>
-										</td>
-										<td>
-										  <div class="<?=($result->fclr == null)?"bid-visible":""?>">
-										  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="1" checked/> Yes <br>
-										  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="0"/> No
-										  </div>
-										</td>
-									</tr>
-									<?php } ?>
-								</tbody>
-							</table>
+							<div class="table">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>Flight Information</th>
+											<th style="text-align:left;">Upgrade Type</th>
+											<th>Bid (s)</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php foreach($results as $result){ ?>
+										<tr>
+											<td>											
+												<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
+													<div class="col-md-5">
+														<p><?php echo $result->from_city; ?></p>
+														<ul>
+															<li><?php echo date('d M Y',$result->dep_date); ?></li>
+															<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
+															<li><?=$result->time_diff?></li>
+															<li><?=date('H:i a',$result->dep_date+$result->dept_time)?></li>
+														</ul>
+													</div>
+													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-fighter-jet"></i></p></div>
+													<div class="col-md-5">
+														<p><?php echo $result->to_city; ?></p>
+														<ul>
+															<li><?php echo date('d M Y',$result->arrival_date); ?></li>
+															<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
+															<li><?=$result->time_diff?></li>
+															<li><?=date('H:i a',$result->arrival_date+$result->arrival_time)?></li>
+														</ul>
+													</div>
+												</div>											
+											</td>
+											<td>		 
+												<div class="bid-radio col-md-12">
+												   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
+												   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>								      
+													<label class="radio-inline <?=($status == 1971)?"bid-visible":""?>">
+														<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0 )?"checked":''; ?> ><?php echo $cabins[$value]; ?>
+													</label><br>
+												   <?php if($status != 1971) { $i++; } } } ?>									
+												</div>	
+											</td>
+											<td>
+												<?php if($result->fclr != null){
+													  $i=0;
+													 foreach($result->to_cabins as $key => $value) {		 
+													  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
+													   if($status == 1992){
+														 break;  
+													   } else {
+														   $i++;
+													   }
+													 }	?>       
+												
+													<div class="price-range col-md-12">		
+													<i class="fa fa-dollar"></i> <b id="bid_min_<?=$result->flight_number?>"></b>
+															<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->avg)[$i]; ?>" data-slider-handle="square"min-slider-handle="200"/>
+														<i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b>
+													</div>
+												<?php }  ?>
+											</td>
+											<td>
+											  <div class="<?=($result->fclr == null)?"bid-visible":""?>">
+											  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="1" checked/> Yes <br>
+											  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="0"/> No
+											  </div>
+											</td>
+										</tr>
+										<?php } ?>
+									</tbody>
+								</table>
+							</div>
 							<div class="col-md-12" style="padding-right:0;">
 								<p class="pull-right">Total Bid Amount  <strong style="margin-left:12px;"> <i class="fa fa-dollar"></i> <b id="tot"></b></strong> </p>
 							</div>

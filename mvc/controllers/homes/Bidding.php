@@ -23,8 +23,8 @@ class Bidding extends MY_Controller {
 	}
   
     public function index() {  
-     // $this->session->set_userdata('pnr_ref','F90488');
-     // $this->session->set_userdata('validation_check',1);	   
+     $this->session->set_userdata('pnr_ref','F90488');
+     $this->session->set_userdata('validation_check',1);	   
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
 			$this->session->unset_userdata('pnr_ref');
