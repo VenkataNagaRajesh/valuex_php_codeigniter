@@ -12,7 +12,7 @@ class General extends Admin_Controller {
 	public function getAirportCountries(){
 		$countryID = $this->input->post('countryID');		
 		$regionID = $this->input->post('regionID');	
-        echo '<option value="0">Select Country</option>';		
+        echo '<option value="0">Country</option>';		
 	    if($regionID){
 		   $countries = $this->airports_m->getDefns(2,$regionID);					
 			foreach ($countries as $country) {
@@ -28,7 +28,7 @@ class General extends Admin_Controller {
 	public function getAirportCities(){
 		$countryID = $this->input->post('countryID');		
 		$cityID = $this->input->post('cityID');	
-        echo '<option value="0">Select City</option>';		
+        echo '<option value="0">City</option>';		
 	    if($countryID){
 		   $cities = $this->airports_m->getDefns(3,$countryID);		
 			
@@ -45,7 +45,7 @@ class General extends Admin_Controller {
 	public function getAirportRegions(){
 		$regionID = $this->input->post('regionID');
 		$areaID = $this->input->post('areaID');	
-			echo '<option value="0">Select Region</option>';
+			echo '<option value="0">Region</option>';
 	    if($areaID){
 		   $regions = $this->airports_m->getDefns(4,$areaID);		
 		
@@ -62,7 +62,7 @@ class General extends Admin_Controller {
 	public function getAirportAreas(){
 		$regionID = $this->input->post('regionID');
 		$areaID = $this->input->post('areaID');
-echo '<option value="0">Select Area</option>';		
+echo '<option value="0">Area</option>';		
 	    if($regionID ){
 		   $areas = $this->airports_m->getDefns(5,$regionID);
            		   
@@ -78,7 +78,7 @@ echo '<option value="0">Select Area</option>';
 	
 	public function getParentlist(){
 		$type = $this->input->post('type');	
- echo '<option value="0">Select Parent</option>';			
+ echo '<option value="0">Parent</option>';			
 	    if($type ){
 		  
 		   if($type != 1 && $type != 2){

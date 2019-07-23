@@ -27,7 +27,7 @@
 			  <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>
                 <div class="col-sm-2">			   
-                 <?php $status = array("1" => "Active","0" => "InActive","2" => "All");               
+                 <?php $status = array("1" => "Active","0" => "InActive","2" => "Status");               
                   						
 				   echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>			
@@ -143,6 +143,11 @@ var newExportAction = function (e, dt, button, config) {
 	 var regionID =<?=$regionID?>;
 	 var areaID = <?=$areaID?>; 
 	 
+	 $("#areaID").trigger("change");
+	$("#regionID").trigger("change");
+	$("#countryID").trigger("change");
+	$("#cityID").trigger("change");
+	 
     $('#master').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
@@ -183,10 +188,7 @@ var newExportAction = function (e, dt, button, config) {
      "columnDefs": [ { "width": "20px", "targets": 0 } ]			
     }); 
   
-    $("#areaID").trigger("change");
-	$("#regionID").trigger("change");
-	$("#countryID").trigger("change");
-	$("#cityID").trigger("change");
+    
   });
  
   
