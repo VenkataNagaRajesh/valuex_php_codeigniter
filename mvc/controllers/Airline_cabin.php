@@ -41,7 +41,7 @@ class Airline_cabin extends Admin_Controller {
                                 'rules' => 'trim|max_length[200]|xss_clean'
                         ),
 			array(
-                                'field' => 'images',
+                                'field' => 'images[]',
                                 'label' => $this->lang->line("images"),
                                 'rules' => 'trim|max_length[200]|xss_clean'
                         ),
@@ -164,7 +164,6 @@ class Airline_cabin extends Admin_Controller {
                         $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
 
                 }
-
 
 		if($_POST) {
 			$rules = $this->rules();
@@ -605,6 +604,17 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , 
                 $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($cabins));
         }
+
+
+public function getAircraftTypes(){
+        $id = $this->input->post('id');
+        if ( isset($id)){
+                $result = $this->airline_m->getAirCraftTypesList($id);
+                        foreach ($result as $defns) {
+                                echo "<option value=\"$defns->aircraftID\">",$defns->aln_data_value,"</option>";
+                        }
+        }
+   }
 
 	
    public function getAircrafts(){

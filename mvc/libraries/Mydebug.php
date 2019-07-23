@@ -30,7 +30,7 @@ class Mydebug {
        }
 	   
 	   
-	   public function airlines_log($logs)
+   public function airlines_log($logs)
         {
 
          //$file=fopen('./debug/airlines_log.txt','a+');
@@ -43,17 +43,71 @@ class Mydebug {
          fwrite($file,'ERROR - '.date('Y-m-d H:m:s')." --> ".$msg."\n");
        }
 
-	  public function rafeed_log($logs)
+	  public function rafeed_log($logs, $flag = 0)
         {
 
-       	$file = fopen(APPPATH.'/logs/log-rafeed.txt','a+');
+       	$file = fopen(APPPATH.'/logs/log-rafeed.php','a+');
          if (is_array($logs)) {
              $msg = print_r($logs,1);
          } else {
              $msg = $logs;
          }
-         fwrite($file,'ERROR - '.date('Y-m-d H:m:s')." --> ".$msg."\n");
+
+	if ($flag == '0' ) {
+		
+		$tag = 'INFO - '.date('Y-m-d H:m:s');
+	} else {
+
+		$tag = 'ERROR - '.date('Y-m-d H:m:s');
+	}
+         fwrite($file,$tag. " --> ".$msg."\n");
        }
+
+
+
+	 public function invfeed_log($logs, $flag = 0)
+        {
+
+        $file = fopen(APPPATH.'/logs/log-invfeed.php','a+');
+         if (is_array($logs)) {
+             $msg = print_r($logs,1);
+         } else {
+             $msg = $logs;
+         }
+
+        if ($flag == '0' ) {
+
+                $tag = 'INFO - '.date('Y-m-d H:m:s');
+        } else {
+
+                $tag = 'ERROR - '.date('Y-m-d H:m:s');
+        }
+         fwrite($file,$tag. " --> ".$msg."\n");
+       }
+
+
+     public function paxfeed_log($logs, $flag = 0)
+        {
+
+        $file = fopen(APPPATH.'/logs/log-paxfeed.php','a+');
+         if (is_array($logs)) {
+             $msg = print_r($logs,1);
+         } else {
+             $msg = $logs;
+         }
+
+        if ($flag == '0' ) {
+
+                $tag = 'INFO - '.date('Y-m-d H:m:s');
+        } else {
+
+                $tag = 'ERROR - '.date('Y-m-d H:m:s');
+        }
+         fwrite($file,$tag. " --> ".$msg."\n");
+       }
+
+
+
 
 
 }

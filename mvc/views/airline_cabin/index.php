@@ -76,8 +76,8 @@
                        <thead>
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('airline_name')?></th>
-					            <th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
+				<th class="col-lg-1"><?=$this->lang->line('airline_name')?></th>
+				<th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_cabin')?></th>
 				                <th class="col-lg-1"><?php echo "Images Count"?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_video')?></th>

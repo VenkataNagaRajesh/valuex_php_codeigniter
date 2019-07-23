@@ -178,5 +178,16 @@ class Airline_m extends MY_Model {
 		$this->db->where('aln_data_typeID',22);
 		$this->db->update('vx_aln_data_defns',array('aln_data_value'=>$seat_capacity));
 	}
+
+
+	public function getAirCraftTypesList($airlineID){
+		$this->db->select('ac.aircraftID , dd.aln_data_value')->from('VX_airline_aircraft ac');
+		 $this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = ac.aircraftID','LEFT');
+		$this->db->where('ac.airlineID',$airlineID);
+		 $query = $this->db->get();
+		$result = $query->result();
+		return $result;
+
+	}
 }
 
