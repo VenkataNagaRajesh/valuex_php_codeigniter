@@ -219,7 +219,8 @@
 				<table id="tztable" class="table table-bordered dataTable no-footer">
 				  <thead>
 					   <tr>
-							<th><?=$this->lang->line('slno')?></th>
+						      
+							<th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
 							<th><?=$this->lang->line('market_name')?></th>
 							<th><?php echo "Airline";?></th>
 							<th><?=$this->lang->line('level_type')?></th>
@@ -341,9 +342,9 @@ function loaddatatable() {
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
-      "columns": [{"data": "market_id" },
-		          {"data": "market_name"},
-		          {"data": "airline_name"},
+      "columns": [{"data": "cbox" },
+		  {"data": "market_name"},
+		  {"data": "airline_name"},
                   {"data": "lname" },
 				  {"data": "levelname" },
 				  {"data": "iname" },
@@ -377,10 +378,40 @@ function loaddatatable() {
 							$a.remove();
 						  });
                         }
-                 }                
+                 }  
+
+
+			 {
+                text: 'Bulk Delete',
+                action: function ( e, dt, node, config ) {
+
+			if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+            var ids = [];
+            $('.deleteRow').each(function(){
+                if($(this).is(':checked')) { 
+                    ids.push($(this).val());
+                }
+            });
+            var ids_string = ids.toString();  // array to string conversion 
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('marketzone/delete_mz_bulk_records'); ?>",
+                data: {data_ids:ids_string},
+                success: function(result) {
+                   $('#tztable').DataTable().ajax.reload();
+                },
+                async:false
+            });
+        }
+
+                }
+
+            }
+
+>>>>>>> branch 'master' of https://gitlab.com/sweken-dev/valuex.git
             ] ,
 	"autoWidth": false,
-     "columnDefs": [ { "width": "30px", "targets": 0 },
+     "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "130px" },
                      { "width": "130px", "targets": 1 },
                      { "width": "50px", "targets": 2 },
 					 { "width": "60px", "targets": 9 }					 
@@ -826,12 +857,52 @@ $('#mytree').jstree({
 
 
 }
+
  $(document).ready(function () {
             $("#example").keyup(function () {
                 var searchString = $(this).val();
                 $('#mytree').jstree('search', searchString);
             });
+
+
+
+$("#bulkDelete").on('click',function() { // bulk checked
+        var status = this.checked;
+        $(".deleteRow").each( function() {
+            $(this).prop("checked",status);
         });
+    });
+     
+    $('#deleteTriger').on("click", function(event){ // triggering delete one by one
+        if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+            var ids = [];
+            $('.deleteRow').each(function(){
+                if($(this).is(':checked')) { 
+                    ids.push($(this).val());
+                }
+            });
+            var ids_string = ids.toString();  // array to string conversion 
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('marketzone/delete_mz_bulk_records'); ?>",
+                data: {data_ids:ids_string},
+                success: function(result) {
+		   $('#tztable').DataTable().ajax.reload();
+                },
+                async:false
+            });
+        }
+    }); 
+
+
+ $('#tztable input:checkbox').click(function() {
+        $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
+    });
+
+
+        });
+
+
     </script>
 
        
