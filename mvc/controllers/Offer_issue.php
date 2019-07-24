@@ -372,7 +372,13 @@ $sWhere $sOrder $sLimit";
                 }
 
 
-                echo json_encode( $output );
+                if(isset($_REQUEST['export'])){
+				  $columns = array('#','Passenger List','PNR Reference','Board Point','Off Point','Departure Date','Carrier','Flight Number');
+				  $rows = array("offer_id","passenger_list","pnr_ref","source_point","dest_point","departure_date","carrier","flight_number");
+				  $this->exportall($output['aaData'],$columns,$rows);		
+				} else {	
+				  echo json_encode( $output );
+				}
 
 	}
 

@@ -147,9 +147,11 @@
 				  echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
 				<div class="col-sm-2">
-				 <button type="button" class="btn btn-danger form-control" name="filter" id="filter"  onclick="$('#seasonslist').dataTable().fnDestroy();;loaddatatable();">Search</button>
+				 <button type="button" class="btn btn-danger" name="filter" id="filter"  onclick="$('#seasonslist').dataTable().fnDestroy();;loaddatatable();">Filter</button>				 
+				 <button type="button" class="btn btn-danger" name="filter" onclick="downloadSeason()">Download</button>
 				 <!-- <button data-toggle="collapse" data-target="#seasonList" type="button" class="form-control btn btn-danger"><i class="fa fa-table"></i> View</button>-->
-				</div>			
+				</div>
+               				
 			</div>
 		</form>
 
@@ -329,10 +331,43 @@ $(document).ready(function() {
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                       action: function(e, dt, node, config) {
+                          $.ajax({
+                               url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
+                               type: 'get',
+                               data: {sSearch: $("input[type=search]").val(),"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val()},
+                               dataType: 'json'
+                           }).done(function(data){
+						var $a = $("<a>");
+						$a.attr("href",data.file);
+						$("body").append($a);
+						$a.attr("download","season.xls");
+						$a[0].click();
+						$a.remove();
+					  });
+                       }
+                 }	                
             ] ,
     });
   }); 
+  
+  function downloadSeason(){
+	   $.ajax({
+           url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
+           type: 'get',
+           data: {"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val()},
+           dataType: 'json'
+        }).done(function(data){
+		var $a = $("<a>");
+		$a.attr("href",data.file);
+		$("body").append($a);
+		$a.attr("download","season.xls");
+		$a[0].click();
+		$a.remove();
+	  });
+  }
   
    $('#seasonslist tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({

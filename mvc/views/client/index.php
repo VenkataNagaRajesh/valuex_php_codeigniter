@@ -14,6 +14,27 @@
              </a>
          </h5>
      <?php } ?>
+	 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
+			<div class='form-group'>
+			    <div class="col-sm-2">			   
+                 <?php $status = array("InActive","Active","Status");               
+                  						
+				   echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
+                </div>
+                <div class="col-sm-2">			   
+                 <?php $list = array("0" => "Select Carrier");               
+                  		foreach($airlines as $airline){
+						  $list[$airline->vx_aln_data_defnsID] = $airline->aln_data_value."(".$airline->code.")";	
+						}				
+				   echo form_dropdown("airlineID", $list,set_value("airlineID",$airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'");    ?>
+                </div>	
+				<div class="col-sm-2">
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+				  <button type="button" class="btn btn-danger" name="download" onclick="downloadClients()" >Download</button>
+                </div>
+				
+            </div>				
+	 </form>
     <!-- form start -->
     <div class="box-body">
         <div class="row">
@@ -50,13 +71,23 @@
     $('#clienttable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
-      "sAjaxSource": "<?php echo base_url('client/server_processing'); ?>", 
+      "sAjaxSource": "<?php echo base_url('client/server_processing'); ?>",
+      "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
+       aoData.push({"name": "airlineID","value": $("#airlineID").val()},
+                   {"name": "active","value": $("#active").val()} ) //pushing custom parameters
+                oSettings.jqXHR = $.ajax( {
+                    "dataType": 'json',
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+			 } ); },	  
 	  "columns": [{"data": "VX_aln_clientID" },
                   {"data": "image" },
 				  {"data": "name" },
 				  {"data": "email" },
 				  {"data": "phone" }, 
-                  {"data": "airline_name"},
+                  {"data": "airline_code"},
 				  {"data": "active"},
                   {"data": "action"}
 				  ],			     
@@ -66,10 +97,43 @@
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('client/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"airlineID": $("#airlineID").val(),"active":$('#active').val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","airline_clients.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }	                
             ] ,
     });
   }); 
+  
+  function downloadClients(){
+	$.ajax({
+        url: "<?php echo base_url('client/server_processing'); ?>?page=all&&export=1",
+        type: 'get',
+        data: {"airlineID": $("#airlineID").val(),"active":$('#active').val()},
+        dataType: 'json'
+    }).done(function(data){
+	var $a = $("<a>");
+	$a.attr("href",data.file);
+	$("body").append($a);
+	$a.attr("download","airline_clients.xls");
+	$a[0].click();
+	$a.remove();
+	 });  
+  }
   
    $('#clienttable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({

@@ -61,9 +61,11 @@
                  </div>
 
 
-                <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                <div class="col-sm-4">
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabins()">Download</button>			   
                 </div>
+				
                           </div>
                          </form>
 
@@ -144,7 +146,23 @@
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export'} },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },{ text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('airline_cabin/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"airlineID": $("#airline_code").val(),"cabinID": $("#airline_cabin").val(),"active": $("#active").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","airline_cabin.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }	                
             ] ,
 	 "autoWidth": false,
      "columnDefs": [ { "width": "20px", "targets": 0 },{"targets":5,
@@ -159,6 +177,22 @@
 	 
     });
   });
+  
+  function downloadCabins(){
+	  $.ajax({
+           url: "<?php echo base_url('airline_cabin/server_processing'); ?>?page=all&&export=1",
+           type: 'get',
+           data: {"airlineID": $("#airline_code").val(),"cabinID": $("#airline_cabin").val(),"active": $("#active").val()},
+           dataType: 'json'
+       }).done(function(data){
+		  var $a = $("<a>");
+		  $a.attr("href",data.file);
+		  $("body").append($a);
+		  $a.attr("download","airline_cabin.xls");
+		  $a[0].click();
+		  $a.remove();
+		 });
+  }
   
    $('#tztable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({

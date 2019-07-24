@@ -30,6 +30,9 @@
 				<div class="col-sm-2">
                   <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                 </div>
+				<div class="col-sm-1">
+                  <button type="button" class="btn btn-danger" name="download" onclick="downloadData()"  id="download">Download</button>
+                </div>
             </div>				
 	 </form>
     <!-- form start -->
@@ -134,6 +137,21 @@
 	//$(".dt-buttons").append('<a href="<?=base_url("definition_data/server_processing")?>?page=all&&export=1" class="dt-button" tabindex="0" aria-controls="defdata"><span>ExportA</span></a>');
     });
 
+  function downloadData(){
+	  $.ajax({
+        url: "<?php echo base_url('definition_data/server_processing'); ?>?page=all&&export=1",
+        type: 'get',
+        data: {"aln_data_typeID": $("#aln_data_typeID").val()},
+        dataType: 'json'
+        }).done(function(data){
+		var $a = $("<a>");
+		$a.attr("href",data.file);
+		$("body").append($a);
+		$a.attr("download","definition_data.xls");
+		$a[0].click();
+		$a.remove();
+	   }); 
+   }  
     
    $('#defdata tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
