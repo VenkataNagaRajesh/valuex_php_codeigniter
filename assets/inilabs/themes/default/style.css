@@ -52,6 +52,11 @@ a {
 	color: #ff6633;
 	letter-spacing: 6px;
 }
+@media screen and (max-width: 767px) {
+	.top-bar-title{
+		font-size:14px;
+	}
+}
 a:hover,
 a:active,
 a:focus {
@@ -2616,13 +2621,26 @@ Component: timeline
   display: block;
 }
 @media screen and (max-width: 767px) {
-  .error-page > .error-content {
-    margin-left: 0;
-  }
-}
-.error-page > .error-content > h3 {
-  font-weight: 300;
-  font-size: 25px;
+	.error-page > .error-content {
+		margin-left: 0;
+	}
+	.error-page > .error-content > h3 {
+		font-weight: 300;
+		font-size: 25px;
+	}
+	.box .box-header {
+		width: 91%;
+		margin-right: 7px;
+	}
+	.mbl-user-name{
+		display:none;
+	}
+	.main-footer {
+		margin-left:0 !important;
+	}
+	.select2-container.form-control {
+		margin:12px 0 !important;
+	}
 }
 @media screen and (max-width: 767px) {
   .error-page > .error-content > h3 {
