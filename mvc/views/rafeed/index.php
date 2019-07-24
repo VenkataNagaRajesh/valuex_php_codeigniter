@@ -131,47 +131,56 @@
                 </div>	             				
 			  </div>
 			 </form>			
-            <div class="tab-content table-responsive" id="hide-table">
-               <table id="rafeedtable" class="table table-bordered dataTable no-footer">
-                 <thead>
-                    <tr>
-                        <th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
-			 <th class="col-lg-2"><?=$this->lang->line('airline_code')?></th>
+
+<div class="col-md-12">
+                <div class="col-md-12">
+                        <div class="tab-content table-responsive" id="hide-table">
+                                <table id="rafeedtable" class="table table-bordered dataTable no-footer">
+                                  <thead>
+                                           <tr>
+<th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
+                         <th class="col-lg-2"><?=$this->lang->line('airline_code')?></th>
                         <th class="col-lg-2"><?=$this->lang->line('ticket_number')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('coupon_number')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('booking_country')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('booking_city')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('issuance_country')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('coupon_number')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('booking_country')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('booking_city')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('issuance_country')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('issuance_city')?></th>
-			 <th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
+                         <th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
                          <th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('prorated_price')?></th>
-			 <th class="col-lg-1"><?=$this->lang->line('cabin')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('class')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('fare_basis')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('prorated_price')?></th>
+                         <th class="col-lg-1"><?=$this->lang->line('cabin')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('class')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('fare_basis')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
 
                         <th class="col-lg-1"><?=$this->lang->line('day_of_week')?></th>
-			 <th class="col-lg-1"><?=$this->lang->line('operating_airline_code')?></th>
+                         <th class="col-lg-1"><?=$this->lang->line('operating_airline_code')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('marketing_airline_code')?></th>
-			<th class="col-lg-1"><?php echo "Carrier Code";?></th>
+                        <th class="col-lg-1"><?php echo "Carrier Code";?></th>
                         <th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
                          <th class="col-lg-1"><?=$this->lang->line('office_id')?></th>
                          <th class="col-lg-1"><?=$this->lang->line('channel')?></th>
-			<th class="col-lg-1"><?=$this->lang->line('pax_type')?></th>
-			
-			
-		 <th class="col-lg-1 noExport"><?=$this->lang->line('active')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('pax_type')?></th>
 
-	<?php if(permissionChecker('rafeed_delete') || permissionChecker('rafeed_view')){?>
+
+                 <th class="col-lg-1 noExport"><?=$this->lang->line('active')?></th>
+
+        <?php if(permissionChecker('rafeed_delete') || permissionChecker('rafeed_view')){?>
                                 <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
-						<?php }?>
-                    </tr>
-                 </thead>
-                 <tbody>                          
-                 </tbody>
-              </table>
-            </div>
+                                                <?php }?>
+
+
+                                           </tr>
+                                   </thead>
+                                   <tbody>
+                                        </tbody>
+                                </table>
+                         </div>
+                 </div>
+        </div>
+
+
           </div>
        </div>
    </div>
@@ -354,10 +363,9 @@ $("#bulkDelete").on('click',function() { // bulk checked
         }
     }); 
 
-
- $('#rafeedtable input:checkbox').click(function() {
-        $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
-    });
+$('#rafeedtable').on('click', 'input[type="checkbox"]', function() {
+        $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+});
 
 });
  </script>

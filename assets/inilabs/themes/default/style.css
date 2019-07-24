@@ -4520,6 +4520,10 @@ table{
    table-layout: fixed;
 }
 
+#cabintable{
+   table-layout: fixed;
+}
+
 .rowselected {
     background-color: #a6b4cd;
 }

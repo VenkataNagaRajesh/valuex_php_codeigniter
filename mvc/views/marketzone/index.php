@@ -893,7 +893,7 @@ $("#bulkDelete").on('click',function() { // bulk checked
     }); 
 
 
- $('#tztable input:checkbox').click(function() {
+$('#tztable').on('click', 'input[type="checkbox"]', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
 
