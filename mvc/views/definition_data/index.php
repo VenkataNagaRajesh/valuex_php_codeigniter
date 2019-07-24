@@ -60,12 +60,28 @@
   </div>
 </div>
 <script>
- $(document).ready(function() {	 
+ $(document).ready(function() {	
+ 
+  /* jQuery.fn.DataTable.Api.register( 'buttons.exportData()', function ( options ) {   alert(buttons[0]); 
+            if ( this.context.length ) {
+                var jsonResult = $.ajax({
+                    url: "<?php echo base_url('definition_data/server_processing'); ?>?page=all",
+                    data: {sSearch: $("#search").val()},
+                    success: function (result) {
+                        //Do nothing
+                    },
+                    async: false
+                });
+
+                return {body: jsonResult.responseJSON.data, header: $("#defdata thead tr th").map(function() { return this.innerHTML; }).get()};
+            }
+        } ); */ 
+
     $('#defdata').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
-	  "lengthMenu": [[10,20, 100, -1], [10,20,100, "All"]],
-      "pageLength": 10,
+	 // "lengthMenu": [[10,20, 100, -1], [10,20,100, "All"]],
+     // "pageLength": 10,
       "sAjaxSource": "<?php echo base_url('definition_data/server_processing'); ?>",  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "aln_data_typeID","value": $("#aln_data_typeID").val()} ) //pushing custom parameters
@@ -86,16 +102,39 @@
 				  ],			     
      dom: 'B<"clear">lfrtip',
      //buttons: [ 'copy', 'csv', 'excel','pdf' ]
-     buttons: [
+    buttons: [
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } ,modifier: {search: 'applied',
-                    order: 'applied' } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
-     ] 	 
+                    order: 'applied',page : 'all'}
+          		},
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('definition_data/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"aln_data_typeID": $("#aln_data_typeID").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","definition_data.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }					              
+              ] 
     });
-  }); 
-  
+	
+	//$(".dt-buttons").append('<a href="<?=base_url("definition_data/exportall")?>" class="dt-button" tabindex="0" aria-controls="defdata"><span>ExportAll</span></a>');
+	
+	//$(".dt-buttons").append('<a href="<?=base_url("definition_data/server_processing")?>?page=all&&export=1" class="dt-button" tabindex="0" aria-controls="defdata"><span>ExportA</span></a>');
+    });
+
+    
    $('#defdata tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',

@@ -650,7 +650,11 @@ on MainSet.market_id = SubSet.market_id
                 "aaData" => array()
             );
 
+	$rownum = 1 + $_GET['iDisplayStart'];
+
                 foreach($rResult as $marketzone){
+			    $marketzone->cbox = "<input type='checkbox'  class='deleteRow' value='".$marketzone->market_id."'  /> #".$rownum ;
+				$rownum++;
                         if(permissionChecker('marketzone_edit') ) {
 				//$marketzone->action .= btn_edit('marketzone/edit/'.$marketzone->market_id, $this->lang->line('edit'));
 				$marketzone->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_market"  data-placement="top" onclick="editzone('.$marketzone->market_id.')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></a>';
@@ -736,6 +740,19 @@ on MainSet.market_id = SubSet.market_id
 
 
 	
+public function delete_mz_bulk_records(){
+$data_ids = $_REQUEST['data_ids'];
+$data_id_array = explode(",", $data_ids); 
+if(!empty($data_id_array)) {
+    foreach($data_id_array as $id) {
+
+		 $this->data['marketzone'] = $this->marketzone_m->get_marketzonename($id);
+                        if($this->data['marketzone']) {
+                                $this->marketzone_m->delete_marketzone($id);
+			}
+    }
+}
+}
 
 
 }

@@ -339,6 +339,7 @@ class Definition_data extends Admin_Controller {
 				$sWhere .= ')';
 			}
 			
+						
 			/* Individual column filtering */
 			for ( $i=0 ; $i<count($aColumns) ; $i++ )
 			{
@@ -359,15 +360,16 @@ class Definition_data extends Admin_Controller {
 		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
               $sWhere .= 'dd.aln_data_typeID = '.$this->input->get('aln_data_typeID');		 
 	        }	
-			
+		
 		$sQuery = "SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
 		$sWhere			
 		$sOrder
-		$sLimit	"; 
-	
-	$rResult = $this->install_m->run_query($sQuery);
-	$sQuery = "SELECT FOUND_ROWS() as total";
-	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
+        $sLimit		
+		";     		
+		
+		$rResult = $this->install_m->run_query($sQuery);
+		$sQuery = "SELECT FOUND_ROWS() as total";
+		$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
 			
 		$output = array(
 		"sEcho" => intval($_GET['sEcho']),
@@ -399,7 +401,14 @@ class Definition_data extends Admin_Controller {
 
 			$output['aaData'][] = $defdata;				
 		}
-		echo json_encode( $output );
+		
+		if(isset($_REQUEST['export'])){
+		  $columns = array('#','Type','Name','Parent','Code');
+		  $rows = array('vx_aln_data_defnsID','datatype','aln_data_value','parent','code');
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
 
 }
