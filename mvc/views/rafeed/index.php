@@ -131,11 +131,11 @@
                 </div>	             				
 			  </div>
 			 </form>			
-            <div id="hide-table">
-               <table id="rafeedtable" class="table table-striped table-bordered table-hover dataTable no-footer">
+            <div class="tab-content table-responsive" id="hide-table">
+               <table id="rafeedtable" class="table table-bordered dataTable no-footer">
                  <thead>
                     <tr>
-                        <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+                        <th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
 			 <th class="col-lg-2"><?=$this->lang->line('airline_code')?></th>
                         <th class="col-lg-2"><?=$this->lang->line('ticket_number')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('coupon_number')?></th>
@@ -204,7 +204,7 @@
                     "success": fnCallback
                          } ); }, 
 
-      "columns": [{"data": "rafeed_id" },
+      "columns": [{"data": "cbox" },
 		  {"data": "airline_code" },
                   {"data": "ticket_number" },
 				  {"data": "coupon_number" },
@@ -238,7 +238,9 @@
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
-            ] 
+            ] ,
+
+ "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "130px" }]
     });
 	
 	
@@ -319,4 +321,43 @@ $( ".select2" ).select2();
 $("#start_date").datepicker();
 $("#end_date").datepicker();
 
+
+$(document).ready(function () {
+
+
+$("#bulkDelete").on('click',function() { // bulk checked
+        var status = this.checked;
+        $(".deleteRow").each( function() {
+            $(this).prop("checked",status);
+        });
+    });
+
+
+ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
+        if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+            var ids = [];
+            $('.deleteRow').each(function(){
+                if($(this).is(':checked')) { 
+                    ids.push($(this).val());
+                }
+            });
+            var ids_string = ids.toString();  // array to string conversion 
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('rafeed/delete_rafeed_bulk_records'); ?>",
+                data: {data_ids:ids_string},
+                success: function(result) {
+                   $('#rafeedtable').DataTable().ajax.reload();
+                },
+                async:false
+            });
+        }
+    }); 
+
+
+ $('#rafeedtable input:checkbox').click(function() {
+        $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
+    });
+
+});
  </script>

@@ -18,13 +18,14 @@ class Rafeed extends Admin_Controller {
 	
 	public function index() {
 
-		 $this->data['headerassets'] = array(
+               $this->data['headerassets'] = array(
                         'css' => array(
                                 'assets/select2/css/select2.css',
-                                'assets/select2/css/select2-bootstrap.css'
+                                'assets/select2/css/select2-bootstrap.css',
+                                'assets/dist/themes/default/style.min.css',
                         ),
                         'js' => array(
-                                'assets/select2/select2.js'
+                                'assets/select2/select2.js',
                         )
                 );
 
@@ -590,10 +591,14 @@ class Rafeed extends Admin_Controller {
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+
+$rownum = 1 + $_GET['iDisplayStart'];
+
 	  foreach($rResult as $feed){		 	
+		$feed->cbox = "<input type='checkbox'  class='deleteRow' value='".$feed->rafeed_id."'  /> #".$rownum ;
+		$rownum++;
+
 		$feed->departure_date = date('d/m/Y',$feed->departure_date);
-
-
 		
 		  if(permissionChecker('rafeed_delete')){
 		   $feed->action .= btn_delete('rafeed/delete/'.$feed->rafeed_id, $this->lang->line('delete'));			 
@@ -656,6 +661,20 @@ class Rafeed extends Admin_Controller {
         return $time_in_seconds;
 
  }
+
+
+public function delete_rafeed_bulk_records(){
+$data_ids = $_REQUEST['data_ids'];
+$data_id_array = explode(",", $data_ids);
+if(!empty($data_id_array)) {
+    foreach($data_id_array as $id) {
+	$this->data['rafeed'] = $this->rafeed_m->get_single_rafeed(array('rafeed_id'=>$id));
+                        if($this->data['rafeed']) {
+				$this->rafeed_m->delete_rafeed($id);
+                        }
+    }
+}
+}
 
 }
 
