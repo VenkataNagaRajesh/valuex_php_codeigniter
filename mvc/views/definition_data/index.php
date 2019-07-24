@@ -7,9 +7,6 @@
             <li class="active"><?=$this->lang->line('menu_defdata')?></li>
         </ol>
     </div><!-- /.box-header -->
-	<div class="box-body">
-      <div class="row">
-         <div class="col-sm-12"> 
 	<h5 class="page-header">                        
 		<?php if(permissionChecker('definition_data_add')) { ?>
          <a href="<?php echo base_url('definition_data/add') ?>" data-toggle="tooltip" data-title="Add Data" data-placement="left" class="btn btn-danger">
@@ -18,17 +15,23 @@
          </a>
 		<?php } ?>
     </h5>
+	<div class="box-body">
+      <div class="row">
+         <div class="col-sm-12"> 
      <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>
-                <div class="col-sm-2">			   
-                 <?php $typelist = array("0" => "Select Type");               
+                <div class="col-sm-2 col-xs-6">			   
+                 <?php $typelist = array("0" => " Type");               
                   		foreach($types as $type){
 						  $typelist[$type->vx_aln_data_typeID] = $type->alias;	
 						}				
 				   echo form_dropdown("aln_data_typeID", $typelist,set_value("aln_data_typeID",$aln_data_typeID), "id='aln_data_typeID' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>	
-				<div class="col-sm-2">
+				<div class="col-sm-2 col-xs-6">
                   <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                </div>
+				<div class="col-sm-1">
+                  <button type="button" class="btn btn-danger" name="download" onclick="downloadData()"  id="download">Download</button>
                 </div>
             </div>				
 	 </form>
@@ -134,6 +137,21 @@
 	//$(".dt-buttons").append('<a href="<?=base_url("definition_data/server_processing")?>?page=all&&export=1" class="dt-button" tabindex="0" aria-controls="defdata"><span>ExportA</span></a>');
     });
 
+  function downloadData(){
+	  $.ajax({
+        url: "<?php echo base_url('definition_data/server_processing'); ?>?page=all&&export=1",
+        type: 'get',
+        data: {"aln_data_typeID": $("#aln_data_typeID").val()},
+        dataType: 'json'
+        }).done(function(data){
+		var $a = $("<a>");
+		$a.attr("href",data.file);
+		$("body").append($a);
+		$a.attr("download","definition_data.xls");
+		$a[0].click();
+		$a.remove();
+	   }); 
+   }  
     
    $('#defdata tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({

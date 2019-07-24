@@ -581,6 +581,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , 
                         $list->active .= "<label for='myonoffswitch".$list->cabin_map_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
 
 		if ( !empty($list->video_links) ){
+			$list->videos = $list->video_links;
 		  $links = explode(',', $list->video_links );
 			$list->video_links = '';
 			foreach ($links as $k=>$link) {
@@ -591,7 +592,13 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , 
                         $output['aaData'][] = $list;
 
                 }
-                echo json_encode( $output );
+               if(isset($_REQUEST['export'])){
+				  $columns = array('#','Airline Name','Aircraft','Cabin','Image Count','Video Links');
+				  $rows = array("cabin_map_id","airline_code","aircraft_name","airline_cabin","img_cnt","videos");
+				  $this->exportall($output['aaData'],$columns,$rows);		
+				} else {	
+				  echo json_encode( $output );
+				}
         }
 
  public function getAirlineCabinByName(){

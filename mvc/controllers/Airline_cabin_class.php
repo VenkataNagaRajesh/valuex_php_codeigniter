@@ -445,7 +445,13 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, airline_class,  ac.aln_data_value
                         $output['aaData'][] = $list;
 
                 }
-                echo json_encode( $output );
+                if(isset($_REQUEST['export'])){
+				  $columns = array('#','Carrier','Carrier Cabin','Carrier Class','Revenue','Order');
+				  $rows = array("map_id","carrier_name","airline_cabin","airline_class","is_revenue","order");
+				  $this->exportall($output['aaData'],$columns,$rows);		
+				} else {	
+				  echo json_encode( $output );
+				}
         }
 
 

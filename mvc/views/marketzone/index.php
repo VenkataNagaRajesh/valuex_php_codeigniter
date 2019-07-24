@@ -205,7 +205,9 @@
 						</div>
 						<div class="col-md-1">
 				 <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#tztable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+				 <a href="#" type="button"  class="btn btn-danger" onclick="downloadZone()">Download</a>
 						</div>
+						
 					</div>
 				</div>
 			</form>
@@ -360,6 +362,24 @@ function loaddatatable() {
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('marketzone/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"marketID": $("#smarket_id").val(),"levelID":$("#samz_level_id").val(),"inclID":$("#samz_incl_id").val(),"exclID":$("#samz_excl_id").val(),"airlineID":$("#sairline_id").val(),"active":$("#active").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","marketzone.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }  
+
 
 			 {
                 text: 'Bulk Delete',
@@ -388,6 +408,7 @@ function loaddatatable() {
 
             }
 
+>>>>>>> branch 'master' of https://gitlab.com/sweken-dev/valuex.git
             ] ,
 	"autoWidth": false,
      "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "130px" },
@@ -403,6 +424,22 @@ function loaddatatable() {
         html: true
     });
   });
+  
+  function downloadZone(){
+	   $.ajax({
+             url: "<?php echo base_url('marketzone/server_processing'); ?>?page=all&&export=1",
+             type: 'get',
+             data: {"marketID": $("#smarket_id").val(),"levelID":$("#samz_level_id").val(),"inclID":$("#samz_incl_id").val(),"exclID":$("#samz_excl_id").val(),"airlineID":$("#sairline_id").val(),"active":$("#active").val()},
+             dataType: 'json'
+         }).done(function(data){
+			var $a = $("<a>");
+			$a.attr("href",data.file);
+			$("body").append($a);
+			$a.attr("download","marketzone.xls");
+			$a[0].click();
+			$a.remove();
+		   });
+  }
   
  var status = '';
   var id = 0;

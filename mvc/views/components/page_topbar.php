@@ -12,15 +12,15 @@
 			
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
-                <!-- Sidebar toggle button
-                <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="navbar-btn sidebar-toggle hidden-md hidden-lg col-xs-2" data-toggle="offcanvas" role="button">
                     <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                </a>-->
-				 <p class="top-bar-title col-md-10">Airline Offer Management System</p>
-
+                </a>
+				<p class="top-bar-title col-md-10 hidden-xs">Airline Offer Management System</p>
+				<p class="top-bar-title col-xs-8 hidden-md hidden-lg">Airline Offer Management System</p>
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
                         <!-- School Year: style can be found in dropdown.less-->
@@ -326,7 +326,7 @@
                                 <!--<img src="<?=base_url("uploads/images/".$this->session->userdata('photo')); 
                                 ?>" class="user-logo" alt="" />-->
                                 <span class="user-icon"><i class="fa fa-user"></i></span>
-                                <span>
+                                <span class="mbl-user-name">
                                     <?php
                                         $name = $this->session->userdata('name');
                                         if(strlen($name) > 11) {

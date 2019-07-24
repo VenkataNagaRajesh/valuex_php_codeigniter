@@ -719,11 +719,18 @@ class Season extends Admin_Controller {
 		   
 		    $season->orig_level_values = $orig_level_values;
 			$season->dest_level_values = $dest_level_values;
+			$season->color = $season->season_color;
 		   $season->season_color = '<p class="season-list-color" style="background: '.$season->season_color.'"></p>';
 			
 			$output['aaData'][] = $season;				
 		}
-		echo json_encode( $output );
+		if(isset($_REQUEST['export'])){
+		  $columns = array("#","Season","Carrier","Carrier Code","Orig Level","Orig Level Values","Dest Level","Dest Level values","Start date","End Date","Return inclusive","Color");
+		  $rows = array("VX_aln_seasonID","season_name","airline_name","airline_code","orig_level","orig_level_values","dest_level","dest_level_values","ams_season_start_date","ams_season_end_date","is_return_inclusive","color");
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
    
     public function searchAirlineCode(){

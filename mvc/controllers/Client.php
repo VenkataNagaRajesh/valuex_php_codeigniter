@@ -181,7 +181,19 @@ class Client extends Admin_Controller {
 	}
 
 	public function index() {
+		$this->data['airlines'] = $this->airline_m->getAirlinesData();
 		
+		if(!empty($this->input->post('airlineID'))){	
+		   $this->data['airlineID'] = $this->input->post('airlineID');
+		} else {
+		  $this->data['airlineID'] = 0;
+		}
+		
+		if(!empty($this->input->post('active'))){	
+		   $this->data['active'] = $this->input->post('active');
+		} else {
+		  $this->data['active'] = 2;
+		}
 		$this->data["subview"] = "client/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -578,8 +590,18 @@ class Client extends Admin_Controller {
                 $sWhere .= 'c.userID = '.$this->session->userdata('loginuserID');	
 			}
 			
+			if($this->input->get('airlineID') > 0 ){
+		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              $sWhere .= 'ca.airlineID = '.$this->input->get('airlineID');		 
+	        }
+			
+			if($this->input->get('active') < 2 ){
+		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+              $sWhere .= 'c.active = '.$this->input->get('active');		 
+	        }
+			
 		    $sGroupby = " GROUP BY c.VX_aln_clientID";
-		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,group_concat(dd.code) airline_name FROM VX_aln_client c LEFT JOIN VX_client_airline ca ON ca.clientID = VX_aln_clientID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
+		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM VX_aln_client c LEFT JOIN VX_client_airline ca ON ca.clientID = VX_aln_clientID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
 			$sWhere	
             $sGroupby
             $sHaving			
@@ -627,7 +649,13 @@ class Client extends Admin_Controller {
 			 $client->image = img($array);
            	$output['aaData'][] = $client;				
 		}
-		echo json_encode( $output );
+		if(isset($_REQUEST['export'])){
+		  $columns = array('#','Name','Email','Phone','Carrier Name',"Carrier Code");
+		  $rows = array("VX_aln_clientID","name","email","phone","airline_name","airline_code");
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
 }
 

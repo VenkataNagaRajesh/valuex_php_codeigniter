@@ -70,7 +70,8 @@
 					</div>
 				</div>
 				<div class="col-sm-2 pull-right">
-					<button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+					<button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+					<button type="button" class="btn btn-danger" onclick="downloadOfferData()" >Download</button>
 				</div>
 			</div>
 		</form>
@@ -132,15 +133,15 @@ $("#dep_to_date").datepicker();
                          } ); }, 
 
       "columns": [ {"data": "offer_id" },
-		   {"data": "passenger_list" },
-		   {"data": "pnr_ref"},
-		   {"data": "source_point" },
+				   {"data": "passenger_list" },
+				   {"data": "pnr_ref"},
+				   {"data": "source_point" },
                    {"data": "dest_point" },
                    {"data": "departure_date" },
                    {"data": "carrier" },
                    {"data": "flight_number" },
-                {"data": "booking_status" },
-		{"data": "bid_info" }
+                   {"data": "booking_status" },
+		           {"data": "bid_info" }
 
 				  ],			     
      dom: 'B<"clear">lfrtip',
@@ -149,15 +150,47 @@ $("#dep_to_date").datepicker();
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('offer_issue/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"pnr_ref":$("#pnr_ref").val(),"carrier":$("#carrier").val(),"fromCabin": $("#from_cabin").val(),"toCabin":$("#to_cabin").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","offer_issue.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
             ] ,
      "autoWidth": false,
-     "columnDefs": [ { "width": "40px", "targets": 0 } ]	
+     "columnDefs": [ { "width": "20px", "targets": 0 } ]	
     });
 	
 	
   });
  
+  function downloadOfferData(){
+	  $.ajax({
+           url: "<?php echo base_url('offer_issue/server_processing'); ?>?page=all&&export=1",
+           type: 'get',
+           data: {"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"pnr_ref":$("#pnr_ref").val(),"carrier":$("#carrier").val(),"fromCabin": $("#from_cabin").val(),"toCabin":$("#to_cabin").val()},
+           dataType: 'json'
+       }).done(function(data){
+		var $a = $("<a>");
+		$a.attr("href",data.file);
+		$("body").append($a);
+		$a.attr("download","offer_issue.xls");
+		$a[0].click();
+		$a.remove();
+	   });
+  }
   
    $('#offertable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
