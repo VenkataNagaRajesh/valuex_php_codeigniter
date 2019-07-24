@@ -867,10 +867,16 @@ $('#mytree').jstree({
 $("#bulkDelete").on('click',function() { // bulk checked
         var status = this.checked;
         $(".deleteRow").each( function() {
+          if(status == 1 && $(this).prop('checked')) {
+                
+          } else {
             $(this).prop("checked",status);
+            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+         }
         });
     });
-     
+
+
     $('#deleteTriger').on("click", function(event){ // triggering delete one by one
         if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
             var ids = [];

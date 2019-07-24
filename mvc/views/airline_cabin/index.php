@@ -269,7 +269,12 @@ $(document).ready(function() {
 $("#bulkDelete").on('click',function() { // bulk checked
         var status = this.checked;
         $(".deleteRow").each( function() {
+          if(status == 1 && $(this).prop('checked')) {
+                
+          } else {
             $(this).prop("checked",status);
+            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+         }
         });
     });
 
