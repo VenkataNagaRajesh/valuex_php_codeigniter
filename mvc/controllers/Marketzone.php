@@ -125,11 +125,9 @@ class Marketzone extends Admin_Controller {
                                 'assets/select2/css/select2.css',
                                 'assets/select2/css/select2-bootstrap.css',
 				'assets/dist/themes/default/style.min.css',
-				'assets/datatables/select.dataTables.min.css'
                         ),
                         'js' => array(
 				'assets/treeview/simpleTree.js',
-				'assets/datatables/tools/dataTables.select.min.js',
                                 'assets/select2/select2.js',
 				'assets/dist/jstree.min.js'
                         )

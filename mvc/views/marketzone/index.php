@@ -218,7 +218,7 @@
 				  <thead>
 					   <tr>
 						      
-							<th><input type="checkbox"  id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
+							<th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
 							<th><?=$this->lang->line('market_name')?></th>
 							<th><?php echo "Airline";?></th>
 							<th><?=$this->lang->line('level_type')?></th>
@@ -856,7 +856,16 @@ $("#bulkDelete").on('click',function() { // bulk checked
             });
         }
     }); 
+
+
+ $('#tztable input:checkbox').click(function() {
+        $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
+    });
+
+
         });
+
+
     </script>
 
        

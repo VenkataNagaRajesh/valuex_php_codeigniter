@@ -4498,3 +4498,7 @@ table{
 #rafeedtable{
    table-layout: fixed;
 }
+
+.rowselected {
+    background-color: #a6b4cd;
+}
