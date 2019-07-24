@@ -378,8 +378,7 @@ function loaddatatable() {
 							$a.remove();
 						  });
                         }
-                 }  
-
+                 },  
 
 			 {
                 text: 'Bulk Delete',
@@ -408,7 +407,6 @@ function loaddatatable() {
 
             }
 
->>>>>>> branch 'master' of https://gitlab.com/sweken-dev/valuex.git
             ] ,
 	"autoWidth": false,
      "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "130px" },
