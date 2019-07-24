@@ -62,11 +62,11 @@
 <script>
  $(document).ready(function() {	
  
-  jQuery.fn.DataTable.Api.register( 'button.exportData()', function ( options ) {   alert(buttons[0]); 
+  /* jQuery.fn.DataTable.Api.register( 'buttons.exportData()', function ( options ) {   alert(buttons[0]); 
             if ( this.context.length ) {
                 var jsonResult = $.ajax({
                     url: "<?php echo base_url('definition_data/server_processing'); ?>?page=all",
-                    data: {search: $("#search").val()},
+                    data: {sSearch: $("#search").val()},
                     success: function (result) {
                         //Do nothing
                     },
@@ -75,14 +75,13 @@
 
                 return {body: jsonResult.responseJSON.data, header: $("#defdata thead tr th").map(function() { return this.innerHTML; }).get()};
             }
-        } );
- 
+        } ); */ 
 
     $('#defdata').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
-	  "lengthMenu": [[10,20, 100, -1], [10,20,100, "All"]],
-      "pageLength": 10,
+	 // "lengthMenu": [[10,20, 100, -1], [10,20,100, "All"]],
+     // "pageLength": 10,
       "sAjaxSource": "<?php echo base_url('definition_data/server_processing'); ?>",  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "aln_data_typeID","value": $("#aln_data_typeID").val()} ) //pushing custom parameters
@@ -110,45 +109,32 @@
                     order: 'applied',page : 'all'}
           		},
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-					{
-                        text: 'exportt',
-                        exportOptions: {
-                            columns: ':visible'
-                        },
+				{ text: 'ExportAll', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('definition_data/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {search: $("input[type=search]").val(),"aln_data_typeID": $("#aln_data_typeID").val()},
+                                data: {sSearch: $("input[type=search]").val(),"aln_data_typeID": $("#aln_data_typeID").val()},
                                 dataType: 'json'
-                               /*  success: function(returnedData) {
-                                   window.open("<?php echo base_url('definition_data/server_processing'); ?>?page=all&&export=1",'_blank' ); 
-                                } */
                             }).done(function(data){
 							var $a = $("<a>");
 							$a.attr("href",data.file);
 							$("body").append($a);
-							$a.attr("download","file.xls");
+							$a.attr("download","definition_data.xls");
 							$a[0].click();
 							$a.remove();
 						  });
                         }
-                    }
-					              
-     ]  
-	 
+                 }					              
+              ] 
     });
 	
-	$(".dt-buttons").append('<a href="<?=base_url("definition_data/exportall")?>" class="dt-button" tabindex="0" aria-controls="defdata"><span>ExportAll</span></a>');
+	//$(".dt-buttons").append('<a href="<?=base_url("definition_data/exportall")?>" class="dt-button" tabindex="0" aria-controls="defdata"><span>ExportAll</span></a>');
 	
-	$(".dt-buttons").append('<a href="<?=base_url("definition_data/server_processing")?>?page=all&&export=1" class="dt-button" tabindex="0" aria-controls="defdata"><span>ExportA</span></a>');
+	//$(".dt-buttons").append('<a href="<?=base_url("definition_data/server_processing")?>?page=all&&export=1" class="dt-button" tabindex="0" aria-controls="defdata"><span>ExportA</span></a>');
     });
 
-   	function exporttest(){
-		alert("cheeeeee");
-	}
-  
-  
+    
    $('#defdata tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',

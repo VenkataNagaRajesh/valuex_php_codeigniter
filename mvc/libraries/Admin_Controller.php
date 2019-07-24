@@ -620,42 +620,40 @@ class Admin_Controller extends MY_Controller {
                     $this->mydebug->debug($this->lang->line('mail_error'));
             }
           }
-     }
+     }	
 	 
-	 function exportdata(){
-		  $this->load->library("excel");
-		  $object = new PHPExcel();
-		  
-		  $object->setActiveSheetIndex(0); 
-		  
-		  $table_columns = $this->session->userdata('server_columns');
-
-		  $column = 0;
-
-		  foreach($table_columns as $field)
-		  {
-		   $object->getActiveSheet()->setCellValueByColumnAndRow($column, 1, $field);
-		   $column++;
-		  }
-
-		 $sQuery =$this->session->userdata("server_query"); 			
-		 $results = $this->install_m->run_query($sQuery);
-		 
-		 $excel_row = 2;
-		 $server_rows = $this->session->userdata("server_rows");	
-		  foreach($results as $row)  {
-			foreach($server_rows as $key => $value){ 
+	 public function exportall($data,$columns,$rows){
+	  ob_start();		 
+	  $this->load->library("excel");
+	  $object = new PHPExcel();		  
+	  $object->setActiveSheetIndex(0); 
+	  $column = 0;
+	   foreach($columns as $field) {
+		 $object->getActiveSheet()->setCellValueByColumnAndRow($column, 1, $field);
+		 $column++;
+	   }		 
+		$excel_row = 2;		
+		  foreach($data as $row)  {
+			foreach($rows as $key => $value){ 
 			 $row_data = ($row->$value =='NUL')?'':$row->$value;
 			 $object->getActiveSheet()->setCellValueByColumnAndRow($key, $excel_row,$row_data);  
 			}
 		   $excel_row++;
 		  } 
-
+			
 		  $object_writer = PHPExcel_IOFactory::createWriter($object, 'Excel5');
 		  header('Content-Type: application/vnd.ms-excel');
-		  header('Content-Disposition: attachment;filename='.$this->session->userdata('server_fname').'.xls');
+		  header('Content-Disposition: attachment;filename="myexport.xls"');
 		  $object_writer->save('php://output');
-		  force_download( $object_writer, null);
+		 
+		  $xlsData = ob_get_contents();
+		  ob_end_clean();
+		  $response =  array(
+					     'op' => 'ok',
+					     'file' => "data:application/vnd.ms-excel;base64,".base64_encode($xlsData)
+				       );
+
+		die(json_encode($response));
 	 }
 
 }
