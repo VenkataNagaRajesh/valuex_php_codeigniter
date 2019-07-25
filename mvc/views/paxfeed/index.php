@@ -375,6 +375,7 @@ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
                 data: {data_ids:ids_string},
                 success: function(result) {
                    $('#paxfeedtable').DataTable().ajax.reload();
+		  $('#bulkDelete').prop("checked",false);
                 },
                 async:false
             });

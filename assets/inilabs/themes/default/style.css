@@ -4524,6 +4524,9 @@ table{
    table-layout: fixed;
 }
 
+#carriermaptable{
+   table-layout: fixed;
+}
 .rowselected {
     background-color: #a6b4cd;
 }

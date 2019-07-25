@@ -272,6 +272,7 @@ $("#bulkDelete").on('click',function() { // bulk checked
                 data: {data_ids:ids_string},
                 success: function(result) {
                    $('#invfeedtable').DataTable().ajax.reload();
+		   $('#bulkDelete').prop("checked",false);
                 },
                 async:false
             });
