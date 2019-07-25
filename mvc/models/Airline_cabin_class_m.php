@@ -12,6 +12,11 @@ class Airline_cabin_class_m extends MY_Model {
 	}
 
 
+	function get_airline_cabin_classbyid($id) {
+                $query = $this->db->get_where('VX_aln_airline_cabin_class',array('map_id'=>$id));
+                return $query->row();
+        }
+
 
 	function checkCarrierDataByID($id){
 		$this->db->select('*');
@@ -103,7 +108,6 @@ function getAirlinesToMap($array) {
 
 }
 	function delete_airline_cabin_class($array){
-
 		 $this->db->where($array);
           	$this->db->delete('VX_aln_airline_cabin_class');
               return TRUE;

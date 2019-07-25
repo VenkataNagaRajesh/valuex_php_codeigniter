@@ -730,12 +730,16 @@ on MainSet.market_id = SubSet.market_id
                         }
                         $marketzone->active .= "<label for='myonoffswitch".$marketzone->market_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
 
-
-
                         $output['aaData'][] = $marketzone;
 
                 }
-                echo json_encode( $output );
+               if(isset($_REQUEST['export'])){
+				  $columns = array('#','Marketzone Name','Airline','Level Type','Level Value','Inclusion Type','Inclusion Value','Exclusion Type','Exclusion Value');
+				  $rows = array('market_id','market_name','airline_name','lname','levelname','iname','inclname','ename','exclname');
+				  $this->exportall($output['aaData'],$columns,$rows);		
+			  } else {	
+				  echo json_encode( $output );
+			  }
         }
 
 

@@ -74,15 +74,15 @@ class Airline_cabin extends Admin_Controller {
 
 	public function index() {
 
-		 $this->data['headerassets'] = array(
+
+		  $this->data['headerassets'] = array(
                         'css' => array(
                                 'assets/select2/css/select2.css',
                                 'assets/select2/css/select2-bootstrap.css',
-                                'assets/fselect/fSelect.css'
+                                'assets/dist/themes/default/style.min.css',
                         ),
                         'js' => array(
                                 'assets/select2/select2.js',
-                                'assets/fselect/fSelect.js',
                         )
                 );
 
@@ -552,9 +552,13 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , 
                 "aaData" => array()
             );
 
-		
+		$rownum = 1 + $_GET['iDisplayStart'];
 
                 foreach($rResult as $list){
+
+			$list->chkbox = "<input type='checkbox'  class='deleteRow' value='".$list->cabin_map_id."'  /> #".$rownum ;
+                                $rownum++;
+
 			$list->img_cnt = $this->airline_cabin_m->getImagesCount($list->cabin_map_id);
                         if(permissionChecker('airline_cabin_edit') ) {
 				$list->action = btn_edit('airline_cabin/edit/'.$list->cabin_map_id, $this->lang->line('edit'));
@@ -581,6 +585,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , 
                         $list->active .= "<label for='myonoffswitch".$list->cabin_map_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
 
 		if ( !empty($list->video_links) ){
+			$list->videos = $list->video_links;
 		  $links = explode(',', $list->video_links );
 			$list->video_links = '';
 			foreach ($links as $k=>$link) {
@@ -591,7 +596,13 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , 
                         $output['aaData'][] = $list;
 
                 }
-                echo json_encode( $output );
+               if(isset($_REQUEST['export'])){
+				  $columns = array('#','Airline Name','Aircraft','Cabin','Image Count','Video Links');
+				  $rows = array("cabin_map_id","airline_code","aircraft_name","airline_cabin","img_cnt","videos");
+				  $this->exportall($output['aaData'],$columns,$rows);		
+				} else {	
+				  echo json_encode( $output );
+				}
         }
 
  public function getAirlineCabinByName(){
@@ -626,6 +637,20 @@ public function getAircraftTypes(){
                         }
         }
    }
+
+public function delete_airline_cabins_bulk_records(){
+$data_ids = $_REQUEST['data_ids'];
+$data_id_array = explode(",", $data_ids);
+if(!empty($data_id_array)) {
+    foreach($data_id_array as $id) {
+
+		 $this->data['airline_cabin'] = $this->airline_cabin_m->get_airline_cabin_map_by_id($id);
+                        if($this->data['airline_cabin']) {
+                                $this->airline_cabin_m->delete_airline_cabin($id);
+			}
+    }
+}
+}
 
 
 

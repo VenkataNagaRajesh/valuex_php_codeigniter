@@ -59,7 +59,8 @@
 
 
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabinmap()">Download</button>
                 </div>
                           </div>
                          </form>
@@ -69,10 +70,10 @@
 	       <div class="tab-content">
                 <div id="all" class="tab-pane active">
                   <div id="hide-table">
-                    <table id="tztable" class="table table-striped table-bordered table-hover dataTable no-footer">
+                    <table id="carriermaptable" class="table table-bordered dataTable no-footer">
                        <thead>
                             <tr>
-                                <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+				<th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
 				<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_cabin')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('airline_class')?></th>
@@ -109,7 +110,7 @@
 
   $( ".select2" ).select2();
 
-    $('#tztable').DataTable( {
+    $('#carriermaptable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('airline_cabin_class/server_processing'); ?>",	  
@@ -124,7 +125,7 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
-      "columns": [{"data": "map_id" },
+      "columns": [{"data": "chkbox" },
 		  {"data": "carrier_name"},
 		   {"data": "airline_cabin"},
                   {"data": "airline_class" },
@@ -141,14 +142,47 @@
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('airline_cabin_class/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"carrier": $("#carrier").val(),"cabinID":$("#airline_cabin").val(),"active": $("#active").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","airline_cabin_class.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }	                
             ] ,
 	 "autoWidth": false,
-     "columnDefs": [ { "width": "20px", "targets": 0 },{ "width": "30px", "targets": 5 } ]
+     "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "50px" },{ "width": "30px", "targets": 5 } ]
     });
   });
   
-   $('#tztable tbody').on('mouseover', 'tr', function () {
+  function downloadCabinmap(){
+	 $.ajax({
+          url: "<?php echo base_url('airline_cabin_class/server_processing'); ?>?page=all&&export=1",
+          type: 'get',
+          data: {"carrier": $("#carrier").val(),"cabinID":$("#airline_cabin").val(),"active": $("#active").val()},
+          dataType: 'json'
+      }).done(function(data){
+		var $a = $("<a>");
+		$a.attr("href",data.file);
+		$("body").append($a);
+		$a.attr("download","airline_cabin_class.xls");
+		$a[0].click();
+		$a.remove();
+		}); 
+  }
+  
+   $('#carriermaptable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
         html: true
@@ -157,7 +191,7 @@
 
  var status = '';
   var id = 0;
- $('#tztable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
+ $('#carriermaptable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");
@@ -216,5 +250,49 @@
       }
   }); 
 
+ $(document).ready(function () {
+
+	$("#bulkDelete").on('click',function() { // bulk checked
+        var status = this.checked;
+        $(".deleteRow").each( function() {
+          if(status == 1 && $(this).prop('checked')) {
+                
+          } else {
+            $(this).prop("checked",status);
+            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+         }
+        });
+    });
+
+$('#deleteTriger').on("click", function(event){ // triggering delete one by one
+        if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+            var ids = [];
+            $('.deleteRow').each(function(){
+                if($(this).is(':checked')) { 
+                    ids.push($(this).val());
+                }
+            });
+            var ids_string = ids.toString();  // array to string conversion 
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('airline_cabin_class/delete_carrier_map_bulk_records'); ?>",
+                data: {data_ids:ids_string},
+                success: function(result) {
+                   $('#carriermaptable').DataTable().ajax.reload();
+		   $('#bulkDelete').prop("checked",false);
+                },
+                async:false
+            });
+        }
+    }); 
+
+
+
+   $('#carriermaptable').on('click', 'input[type="checkbox"]', function() {
+        $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
+    });
+
+
+ });
   
 </script>

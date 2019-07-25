@@ -377,7 +377,12 @@ class Definition_data extends Admin_Controller {
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+
+	$rownum = 1 + $_GET['iDisplayStart'];
 	  foreach($rResult as $defdata){		 	
+
+		 $defdata->chkbox = "<input type='checkbox'  class='deleteRow' value='".$defdata->vx_aln_data_defnsID."'  /> #".$rownum ;
+                                $rownum++;
 		  if(permissionChecker('definition_data_edit')){ 			
 			$defdata->action = btn_edit('definition_data/edit/'.$defdata->vx_aln_data_defnsID, $this->lang->line('edit'));
 		  }
@@ -411,5 +416,19 @@ class Definition_data extends Admin_Controller {
 		}
 	}
 
+public function delete_def_bulk_records(){
+$data_ids = $_REQUEST['data_ids'];
+$data_id_array = explode(",", $data_ids);
+if(!empty($data_id_array)) {
+    foreach($data_id_array as $id) {
+
+	$this->data['defdata'] = $this->airports_m->get_definition_data($id);
+                        if($this->data['defdata']) {
+                                $this->airports_m->delete_definition_data($id);
+
+                        }
+    }
+}
 }
 
+}

@@ -312,7 +312,7 @@ function valFrequency($num)
 		if(!empty($this->input->post('active'))){
                 	$this->data['active'] = $this->input->post('active');
                 } else {
-                    	$this->data['active'] = '1';
+                    	$this->data['active'] = '-1';
                 }
 
 		//$this->data['carriers'] = $this->airports_m->getDefnsListByType('12');
@@ -963,7 +963,12 @@ LEFT JOIN (
 		"aaData" => array()
 	  );
 
+	 $rownum = 1 + $_GET['iDisplayStart'];
+
 	  foreach($rResult as $rule){	
+		 $rule->chkbox = "<input type='checkbox'  class='deleteRow' value='".$rule->eexcl_id."'  /> #".$rownum ;
+                                $rownum++;
+
 		$rule->ruleno = 'Rule#'.$rule->excl_grp;
 		$rule->flight_efec_date = $rule->flight_efec_date ? date('d-m-Y',$rule->flight_efec_date) : 'NA';
                $rule->flight_disc_date = $rule->flight_disc_date ? date('d-m-Y',$rule->flight_disc_date) : 'NA';
@@ -1029,5 +1034,20 @@ LEFT JOIN (
 		echo json_encode( $output );
 	}
 
+
+
+public function delete_excl_bulk_records(){
+$data_ids = $_REQUEST['data_ids'];
+$data_id_array = explode(",", $data_ids);
+if(!empty($data_id_array)) {
+    foreach($data_id_array as $id) {
+		 $this->data['rule'] = $this->eligibility_exclusion_m->get_single_eligibility_exclrule(array('eexcl_id'=>$id));
+                        if($this->data['rule']) {
+                                $this->eligibility_exclusion_m->delete_eligibility_rule($id);
+
+                        }
+    }
+}
+}
 
 }

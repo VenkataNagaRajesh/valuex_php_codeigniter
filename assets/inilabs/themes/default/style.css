@@ -3888,7 +3888,7 @@ fieldset[disabled] .btn-vk.active {
 }
 .table-reponsive .col-md-1{
 	padding: 0;
-	margin-top: 1em;
+	margin-top: 0;
 }
 .table-reponsive .btn-danger{
 	width:100%;
@@ -3896,6 +3896,9 @@ fieldset[disabled] .btn-vk.active {
 .mzones{
 	color:#333;
 	margin-top: 12px;
+}
+.mzones .table-reponsive .table {
+    margin-top: 12px;
 }
 .mzones-list-bar .title-bar{
 	margin-top:12px;
@@ -4514,6 +4517,17 @@ table{
    table-layout: fixed;	
 }
 #rafeedtable{
+   table-layout: fixed;
+}
+#cabintable{
+   table-layout: fixed;
+}
+
+#carriermaptable{
+   table-layout: fixed;
+}
+
+#defdata{
    table-layout: fixed;
 }
 .rowselected {

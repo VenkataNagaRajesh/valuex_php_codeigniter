@@ -61,25 +61,29 @@
                  </div>
 
 
-                <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                <div class="col-sm-4">
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabins()">Download</button>			   
                 </div>
+				
                           </div>
                          </form>
 
 		
+
+
+ <div class="col-md-12">
+                <div class="col-md-12">
+                        <div class="tab-content table-responsive" id="hide-table">
+                                <table id="cabintable" class="table table-bordered dataTable no-footer">
+                                  <thead>
+                                           <tr>
 		
-	       <div class="tab-content">
-                <div id="all" class="tab-pane active">
-                  <div id="hide-table">
-                    <table id="tztable" class="table table-striped table-bordered table-hover dataTable no-footer">
-                       <thead>
-                            <tr>
-                                <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-				<th class="col-lg-1"><?=$this->lang->line('airline_name')?></th>
-				<th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
+				 <th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
+                                <th class="col-lg-1"><?=$this->lang->line('airline_name')?></th>
+                                <th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_cabin')?></th>
-				                <th class="col-lg-1"><?php echo "Images Count"?></th>
+                                                <th class="col-lg-1"><?php echo "Images Count"?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_video')?></th>
                                 <?php if(permissionChecker('airline_cabin_edit')) { ?>
                                   <th class="col-lg-1 noExport"><?=$this->lang->line('airline_cabin_status')?></th>
@@ -89,17 +93,16 @@
                                 <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
 
-	
-                            </tr>
-                        </thead>
-						<tbody>                           
-                        </tbody>
-                    <tbody>
-					</tbody>
-					</table>
-				  </div>
-                </div>
-              </div>
+
+                                           </tr>
+                                   </thead>
+                                   <tbody>
+                                        </tbody>
+                                </table>
+                         </div>
+                 </div>
+        </div>
+
             </div>
 		  </div>
         </div>
@@ -110,9 +113,10 @@
 <script type="text/javascript">
   $(document).ready(function() {
 
+  
   $( ".select2" ).select2();
 
-    $('#tztable').DataTable( {
+    $('#cabintable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('airline_cabin/server_processing'); ?>",	  
@@ -127,7 +131,7 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
-      "columns": [{"data": "cabin_map_id" },
+      "columns": [{"data": "chkbox" },
 		   {"data": "airline_code"},
 		  {"data": "aircraft_name"},
 		  {"data": "airline_cabin"},
@@ -144,10 +148,26 @@
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export'} },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },{ text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('airline_cabin/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"airlineID": $("#airline_code").val(),"cabinID": $("#airline_cabin").val(),"active": $("#active").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","airline_cabin.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }	                
             ] ,
 	 "autoWidth": false,
-     "columnDefs": [ { "width": "20px", "targets": 0 },{"targets":5,
+     "columnDefs":  [ {"targets": 0,"orderable": false,"searchable": false,"width": "80px" },{"targets":5,
 	                 render: function ( data, type, row, meta ) {
                        console.log(type);						 
 						if(type == 'export'){
@@ -160,7 +180,23 @@
     });
   });
   
-   $('#tztable tbody').on('mouseover', 'tr', function () {
+  function downloadCabins(){
+	  $.ajax({
+           url: "<?php echo base_url('airline_cabin/server_processing'); ?>?page=all&&export=1",
+           type: 'get',
+           data: {"airlineID": $("#airline_code").val(),"cabinID": $("#airline_cabin").val(),"active": $("#active").val()},
+           dataType: 'json'
+       }).done(function(data){
+		  var $a = $("<a>");
+		  $a.attr("href",data.file);
+		  $("body").append($a);
+		  $a.attr("download","airline_cabin.xls");
+		  $a[0].click();
+		  $a.remove();
+		 });
+  }
+  
+   $('#cabintable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
         html: true
@@ -169,7 +205,7 @@
 
  var status = '';
   var id = 0;
- $('#tztable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
+ $('#cabintable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");
@@ -229,4 +265,47 @@
   }); 
 
   
+$(document).ready(function() {
+$("#bulkDelete").on('click',function() { // bulk checked
+        var status = this.checked;
+        $(".deleteRow").each( function() {
+          if(status == 1 && $(this).prop('checked')) {
+                
+          } else {
+            $(this).prop("checked",status);
+            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+         }
+        });
+    });
+
+
+$('#deleteTriger').on("click", function(event){ // triggering delete one by one
+        if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+            var ids = [];
+            $('.deleteRow').each(function(){
+                if($(this).is(':checked')) { 
+                    ids.push($(this).val());
+                }
+            });
+            var ids_string = ids.toString();  // array to string conversion 
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('marketzone/delete_mz_bulk_records'); ?>",
+                data: {data_ids:ids_string},
+                success: function(result) {
+                   $('#cabintable').DataTable().ajax.reload();
+		   $('#bulkDelete').prop("checked",false);
+                },
+                async:false
+            });
+        }
+    }); 
+
+
+$('#cabintable').on('click', 'input[type="checkbox"]', function() {
+	$(this).not("#bulkDelete").closest('tr').toggleClass('rowselected', this.checked);
+});
+
+
+});
 </script>
