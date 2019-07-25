@@ -138,3 +138,7 @@ SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from 
 		WHERE (dd.vx_aln_data_defnsID LIKE '%Asia%' OR t.name LIKE '%Asia%' OR dd.aln_data_value LIKE '%Asia%' OR dd1.aln_data_value LIKE '%Asia%' OR dd.code LIKE '%Asia%' OR dd.active LIKE '%Asia%' ) AND dd.aln_data_typeID = 4			
 		 
 		
+
+
+
+
