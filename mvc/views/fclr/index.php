@@ -193,10 +193,11 @@
 	</div>
 	<div class="col-md-12 fclr-table">
 		<div id="hide-table" class="fclr-table-data">
-             <table id="fclrtable" class="table table-striped table-bordered table-hover dataTable no-footer">
+             <table id="fclrtable" class="table table-bordered dataTable no-footer">
                  <thead>
 					<tr>
-						<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+
+					  <th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
 						<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
@@ -261,7 +262,7 @@ function loaddatatable() {
                     "success": fnCallback
                          } ); }, 
 
-      "columns": [ {"data": "fclr_id" },
+      "columns": [ {"data": "chkbox" },
 		   {"data": "source_point" },
 	           {"data": "dest_point" },
 		   {"data": "carrier_code" },
@@ -286,7 +287,9 @@ function loaddatatable() {
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
-            ] 
+            ],
+
+	"columnDefs": [ {"targets": 0,"orderable": false,"searchable": false}]
     });
 	
 	
@@ -509,4 +512,51 @@ function form_reset(){
         	$(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
         });
     });
+
+$(document).ready(function(){
+$("#bulkDelete").on('click',function() { // bulk checked
+        var status = this.checked;
+        $(".deleteRow").each( function() {
+          if(status == 1 && $(this).prop('checked')) {
+                
+          } else {
+            $(this).prop("checked",status);
+            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+         }
+        });
+    });
+
+$('#deleteTriger').on("click", function(event){ // triggering delete one by one
+        if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+            var ids = [];
+            $('.deleteRow').each(function(){
+                if($(this).is(':checked')) { 
+                    ids.push($(this).val());
+                }
+            });
+            var ids_string = ids.toString();  // array to string conversion 
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('fclr/delete_fclr_bulk_records'); ?>",
+                data: {data_ids:ids_string},
+                success: function(result) {
+                   $('#fclrtable').DataTable().ajax.reload();
+                   $('#bulkDelete').prop("checked",false);
+                },
+                async:false
+            });
+        }
+    }); 
+
+
+
+
+$('#fclrtable').on('click', 'input[type="checkbox"]', function() {
+        $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
+    });
+
+
+
+
+});
 </script>
