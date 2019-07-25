@@ -265,7 +265,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext
 		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, ex.excl_grp,
 		pf.pnr_ref
 		     from VX_aln_dtpf_ext pext 
-		     LEFT JOIN VX_aln_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_processed = 1 and pf.active = 1)
+		     INNER JOIN VX_aln_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_processed = 1 and pf.active = 1)
 		     LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)
 		     LEFT JOIN VX_aln_eligibility_excl_rules ex on (pext.exclusion_id = ex.eexcl_id)
 		     LEFT JOIN VX_aln_season sea on (sea.VX_aln_seasonID = fc.season_id )

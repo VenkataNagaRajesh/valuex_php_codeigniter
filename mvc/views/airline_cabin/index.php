@@ -167,7 +167,7 @@
                  }	                
             ] ,
 	 "autoWidth": false,
-     "columnDefs":  [ {"targets": 0,"orderable": false,"searchable": false,"width": "1px" },{"targets":5,
+     "columnDefs":  [ {"targets": 0,"orderable": false,"searchable": false,"width": "80px" },{"targets":5,
 	                 render: function ( data, type, row, meta ) {
                        console.log(type);						 
 						if(type == 'export'){

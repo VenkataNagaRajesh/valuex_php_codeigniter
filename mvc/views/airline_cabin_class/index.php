@@ -162,7 +162,7 @@
                  }	                
             ] ,
 	 "autoWidth": false,
-     "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "5px" },{ "width": "30px", "targets": 5 } ]
+     "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "50px" },{ "width": "30px", "targets": 5 } ]
     });
   });
   
