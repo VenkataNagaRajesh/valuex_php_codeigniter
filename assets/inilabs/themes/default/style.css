@@ -4516,7 +4516,22 @@ table{
 #rafeedtable{
    table-layout: fixed;
 }
-
 .rowselected {
     background-color: #a6b4cd;
+}
+.airline-cabin-img img{
+	margin: 0px 5px 20px;
+	width: 180px;
+	height: 120px;
+	border:solid 2px #ddd;
+}
+.airline-cabin-img .col-md-3{
+	padding: 0 6px;
+}
+.airline-cabin-img h2{
+	background: #ff6633;
+	color: #fff;
+	font-size: 20px;
+	padding: 4px 12px;
+	font-weight:bold;
 }
