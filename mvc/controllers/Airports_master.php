@@ -339,32 +339,18 @@ class Airports_master extends Admin_Controller {
                                                                     }
 		
 
-								  if ( !empty($levellist) && !empty($incllist)){
-								  if(!empty(array_intersect($parentSet,$levellist))) {
-									if(!empty(array_intersect($parentSet,$incllist))){
-										if(empty(array_intersect($parentSet,$excllist))){
-											  $newentry['airport_id'] = $data['airportID'];
-                                                                                $newentry['market_id'] = $marketzone->market_id;
-                                                                                $this->market_airport_map_m->insert_marketairport_mapid($newentry);
-										}	
-									} else {
-										if(empty(array_intersect($parentSet,$excllist))){
-										    $newentry['airport_id'] = $data['airportID'];
-                                                                                $newentry['market_id'] = $marketzone->market_id;
-                                                                                $this->market_airport_map_m->insert_marketairport_mapid($newentry);
 
-										}
-									}
-								   }
-								 } else if (empty($incllist) && !empty($levellist) ) {
-									if(!empty(array_intersect($parentSet,$levellist))){
-										if(empty(array_intersect($parentSet,$excllist))){
-											$newentry['airport_id'] = $data['airportID'];
-                                                                                $newentry['market_id'] = $marketzone->market_id;
-                                                                                $this->market_airport_map_m->insert_marketairport_mapid($newentry); 
-										 }
-                                                                         }
+								if ( !empty($levellist) || !empty($incllist)){ 
+
+									if(!empty(array_intersect($parentSet,$levellist)) || 
+										!empty(array_intersect($parentSet,$incllist))) {
+										 $newentry['airport_id'] = $data['airportID'];
+                                                                               $newentry['market_id'] = $marketzone->market_id;
+                                                                            $this->market_airport_map_m->insert_marketairport_mapid($newentry);
+
+
 								}
+									}
 								}
 								
 								//Updating seasons maping data
