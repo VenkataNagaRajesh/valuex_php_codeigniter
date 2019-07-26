@@ -414,9 +414,10 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, airline_class,  ac.aln_data_value
             );
 
 		
-		
+	 $rownum = 1 + $_GET['iDisplayStart'];	
                 foreach($rResult as $list){
-
+			$list->chkbox = "<input type='checkbox'  class='deleteRow' value='".$list->map_id."'  /> #".$rownum ;
+                                $rownum++;
 		   $list->is_revenue = ($list->is_revenue)?"yes":"no";
                         if(permissionChecker('airline_cabin_class_edit') ) {
 				$list->action = btn_edit('airline_cabin_class/edit/'.$list->carrier, $this->lang->line('edit'));
@@ -455,6 +456,18 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, airline_class,  ac.aln_data_value
         }
 
 
+public function delete_carrier_map_bulk_records(){
+$data_ids = $_REQUEST['data_ids'];
+$data_id_array = explode(",", $data_ids);
+if(!empty($data_id_array)) {
+    foreach($data_id_array as $id) {
+		 $this->data['airline_cabin'] = $this->airline_cabin_class_m->get_airline_cabin_classbyid($id);
+                        if($this->data['airline_cabin']) {
+                                $this->airline_cabin_class_m->delete_airline_cabin_class(array('map_id'=>$id));
+                        }
+    }
+}
+}
 
 
 }

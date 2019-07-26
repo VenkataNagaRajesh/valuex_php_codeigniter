@@ -93,10 +93,11 @@
 			  </div>
 			 </form>			
             <div id="hide-table">
-               <table id="invfeedtable" class="table table-striped table-bordered table-hover dataTable no-footer">
+               <table id="invfeedtable" class="table table-bordered dataTable no-footer">
                  <thead>
                     <tr>
-                        <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+			
+			 <th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
                         <th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('orig_airport')?></th>
@@ -144,7 +145,7 @@
                     "success": fnCallback
                          } ); },
 
-      "columns": [{"data": "invfeed_id" },
+      "columns": [{"data": "chkbox" },
                   {"data": "airline_code" },
 				  {"data": "flight_nbr" },
 				  {"data": "origin_airport" },
@@ -180,7 +181,10 @@
 						  });
                         }
                  }                
-            ] 
+           		               
+            ],
+
+	 "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false}],
     });
 	
 	
@@ -272,5 +276,52 @@
   }); 
 
 $( ".select2" ).select2();
+
+$(document).ready(function () {
+$("#bulkDelete").on('click',function() { // bulk checked
+        var status = this.checked;
+        $(".deleteRow").each( function() {
+          if(status == 1 && $(this).prop('checked')) {
+                
+          } else {
+            $(this).prop("checked",status);
+            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+         }
+        });
+    });
+
+
+	 $('#deleteTriger').on("click", function(event){ // triggering delete one by one
+        if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+            var ids = [];
+            $('.deleteRow').each(function(){
+                if($(this).is(':checked')) { 
+                    ids.push($(this).val());
+                }
+            });
+            var ids_string = ids.toString();  // array to string conversion 
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('invfeed/delete_inv_bulk_records'); ?>",
+                data: {data_ids:ids_string},
+                success: function(result) {
+                   $('#invfeedtable').DataTable().ajax.reload();
+		   $('#bulkDelete').prop("checked",false);
+                },
+                async:false
+            });
+        }
+    }); 
+
+
+$('#invfeedtable').on('click', '.deleteRow', function() {
+        $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
+    });
+
+});
+
+
 $("#start_date").datepicker();
+
+
  </script>

@@ -23,16 +23,15 @@
 						<?=$airline_cabin->aircraft_name;?></p>
 					 <p><span><?=$this->lang->line("airline_cabin")?> </span>: 
 						<?=$airline_cabin->cabin?></p>
-					<p><span><?=$this->lang->line("airline_video")?> </span>:
-<?php	
+					<!--<p><span><?=$this->lang->line("airline_video")?> </span>:
+						<?php	
 						 if ( !empty($airline_cabin->video_links) ){
 					 $links = explode(',', $airline_cabin->video_links );
                         			foreach ($links as $k=>$link) {?>
                                 <a target="_new" href="<?=$link;?>" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs">link<?=$k+1?></a>&nbsp;&nbsp;
-               <?php } } ?>
+						<?php } } ?>
 
-
-						
+					</p>-->						
 					 <p><span><?=$this->lang->line("airline_cabin_create_user")?> </span>: 
 							<?php echo $this->user_m->get_username_byid($airline_cabin->create_userID)?></p>
 					 <p><span><?=$this->lang->line("airline_cabin_modify_user")?> </span>:
@@ -49,21 +48,31 @@
 				</div>  
 			</div>
 		</div>
- <div>
-                        <?php foreach($airline_cabin->gallery as $gallery){
+		<div class="col-md-12 airline-cabin-img" style="padding:0">
+		<h2>Images</h2>
+            <?php foreach($airline_cabin->gallery as $gallery){
 
-                                     $array = array(
-                                "src" => base_url('uploads/images/'.$gallery->image),
-                                        'width' => '150px',
-                                        'height' => '150px',
-                                        'class' => 'img-rounded'
-                                );
+                         $array = array(
+                    "src" => base_url('uploads/images/'.$gallery->image),
+                            'width' => '150px',
+                            'height' => '150px',
+                            'class' => 'img-rounded'
+                    );
 				echo img($array);
-
-                        }?>
-                        </div>
-
-
+            }?>
+        </div>
+		<div class="col-md-12 airline-cabin-img" style="padding:0">
+		<h2>Videos</h2>
+			<div class="col-md-3">
+				<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="130"></iframe>
+			</div>
+			<div class="col-md-3">
+				<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="130"></iframe>
+			</div>
+			<div class="col-md-3">
+				<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="130"></iframe>
+			</div>
+        </div>
   </section>
 </div>
 

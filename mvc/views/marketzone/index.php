@@ -378,8 +378,7 @@ function loaddatatable() {
 							$a.remove();
 						  });
                         }
-                 }  
-
+                 },  
 
 			 {
                 text: 'Bulk Delete',
@@ -408,10 +407,9 @@ function loaddatatable() {
 
             }
 
->>>>>>> branch 'master' of https://gitlab.com/sweken-dev/valuex.git
             ] ,
 	"autoWidth": false,
-     "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "130px" },
+     "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "120px" },
                      { "width": "130px", "targets": 1 },
                      { "width": "50px", "targets": 2 },
 					 { "width": "60px", "targets": 9 }					 
@@ -869,10 +867,16 @@ $('#mytree').jstree({
 $("#bulkDelete").on('click',function() { // bulk checked
         var status = this.checked;
         $(".deleteRow").each( function() {
+          if(status == 1 && $(this).prop('checked')) {
+                
+          } else {
             $(this).prop("checked",status);
+            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+         }
         });
     });
-     
+
+
     $('#deleteTriger').on("click", function(event){ // triggering delete one by one
         if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
             var ids = [];
@@ -888,6 +892,7 @@ $("#bulkDelete").on('click',function() { // bulk checked
                 data: {data_ids:ids_string},
                 success: function(result) {
 		   $('#tztable').DataTable().ajax.reload();
+		   $('#bulkDelete').prop("checked",false);
                 },
                 async:false
             });
@@ -895,7 +900,7 @@ $("#bulkDelete").on('click',function() { // bulk checked
     }); 
 
 
- $('#tztable input:checkbox').click(function() {
+$('#tztable').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
 

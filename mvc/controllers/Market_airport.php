@@ -70,7 +70,7 @@ class Market_airport extends Admin_Controller {
 		$this->data['airports_list'] = $this->airports_m->getDefnsCodesListByType('1');
 		$this->data['country_list'] = $this->airports_m->getDefnsCodesListByType('2');
 		$this->data['city_list'] = $this->airports_m->getDefnsCodesListByType('3');
-		$this->data['region_list'] = $this->airports_m->getDefnsCodesListByType('4');
+		$this->data['region_list'] = $this->airports_m->getDefnsListByType('4');
 		
 
 		$this->data["subview"] = "market_airport/index";

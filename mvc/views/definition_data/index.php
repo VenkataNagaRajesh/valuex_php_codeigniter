@@ -39,10 +39,10 @@
     
             <div class="col-sm-12">              		 				
             <div id="hide-table">
-               <table id="defdata" class="table table-striped table-bordered table-hover dataTable no-footer">
+               <table id="defdata" class="table table-bordered dataTable no-footer">>
                  <thead>
                     <tr>
-                        <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+			 <th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
                         <th class="col-lg-1"><?=$this->lang->line('defdata_type')?></th>
 						<th class="col-lg-2"><?=$this->lang->line('defdata_value')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('defdata_parent')?></th>
@@ -95,7 +95,7 @@
                     "data": aoData,
                     "success": fnCallback
 			 } ); },	  
-      "columns": [{"data": "vx_aln_data_defnsID" },
+      "columns": [{"data": "chkbox" },
                   {"data": "datatype" },
 				  {"data": "aln_data_value" },
 				  {"data": "parent" },
@@ -129,7 +129,9 @@
 						  });
                         }
                  }					              
-              ] 
+              ],
+	 "autoWidth": false,
+	"columnDefs": [ {"targets": 0,"orderable": false,"searchable": false, "width": "10px"}] 
     });
 	
 	//$(".dt-buttons").append('<a href="<?=base_url("definition_data/exportall")?>" class="dt-button" tabindex="0" aria-controls="defdata"><span>ExportAll</span></a>');
@@ -221,4 +223,52 @@
           });
       }
   }); 
+
+$(document).ready(function() {
+$("#bulkDelete").on('click',function() { // bulk checked
+        var status = this.checked;
+        $(".deleteRow").each( function() {
+          if(status == 1 && $(this).prop('checked')) {
+                
+          } else {
+            $(this).prop("checked",status);
+            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+         }
+        });
+    });
+
+
+
+    $('#deleteTriger').on("click", function(event){ // triggering delete one by one
+        if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+            var ids = [];
+            $('.deleteRow').each(function(){
+                if($(this).is(':checked')) { 
+                    ids.push($(this).val());
+                }
+            });
+            var ids_string = ids.toString();  // array to string conversion 
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('definition_data/delete_def_bulk_records'); ?>",
+                data: {data_ids:ids_string},
+                success: function(result) {
+                   $('#defdata').DataTable().ajax.reload();
+                   $('#bulkDelete').prop("checked",false);
+                },
+                async:false
+            });
+        }
+    }); 
+
+
+$('#defdata').on('click', '.deleteRow', function() {
+        $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
+    });
+
+
+
+
+
+});
 </script>

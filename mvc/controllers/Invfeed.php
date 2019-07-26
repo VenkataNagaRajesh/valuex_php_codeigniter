@@ -390,10 +390,16 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','dc.c
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+
 	  $i = 1;
+
+	$rownum = 1 + $_GET['iDisplayStart'];
+
 	  foreach($rResult as $feed){		 	
 		$feed->departure_date = date('d/m/Y',$feed->departure_date);
 
+		 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->invfeed_id."'  /> #".$rownum ;
+                                $rownum++;
 
 
 		  if(permissionChecker('invfeed_delete')){
@@ -463,6 +469,20 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','dc.c
         return $time_in_seconds;
 
  }
+
+
+public function delete_inv_bulk_records(){
+$data_ids = $_REQUEST['data_ids'];
+$data_id_array = explode(",", $data_ids);
+if(!empty($data_id_array)) {
+    foreach($data_id_array as $id) {
+	$this->data['invfeed'] = $this->invfeed_m->get_single_invfeed(array('invfeed_id'=>$id));
+          if($this->data['invfeed']) {
+                  $this->invfeed_m->delete_invfeed($id);
+          }
+    }
+  }
+}
 
 
 }

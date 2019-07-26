@@ -626,8 +626,13 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+
 	  $i = 1;
-	  foreach($rResult as $feed){		 	
+	 $rownum = 1 + $_GET['iDisplayStart'];
+	  foreach($rResult as $feed){	
+		 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->dtpf_id."'  /> #".$rownum ;
+                                $rownum++;
+
 		$feed->dep_date = date('d/m/Y',$feed->dep_date);
 		$feed->arrival_date = date('d/m/Y',$feed->arrival_date);
 		$feed->dept_time = gmdate("H:i:s", $feed->dept_time);
@@ -700,6 +705,20 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
                 force_download($filename, null);
       }
 
+
+public function delete_pax_bulk_records(){
+$data_ids = $_REQUEST['data_ids'];
+$data_id_array = explode(",", $data_ids);
+if(!empty($data_id_array)) {
+    foreach($data_id_array as $id) {
+	$this->data['paxfeed'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$id));
+                        if($this->data['paxfeed']) {
+                                $this->paxfeed_m->delete_paxfeed($id);
+
+                        }
+    }
+}
+}
 
 }
 

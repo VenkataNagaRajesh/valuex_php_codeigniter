@@ -390,10 +390,11 @@
 		 <div class="col-md-12  off-table">
 		 <div class="col-md-12">
 			<div id="hide-table">
-              <table id="ruleslist" class="table table-striped table-bordered table-hover dataTable no-footer">
+              <table id="ruleslist" class="table table-bordered dataTable no-footer">
                    <thead>
                        <tr>
-							<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+						 
+				<th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
 							<th class="col-lg-1">Rule#</th>
 							<th class="col-lg-1"><?=$this->lang->line('desc')?></th>
 							<th class="col-lg-1"><?php echo "Origin Level";?></th>
@@ -454,7 +455,7 @@ function loaddatatable() {
                     "data": aoData,
                     "success": fnCallback
                          } ); }, 
-      "columns": [{"data": "eexcl_id" },
+      "columns": [{"data": "chkbox" },
 		  {"data": "ruleno" },
                   {"data": "excl_reason_desc" },
                                   {"data": "orig_level" },
@@ -499,7 +500,11 @@ function loaddatatable() {
 						  });
                         }
                  }                
-            ]
+            ],
+
+
+	"columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "130px" }]
+
     });
   
 }
@@ -829,4 +834,55 @@ function myFunction(x) {
         	$(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
         });
     });
+
+
+$(document).ready(function(){
+
+$("#bulkDelete").on('click',function() { // bulk checked
+        var status = this.checked;
+        $(".deleteRow").each( function() {
+          if(status == 1 && $(this).prop('checked')) {
+                
+          } else {
+            $(this).prop("checked",status);
+            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+         }
+        });
+    });
+
+
+
+ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
+        if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+            var ids = [];
+            $('.deleteRow').each(function(){
+                if($(this).is(':checked')) { 
+                    ids.push($(this).val());
+                }
+            });
+            var ids_string = ids.toString();  // array to string conversion 
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('eligibility_exclusion/delete_excl_bulk_records'); ?>",
+                data: {data_ids:ids_string},
+                success: function(result) {
+                   $('#ruleslist').DataTable().ajax.reload();
+                   $('#bulkDelete').prop("checked",false);
+                },
+                async:false
+            });
+        }
+    }); 
+
+
+$('#ruleslist').on('click', '.deleteRow', function() {
+        $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
+    });
+
+
+
+});
 </script>
+
+
+
