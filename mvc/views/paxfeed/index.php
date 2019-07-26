@@ -138,7 +138,8 @@
 
 
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+				   <button type="button" class="btn btn-danger" onclick="downloadPAXFeed()">Download</button>
                 </div>	             				
 			  </div>
 			 </form>			
@@ -202,14 +203,14 @@
                    {"name": "bookingCity","value": $("#booking_city").val()},
                    {"name": "fromCity","value": $("#from_city").val()},
                    {"name": "toCity","value": $("#to_city").val()},
-		   {"name": "pax_type","value": $("#pax_type").val()},
-		   {"name": "tier","value": $("#tier").val()},
-		   {"name": "flight_range","value": $("#flight_range").val()},
-		   {"name": "start_date","value": $("#start_date").val()},
-		   {"name": "end_date","value": $("#end_date").val()},
-		   {"name": "frequency","value": $("#frequency").val()},
-		   {"name": "pf_id","value": $("#pf_id").val()},
-                    {"name": "carrierCode","value": $("#carrier_code").val()},
+				   {"name": "pax_type","value": $("#pax_type").val()},
+				   {"name": "tier","value": $("#tier").val()},
+				   {"name": "flight_range","value": $("#flight_range").val()},
+				   {"name": "start_date","value": $("#start_date").val()},
+				   {"name": "end_date","value": $("#end_date").val()},
+				   {"name": "frequency","value": $("#frequency").val()},
+				   {"name": "pf_id","value": $("#pf_id").val()},
+                   {"name": "carrierCode","value": $("#carrier_code").val()},
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -219,7 +220,7 @@
                     "success": fnCallback
                          } ); }, 
 
-      "columns": [{"data": "dtpf_id" },
+      "columns": [{"data": "id" },
                   {"data": "airline_code" },
 				  {"data": "pnr_ref" },
 				  {"data": "pax_nbr"},
@@ -256,13 +257,45 @@
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('paxfeed/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"bookingCountry":$("#booking_country").val(),"bookingCity":$("#booking_city").val(),"fromCity":$("#from_city").val(),"toCity":$("#to_city").val(),"pax_type":$("#pax_type").val(),"tier":$("#tier").val(),"flight_range":$("#flight_range").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"frequency":$("#frequency").val(),"pf_id": $("#pf_id").val(),"carrierCode":$("#carrier_code").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","paxfeed.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
             ] 	
     });
 	
 	
   });
  
+  function downloadPAXFeed(){
+	  $.ajax({
+        url: "<?php echo base_url('paxfeed/server_processing'); ?>?page=all&&export=1",
+        type: 'get',
+        data: {"bookingCountry":$("#booking_country").val(),"bookingCity":$("#booking_city").val(),"fromCity":$("#from_city").val(),"toCity":$("#to_city").val(),"pax_type":$("#pax_type").val(),"tier":$("#tier").val(),"flight_range":$("#flight_range").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"frequency":$("#frequency").val(),"pf_id": $("#pf_id").val(),"carrierCode":$("#carrier_code").val()},
+        dataType: 'json'
+        }).done(function(data){
+		var $a = $("<a>");
+		$a.attr("href",data.file);
+		$("body").append($a);
+		$a.attr("download","paxfeed.xls");
+		$a[0].click();
+		$a.remove();
+	   });
+  }
   
    $('#paxfeedtable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({

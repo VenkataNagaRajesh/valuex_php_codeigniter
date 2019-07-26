@@ -374,7 +374,8 @@
                                   
 
                 <div class="col-sm-2">
-		<a href="#" type="button"  id='btn_txt' class="form-control btn btn-danger" onclick="$('#ruleslist').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+		<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#ruleslist').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+		<a type="button" class="btn btn-danger" onclick="downloadEligibilityExc()">Download</a>
 
                 </div>
 
@@ -480,10 +481,43 @@ function loaddatatable() {
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('eligibility_exclusion/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"scarrier":$("#scarrier").val(),"sfrequency":$("#sfrequency").val(),"fromClass":$("#sfrom_class").val(),"toClass": $("#sto_class").val(),"nbrStart":$("#sflight_nbr_start").val(),"nbrEnd":$("#sflight_nbr_end").val(),"efecDate":$("#sflight_efec_date").val(),"discDate":$("#sflight_disc_date").val(),"startHrs":$("#sflight_dep_start_hrs").val(),"startMins":$("#sflight_dep_start_mins").val(),"endHrs":$("#sflight_dep_end_hrs").val(),"endMins":$("#sflight_dep_end_mins").val(),"active":$("#active").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","eligibility_exclusion.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
             ]
     });
   
+}
+
+function downloadEligibilityExc(){
+	$.ajax({
+         url: "<?php echo base_url('eligibility_exclusion/server_processing'); ?>?page=all&&export=1",
+          type: 'get',
+         data: {"scarrier":$("#scarrier").val(),"sfrequency":$("#sfrequency").val(),"fromClass":$("#sfrom_class").val(),"toClass": $("#sto_class").val(),"nbrStart":$("#sflight_nbr_start").val(),"nbrEnd":$("#sflight_nbr_end").val(),"efecDate":$("#sflight_efec_date").val(),"discDate":$("#sflight_disc_date").val(),"startHrs":$("#sflight_dep_start_hrs").val(),"startMins":$("#sflight_dep_start_mins").val(),"endHrs":$("#sflight_dep_end_hrs").val(),"endMins":$("#sflight_dep_end_mins").val(),"active":$("#active").val()},
+         dataType: 'json'
+     }).done(function(data){
+		var $a = $("<a>");
+		$a.attr("href",data.file);
+		$("body").append($a);
+		$a.attr("download","eligibility_exclusion.xls");
+		$a[0].click();
+		$a.remove();
+		 });
 }
    $('#ruleslist tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({

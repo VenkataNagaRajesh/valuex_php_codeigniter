@@ -184,7 +184,8 @@
                 <input type="text" class="form-control" placeholder='FCLR ID' id="sfclr_id" name="sfclr_id" value="<?=set_value('sfclr_id',$sfclr_id)?>" >
                                                 </div>
 						<div class="col-md-12">
-							<a href="#" type="button"  id='btn_txt' class="btn btn-danger form-control" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+							<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+							<a type="button" class="btn btn-danger" onclick="downloadFCLR()">Download</a>
 						</div>
 					</div>
 				</div>
@@ -237,18 +238,18 @@ function loaddatatable() {
       "sAjaxSource": "<?php echo base_url('fclr/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#sflight_number").val()},
-		  {"name": "flightNbrEnd","value": $("#end_flight_number").val()},
+		           {"name": "flightNbrEnd","value": $("#end_flight_number").val()},
                    {"name": "boardPoint","value": $("#boarding_point").val()},
                    {"name": "offPoint","value": $("#soff_point").val()},
-		    {"name": "depStartDate","value": $("#dep_from_date").val()},
+		           {"name": "depStartDate","value": $("#dep_from_date").val()},
                    {"name": "depEndDate","value": $("#dep_to_date").val()},
-			{"name": "frequency","value": $("#sfrequency").val()},
-		  {"name": "smarket","value": $("#smarket").val()},
+			       {"name": "frequency","value": $("#sfrequency").val()},
+		           {"name": "smarket","value": $("#smarket").val()},
                    {"name": "dmarket","value": $("#dmarket").val()},
-		  {"name": "sfrom_cabin","value": $("#sfrom_cabin").val()},
+		           {"name": "sfrom_cabin","value": $("#sfrom_cabin").val()},
                    {"name": "sto_cabin","value": $("#sto_cabin").val()},
-			 {"name": "sseason_id","value": $("#sseason_id").val()},
-			{"name": "sfclr_id","value": $("#sfclr_id").val()},
+			       {"name": "sseason_id","value": $("#sseason_id").val()},
+			       {"name": "sfclr_id","value": $("#sfclr_id").val()},
                    {"name": "scarrier","value": $("#scarrier").val()},
 
                   
@@ -261,7 +262,7 @@ function loaddatatable() {
                     "success": fnCallback
                          } ); }, 
 
-      "columns": [ {"data": "fclr_id" },
+      "columns": [ {"data": "id" },
 		   {"data": "source_point" },
 	           {"data": "dest_point" },
 		   {"data": "carrier_code" },
@@ -285,12 +286,43 @@ function loaddatatable() {
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('fclr/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","fclr.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
             ] 
-    });
-	
-	
+    });	
 } 
+
+function downloadFCLR(){
+	$.ajax({
+       url: "<?php echo base_url('fclr/server_processing'); ?>?page=all&&export=1",
+       type: 'get',
+       data: {"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val()},
+       dataType: 'json'
+       }).done(function(data){
+			var $a = $("<a>");
+			$a.attr("href",data.file);
+			$("body").append($a);
+			$a.attr("download","fclr.xls");
+			$a[0].click();
+			$a.remove();
+		 });
+}
   
    $('#fclrtable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({

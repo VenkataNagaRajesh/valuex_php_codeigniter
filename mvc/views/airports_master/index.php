@@ -56,7 +56,8 @@
 			    
                  
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+				  <button type="button" class="btn btn-danger" onclick="downloadMasterData()">Download</button>
                 </div>	             				
 			  </div>
 			 </form>
@@ -93,50 +94,7 @@
 <script>
 $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
 
-var oldExportAction = function (self, e, dt, button, config) {  console.log("bbbbbb");
-    if (button[0].className.indexOf('buttons-excel') >= 0) {
-        if ($.fn.dataTable.ext.buttons.excelHtml5.available(dt, config)) {
-            $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config);
-        }
-        else {
-            $.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt, button, config);
-        }
-    } else if (button[0].className.indexOf('buttons-print') >= 0) {
-        $.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
-    }
-};
 
-var newExportAction = function (e, dt, button, config) {
-    var self = this;
-    var oldStart = dt.settings()[0]._iDisplayStart;
- console.log("hhhhhh");
-    dt.one('preXhr', function (e, s, data) {
-        // Just this once, load all data from the server...
-        data.start = 0;
-        data.length = 2147483647;
-
-        dt.one('preDraw', function (e, settings) {
-            // Call the original action function 
-            oldExportAction(self, e, dt, button, config);
-
-            dt.one('preXhr', function (e, s, data) {
-                // DataTables thinks the first item displayed is index 0, but we're not drawing that.
-                // Set the property to what it was before exporting.
-                settings._iDisplayStart = oldStart;
-                data.start = oldStart;
-            });
-
-            // Reload the grid with the original page. Otherwise, API functions like table.cell(this) don't work properly.
-            setTimeout(dt.ajax.reload, 0);
-
-            // Prevent rendering of the full data to the DOM
-            return false;
-        });
-    });
-
-    // Requery the server with the new one-time export settings
-    dt.ajax.reload();
-};
 
  $(document).ready(function() {	 
 	 var countryID = <?=$countryID?>;	
@@ -156,10 +114,10 @@ var newExportAction = function (e, dt, button, config) {
       "sAjaxSource": "<?php echo base_url('airports_master/server_processing'); ?>",
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "countryID","value": $("#countryID").val()},
-	   {"name": "regionID","value": $("#regionID").val()},
-	   {"name": "areaID","value": $("#areaID").val()},
-	   {"name": "cityID","value": $("#cityID").val()},
-	   {"name": "active","value": $("#active").val()}) //pushing custom parameters
+				   {"name": "regionID","value": $("#regionID").val()},
+				   {"name": "areaID","value": $("#areaID").val()},
+				   {"name": "cityID","value": $("#cityID").val()},
+				   {"name": "active","value": $("#active").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
                     "type": "GET",
@@ -181,8 +139,25 @@ var newExportAction = function (e, dt, button, config) {
      buttons: [
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'excel', action: newExportAction, exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'excel',exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('airports_master/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"countryID":$("#countryID").val(),"regionID": $("#regionID").val(),"areaID": $("#areaID").val(),"cityID": $("#cityID").val(),"active": $("#active").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","airports_master.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
             ] ,
      "autoWidth": false,
      "columnDefs": [ { "width": "20px", "targets": 0 } ]			
@@ -190,6 +165,22 @@ var newExportAction = function (e, dt, button, config) {
   
     
   });
+  
+  function downloadMasterData(){
+	     $.ajax({
+              url: "<?php echo base_url('airports_master/server_processing'); ?>?page=all&&export=1",
+              type: 'get',
+              data: {"countryID":$("#countryID").val(),"regionID": $("#regionID").val(),"areaID": $("#areaID").val(),"cityID": $("#cityID").val(),"active": $("#active").val()},
+              dataType: 'json'
+          }).done(function(data){
+		 var $a = $("<a>");
+		 $a.attr("href",data.file);
+		 $("body").append($a);
+		 $a.attr("download","airports_master.xls");
+		 $a[0].click();
+		 $a.remove();
+		  });
+  }
  
   
    $('#master tbody').on('mouseover', 'tr', function () {

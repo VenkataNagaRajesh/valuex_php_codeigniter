@@ -100,7 +100,8 @@
 					</div>
 				</div>
 				<div class="col-sm-2 pull-right">
-                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+				   <button type="button" class="btn btn-danger" onclick="downloadOfferEligibility()">Download</button>
                 </div>	             				
 			</div>
 		</form>
@@ -150,16 +151,16 @@ $("#dep_to_date").datepicker();
       "sAjaxSource": "<?php echo base_url('offer_eligibility/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#flight_number").val()},
-		  {"name": "flightNbrEnd","value": $("#end_flight_number").val()},
+		           {"name": "flightNbrEnd","value": $("#end_flight_number").val()},
                    {"name": "boardPoint","value": $("#boarding_point").val()},
                    {"name": "offPoint","value": $("#off_point").val()},
-		    {"name": "depStartDate","value": $("#dep_from_date").val()},
+		           {"name": "depStartDate","value": $("#dep_from_date").val()},
                    {"name": "depEndDate","value": $("#dep_to_date").val()},
-		  {"name": "fromCabin","value": $("#from_cabin").val()},
+		           {"name": "fromCabin","value": $("#from_cabin").val()},
                    {"name": "toCabin","value": $("#to_cabin").val()},
-		    {"name": "frequency","value": $("#frequency").val()},
-			 {"name": "booking_status","value": $("#booking_status").val()},
-			{"name": "season","value": $("#season").val()},
+		           {"name": "frequency","value": $("#frequency").val()},
+			       {"name": "booking_status","value": $("#booking_status").val()},
+			       {"name": "season","value": $("#season").val()},
                    {"name": "carrier","value": $("#carrier").val()},
                   
                    ) //pushing custom parameters
@@ -176,7 +177,7 @@ $("#dep_to_date").datepicker();
 		   {"data": "fclr_id" },
 		   {"data": "season_id" },
 		   {"data": "source_point" },
-	           {"data": "dest_point" },
+	       {"data": "dest_point" },
 		   {"data": "pnr_ref" },
 		   {"data": "departure_date" },
 		   {"data": "carrier_code" },
@@ -185,18 +186,56 @@ $("#dep_to_date").datepicker();
 		   {"data": "tcabin" },
 		   {"data": "day_of_week" },
 		   {"data": "average" },
-                   {"data": "min" },
-		  {"data": "max" },
-		 {"data": "slider_start" },
-		{"data": "booking_status" }
+           {"data": "min" },
+		   {"data": "max" },
+		   {"data": "slider_start" },
+		   {"data": "booking_status" }
 				  ],			     
      dom: 'B<"clear">lfrtip',
-     buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+    // buttons: [ 'copy', 'csv', 'excel','pdf' ]
+     buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('offer_eligibility/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"fromCabin": $("#from_cabin").val(),"toCabin":$("#to_cabin").val(),"frequency":$("#frequency").val(),"booking_status": $("#booking_status").val(),"season":$("#season").val(),"carrier":$("#carrier").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","offer_eligibility.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
+            ]	
     });
 	
 	
   });
  
+  function downloadOfferEligibility(){
+	  $.ajax({
+        url: "<?php echo base_url('offer_eligibility/server_processing'); ?>?page=all&&export=1",
+        type: 'get',
+        data: {"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"fromCabin": $("#from_cabin").val(),"toCabin":$("#to_cabin").val(),"frequency":$("#frequency").val(),"booking_status": $("#booking_status").val(),"season":$("#season").val(),"carrier":$("#carrier").val()},
+        dataType: 'json'
+        }).done(function(data){
+		   var $a = $("<a>");
+		   $a.attr("href",data.file);
+		   $("body").append($a);
+		   $a.attr("download","offer_eligibility.xls");
+		   $a[0].click();
+		   $a.remove();
+		  }); 
+  }
   
    $('#eligibilitytable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({

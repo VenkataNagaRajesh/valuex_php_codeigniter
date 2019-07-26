@@ -127,7 +127,8 @@
 
 
                 <div class="col-sm-2 pull-right">
-                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+				  <button type="button" class="btn btn-danger" onclick="downloadRAFeed()">Download</button>
                 </div>	             				
 			  </div>
 			 </form>			
@@ -189,11 +190,11 @@
                    {"name": "boardPoint","value": $("#boarding_point").val()},
                    {"name": "offPoint","value": $("#offPoint").val()},
                    {"name": "Class","value": $("#class").val()},
-			{"name": "frequency","value": $("#frequency").val()},
-                    {"name": "airLine","value": $("#airline_code").val()},
-		   {"name": "flight_range","value": $("#flight_range").val()},
-		  {"name": "start_date","value": $("#start_date").val()},
-		  {"name": "end_date","value": $("#end_date").val()},
+			       {"name": "frequency","value": $("#frequency").val()},
+                   {"name": "airLine","value": $("#airline_code").val()},
+				   {"name": "flight_range","value": $("#flight_range").val()},
+				   {"name": "start_date","value": $("#start_date").val()},
+				   {"name": "end_date","value": $("#end_date").val()},
 
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
@@ -204,31 +205,30 @@
                     "success": fnCallback
                          } ); }, 
 
-      "columns": [{"data": "rafeed_id" },
-		  {"data": "airline_code" },
+      "columns": [{"data": "temp_id" },
+		          {"data": "airline_code" },
                   {"data": "ticket_number" },
 				  {"data": "coupon_number" },
 				  {"data": "booking_country"},
-                                  {"data": "booking_city" },
-				{"data": "issuance_country"},
-                                  {"data": "issuance_city" },
-                                {"data": "boarding_point"},
-                                 {"data": "off_point" },
-				{"data": "prorated_price" },
-				{"data": "cabin" },
-                                {"data": "class" },
-				{"data": "fare_basis" },
-				{"data": "departure_date" },
-                                  {"data": "day_of_week" },
-
-                                  {"data": "operating_airline_code"},
-				 {"data": "marketing_airline_code" },
-				 {"data": "carrier_code" },
-				 {"data": "flight_number" },
-                                  {"data": "office_id"},
-				    {"data": "channel" },
-                                  {"data": "pax_type"},
-					{"data": "active"},
+                  {"data": "booking_city" },
+				  {"data": "issuance_country"},
+                  {"data": "issuance_city" },
+                  {"data": "boarding_point"},
+                  {"data": "off_point" },
+				  {"data": "prorated_price" },
+				  {"data": "cabin" },
+                  {"data": "class" },
+				  {"data": "fare_basis" },
+				  {"data": "departure_date" },
+                  {"data": "day_of_week" },
+                  {"data": "operating_airline_code"},
+				  {"data": "marketing_airline_code" },
+				  {"data": "carrier_code" },
+				  {"data": "flight_number" },
+                  {"data": "office_id"},
+				  {"data": "channel" },
+				  {"data": "pax_type"},
+				  {"data": "active"},
 				  {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
@@ -237,12 +237,45 @@
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('rafeed/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"bookingCountry":$("#booking_country").val(),"bookingCity":$("#booking_city").val(),"boardPoint": $("#boarding_point").val(),"offPoint":$("#offPoint").val(),"Class":$("#class").val(),"frequency": $("#frequency").val(),"airLine":$("#airline_code").val(),"flight_range":$("#flight_range").val(),"start_date": $("#start_date").val(),"end_date":$("#end_date").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","rafeed.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }	                
             ] 
     });
 	
 	
   });
+  
+  function downloadRAFeed(){
+	   $.ajax({
+         url: "<?php echo base_url('rafeed/server_processing'); ?>?page=all&&export=1",
+         type: 'get',
+         data: {"bookingCountry":$("#booking_country").val(),"bookingCity":$("#booking_city").val(),"boardPoint": $("#boarding_point").val(),"offPoint":$("#offPoint").val(),"Class":$("#class").val(),"frequency": $("#frequency").val(),"airLine":$("#airline_code").val(),"flight_range":$("#flight_range").val(),"start_date": $("#start_date").val(),"end_date":$("#end_date").val()},
+         dataType: 'json'
+        }).done(function(data){
+			var $a = $("<a>");
+			$a.attr("href",data.file);
+			$("body").append($a);
+			$a.attr("download","rafeed.xls");
+			$a[0].click();
+			$a.remove();
+			});
+  }
  
   
    $('#rafeedtable tbody').on('mouseover', 'tr', function () {

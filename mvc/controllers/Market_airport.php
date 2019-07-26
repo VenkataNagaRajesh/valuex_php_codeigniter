@@ -201,18 +201,22 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS mz.market_id,mz.market_name,ma.code airpo
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
             );
-
+                $i = 1;
                 foreach($rResult as $list){
-
+                     $list->id = $i; $i++;
                         $output['aaData'][] = $list;
-
+                     
                 }
-                echo json_encode( $output );
+               if(isset($_REQUEST['export'])){
+				  $columns = array('#','Marketzone Name','Airport Name','City','Country','Region','Area');
+				  $rows = array('id','market_name','airport','city','country','region','area');
+				  $this->exportall($output['aaData'],$columns,$rows);		
+				} else {	
+				  echo json_encode( $output );
+				}
         }
 	
 
 
 }
 
-/* End of file user.php */
-/* Location: .//D/xampp/htdocs/school/mvc/controllers/user.php */

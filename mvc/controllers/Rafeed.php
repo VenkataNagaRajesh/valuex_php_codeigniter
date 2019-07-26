@@ -590,6 +590,7 @@ class Rafeed extends Admin_Controller {
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+	   $i = 1;
 	  foreach($rResult as $feed){		 	
 		$feed->departure_date = date('d/m/Y',$feed->departure_date);
 
@@ -608,10 +609,16 @@ class Rafeed extends Admin_Controller {
 			}	
 			
 			$feed->active .= "<label for='myonoffswitch".$feed->rafeed_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";         
-           
+            $feed->temp_id = $i; $i++;
 			$output['aaData'][] = $feed;				
 		}
-		echo json_encode( $output );
+		if(isset($_REQUEST['export'])){
+		  $columns = array("#","Airline Code","Ticket Number","Coupon number","Booking Country","Booking City","Issuance Country","Issuance City","Board Point","Off Point","Prorated Price","Cabin","Class","Fare Basis","Departure Date","Day Of Week","Operating Airline","Marketing Airline","Carrier Code","Flight Number","Office","Channel","Pax Type");
+		  $rows = array("temp_id","airline_code","ticket_number","coupon_number","booking_country","booking_city","issuance_country","issuance_city","boarding_point","off_point","prorated_price","cabin","class","fare_basis","departure_date","day_of_week","operating_airline_code","marketing_airline_code","carrier_code","flight_number","office_id","channel","pax_type");
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
 	
 

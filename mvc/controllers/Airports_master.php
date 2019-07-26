@@ -586,7 +586,13 @@ class Airports_master extends Admin_Controller {
 			$output['aaData'][] = $airport;
             $i++;			
 		}
-		echo json_encode( $output );
+		if(isset($_REQUEST['export'])){
+		  $columns = array('#','Name','Code','City','City Code','Country','Country Code','Region','Area');
+		  $rows = array("temp_id","airport","code","city","citycode","country","countrycode","region","area");
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
 	
     function active() {

@@ -380,6 +380,7 @@ $sOrder $sLimit";
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
           );
+		       $i = 1;
                 foreach ($rResult as $feed ) {
 			$feed->avg_fare = $feed->bid_value;;
                         $feed->flight_date = date('d-m-Y',$feed->flight_date);
@@ -388,11 +389,17 @@ $sOrder $sLimit";
 			$feed->p_count = count(explode(',',$feed->p_list));
 			$feed->action = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
                                 $output['aaData'][] = $feed;
-
+            $feed->id = $i;
+			 $i++;
                 }
 
-
-                echo json_encode( $output );
+           if(isset($_REQUEST['export'])){
+		  $columns = array("id","Offer Date","Carrier","Flight Number","Flight Date","Board Point","Off Point","Current cabin","Bid Cabin","Bid Amount","Submit Date","PAX Names","FQTV NBR","PNR Reference","Number In Party","Average Fare","cash","miles","offer status");
+		  $rows = array("id","offer_date","carrier","flight_number","flight_date","from_city","to_city","from_cabin","to_cabin","bid_value","bid_submit_date","p_list","fqtv","pnr_ref","p_count","avg_fare","cash","miles","offer_status");
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 
 	}
 

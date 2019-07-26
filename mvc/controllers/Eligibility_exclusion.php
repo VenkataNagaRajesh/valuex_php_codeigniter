@@ -1026,7 +1026,13 @@ LEFT JOIN (
 			
 			$output['aaData'][] = $rule;				
 		}
-		echo json_encode( $output );
+		if(isset($_REQUEST['export'])){
+		  $columns = array('#','Rule#','Reason Description','Origin Level','Orig Level Value','Dest Level','Dest Level Value','Carrier','Flight Effective Date','Flight Discontinue Date','Departure Start Time','Departure End Time','Flight Number Range','Upgrade From Cabin','Upgrade To Cabin','Frequency');
+		  $rows = array("eexcl_id","ruleno","excl_reason_desc","orig_level","orig_level_value","dest_level","dest_level_value","carrier_code" ,"flight_efec_date","flight_disc_date","flight_dep_start","flight_dep_end","flight_nbr","from_class","to_class","frequency");
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
 
 

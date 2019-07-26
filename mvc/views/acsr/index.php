@@ -157,7 +157,8 @@
                         </div>-->
                                   
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+				  <button type="button" class="btn btn-danger" onclick="downloadACSR()">Download</button>
                 </div>
 
 </div>
@@ -214,17 +215,16 @@ $(document).ready(function() {
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "origID","value": $("#orig_market_id").val()},
                    {"name": "destID","value": $("#dest_market_id").val()},
-		   {"name": "day","value": $("#day").val()},
-		   {"name": "fromCabin","value": $("#from_cabin").val()},
-		   {"name": "toCabin","value": $("#to_cabin").val()},
-		    {"name": "nbrStart","value": $("#flight_nbr_start").val()},
+				   {"name": "day","value": $("#day").val()},
+				   {"name": "fromCabin","value": $("#from_cabin").val()},
+				   {"name": "toCabin","value": $("#to_cabin").val()},
+		           {"name": "nbrStart","value": $("#flight_nbr_start").val()},
                    {"name": "nbrEnd","value": $("#flight_nbr_end").val()},
-		   {"name": "depDateStart","value": $("#flight_dep_date_start").val()},
+		           {"name": "depDateStart","value": $("#flight_dep_date_start").val()},
                    {"name": "depDateEnd","value": $("#flight_dep_date_end").val()},
-
-		   {"name": "startHrs","value": $("#flight_dep_start_hrs").val()},
+		           {"name": "startHrs","value": $("#flight_dep_start_hrs").val()},
                    {"name": "startMins","value": $("#flight_dep_start_mins").val()},
-		 {"name": "endHrs","value": $("#flight_dep_end_hrs").val()},
+		           {"name": "endHrs","value": $("#flight_dep_end_hrs").val()},
                    {"name": "endMins","value": $("#flight_dep_end_mins").val()},
                    {"name": "active","value": $("#active").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
@@ -234,23 +234,23 @@ $(document).ready(function() {
                     "data": aoData,
                     "success": fnCallback
                          } ); }, 
-      "columns": [{"data": "acsr_id" },
-                                  {"data": "orig_level" },
-                                  {"data": "orig_level_value" },
+      "columns": [{"data": "id" },
+                  {"data": "orig_level" },
+                  {"data": "orig_level_value" },
 				  {"data": "dest_level" },
-                                  {"data": "dest_level_value" },
+                  {"data": "dest_level_value" },
 				  {"data": "carrier" },
-                                  {"data": "flight_dep_date_start" }, 
+                  {"data": "flight_dep_date_start" }, 
                   {"data": "flight_dep_date_end"},
-                                  {"data": "flight_dep_time_start" },
-                                  {"data": "flight_dep_time_end" },
-                                  {"data": "flight_nbr" },
+                  {"data": "flight_dep_time_start" },
+                  {"data": "flight_dep_time_end" },
+                  {"data": "flight_nbr" },
 				  {"data": "season_name" },
-                                  {"data": "from_cabin"},
-                                         {"data": "to_cabin" },
+                  {"data": "from_cabin"},
+                  {"data": "to_cabin" },
 				  {"data": "memp" },
-                                  {"data": "min_bid_price"},
-                                  {"data": "frequency"},
+                  {"data": "min_bid_price"},
+                  {"data": "frequency"},
 				  {"data": "action_typ" },
 				  {"data": "active"},
                   {"data": "action"}
@@ -263,10 +263,43 @@ $(document).ready(function() {
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('acsr/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"origID":$("#orig_market_id").val(),"destID":$("#dest_market_id").val(),"day":$("#day").val(),"fromCabin":$("#from_cabin").val(),"toCabin":$("#to_cabin").val(),"nbrStart":$("#flight_nbr_start").val(),"nbrEnd":$("#flight_nbr_end").val(),"depDateStart":$("#flight_dep_date_start").val(),"depDateEnd":$("#flight_dep_date_end").val(),"startHrs":$("#flight_dep_start_hrs").val(),"startMins":$("#flight_dep_start_mins").val(),"endHrs":$("#flight_dep_end_hrs").val(),"endMins": $("#flight_dep_end_mins").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","acsr.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
             ] 
     });
   });
+  
+  function downloadACSR(){
+	   $.ajax({
+         url: "<?php echo base_url('acsr/server_processing'); ?>?page=all&&export=1",
+         type: 'get',
+         data: {"origID":$("#orig_market_id").val(),"destID":$("#dest_market_id").val(),"day":$("#day").val(),"fromCabin":$("#from_cabin").val(),"toCabin":$("#to_cabin").val(),"nbrStart":$("#flight_nbr_start").val(),"nbrEnd":$("#flight_nbr_end").val(),"depDateStart":$("#flight_dep_date_start").val(),"depDateEnd":$("#flight_dep_date_end").val(),"startHrs":$("#flight_dep_start_hrs").val(),"startMins":$("#flight_dep_start_mins").val(),"endHrs":$("#flight_dep_end_hrs").val(),"endMins": $("#flight_dep_end_mins").val()},
+         dataType: 'json'
+         }).done(function(data){
+			var $a = $("<a>");
+			$a.attr("href",data.file);
+			$("body").append($a);
+			$a.attr("download","acsr.xls");
+			$a[0].click();
+			$a.remove();
+		  });
+  }
   
    $('#ruleslist tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({

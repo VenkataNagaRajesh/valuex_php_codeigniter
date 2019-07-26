@@ -626,6 +626,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+	  $i = 1;
 	  foreach($rResult as $feed){		 	
 		$feed->dep_date = date('d/m/Y',$feed->dep_date);
 		$feed->arrival_date = date('d/m/Y',$feed->arrival_date);
@@ -645,10 +646,16 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 			}	
 			
 			$feed->active .= "<label for='myonoffswitch".$feed->dtpf_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";         
-           
+             $feed->id = $i; $i++;
 			$output['aaData'][] = $feed;				
 		}
-		echo json_encode( $output );
+		if(isset($_REQUEST['export'])){
+		  $columns = array("#","Airline Code","PNR Reference","PAX Number","First Name","Last Name","PTC","FQTV","Carrier Code","Seg Number","Flight Number","Departure Date","Departure Time","Arrival Date","Arrival Time","Class","Cabin","Board Point","Off Point","Tier","Frequency","Pax Contact Email","Phone","Booking Country","Booking City","Office","Channel");
+		  $rows = array("id","airline_code","pnr_ref","pax_nbr","first_name","last_name","ptc_code","fqtv","carrier_code","seg_nbr","flight_number","dep_date","dept_time","arrival_date","arrival_time","class","cabin","from_city","to_city","tier","frequency","pax_contact_email","phone","booking_country","booking_city","office_id","channel");
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
 	
  function convertTimeToSeconds($time_str) {

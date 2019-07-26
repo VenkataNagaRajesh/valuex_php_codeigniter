@@ -536,6 +536,7 @@ class Airline extends Admin_Controller {
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+	  $i=1;
 	  foreach($rResult as $airline){		 	
 		  if(permissionChecker('airline_edit')){ 			
 			$airline->action = btn_edit('airline/edit/'.$airline->vx_aln_data_defnsID, $this->lang->line('edit'));
@@ -574,9 +575,16 @@ class Airline extends Admin_Controller {
 			//$airline->aircraft = implode('/',$airline->aircraft_seat_capacity);
 			$airline->aircraft = implode(',',$aircraft);
 			$airline->seat_capacity = implode(',',$seat_capacity);
+			$airline->id = $i; $i++;
 			$output['aaData'][] = $airline;				
 		}
-		echo json_encode( $output );
+		if(isset($_REQUEST['export'])){
+		  $columns = array('#','Airline Name','Code','Aircraft','Seat Capacity');
+		  $rows = array('id','aln_data_value','code','aircraft','seat_capacity');
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
 	
     function active() {

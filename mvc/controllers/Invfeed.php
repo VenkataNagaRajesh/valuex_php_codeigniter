@@ -390,6 +390,7 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','dc.c
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+	  $i = 1;
 	  foreach($rResult as $feed){		 	
 		$feed->departure_date = date('d/m/Y',$feed->departure_date);
 
@@ -408,10 +409,16 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','dc.c
 			}	
 			
 			$feed->active .= "<label for='myonoffswitch".$feed->invfeed_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";         
-           
+            $feed->id = $i; $i++;
 			$output['aaData'][] = $feed;				
 		}
-		echo json_encode( $output );
+		if(isset($_REQUEST['export'])){
+		  $columns = array('#','Carrier Code','Flight Number','origin Airport','Destination Airport','Cabin','Departure Date','Empty Seats','Sold Seats');
+		  $rows = array("id","airline_code","flight_nbr","origin_airport","dest_airport","cabin","departure_date","empty_seats","sold_seats");
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
 	
  function downloadFormat(){

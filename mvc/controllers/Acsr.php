@@ -889,6 +889,7 @@ LEFT JOIN (
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+	  $n = 1;
 	  foreach($rResult as $rule){	
 		$rule->flight_dep_date_start = date('d-m-Y',$rule->flight_dep_date_start);
                $rule->flight_dep_date_end = date('d-m-Y',$rule->flight_dep_date_end);
@@ -966,10 +967,17 @@ LEFT JOIN (
 			
 			$rule->active .= "<label for='myonoffswitch".$rule->acsr_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
 			
-			
+			$rule->id = $n; $n++;
 			$output['aaData'][] = $rule;				
 		}
-		echo json_encode( $output );
+				
+		if(isset($_REQUEST['export'])){
+		  $columns = array("#","origin Level","Origin Level Value","Destination Level","Destinatio Level Value","Carrier","Flight Departure Start Date","Flight Departure End Date","Flight Departure Start Time","Flight Departure End Time","Flight Number","Season Name","Upgrade From Cabin","Upgrade To Cabin","Memp","Min Bid Price","Frequency","Action type");
+		  $rows = array("id","orig_level","orig_level_value","dest_level","dest_level_value","carrier","flight_dep_date_start","flight_dep_date_end","flight_dep_time_start","flight_dep_time_end","flight_nbr","season_name","from_cabin","to_cabin","memp","min_bid_price","frequency","action_typ");
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
 
 
