@@ -262,7 +262,7 @@ $("#bulkDelete").on('click',function() { // bulk checked
     }); 
 
 
-$('#defdata').on('click', 'input[type="checkbox"]', function() {
+$('#defdata').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
 

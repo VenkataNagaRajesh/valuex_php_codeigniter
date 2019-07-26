@@ -841,7 +841,7 @@ $("#bulkDelete").on('click',function() { // bulk checked
     }); 
 
 
-$('#ruleslist').on('click', 'input[type="checkbox"]', function() {
+$('#ruleslist').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
 

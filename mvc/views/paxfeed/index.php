@@ -383,7 +383,7 @@ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
     }); 
 
 
-$('#paxfeedtable').on('click', 'input[type="checkbox"]', function() {
+$('#paxfeedtable').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
 

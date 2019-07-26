@@ -551,7 +551,7 @@ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
 
 
 
-$('#fclrtable').on('click', 'input[type="checkbox"]', function() {
+$('#fclrtable').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
 

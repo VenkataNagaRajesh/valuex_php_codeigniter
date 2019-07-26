@@ -738,7 +738,7 @@ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
 
 
 
-$('#seasonslist').on('click', 'input[type="checkbox"]', function() {
+$('#seasonslist').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
 

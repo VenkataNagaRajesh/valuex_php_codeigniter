@@ -280,7 +280,7 @@ $("#bulkDelete").on('click',function() { // bulk checked
     }); 
 
 
-$('#invfeedtable').on('click', 'input[type="checkbox"]', function() {
+$('#invfeedtable').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
 

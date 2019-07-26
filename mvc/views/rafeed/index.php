@@ -369,7 +369,7 @@ $("#bulkDelete").on('click',function() { // bulk checked
         }
     }); 
 
-$('#rafeedtable').on('click', 'input[type="checkbox"]', function() {
+$('#rafeedtable').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
 });
 
