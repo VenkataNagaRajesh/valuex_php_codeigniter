@@ -562,7 +562,14 @@ class Airports_master extends Admin_Controller {
 		"aaData" => array()
 	  );
 	  $i=1;
+
+	$rownum = 1 + $_GET['iDisplayStart'];
+
 	  foreach($rResult as $airport){		 	
+
+		 $airport->chkbox = "<input type='checkbox'  class='deleteRow' value='".$airport->vx_amdID."'  /> #".$rownum ;
+                                $rownum++;
+
 		  if(permissionChecker('airports_master_edit')){ 			
 			$airport->action = btn_edit('airports_master/edit/'.$airport->vx_amdID, $this->lang->line('edit'));
 		  }
@@ -681,6 +688,21 @@ $data['airportID']='499';
 }*/
 	
 	
+
+public function delete_master_bulk_records(){
+$data_ids = $_REQUEST['data_ids'];
+$data_id_array = explode(",", $data_ids);
+if(!empty($data_id_array)) {
+    foreach($data_id_array as $id) {
+	 $this->data['airport'] = $this->airports_m->get_airportmaster($id);
+                        if($this->data['airport']) {
+                                $data['active'] = 0 ;
+                                $this->airports_m->update_master_data($data, $id);
+                        }
+    }
+}
+}
+
    
 }
 
