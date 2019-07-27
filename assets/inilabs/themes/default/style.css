@@ -2641,6 +2641,22 @@ Component: timeline
 	.select2-container.form-control {
 		margin:12px 0 !important;
 	}
+	.mbl-tree-btn{
+		margin-top:1px !important;
+	}
+	.table-responsive{
+		overflow:auto;
+	}
+	.mzones .title-tool-bar{
+		width: 62% !important;
+		margin-right: 5px !important;
+	}
+	.mzones .mzone-filter {
+		margin: 0 0 2em !important;
+	}
+	.mzones .pull-right{
+		float:none !important;
+	}
 }
 @media screen and (max-width: 767px) {
   .error-page > .error-content > h3 {
@@ -3870,12 +3886,19 @@ fieldset[disabled] .btn-vk.active {
 	margin-bottom: 5px;
 	border:solid 1px #999;
 }
-.table-reponsive{
+.mzones .mzone-filter{
 	border: solid 1px #999;
-	padding: 14px;
 	margin: 10px 0;
 	border-radius:3px;
 	background:#fff;
+	padding: 12px 0 4px;
+}
+.mzones #hide-table{
+	border: solid 1px #999;
+	margin: 10px 0;
+	border-radius:3px;
+	background:#fff;
+	padding: 12px 10px;
 }
 .table-reponsive .table thead th{
 	font-weight:bold;
@@ -4513,9 +4536,9 @@ table{
 #master{
 	table-layout: fixed; 
 }
-#tztable{
+/*#tztable{
    table-layout: fixed;	
-}
+}*/
 #rafeedtable{
    table-layout: fixed;
 }
