@@ -63,15 +63,17 @@
         </div>
 		<div class="col-md-12 airline-cabin-img" style="padding:0">
 		<h2>Videos</h2>
+		  <?php foreach($airline_cabin->video_links as $link) { ?>
 			<div class="col-md-3">
+				<iframe src="<?=$link?>" width="100%" height="130"></iframe>
+			</div>
+		<?php } ?>
+			<!--<div class="col-md-3">
 				<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="130"></iframe>
 			</div>
 			<div class="col-md-3">
 				<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="130"></iframe>
-			</div>
-			<div class="col-md-3">
-				<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="130"></iframe>
-			</div>
+			</div>-->
         </div>
   </section>
 </div>
