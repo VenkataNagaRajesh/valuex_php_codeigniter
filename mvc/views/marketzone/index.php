@@ -134,39 +134,39 @@
                    </div>
 				</div>
 				<div class="col-md-12">
-					<div class="mzone-filter col-md-12">
-						<div class="col-md-2">
+					<div class="mzone-filter col-md-12 col-sm-12">
+						<div class="col-md-2 col-sm-3">
 							<?php echo form_dropdown("sairline_id", $airlinelist,set_value("sairline_id"), "id='sairline_id' class='form-control hide-dropdown-icon select2'");?>
 						</div>
-						<div class="col-md-2">
+						<div class="col-md-2 col-sm-3">
 							<?php $marketlist = array("0" => "Marketzone");
 								foreach($marketzones as $marketzone){
 									$marketlist[$marketzone->market_id] = $marketzone->market_name;
 								 }
 								echo form_dropdown("smarket_id", $marketlist,set_value("smarket_id",$marketID), "id='smarket_id' class='form-control hide-dropdown-icon select2'");    ?>
 						</div>
-						<div class="col-md-2">
+						<div class="col-md-2 col-sm-3">
 							<?php 
 								$aln_datatypes['0'] = "Level Type";                         
 								ksort($aln_datatypes); 			
 								echo form_dropdown("samz_level_id", $aln_datatypes,set_value("samz_level_id",$levelID), "id='samz_level_id' class='form-control hide-dropdown-icon select2'");    ?>
 						</div>
-						<div class="col-md-2">
+						<div class="col-md-2 col-sm-3">
 							<?php 
 								$aln_datatypes['0'] = "Inclusion Type ";                         
 								ksort($aln_datatypes);                         
 								echo form_dropdown("samz_incl_id", $aln_datatypes,set_value("samz_incl_id",$inclID), "id='samz_incl_id' class='form-control hide-dropdown-icon select2'");    ?> 
 						</div>
-						<div class="col-md-2">
+						<div class="col-md-2 col-sm-3">
 							<?php                         
 								$aln_datatypes['0'] = "Exclusion Type ";                         
 								ksort($aln_datatypes);                         
 								echo form_dropdown("samz_excl_id", $aln_datatypes,set_value("samz_excl_id",$exclID), "id='samz_excl_id' class='form-control hide-dropdown-icon select2'");    ?> 
 						</div>
-						<div class="col-md-1">
+						<div class="col-md-1 col-sm-3">
 							<a href="#" type="button"  id='btn_txt' class="btn btn-danger form-control" onclick="$('#tztable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
 						</div>
-						<div class="col-md-1">
+						<div class="col-md-1 col-sm-3">
 							<a href="#" type="button"  class="btn btn-danger form-control" onclick="downloadZone()" data-title="Download" data-toggle="tooltip" data-placement="top"><i class="fa fa-download"></i></a>
 						</div>
 					</div>

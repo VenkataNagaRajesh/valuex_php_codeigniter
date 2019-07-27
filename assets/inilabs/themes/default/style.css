@@ -2620,7 +2620,7 @@ Component: timeline
   margin-left: 190px;
   display: block;
 }
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 768px) {
 	.error-page > .error-content {
 		margin-left: 0;
 	}
@@ -2631,6 +2631,9 @@ Component: timeline
 	.box .box-header {
 		width: 91%;
 		margin-right: 7px;
+	}
+	.top-bar-title {
+		font-size:1em;
 	}
 	.mbl-user-name{
 		display:none;
@@ -2648,14 +2651,20 @@ Component: timeline
 		overflow:auto;
 	}
 	.mzones .title-tool-bar{
-		width: 62% !important;
-		margin-right: 5px !important;
+		width: 78% !important;
+		margin-right: 0 !important;
 	}
 	.mzones .mzone-filter {
 		margin: 0 0 2em !important;
 	}
 	.mzones .pull-right{
 		float:none !important;
+	}
+	.form-horizontal .btn-danger{
+		margin:12px 0 !important;
+	}
+	.form-horizontal .select2{
+		margin-bottom:10px;
 	}
 }
 @media screen and (max-width: 767px) {

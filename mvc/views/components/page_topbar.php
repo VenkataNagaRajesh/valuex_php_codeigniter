@@ -19,7 +19,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-				<p class="top-bar-title col-md-10 hidden-xs">Airline Offer Management System</p>
+				<p class="top-bar-title col-md-10 hidden-xs hidden-sm">Airline Offer Management System</p>
 				<p class="top-bar-title col-xs-8 hidden-md hidden-lg">Airline Offer Management System</p>
                 <div class="navbar-right">
                     <ul class="nav navbar-nav">
