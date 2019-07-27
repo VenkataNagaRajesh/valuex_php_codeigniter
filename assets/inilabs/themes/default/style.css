@@ -4614,6 +4614,18 @@ table{
 #defdata{
    table-layout: fixed;
 }
+#fclrtable{
+   table-layout: fixed;
+}
+#invfeedtable{
+   table-layout: fixed;
+}
+#offertable{
+   table-layout: fixed;
+}
+#airlinetable{
+   table-layout: fixed;
+}
 .rowselected {
     background-color: #a6b4cd;
 }

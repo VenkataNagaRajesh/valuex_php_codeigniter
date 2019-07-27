@@ -115,8 +115,9 @@
 						  });
                         }
                  }                
-            ] ,
-     lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, "All"] ]	 
+            ],
+	"autoWidth": false,
+	"columnDefs": [ {"targets": 0,"width": "30px"}]
     });
 	
 	

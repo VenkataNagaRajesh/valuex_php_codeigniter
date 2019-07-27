@@ -181,7 +181,7 @@
 				  <thead>
 					   <tr>
 						      
-							<th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
+							<th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/> #
 							<th><?=$this->lang->line('market_name')?></th>
 							<th><?php echo "Airline";?></th>
 							<th><?=$this->lang->line('level_type')?></th>
@@ -272,14 +272,15 @@ $('#tree1').treed();
 
 
 <script type="text/javascript">
-  $(document).ready(function() {
+  $(document).ready(function() { 
 
 $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
 	
 	loadjstree();
 
 	loaddatatable();
-
+	
+     
  });
 
 
@@ -318,7 +319,28 @@ function loaddatatable() {
 	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
 	dom: 'B<"clear">lfrtip',
    // buttons: [ 'copy', 'csv', 'excel','pdf' ],
-    buttons: [
+    buttons: [   {text: 'Delete',
+				  action: function ( e, dt, node, config ) {
+					if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+						var ids = [];
+						$('.deleteRow').each(function(){
+							if($(this).is(':checked')) { 
+								ids.push($(this).val());
+							}
+						});
+						var ids_string = ids.toString();  // array to string conversion 
+						$.ajax({
+							type: "POST",
+							url: "<?php echo base_url('marketzone/delete_mz_bulk_records'); ?>",
+							data: {data_ids:ids_string},
+							success: function(result) {
+							   $('#tztable').DataTable().ajax.reload();
+							},
+							async:false
+						});
+				    }
+				  }
+                },
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
@@ -339,38 +361,13 @@ function loaddatatable() {
 							$a.remove();
 						  });
                         }
-                 },  
+                 }  
 
-			 {
-                text: 'Bulk Delete',
-                action: function ( e, dt, node, config ) {
-
-			if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
-            var ids = [];
-            $('.deleteRow').each(function(){
-                if($(this).is(':checked')) { 
-                    ids.push($(this).val());
-                }
-            });
-            var ids_string = ids.toString();  // array to string conversion 
-            $.ajax({
-                type: "POST",
-                url: "<?php echo base_url('marketzone/delete_mz_bulk_records'); ?>",
-                data: {data_ids:ids_string},
-                success: function(result) {
-                   $('#tztable').DataTable().ajax.reload();
-                },
-                async:false
-            });
-        }
-
-                }
-
-            }
+			
 
             ] ,
 	"autoWidth": false,
-     "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "120px" },
+     "columnDefs": [ {"targets": 0,"width": "50px" },
                      { "width": "130px", "targets": 1 },
                      { "width": "50px", "targets": 2 },
 					 { "width": "60px", "targets": 9 }					 
