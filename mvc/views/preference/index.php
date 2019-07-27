@@ -50,7 +50,7 @@ $(document).ready(function() {
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('preference/server_processing'); ?>",      	  
-      "columns": [{"data": "VX_aln_preferenceID" },
+      "columns": [{"data": "id" },
                   {"data": "category" },
 				  {"data": "type" },
 				  {"data": "pref_code" },
@@ -67,7 +67,24 @@ $(document).ready(function() {
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('preference/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","preference.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
             ] 	 
     });
   }); 

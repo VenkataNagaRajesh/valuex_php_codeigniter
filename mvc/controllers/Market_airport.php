@@ -70,7 +70,7 @@ class Market_airport extends Admin_Controller {
 		$this->data['airports_list'] = $this->airports_m->getDefnsCodesListByType('1');
 		$this->data['country_list'] = $this->airports_m->getDefnsCodesListByType('2');
 		$this->data['city_list'] = $this->airports_m->getDefnsCodesListByType('3');
-		$this->data['region_list'] = $this->airports_m->getDefnsCodesListByType('4');
+		$this->data['region_list'] = $this->airports_m->getDefnsListByType('4');
 		
 
 		$this->data["subview"] = "market_airport/index";
@@ -201,18 +201,22 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS mz.market_id,mz.market_name,ma.code airpo
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
             );
-
+                $i = 1;
                 foreach($rResult as $list){
-
+                     $list->id = $i; $i++;
                         $output['aaData'][] = $list;
-
+                     
                 }
-                echo json_encode( $output );
+               if(isset($_REQUEST['export'])){
+				  $columns = array('#','Marketzone Name','Airport Name','City','Country','Region','Area');
+				  $rows = array('id','market_name','airport','city','country','region','area');
+				  $this->exportall($output['aaData'],$columns,$rows);		
+				} else {	
+				  echo json_encode( $output );
+				}
         }
 	
 
 
 }
 
-/* End of file user.php */
-/* Location: .//D/xampp/htdocs/school/mvc/controllers/user.php */

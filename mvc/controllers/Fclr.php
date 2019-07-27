@@ -661,12 +661,21 @@ $sWhere $sOrder $sLimit";
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+
+	    $i = 1;
+		$rownum = 1 + $_GET['iDisplayStart'];
 		foreach ($rResult as $feed ) {
+
+			 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->fclr_id."'  /> #".$rownum ;
+                                $rownum++;
+
 			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
 			$feed->day_of_week = ($feed->day_of_week)? ($feed->day_of_week):"NA";
+			$feed->source = $feed->source_point;
 			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip"  data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
 			 $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
-                        $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip"  data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
+			  $feed->dest = $dest_markets ;
+               $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip"  data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
 
 			
 			/*if ( $feed->season_id > 0 ) {
@@ -703,13 +712,19 @@ $sWhere $sOrder $sLimit";
                         }
 
                         $feed->active .= "<label for='myonoffswitch".$feed->fclr_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
-
+           $feed->id = $i; $i++;
 		$output['aaData'][] = $feed;
 
 		}
 
-		
-		echo json_encode( $output );
+						 
+        if(isset($_REQUEST['export'])){
+		  $columns = array('#','Board Point','Off Point','Carrier','Flight Number','Season','From date','To date','Frequency','From Cabin','To Cabin','Average','Minimum','Maximum','Slider Position');
+		  $rows = array("id","source","dest","carrier_code","flight_number","season_id","start_date","end_date","day_of_week","fcabin","tcabin","average","min","max","slider_start");
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
 	
 
@@ -921,6 +936,22 @@ $rResult = array_merge($rResult1,$rResult2);
                            redirect(base_url("fclr/index"));
 
    }
+
+
+public function delete_fclr_bulk_records(){
+$data_ids = $_REQUEST['data_ids'];
+$data_id_array = explode(",", $data_ids);
+if(!empty($data_id_array)) {
+    foreach($data_id_array as $id) {
+
+	 $this->data['rule'] = $this->fclr_m->get_single_fclr(array('fclr_id'=>$id));
+                        if($this->data['rule']) {
+                                $this->fclr_m->delete_fclr($id);
+
+                        }
+    }
+}
+}
 
 
 

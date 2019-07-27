@@ -87,7 +87,8 @@
 
 
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+				  <button type="button" class="btn btn-danger" onclick="downloadINVFeed()">Download</button>
                 </div>	             				
 			  </div>
 			 </form>			
@@ -132,9 +133,9 @@
        aoData.push({"name": "orgAirport","value": $("#origin_airport").val()},
                    {"name": "destAirport","value": $("#dest_airport").val()},
                    {"name": "Cabin","value": $("#cabin").val()},
-                    {"name": "airLine","value": $("#airline_code").val()},
-		    {"name": "flight_range","value": $("#flight_range").val()},
-			 {"name": "start_date","value": $("#start_date").val()},
+                   {"name": "airLine","value": $("#airline_code").val()},
+		           {"name": "flight_range","value": $("#flight_range").val()},
+			       {"name": "start_date","value": $("#start_date").val()},
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -149,11 +150,11 @@
 				  {"data": "flight_nbr" },
 				  {"data": "origin_airport" },
 				  {"data": "dest_airport"},
-                                  {"data": "cabin" },
-				 {"data": "departure_date" },
-                                  {"data": "empty_seats" },
-                                  {"data": "sold_seats"},
-					{"data": "active"},
+                  {"data": "cabin" },
+				  {"data": "departure_date" },
+                  {"data": "empty_seats" },
+                  {"data": "sold_seats"},
+				  {"data": "active"},
 				  {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
@@ -162,7 +163,25 @@
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('invfeed/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"orgAirport":$("#origin_airport").val(),"destAirport":$("#dest_airport").val(),"Cabin":$("#cabin").val(),"airLine": $("#airline_code").val(),"flight_range":$("#flight_range").val(),"start_date":$("#start_date").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","invfeed.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
+           		               
             ],
 
 	 "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false}],
@@ -171,6 +190,21 @@
 	
   });
  
+  function downloadINVFeed(){
+	  $.ajax({
+        url: "<?php echo base_url('invfeed/server_processing'); ?>?page=all&&export=1",
+        type: 'get',
+        data: {"orgAirport":$("#origin_airport").val(),"destAirport":$("#dest_airport").val(),"Cabin":$("#cabin").val(),"airLine": $("#airline_code").val(),"flight_range":$("#flight_range").val(),"start_date":$("#start_date").val()},
+        dataType: 'json'
+        }).done(function(data){
+		var $a = $("<a>");
+		$a.attr("href",data.file);
+		$("body").append($a);
+		$a.attr("download","invfeed.xls");
+		$a[0].click();
+		$a.remove();
+	    });
+  }
   
    $('#invfeedtable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
@@ -280,7 +314,7 @@ $("#bulkDelete").on('click',function() { // bulk checked
     }); 
 
 
-$('#invfeedtable').on('click', 'input[type="checkbox"]', function() {
+$('#invfeedtable').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
 

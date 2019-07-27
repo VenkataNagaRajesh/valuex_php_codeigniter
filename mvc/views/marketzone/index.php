@@ -370,7 +370,7 @@ function loaddatatable() {
 
             ] ,
 	"autoWidth": false,
-     "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "130px" },
+     "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "120px" },
                      { "width": "130px", "targets": 1 },
                      { "width": "50px", "targets": 2 },
 					 { "width": "60px", "targets": 9 }					 
@@ -861,7 +861,7 @@ $("#bulkDelete").on('click',function() { // bulk checked
     }); 
 
 
-$('#tztable').on('click', 'input[type="checkbox"]', function() {
+$('#tztable').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
 

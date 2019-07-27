@@ -679,7 +679,7 @@ on MainSet.market_id = SubSet.market_id
   				 }
 
    				if($i%4==0) {
-       				$marketzone->levelname .= "<br>"; // or echo "\n";
+       				//$marketzone->levelname .= "<br>"; // or echo "\n";
    				}    
    				$i++;
 			}
@@ -695,7 +695,7 @@ on MainSet.market_id = SubSet.market_id
                                  }
                         
                                 if($i%4==0) {
-                                $marketzone->inclname .= "<br>"; // or echo "\n";
+                               // $marketzone->inclname .= "<br>"; // or echo "\n";
                                 }    
                                 $i++;
                         }
@@ -712,7 +712,7 @@ on MainSet.market_id = SubSet.market_id
                                  }
                         
                                 if($i%4==0) {
-                                $marketzone->exclname .= "<br>"; // or echo "\n";
+                                //$marketzone->exclname .= "<br>"; // or echo "\n";
                                 }    
                                 $i++;
                         }

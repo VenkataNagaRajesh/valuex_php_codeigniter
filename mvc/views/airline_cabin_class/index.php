@@ -288,7 +288,7 @@ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
 
 
 
-   $('#carriermaptable').on('click', 'input[type="checkbox"]', function() {
+   $('#carriermaptable').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
 

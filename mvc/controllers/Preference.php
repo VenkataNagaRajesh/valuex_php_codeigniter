@@ -232,7 +232,9 @@ class Preference extends Admin_Controller {
 		if((int)$id) {
 			$this->data['preference'] = $this->preference_m->get_preference(array('VX_aln_preferenceID'=>$id));
 			if($this->data['preference']) {			
-					$this->preference_m->delete_preference($id);
+					//$this->preference_m->delete_preference($id);
+					$data['active'] = 0 ;
+					$this->preference_m->update_preference($data, $id);
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url("preference/index"));			
 			} else {
@@ -363,6 +365,7 @@ class Preference extends Admin_Controller {
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+	   $n = 1;
 	  foreach($rResult as $preference){		 	
 		  if(permissionChecker('preference_edit')){ 			
 			$preference->action = btn_edit('preference/edit/'.$preference->VX_aln_preferenceID, $this->lang->line('edit'));
@@ -383,10 +386,16 @@ class Preference extends Admin_Controller {
 			}	
 			
 			$preference->active .= "<label for='myonoffswitch".$preference->VX_aln_preferenceID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";         
-           
+            $preference->id = $n; $n++;
 			$output['aaData'][] = $preference;				
 		}
-		echo json_encode( $output );
+		if(isset($_REQUEST['export'])){
+		  $columns = array('#','Category','Type','Preference Code','Display Name','Default Value','Get Value Type','get Value');
+		  $rows = array("id","category","type","pref_code","pref_display_name","pref_value","valuetype","value");
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
 
 	public function pref_get_value(){

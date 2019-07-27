@@ -30,7 +30,7 @@
                   </a>				  
 				  <?php } ?>
               </h5>
-			<!--  <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
+			<!--<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 
 			   <div class="col-sm-2">			   
                <?php $clist = array("0" => "Select Country");               
@@ -40,25 +40,17 @@
 				   echo form_dropdown("countryID", $clist,set_value("countryID",$countryID), "id='countryID' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
                  <div class="col-sm-2">			   
-                   <select name="stateID" id="stateID" class="form-control" placeholder="State">
-				   
-				   </select>
-                 </div>                				
-			     <div class="col-sm-2">
-                    <select name="regionID" id="regionID" class="form-control" placeholder="Region">
-				   
-				    </select>
-                 </div>
-                 <div class="col-sm-2">
-                 	<select name="areaID" id="areaID" class="form-control" placeholder="Area">
-				   
-				    </select>	
-                 </div>
+                   <?php $clist = array("0" => "Select Country");               
+                   foreach($aircrafts as $aircraft){
+								 $clist[$country->vx_aln_data_defnsID] = $country->aln_data_value;
+							 }							
+				   echo form_dropdown("countryID", $clist,set_value("countryID",$countryID), "id='countryID' class='form-control hide-dropdown-icon select2'");    ?>
+                 </div>		    
                 <div class="col-sm-2">
                   <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
                 </div>	             				
 			  </div>
-			 </form>-->				
+			 </form>-->			
             <div id="hide-table">
                <table id="airlinetable" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>
@@ -90,7 +82,7 @@
       "bProcessing": true,
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('airline/server_processing'); ?>",
-      "columns": [{"data": "vx_aln_data_defnsID" },
+      "columns": [{"data": "id" },
                   //{"data": "aln_data_value" },
 				  {"data": "code" },
 				  {"data": "aircraft"},
@@ -105,7 +97,24 @@
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('airline/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"aln_data_typeID": $("#aln_data_typeID").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","airline.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
             ] ,
      lengthMenu: [ [10, 25, 50, -1], [10, 25, 50, "All"] ]	 
     });

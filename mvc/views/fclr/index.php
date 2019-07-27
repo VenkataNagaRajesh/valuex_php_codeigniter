@@ -184,7 +184,8 @@
                 <input type="text" class="form-control" placeholder='FCLR ID' id="sfclr_id" name="sfclr_id" value="<?=set_value('sfclr_id',$sfclr_id)?>" >
                                                 </div>
 						<div class="col-md-12">
-							<a href="#" type="button"  id='btn_txt' class="btn btn-danger form-control" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+							<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+							<a type="button" class="btn btn-danger" onclick="downloadFCLR()">Download</a>
 						</div>
 					</div>
 				</div>
@@ -193,10 +194,11 @@
 	</div>
 	<div class="col-md-12 fclr-table">
 		<div id="hide-table" class="fclr-table-data">
-             <table id="fclrtable" class="table table-striped table-bordered table-hover dataTable no-footer">
+             <table id="fclrtable" class="table table-bordered dataTable no-footer">
                  <thead>
 					<tr>
-						<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+
+					  <th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
 						<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
@@ -237,18 +239,18 @@ function loaddatatable() {
       "sAjaxSource": "<?php echo base_url('fclr/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#sflight_number").val()},
-		  {"name": "flightNbrEnd","value": $("#end_flight_number").val()},
+		           {"name": "flightNbrEnd","value": $("#end_flight_number").val()},
                    {"name": "boardPoint","value": $("#boarding_point").val()},
                    {"name": "offPoint","value": $("#soff_point").val()},
-		    {"name": "depStartDate","value": $("#dep_from_date").val()},
+		           {"name": "depStartDate","value": $("#dep_from_date").val()},
                    {"name": "depEndDate","value": $("#dep_to_date").val()},
-			{"name": "frequency","value": $("#sfrequency").val()},
-		  {"name": "smarket","value": $("#smarket").val()},
+			       {"name": "frequency","value": $("#sfrequency").val()},
+		           {"name": "smarket","value": $("#smarket").val()},
                    {"name": "dmarket","value": $("#dmarket").val()},
-		  {"name": "sfrom_cabin","value": $("#sfrom_cabin").val()},
+		           {"name": "sfrom_cabin","value": $("#sfrom_cabin").val()},
                    {"name": "sto_cabin","value": $("#sto_cabin").val()},
-			 {"name": "sseason_id","value": $("#sseason_id").val()},
-			{"name": "sfclr_id","value": $("#sfclr_id").val()},
+			       {"name": "sseason_id","value": $("#sseason_id").val()},
+			       {"name": "sfclr_id","value": $("#sfclr_id").val()},
                    {"name": "scarrier","value": $("#scarrier").val()},
 
                   
@@ -261,7 +263,8 @@ function loaddatatable() {
                     "success": fnCallback
                          } ); }, 
 
-      "columns": [ {"data": "fclr_id" },
+
+      "columns": [ {"data": "chkbox" },
 		   {"data": "source_point" },
 	           {"data": "dest_point" },
 		   {"data": "carrier_code" },
@@ -285,12 +288,53 @@ function loaddatatable() {
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('fclr/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","fclr.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
             ] 
+    });	
+
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+            ],
+
+	"columnDefs": [ {"targets": 0,"orderable": false,"searchable": false}]
     });
 	
 	
+
 } 
+
+function downloadFCLR(){
+	$.ajax({
+       url: "<?php echo base_url('fclr/server_processing'); ?>?page=all&&export=1",
+       type: 'get',
+       data: {"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val()},
+       dataType: 'json'
+       }).done(function(data){
+			var $a = $("<a>");
+			$a.attr("href",data.file);
+			$("body").append($a);
+			$a.attr("download","fclr.xls");
+			$a[0].click();
+			$a.remove();
+		 });
+}
   
    $('#fclrtable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
@@ -509,4 +553,51 @@ function form_reset(){
         	$(this).prev(".card-header").find(".fa").removeClass("fa-minus").addClass("fa-plus");
         });
     });
+
+$(document).ready(function(){
+$("#bulkDelete").on('click',function() { // bulk checked
+        var status = this.checked;
+        $(".deleteRow").each( function() {
+          if(status == 1 && $(this).prop('checked')) {
+                
+          } else {
+            $(this).prop("checked",status);
+            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+         }
+        });
+    });
+
+$('#deleteTriger').on("click", function(event){ // triggering delete one by one
+        if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+            var ids = [];
+            $('.deleteRow').each(function(){
+                if($(this).is(':checked')) { 
+                    ids.push($(this).val());
+                }
+            });
+            var ids_string = ids.toString();  // array to string conversion 
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('fclr/delete_fclr_bulk_records'); ?>",
+                data: {data_ids:ids_string},
+                success: function(result) {
+                   $('#fclrtable').DataTable().ajax.reload();
+                   $('#bulkDelete').prop("checked",false);
+                },
+                async:false
+            });
+        }
+    }); 
+
+
+
+
+$('#fclrtable').on('click', '.deleteRow', function() {
+        $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
+    });
+
+
+
+
+});
 </script>

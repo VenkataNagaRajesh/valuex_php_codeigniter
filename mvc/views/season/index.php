@@ -156,10 +156,12 @@
 		</form>
 
 			<div id="hide-table">
-				<table id="seasonslist" class="table table-striped table-bordered table-hover dataTable no-footer" style="width:100%;">
+				<table id="seasonslist" class="table table-bordered dataTable no-footer" style="width:100%;">
 					<thead>
 						<tr>
-							<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+
+						 <th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
+
 							<th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
@@ -310,7 +312,7 @@ $(document).ready(function() {
                     "data": aoData,
                     "success": fnCallback
 			 } ); },	  
-      "columns": [{"data": "VX_aln_seasonID" },
+      "columns": [{"data": "chkbox" },
                   {"data": "season_name" },
 				 // {"data": "airline_name" },
 				  {"data": "airline_code" },
@@ -350,6 +352,8 @@ $(document).ready(function() {
                        }
                  }	                
             ] ,
+
+	"columnDefs": [ {"targets": 0,"orderable": false,"searchable": false}]
     });
   }); 
   
@@ -677,7 +681,7 @@ $("#dest_all").click(function(){
                     "data": aoData,
                     "success": fnCallback
 			 } ); },	  
-      "columns": [{"data": "VX_aln_seasonID" },
+      "columns": [{"data": "chkbox" },
                   {"data": "season_name" },
 				 // {"data": "airline_name" },
 				  {"data": "airline_code" },
@@ -693,7 +697,54 @@ $("#dest_all").click(function(){
                   {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
-     buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+     buttons: [ 'copy', 'csv', 'excel','pdf' ],
+     "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false}]
     }); 
    }
+
+$(document).ready(function () {
+$("#bulkDelete").on('click',function() { // bulk checked
+        var status = this.checked;
+        $(".deleteRow").each( function() {
+          if(status == 1 && $(this).prop('checked')) {
+                
+          } else {
+            $(this).prop("checked",status);
+            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+         }
+        });
+    });
+$('#deleteTriger').on("click", function(event){ // triggering delete one by one
+        if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+            var ids = [];
+            $('.deleteRow').each(function(){
+                if($(this).is(':checked')) { 
+                    ids.push($(this).val());
+                }
+            });
+            var ids_string = ids.toString();  // array to string conversion 
+            $.ajax({
+                type: "POST",
+                url: "<?php echo base_url('season/delete_season_bulk_records'); ?>",
+                data: {data_ids:ids_string},
+                success: function(result) {
+                   $('#seasonslist').DataTable().ajax.reload();
+                   $('#bulkDelete').prop("checked",false);
+                },
+                async:false
+            });
+        }
+    }); 
+
+
+
+$('#seasonslist').on('click', '.deleteRow', function() {
+        $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
+    });
+
+
+        });
+
+
+
 </script>

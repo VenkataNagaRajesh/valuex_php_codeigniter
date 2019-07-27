@@ -660,7 +660,12 @@ class Season extends Admin_Controller {
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+
+	$rownum = 1 + $_GET['iDisplayStart'];
 	  foreach($rResult as $season){	
+
+		 $season->chkbox = "<input type='checkbox'  class='deleteRow' value='".$season->VX_aln_seasonID."'  /> #".$rownum ;
+                                $rownum++;
           $season->ams_season_start_date = date('d-m-Y',$season->ams_season_start_date);	  
 		  $season->ams_season_end_date = date('d-m-Y',$season->ams_season_end_date);
 		  
@@ -743,5 +748,19 @@ class Season extends Admin_Controller {
 		}		
 		echo json_encode($search_info);
     }
+
+
+public function delete_season_bulk_records(){
+$data_ids = $_REQUEST['data_ids'];
+$data_id_array = explode(",", $data_ids);
+if(!empty($data_id_array)) {
+    foreach($data_id_array as $id) {
+	$this->data['season'] = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
+                        if($this->data['season']) {
+                                $this->season_m->delete_season($id);
+                        }
+    }
+}
+}
 
 }

@@ -21,8 +21,8 @@
           <div class='form-group'>
             <div class="col-sm-2">
              <?php $slist = array("0" => "Season");               
-					   foreach($seasonslist as $season){
-						  $slist[] = $season;
+					   foreach($seasonslist as $key => $season){
+						  $slist[$key] = $season;
 						}							
 				echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
             </div>
@@ -42,7 +42,8 @@
             </div>
 			
             <div class="col-sm-2">
-              <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+              <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+			  <button type="button" class="btn btn-danger" onclick="downloadSeasonAirport()">Download</button>
             </div>			
           </div>
         </form>		
@@ -92,7 +93,7 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
-      "columns": [{"data": "id" },
+      "columns": [{"data": "temp_id" },
 		          {"data": "season_name"},
                   {"data": "airport" },
 		          {"data": "country" },		          
@@ -101,9 +102,48 @@
 				 ],			   
 	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
 	dom: 'B<"clear">lfrtip',
-    buttons: [ 'copy', 'csv', 'excel','pdf' ]
+   // buttons: [ 'copy', 'csv', 'excel','pdf' ]
+     buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('season_airport/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"seasonID": $("#seasonID").val(),"type": $("#type").val(),"airportID": $("#airportID").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","season_airport.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
+            ]
     });
   });
+  
+   function downloadSeasonAirport(){
+	  $.ajax({
+          url: "<?php echo base_url('season_airport/server_processing'); ?>?page=all&&export=1",
+          type: 'get',
+          data: {"seasonID": $("#seasonID").val(),"type": $("#type").val(),"airportID": $("#airportID").val()},
+          dataType: 'json'
+      }).done(function(data){
+		var $a = $("<a>");
+		$a.attr("href",data.file);
+		$("body").append($a);
+		$a.attr("download","season_airport.xls");
+		$a[0].click();
+		$a.remove();
+		 });
+   }
   
    $('#satable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({

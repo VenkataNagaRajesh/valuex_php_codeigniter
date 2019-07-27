@@ -430,8 +430,13 @@ class Airline_cabin extends Admin_Controller {
 		
                 if ((int)$id) {
                         $this->data["airline_cabin"] = $this->airline_cabin_m->getAirLineCabinDataByID($id);
-			$this->data['airline_cabin']->gallery = $this->airline_cabin_m->getAirlineCabinImages($id);
-
+			      $this->data['airline_cabin']->gallery = $this->airline_cabin_m->getAirlineCabinImages($id);
+                  $videos = explode(',',$this->data['airline_cabin']->video_links);
+				   foreach($videos as $key => $video){
+					 $video_links[$key] = str_replace('watch?v=','embed/',$video);
+				   }
+				   $this->data['airline_cabin']->video_links = $video_links; 
+				   					
                         if($this->data["airline_cabin"]) {
                                 $this->data["subview"] = "airline_cabin/view";
                                 $this->load->view('_layout_main', $this->data);

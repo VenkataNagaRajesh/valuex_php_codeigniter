@@ -302,7 +302,7 @@ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
     }); 
 
 
-$('#cabintable').on('click', 'input[type="checkbox"]', function() {
+$('#cabintable').on('click', '.deleteRow', function() {
 	$(this).not("#bulkDelete").closest('tr').toggleClass('rowselected', this.checked);
 });
 

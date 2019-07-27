@@ -76,7 +76,8 @@
 
 
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
+				  <button type="button" class="btn btn-danger" onclick="downloadMarketAirport()">Download</button>
                 </div>
                           </div>
                          </form>
@@ -146,9 +147,48 @@
 				  ],			   
 	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
 	dom: 'B<"clear">lfrtip',
-    buttons: [ 'copy', 'csv', 'excel','pdf' ]
+   // buttons: [ 'copy', 'csv', 'excel','pdf' ]
+     buttons: [
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+                           $.ajax({
+                                url: "<?php echo base_url('market_airport/server_processing'); ?>?page=all&&export=1",
+                                type: 'get',
+                                data: {sSearch: $("input[type=search]").val(),"marketID": $("#market_id").val(),"airportID": $("#airport_id").val(),"countryID": $("#country_id").val(),"cityID": $("#city_id").val(),"regionID": $("#region_id").val()},
+                                dataType: 'json'
+                            }).done(function(data){
+							var $a = $("<a>");
+							$a.attr("href",data.file);
+							$("body").append($a);
+							$a.attr("download","market_airport.xls");
+							$a[0].click();
+							$a.remove();
+						  });
+                        }
+                 }                
+            ] 
     });
   });
+  
+  function downloadMarketAirport(){
+	  $.ajax({
+           url: "<?php echo base_url('market_airport/server_processing'); ?>?page=all&&export=1",
+           type: 'get',
+           data: {"marketID": $("#market_id").val(),"airportID": $("#airport_id").val(),"countryID": $("#country_id").val(),"cityID": $("#city_id").val(),"regionID": $("#region_id").val()},
+           dataType: 'json'
+       }).done(function(data){
+		var $a = $("<a>");
+		$a.attr("href",data.file);
+		$("body").append($a);
+		$a.attr("download","market_airport.xls");
+		$a[0].click();
+		$a.remove();
+		 }); 
+  }
   
    $('#tztable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({

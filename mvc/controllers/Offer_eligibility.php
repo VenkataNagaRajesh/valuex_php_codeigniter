@@ -292,15 +292,18 @@ $sWhere $sOrder $sLimit";
 	  );
 		foreach ($rResult as $feed ) {
 			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
+			$feed->spoint = $feed->source_point."(".$boarding_markets.")";
+            $feed->dpoint = $feed->dest_point."(".$dest_markets.")";		
 			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
 			 $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
-
+               $feed->bstatus = $feed->booking_status;			  
 			if($feed->booking_status == 'Excluded') {
 				$feed->booking_status = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->excl_grp.'">'.$feed->booking_status.'</a>';
 
 			}
-
+            $feed->fclrID = $feed->fclr_id;
+			$feed->dtpfID = $feed->dtpf_id ;
 			$feed->fclr_id = '<a target="_new" style="color:blue;" href="'.base_url('fclr/index/'.$feed->fclr_id).'"  >'.$feed->fclr_id.'</a>';
 			$feed->dtpf_id = '<a target="_new" style="color:blue;" href="'.base_url('paxfeed/index/'.$feed->dtpf_id).'"  >'.$feed->dtpf_id.'</a>';
 
@@ -311,7 +314,13 @@ $sWhere $sOrder $sLimit";
 		}
 
 		
-		echo json_encode( $output );
+		if(isset($_REQUEST['export'])){
+		  $columns = array("#","PAX Feed ID","FCLR ID","Season","Board Point","Off Point","PNR Reference","Departure Date","Carrier","Flight Number" ,"From Cabin","To Cabin","Frequency","Average","Min","Max","Slider Position","Booking Status");
+		  $rows = array("id","dtpfID","fclrID","season_id","spoint","dpoint","pnr_ref","departure_date","carrier_code","flight_number" ,"fcabin","tcabin","day_of_week","average","min","max","slider_start","bstatus");
+		  $this->exportall($output['aaData'],$columns,$rows);		
+		} else {	
+		  echo json_encode( $output );
+		}
 	}
 	
 
