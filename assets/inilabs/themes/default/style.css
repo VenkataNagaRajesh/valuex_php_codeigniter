@@ -2284,6 +2284,7 @@ Component: timeline
   margin-bottom: 20px;
   background: #fff;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  clear:both;
 }
 .nav-tabs-custom > .nav-tabs {
   background-color: #e5e5e5;
@@ -2673,23 +2674,52 @@ Component: timeline
 		width: 94% !important;
 		margin-bottom: 12px !important;
 	}
-	.seasons .select2, .seasons .form-control{
+	.select2, .form-control{
 		margin-bottom:12px !important;
+	}
+	.box .box-header {
+		width: 94%;
+		margin-right: 9px;
+	}
+	#clienttable{
+		width:100% !important;
+	}
+	.tab-content{
+		border: solid 1px #999;
+		margin: 10px 0;
+	}
+	.eer .off-table table tbody tr td{
+		padding-left:30px !important;
 	}
 }
 @media screen and (min-width: 320px) and (max-width: 500px){
 	.top-bar-title {
 		font-size:9px;
 	}
+	#hide-table td{
+		padding-left:30px !important;
+	}
+	.box .box-header {
+		width: 100%;
+	}
+	.page-header .btn-danger{
+		margin-left: 45%;
+	}
 	.mzones .title-tool-bar{
 		width: 100% !important;
 		margin-right: 0 !important;
+	}
+	.select2, .form-control{
+		margin-bottom:12px !important;
 	}
 	#add_zone_button{
 		float:right;
 	}
 	.mbl-tree-btn{
 		margin: 0 !important;
+	}
+	.eer .off-filter-form {
+		clear:both;
 	}
 	.seasons .season-highlight span{
 		width:100% !important;
@@ -4146,6 +4176,7 @@ fieldset[disabled] .btn-vk.active {
 	padding: 15px 0;
 	background: #fff;
 	margin-top: 14px;
+	clear: both;
 }
 .fclr-bar .table-responsive thead{
 	background: #ddd;
@@ -4181,6 +4212,7 @@ fieldset[disabled] .btn-vk.active {
 	border: solid 1px #999;
 	margin-bottom: 15px;
 	padding: 15px 0;
+	clear: both;
 }
 .fclr-bar  .form-group h4{
 	background:#ddd;
@@ -4216,6 +4248,7 @@ fieldset[disabled] .btn-vk.active {
 	border: solid 1px #999;
 	margin: 0 0 10px;
 	padding: 12px 0;
+	clear: both;
 }
 .eer .form-horizontal .form-group label{
 	width: 100%;

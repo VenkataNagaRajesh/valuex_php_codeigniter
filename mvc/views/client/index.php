@@ -16,19 +16,19 @@
      <?php } ?>
 	 <form class="form-horizontal col-md-12" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>
-			    <div class="col-sm-2">			   
+			    <div class="col-sm-4 col-md-3">			   
                  <?php $status = array("InActive","Active","Status");               
                   						
 				   echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
-                <div class="col-sm-2">			   
+                <div class="col-sm-4 col-md-3">			   
                  <?php $list = array("0" => "Select Carrier");               
                   		foreach($airlines as $airline){
 						  $list[$airline->vx_aln_data_defnsID] = $airline->aln_data_value."(".$airline->code.")";	
 						}				
 				   echo form_dropdown("airlineID", $list,set_value("airlineID",$airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>	
-				<div class="col-sm-2">
+				<div class="col-sm-4 col-md-3">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				  <button type="button" class="btn btn-danger" name="download" onclick="downloadClients()" >Download</button>
                 </div>

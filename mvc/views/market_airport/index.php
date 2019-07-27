@@ -20,14 +20,14 @@
 	<br/> <br/>
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
-                           <div class="col-sm-2">
+                           <div class="col-sm-3 col-md-2">
                <?php $marketlist = array("0" => "Marketzone");
                    foreach($marketzones as $marketzone){
                          $marketlist[$marketzone->market_id] = $marketzone->market_name;
                    }
                                    echo form_dropdown("market_id", $marketlist,set_value("market_id",$marketID), "id='market_id' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
-                 <div class="col-sm-2">
+                 <div class="col-sm-3 col-md-2">
 
 			<?php
 			
@@ -37,7 +37,7 @@
 
                  </div>
 
-		 <div class="col-sm-2">
+		 <div class="col-sm-3 col-md-2">
 
                         <?php
 
@@ -50,7 +50,7 @@
 
 
 
-		 <div class="col-sm-2">
+		 <div class="col-sm-3 col-md-2">
 
                         <?php
 
@@ -63,7 +63,7 @@
 
 
 
-	 <div class="col-sm-2">
+	 <div class="col-sm-3 col-md-2">
 
                         <?php
 
@@ -75,7 +75,7 @@
 
 
 
-                <div class="col-sm-2">
+                <div class="col-sm-3 col-md-2">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				  <button type="button" class="btn btn-danger" onclick="downloadMarketAirport()">Download</button>
                 </div>
