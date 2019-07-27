@@ -2667,6 +2667,21 @@ Component: timeline
 		margin-bottom:10px;
 	}
 }
+@media screen and (max-width: 320px) {
+	.top-bar-title {
+		font-size:9px;
+	}
+	.mzones .title-tool-bar{
+		width: 100% !important;
+		margin-right: 0 !important;
+	}
+	#add_zone_button{
+		float:right;
+	}
+	.mbl-tree-btn{
+		margin: 0 !important;
+	}
+}
 @media screen and (max-width: 767px) {
   .error-page > .error-content > h3 {
     text-align: center;
