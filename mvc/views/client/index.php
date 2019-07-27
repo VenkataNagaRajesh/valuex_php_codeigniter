@@ -14,7 +14,7 @@
              </a>
          </h5>
      <?php } ?>
-	 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
+	 <form class="form-horizontal col-md-12" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>
 			    <div class="col-sm-2">			   
                  <?php $status = array("InActive","Active","Status");               
