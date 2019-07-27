@@ -2641,9 +2641,6 @@ Component: timeline
 	.main-footer {
 		margin-left:0 !important;
 	}
-	.select2-container.form-control {
-		margin:12px 0 !important;
-	}
 	.mbl-tree-btn{
 		margin-top:1px !important;
 	}
@@ -2660,11 +2657,24 @@ Component: timeline
 	.mzones .pull-right{
 		float:none !important;
 	}
-	.form-horizontal .btn-danger{
-		margin:12px 0 !important;
+	#hide-table table tr td {
+		text-align:left !important;
+	}
+	.onoffswitch-small {
+		margin: 0 !important;
+	}
+	#hide-table td {
+		padding-left: 0;
 	}
 	.form-horizontal .select2{
 		margin-bottom:10px;
+	}
+	.title-tool-bar{
+		width: 94% !important;
+		margin-bottom: 12px !important;
+	}
+	.seasons .select2, .seasons .form-control{
+		margin-bottom:12px !important;
 	}
 }
 @media screen and (min-width: 320px) and (max-width: 500px){
@@ -2680,6 +2690,31 @@ Component: timeline
 	}
 	.mbl-tree-btn{
 		margin: 0 !important;
+	}
+	.seasons .season-highlight span{
+		width:100% !important;
+	}
+	.seasons .ui-datepicker-group {
+		width: 100% !important;
+	}
+	.cal-box {
+		margin-bottom:10px;
+	}
+	.season-highlight select , .season-highlight .select{
+		width:100% !important;
+	}
+	#hide-table table tr td {
+		text-align:left !important;
+	}
+	.onoffswitch-small {
+		margin: 0 !important;
+	}
+	#hide-table td {
+		padding-left: 10%;
+	}
+	.title-tool-bar{
+		width: 88% !important;
+		margin-bottom: 12px !important;
 	}
 }
 @media screen and (max-width: 767px) {
@@ -3996,6 +4031,7 @@ fieldset[disabled] .btn-vk.active {
     border: solid 1px #999;
     background: #fff;
     padding: 15px;
+	clear: both;
 }
 .seasons .table-responsive .form-horizontal .control-label{
 	color: #ff6633;
@@ -4091,6 +4127,7 @@ fieldset[disabled] .btn-vk.active {
 	margin-top: 15px;
 	background: #fff;
 	padding: 15px 20px;
+	clear: both;
 }
 .seasons  .season-table .table .onoffswitch-small-inner::before {
 	background:#109610;

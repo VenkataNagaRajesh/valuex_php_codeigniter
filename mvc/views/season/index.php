@@ -5,7 +5,7 @@
 		<form class="form-horizontal" action="#" id="season_form">
 			<div class="form-group">
 				<div class="row">
-					<div class="col-md-3 select-form">
+					<div class="col-md-3 col-sm-3 select-form">
 						<div class="col-md-12">
 							<input type="text" class="form-control"  placeholder="Enter Name" id="season_name" name="season_name" value="<?=set_value('season_name')?>">
 						</div>
@@ -18,7 +18,7 @@
 								echo form_dropdown("airlineID", $airlinelist,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'"); ?>
 						</div>
 					</div>
-					<div class="col-md-3 select-form">
+					<div class="col-md-3 col-sm-3 select-form">
 						<div class="col-md-12">
 							<?php
 								 $orglevels[0]=$this->lang->line("season_orig_level_select");
@@ -28,16 +28,16 @@
 								echo form_dropdown("ams_orig_levelID", $orglevels,set_value("ams_orig_levelID"), "id='ams_orig_levelID' class='form-control hide-dropdown-icon select2'"); ?>
 						</div>
 						<div class="col-md-12">
-							<div class="col-md-10" style="padding:0;">
+							<div class="col-md-10 col-sm-9" style="padding:0;">
 								<select name="ams_orig_level_value[]" id="ams_orig_level_value" class="form-control select2" multiple="multiple">
 								</select>
 							</div>
-							<div class="col-md-2">
+							<div class="col-md-2 col-sm-2">
 								<input type="checkbox" id="orig_all" title="Select All" data-toggle="tooltip" data-placement="top">
 							</div>
 						</div>
 					</div>
-					<div class="col-md-3 select-form">
+					<div class="col-md-3 col-sm-3 select-form">
 						<div class="col-md-12">
 							 <?php
 								 $destlevels[0]=$this->lang->line("season_dest_level_select");
@@ -48,16 +48,16 @@
 							?>
 						</div>
 						<div class="col-md-12">
-							<div class="col-md-10" style="padding:0;">
+							<div class="col-md-10 col-sm-9" style="padding:0;">
 								<select name="ams_dest_level_value[]" id="ams_dest_level_value" class="form-control select2 col-md-10" multiple="multiple">
 							</select>	
 							</div>
-							<div class="col-md-2">
+							<div class="col-md-2 col-sm-2">
 								<input type="checkbox" id="dest_all" title="Select All" data-toggle="tooltip" data-placement="top">
 							</div>	
 						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3 col-sm-3">
 						<div class="col-md-12">
 							<div class="input-group">
 								<input type="text" class="form-control" id="ams_season_start_date" name="ams_season_start_date" placeholder="Enter Dep From date" value="<?=set_value('ams_season_start_date')?>" >
@@ -73,15 +73,15 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-3">
+					<div class="col-md-3 col-sm-3">
 						<label class="control-label col-md-3">Color</label>
 						<div class="col-md-9">
 							<input type="color" class="form-control" id="season_color" name="season_color" value="<?=set_value('season_color')?>" >
 						</div>
 					</div>
-					<div class="col-md-4">
-						<label class="control-label col-md-5">Return Inclusive</label>
-						<div class="col-md-7">
+					<div class="col-md-4 col-sm-4">
+						<label class="control-label col-md-5 col-sm-5">Return Inclusive</label>
+						<div class="col-md-7 col-sm-7">
 							<label class="radio-inline">
 								<input type="radio" name="is_return_inclusive" value="1" <?=set_value('is_return_inclusive')?> >Yes
 							</label>
@@ -91,7 +91,7 @@
 							<input type="hidden" class="form-control" id="season_id" name="season_id"   value="" >	
 						</div>
 					</div>
-					<div class="col-md-5">
+					<div class="col-md-5 col-sm-5">
 						<div class="col-md-12">
 							<p class="pull-right">
 								<a href="#" type="button" class="btn btn-danger" id='btn_txt' onclick="saveseason()">Save</a>
@@ -118,35 +118,35 @@
 		
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form">		   
 			<div class='form-group'>			 
-				<div class="col-sm-2">			   
+				<div class="col-sm-3 col-md-2">			   
 				<?php $slist = array("0" => " Season");               
 				   foreach($seasonslist as $season){
 					  $slist[$season->VX_aln_seasonID] = $season->season_name;
 					}							
 				   echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
-				<div class="col-sm-2">			   
+				<div class="col-sm-3 col-md-2">			   
 				  <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>
 				</div>
-				<div class="col-sm-2">			   
+				<div class="col-sm-3 col-md-2">			   
 				  <?php $olist = array("0" => " Origin Level");               
 				  foreach($types as $type){
 					  $olist[$type->vx_aln_data_typeID] = $type->alias;
 					}							
 				  echo form_dropdown("origID", $olist,set_value("origID",$origID), "id='origID' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>                				
-				<div class="col-sm-2">
+				<div class="col-sm-3 col-md-2">
 					<?php $dlist = array("0" => " Destination");               
 				   foreach($types as $type){
 					  $dlist[$type->vx_aln_data_typeID] = $type->alias;
 					}							
 				  echo form_dropdown("destID", $dlist,set_value("destID",$destID), "id='destID' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
-				<div class="col-sm-2">
+				<div class="col-sm-3 col-md-2">
 					<?php $activestatus[1]="Active";	$activestatus[0]="In Active";				
 				  echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
-				<div class="col-sm-2">
+				<div class="col-sm-3 col-md-2">
 				 <button type="button" class="btn btn-danger" name="filter" id="filter"  onclick="$('#seasonslist').dataTable().fnDestroy();;loaddatatable();">Filter</button>				 
 				 <button type="button" class="btn btn-danger" name="filter" onclick="downloadSeason()">Download</button>
 				 <!-- <button data-toggle="collapse" data-target="#seasonList" type="button" class="form-control btn btn-danger"><i class="fa fa-table"></i> View</button>-->
