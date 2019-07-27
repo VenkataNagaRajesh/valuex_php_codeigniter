@@ -160,8 +160,9 @@
 					<thead>
 						<tr>
 
-						 <th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
-
+						    <th class="col-lg-1">
+							  <input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#
+                            </th>
 							<th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
@@ -202,9 +203,12 @@
 					<!--<span class="default">Default</span><span class="default-high">&nbsp;</span><br>
 					<span class="default">Summer Peak</span><span class="summer-high">&nbsp;</span><br>
 					<span class="default">Christmas Peak</span><span class="christ-high">&nbsp;</span>-->
+					<div class="load_seasons">
+					</div>
 					<?php foreach($seasonslist as $season) { ?>
 					<span class="default" onclick="getCalenderBySeason(<?=$season->VX_aln_seasonID?>)"><?=$season->season_name?></span><span style="background: <?=$season->season_color?>;" onclick="getCalenderBySeason(<?=$season->VX_aln_seasonID?>)">&nbsp;</span>
 					<?php } ?>
+					
 				</p>
 			</div>
 		</div>
@@ -214,8 +218,7 @@
     jQuery(document).ready(function() {	
 	seasoncalender('<?php echo json_encode($seasonslist)?>');
 	//alert('<?php echo json_encode($seasonslist)?>');
-	
-
+	loaddatatable();
 });
 
 function seasoncalender (seasonlist = '[]') {
@@ -226,6 +229,7 @@ function seasoncalender (seasonlist = '[]') {
      var eventDates = {}; var season = {}; var name = {};
 	
 	 //$_POST['color_season']=10; 
+	     //  var html = '';
              for(var i=0; i<season_data.length; i++){
 		for ( var k=0 ; k<season_data[i]['dates'].length; k++){	
 	       eventDates[ new Date( season_data[i]['dates'][k] )] = new Date( season_data[i]['dates'][k] ).toString();
@@ -234,11 +238,14 @@ function seasoncalender (seasonlist = '[]') {
 				name[ new Date( season_data[i]['dates'][k] )] = name[ new Date( season_data[i]['dates'][k] )]+'+'+season_data[i]['season_name'] ;
 			} else {
 			name[ new Date( season_data[i]['dates'][k] )] = season_data[i]['season_name'] ;
-			}			
+			}
+                    			
 	   } 
 	    $("<style> .season"+season_data[i]['VX_aln_seasonID'] + " { color:#fffff !important;  background:"+season_data[i]['season_color'] + " !important;} </style>").appendTo("head");
+		
+		// html .= '<span class="default" onclick="getCalenderBySeason('+season_data[i]['VX_aln_seasonID']+')"><?=$season->season_name?></span><span style="background: '+season_data[i]['season_color']+';" onclick="getCalenderBySeason('+season_data[i]['VX_aln_seasonID']+')">&nbsp;</span>';
      }   
-   
+        //$('.load_seasons').append(html);
         jQuery('#calendar1').datepicker({		    
            // changeMonth: true,
            // changeYear: true,
@@ -292,70 +299,6 @@ function getCalenderBySeason(season){
   
 </script>
 <script>
-$(document).ready(function() {	 
-    $('#seasonslist').DataTable( {
-      "bProcessing": true,
-      "bServerSide": true,
-      "sAjaxSource": "<?php echo base_url('season/server_processing'); ?>", 
-	  "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) { 
-      aoData.push(
-	  {"name": "seasonID","value": $("#seasonID").val()},
-	  {"name": "origID","value": $("#origID").val()},
-      {"name": "active","value": $("#active").val()},	  
-	  {"name": "destID","value": $("#destID").val()},
-	  {"name": "airlinecode","value": $("#airlinecode").val()}),     
-	  //pushing custom parameters
-                oSettings.jqXHR = $.ajax( {
-                    "dataType": 'json',
-                    "type": "GET",
-                    "url": sSource,
-                    "data": aoData,
-                    "success": fnCallback
-			 } ); },	  
-      "columns": [{"data": "chkbox" },
-                  {"data": "season_name" },
-				 // {"data": "airline_name" },
-				  {"data": "airline_code" },
-				  {"data": "orig_level" },
-				  {"data": "orig_level_values" },
-				  {"data": "dest_level" }, 
-                  {"data": "dest_level_values"},
-				  {"data": "ams_season_start_date" },
-				  {"data": "ams_season_end_date" },
-				  {"data": "is_return_inclusive" },
-				  {"data": "season_color"},
-                  {"data": "active"},
-                  {"data": "action"}
-				  ],			     
-     dom: 'B<"clear">lfrtip',
-     //buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
-	  buttons: [
-	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
-                       action: function(e, dt, node, config) {
-                          $.ajax({
-                               url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
-                               type: 'get',
-                               data: {sSearch: $("input[type=search]").val(),"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val()},
-                               dataType: 'json'
-                           }).done(function(data){
-						var $a = $("<a>");
-						$a.attr("href",data.file);
-						$("body").append($a);
-						$a.attr("download","season.xls");
-						$a[0].click();
-						$a.remove();
-					  });
-                       }
-                 }	                
-            ] ,
-
-	"columnDefs": [ {"targets": 0,"orderable": false,"searchable": false}]
-    });
-  }); 
   
   function downloadSeason(){
 	   $.ajax({
@@ -697,10 +640,62 @@ $("#dest_all").click(function(){
                   {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
-     buttons: [ 'copy', 'csv', 'excel','pdf' ],
-     "columnDefs": [ {"targets": 0,"orderable": false,"searchable": false}]
-    }); 
+     //buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+	  buttons: [{text: 'Delete',
+				  action: function ( e, dt, node, config ) {
+					 if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+						var ids = [];
+						$('.deleteRow').each(function(){
+							if($(this).is(':checked')) { 
+								ids.push($(this).val());
+							}
+						});
+						var ids_string = ids.toString();  // array to string conversion 
+						$.ajax({
+							type: "POST",
+							url: "<?php echo base_url('season/delete_season_bulk_records'); ?>",
+							data: {data_ids:ids_string},
+							success: function(result) {
+							//var seasoninfo = jQuery.parseJSON(result);
+							   $('#seasonslist').DataTable().ajax.reload();
+							  
+							   $('#bulkDelete').prop("checked",false);
+							   $("#calendar1").datepicker("destroy");
+				              seasoncalender(JSON.stringify(result['seasonslist']));
+							},
+							async:false
+						});
+					}
+				  }
+                },
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                       action: function(e, dt, node, config) {
+                          $.ajax({
+                               url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
+                               type: 'get',
+                               data: {sSearch: $("input[type=search]").val(),"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val()},
+                               dataType: 'json'
+                           }).done(function(data){
+						var $a = $("<a>");
+						$a.attr("href",data.file);
+						$("body").append($a);
+						$a.attr("download","season.xls");
+						$a[0].click();
+						$a.remove();
+					  });
+                       }
+                 }	                
+            ] 
+   // "autoWidth": false,
+	//"columnDefs": [ {"targets": 0,"width": "50px"},{"targets":2,"width":"73px"},{"targets":4,"width":"100px"},{"targets":5,"width":"94px"},{"targets":6,"width":"133px"},{"targets":7,"width":"93px"}]
+    });
    }
+   
+  
 
 $(document).ready(function () {
 $("#bulkDelete").on('click',function() { // bulk checked

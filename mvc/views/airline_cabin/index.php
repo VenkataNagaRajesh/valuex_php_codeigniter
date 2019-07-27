@@ -79,7 +79,7 @@
                                   <thead>
                                            <tr>
 		
-				 <th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
+				 <th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_name')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_cabin')?></th>
@@ -144,7 +144,29 @@
 	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
 	dom: 'B<"clear">lfrtip',
    // buttons: [ 'copy', 'csv', 'excel','pdf' ]
-     buttons: [
+     buttons: [ {text: 'Delete',
+				  action: function ( e, dt, node, config ) {
+				    if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+						var ids = [];
+						$('.deleteRow').each(function(){
+							if($(this).is(':checked')) { 
+								ids.push($(this).val());
+							}
+						});
+						var ids_string = ids.toString();  // array to string conversion 
+						$.ajax({
+							type: "POST",
+							url: "<?php echo base_url('airline_cabin/delete_airline_cabins_bulk_records'); ?>",
+							data: {data_ids:ids_string},
+							success: function(result) {
+							   $('#cabintable').DataTable().ajax.reload();
+					   $('#bulkDelete').prop("checked",false);
+							},
+							async:false
+						});
+					}  
+				  }
+	            },
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export'} },
@@ -167,7 +189,7 @@
                  }	                
             ] ,
 	 "autoWidth": false,
-     "columnDefs":  [ {"targets": 0,"orderable": false,"searchable": false,"width": "80px" },{"targets":5,
+     "columnDefs":  [ {"targets": 0,"width": "30px" },{"targets":5,
 	                 render: function ( data, type, row, meta ) {
                        console.log(type);						 
 						if(type == 'export'){

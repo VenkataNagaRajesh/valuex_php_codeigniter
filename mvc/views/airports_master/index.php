@@ -66,7 +66,7 @@
                <table id="master" class="table table-bordered dataTable no-footer">
                  <thead>
                     <tr>
-					<th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
+					<th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
                         <!--<th class="col-lg-2"><?=$this->lang->line('master_airport')?></th>-->
 						<th class="col-lg-1"><?=$this->lang->line('master_code')?></th>
 						<!--<th class="col-lg-1"><?=$this->lang->line('master_city')?></th>-->
@@ -136,7 +136,30 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
 				  ],			     
      dom: 'B<"clear">lfrtip',	
     // buttons: [ 'copy', 'csv', 'excel','pdf' ],	
-     buttons: [
+     buttons: [  { text: 'Delete', exportOptions: { columns: ':visible' },
+                        action: function(e, dt, node, config) {
+							if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+								var ids = [];
+								$('.deleteRow').each(function(){
+									if($(this).is(':checked')) { 
+										ids.push($(this).val());
+									}
+								});
+								var ids_string = ids.toString();  // array to string conversion 
+								$.ajax({
+									type: "POST",
+									url: "<?php echo base_url('airports_master/delete_master_bulk_records'); ?>",
+									data: {data_ids:ids_string},
+									success: function(result) {
+									   $('#master').DataTable().ajax.reload();
+									   $('#bulkDelete').prop("checked",false);
+									},
+									async:false
+								});
+							}
+							
+						}
+	             },
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel',exportOptions: { columns: "thead th:not(.noExport)" } },
@@ -160,7 +183,7 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
                  }                
             ] ,
      "autoWidth": false,
-     "columnDefs": [ { "width": "20px", "targets": 0,"orderable": false,"searchable": false } ]			
+     "columnDefs": [ { "width": "30px", "targets": 0 } ]			
     }); 
   
     

@@ -41,7 +41,11 @@
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
             ] ,
               search: false
-          } );		 
+          } );	
+
+           $('.filter').on('click', function(e){
+			   e.stopPropagation();    
+			});		  
         } );
 	 /* $('.dataTable').DataTable( {
 		 buttons: [{

@@ -394,7 +394,7 @@
                    <thead>
                        <tr>
 						 
-				<th><input type="checkbox" id="bulkDelete"/> <button id="deleteTriger">Delete All</button></th>
+				<th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
 							<th class="col-lg-1">Rule#</th>
 							<th class="col-lg-1"><?=$this->lang->line('desc')?></th>
 							<th class="col-lg-1"><?php echo "Origin Level";?></th>
@@ -478,7 +478,29 @@ function loaddatatable() {
         //"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']  
         dom: 'B<"clear">lfrtip',
    // buttons: [ 'copy', 'csv', 'excel','pdf' ]
-    buttons: [
+    buttons: [  { text: 'Delete', exportOptions: { columns: ':visible' },
+                  action: function(e, dt, node, config) {
+				    if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+						var ids = [];
+						$('.deleteRow').each(function(){
+							if($(this).is(':checked')) { 
+								ids.push($(this).val());
+							}
+						});
+						var ids_string = ids.toString();  // array to string conversion 
+						$.ajax({
+							type: "POST",
+							url: "<?php echo base_url('eligibility_exclusion/delete_excl_bulk_records'); ?>",
+							data: {data_ids:ids_string},
+							success: function(result) {
+							   $('#ruleslist').DataTable().ajax.reload();
+							   $('#bulkDelete').prop("checked",false);
+							},
+							async:false
+						});
+					}
+				  }
+	            },
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
@@ -503,7 +525,7 @@ function loaddatatable() {
             ],
 
 
-	"columnDefs": [ {"targets": 0,"orderable": false,"searchable": false,"width": "130px" }]
+	"columnDefs": [ {"targets": 0,"width": "30px" }]
 
     });
   

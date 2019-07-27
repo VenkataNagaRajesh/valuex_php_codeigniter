@@ -510,6 +510,8 @@ class Season extends Admin_Controller {
         $this->output->set_output(json_encode($season));
 	}
 	
+	
+	
 	public function getSeasonInfo() {
 		$id = $this->input->post('season_id');
 		if((int)$id) {
@@ -751,16 +753,29 @@ class Season extends Admin_Controller {
 
 
 public function delete_season_bulk_records(){
-$data_ids = $_REQUEST['data_ids'];
-$data_id_array = explode(",", $data_ids);
-if(!empty($data_id_array)) {
-    foreach($data_id_array as $id) {
-	$this->data['season'] = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
-                        if($this->data['season']) {
-                                $this->season_m->delete_season($id);
-                        }
-    }
-}
-}
+	$data_ids = $_REQUEST['data_ids'];
+	$data_id_array = explode(",", $data_ids);
+	if(!empty($data_id_array)) {
+		foreach($data_id_array as $id) {
+		$this->data['season'] = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
+							if($this->data['season']) {
+									$this->season_m->delete_season($id);
+							}
+		}
+	}
+     if($this->session->userdata('usertypeID') == 2){
+		   $json['seasonslist'] = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
+		}else{
+		   $json['seasonslist'] = $this->season_m->get_seasons(); 
+		}  
+		   foreach($json['seasonslist'] as $season){
+             $season->ams_season_start_date = date('m/d/Y',$season->ams_season_start_date);
+		    $season->ams_season_end_date = date('m/d/Y',$season->ams_season_end_date);
+            $season->dates = $this->createDateRange($season->ams_season_start_date,$season->ams_season_end_date);		
+           }
+		$this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($json));
+
+   }
 
 }
