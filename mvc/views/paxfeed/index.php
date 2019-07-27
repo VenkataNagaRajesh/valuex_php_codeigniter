@@ -137,7 +137,7 @@
 
 
 
-                <div class="col-sm-2">
+                <div class="col-md-2 col-sm-6">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				   <button type="button" class="btn btn-danger" onclick="downloadPAXFeed()">Download</button>
                 </div>	             				
