@@ -4608,3 +4608,12 @@ table{
 	padding: 4px 12px;
 	font-weight:bold;
 }
+.ui-state-active{	
+    background: #ff6633 !important;   
+    color: #fff !important;
+}
+.cal-box .ui-state-active{
+	background:none !important;
+	color: #212121 !important;
+	border:none !important;
+}

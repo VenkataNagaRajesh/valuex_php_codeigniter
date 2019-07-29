@@ -219,15 +219,27 @@
 	seasoncalender('<?php echo json_encode($seasonslist)?>');
 	//alert('<?php echo json_encode($seasonslist)?>');
 	loaddatatable();
+	//loadSeasonList(<?php echo json_encode($seasonslist)?>);
 });
+
+function loadSeasonList(seasonlist = '[]'){
+	var shtml = '';	
+	var season_data = jQuery.parseJSON(seasonlist);
+	
+	for(var i=0; i<season_data.length; i++){
+	  shtml += '<span class="default" >sssss</span><span style="background: black;" >&nbsp;</span>';
+	}
+	
+	$('.load_seasons').html(shtml);
+}
 
 function seasoncalender (seasonlist = '[]') {
 	
 	var season_data = jQuery.parseJSON(seasonlist);
-
+    
         // An array of dates
      var eventDates = {}; var season = {}; var name = {};
-	
+	 var datecal = new Date().getFullYear();
 	 //$_POST['color_season']=10; 
 	     //  var html = '';
              for(var i=0; i<season_data.length; i++){
@@ -241,16 +253,19 @@ function seasoncalender (seasonlist = '[]') {
 			}
                     			
 	   } 
-	    $("<style> .season"+season_data[i]['VX_aln_seasonID'] + " { color:#fffff !important;  background:"+season_data[i]['season_color'] + " !important;} </style>").appendTo("head");
+	    $("<style> .season"+season_data[i]['VX_aln_seasonID'] + " { color:#fffff !important;  background:"+season_data[i]['season_color'] + " !important;} </style>").appendTo("head");		
 		
-		// html .= '<span class="default" onclick="getCalenderBySeason('+season_data[i]['VX_aln_seasonID']+')"><?=$season->season_name?></span><span style="background: '+season_data[i]['season_color']+';" onclick="getCalenderBySeason('+season_data[i]['VX_aln_seasonID']+')">&nbsp;</span>';
      }   
         //$('.load_seasons').append(html);
+		if(season_data.length == 1) {
+		 datecal = new Date(season_data[0]['ams_season_start_date']).getFullYear();
+		}
+		
         jQuery('#calendar1').datepicker({		    
            // changeMonth: true,
            // changeYear: true,
             numberOfMonths: [3,4],  
-            defaultDate: new Date(new Date().getFullYear(), 0, 1),			
+            defaultDate: new Date(datecal, 0, 1),			
 		    beforeShowDay: function( date ) {					
                 var highlight = eventDates[date];
 				var color = "";
@@ -596,9 +611,13 @@ $("#dest_all").click(function(){
 				$('#ams_dest_level_value').val(dest_level).trigger('change'); 
 				$('#ams_season_start_date').val(seasoninfo['ams_season_start_date']);
 				$('#ams_season_end_date').val(seasoninfo['ams_season_end_date']);
+				
+                $("#ams_season_start_date").datepicker("setDate", new Date(seasoninfo['ams_season_start_date']));
+			
+				$("#ams_season_end_date").datepicker("setDate", new Date(seasoninfo['ams_season_end_date']));
 							
 				$("input[name=is_return_inclusive][value=" + seasoninfo['is_return_inclusive'] + "]").attr('checked', 'checked');				
-				
+				console.log($('input[type=radio][name=is_return_inclusive]:checked').val());
 				$('#season_id').val(seasoninfo['VX_aln_seasonID']);
          }
 	 });
