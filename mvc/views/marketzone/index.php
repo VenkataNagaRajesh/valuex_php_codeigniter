@@ -215,71 +215,6 @@
 		 </div>
 	</div>
 </div>
-<script>
-$.fn.extend({
-    treed: function (o) {
-      
-      var openedClass = 'glyphicon-minus-sign';
-      var closedClass = 'glyphicon-plus-sign';
-      
-      if (typeof o != 'undefined'){
-        if (typeof o.openedClass != 'undefined'){
-        openedClass = o.openedClass;
-        }
-        if (typeof o.closedClass != 'undefined'){
-        closedClass = o.closedClass;
-        }
-      };
-      
-        //initialize each of the top levels
-        var tree = $(this);
-        tree.addClass("tree");
-        tree.find('li').has("ul").each(function () {
-            var branch = $(this); //li with children ul
-            branch.prepend("<i class='indicator glyphicon " + closedClass + "'></i>");
-            branch.addClass('branch');
-            branch.on('click', function (e) {
-                if (this == e.target) {
-                    var icon = $(this).children('i:first');
-                    icon.toggleClass(openedClass + " " + closedClass);
-                    $(this).children().children().toggle();
-                }
-            })
-            branch.children().children().toggle();
-        });
-        //fire event from the dynamically added icon
-      tree.find('.branch .indicator').each(function(){
-        $(this).on('click', function () {
-            $(this).closest('li').click();
-        });
-      });
-        //fire event to open branch if the li contains an anchor instead of text
-        tree.find('.branch>a').each(function () {
-            $(this).on('click', function (e) {
-                $(this).closest('li').click();
-                e.preventDefault();
-            });
-        });
-        //fire event to open branch if the li contains a button instead of text
-        tree.find('.branch>button').each(function () {
-            $(this).on('click', function (e) {
-                $(this).closest('li').click();
-                e.preventDefault();
-            });
-        });
-    }
-});
-
-//Initialization of treeviews
-
-$('#tree1').treed();
-
-//$('#tree2').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
-
-//$('#tree3').treed({openedClass:'glyphicon-chevron-right', closedClass:'glyphicon-chevron-down'});
-</script>
-
-
 
 <script type="text/javascript">
   $(document).ready(function() { 
@@ -502,9 +437,18 @@ $('#amz_level_id').trigger('change');
 
 
 $('#airline_id').change(function(event) {
-	$('#amz_level_id').trigger('change');
-	$('#amz_excl_id').trigger('change');
-	$('#amz_incl_id').trigger('change');
+	if ($('#amz_level_id').val() == 17 ) {
+		$('#amz_level_id').trigger('change');
+	}
+
+	if ($('#amz_excl_id').val() == 17 ) {
+
+		$('#amz_excl_id').trigger('change');
+	}
+
+	if ($('#amz_incl_id').val() == 17) {
+		$('#amz_incl_id').trigger('change');
+	}
 
 });
 
@@ -512,6 +456,7 @@ $('#amz_level_id').change(function(event) {
         $('#amz_level_value').val(null).trigger('change');
   var level_id = $(this).val();                 
   var airline_id = $('#airline_id').val();
+  var market_id = $('#market_id').val();
 	if( level_id == '17' ) {
 		if($('#airline_id').val() == '0') {
 			alert('select Airline');
@@ -528,7 +473,8 @@ $.ajax({     async: false,
 
 	     data: {
                            "id":level_id,
-			   "airline_id":airline_id
+			   "airline_id":airline_id,
+			   "market_id":market_id
 				},
              dataType: "html",                                  
              success: function(data) {               
@@ -539,6 +485,7 @@ $.ajax({     async: false,
 $('#amz_incl_id').change(function(event) {    
         $('#amz_incl_value').val(null).trigger('change');
   var incl_id = $(this).val();                 
+	var market_id = $('#market_id').val();
    var airline_id = $('#airline_id').val();
 	 if( incl_id == '17' ) {
                 if($('#airline_id').val() == '0') {
@@ -553,7 +500,8 @@ $.ajax({     async: false,
              url: "<?=base_url('marketzone/getSubdataTypes')?>",            
 	      data: {
                            "id":incl_id,
-                           "airline_id":airline_id
+                           "airline_id":airline_id,
+			  "market_id":market_id
                                 },
 
              dataType: "html",                                  
@@ -567,6 +515,7 @@ $.ajax({     async: false,
 $('#amz_excl_id').change(function(event) {    
         $('#amz_excl_value').val(null).trigger('change');
   var excl_id = $(this).val();                 
+	var market_id = $('#market_id').val();
   var level_id = $('#amz_level_id').val();
   var level_value =  $('#amz_level_value').val();
    var airline_id = $('#airline_id').val();
@@ -585,7 +534,8 @@ $.ajax({     async: false,
                            "id":excl_id,
                            "airline_id":airline_id,
 			   "level_id":level_id,
-			   "level_value":level_value
+			   "level_value":level_value,
+			    "market_id":market_id
                                 },
 
              dataType: "html",                                  

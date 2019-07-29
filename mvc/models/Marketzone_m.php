@@ -105,7 +105,7 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
                 return $query->row('cnt');
 
 	}
-	 function get_marketzones($wherein = null,$airline_in=null) {
+	 function get_marketzones($wherein = null,$airline_in=null,$where_not_in = null) {
                 $this->db->select('*');
                 $this->db->from('VX_aln_market_zone');
 				if(!empty($wherein)){
@@ -113,6 +113,10 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 				}
 				if(!empty($airline_in)){
 					$this->db->where_in('airline_id',$airline_in);
+				}
+
+				if(!empty($where_not_in)){
+					$this->db->where_not_in('market_id',$where_not_in);
 				}
                         $query = $this->db->get();
                         return $query->result();
