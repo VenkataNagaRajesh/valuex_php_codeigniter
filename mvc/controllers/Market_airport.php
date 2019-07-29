@@ -83,7 +83,7 @@ class Market_airport extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('mz.market_id','mz.market_name','ma.code','mct.code','mc.code','mr.aln_data_value' ,'mar.aln_data_value','ma.aln_data_value','mct.aln_data_value','mc.aln_data_value');
+	$aColumns =  array('mam.ma_id', 'mz.market_name','car.code','ma.code','mct.code','mc.code','mr.aln_data_value','mar.aln_data_value','car.aln_data_value','ma.aln_data_value','mct.aln_data_value','mc.aln_data_value');
                 $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -97,12 +97,12 @@ class Market_airport extends Admin_Controller {
                                 {
                                         if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
                                         {
-                                                if($_GET['iSortCol_0'] == 8){
-                                                        $sOrder .= " (s.order_no*-1) DESC ,";
-                                                } else { 
+                                              // // if($_GET['iSortCol_0'] == 8{
+                                                //        $sOrder .= " (s.order_no*-1) DESC ,";
+                                               // } else { 
                                                  $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
                                                         ".$_GET['sSortDir_'.$i] .", ";
-                                                }
+                                                //}
                                         }
                                 }                               
                                   $sOrder = substr_replace( $sOrder, "", -2 );
@@ -175,12 +175,12 @@ class Market_airport extends Admin_Controller {
                 }
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS mz.market_id,mz.market_name,ma.code airport,mc.code country, 
-		mct.code as city,
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS mam.ma_id,mz.market_id,mz.market_name,ma.code airport,mc.code country, 
+		mct.code as city, car.code as carrier_code, car.aln_data_value,
             mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active FROM VX_aln_market_zone mz 
             JOIN VX_market_airport_map mam on (mam.market_id = mz.market_id) 
-
             LEFT JOIN vx_aln_master_data m on (m.airportID = mam.airport_id ) 
+	    left join vx_aln_data_defns car ON (car.vx_aln_data_defnsID = mz.airline_id)
             left join vx_aln_data_defns ma ON (ma.vx_aln_data_defnsID = m.airportID) 
             left join vx_aln_data_defns mct ON (mct.vx_aln_data_defnsID = m.cityID) 
             left join vx_aln_data_defns mc ON (mc.vx_aln_data_defnsID = m.countryID) 
@@ -202,7 +202,11 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS mz.market_id,mz.market_name,ma.code airpo
                 "aaData" => array()
             );
                 $i = 1;
+		$rownum = 1 + $_GET['iDisplayStart'];
                 foreach($rResult as $list){
+			$list->sno = $rownum;
+			$rownum++;
+
                      $list->id = $i; $i++;
                         $output['aaData'][] = $list;
                      

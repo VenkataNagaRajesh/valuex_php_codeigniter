@@ -177,6 +177,7 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 
 	function getAirportsDataForMktZones($list){
 
+	 $this->db->query('SET SQL_BIG_SELECTS=1');
 
 	 $sQuery =  "SELECT        mz.market_id, COALESCE(group_concat(distinct c.airportID) ,group_concat(distinct mapl.airport_id)) as level_value , COALESCE(group_concat(distinct cc.airportID) , group_concat(distinct mapi.airport_id))  as incl_value, COALESCE(group_concat(distinct ce.airportID) , group_concat(distinct mape.airport_id))  as excl_value FROM VX_aln_market_zone mz LEFT OUTER JOIN  vx_aln_master_data c ON (
 (find_in_set(c.countryID, mz.amz_level_name) AND mz.amz_level_id  = 2) OR
@@ -239,7 +240,7 @@ group by mz.market_id";
 	
 	function getSubDataDefns($id){
 		  
-		 $this->db->select('vx_aln_data_defnsID, aln_data_value')->from('vx_aln_data_defns');
+		 $this->db->select('vx_aln_data_defnsID, aln_data_value,code')->from('vx_aln_data_defns');
          	 $this->db->where('aln_data_typeID',$id);
 		$this->db->order_by('aln_data_value');
          	$query = $this->db->get();

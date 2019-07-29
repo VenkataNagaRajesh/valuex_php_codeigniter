@@ -91,8 +91,9 @@
                        <thead>
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('market_name')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>
+				<th class="col-lg-1"><?=$this->lang->line('market_name')?></th>
+				 <th class="col-lg-1">Carrier</th>
+                              <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('city')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('country')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('region')?></th>	
@@ -137,8 +138,9 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
-      "columns": [{"data": "market_id" },
+      "columns": [{"data": "sno" },
 		  {"data": "market_name"},
+		  {"data": "carrier_code"},
                   {"data": "airport" },
 		  {"data": "city" },
 			{"data": "country" },
