@@ -567,6 +567,8 @@ $.ajax({     async: false,
 $('#amz_excl_id').change(function(event) {    
         $('#amz_excl_value').val(null).trigger('change');
   var excl_id = $(this).val();                 
+  var level_id = $('#amz_level_id').val();
+  var level_value =  $('#amz_level_value').val();
    var airline_id = $('#airline_id').val();
 	 if( excl_id == '17' ) {
                 if($('#airline_id').val() == '0') {
@@ -578,10 +580,12 @@ $('#amz_excl_id').change(function(event) {
 
 $.ajax({     async: false,            
              type: 'POST',            
-             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+             url: "<?=base_url('marketzone/getSubListForExcl')?>",            
 	 data: {
                            "id":excl_id,
-                           "airline_id":airline_id
+                           "airline_id":airline_id,
+			   "level_id":level_id,
+			   "level_value":level_value
                                 },
 
              dataType: "html",                                  
