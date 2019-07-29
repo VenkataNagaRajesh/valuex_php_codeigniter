@@ -258,7 +258,7 @@
 							data: {data_ids:ids_string},
 							success: function(result) {
 							   $('#rafeedtable').DataTable().ajax.reload();
-					   $('#bulkDelete').prop("checked",false);
+					 		   $('#bulkDelete').prop("checked",false);
 							},
 							async:false
 						});
@@ -396,8 +396,12 @@ $("#bulkDelete").on('click',function() { // bulk checked
 	  if(status == 1 && $(this).prop('checked')) {
 		
 	  } else {
-            $(this).prop("checked",status);
-	    $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+		if (status == false && $(this).prop('checked') == false) {
+
+		} else {
+           		 $(this).prop("checked",status);
+	    		$(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+		}
 	 }
         });
     });

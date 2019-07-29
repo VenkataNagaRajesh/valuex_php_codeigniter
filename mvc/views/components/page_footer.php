@@ -46,6 +46,27 @@
            $('.filter').on('click', function(e){
 			   e.stopPropagation();    
 			});		  
+
+		$('.dataTables_filter').on('click', function(e){
+			if ($('#bulkDelete').prop("checked")){
+				$('#bulkDelete').prop("checked",false);
+				 $('.deleteRow').each(function(){
+
+					if($(this).prop("checked")){
+						$(this).prop("checked",false);
+						$(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+					}
+				 });
+			}
+		});
+
+		$('.dataTables_paginate').on('click', function(e){
+                        if ($('#bulkDelete').prop("checked")){
+                                $('#bulkDelete').prop("checked",false);
+
+                        }
+                });
+
         } );
 	 /* $('.dataTable').DataTable( {
 		 buttons: [{

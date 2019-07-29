@@ -54,10 +54,9 @@ class Trigger extends Admin_Controller {
                                 // now we have level, incl, excl list for each zone
                                 // check and insert in map table
 
-                                $level_list = explode(',',$marketzone->level_value);
-                                $incl_list = explode(',',$marketzone->incl_value);
-                                $excl_list = explode(',',$marketzone->excl_value);
-
+                                $level_list = array_filter(explode(',',$marketzone->level_value));
+                                $incl_list = array_filter(explode(',',$marketzone->incl_value));
+                                $excl_list = array_filter(explode(',',$marketzone->excl_value));
                                 $remlist =  array_diff(array_unique(array_merge($level_list,$incl_list)),$excl_list);
                                   $isNewentry = $this->market_airport_map_m->check_mappingdata($marketzone->market_id);
                                 if (!$isNewentry) {
@@ -72,13 +71,16 @@ class Trigger extends Admin_Controller {
                                         $finallist = $remlist;
                                 } 
 
-                                        
+				if(count($finallist) > 0  && !empty($finallist)) { 
                                 //insert entries to mapping table
                                 foreach($finallist as $airportid) {
-                                       $array["market_id"] = $marketzone->market_id;;
-                                       $array["airport_id"] = $airportid;
-                                       $this->market_airport_map_m->insert_marketairport_mapid($array);
+					if($airportid != ''){
+                                      		 $array["market_id"] = $marketzone->market_id;;
+                                       		$array["airport_id"] = $airportid;
+                                       		$this->market_airport_map_m->insert_marketairport_mapid($array);
+					}
                                 }
+				}
 
                           }
 
