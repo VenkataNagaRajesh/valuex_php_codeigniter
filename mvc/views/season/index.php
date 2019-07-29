@@ -11,11 +11,23 @@
 						</div>
 						<div class="col-md-12">
 							<?php
-								$airlinelist[0]=$this->lang->line("season_select_airline");
 								 foreach($airlines as $airline){
 									$airlinelist[$airline->vx_aln_data_defnsID] = $airline->airline_name;
 								  }							
-								echo form_dropdown("airlineID", $airlinelist,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'"); ?>
+
+
+								$userTypeID = $this->session->userdata('usertypeID');
+                                                        if($userTypeID == 2){
+                                                                $default_airlineID =  key($airlinelist);
+                                                        } else {
+                                                                $default_airlineID = 0;
+                                                        }
+
+
+								$airlinelist[0]=$this->lang->line("season_select_airline");
+								ksort($airlinelist);
+
+								echo form_dropdown("airlineID", $airlinelist,set_value("airlineID",$default_airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'"); ?>
 						</div>
 					</div>
 					<div class="col-md-3 col-sm-3 select-form">
@@ -191,14 +203,16 @@
 			<div id="calendar1" class="cal-box"></div>
 		</div>
 		<div class="col-md-4">
+
+			<div>
+			<?php
+			 echo form_dropdown("color_airline_season", $airlinelist,set_value("color_airline_season",$default_airlineID), "id='color_airline_season' class='form-control hide-dropdown-icon select2'"); ?>
+
+			</div>
+			<br>
+			<br>
+
 			<div class="season-highlight">
-				<p><select style="width:85%;" name="color_season" id="color_airline_season" class="form-control">
-				 <option value="0">Airlines</option>
-				 <?php foreach($airlines as $airline){
-                  echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->airline_name.'('.$airline->code.')'.'</option>';  
-				 } ?>
-				</select></p>
-				<p>
 					<span>Season</span><span>Highlights</span><br>
 					<!--<span class="default">Default</span><span class="default-high">&nbsp;</span><br>
 					<span class="default">Summer Peak</span><span class="summer-high">&nbsp;</span><br>

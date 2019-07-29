@@ -32,6 +32,7 @@
 			<?php
 			
                         $airports_list['0'] = "Airport";
+			ksort($airports_list);
                         echo form_dropdown("airport_id", $airports_list,set_value("airport_id",$airportID), "id='airport_id' class='form-control hide-dropdown-icon select2'");    ?>
 
 
@@ -42,6 +43,7 @@
                         <?php
 
                         $city_list['0'] = "City";
+			ksort($city_list);
                         echo form_dropdown("city_id", $city_list,set_value("city_id",$cityID), "id='city_id' class='form-control hide-dropdown-icon select2'");    ?>
 
 
@@ -55,6 +57,7 @@
                         <?php
 
                         $country_list['0'] = "Country";
+			ksort($country_list);
                         echo form_dropdown("country_id", $country_list,set_value("country_id",$countryID), "id='country_id' class='form-control hide-dropdown-icon select2'");    ?>
 
 
@@ -68,6 +71,7 @@
                         <?php
 
                         $region_list['0'] = "Region";
+			ksort($region_list);
                         echo form_dropdown("region_id", $region_list,set_value("region_id",$regionID), "id='region_id' class='form-control hide-dropdown-icon select2'");    ?>
 
 

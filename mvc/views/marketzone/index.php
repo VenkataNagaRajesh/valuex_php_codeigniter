@@ -35,12 +35,22 @@
 						<!--<p>Airline Code</p>-->
 
 					<?php
-                                                         $airlinelist[0]= 'Airline';
+	
                                                      foreach($airlines as $airline){
-                                                                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->aln_data_value.'('.$airline->code.')';
-                                                         }
+                                                                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+							}
+							$userTypeID = $this->session->userdata('usertypeID');
+                                                        if($userTypeID == 2){
+                                                                $default_airlineID =  key($airlinelist);
+                                                        } else {
+								$default_airlineID = 0;
+							}
+
+
+							$airlinelist[0]= 'Airline';
 							ksort($airlinelist);
-                                                   echo form_dropdown("airline_id", $airlinelist,set_value("airline_id"), "id='airline_id' class='form-control hide-dropdown-icon select2'");
+							
+                                                   echo form_dropdown("airline_id", $airlinelist,set_value("airline_id",$default_airlineID), "id='airline_id' class='form-control hide-dropdown-icon select2'");
                                                    ?>
 					</div>
 					<div class="col-md-2">
