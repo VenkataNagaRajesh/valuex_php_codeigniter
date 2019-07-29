@@ -86,7 +86,7 @@
                 </div>
 
 
-                <div class="col-sm-2">
+                <div class="col-md-2 col-sm-6">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				  <button type="button" class="btn btn-danger" onclick="downloadINVFeed()">Download</button>
                 </div>	             				
@@ -300,17 +300,24 @@
 $( ".select2" ).select2();
 
 $(document).ready(function () {
+
+
 $("#bulkDelete").on('click',function() { // bulk checked
         var status = this.checked;
         $(".deleteRow").each( function() {
           if(status == 1 && $(this).prop('checked')) {
                 
           } else {
-            $(this).prop("checked",status);
-            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+                if (status == false && $(this).prop('checked') == false) {
+
+                } else {
+                         $(this).prop("checked",status);
+                        $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+                }
          }
         });
     });
+
 
 
 	 $('#deleteTriger').on("click", function(event){ // triggering delete one by one

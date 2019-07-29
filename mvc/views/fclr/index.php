@@ -7,80 +7,68 @@
 		<form class="form-horizontal" action="#" id='fclr_add_form'>
 			<div class="col-md-12">
 				<div class="form-group">
-					<div class="col-md-2">
-						<h4>Board Point</h4>
+					<div class="col-md-2 col-sm-3">
 						<?php
 							$airports['0'] = 'Board Point';
 							ksort($airports);
 							echo form_dropdown("board_point", $airports,set_value("board_point"), "id='board_point' class='form-control hide-dropdown-icon select2'"); ?>
 					</div>
-					<div class="col-md-2">
-						<h4>Off Point</h4>
+					<div class="col-md-2 col-sm-3">
 						<?php
 							$airports['0'] = 'Off Point';
 							ksort($airports);
 							echo form_dropdown("off_point", $airports,set_value("off_point"), "id='off_point' class='form-control hide-dropdown-icon select2'");?>
 					</div>
-					<div class="col-md-2">
-						<h4>Season</h4>
+					<div class="col-md-2 col-sm-3">
 						<?php 
 							$seasons[0] = 'Seasons';
 							ksort($seasons);
 							echo form_dropdown("season_id", $seasons,set_value("season_id"), "id='season_id' class='form-control hide-dropdown-icon select2'");?>
 					</div>
-					<div class="col-md-2">
-						<h4>Carrier</h4>
+					<div class="col-md-2 col-sm-3">
 						<?php
 							$airlines[0] = 'Carrier';
 							ksort($airlines);
 							echo form_dropdown("carrier_code", $airlines,set_value("carrier_code"), "id='carrier_code' class='form-control hide-dropdown-icon select2'"); ?>
 					</div>
-					<div class="col-md-2">
-						<h4>Flight Number</h4>
-						<input type="text" class="form-control" id="flight_number" name="flight_number" value="<?=set_value('flight_number')?>" >
+					<div class="col-md-2 col-sm-3">
+						<input type="text" placeholder="Flight No" class="form-control" id="flight_number" name="flight_number" value="<?=set_value('flight_number')?>" >
 					</div>
-					<div class="col-md-2">
-						<h4>Frequency</h4>
+					<div class="col-md-2 col-sm-3">
 						<?php
 							$days_of_week[0] = 'Frequency';
 							ksort($days_of_week);
 							echo form_dropdown("frequency", $days_of_week, set_value("frequency"), "id='frequency' class='form-control hide-dropdown-icon select2'");?>  
 					</div>
-					<div class="col-md-2">
-						<h4>From Cabin</h4>
+					<div class="col-md-2 col-sm-3">
 						<?php
 							$cabins['0'] = 'From Cabin';
 							ksort($cabins);
 							echo form_dropdown("upgrade_from_cabin_type", $cabins,set_value("upgrade_from_cabin_type"), "id='upgrade_from_cabin_type' class='form-control hide-dropdown-icon select2'"); ?>   
 					</div>
-					<div class="col-md-2">
-						<h4>To Cabin</h4>
+					<div class="col-md-2 col-sm-3">
 						<?php
 							$cabins['0'] = 'To Cabin';
 							ksort($cabins);
 							echo form_dropdown("upgrade_to_cabin_type", $cabins,set_value("upgrade_to_cabin_type"), "id='upgrade_to_cabin_type' class='form-control hide-dropdown-icon select2'");?> 
 					</div>
-					<div class="col-md-2">
-						<h4>Minimum</h4>
-						<input type="text" class="form-control" id="min" name="min" value="<?=set_value('min')?>" >
+					<div class="col-md-2 col-sm-3">
+						<input type="text" class="form-control" id="min" placeholder="min" name="min" value="<?=set_value('min')?>" >
 					</div>
-					<div class="col-md-2">
-						<h4>Maximum</h4>
-						<input type="text" class="form-control" id="max" name="max" value="<?=set_value('max')?>" >
+					<div class="col-md-2 col-sm-3">
+						<input type="text" class="form-control" id="max" placeholder="max" name="max" value="<?=set_value('max')?>" >
 					</div>
-					<div class="col-md-2">
-						<h4>Average</h4>
-						<input type="text" class="form-control" id="avg" name="avg" value="<?=set_value('avg')?>" >
+					<div class="col-md-2 col-sm-3">
+						<input type="text" class="form-control" id="avg" placeholder="avg" name="avg" value="<?=set_value('avg')?>" >
 					</div>
-					<div class="col-md-2">
-						<h4>Slider Position</h4>
-						<input type="text" class="form-control" id="slider_start" name="slider_start" value="<?=set_value('slider_start')?>" >
+					<div class="col-md-2 col-sm-3">
+						<input type="text" class="form-control" id="slider_start" placeholder="slider-start" name="slider_start" value="<?=set_value('slider_start')?>" >
 					</div>
 					<input type="hidden" class="form-control" id="fclr_id" name="fclr_id"   value="" >
-				</div>
-				<div class="col-md-3 pull-right">
-					<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savefclr();">ADD FCLR</a>
-					<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
+					<div class="col-md-3 col-sm-4 pull-right">
+						<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savefclr();">ADD FCLR</a>
+						<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
+					</div>
 				</div>
 			</div>
 		</form>
@@ -95,8 +83,7 @@
 		<form class="form-horizontal" action="#">
 			<div class="col-md-12">
 				<div class="form-group">
-					<div class="col-md-2 select-form">
-						<h4>Flight No Range</h4>
+					<div class="col-md-2 col-sm-3 select-form">
 						<div class="col-md-12">
 							<input type="text" class="form-control" placeholder="Start range" id="sflight_number" name="sflight_number" value="<?=set_value('sflight_number',$flight_number)?>" >
 						</div>
@@ -104,8 +91,7 @@
 							<input type="text" class="form-control" placeholder="End range" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
 						</div>
 					</div>
-					<div class="col-md-2 select-form">
-						<h4>Season and Carrier</h4>
+					<div class="col-md-2 col-sm-3 select-form">
 						<div class="col-md-12">
 		 <?php
                                                         $seasons['0'] = 'Season';
@@ -123,8 +109,7 @@
 						</div>
 					</div>
 
-					  <div class="col-md-2 select-form">
-                                                <h4>Cabins</h4>
+					  <div class="col-md-2 col-sm-3 select-form">
                                                 <div class="col-md-12">
 				 <?php
                                                         $cabins['0'] = 'From Cabin';
@@ -142,8 +127,7 @@
                                                 </div>
                                         </div>
 
-					<div class="col-md-2 select-form">
-						<h4>Board/Off Point</h4>
+					<div class="col-md-2 col-sm-3 select-form">
 						<div class="col-md-12">
 							 <?php
 								$airports['0'] = ' Boarding Point';
@@ -157,8 +141,7 @@
                                 echo form_dropdown("soff_point", $airports,set_value("soff_point",$off_point), "id='soff_point' class='form-control hide-dropdown-icon select2'");    ?>
 						</div>
 					</div>
-					<div class="col-md-2 select-form">
-						<h4>Market</h4>
+					<div class="col-md-2 col-sm-3 select-form">
 						<div class="col-md-12">
 							<?php
 								$marketzones['0'] = 'Origin Market';
@@ -172,8 +155,7 @@
                                 echo form_dropdown("dmarket", $marketzones,set_value("dmarket",$dmarket), "id='dmarket' class='form-control hide-dropdown-icon select2'");    ?>
 						</div>
 					</div>
-					<div class="col-md-2 select-form">
-						<h4>Frequency & FCLR ID</h4>
+					<div class="col-md-2 col-sm-3 select-form">
 						<div class="col-md-12">
 	
 		<input type="text" class="form-control" placeholder='frequency' id="sfrequency" name="sfrequency" value="<?=set_value('sfrequency')?>" >
@@ -183,9 +165,13 @@
 
                 <input type="text" class="form-control" placeholder='FCLR ID' id="sfclr_id" name="sfclr_id" value="<?=set_value('sfclr_id',$sfclr_id)?>" >
                                                 </div>
-						<div class="col-md-12">
-							<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
-							<a type="button" class="btn btn-danger" onclick="downloadFCLR()">Download</a>
+					</div>
+					<div class="col-md-12">
+						<div class="col-md-2 col-sm-3 pull-right">
+								<a href="#" type="button"  id='btn_txt' class="btn btn-danger form-control" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+						</div>
+						<div class="col-md-2 col-sm-3 pull-right">
+								<a type="button" class="btn btn-danger form-control" onclick="downloadFCLR()">Download</a>
 						</div>
 					</div>
 				</div>
@@ -571,17 +557,23 @@ function form_reset(){
     });
 
 $(document).ready(function(){
+
 $("#bulkDelete").on('click',function() { // bulk checked
         var status = this.checked;
         $(".deleteRow").each( function() {
           if(status == 1 && $(this).prop('checked')) {
                 
           } else {
-            $(this).prop("checked",status);
-            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+                if (status == false && $(this).prop('checked') == false) {
+
+                } else {
+                         $(this).prop("checked",status);
+                        $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+                }
          }
         });
     });
+
 
 $('#deleteTriger').on("click", function(event){ // triggering delete one by one
         if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked

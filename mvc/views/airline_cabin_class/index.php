@@ -30,12 +30,12 @@
 	<br/> <br/>                
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
-                           <div class="col-sm-2">
+                           <div class="col-sm-3 col-md-2">
                <?php $airlinesdata['0'] = " Airlines";
 			ksort($airlinesdata);
                                    echo form_dropdown("carrier", $airlinesdata,set_value("carrier",$carrer), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
-                 <div class="col-sm-2">
+                 <div class="col-sm-3 col-md-2">
 
 			<?php
 			
@@ -46,7 +46,7 @@
 
                  </div>
 
-		 <div class="col-sm-2">
+		 <div class="col-sm-3 col-md-2">
 
                         <?php
                         $map_status['-1'] = ' Status';
@@ -58,7 +58,7 @@
                  </div>
 
 
-                <div class="col-sm-2">
+                <div class="col-sm-3 col-md-2">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabinmap()">Download</button>
                 </div>
@@ -274,17 +274,24 @@
 
  $(document).ready(function () {
 
-	$("#bulkDelete").on('click',function() { // bulk checked
+$("#bulkDelete").on('click',function() { // bulk checked
         var status = this.checked;
         $(".deleteRow").each( function() {
           if(status == 1 && $(this).prop('checked')) {
                 
           } else {
-            $(this).prop("checked",status);
-            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+                if (status == false && $(this).prop('checked') == false) {
+
+                } else {
+                         $(this).prop("checked",status);
+                        $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+                }
          }
         });
     });
+
+
+
 
 $('#deleteTriger').on("click", function(event){ // triggering delete one by one
         if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked

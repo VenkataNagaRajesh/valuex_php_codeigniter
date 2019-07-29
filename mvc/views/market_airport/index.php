@@ -20,28 +20,30 @@
 	<br/> <br/>
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
-                           <div class="col-sm-2">
+                           <div class="col-sm-3 col-md-2">
                <?php $marketlist = array("0" => "Marketzone");
                    foreach($marketzones as $marketzone){
                          $marketlist[$marketzone->market_id] = $marketzone->market_name;
                    }
                                    echo form_dropdown("market_id", $marketlist,set_value("market_id",$marketID), "id='market_id' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
-                 <div class="col-sm-2">
+                 <div class="col-sm-3 col-md-2">
 
 			<?php
 			
                         $airports_list['0'] = "Airport";
+			ksort($airports_list);
                         echo form_dropdown("airport_id", $airports_list,set_value("airport_id",$airportID), "id='airport_id' class='form-control hide-dropdown-icon select2'");    ?>
 
 
                  </div>
 
-		 <div class="col-sm-2">
+		 <div class="col-sm-3 col-md-2">
 
                         <?php
 
                         $city_list['0'] = "City";
+			ksort($city_list);
                         echo form_dropdown("city_id", $city_list,set_value("city_id",$cityID), "id='city_id' class='form-control hide-dropdown-icon select2'");    ?>
 
 
@@ -50,11 +52,12 @@
 
 
 
-		 <div class="col-sm-2">
+		 <div class="col-sm-3 col-md-2">
 
                         <?php
 
                         $country_list['0'] = "Country";
+			ksort($country_list);
                         echo form_dropdown("country_id", $country_list,set_value("country_id",$countryID), "id='country_id' class='form-control hide-dropdown-icon select2'");    ?>
 
 
@@ -63,11 +66,12 @@
 
 
 
-	 <div class="col-sm-2">
+	 <div class="col-sm-3 col-md-2">
 
                         <?php
 
                         $region_list['0'] = "Region";
+			ksort($region_list);
                         echo form_dropdown("region_id", $region_list,set_value("region_id",$regionID), "id='region_id' class='form-control hide-dropdown-icon select2'");    ?>
 
 
@@ -75,7 +79,7 @@
 
 
 
-                <div class="col-sm-2">
+                <div class="col-sm-3 col-md-2">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				  <button type="button" class="btn btn-danger" onclick="downloadMarketAirport()">Download</button>
                 </div>
@@ -91,8 +95,9 @@
                        <thead>
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('market_name')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>
+				<th class="col-lg-1"><?=$this->lang->line('market_name')?></th>
+				 <th class="col-lg-1">Carrier</th>
+                              <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('city')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('country')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('region')?></th>	
@@ -137,8 +142,9 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
-      "columns": [{"data": "market_id" },
+      "columns": [{"data": "sno" },
 		  {"data": "market_name"},
+		  {"data": "carrier_code"},
                   {"data": "airport" },
 		  {"data": "city" },
 			{"data": "country" },

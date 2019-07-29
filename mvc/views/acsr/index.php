@@ -156,7 +156,7 @@
                                                         ?>
                         </div>-->
                                   
-                <div class="col-sm-2">
+                <div class="col-md-3 col-sm-4">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				  <button type="button" class="btn btn-danger" onclick="downloadACSR()">Download</button>
                 </div>

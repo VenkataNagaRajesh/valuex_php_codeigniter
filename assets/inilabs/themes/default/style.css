@@ -2284,6 +2284,7 @@ Component: timeline
   margin-bottom: 20px;
   background: #fff;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  clear:both;
 }
 .nav-tabs-custom > .nav-tabs {
   background-color: #e5e5e5;
@@ -2641,9 +2642,6 @@ Component: timeline
 	.main-footer {
 		margin-left:0 !important;
 	}
-	.select2-container.form-control {
-		margin:12px 0 !important;
-	}
 	.mbl-tree-btn{
 		margin-top:1px !important;
 	}
@@ -2660,26 +2658,93 @@ Component: timeline
 	.mzones .pull-right{
 		float:none !important;
 	}
-	.form-horizontal .btn-danger{
-		margin:12px 0 !important;
+	#hide-table table tr td {
+		text-align:left !important;
+	}
+	.onoffswitch-small {
+		margin: 0 !important;
+	}
+	#hide-table td {
+		padding-left: 0;
 	}
 	.form-horizontal .select2{
 		margin-bottom:10px;
+	}
+	.title-tool-bar{
+		width: 94% !important;
+		margin-bottom: 12px !important;
+	}
+	.select2, .form-control{
+		margin-bottom:12px !important;
+	}
+	.box .box-header {
+		width: 94%;
+		margin-right: 9px;
+	}
+	#clienttable{
+		width:100% !important;
+	}
+	.tab-content{
+		border: solid 1px #999;
+		margin: 10px 0;
+	}
+	.eer .off-table table tbody tr td{
+		padding-left:30px !important;
 	}
 }
 @media screen and (min-width: 320px) and (max-width: 500px){
 	.top-bar-title {
 		font-size:9px;
 	}
+	#hide-table td{
+		padding-left:30px !important;
+	}
+	.box .box-header {
+		width: 100%;
+	}
+	.page-header .btn-danger{
+		margin-left: 45%;
+	}
 	.mzones .title-tool-bar{
 		width: 100% !important;
 		margin-right: 0 !important;
+	}
+	.select2, .form-control{
+		margin-bottom:12px !important;
 	}
 	#add_zone_button{
 		float:right;
 	}
 	.mbl-tree-btn{
 		margin: 0 !important;
+	}
+	.eer .off-filter-form {
+		clear:both;
+	}
+	.seasons .season-highlight span{
+		width:100% !important;
+	}
+	.seasons .ui-datepicker-group {
+		width: 100% !important;
+	}
+	.cal-box {
+		margin-bottom:10px;
+	}
+	.season-highlight select , .season-highlight .select{
+		width:100% !important;
+	}
+	#hide-table table tr td {
+		text-align:left !important;
+	}
+	.onoffswitch-small {
+		margin: 0 !important;
+	}
+	#hide-table td {
+		padding-left: 10%;
+	}
+	.title-tool-bar{
+		width: 88% !important;
+		margin-bottom: 12px !important;
 	}
 }
 @media screen and (max-width: 767px) {
@@ -3996,6 +4061,7 @@ fieldset[disabled] .btn-vk.active {
     border: solid 1px #999;
     background: #fff;
     padding: 15px;
+	clear: both;
 }
 .seasons .table-responsive .form-horizontal .control-label{
 	color: #ff6633;
@@ -4091,6 +4157,7 @@ fieldset[disabled] .btn-vk.active {
 	margin-top: 15px;
 	background: #fff;
 	padding: 15px 20px;
+	clear: both;
 }
 .seasons  .season-table .table .onoffswitch-small-inner::before {
 	background:#109610;
@@ -4109,6 +4176,7 @@ fieldset[disabled] .btn-vk.active {
 	padding: 15px 0;
 	background: #fff;
 	margin-top: 14px;
+	clear: both;
 }
 .fclr-bar .table-responsive thead{
 	background: #ddd;
@@ -4144,6 +4212,7 @@ fieldset[disabled] .btn-vk.active {
 	border: solid 1px #999;
 	margin-bottom: 15px;
 	padding: 15px 0;
+	clear: both;
 }
 .fclr-bar  .form-group h4{
 	background:#ddd;
@@ -4179,6 +4248,7 @@ fieldset[disabled] .btn-vk.active {
 	border: solid 1px #999;
 	margin: 0 0 10px;
 	padding: 12px 0;
+	clear: both;
 }
 .eer .form-horizontal .form-group label{
 	width: 100%;

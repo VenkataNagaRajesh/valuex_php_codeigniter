@@ -390,7 +390,12 @@ class Marketzone extends Admin_Controller {
 	      $list = explode(',',$sub_id);
           // echo "<option value='0'>", SELECT,"</option>";
             foreach ($result as $defns) {                               
-               echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->aln_data_value,"</option>";
+		if ( $id == 4 || $id == 5 ) {
+			echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->aln_data_value,"</option>";
+		}else {
+               		echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->code,"</option>";
+
+		}
             }
 	    }
      }

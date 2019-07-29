@@ -19,7 +19,7 @@
 	        <br/> <br/>
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
           <div class='form-group'>
-            <div class="col-sm-2">
+            <div class="col-sm-3 col-md-2">
              <?php $slist = array("0" => "Season");               
 					   foreach($seasonslist as $key => $season){
 						  $slist[$key] = $season;
@@ -27,13 +27,13 @@
 				echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
             </div>
 			
-            <div class="col-sm-2">
+            <div class="col-sm-3 col-md-2">
 			 <?php  $types['VX_season_airport_origin_map']="Origin Map";
 			        $types['VX_season_airport_dest_map']="Destination Map";
 				 echo form_dropdown("type", $types,set_value("type",$type), "id='type' class='form-control hide-dropdown-icon select2'");    ?>
             </div>
 			
-			<div class="col-sm-2">
+			<div class="col-sm-3 col-md-2">
 			 <?php  $list['0'] = " Airport";
 			     foreach($airports_list as $alist ) {
 				    $list[$alist->vx_aln_data_defnsID] = $alist->aln_data_value;
@@ -41,7 +41,7 @@
 				 echo form_dropdown("airportID", $list,set_value("airportID",$airportID), "id='airportID' class='form-control hide-dropdown-icon select2'");    ?>
             </div>
 			
-            <div class="col-sm-2">
+            <div class="col-sm-3 col-md-2">
               <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 			  <button type="button" class="btn btn-danger" onclick="downloadSeasonAirport()">Download</button>
             </div>			

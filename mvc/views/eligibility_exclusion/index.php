@@ -6,34 +6,30 @@
 		<form class="form-horizontal" id='add_rule_form' action="#">
 			<div class="col-md-12">
 				<div class="form-group">
-					<div class="col-md-3">
-						<label class="control-label">Exclusion Reason Name</label>
+					<div class="col-md-3 col-sm-3">
 						<input type="text" placeholder="Enter Name" class="form-control" id="desc" name="desc" value="<?=set_value('desc')?>" >
 					</div>
-					<div class="col-md-3">
-						<label class="control-label">Origin Level</label>
-						<div class="col-md-6">
+					<div class="col-md-3 col-sm-3">
+						<div class="col-md-6 col-sm-6">
 							<?php $aln_datatypes['0'] = " Level ";
                                    ksort($aln_datatypes);
 									echo form_dropdown("orig_level_id", $aln_datatypes, set_value("orig_level_id"), "id='orig_level_id' class='form-control select2'");?>
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-6 col-sm-6">
 							<select  name="orig_level_value[]"  id="orig_level_value" class="form-control select2" multiple="multiple"></select>
 						</div>
 					</div>
-					<div class="col-md-3">
-                         <label class="control-label">Destination Level</label>
-                         <div class="col-md-6">
+					<div class="col-md-3 col-sm-3">
+                         <div class="col-md-6 col-sm-6">
 							<?php $aln_datatypes['0'] = " Level ";
                                     ksort($aln_datatypes);
 									echo form_dropdown("dest_level_id", $aln_datatypes, set_value("dest_level_id"), "id='dest_level_id' class='form-control select2'");?>
                           </div>
-						  <div class="col-md-6">
+						  <div class="col-md-6 col-sm-6">
                             <select  name="dest_level_value[]"  id="dest_level_value" class="form-control select2" multiple="multiple"></select>
                           </div>
                      </div>
-					<div class="col-md-3">
-						<label class="control-label">Carrier</label>
+					<div class="col-md-3 col-sm-3">
 						<?php
 
 					 foreach($carriers as $airline){
@@ -50,51 +46,51 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-md-3">
+					<div class="col-md-3 col-sm-3">
 						<label class="control-label">Flight Effective & Discontinue Date</label>
-						<div class="col-md-6">
+						<div class="col-md-6 col-sm-6">
 							<input type="text" placeholder="Effect Date" class="form-control" id="flight_efec_date" name="flight_efec_date" value="<?=set_value('flight_efec_date')?>" >
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-6 col-sm-6">
 							<input type="text" class="form-control" placeholder="Disc Date" id="flight_disc_date" name="flight_disc_date" value="<?=set_value('flight_disc_date')?>" >
 						</div>
 					</div>
-					<div class="col-md-4">
+					<div class="col-md-4 col-sm-4">
 						<label class="control-label">Departure Start & End Time: HRS & Mins</label>
-						<div class="col-md-3">
+						<div class="col-md-3 col-sm-3">
 							<?php
 							$hrs['-1'] = 'Start Hrs';
 							ksort($hrs);
 							
 								echo form_dropdown("flight_dep_start_hrs", $hrs,set_value("flight_dep_start_hrs"), "id='flight_dep_start_hrs' class='form-control hide-dropdown-icon select2'");?>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-3 col-sm-3">
 							 <?php
 							 $mins['-1'] = 'Start Mins';
 							 ksort($mins);
 							 echo form_dropdown("flight_dep_start_mins", $mins,set_value("flight_dep_start_mins"), "id='flight_dep_start_mins' class='form-control hide-dropdown-icon select2'"); ?>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-3 col-sm-3">
 							<?php
 								$hrs['-1'] = 'End Hrs';
 								echo form_dropdown("flight_dep_end_hrs", $hrs,set_value("flight_dep_end_hrs"), "id='flight_dep_end_hrs' class='form-control hide-dropdown-icon select2'");?>
 						</div>
-						<div class="col-md-3">
+						<div class="col-md-3 col-sm-3">
 							 <?php
 								 $mins['-1'] = 'End Mins';
 								echo form_dropdown("flight_dep_end_mins", $mins,set_value("flight_dep_end_mins"), "id='flight_dep_end_mins' class='form-control hide-dropdown-icon select2'");?>
 						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3 col-sm-3">
 						<label class="control-label">Flight Number Start & End</label>
-						<div class="col-md-6">
+						<div class="col-md-6 col-sm-6">
 							 <input type="text" class="form-control" placeholder="Start" id="flight_nbr_start" name="flight_nbr_start" value="<?=set_value('flight_nbr_start')?>" >
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-6 col-sm-6">
 							 <input type="text" class="form-control" placeholder="End" id="flight_nbr_end" name="flight_nbr_end" value="<?=set_value('flight_nbr_end')?>" >
 						</div>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-2 col-sm-2">
 						<label class="control-label">Frequency</label>
 						<input type="text" class="form-control" placeholder="Frequency" id="frequency" name="frequency" value="<?=set_value('frequency')?>" >
 					</div>
@@ -373,7 +369,7 @@
 
                                   
 
-                <div class="col-sm-2">
+                <div class="col-md-2 col-sm-6">
 		<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#ruleslist').dataTable().fnDestroy();;loaddatatable();">Filter</a>
 		<a type="button" class="btn btn-danger" onclick="downloadEligibilityExc()">Download</a>
 
@@ -866,11 +862,16 @@ $("#bulkDelete").on('click',function() { // bulk checked
           if(status == 1 && $(this).prop('checked')) {
                 
           } else {
-            $(this).prop("checked",status);
-            $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+                if (status == false && $(this).prop('checked') == false) {
+
+                } else {
+                         $(this).prop("checked",status);
+                        $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+                }
          }
         });
     });
+
 
 
 
