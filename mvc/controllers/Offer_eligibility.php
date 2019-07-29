@@ -397,7 +397,7 @@ $sWhere $sOrder $sLimit";
 
 						if($rule->frequency != '0' ) {
 
-							$query .= ' AND (FIND_IN_SET('.$f->frequency.',frequency))';
+							$query .= ' AND (FIND_IN_SET('.$p_freq.',frequency))';
 
 						}
 
@@ -428,7 +428,7 @@ $sWhere $sOrder $sLimit";
 						}
 
 
-						if($rule->flight_dep_start != 0 AND $rule->flight_dep_end != 0 ) {
+						if($rule->flight_dep_start != -1 AND $rule->flight_dep_end != -1 ) {
 
 							$query .= " AND (flight_dep_start <= ".$feed->dept_time." and flight_dep_end >= ".$feed->dept_time.")";
 						}
