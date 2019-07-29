@@ -1,7 +1,7 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "RAfeed";
+$lang['panel_title'] = "RA Feed";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
 $lang['active'] = 'Status';
