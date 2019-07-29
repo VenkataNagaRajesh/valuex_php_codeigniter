@@ -384,9 +384,6 @@ class Marketzone extends Admin_Controller {
 	if ( isset($id)){
 		if($id == 17){
 			$result = $this->marketzone_m->get_marketzones(null,$airline_id,array($market_id));
-			if($market_id > 0){
-				unset($result[$market_id]);
-			}
 			
 		   foreach ($result as $market) {                               
                echo "<option value=\"$market->market_id\">",$market->market_name,"</option>";
@@ -425,9 +422,6 @@ $id = $this->input->post('id');
         if ( isset($id)){
                 if($id == 17){
                         $result = $this->marketzone_m->get_marketzones(null,$airline_id);
-			if($market_id > 0){
-                                unset($result[$market_id]);
-                        }
 
                    foreach ($result as $market) {
                echo "<option value=\"$market->market_id\">",$market->market_name,"</option>";
