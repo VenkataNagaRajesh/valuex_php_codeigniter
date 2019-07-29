@@ -243,6 +243,7 @@ function valFrequency($num)
 	
 	public function index() {
 
+	$excl_id = htmlentities(escapeString($this->uri->segment(3)));
 	 $this->data['headerassets'] = array(
                 'css' => array(
                         'assets/select2/css/select2.css',
@@ -254,6 +255,12 @@ function valFrequency($num)
                                                 'assets/datepicker/datepicker.js'
                 )
         );
+
+
+		if($excl_id > 0 ) {
+
+			$this->data['sexcl_id'] = $excl_id;
+		}
 
 
 		if(!empty($this->input->post('sorig_market_id'))){
@@ -279,7 +286,6 @@ function valFrequency($num)
                 } else {
                          $this->data['toclass'] = 0;
                 }
-
 
 
 
@@ -813,6 +819,13 @@ function time_dropdown($val) {
                         }
 
 
+			 if(!empty($this->input->get('excl_id'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.eexcl_id = '.$this->input->get('excl_id');
+                        }
+
+
+
 		        if(!empty($this->input->get('nbrStart'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.flight_nbr_start <= '.$this->input->get('nbrStart');
@@ -857,6 +870,7 @@ function time_dropdown($val) {
 
 
 
+			
 
 
 

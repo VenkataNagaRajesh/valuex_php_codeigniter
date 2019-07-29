@@ -299,7 +299,7 @@ $sWhere $sOrder $sLimit";
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
                $feed->bstatus = $feed->booking_status;			  
 			if($feed->booking_status == 'Excluded') {
-				$feed->booking_status = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->excl_grp.'">'.$feed->booking_status.'</a>';
+				$feed->booking_status = '<a href="'.base_url('eligibility_exclusion/index/'.$feed->exclusion_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->excl_grp.'">'.$feed->booking_status.'</a>';
 
 			}
             $feed->fclrID = $feed->fclr_id;
