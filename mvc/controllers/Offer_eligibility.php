@@ -96,7 +96,7 @@ class Offer_eligibility extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
 
         if($this->session->userdata('usertypeID') == 2){
-                   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
+                   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('s.create_userID' => $this->session->userdata('loginuserID')),null);
                 }else{
                    $this->data['seasonslist'] = $this->season_m->get_seasons();
                 }

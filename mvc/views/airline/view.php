@@ -18,7 +18,7 @@
 				     <p><span><?=$this->lang->line("airline_id")?> </span>: <?=$airline->vx_aln_data_defnsID?></p>
 					 <p><span><?=$this->lang->line("airline_name")?> </span>: <?=$airline->airline_name?></p>
 					 <p><span><?=$this->lang->line("airline_code")?> </span>: <?=$airline->code?></p>
-					 <p><span><?=$this->lang->line("airline_active")?> </span>: <?=$airline->active?></p>
+					 <p><span><?=$this->lang->line("airline_active")?> </span>: <?=($airline->active)?'Anable':'Disable'?></p>
 					 <p><span><?=$this->lang->line("airline_created_user")?> </span>: <?=$airline->modify_by?></p>
 					 <p><span><?=$this->lang->line("airline_created_date")?> </span>: <?=date('d/m/Y',$airline->modify_date)?></p>
 					 <p><span><?=$this->lang->line("airline_flights")?> </span>: <?=$airline->flights?></p>
