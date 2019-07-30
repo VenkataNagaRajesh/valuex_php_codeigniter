@@ -473,7 +473,7 @@ $(document).ready(function(){
 	$('#ams_orig_level_value').val(orig_level).trigger('change');
 	var dest_level = [<?php echo implode(',',$this->input->post("ams_dest_level_value")); ?>];
 	$('#ams_dest_level_value').val(dest_level).trigger('change');  
-	//$("input[name=is_return_inclusive][value=1]").attr('checked', 'checked');
+	$("input[name=is_return_inclusive][value=0]").attr('checked', 'checked');
 });
 
 $('#ams_orig_levelID').change(function(e){
@@ -543,7 +543,8 @@ $("#dest_all").click(function(){
        $("#ams_orig_levelID").removeAttr("selected");
 	   $('#ams_orig_levelID').trigger('change');	   
 	   $("#ams_dest_levelID").removeAttr("selected");
-	   $('#ams_dest_levelID').trigger('change');	   
+	   $('#ams_dest_levelID').trigger('change');
+       $("input[name=is_return_inclusive][value=0]").attr('checked', 'checked');	   
   }
 
     function saveseason() {

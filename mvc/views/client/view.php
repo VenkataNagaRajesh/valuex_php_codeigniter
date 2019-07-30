@@ -19,8 +19,8 @@
 					 <p><span><?=$this->lang->line("client_name")?> </span>: <?=$client->name?></p>
 					 <p><span><?=$this->lang->line("client_email")?> </span>: <?=$client->email?></p>
 					 <p><span><?=$this->lang->line("client_phone")?> </span>: <?=$client->phone?></p>
-					 <p><span><?=$this->lang->line("client_airline")?> </span>: <?=$client->airline?></p>
-					 <p><span><?=$this->lang->line("client_status")?> </span>: <?=$client->active?></p>
+					 <p><span><?=$this->lang->line("client_airline")?> </span>: <?=$client->airlines?></p>
+					 <p><span><?=$this->lang->line("client_status")?> </span>: <?=($client->active)?'Anable':'Disable'?></p>
 					 <p><span><?=$this->lang->line("client_username")?> </span>: <?=$client->username?></p>
 					
 				</div>  

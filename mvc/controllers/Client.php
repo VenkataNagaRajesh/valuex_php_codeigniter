@@ -382,7 +382,7 @@ class Client extends Admin_Controller {
 	public function view() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if ((int)$id) {
-			$this->data["client"] = $this->client_m->getClientData($id);
+			$this->data["client"] = $this->client_m->getClientData($id); 
 			if($this->data["client"]) {
 				$this->data["subview"] = "client/view";
 				$this->load->view('_layout_main', $this->data);

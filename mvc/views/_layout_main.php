@@ -14,9 +14,11 @@
 
         <footer class="main-footer">
           	<div class="pull-right hidden-xs">
-            	<b>v</b> <?=config_item('ini_version')?>
+            	<!--<b>v</b> <?=config_item('ini_version')?>-->
+				<a href="<?=base_url()?>">www.valuex.sweken.com</a>
           	</div>
           	<strong><?=$siteinfos->footer?></strong>
+			
         </footer>
 <?php $this->load->view("components/page_footer"); ?>
 
