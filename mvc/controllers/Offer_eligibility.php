@@ -253,7 +253,7 @@ class Offer_eligibility extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
                 if($userTypeID == 2){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                        $sWhere .= 'pf.carrier IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
+                        $sWhere .= 'pf.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
                 }
 	
 
