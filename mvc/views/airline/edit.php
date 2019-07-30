@@ -30,13 +30,54 @@
                         </span>
                     </div>
 					
-					<?php 
-                        if(form_error('aircraft')) 
+					<?php
+                        if(form_error('photo'))
                             echo "<div class='form-group has-error' >";
-                        else     
+                        else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="aircraft" class="col-sm-2 control-label">
+                        <label for="photo" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_logo")?>
+                        </label>
+                        <div class="col-sm-6">
+                            <div class="input-group image-preview">
+                                <input type="text" class="form-control image-preview-filename" disabled="disabled">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default image-preview-clear" style="display:none;">
+                                        <span class="fa fa-remove"></span>
+                                        <?=$this->lang->line('airline_clear')?>
+                                    </button>
+                                    <div class="btn btn-success image-preview-input">
+                                        <span class="fa fa-repeat"></span>
+                                        <span class="image-preview-input-title">
+                                        <?=$this->lang->line('airline_file_browse')?></span>
+                                        <input type="file" accept="image/png, image/jpeg, image/gif" name="photo"/>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+
+                        <span class="col-sm-4">
+                            <?php echo form_error('photo'); ?>
+                        </span>
+                    </div>
+					
+					 <div class='form-group' >
+                        <label for="airline" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_video_links")?>
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="video_links" name="video_links" value="<?=set_value('video_links', $airline->video_links)?>" >
+                        </div>                     
+                    </div>
+					
+					<?php 
+                      /*   if(form_error('aircraft')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >"; */
+                    ?>
+                        <!--<label for="aircraft" class="col-sm-2 control-label">
                             <?=$this->lang->line("airline_aircraft")?>
                         </label>
                         <div class="col-sm-6">
@@ -45,15 +86,15 @@
                        <span class="col-sm-4 control-label">
                             <?php echo form_error('aircraft'); ?>
                         </span>
-                    </div>
+                    </div>-->
 					
 					<?php 
-                        if(form_error('seat_capacity')) 
+                       /*  if(form_error('seat_capacity')) 
                             echo "<div class='form-group has-error' >";
                         else     
-                            echo "<div class='form-group' >";
+                            echo "<div class='form-group' >"; */
                     ?>
-                        <label for="seat_capacity" class="col-sm-2 control-label">
+                       <!-- <label for="seat_capacity" class="col-sm-2 control-label">
                             <?=$this->lang->line("airline_seat_capacity")?>
                         </label>
                         <div class="col-sm-6">
@@ -62,15 +103,15 @@
                        <span class="col-sm-4 control-label">
                             <?php echo form_error('seat_capacity'); ?>
                        </span>
-                    </div>
+                    </div>-->
 					
 					<?php 
-                        if(form_error('code')) 
+                       /*  if(form_error('code')) 
                             echo "<div class='form-group has-error' >";
                         else     
-                            echo "<div class='form-group' >";
+                            echo "<div class='form-group' >"; */
                     ?>
-                        <label for="code" class="col-sm-2 control-label">
+                       <!-- <label for="code" class="col-sm-2 control-label">
                             <?=$this->lang->line("airline_code")?>
                         </label>
                         <div class="col-sm-6">
@@ -79,7 +120,7 @@
                        <span class="col-sm-4 control-label">
                             <?php echo form_error('code'); ?>
                        </span>
-                    </div>
+                    </div>-->
 					
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
@@ -92,4 +133,67 @@
     </div>
 </div>
 
+<script>
+$(document).on('click', '#close-preview', function(){
+    $('.image-preview').popover('hide');
+    // Hover befor close the preview
+    $('.image-preview').hover(
+        function () {
+           $('.image-preview').popover('show');
+           $('.content').css('padding-bottom', '100px');
+        },
+         function () {
+           $('.image-preview').popover('hide');
+           $('.content').css('padding-bottom', '20px');
+        }
+    );
+});
 
+$(function() {
+    // Create the close button
+    var closebtn = $('<button/>', {
+        type:"button",
+        text: 'x',
+        id: 'close-preview',
+        style: 'font-size: initial;',
+    });
+    closebtn.attr("class","close pull-right");
+    // Set the popover default content
+    $('.image-preview').popover({
+        trigger:'manual',
+        html:true,
+        title: "<strong>Preview</strong>"+$(closebtn)[0].outerHTML,
+        content: "There's no image",
+        placement:'bottom'
+    });
+    // Clear event
+    $('.image-preview-clear').click(function(){
+        $('.image-preview').attr("data-content","").popover('hide');
+        $('.image-preview-filename').val("");
+        $('.image-preview-clear').hide();
+        $('.image-preview-input input:file').val("");
+        $(".image-preview-input-title").text("<?=$this->lang->line('airline_file_browse')?>");
+    });
+    // Create the preview image
+    $(".image-preview-input input:file").change(function (){
+        var img = $('<img/>', {
+            id: 'dynamic',
+            width:250,
+            height:200,
+            overflow:'hidden'
+        });
+        var file = this.files[0];
+        var reader = new FileReader();
+        // Set preview image into the popover data-content
+        reader.onload = function (e) {
+            $(".image-preview-input-title").text("<?=$this->lang->line(airline_file_browse)?>");
+            $(".image-preview-clear").show();
+            $(".image-preview-filename").val(file.name);
+            img.attr('src', e.target.result);
+            $(".image-preview").attr("data-content",$(img)[0].outerHTML).popover("show");
+            $('.content').css('padding-bottom', '100px');
+        }
+        reader.readAsDataURL(file);
+    });
+});
+</script>

@@ -21,6 +21,11 @@ class Airline extends Admin_Controller {
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_unique_name'
 			),
 			array(
+				'field' => 'photo',
+				'label' => $this->lang->line("airline_photo"),
+				'rules' => 'trim|max_length[200]|xss_clean|callback_photoupload'
+			)
+			/* array(
 				'field' => 'aircraft', 
 				'label' => $this->lang->line("airline_aircraft"), 
 				'rules' => 'trim|required|xss_clean|max_length[150]'
@@ -34,10 +39,55 @@ class Airline extends Admin_Controller {
 				'field' => 'code', 
 				'label' => $this->lang->line("airline_code"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_unique_code'
-			)	
+			) */	
 			
 		);
 		return $rules;
+	}
+	
+	public function photoupload() {
+		$id = htmlentities(escapeString($this->uri->segment(3)));
+		$airline = array();
+		if((int)$id) {
+			$airline = $this->airline_m->getAirlineLogo($id);
+		}
+		$new_file = "defualt.png";
+		$this->mydebug->debug($_FILES);
+		if($_FILES["photo"]['name'] !="") {
+			$file_name = $_FILES["photo"]['name'];
+			$random = rand(1, 10000000000000000);
+	    	$makeRandom = hash('sha512', $random.$this->input->post('airline') . config_item("encryption_key"));
+			$file_name_rename = $makeRandom;
+            $explode = explode('.', $file_name);
+            if(count($explode) >= 2) {
+	            $new_file = $file_name_rename.'.'.end($explode);
+				$config['upload_path'] = "./uploads/images";
+				$config['allowed_types'] = "gif|jpg|png";
+				$config['file_name'] = $new_file;
+				$config['max_size'] = '1024';
+				$config['max_width'] = '3000';
+				$config['max_height'] = '3000';
+				$this->load->library('upload', $config);
+				if(!$this->upload->do_upload("photo")) {
+					$this->form_validation->set_message("photoupload", $this->upload->display_errors());
+	     			return FALSE;
+				} else {
+					$this->upload_data['file'] =  $this->upload->data();
+					return TRUE;
+				}
+			} else {
+				$this->form_validation->set_message("photoupload", "Invalid file");
+	     		return FALSE;
+			}
+		} else {
+			if(count($airline)) {
+				$this->upload_data['file'] = array('file_name' => $airline->logo);
+				return TRUE;
+			} else {
+				$this->upload_data['file'] = array('file_name' => $new_file);
+			return TRUE;
+			}
+		}
 	}
 	
 	function valSeatCapacity($post_string){
@@ -155,28 +205,38 @@ class Airline extends Admin_Controller {
 		);		
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
-			$this->data['airline'] = $this->airline_m->getAirlineData($id);			
+			$this->data['airline'] = $this->airline_m->getAirlineData($id);	
+            $airline = $this->airline_m->getAirlineLogo($id);	
+            if(!empty($airline)){
+			  $this->data['airline']->video_links = $airline->video_links;	
+			} else {
+			  $this->data['airline']->video_links = '';	
+			}			
 			if($this->data['airline']) {
-				if($_POST) {	
+				if($_POST) {	print_r($_FILES); exit;
                    $rules = $this->rules();
 				   $this->form_validation->set_rules($rules);
 				   if ($this->form_validation->run() == FALSE) { //echo validation_errors();
 				   	$this->data["subview"] = "airline/edit";
 				   	$this->load->view('_layout_main', $this->data);			
 				   } else {	
-                        $aircraftID = $this->airports_m->checkData($this->input->post('aircraft'),21); 
+                        /* $aircraftID = $this->airports_m->checkData($this->input->post('aircraft'),21); 
 						if($aircraftID == $this->data['airline']->parentID && $this->data['airline']->seatID != null ){
 							$this->airline_m->updateSeatCapacity($this->input->post('seat_capacity'),$this->data['airline']->seatID);
 						} else {
      						$seat_capacityID = $this->airports_m->checkData($this->input->post('seat_capacity'),22,$aircraftID);
-						}						
+						} */						
 						$data['aln_data_value'] = $this->input->post('airline');
-						$data['code'] = $this->input->post('code');
-						$data['parentID'] = $aircraftID;
-						//$data['active'] = $this->input->post('active');						
+						//$data['code'] = $this->input->post('code');
+						//$data['parentID'] = $aircraftID;
+						//$data['active'] = $this->input->post('active');                     						
 						$data['modify_date'] = time();					
 						$data['modify_userID'] = $this->session->userdata('loginuserID'); 
-						$this->airline_m->update_airline($data,$id); 						
+						$this->airline_m->update_airline($data,$id); 
+                        $array['logo'] = $this->upload_data['file']['file_name'];
+						$array['video_links'] = $this->input->post('video_links');
+						$array['airlineID'] = $id;
+						$this->airline_m->update_airlinelogo($array);
 						$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 						redirect(base_url("airline/index"));	
                    }						

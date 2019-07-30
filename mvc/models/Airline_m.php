@@ -189,5 +189,28 @@ class Airline_m extends MY_Model {
 		return $result;
 
 	}
+	
+	public function getAirlineLogo($id){
+		$query = $this->db->get_where('VX_aln_airline',array('airlineID'=>$id));
+		return $query->row();
+	}
+	
+	public function update_airlinelogo($data){
+		$airline = $this->getAirlineLogo($data['airlineID']);
+		if(empty($airline)){
+			$data['create_userID'] = $this->session->userdata('loginuserID');
+			$data['modify_userID'] = $this->session->userdata('loginuserID');
+			$data['create_date'] = time();
+			$data['modify_date'] = time();
+			$this->db->insert('VX_aln_airline',$data);
+		} else {
+			$data['modify_userID'] = $this->session->userdata('loginuserID');
+			$data['modify_date'] = time();			
+			$airlineID = $data['airlineID'];
+			unset($data['airlineID']);
+			$this->db->where('airlineID',$airlineID);
+			$this->db->update('VX_aln_airline',$data);
+		}
+	}
 }
 
