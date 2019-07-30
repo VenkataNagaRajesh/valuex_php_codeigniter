@@ -146,7 +146,11 @@
 					  $olist[$type->vx_aln_data_typeID] = $type->alias;
 					}							
 				  echo form_dropdown("origID", $olist,set_value("origID",$origID), "id='origID' class='form-control hide-dropdown-icon select2'");    ?>
-				</div>                				
+				</div> 
+                <div class="col-sm-3 col-md-2">
+				  <select name="origValues[]" id="origValues" class="form-control select2 col-md-10" multiple="multiple">
+				  </select>
+                </div>				
 				<div class="col-sm-3 col-md-2">
 					<?php $dlist = array("0" => " Destination");               
 				   foreach($types as $type){
@@ -154,14 +158,21 @@
 					}							
 				  echo form_dropdown("destID", $dlist,set_value("destID",$destID), "id='destID' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
+				 <div class="col-sm-3 col-md-2">
+				  <select name="destValues[]" id="destValues" class="form-control select2 col-md-10" multiple="multiple">
+				  </select>
+                </div>
 				<div class="col-sm-3 col-md-2">
 					<?php $activestatus[1]="Active";	$activestatus[0]="In Active";				
 				  echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
 				<div class="col-sm-3 col-md-2">
-				 <button type="button" class="btn btn-danger" name="filter" id="filter"  onclick="$('#seasonslist').dataTable().fnDestroy();;loaddatatable();">Filter</button>				 
-				 <button type="button" class="btn btn-danger" name="filter" onclick="downloadSeason()">Download</button>
+				 <button type="button" class=" form-control btn btn-danger" name="filter" id="filter"  onclick="$('#seasonslist').dataTable().fnDestroy();;loaddatatable();">Filter</button>				 
+				 
 				 <!-- <button data-toggle="collapse" data-target="#seasonList" type="button" class="form-control btn btn-danger"><i class="fa fa-table"></i> View</button>-->
+				</div>
+				<div class="col-sm-2">
+				 <button type="button" class="form-control btn btn-danger" name="filter" onclick="downloadSeason()">Download</button>
 				</div>
                				
 			</div>
@@ -333,7 +344,7 @@ function getCalenderBySeason(season){
 	   $.ajax({
            url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
            type: 'get',
-           data: {"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val()},
+           data: {"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val(),"origValues": $("#origValues").val(),"destValues": $("#destValues").val()},
            dataType: 'json'
         }).done(function(data){
 		var $a = $("<a>");
@@ -468,11 +479,19 @@ $( ".select2" ).select2({closeOnSelect:false,
 				 
 $(document).ready(function(){
 	$('#ams_orig_levelID').trigger('change');
-    $('#ams_dest_levelID').trigger('change');	
+    $('#ams_dest_levelID').trigger('change');
+    $('#origID').trigger('change');
+    $('#destID').trigger('change');	
 	var orig_level = [<?php echo implode(',',$this->input->post("ams_orig_level_value")); ?>];
 	$('#ams_orig_level_value').val(orig_level).trigger('change');
 	var dest_level = [<?php echo implode(',',$this->input->post("ams_dest_level_value")); ?>];
-	$('#ams_dest_level_value').val(dest_level).trigger('change');  
+	$('#ams_dest_level_value').val(dest_level).trigger('change');
+	
+	var origValues = [<?php echo implode(',',$this->input->post("origValues")); ?>];
+	$('#origValues').val(origValues).trigger('change');
+	var destValues = [<?php echo implode(',',$this->input->post("destValues")); ?>];
+	$('#destValues').val(destValues).trigger('change');	
+	
 	$("input[name=is_return_inclusive][value=0]").attr('checked', 'checked');
 });
 
@@ -490,7 +509,39 @@ $('#ams_orig_levelID').change(function(e){
                 $('#ams_orig_level_value').html(data); 
 			 }        
       }); 
-});	
+});
+	
+$('#origID').change(function(e){
+	$(this).parent().removeClass('has-error');
+	$('#origValues').val(null).trigger('change')
+     var level_id = $(this).val();                 
+    $.ajax({ 
+             async: false,            
+	         type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+             data: "id=" + level_id,            
+             dataType: "html",                                  
+             success: function(data) {               
+                $('#origValues').html(data); 
+			 }        
+      }); 
+});
+
+$('#destID').change(function(e){
+	$(this).parent().removeClass('has-error');
+	$('#destValues').val(null).trigger('change')
+     var level_id = $(this).val();                 
+    $.ajax({ 
+             async: false,            
+	         type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+             data: "id=" + level_id,            
+             dataType: "html",                                  
+             success: function(data) {               
+                $('#destValues').html(data); 
+			 }        
+      }); 
+});
 			
 $('#ams_dest_levelID').change(function(e){
 	$(this).parent().removeClass('has-error');
@@ -530,7 +581,7 @@ $("#dest_all").click(function(){
 });
 
   function form_reset(){    
-	  var $inputs = $('#season_form :input'); 
+	  var $inputs = $('#season_form :input:not(:radio)'); 
 	  $inputs.each(function (index)
        {
           $(this).val(""); 
@@ -569,7 +620,7 @@ $("#dest_all").click(function(){
 			var seasoninfo = jQuery.parseJSON(data);
 			var status = seasoninfo['status'];			
 			if (status == 'success' ) {				
-				alert(status);
+				alert("Successfully Saved..!");
 				form_reset();
 				$("#seasonslist").dataTable().fnDestroy();
 				loaddatatable();				
@@ -611,7 +662,7 @@ $("#dest_all").click(function(){
           dataType: "html",                     
           success: function(data) {
                 var seasoninfo = jQuery.parseJSON(data);
-				$('#btn_txt').text('Edit Season');				
+				//$('#btn_txt').text('Edit Season');				
 				$('#airlineID').val(seasoninfo['airlineID']);
 				$('#airlineID').trigger('change');
 				$('#season_name').val(seasoninfo['season_name']);
@@ -649,6 +700,8 @@ $("#dest_all").click(function(){
 	  {"name": "origID","value": $("#origID").val()},
       {"name": "active","value": $("#active").val()},	  
 	  {"name": "destID","value": $("#destID").val()},
+	  {"name": "origValues","value": $("#origValues").val()},	  
+	  {"name": "destValues","value": $("#destValues").val()},
 	  {"name": "airlinecode","value": $("#airlinecode").val()}),     
 	  //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
@@ -711,7 +764,7 @@ $("#dest_all").click(function(){
                           $.ajax({
                                url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
                                type: 'get',
-                               data: {sSearch: $("input[type=search]").val(),"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val()},
+                               data: {sSearch: $("input[type=search]").val(),"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val(),"origValues": $("#origValues").val(),"destValues": $("#destValues").val()},
                                dataType: 'json'
                            }).done(function(data){
 						var $a = $("<a>");
