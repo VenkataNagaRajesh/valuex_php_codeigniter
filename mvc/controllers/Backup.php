@@ -17,12 +17,8 @@ class Backup extends Admin_Controller {
 */
 	function __construct() {
 		parent::__construct();
-		$language = $this->session->userdata('lang');
-        $this->load->model("teacher_m");
-        $this->load->model("parents_m");
-        $this->load->model("student_m");
-        $this->load->model("user_m");
-        $this->load->model("book_m");
+		$language = $this->session->userdata('lang');       
+        $this->load->model("user_m");       
 		$this->lang->load('backup', $language);
 	}
 
