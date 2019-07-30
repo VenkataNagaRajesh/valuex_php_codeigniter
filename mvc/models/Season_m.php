@@ -73,6 +73,7 @@ class season_m extends MY_Model {
 		$this->db->where('dest_airportID' , $dest_id);
 		$this->db->where('orig_airportID' , $orig_id);
 
+		$this->db->where('active' , '1');
 	//	$this->db->where('year(FROM_UNIXTIME(ams_season_start_date))' , $current_year);
         //        $this->db->where('year(FROM_UNIXTIME(ams_season_end_date)) ' , $current_year);
 

@@ -130,10 +130,11 @@ class Paxfeed extends Admin_Controller {
 		$column = 0;                                          
              foreach ($Reader as $Row){
 			$column++;
+		$Row = array_map('trim', $Row);
                  if($i == 0){ // header checking                                         
 
                   	$flag = 0 ;
-		        $Row = array_map('trim', $Row);
+		       // $Row = array_map('trim', $Row);
 	                $import_header = array_map('strtolower', $Row);
 
                         if(count(array_diff($header,$import_header)) == 0){
@@ -164,20 +165,35 @@ class Paxfeed extends Admin_Controller {
                                                 continue;
                                         }
 
-                                      $paxfeedraw['first_name'] = $Row[array_search('first name',$import_header)];
+                                      $paxfeedraw['first_name'] = trim($Row[array_search('first name',$import_header)]);
 
-                                       if ( strlen($paxfeedraw['first_name']) >= 99 || !ctype_alpha($paxfeedraw['first_name'])) {
+                                       if ( strlen($paxfeedraw['first_name']) >= 99 )  {
                                               $this->mydebug->paxfeed_log("First name should be of length 99 characters in row " . $column , 1);
                                                 continue;
                                         }
 
 
-                                      $paxfeedraw['last_name'] = $Row[array_search('last name',$import_header)];
+					if (!ctype_alpha($paxfeedraw['first_name'])){
+					 $this->mydebug->paxfeed_log( $paxfeedraw['first_name'] . " First name should contain alphabets only in row " .$column  , 1);
+                                                continue;
 
-					if ( strlen($paxfeedraw['last_name']) >= 99 || !ctype_alpha($paxfeedraw['last_name'])) {
+					}
+
+
+                                      $paxfeedraw['last_name'] = trim($Row[array_search('last name',$import_header)]);
+
+					if ( strlen($paxfeedraw['last_name']) >= 99  ) {
                                               $this->mydebug->paxfeed_log("Last name should be of length 99 characters in row " . $column , 1);
                                                 continue;
                                         }
+
+
+						 if (!ctype_alpha($paxfeedraw['last_name'])){
+                                         $this->mydebug->paxfeed_log("Last name should contain alphabets only in row " .$column  , 1);
+                                                continue;
+
+                                        }
+
 
                                       $paxfeedraw['ptc'] = $Row[array_search('ptc',$import_header)];
 
@@ -295,18 +311,23 @@ class Paxfeed extends Admin_Controller {
 					
 					$exist_pax_raw = $this->paxfeedraw_m->checkPaxFeedRaw($paxfeedraw);
 				      if(!$exist_pax_raw) {
-
+					
                                           $paxfeedraw['create_date'] = time();
                                           $paxfeedraw['modify_date'] = time();
                                           $paxfeedraw['create_userID'] = $this->session->userdata('loginuserID');
                                           $paxfeedraw['modify_userID'] = $this->session->userdata('loginuserID');
                                           $raw_pax_id = $this->paxfeedraw_m->insert_paxfeedraw($paxfeedraw);
+						if($raw_pax_id){
+							$this->mydebug->paxfeed_log("Raw feed id is inserted for row " . $column , 0);
+						}
 					} else {
 
 						// check pax raw in pf table
+							 $this->mydebug->paxfeed_log("Raw fields already exist for row " . $column , 0);
 
-						$exist_data = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id' => $exist_pax_raw));
+						$exist_data = $this->paxfeed_m->get_single_paxfeed(array('dtpfraw_id' => $exist_pax_raw));
 						if (count($exist_data) >= 1) {
+							$this->mydebug->paxfeed_log("Pax feed entry already exist for row " . $column , 0);
 							continue;
 						} else {
 							$raw_pax_id = $exist_pax_raw;
@@ -315,7 +336,6 @@ class Paxfeed extends Admin_Controller {
 						
 			             if ( $raw_pax_id ) {
 	
-					$this->mydebug->paxfeed_log("Raw feed id is inserted for row " . $column , 0);
 					$paxfeed = array();
 	 				$paxfeed['airline_code'] = $paxfeedraw['airline_code'];
                                         $paxfeed['pnr_ref'] = $paxfeedraw['pnr_ref'];
@@ -404,6 +424,9 @@ class Paxfeed extends Admin_Controller {
 									$this->mydebug->paxfeed_log("Not inserted pax record for row " . $column .' not a valid data ', 1);
 								}
 						   }
+					}else {
+
+						$this->mydebug->paxfeed_log("Duplicate record for row ". $column, 0);
 					}
 			}
 		}

@@ -78,15 +78,16 @@ class Marketzone extends Admin_Controller {
 
   public function unique_marketzonename() {
 	$id = $this->input->post("market_id");
+	$airline_id = $this->input->post("airline_id");
                 if((int)$id) {
-                        $marketzone = $this->marketzone_m->get_order_by_marketzone(array("market_name" => $this->input->post("market_name"), "market_id !=" => $id));
+                        $marketzone = $this->marketzone_m->get_order_by_marketzone(array("market_name" => $this->input->post("market_name"),"airline_id" => $airline_id, "market_id !=" => $id));
                         if(count($marketzone)) {
                                 $this->form_validation->set_message("unique_marketzonename", "%s already exists");
                                 return FALSE;
                         }
                         return TRUE;
                 } else {
-                        $marketzone = $this->marketzone_m->get_order_by_marketzone(array("market_name" => $this->input->post("market_name")));
+                        $marketzone = $this->marketzone_m->get_order_by_marketzone(array("market_name" => $this->input->post("market_name"),"airline_id" => $airline_id));
 
                         if(count($marketzone)) {
                                 $this->form_validation->set_message("unique_marketzonename", "%s already exists");
@@ -373,6 +374,7 @@ class Marketzone extends Admin_Controller {
    public function getSubdataTypes(){
 	
 	$id = $this->input->post('id');
+	$market_id = $this->input->post('market_id');
 	$airline_id = $this->input->post('airline_id');
 	if($this->input->post('sub_id')){
               $sub_id = $this->input->post('sub_id');
@@ -381,7 +383,8 @@ class Marketzone extends Admin_Controller {
         }
 	if ( isset($id)){
 		if($id == 17){
-			$result = $this->marketzone_m->get_marketzones(null,$airline_id);
+			$result = $this->marketzone_m->get_marketzones(null,$airline_id,array($market_id));
+			
 		   foreach ($result as $market) {                               
                echo "<option value=\"$market->market_id\">",$market->market_name,"</option>";
             }
@@ -401,6 +404,49 @@ class Marketzone extends Admin_Controller {
      }
    }
 
+function getSubListForExcl() {
+
+$id = $this->input->post('id');
+	$market_id = $this->input->post('market_id');
+        $airline_id = $this->input->post('airline_id');
+	$level_id = $this->input->post('level_id');
+	$level_value = $this->input->post('level_value');
+
+        if($this->input->post('sub_id')){
+              $sub_id = $this->input->post('sub_id');
+         }else{
+             $sub_id = null;
+        }
+
+		$result = array();
+        if ( isset($id)){
+                if($id == 17){
+                        $result = $this->marketzone_m->get_marketzones(null,$airline_id);
+
+                   foreach ($result as $market) {
+               echo "<option value=\"$market->market_id\">",$market->market_name,"</option>";
+            }
+                } else {
+			
+                  foreach ($level_value as $level){
+			$tenp = array();
+			$temp = $this->marketzone_m->getChildsList($level,$id);
+			$result = array_merge($result,$temp);	
+		  }
+              $list = explode(',',$sub_id);
+          // echo "<option value='0'>", SELECT,"</option>";
+            foreach ($result as $defns) {
+                if ( $id == 4 || $id == 5 ) {
+                        echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->aln_data_value,"</option>";
+                }else {
+                        echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->code,"</option>";
+
+                }
+            }
+            }
+     }
+
+}
 	 function active() {
                 if(permissionChecker('marketzone_edit')) {
                         $id = $this->input->post('id');

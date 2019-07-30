@@ -105,7 +105,7 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
                 return $query->row('cnt');
 
 	}
-	 function get_marketzones($wherein = null,$airline_in=null) {
+	 function get_marketzones($wherein = null,$airline_in=null,$where_not_in = null) {
                 $this->db->select('*');
                 $this->db->from('VX_aln_market_zone');
 				if(!empty($wherein)){
@@ -113,6 +113,10 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 				}
 				if(!empty($airline_in)){
 					$this->db->where_in('airline_id',$airline_in);
+				}
+
+				if(!empty($where_not_in)){
+					$this->db->where_not_in('market_id',$where_not_in);
 				}
                         $query = $this->db->get();
                         return $query->result();
@@ -242,6 +246,7 @@ group by mz.market_id";
 		  
 		 $this->db->select('vx_aln_data_defnsID, aln_data_value,code')->from('vx_aln_data_defns');
          	 $this->db->where('aln_data_typeID',$id);
+		 $this->db->where('active','1');
 		$this->db->order_by('aln_data_value');
          	$query = $this->db->get();
          	$result =  $query->result();
@@ -259,6 +264,22 @@ group by mz.market_id";
 		$result = $this->install_m->run_query($query);
 		return array_column($result,'vx_aln_data_defnsID');
 	}
+
+
+	function getChildsList($parentID,$type){
+                 $query = "select vx_aln_data_defnsID, aln_data_value,code FROM 
+                                        ( SELECT * from 
+                                        ( SELECT * from vx_aln_data_defns  order by parentID, vx_aln_data_defnsID) 
+                                          vx_aln_data_defns, (select @pv := ".$parentID.") 
+                                          initialisation where find_in_set(parentID, @pv) > 0 and 
+                                          @pv := concat(@pv, ',', vx_aln_data_defnsID ) ) as subresult where aln_data_typeID = ".$type.
+					  " AND active = 1 ";
+                $result = $this->install_m->run_query($query);
+                return $result;
+        }
+
+
+	
 
 	function getParentsofAirport($airportID) {
 		$query = "SELECT T2.vx_aln_data_defnsID 

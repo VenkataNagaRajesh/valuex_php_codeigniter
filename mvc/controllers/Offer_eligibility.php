@@ -299,7 +299,7 @@ $sWhere $sOrder $sLimit";
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
                $feed->bstatus = $feed->booking_status;			  
 			if($feed->booking_status == 'Excluded') {
-				$feed->booking_status = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->excl_grp.'">'.$feed->booking_status.'</a>';
+				$feed->booking_status = '<a href="'.base_url('eligibility_exclusion/index/'.$feed->exclusion_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->excl_grp.'">'.$feed->booking_status.'</a>';
 
 			}
             $feed->fclrID = $feed->fclr_id;
@@ -397,7 +397,7 @@ $sWhere $sOrder $sLimit";
 
 						if($rule->frequency != '0' ) {
 
-							$query .= ' AND (FIND_IN_SET('.$f->frequency.',frequency))';
+							$query .= ' AND (FIND_IN_SET('.$p_freq.',frequency))';
 
 						}
 
@@ -428,7 +428,7 @@ $sWhere $sOrder $sLimit";
 						}
 
 
-						if($rule->flight_dep_start != 0 AND $rule->flight_dep_end != 0 ) {
+						if($rule->flight_dep_start != -1 AND $rule->flight_dep_end != -1 ) {
 
 							$query .= " AND (flight_dep_start <= ".$feed->dept_time." and flight_dep_end >= ".$feed->dept_time.")";
 						}

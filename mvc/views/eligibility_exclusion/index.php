@@ -354,6 +354,10 @@
 <div class="col-sm-12">
 
 
+                          <div class="col-md-2">
+
+                <input type="text" class="form-control" placeholder='Exclusion ID' id="sexcl_id" name="sexcl_id" value="<?=set_value('sexcl_id',$sexcl_id)?>" >
+                                                </div>
 
 
           <div class="col-sm-2">
@@ -443,6 +447,7 @@ function loaddatatable() {
                    {"name": "startMins","value": $("#sflight_dep_start_mins").val()},
 		 {"name": "endHrs","value": $("#sflight_dep_end_hrs").val()},
                    {"name": "endMins","value": $("#sflight_dep_end_mins").val()},
+			 {"name": "excl_id","value": $("#sexcl_id").val()},
                    {"name": "active","value": $("#active").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',

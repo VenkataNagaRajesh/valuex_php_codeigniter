@@ -122,11 +122,11 @@ class Invfeed extends Admin_Controller {
 				$column = 0;
                                   foreach ($Reader as $Row){
 					$column++;
+						$Row = array_map('trim', $Row);
                                     //  print_r($Row);exit;
                                         if($i == 0){ // header checking                                         
 						
                                           $flag = 0 ;
-					 $Row = array_map('trim', $Row);
                                          $import_header = array_map('strtolower', $Row);
                                          if(count(array_diff($header,$import_header)) == 0 ){
 						$this->mydebug->invfeed_log("Header Matched for " . $_FILES['file']['name'] , 0);

@@ -12,7 +12,7 @@
 			</a>
 			<a href="<?php echo base_url('offer_issue/auto_acsr') ?>">
 				 <i class="fa fa-upload"></i>
-				 <?php echo "Auto Acsr"?>
+				 <?php echo "Auto ACSR"?>
 			</a>
 		</div>
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">	
