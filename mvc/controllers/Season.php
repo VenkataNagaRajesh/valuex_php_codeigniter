@@ -192,16 +192,16 @@ class Season extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
 
         if($this->session->userdata('usertypeID') == 2){
-		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
+		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('s.create_userID' => $this->session->userdata('loginuserID')),null);
 		}else{
-		   $this->data['seasonslist'] = $this->season_m->get_seasons(); 
+		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(); 
 		}  
 		   foreach($this->data['seasonslist'] as $season){
              $season->ams_season_start_date = date('m/d/Y',$season->ams_season_start_date);
 		    $season->ams_season_end_date = date('m/d/Y',$season->ams_season_end_date);
             $season->dates = $this->createDateRange($season->ams_season_start_date,$season->ams_season_end_date);		
            }			
-       //print_r($this->data['seasonslist']); exit;
+      // print_r($this->data['seasonslist']); exit;
 		$this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 			if($userTypeID == 2){
 			  $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
@@ -356,9 +356,9 @@ class Season extends Admin_Controller {
 				
 
 				 if($this->session->userdata('usertypeID') == 2){
-			                   $seasonslist = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
+			                   $seasonslist = $this->season_m->get_seasons_where(array('s.create_userID' => $this->session->userdata('loginuserID')),null);
                 		}else{
-                   				$seasonslist = $this->season_m->get_seasons();
+                   				$seasonslist = $this->season_m->get_seasons_where();
                 		}
                   			 foreach($seasonslist as $season){
 				             $season->ams_season_start_date = date('m/d/Y',$season->ams_season_start_date);
@@ -782,9 +782,9 @@ public function delete_season_bulk_records(){
 		}
 	}
      if($this->session->userdata('usertypeID') == 2){
-		   $json['seasonslist'] = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
+		   $json['seasonslist'] = $this->season_m->get_seasons_where(array('s.create_userID' => $this->session->userdata('loginuserID')),null);
 		}else{
-		   $json['seasonslist'] = $this->season_m->get_seasons(); 
+		   $json['seasonslist'] = $this->season_m->get_seasons_where(); 
 		}  
 		   foreach($json['seasonslist'] as $season){
              $season->ams_season_start_date = date('m/d/Y',$season->ams_season_start_date);

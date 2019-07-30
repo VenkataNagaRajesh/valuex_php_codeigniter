@@ -261,7 +261,7 @@ function loadSeasonList(seasonlist = '[]'){
 function seasoncalender (seasonlist = '[]') {
 	
 	var season_data = jQuery.parseJSON(seasonlist);
-    
+   // console.log(seasonlist);
         // An array of dates
      var eventDates = {}; var season = {}; var name = {};
 	 var datecal = new Date().getFullYear();
@@ -272,9 +272,9 @@ function seasoncalender (seasonlist = '[]') {
 	       eventDates[ new Date( season_data[i]['dates'][k] )] = new Date( season_data[i]['dates'][k] ).toString();
 		    season[ new Date( season_data[i]['dates'][k] )] = season_data[i]['VX_aln_seasonID'];
 			if(name[ new Date( season_data[i]['dates'][k] )]){
-				name[ new Date( season_data[i]['dates'][k] )] = name[ new Date( season_data[i]['dates'][k] )]+'+'+season_data[i]['season_name'] ;
+				name[ new Date( season_data[i]['dates'][k] )] = name[ new Date( season_data[i]['dates'][k] )]+' \n '+season_data[i]['season_name']+'(Airline:'+season_data[i]['airline_code']+',Origin:'+season_data[i]['orig_level']+',Destination:'+season_data[i]['dest_level']+')' ;
 			} else {
-			name[ new Date( season_data[i]['dates'][k] )] = season_data[i]['season_name'] ;
+			name[ new Date( season_data[i]['dates'][k] )] = season_data[i]['season_name']+'(Airline:'+season_data[i]['airline_code']+',Origin:'+season_data[i]['orig_level']+',Destination:'+season_data[i]['dest_level']+')' ;
 			}
                     			
 	   } 
