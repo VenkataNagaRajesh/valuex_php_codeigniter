@@ -104,6 +104,34 @@
 $("#dep_from_date").datepicker();
 $("#dep_to_date").datepicker();
 
+
+$("#dep_from_date").datepicker({
+    }).on('changeDate', function (ev) {
+        $('#dep_to_date').val("").datepicker("update");
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+        var minDate = new Date(formatDate);
+        $('#dep_to_date').datepicker('setStartDate', minDate);
+         $("#dep_to_date").datepicker("setDate" , $(this).val());
+    });
+
+    $("#dep_to_date").datepicker()
+        .on('changeDate', function (selected) {
+
+                var dates = $(this).val();
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+
+            var maxDate = new Date(formatDate);
+            $('#dep_from_date').datepicker('setEndDate', maxDate);
+        });
+
+
+
     $('#offertable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,

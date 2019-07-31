@@ -759,25 +759,25 @@ function time_dropdown($val) {
 
 		        if(!empty($this->input->get('nbrStart'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_nbr_start = '.$this->input->get('nbrStart');
+                                $sWhere .= 'MainSet.flight_nbr_start <= '.$this->input->get('nbrStart');
                         }
 
 
 			if(!empty($this->input->get('nbrEnd'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_nbr_end = '.$this->input->get('nbrEnd');
+                                $sWhere .= 'MainSet.flight_nbr_end >= '.$this->input->get('nbrEnd');
                         }
 
 
                        if(!empty($this->input->get('depDateStart'))){
                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_dep_date_start = '.strtotime($this->input->get('depDateStart'));
+                                $sWhere .= 'MainSet.flight_dep_date_start <= '.strtotime($this->input->get('depDateStart'));
                         }
 
 
                         if(!empty($this->input->get('depDateEnd'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_dep_date_end = '.strtotime($this->input->get('depDateEnd'));
+                                $sWhere .= 'MainSet.flight_dep_date_end >= '.strtotime($this->input->get('depDateEnd'));
                         }
 
 
@@ -785,14 +785,14 @@ function time_dropdown($val) {
 			if(!empty($this->input->get('startHrs')) && !empty($this->input->get('startMins')) 
 					&& $this->input->get('startHrs') != '-1' && $this->input->get('startMins') != '-1'){
                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_dep_time_start = "'.$this->input->get('startHrs').':'.$this->input->get('startMins').'"';
+                                $sWhere .= 'MainSet.flight_dep_time_start <= "'.$this->input->get('startHrs').':'.$this->input->get('startMins').'"';
                         }
 
 
 			 if(!empty($this->input->get('endHrs')) && !empty($this->input->get('endMins'))
 				&& $this->input->get('endHrs') != '-1' && $this->input->get('endMins') != '-1'){
                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_dep_time_end = "'.$this->input->get('endHrs').':'.$this->input->get('endMins').'"';
+                                $sWhere .= 'MainSet.flight_dep_time_end >= "'.$this->input->get('endHrs').':'.$this->input->get('endMins').'"';
                         }
 
 

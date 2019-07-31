@@ -376,4 +376,30 @@ $( ".select2" ).select2({closeOnSelect:false,
 $("#flight_dep_date_start").datepicker();
 $("#flight_dep_date_end").datepicker();
 
+$("#flight_dep_date_start").datepicker({
+    }).on('changeDate', function (ev) {
+        $('#flight_dep_date_end').val("").datepicker("update");
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+        var minDate = new Date(formatDate);
+        $('#flight_dep_date_end').datepicker('setStartDate', minDate);
+         $("#flight_dep_date_end").datepicker("setDate" , $(this).val());
+    });
+
+    $("#flight_dep_date_end").datepicker()
+        .on('changeDate', function (selected) {
+
+                var dates = $(this).val();
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+
+            var maxDate = new Date(formatDate);
+            $('#flight_dep_date_start').datepicker('setEndDate', maxDate);
+        });
+
+
 </script>
