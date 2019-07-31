@@ -88,6 +88,8 @@ $namelist = explode(',',$passenger_data->passengers);
 
 // update inv feed data about processed seats count
 
+	if ( $status == 'accept' ) {
+
         $inv = array();
         $inv['flight_nbr'] = $flight_number;
         $inv['airline_id'] = $passenger_data->carrier_code;
@@ -104,20 +106,19 @@ $namelist = explode(',',$passenger_data->passengers);
 	$upd['modify_date'] = time();
         $this->invfeed_m->update_entries($upd,$inv);
 
-if( $status == 'accept' ) {
 //accept 
-$bid_status = 'bid_accepted';
-$msg_txt = "Bid is accepted";
-$template ="home/upgradeoffertmp";
-} else if ( $status == 'reject' ) { 
-$bid_status = 'bid_cancel';	
-$msg_txt = 'Bid is rejected';
-$template ="home/bidreject-temp";	
-} else {
-	$this->session->set_flashdata('error', 'No Action Status');
-        redirect(base_url("offer_table/view/".$offer_id));
+		$bid_status = 'bid_accepted';
+		$msg_txt = "Bid is accepted";
+		$template ="home/upgradeoffertmp";
+	} else if ( $status == 'reject' ) { 
+		$bid_status = 'bid_cancel';	
+		$msg_txt = 'Bid is rejected';
+		$template ="home/bidreject-temp";	
+	} else {
+		$this->session->set_flashdata('error', 'No Action Status');
+        	redirect(base_url("offer_table/view/".$offer_id));
 
-}
+	}
 
 
 // $offer_data = $this->bid_m->get_offer_data($offer_id);
