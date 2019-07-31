@@ -26,9 +26,18 @@
                         </label>
                         <div class="col-sm-6">
                         <?php
+
+			 $userTypeID = $this->session->userdata('usertypeID');
+                        if($userTypeID == 2){
+                          $default_airlineID =  key($airlinesdata);
+                        } else {
+                          $default_airlineID = 0;
+                      }
+
+
 			$airlinesdata['0'] = 'Select Airlines';
 			ksort($airlinesdata);
-                        echo form_dropdown("airline_code", $airlinesdata, set_value("airline_code"), "id='airline_code' class='form-control select2'");
+                        echo form_dropdown("airline_code", $airlinesdata, set_value("airline_code",$default_airlineID), "id='airline_code' class='form-control select2'");
                         ?>
                         </div>
                         <span class="col-sm-4 control-label">
