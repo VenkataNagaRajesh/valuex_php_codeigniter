@@ -785,14 +785,16 @@ function time_dropdown($val) {
 			if(!empty($this->input->get('startHrs')) && !empty($this->input->get('startMins')) 
 					&& $this->input->get('startHrs') != '-1' && $this->input->get('startMins') != '-1'){
                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_dep_time_start <= "'.$this->input->get('startHrs').':'.$this->input->get('startMins').'"';
+				 $stime = (3600 * $this->input->get('startHrs')) + (60 * $this->input->get('startMins') );
+                                $sWhere .= 'MainSet.flight_dep_time_start <= "'.$stime.'"';
                         }
 
 
 			 if(!empty($this->input->get('endHrs')) && !empty($this->input->get('endMins'))
 				&& $this->input->get('endHrs') != '-1' && $this->input->get('endMins') != '-1'){
                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.flight_dep_time_end >= "'.$this->input->get('endHrs').':'.$this->input->get('endMins').'"';
+			       $etime = (3600 * $this->input->get('endHrs')) + (60 * $this->input->get('endMins') );
+                                $sWhere .= 'MainSet.flight_dep_time_end >= "'.$etime.'"';
                         }
 
 
