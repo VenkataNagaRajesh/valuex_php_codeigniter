@@ -23,8 +23,8 @@ class Home extends MY_Controller {
 				'field' => 'pnr', 
 				'label' => $this->lang->line("home_pnr"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]'
-			),
-			array(
+			)
+			/* array(
 				'field' => 'code', 
 				'label' => $this->lang->line("home_code"), 
 				'rules' => 'trim|required|xss_clean|max_length[50]|callback_validate_code'
@@ -33,7 +33,7 @@ class Home extends MY_Controller {
 				'field' => 'g-recaptcha-response', 
 				'label' => 'reCaptcha', 
 				'rules' => 'callback_validate_recaptcha'
-			)
+			) */
 		);
 		return $rules;
 	}
@@ -72,6 +72,8 @@ class Home extends MY_Controller {
 		  }		 
 	   }
 	}
+	
+	
 	
 	public function index() {
         $this->data = array(

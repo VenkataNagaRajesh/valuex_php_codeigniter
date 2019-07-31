@@ -21,7 +21,7 @@
 						<h2>Upgrade for Sure</h2>
 					</div>
 					<div class="tabulation animate-box">
-						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="198"></iframe>
+						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="138"></iframe>
 					</div>
 				</div>
 				<div class="col-sm-5 col-md-4">				
@@ -42,31 +42,31 @@
 									</span>
 								</div>
 							</div>
-							<div class="form-group">
+							<!--<div class="form-group">
 								<?php 
-									if(form_error('code')) 
+									/* if(form_error('code')) 
 										echo "<div class='col-sm-12  has-error' >";
 									else     
-										echo "<div class='col-sm-12' >";
+										echo "<div class='col-sm-12' >"; */
 								  ?>								
-									<input type="text" class="form-control" id="code" name="code" placeholder="Code" value="<?=set_value('code')?>" >
+									<input type="text" class="form-control" id="code" name="code" placeholder="Code" value="<?//=set_value('code')?>" >
 									 <span>
-										<?php echo form_error('code'); ?>
+										<?php //echo form_error('code'); ?>
 									</span>
 								</div>
-							</div>
+							</div>-->
 							<?php 
-							   if(form_error('g-recaptcha-response')) 
+							  /*  if(form_error('g-recaptcha-response')) 
 							   	echo "<div class='col-md-12  has-error' style='margin-left:-6px;'>";
 							   else     
-							   	echo "<div class='col-md-12 hidden-xs' style='margin-left:-6px;'>";
+							   	echo "<div class='col-md-12 hidden-xs' style='margin-left:-6px;'>"; */
 							  ?>
-								<?php echo $widget;?>
-                                <?php echo $script;?>
-								 <span>
-										<?php echo form_error('g-recaptcha-response'); ?>
+								<?php //echo $widget;?>
+                                <?php //echo $script;?>
+								<!-- <span>
+										<?php //echo form_error('g-recaptcha-response'); ?>
 								 </span>
-							</div>
+							</div>-->
 							<div class="form-group">
 								<div class="col-md-4 col-md-offset-4">
 									<button type="submit" class="btn btn-dander btn-lg">Proceed</button>
