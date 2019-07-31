@@ -217,21 +217,22 @@ $(document).ready(function () {
 	   $('#milesSlider .slider-handle').css({"background":"#0feded"});	
    tot_avg = 0;
   <?php foreach($results as $result){  if($result->fclr != null){  ?>	  
-	<?php $i=0;
+	<?php $i=0,$flag =0;
 	 foreach($result->to_cabins as $key => $value) {		 
 	  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
        if($status == 1992){
+		 $flag = 1;
 		 break;  
 	   } else {
 		   $i++;
 	   }
-	 }	?>
+	 }	if($flag == 1 && explode(',',$result->min)[$i]){  ?>
        	
     $('#bid_min_<?=$result->flight_number?>').text(<?php echo explode(',',$result->min)[$i]; ?>);
     $('#bid_max_<?=$result->flight_number?>').text(<?php echo explode(',',$result->max)[$i]; ?>);
 	var tot_avg = tot_avg + <?=explode(',',$result->avg)[$i]?>;
     changeColors(<?=$result->flight_number?>);
-  <?php } } ?>  
+  <?php } } } ?>  
   $("#tot").text(tot_avg*<?=$passengers_count?>);
   $("#bidtot").text(tot_avg*<?=$passengers_count?>);  
   mileSliderUpdate();
@@ -273,7 +274,7 @@ $("#bid_slider_<?=$result->flight_number?>").on("slide", function(slideEvt) {
     mileSliderUpdate();	
     changeColors(<?=$result->flight_number?>);	 
 });
-$("#bid_slider_<?=$result->flight_number?>").on("click", function(slideEvt) {
+$("#bid_slider_<?=$result->flight_number?>").on("click", function(slideEvt) { console.log("vvvvvvvv");
 	var tot_avg = getTotal();
 	$("#tot").text(tot_avg);
 	$("#bidtot").text(tot_avg);	 

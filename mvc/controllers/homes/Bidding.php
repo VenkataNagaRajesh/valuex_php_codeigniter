@@ -24,8 +24,8 @@ class Bidding extends MY_Controller {
   
 
     public function index() {  
-     // $this->session->set_userdata('pnr_ref','F90487');
-     // $this->session->set_userdata('validation_check',1);	   
+      //$this->session->set_userdata('pnr_ref','F90437');
+      //$this->session->set_userdata('validation_check',1);	   
 
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
@@ -64,7 +64,7 @@ class Bidding extends MY_Controller {
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
 		
        	
-	   // print_r($this->data['results']); exit;
+	  //  print_r($this->data['results']); exit;
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);
 	}
