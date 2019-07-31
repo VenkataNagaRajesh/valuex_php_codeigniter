@@ -11,7 +11,7 @@
 					</div>
 					<div class="col-md-3 col-sm-3">
 						<div class="col-md-6 col-sm-6">
-							<?php $aln_datatypes['0'] = " Level ";
+							<?php $aln_datatypes['0'] = " Origin Level ";
                                    ksort($aln_datatypes);
 									echo form_dropdown("orig_level_id", $aln_datatypes, set_value("orig_level_id"), "id='orig_level_id' class='form-control select2'");?>
 						</div>
@@ -21,7 +21,7 @@
 					</div>
 					<div class="col-md-3 col-sm-3">
                          <div class="col-md-6 col-sm-6">
-							<?php $aln_datatypes['0'] = " Level ";
+							<?php $aln_datatypes['0'] = "Dest Level ";
                                     ksort($aln_datatypes);
 									echo form_dropdown("dest_level_id", $aln_datatypes, set_value("dest_level_id"), "id='dest_level_id' class='form-control select2'");?>
                           </div>
@@ -398,9 +398,9 @@
 							<th class="col-lg-1">Rule#</th>
 							<th class="col-lg-1"><?=$this->lang->line('desc')?></th>
 							<th class="col-lg-1"><?php echo "Origin Level";?></th>
-                            				<th class="col-lg-1"><?php echo "Orig Level Value";?></th>
+                            				<th class="col-lg-1"><?php echo "Orig Value";?></th>
 							<th class="col-lg-1"><?php echo "Dest Level";?></th>
-                            				<th class="col-lg-1"><?php echo "Dest Level Value";?></th>
+                            				<th class="col-lg-1"><?php echo "Dest Value";?></th>
 							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_efec_date')?></th>
                             				<th class="col-lg-1"><?=$this->lang->line('flight_disc_date')?></th>
@@ -910,6 +910,7 @@ $('#ruleslist').on('click', '.deleteRow', function() {
 
 
 });
+
 </script>
 
 

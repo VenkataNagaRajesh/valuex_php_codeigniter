@@ -183,6 +183,7 @@ if($end < $start ) {
 
 function valFrequency($num)
 {
+	if ( $num != '' ){
 	$arr = str_split($num);
 	$freq = range(1,7);
 	foreach($arr as $a ) {
@@ -204,6 +205,10 @@ function valFrequency($num)
     {
 	return true;
     }
+
+	} else {
+		return true;
+	}
 }
 	function valMarket($post_string){		
 	  if($post_string == '0'){

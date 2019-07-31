@@ -122,6 +122,7 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
                         return $query->result();
         }
 
+
 	function insert_marketzone($array) {
 		 $this->db->insert("VX_aln_market_zone",$array);
           	return $this->db->insert_id();
