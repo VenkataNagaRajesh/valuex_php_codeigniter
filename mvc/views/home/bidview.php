@@ -217,7 +217,7 @@ $(document).ready(function () {
 	   $('#milesSlider .slider-handle').css({"background":"#0feded"});	
    tot_avg = 0;
   <?php foreach($results as $result){  if($result->fclr != null){  ?>	  
-	<?php $i=0,$flag =0;
+	<?php $i=0; $flag =0;
 	 foreach($result->to_cabins as $key => $value) {		 
 	  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
        if($status == 1992){

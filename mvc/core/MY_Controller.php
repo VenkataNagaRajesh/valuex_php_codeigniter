@@ -42,20 +42,24 @@ class MY_Controller extends CI_Controller {
 		//$this->mydebug->debug($status);
 		//$this->mydebug->debug($offer_data->offer_status);
 		//$offer_data->dep_date = 1561805915;
-		if($status == $offer_data->offer_status){
-		    $added_timestamp = strtotime('+'.$bid_expire+$bid_confirmation.' day', time());
-			//$this->mydebug->debug("cal date : ".date('d.m.Y', $added_timestamp));
-			//$this->mydebug->debug("dep date : ".date('d.m.Y', $offer_data->dep_date));
-            //echo $result;
-			if($added_timestamp > $offer_data->dep_date){
-				$error ="Offer Expired";
-			} else {
-				$error = '';
-			}
+		if(empty($offer_data->offer_status)){
+			return "Invalid PNR Reference";
 		} else {
-			$error = "This Offer Status Not matched";
-		}
-		return $error;
+			if($status == $offer_data->offer_status){
+				$added_timestamp = strtotime('+'.$bid_expire+$bid_confirmation.' day', time());
+				//$this->mydebug->debug("cal date : ".date('d.m.Y', $added_timestamp));
+				//$this->mydebug->debug("dep date : ".date('d.m.Y', $offer_data->dep_date));
+				//echo $result;
+				if($added_timestamp > $offer_data->dep_date){
+					$error ="Offer Expired";
+				} else {
+					$error = '';
+				}
+			} else {
+				$error = "This Offer Status Not matched";
+			}
+			return $error;
+	    }
 	}
 
 }
