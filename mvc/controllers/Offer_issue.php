@@ -212,8 +212,7 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 
 
 
-            $aColumns = array('MainSet.offer_id','SubSet.passenger_list','MainSet.pnr_ref','SubSet.from_city', 'SubSet.to_city','SubSet.flight_date',
-				'SubSet.carrier', 'SubSet.flight_number','SubSet.from_city_name', 'SubSet.to_city_name');
+            $aColumns = array('MainSet.offer_id','MainSet.offer_id','SubSet.passenger_list','MainSet.pnr_ref','SubSet.from_city', 'SubSet.to_city','SubSet.flight_date','SubSet.carrier', 'SubSet.flight_number','SubSet.from_city_name', 'SubSet.to_city_name');
 
                 $sLimit = "";
 
@@ -228,12 +227,12 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
                                 {
                                         if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
                                         {
-                                                if($_GET['iSortCol_0'] == 8){
-                                                        $sOrder .= " (s.order_no*-1) DESC ,";
-                                                } else {
+                                                //if($_GET['iSortCol_0'] == 8){
+                                                  //      $sOrder .= " (s.order_no*-1) DESC ,";
+                                                //} else {
                                                  $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
                                                         ".$_GET['sSortDir_'.$i] .", ";
-                                                }
+                                                //}
                                         }
                                 }
                                   $sOrder = substr_replace( $sOrder, "", -2 );

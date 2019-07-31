@@ -198,7 +198,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 
 
-            $aColumns = array('MainSet.offer_id','MainSet.offer_date', 'SubSet.carrier','MainSet.flight_number', 'SubSet.flight_date' , 'SubSet.from_city', 'SubSet.to_city', 'SubSet.from_cabin','MainSet.to_cabin', 'MainSet.bid_value','MainSet.bid_submit_date','SubSet.p_list','SubSet.fqtv','MainSet.pnr_ref','1','MainSet.bid_value','MainSet.cash', 'MainSet.miles','MainSet.offer_status','SubSet.from_city_name', 'SubSet.to_city_name');
+            $aColumns = array('MainSet.offer_id','MainSet.offer_id','MainSet.offer_date', 'SubSet.carrier','MainSet.flight_number', 'SubSet.flight_date' , 'SubSet.from_city', 'SubSet.to_city', 'SubSet.from_cabin','MainSet.to_cabin', 'MainSet.bid_value','MainSet.bid_submit_date','SubSet.p_list','SubSet.fqtv','MainSet.pnr_ref','1','MainSet.bid_value','MainSet.cash', 'MainSet.miles','MainSet.offer_status','SubSet.from_city_name', 'SubSet.to_city_name');
 
                 $sLimit = "";
 
