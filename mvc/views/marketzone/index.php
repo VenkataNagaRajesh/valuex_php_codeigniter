@@ -161,20 +161,37 @@
 								ksort($aln_datatypes); 			
 								echo form_dropdown("samz_level_id", $aln_datatypes,set_value("samz_level_id",$levelID), "id='samz_level_id' class='form-control hide-dropdown-icon select2'");    ?>
 						</div>
+						 <div class="col-md-2 col-sm-3">
+                                                        <select  name="samz_level_value[]"  id="samz_level_value" class="form-control select2" multiple="multiple">
+                                                        </select>
+                                                </div>
+
 						<div class="col-md-2 col-sm-3">
 							<?php 
 								$aln_datatypes['0'] = "Inclusion Type ";                         
 								ksort($aln_datatypes);                         
 								echo form_dropdown("samz_incl_id", $aln_datatypes,set_value("samz_incl_id",$inclID), "id='samz_incl_id' class='form-control hide-dropdown-icon select2'");    ?> 
 						</div>
+
+					<div class="col-md-2 col-sm-3">
+                                                        <select  name="samz_incl_value[]"  id="samz_incl_value" class="form-control select2" multiple="multiple">
+                                                        </select>
+                                                </div>
+
 						<div class="col-md-2 col-sm-3">
 							<?php                         
 								$aln_datatypes['0'] = "Exclusion Type ";                         
 								ksort($aln_datatypes);                         
 								echo form_dropdown("samz_excl_id", $aln_datatypes,set_value("samz_excl_id",$exclID), "id='samz_excl_id' class='form-control hide-dropdown-icon select2'");    ?> 
 						</div>
+
+			<div class="col-md-2 col-sm-3">
+                                                        <select  name="samz_excl_value[]"  id="samz_excl_value" class="form-control select2" multiple="multiple">
+                                                        </select>
+                                                </div>
+
 						<div class="col-md-1 col-sm-3">
-							<a href="#" type="button"  id='btn_txt' class="btn btn-danger form-control" onclick="$('#tztable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+							<a href="#" type="button"  id='filter_button' class="btn btn-danger form-control" onclick="$('#tztable').dataTable().fnDestroy();loaddatatable();">Filter</a>
 						</div>
 						<div class="col-md-1 col-sm-3">
 							<a href="#" type="button"  class="btn btn-danger form-control" onclick="downloadZone()" data-title="Download" data-toggle="tooltip" data-placement="top"><i class="fa fa-download"></i></a>
@@ -240,6 +257,9 @@ function loaddatatable() {
 		   {"name": "levelID","value": $("#samz_level_id").val()},
 		   {"name": "inclID","value": $("#samz_incl_id").val()},
 		   {"name": "exclID","value": $("#samz_excl_id").val()},
+		{"name": "levelvalue","value": $("#samz_level_value").val()},
+                {"name": "inclvalue","value": $("#samz_incl_value").val()},
+                   {"name": "exclvalue","value": $("#samz_excl_value").val()},
 		   {"name": "airlineID","value": $("#sairline_id").val()},
 		   {"name": "active","value": $("#active").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
@@ -778,6 +798,62 @@ $('#mytree').jstree({
 
 }
 
+$(document).ready(function () {
+$('#samz_level_id').change(function(event) {    
+        $('#samz_level_value').val(null).trigger('change');
+  var level_id = $(this).val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypesForSearch')?>",            
+
+             data: {
+                           "id":level_id,
+                                },
+             dataType: "html",                                  
+             success: function(data) {               
+             $('#samz_level_value').html(data); }        
+      });       
+});
+
+
+$('#samz_incl_id').change(function(event) {    
+        $('#samz_incl_value').val(null).trigger('change');
+  var incl_id = $(this).val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypesForSearch')?>",            
+
+             data: {
+                           "id":incl_id,
+                                },
+             dataType: "html",                                  
+             success: function(data) {               
+             $('#samz_incl_value').html(data); }        
+      });       
+});
+
+
+
+$('#samz_excl_id').change(function(event) {    
+        $('#samz_excl_value').val(null).trigger('change');
+  var excl_id = $(this).val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypesForSearch')?>",            
+
+             data: {
+                           "id":excl_id,
+                                },
+             dataType: "html",                                  
+             success: function(data) {               
+             $('#samz_excl_value').html(data); }        
+      });       
+});
+
+
+
+});
+
  $(document).ready(function () {
             $("#example").keyup(function () {
                 var searchString = $(this).val();
@@ -824,7 +900,12 @@ $("#bulkDelete").on('click',function() { // bulk checked
             });
         }
     }); 
+$('#filter_button').on('click', function() {
+ if ($('#bulkDelete').prop("checked")){
+                                $('#bulkDelete').prop("checked",false);
 
+                        }
+});
 
 $('#tztable').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');

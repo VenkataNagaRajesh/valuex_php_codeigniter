@@ -253,7 +253,7 @@ class Offer_eligibility extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
                 if($userTypeID == 2){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                        $sWhere .= 'pf.carrier IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
+                        $sWhere .= 'pf.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
                 }
 	
 
@@ -290,7 +290,11 @@ $sWhere $sOrder $sLimit";
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+
+		$rownum = 1 + $_GET['iDisplayStart'];
 		foreach ($rResult as $feed ) {
+			$feed->sno = $rownum;
+			$rownum++;
 			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
 			$feed->spoint = $feed->source_point;
             $feed->dpoint = $feed->dest_point;		

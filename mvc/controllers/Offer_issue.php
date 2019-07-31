@@ -185,8 +185,8 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 
 		}	
 		
-		$this->data["subview"] = "offer/index";
-		$this->load->view('_layout_main', $this->data);
+
+		redirect(base_url("offer_issue/index"));
 	}
 
 
@@ -212,8 +212,7 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 
 
 
-            $aColumns = array('MainSet.offer_id','SubSet.passenger_list','MainSet.pnr_ref','SubSet.from_city', 'SubSet.to_city','SubSet.flight_date',
-				'SubSet.carrier', 'SubSet.flight_number','SubSet.from_city_name', 'SubSet.to_city_name');
+            $aColumns = array('MainSet.offer_id','MainSet.offer_id','SubSet.passenger_list','MainSet.pnr_ref','SubSet.from_city', 'SubSet.to_city','SubSet.flight_date','SubSet.carrier', 'SubSet.flight_number','SubSet.from_city_name', 'SubSet.to_city_name');
 
                 $sLimit = "";
 
@@ -228,12 +227,12 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
                                 {
                                         if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
                                         {
-                                                if($_GET['iSortCol_0'] == 8){
-                                                        $sOrder .= " (s.order_no*-1) DESC ,";
-                                                } else {
+                                                //if($_GET['iSortCol_0'] == 8){
+                                                  //      $sOrder .= " (s.order_no*-1) DESC ,";
+                                                //} else {
                                                  $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
                                                         ".$_GET['sSortDir_'.$i] .", ";
-                                                }
+                                                //}
                                         }
                                 }
                                   $sOrder = substr_replace( $sOrder, "", -2 );
@@ -355,13 +354,16 @@ $sWhere $sOrder $sLimit";
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
           );
-                foreach ($rResult as $feed ) {
 
+		$rownum = 1 + $_GET['iDisplayStart'];
+                foreach ($rResult as $feed ) {
+			$feed->sno = $rownum;
+			$rownum++;
                         $boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->from_city_code));
 						$feed->source = $feed->from_city;
 						$feed->dest = $feed->to_city;
                         $feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->from_city.'</a>';
-                         $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->to_city_code));
+                        $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->to_city_code));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->to_city.'</a>';
 			
 			$feed->booking_status = btn_view('offer_issue/view/'.$feed->offer_id, $this->lang->line('view'));
