@@ -40,7 +40,8 @@ class Airline_m extends MY_Model {
 	}
 	
 	public function getAirlineData($id){
-		$this->db->select('dd.*,dd.aln_data_value airline_name,dd.code,u.name modify_by,group_concat( distinct ac.aln_data_value,"/",sc.aln_data_value) as aircraft_seat_capacity,GROUP_CONCAT(d.aln_data_value SEPARATOR ", ") flights')->from('vx_aln_data_defns dd');	
+		$this->db->select('dd.*,dd.aln_data_value airline_name,dd.code,u.name modify_by,group_concat( distinct ac.aln_data_value,"/",sc.aln_data_value) as aircraft_seat_capacity,GROUP_CONCAT(d.aln_data_value SEPARATOR ", ") flights,a.logo,a.video_links')->from('vx_aln_data_defns dd');
+        $this->db->join('VX_aln_airline a','a.airlineID = dd.vx_aln_data_defnsID','LEFT');		
         $this->db->join('vx_aln_data_defns d','d.parentID = dd.vx_aln_data_defnsID AND d.aln_data_typeID = 16','LEFT');
 		$this->db->join('VX_airline_aircraft aa','aa.airlineID = dd.vx_aln_data_defnsID','LEFT');
 		$this->db->join('vx_aln_data_defns ac','ac.vx_aln_data_defnsID = aa.aircraftID AND ac.aln_data_typeID = 21','LEFT');
