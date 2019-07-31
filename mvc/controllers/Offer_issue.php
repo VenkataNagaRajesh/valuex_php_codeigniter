@@ -185,8 +185,8 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 
 		}	
 		
-		$this->data["subview"] = "offer/index";
-		$this->load->view('_layout_main', $this->data);
+
+		redirect(base_url("offer_issue/index"));
 	}
 
 
@@ -355,11 +355,14 @@ $sWhere $sOrder $sLimit";
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
           );
-                foreach ($rResult as $feed ) {
 
+		$rownum = 1 + $_GET['iDisplayStart'];
+                foreach ($rResult as $feed ) {
+			$feed->sno = $rownum;
+			$rownum++;
                         $boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->from_city_code));
                         $feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->from_city.'</a>';
-                         $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->to_city_code));
+                        $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->to_city_code));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->to_city.'</a>';
 			
 			$feed->booking_status = btn_view('offer_issue/view/'.$feed->offer_id, $this->lang->line('view'));

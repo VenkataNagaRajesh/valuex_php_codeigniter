@@ -172,7 +172,7 @@ $("#dep_to_date").datepicker();
                     "success": fnCallback
                          } ); }, 
 
-      "columns": [ {"data": "dtpfext_id" },
+      "columns": [ {"data": "sno" },
 		   {"data": "dtpf_id" },
 		   {"data": "fclr_id" },
 		   {"data": "season_id" },

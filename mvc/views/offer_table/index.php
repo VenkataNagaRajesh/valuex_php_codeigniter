@@ -92,7 +92,8 @@
 			<div id="hide-table">
 				 <table id="offertable" class="table table-bordered">
 					 <thead>
-						<tr>
+						<tr>	
+							<th class="col-lg-1">#</th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_date')?></th>
 							<th class="col-lg-1">Carrier</th>
@@ -154,7 +155,7 @@ $("#dep_to_date").datepicker();
                     "success": fnCallback
                          } ); }, 
 
-      "columns": [
+      "columns": [   {"data": "sno" },
 		   {"data": "offer_id" },
 		   {"data": "offer_date" },
 		   {"data": "carrier" },

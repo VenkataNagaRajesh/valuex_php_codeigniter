@@ -290,7 +290,11 @@ $sWhere $sOrder $sLimit";
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+
+		$rownum = 1 + $_GET['iDisplayStart'];
 		foreach ($rResult as $feed ) {
+			$feed->sno = $rownum;
+			$rownum++;
 			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
 			$feed->spoint = $feed->source_point."(".$boarding_markets.")";
             $feed->dpoint = $feed->dest_point."(".$dest_markets.")";		

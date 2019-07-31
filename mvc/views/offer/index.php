@@ -2,10 +2,6 @@
 	<h2 class="title-tool-bar">Offer Details</h2>
 	<div class="col-md-12 off-elg-filter-box">
 		<div class="auto-gen">
-			<a href="<?php echo base_url('offer_eligibility/generatedata') ?>">
-				<i class="fa fa-upload"></i>
-				<?=$this->lang->line('generate_offer_eligibility')?>
-			</a>
 			<a href="<?php echo base_url('offer_issue/run_offer_issue') ?>">
 				 <i class="fa fa-upload"></i>
 				 <?=$this->lang->line('offer_issue')?>
@@ -82,6 +78,7 @@
 				<table id="offertable" class="table table-bordered">
 					 <thead>
 						<tr>
+							<th class="col-lg-1">#</th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('passenger_list')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
@@ -132,7 +129,7 @@ $("#dep_to_date").datepicker();
                     "success": fnCallback
                          } ); }, 
 
-      "columns": [ {"data": "offer_id" },
+      "columns": [ {"data": "sno" },{"data": "offer_id" },
 				   {"data": "passenger_list" },
 				   {"data": "pnr_ref"},
 				   {"data": "source_point" },

@@ -381,7 +381,10 @@ $sOrder $sLimit";
                 "aaData" => array()
           );
 		       $i = 1;
+		 $rownum = 1 + $_GET['iDisplayStart'];
                 foreach ($rResult as $feed ) {
+			$feed->sno = $rownum;
+			$rownum++;
 			$feed->avg_fare = $feed->bid_value;;
                         $feed->flight_date = date('d-m-Y',$feed->flight_date);
 			$feed->bid_submit_date =  date('d-m-Y H:i:s',$feed->bid_submit_date);
