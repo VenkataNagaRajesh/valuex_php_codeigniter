@@ -44,10 +44,10 @@
 				<div class="col-md-3 select-form">
 					<h4>Flight Number Range</h4>
 					<div class="col-sm-12">
-						<input type="text" class="form-control" placeholder="Enter Start range Flight Number" id="flight_number" name="flight_number" value="<?=set_value('flight_number',$flight_number)?>" >
+						<input type="text" class="form-control" placeholder="Start range" id="flight_number" name="flight_number" value="<?=set_value('flight_number',$flight_number)?>" >
 					</div>
 					<div class="col-sm-12">
-						<input type="text" class="form-control" placeholder="Enter End range Flight number" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
+						<input type="text" class="form-control" placeholder="End range" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
 					</div>
 				</div>
 				<div class="col-md-3">
