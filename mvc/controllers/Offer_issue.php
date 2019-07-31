@@ -360,6 +360,8 @@ $sWhere $sOrder $sLimit";
 			$feed->sno = $rownum;
 			$rownum++;
                         $boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->from_city_code));
+						$feed->source = $feed->from_city;
+						$feed->dest = $feed->to_city;
                         $feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->from_city.'</a>';
                         $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->to_city_code));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->to_city.'</a>';
@@ -376,7 +378,7 @@ $sWhere $sOrder $sLimit";
 
                 if(isset($_REQUEST['export'])){
 				  $columns = array('#','Passenger List','PNR Reference','Board Point','Off Point','Departure Date','Carrier','Flight Number');
-				  $rows = array("offer_id","passenger_list","pnr_ref","source_point","dest_point","departure_date","carrier","flight_number");
+				  $rows = array("offer_id","passenger_list","pnr_ref","source","dest","departure_date","carrier","flight_number");
 				  $this->exportall($output['aaData'],$columns,$rows);		
 				} else {	
 				  echo json_encode( $output );

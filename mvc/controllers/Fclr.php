@@ -674,7 +674,7 @@ $sWhere $sOrder $sLimit";
 			$feed->source = $feed->source_point;
 			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip"  data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
 			 $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
-			  $feed->dest = $dest_markets ;
+			  $feed->dest = $feed->dest_point ;
                $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip"  data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
 
 			

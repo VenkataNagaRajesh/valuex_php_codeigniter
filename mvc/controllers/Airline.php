@@ -213,7 +213,7 @@ class Airline extends Admin_Controller {
 			  $this->data['airline']->video_links = '';	
 			}			
 			if($this->data['airline']) {
-				if($_POST) {	print_r($_FILES); exit;
+				if($_POST) {	//print_r($_FILES); exit;
                    $rules = $this->rules();
 				   $this->form_validation->set_rules($rules);
 				   if ($this->form_validation->run() == FALSE) { //echo validation_errors();

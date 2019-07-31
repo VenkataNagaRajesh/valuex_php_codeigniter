@@ -12,7 +12,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-8">
-                <form class="form-horizontal" role="form" method="post">
+                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                   <?php 
                         if(form_error('airline')) 
                             echo "<div class='form-group has-error' >";

@@ -21,10 +21,30 @@
 					 <p><span><?=$this->lang->line("airline_active")?> </span>: <?=($airline->active)?'Anable':'Disable'?></p>
 					 <p><span><?=$this->lang->line("airline_created_user")?> </span>: <?=$airline->modify_by?></p>
 					 <p><span><?=$this->lang->line("airline_created_date")?> </span>: <?=date('d/m/Y',$airline->modify_date)?></p>
-					 <p><span><?=$this->lang->line("airline_flights")?> </span>: <?=$airline->flights?></p>
+					
 					 
-				</div>  
+				</div>
+                <div class="profile-view-tab">
+				    <p><span><?=$this->lang->line("airline_flights")?> </span>: <?=$airline->flights?></p>
+                </div>				
 			</div>
+			<div class="col-md-12 airline-cabin-img" style="padding:0">
+		<h2>Logo & Videos</h2>
+           
+            <?php
+                         $array = array(
+                    "src" => base_url('uploads/images/'.$airline->logo),
+                            'width' => '150px',
+                            'height' => '150px',
+                            'class' => 'img-rounded'
+                    );
+				echo img($array);
+            ?>
+			
+			<div class="col-md-3">
+				<iframe src="<?=str_replace('watch?v=','embed/',$airline->video_links)?>" width="100%" height="130"></iframe>
+			</div>
+        </div>
 		</div>
   </section>
 </div>
