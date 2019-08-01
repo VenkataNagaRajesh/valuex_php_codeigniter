@@ -18,8 +18,7 @@
                                         <img style="width:auto;display: block;max-width: 100%;height:auto;" src="{base_url}assets/home/images/temp1-bnr.jpg" alt="temp bnr">
                                 </div>
                         </div>
-                        <div style="position: relative;min-height: 1px;padding-left: 15px;padding-right:15px;">
-						        <span>coupon code : {coupon_code}</span>
+                        <div style="position: relative;min-height: 1px;padding-left: 15px;padding-right:15px;">		      
                                 <p style="margin-bottom: 10px;font-size: 14px;color: #333;font-family:century gothic;text-align:center;">
                                         With AC Bid Upgrade you can enhance your travel experince by enjoying priority. One or more of yourupcoming flight (s) are eligible for bids
                                 </p>

@@ -24,7 +24,7 @@ class Bidding extends MY_Controller {
   
 
     public function index() {  
-      //$this->session->set_userdata('pnr_ref','F90437');
+      //$this->session->set_userdata('pnr_ref','F90442');
       //$this->session->set_userdata('validation_check',1);	   
 
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
@@ -62,7 +62,8 @@ class Bidding extends MY_Controller {
         $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
         $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
-		
+		$this->data['sent_mail_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+		$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
        	
 	  //  print_r($this->data['results']); exit;
 		$this->data["subview"] = "home/bidview";
