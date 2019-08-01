@@ -58,6 +58,7 @@ $this->data['headerassets'] = array(
                                                 'assets/datepicker/datepicker.js'
                 )
         );
+
 		$this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
                 $this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
 		 $this->data['carrier'] =  $this->airports_m->getDefnsCodesListByType('12');
@@ -373,7 +374,7 @@ $sWhere $sOrder $sLimit";
 			if($bid_cnt > 0 ) {
 				$feed->bid_info = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
 			} else{
-				$feed->bid_info = 'No Bids';
+				$feed->bid_info = 'No Bid';
 			}
 
                                 $output['aaData'][] = $feed;

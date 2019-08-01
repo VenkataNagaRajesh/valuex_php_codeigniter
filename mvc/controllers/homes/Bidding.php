@@ -33,7 +33,7 @@ class Bidding extends MY_Controller {
 		}
 		
 		$this->data['results'] = $this->bid_m->getPassengers($this->session->userdata('pnr_ref'));
-		//print_r($this->data['results'] ); exit;
+	//	print_r($this->data['results'] ); exit;
 		//$this->data['tomail'] = explode(',',$this->data['results'][0]->email_list)[0]; 
 		if(empty($this->data['results'])){
 			redirect(base_url('home/index'));
@@ -131,6 +131,15 @@ class Bidding extends MY_Controller {
                        //  $this->mydebug->debug("mailstatus : ".$status);
 				
 			  $json['status'] = "success";
+
+			// calculate average and rank
+				$bid_array['flight_number'] =  $data['flight_number'];
+				$bid_array['upgrade_type'] = $data['upgrade_type'];
+				$fly_data = $this->offer_issue_m->get_flight_date($data['offer_id'],$data['flight_number']);
+				$bid_array['flight_date'] = $fly_data->dep_date;
+				$bid_array['carrier_code'] = $fly_data->carrier_code;
+				$this->offer_issue_m->calculateBidAvg($bid_array);
+			
 			  $this->session->unset_userdata('validation_check');
 			  $this->session->unset_userdata('pnr_ref');
     	    }	
