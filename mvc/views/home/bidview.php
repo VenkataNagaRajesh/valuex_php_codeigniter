@@ -70,10 +70,10 @@
 												<div class="bid-radio col-md-12">
 												   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
 												   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>								      
-													<label class="radio-inline <?=($status == 1971)?"bid-visible":""?>">
+													<label class="radio-inline <?=($status == $excluded_status)?"bid-visible":""?>">
 														<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0 )?"checked":''; ?> ><?php echo $cabins[$value]; ?>
 													</label><br>
-												   <?php if($status != 1971) { $i++; } } } ?>									
+												   <?php if($status != $excluded_status) { $i++; } } } ?>									
 												</div>	
 											</td>
 											<td>
@@ -81,7 +81,7 @@
 													  $i=0;
 													 foreach($result->to_cabins as $key => $value) {		 
 													  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
-													   if($status == 1992){
+													   if($status == $sent_mail_status){
 														 break;  
 													   } else {
 														   $i++;
@@ -220,7 +220,7 @@ $(document).ready(function () {
 	<?php $i=0; $flag =0;
 	 foreach($result->to_cabins as $key => $value) {		 
 	  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
-       if($status == 1992){
+       if($status == $sent_mail_status){
 		 $flag = 1;
 		 break;  
 	   } else {

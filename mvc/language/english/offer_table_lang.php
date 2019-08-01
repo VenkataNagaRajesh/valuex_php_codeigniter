@@ -1,7 +1,7 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "Offer Management Table";
+$lang['panel_title'] = "Bid Details";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
 $lang['active'] = 'Status';
