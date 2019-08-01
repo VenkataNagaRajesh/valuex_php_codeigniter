@@ -9,8 +9,8 @@ $lang['action'] = "Action";
 $lang['desc'] = 'Reason Description';
 $lang['orig_level_id'] = 'Origin Level';
 $lang['dest_level_id'] = 'Dest Level';
-$lang['orig_level_value'] = 'Orig Level value';
-$lang['dest_level_value'] = 'Dest Level value';
+$lang['orig_level_value'] = 'Orig value';
+$lang['dest_level_value'] = 'Dest value';
 
 $lang['flight_nbr_start'] = 'Flight Number Start';
 $lang['flight_nbr_end'] = 'Flight Number End';

@@ -96,6 +96,15 @@ class bid_m extends MY_Model {
 	  return $id;
   }
 
+
+	public function getBidByOfferID($offer_id){
+		$this->db->select('count(*) as count')->from('VX_aln_bid');
+		$this->db->where('offer_id',$offer_id);
+		$query = $this->db->get();
+                return $query->row('count');
+
+	
+	}
   public function getCardData($offer_id){
 	  $this->db->select("*")->from("VX_aln_card_data");
 	  $this->db->where('offer_id',$offer_id);

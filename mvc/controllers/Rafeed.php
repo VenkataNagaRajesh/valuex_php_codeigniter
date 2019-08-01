@@ -23,9 +23,11 @@ class Rafeed extends Admin_Controller {
                                 'assets/select2/css/select2.css',
                                 'assets/select2/css/select2-bootstrap.css',
                                 'assets/dist/themes/default/style.min.css',
+				'assets/datepicker/datepicker.css'
                         ),
                         'js' => array(
                                 'assets/select2/select2.js',
+				'assets/datepicker/datepicker.js'
                         )
                 );
 

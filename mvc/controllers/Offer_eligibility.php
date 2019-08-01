@@ -262,12 +262,11 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext
 		 boarding_point, dai.code as carrier_code , off_point, season_id,pf.flight_number, fca.code as fcabin, 
             	tca.code as tcabin, dfre.code as day_of_week , sea.season_name,
             	pf.dep_date as departure_date, min,max,average,slider_start,from_cabin, to_cabin,
-		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, ex.excl_grp,
+		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, 
 		pf.pnr_ref
 		     from VX_aln_dtpf_ext pext 
 		     INNER JOIN VX_aln_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_processed = 1 and pf.active = 1)
 		     LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)
-		     LEFT JOIN VX_aln_eligibility_excl_rules ex on (pext.exclusion_id = ex.eexcl_id)
 		     LEFT JOIN VX_aln_season sea on (sea.VX_aln_seasonID = fc.season_id )
                      LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
 		     LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
@@ -303,7 +302,8 @@ $sWhere $sOrder $sLimit";
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
                $feed->bstatus = $feed->booking_status;			  
 			if($feed->booking_status == 'Excluded') {
-				$feed->booking_status = '<a href="'.base_url('eligibility_exclusion/index/'.$feed->exclusion_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->excl_grp.'">'.$feed->booking_status.'</a>';
+				$excl_id = $this->eligibility_exclusion_m->getexclIdForGrpANDCabins($feed->exclusion_id,$feed->from_cabin,$feed->to_cabin);
+				$feed->booking_status = '<a href="'.base_url('eligibility_exclusion/index/'.$excl_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->exclusion_id.'">'.$feed->booking_status.'</a>';
 
 			}
             $feed->fclrID = $feed->fclr_id;
@@ -439,7 +439,7 @@ $sWhere $sOrder $sLimit";
 
 							$result = $this->install_m->run_query($query);
 							if(count($result) > 0 ) {	
-								$matched = $result[0]->eexcl_id;
+								$matched = $result[0]->excl_grp;
 								break;
 							  }
 					}

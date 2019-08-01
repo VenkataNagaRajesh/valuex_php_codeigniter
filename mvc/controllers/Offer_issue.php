@@ -369,7 +369,12 @@ $sWhere $sOrder $sLimit";
 			$feed->booking_status = btn_view('offer_issue/view/'.$feed->offer_id, $this->lang->line('view'));
                         $feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default season";
                         $feed->departure_date = date('d-m-Y',$feed->flight_date);
-			$feed->bid_info = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
+			$bid_cnt = $this->bid_m->getBidByOfferID($feed->offer_id);
+			if($bid_cnt > 0 ) {
+				$feed->bid_info = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
+			} else{
+				$feed->bid_info = 'No Bids';
+			}
 
                                 $output['aaData'][] = $feed;
 
@@ -521,7 +526,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                         $this->email->send();
 
 				 $array = array();
-                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_cancel','20');
+                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
                         $array["modify_date"] = time();
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
 			$p_list = explode(',',$passenger_data->p_list);

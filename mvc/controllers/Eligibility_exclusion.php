@@ -988,7 +988,7 @@ LEFT JOIN (
 		 $rule->chkbox = "<input type='checkbox'  class='deleteRow' value='".$rule->eexcl_id."'  /> #".$rownum ;
                                 $rownum++;
 
-		$rule->ruleno = 'Rule#'.$rule->excl_grp;
+		$rule->ruleno = $rule->excl_grp;
 		$rule->flight_efec_date = $rule->flight_efec_date ? date('d-m-Y',$rule->flight_efec_date) : 'NA';
                $rule->flight_disc_date = $rule->flight_disc_date ? date('d-m-Y',$rule->flight_disc_date) : 'NA';
 		if ( $rule->flight_dep_start != '-1'){

@@ -97,7 +97,7 @@ class Eligibility_exclusion_m extends MY_Model {
 		$query = "select eexcl_id,excl_grp, orig_level, dest_level,frequency, flight_efec_date, flight_disc_date, carrier, flight_dep_start, flight_dep_end , flight_nbr_start, flight_nbr_end, upgrade_from_cabin_type, upgrade_to_cabin_type, active ";
 		} else {
 
-			$query =  "select eexcl_id " ;
+			$query =  "select eexcl_id, excl_grp " ;
 
 		}
 
@@ -143,6 +143,19 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, ex.or
 
 	}
 
+
+	function getexclIdForGrpANDCabins($grp,$fc,$tc) {
+
+		$this->db->select('eexcl_id')->from('VX_aln_eligibility_excl_rules');
+		$this->db->where('excl_grp',$grp);
+		$this->db->where('upgrade_from_cabin_type',$fc);
+		$this->db->where('upgrade_to_cabin_type',$tc);
+		$this->db->limit(1);
+		$query = $this->db->get();
+                $r = $query->row();
+
+		return $r->eexcl_id;
+	}
 	function update_eligibility_rule($data, $id = NULL) {
 		parent::update($data, $id);
 		return $id;

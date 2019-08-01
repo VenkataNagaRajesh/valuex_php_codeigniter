@@ -54,8 +54,6 @@
 	</div>
 	<div class="col-md-4">
 		<div class="off-status">
-		<?php $status_ofr = implode('<br>',array_column($ofr,'offer_status'));?>
-			<p>Status: <b><?php echo $status_ofr; ?></b></p>
 			<p><b>Offer Price</b><br>
 				<span>Total Price:</span><?php echo array_sum(array_column($ofr,'bid_value'));?><br>
 				<span>Mode:</span> <?php echo $cash_percentage;?>%  Cash, <?php echo $miles_percentage?>% Miles<br>
