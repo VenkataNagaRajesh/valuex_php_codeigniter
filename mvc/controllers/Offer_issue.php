@@ -526,7 +526,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                         $this->email->send();
 
 				 $array = array();
-                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_cancel','20');
+                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
                         $array["modify_date"] = time();
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
 			$p_list = explode(',',$passenger_data->p_list);

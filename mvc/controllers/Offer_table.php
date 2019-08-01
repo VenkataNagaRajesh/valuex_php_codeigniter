@@ -111,7 +111,7 @@ $namelist = explode(',',$passenger_data->passengers);
 		$msg_txt = "Bid is accepted";
 		$template ="home/upgradeoffertmp";
 	} else if ( $status == 'reject' ) { 
-		$bid_status = 'bid_cancel';	
+		$bid_status = 'bid_reject';	
 		$msg_txt = 'Bid is rejected';
 		$template ="home/bidreject-temp";	
 	} else {
