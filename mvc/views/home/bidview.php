@@ -35,8 +35,8 @@
 									<thead>
 										<tr>
 											<th>Flight Information</th>
-											<th style="text-align:left;">Upgrade Type</th>
-											<th>Bid (s)</th>
+											<th style="text-align:left;">Upgrade To Cabin</th>
+											<th>Bid Amount</th>
 											<th>Action</th>
 										</tr>
 									</thead>
@@ -46,7 +46,7 @@
 											<td>											
 												<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
 													<div class="col-md-5">
-														<p><?php echo $result->from_city; ?></p>
+														<p><?php echo $result->from_city_code; ?></p>
 														<ul>
 															<li><?php echo date('d M Y',$result->dep_date); ?></li>
 															<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
@@ -56,7 +56,7 @@
 													</div>
 													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-fighter-jet"></i></p></div>
 													<div class="col-md-5">
-														<p><?php echo $result->to_city; ?></p>
+														<p><?php echo $result->to_city_code; ?></p>
 														<ul>
 															<li><?php echo date('d M Y',$result->arrival_date); ?></li>
 															<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
@@ -89,9 +89,9 @@
 													 }	?>       
 												
 													<div class="price-range col-md-12">		
-													<i class="fa fa-dollar"></i> <b id="bid_min_<?=$result->flight_number?>"></b>
-															<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->avg)[$i]; ?>" data-slider-handle="square"min-slider-handle="200"/>
-														<i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b>
+													Min <i class="fa fa-dollar"></i> <b id="bid_min_<?=$result->flight_number?>"></b>
+															<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
+														Max <i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b>
 													</div>
 												<?php }  ?>
 											</td>
@@ -242,7 +242,7 @@ $(document).ready(function () {
 $('#bid_slider_<?=$result->flight_number?>').slider({
 	tooltip: 'always',
 	formatter: function(value) {
-		return '$'+value + '(<?=$passengers_count?>)';
+		return '$'+value + ' Per Person';
 	}
 });
 <?php } } ?>
