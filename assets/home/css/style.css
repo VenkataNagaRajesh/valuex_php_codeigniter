@@ -230,7 +230,7 @@ figure {
 	color:#ff6633;
 }
 .bid-tab .tab-content .pass-info .bid-radio{
-	width:200px;
+	width:140px;
 }
 .bid-tab .tab-content .pass-info .bid-radio label{
 	color: #333;
@@ -363,6 +363,7 @@ figure {
 #offer .price-range{
 	background: #f5f5f5;
 	padding: 14px;
+	color: black;
 }
 #offer .pass-info .btn-danger{
 	background: #ff6633;
