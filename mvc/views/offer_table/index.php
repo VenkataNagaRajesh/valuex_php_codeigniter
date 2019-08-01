@@ -209,6 +209,7 @@ $("#dep_from_date").datepicker({
 		{"data": "action" }
 
 				  ],			     
+	"order": [[ 1, "asc" ], [ 5, "asc" ]],
      dom: 'B<"clear">lfrtip',
      //buttons: [ 'copy', 'csv', 'excel','pdf' ]
       buttons: [

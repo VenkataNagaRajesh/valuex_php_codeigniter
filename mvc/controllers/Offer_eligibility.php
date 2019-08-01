@@ -446,7 +446,7 @@ $sWhere $sOrder $sLimit";
 
 					if($matched > 0 ) {
 						$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-                                                $ext['exclusion_id'] = $result[0]->eexcl_id;
+                                                $ext['exclusion_id'] = $matched;
                                                 $this->offer_eligibility_m->insert_dtpfext($ext);
 
 					}else {
