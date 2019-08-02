@@ -330,7 +330,7 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
 
                 FROM ( 
                                 select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, bid_avg,
-                                tcab.code as to_cabin, oref.pnr_ref, bid.flight_number,oref.cash, oref.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank
+                                tcab.code as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank
                                 from  
                                         VX_aln_offer_ref oref 
                                         INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id) 
