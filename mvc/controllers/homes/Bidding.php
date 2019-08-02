@@ -244,17 +244,17 @@ class Bidding extends MY_Controller {
             $data['date_added'] = time();			
             $id = $this->bid_m->save_card_data($data);
 			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_complete','20');
-			   //$ref['cash'] = $this->input->post("cash");
-			  // $ref['miles'] = $this->input->post("miles");
-			   //$tot_bid = $this->input->post("tot_bid");
+			   $ref['cash'] = $this->input->post("cash");
+			   $ref['miles'] = $this->input->post("miles");
+			   $tot_bid = $this->input->post("tot_bid");
 			   $ref['offer_status'] = $select_status;
 			   $ref["modify_date"] = time();
-			  /*  if($tot_bid != 0){
+			   if($tot_bid != 0){
 			    $ref["cash_percentage"] = round((($ref['cash']/ $tot_bid)*100),2);
 			   } else {
 				$ref["cash_percentage"] = 0;   
 			   }
-			   $this->mydebug->debug("cash per :".$ref["cash_percentage"]); */
+			   $this->mydebug->debug("cash per :".$ref["cash_percentage"]); 
 			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
 			if($id){
 			  $json['status'] = "success";
