@@ -110,6 +110,7 @@
 							<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('number_psgr')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('avg_p')?></th>
+							<th class="col-lg-1">Rank</th>
 							<th class="col-lg-1"><?=$this->lang->line('cash')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('miles')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_status')?></th>
@@ -202,7 +203,8 @@ $("#dep_from_date").datepicker({
 		   {"data": "fqtv" },
                    {"data": "pnr_ref" },
                 {"data": "p_count" },
-		 {"data": "avg_fare" },
+		 {"data": "bid_avg" },
+		{"data": "rank" },
                 {"data": "cash" },
 		{"data": "miles" },
 		{"data": "offer_status" },
