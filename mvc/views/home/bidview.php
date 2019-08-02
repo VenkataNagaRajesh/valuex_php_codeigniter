@@ -342,25 +342,28 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 	 var two = min + Math.round((diff)*(50/100));
 	 var three = min+ Math.round((diff)*(75/100));
 	 	 
-	 /*  if(value <= one ){
+	   if(value <= one ){
 	   $('#bid_slider_'+id+'Slider .slider-selection').css({"background":"red"});
-	   $('#bid_slider_'+id+'Slider .slider-handle').css({"background":"red"});
+	   //$('#bid_slider_'+id+'Slider .slider-handle').css({"background":"red"});
      } else if(value <= two){ 
-	   $('#bid_slider_'+id+'Slider .slider-selection').css({"background":"orange"}); 
-	   $('#bid_slider_'+id+'Slider .slider-handle').css({"background":"orange"});
+	   $('#bid_slider_'+id+'Slider .slider-selection').css({"background":"orange"});   
+	   //$('#bid_slider_'+id+'Slider .slider-handle').css({"background":"orange"});	   
+	   $('#bid_slider_'+id+'Slider .slider-selection').css({"background":" -webkit-linear-gradient(left,  #ff3019 0%,#e2d704 100%,#cf0404 100%,#e2d704 100%)"},{"background":" -webkit-linear-gradient(left,  #ff3019 0%,#e2d704 100%,#cf0404 100%,#e2d704 100%)"}); 
      } else if(value <= three ){
-	   $('#bid_slider_'+id+'Slider .slider-selection').css({"background":"#00ff00"}); 
-	   $('#bid_slider_'+id+'Slider .slider-handle').css({"background":"#00ff00"});
+	   //$('#bid_slider_'+id+'Slider .slider-selection').css({"background":"#00ff00"}); 
+	   //$('#bid_slider_'+id+'Slider .slider-handle').css({"background":"#00ff00"});
+	    $('#bid_slider_'+id+'Slider .slider-selection').css({"background":" -webkit-linear-gradient(left,  #ff3019 0%,#e2d704 35%,#e2d704 41%,#e2d704 59%,#04ea04 100%,#cf0404 100%,#04ea04 100%)"},{"background":" -webkit-linear-gradient(left,  #ff3019 0%,#e2d704 35%,#e2d704 41%,#e2d704 59%,#04ea04 100%,#cf0404 100%,#04ea04 100%)"}); 
      } else {
-	    $('#bid_slider_'+id+'Slider .slider-selection').css({"background":"#009900"}); 
-		$('#bid_slider_'+id+'Slider .slider-handle').css({"background":"#009900"});
-     } */
+	    //$('#bid_slider_'+id+'Slider .slider-selection').css({"background":"#009900"}); 
+		//$('#bid_slider_'+id+'Slider .slider-handle').css({"background":"#009900"});
+		$('#bid_slider_'+id+'Slider .slider-selection').css({"background":" -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"},{"background":" -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"}); 
+     } 
 	 
 	
 	// $('#bid_slider_'+id+'Slider .slider-selection').css({"background":" -webkit-linear-gradient(top, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"}); 
 	
 	// $('#bid_slider_'+id+'Slider .slider-handle').css({"background":"  -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"},{"background":"-webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"});
-	$('#bid_slider_'+id+'Slider .slider-selection').css({"background":"  -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"},{"background":"-webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"});
+	//$('#bid_slider_'+id+'Slider .slider-selection').css({"background":"  -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"},{"background":"-webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"});
 	 
 	 
 	 
