@@ -178,6 +178,9 @@ return $rResult;
 }
 
 
+
+
+
 function get_flight_date($offer_id,$flight_number){
 	$this->db->select('dep_date,carrier_code')->from('VX_aln_daily_tkt_pax_feed pf');
 	$this->db->join('VX_aln_offer_ref oref', 'oref.pnr_ref =  pf.pnr_ref', 'INNER');

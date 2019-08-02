@@ -470,11 +470,16 @@ $sWhere $sOrder $sLimit";
                         $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
                         $acsr['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
 
+			$excl_arr = array();
+			$excl_arr = $acsr;
+			$excl_arr['frequency'] = $p_freq;
                         if($acsr['season_id'] == 0 ) {
                                 $acsr['frequency'] = $p_freq;
                         }
 
+			$excl_id = $this->eligibility_exclusion_m->apply_excl_rules_before_acsr($excl_arr);	
 
+			if ($excl_id == 0 ) {
 			$acsr_data = $this->acsr_m->apply_acsr_rules($acsr);	
 			$this->data['siteinfos'] = $this->reset_m->get_site();
 		/*	echo "pnr ref: " . $passenger_data->pnr_ref;
@@ -743,9 +748,26 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 			}
 				}
 
+		}else {
+
+			//exclude
+			$array = array();
+                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
+                        $array["modify_date"] = time();
+                        $array["modify_userID"] = $this->session->userdata('loginuserID');
+
+
+                        // update extension table with new status
+                        $p_list = explode(',',$passenger_data->p_list);
+                        $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+				
+		}
+
 
 
 				}
+		
 
 			}
 			

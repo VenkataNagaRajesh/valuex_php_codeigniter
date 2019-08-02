@@ -144,6 +144,81 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, ex.or
 	}
 
 
+
+	public function apply_excl_rules_before_acsr($arr){
+
+	  $rules = $this->apply_exclusion_rules();
+		$matched = 0;
+               if(count($rules) > 0 ) {
+			foreach ( $rules  as $rule ) {
+                                                $query = $this->apply_exclusion_rules(1);
+                                                $query .= ' AND eexcl_id = ' .$rule->eexcl_id;
+
+                                                if ($rule->orig_level != NULL) {
+                                                        $query .= ' AND  (FIND_IN_SET('.$arr["from_city"].', orig_level))';
+                                                }
+                                                if ($rule->dest_level != NULL) {
+                                                        $query .= ' AND  (FIND_IN_SET('.$arr["to_city"].',dest_level))';
+
+                                                }
+
+                                                if($rule->frequency != '0' ) {
+
+                                                        $query .= ' AND (FIND_IN_SET('.$arr["frequency"].',frequency))';
+
+                                                }
+
+						if($rule->flight_efec_date != 0 AND $rule->flight_disc_date != 0 ){
+
+                                                        $date_format =  date('d-m', $arr["dep_date"]);
+                                                        $current_year =  date("Y");
+                                                        $prv_year = $current_year - 1;
+                                                        $current_yr_date = strtotime($date_format.'-'.$current_year);
+                                                        $old_yr_date = strtotime($date_format.'-'.$prv_year);
+
+                                                        $query .= " AND ((flight_efec_date <= ".$current_yr_date." AND flight_disc_date >= " . $current_yr_date . ") OR (flight_efec_date <= ".$old_yr_date." AND flight_disc_date >= "  . $old_yr_date.")) ";
+
+                                                }
+
+                                                if($rule->carrier != 0 ) {
+                                                        $query .= " AND  (carrier = ".$arr['carrier_code']. ")";
+
+                                                }
+
+
+
+						 if($rule->flight_nbr_start != '0' AND $rule->flight_nbr_end != 0 ) {
+                                                        $query .= " AND  (flight_nbr_start <= ". $arr['flight_number']. " and flight_nbr_end >= " . $arr['flight_number']. ")";
+
+                                                }
+
+                                                if($rule->upgrade_from_cabin_type != 0  AND $rule->upgrade_to_cabin_type != 0 ) {
+                                                        $query .= " AND ( upgrade_from_cabin_type = " .$arr['from_cabin']. "  AND upgrade_to_cabin_type = " .$arr['to_cabin']. " ) ";
+                                                }
+
+
+						/*
+
+						 if($rule->flight_dep_start != -1 AND $rule->flight_dep_end != -1 ) {
+
+                                                        $query .= " AND (flight_dep_start <= ".$arr['dept_time']." and flight_dep_end >= ".$arr['dept_time'].")";
+                                                }*/
+
+                                                        $result = $this->install_m->run_query($query);
+                                                        if(count($result) > 0 ) {
+                                                                $matched = $result[0]->excl_grp;
+                                                                break;
+                                                          }
+                                        }
+					
+
+	} 
+
+		return $matched;
+
+	}
+
+
 	function getexclIdForGrpANDCabins($grp,$fc,$tc) {
 
 		$this->db->select('eexcl_id')->from('VX_aln_eligibility_excl_rules');
