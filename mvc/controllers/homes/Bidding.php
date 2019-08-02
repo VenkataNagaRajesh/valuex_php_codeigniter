@@ -83,6 +83,9 @@ class Bidding extends MY_Controller {
 	public function saveBidData(){		
 		if($this->input->post('offer_id')){ 		
 		  if($this->input->post('bid_action') == 1){
+			$data['cash'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
+			$data['miles'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
+			$data["cash_percentage"] = round((($data['cash']/ $this->input->post("tot_bid"))*100),2);
 			$data['offer_id'] = $this->input->post('offer_id');			
 			$data['bid_value'] = $this->input->post("bid_value");			
 			$data['fclr_id'] = $this->input->post("fclr_id");
@@ -113,7 +116,7 @@ class Bidding extends MY_Controller {
 			   $maildata = (array)$offer_data;
 			   $maildata['dep_date'] = date('d/m/Y',$maildata['dep_date']);
 			   $maildata['dep_time'] = gmdate('H:i A',$maildata['dept_time']);
-			   $maildata['cash'] = $this->input->post("cash");
+			   $maildata['cash'] = $this->input->post("bid_value");
 			    $this->load->library('parser');        
 			  $message = $this->parser->parse("home/bidsuccess-temp", $maildata);
 			  $message =html_entity_decode($message);
@@ -232,17 +235,17 @@ class Bidding extends MY_Controller {
             $data['date_added'] = time();			
             $id = $this->bid_m->save_card_data($data);
 			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_complete','20');
-			   $ref['cash'] = $this->input->post("cash");
-			   $ref['miles'] = $this->input->post("miles");
-			   $tot_bid = $this->input->post("tot_bid");
+			   //$ref['cash'] = $this->input->post("cash");
+			  // $ref['miles'] = $this->input->post("miles");
+			   //$tot_bid = $this->input->post("tot_bid");
 			   $ref['offer_status'] = $select_status;
 			   $ref["modify_date"] = time();
-			   if($tot_bid != 0){
+			  /*  if($tot_bid != 0){
 			    $ref["cash_percentage"] = round((($ref['cash']/ $tot_bid)*100),2);
 			   } else {
 				$ref["cash_percentage"] = 0;   
 			   }
-			   $this->mydebug->debug("cash per :".$ref["cash_percentage"]);
+			   $this->mydebug->debug("cash per :".$ref["cash_percentage"]); */
 			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
 			if($id){
 			  $json['status'] = "success";

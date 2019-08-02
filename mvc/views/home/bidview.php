@@ -342,7 +342,7 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 	 var two = min + Math.round((diff)*(50/100));
 	 var three = min+ Math.round((diff)*(75/100));
 	 	 
-	  if(value <= one ){
+	 /*  if(value <= one ){
 	   $('#bid_slider_'+id+'Slider .slider-selection').css({"background":"red"});
 	   $('#bid_slider_'+id+'Slider .slider-handle').css({"background":"red"});
      } else if(value <= two){ 
@@ -354,7 +354,16 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
      } else {
 	    $('#bid_slider_'+id+'Slider .slider-selection').css({"background":"#009900"}); 
 		$('#bid_slider_'+id+'Slider .slider-handle').css({"background":"#009900"});
-     }
+     } */
+	 
+	
+	// $('#bid_slider_'+id+'Slider .slider-selection').css({"background":" -webkit-linear-gradient(top, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"}); 
+	
+	// $('#bid_slider_'+id+'Slider .slider-handle').css({"background":"  -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"},{"background":"-webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"});
+	$('#bid_slider_'+id+'Slider .slider-selection').css({"background":"  -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"},{"background":"-webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"});
+	 
+	 
+	 
  }
  
  function mileSliderUpdate(){	  
@@ -396,7 +405,7 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 				  async: false,
 				  type: 'POST',
 				  url: "<?=base_url('homes/bidding/saveBidData')?>",          
-				  data: {"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id,'bid_action':bid_action},
+				  data: {"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id,'bid_action':bid_action,"tot_cash":pay_cash,"tot_miles":miles,"tot_bid":tot_bid},
 				  dataType: "html",			
 				  success: function(data) {
 					var info = jQuery.parseJSON(data);              		
