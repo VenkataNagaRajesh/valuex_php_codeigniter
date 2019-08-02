@@ -271,7 +271,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext
                      LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
 		     LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
 		     LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = pf.carrier_code AND dai.aln_data_typeID = 12)
-		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency AND dfre.aln_data_typeID = 14)
+		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = pf.frequency AND dfre.aln_data_typeID = 14)
 		     LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13)
                      LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13)
 		     INNER JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
@@ -311,7 +311,7 @@ $sWhere $sOrder $sLimit";
 			$feed->fclr_id = '<a target="_new" style="color:blue;" href="'.base_url('fclr/index/'.$feed->fclr_id).'"  >'.$feed->fclr_id.'</a>';
 			$feed->dtpf_id = '<a target="_new" style="color:blue;" href="'.base_url('paxfeed/index/'.$feed->dtpf_id).'"  >'.$feed->dtpf_id.'</a>';
 
-			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default season";
+			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default";
 			$feed->departure_date = date('d-m-Y',$feed->departure_date);
                                 $output['aaData'][] = $feed;
 

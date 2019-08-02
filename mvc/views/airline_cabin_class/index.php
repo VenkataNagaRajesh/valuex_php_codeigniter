@@ -31,9 +31,11 @@
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
                            <div class="col-sm-3 col-md-2">
-               <?php $airlinesdata['0'] = " Airlines";
-			ksort($airlinesdata);
-                                   echo form_dropdown("carrier", $airlinesdata,set_value("carrier",$carrer), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
+               <?php $airlinelist['0'] = " Airlines";
+			  foreach($airlinesdata as $airline){
+                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                           }
+                                   echo form_dropdown("carrier", $airlinelist,set_value("carrier",$carrer), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
                  <div class="col-sm-3 col-md-2">
 
@@ -75,8 +77,8 @@
                             <tr>
 				<th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
 				<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
-                                <th class="col-lg-1"><?=$this->lang->line('airline_cabin')?></th>
-				<th class="col-lg-1"><?=$this->lang->line('airline_class')?></th>
+                                <th class="col-lg-1">Cabin</th>
+				<th class="col-lg-1">Class</th>
                                 <th class="col-lg-1"><?=$this->lang->line('is_revenue')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('order')?></th>
                                 <?php if(permissionChecker('airline_cabin_class_edit')) { ?>

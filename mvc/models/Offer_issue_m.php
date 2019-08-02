@@ -77,6 +77,41 @@ class Offer_issue_m extends MY_Model {
 		return $passgr;
 	}
 	
+
+	function calculateBidAvg($array){
+
+		$this->db->select('bid_value,bid_id')->from('VX_aln_bid bid');
+		$this->db->join('VX_aln_offer_ref ref', 'ref.offer_id = bid.offer_id', 'INNER');
+		$this->db->join('VX_aln_daily_tkt_pax_feed pf', 'pf.pnr_ref = ref.pnr_ref AND  bid.flight_number = pf.flight_number', 'INNER');
+		$this->db->join('VX_aln_dtpf_ext pext', 'pext.dtpf_id = pf.dtpf_id and bid.fclr_id = pext.fclr_id', 'INNER');
+		$this->db->join('vx_aln_data_defns dd', 'dd.vx_aln_data_defnsID = pext.booking_status and dd.aln_data_typeID = 20', 'LEFT');
+		$this->db->where('pf.carrier_code',$array['carrier_code']);
+		$this->db->where('bid.flight_number',$array['flight_number']);
+		$this->db->where('pf.dep_date',$array['flight_date']);
+		$this->db->where('bid.upgrade_type',$array['upgrade_type']);
+		$this->db->order_by('bid_value','desc');
+		$this->db->order_by('bid_submit_date','asc');
+
+		$query = $this->db->get();
+                 $rResult = $query->result();
+
+		//$query = " SELECT bid_value,bid_id from VX_aln_bid bid  INNER JOIN VX_aln_offer_ref ref on (ref.offer_id = bid.offer_id) INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = ref.pnr_ref AND bid.flight_number = pf.flight_number) INNER JOIN VX_aln_dtpf_ext pext on (pext.dtpf_id = pf.dtpf_id and bid.fclr_id = pext.fclr_id) LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pext.booking_status) where dd.alias = 'bid_complete' AND  pf.carrier_code = ".$array['carrier_code']." AND bid.flight_number = ".$array['flight_number']." AND pf.dep_date = ".$array['flight_date']." AND bid.upgrade_type = ".$array['upgrade_type']. "  order by bid_value desc,bid_submit_date asc";
+		$avg_arr = array_column($rResult,'bid_value');
+		$avg = array_sum($avg_arr)/count($avg_arr);
+		$i = 1;
+		foreach($rResult as $b){
+			$data =array();
+			$data['bid_avg'] = $avg;
+			$data['rank'] = $i;
+			 $this->db->where('bid_id',$b->bid_id);
+                         $this->db->update('VX_aln_bid',$data);
+			$i++;
+		}
+		
+
+	}
+
+
 	function checkForUniqueCouponCode($code) {
 		$this->db->select('dtpfext_id')->from('VX_aln_dtpf_ext');
 		$this->db->where('coupon_code',$code);
@@ -110,10 +145,10 @@ public function getOfferDetailsById($id) {
 $query = " select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin, MainSet.to_cabin_code,
-                        MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status  , SubSet.carrier_code, MainSet.min,MainSet.max , SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage
+                        MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status  , SubSet.carrier_code, MainSet.min,MainSet.max , SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, MainSet.rank
 
                 FROM ( 
-                               select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, tcab.aln_data_value as to_cabin, upgrade_type as to_cabin_code, oref.pnr_ref, bid.flight_number,oref.cash_percentage, oref.cash, oref.miles, fclr.min, fclr.max , bs.aln_data_value as offer_status from  VX_aln_offer_ref oref   INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id)   LEFT JOIN vx_aln_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13)  INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  and pf.flight_number = bid.flight_number) INNER JOIN VX_aln_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) INNER JOIN VX_aln_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type) LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) WHERE  oref.offer_id = ".$id."
+                               select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, rank,tcab.aln_data_value as to_cabin, upgrade_type as to_cabin_code, oref.pnr_ref, bid.flight_number,oref.cash_percentage, oref.cash, oref.miles, fclr.min, fclr.max , bs.aln_data_value as offer_status from  VX_aln_offer_ref oref   INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id)   LEFT JOIN vx_aln_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13)  INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  and pf.flight_number = bid.flight_number) INNER JOIN VX_aln_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) INNER JOIN VX_aln_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type) LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) WHERE  oref.offer_id = ".$id."
                      ) as MainSet 
 
                         
@@ -142,6 +177,17 @@ return $rResult;
 
 }
 
+
+function get_flight_date($offer_id,$flight_number){
+	$this->db->select('dep_date,carrier_code')->from('VX_aln_daily_tkt_pax_feed pf');
+	$this->db->join('VX_aln_offer_ref oref', 'oref.pnr_ref =  pf.pnr_ref', 'INNER');
+	$this->db->where('oref.offer_id',$offer_id);
+	$this->db->where('pf.flight_number',$flight_number);
+	$this->db->limit(1);
+        $query = $this->db->get();
+        $result = $query->row();
+	return $result;
+}
 
 
 	function getOfferDetailsForIssue($id) {

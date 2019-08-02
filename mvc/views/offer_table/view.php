@@ -115,7 +115,7 @@
 						<td><?php echo $data->bid_value;?></td>
 						<td><?php echo $p_cnt * $data->min;?></td>
 						<td><?php echo $p_cnt * $data->max;?></td>
-						<td>3</td>
+						<td><?php echo $data->rank;?></td>
 						<td><?php echo $empty_seats ? $empty_seats : 0 ?></td>
 
 

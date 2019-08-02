@@ -690,7 +690,7 @@ $sWhere $sOrder $sLimit";
 			}*/
 
 
-			$feed->season_id = ($feed->season_name) ? ($feed->season_name) : 'default season';
+			$feed->season_id = ($feed->season_name) ? ($feed->season_name) : 'default';
 			$feed->start_date = ($feed->start_date) ? date('d-m-Y',$feed->start_date) : 'NA';
 			$feed->end_date = $feed->end_date ? date('d-m-Y',$feed->end_date) : 'NA';
 

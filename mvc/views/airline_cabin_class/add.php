@@ -24,18 +24,24 @@
                         <label for="carrier" class="col-sm-2 control-label">
                             <?=$this->lang->line("carrier")?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                         <?php
 			 $userTypeID = $this->session->userdata('usertypeID');
+
+			 foreach($airlinesdata as $airline){
+                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                           }
+
 			if($userTypeID == 2){
-                          $default_airlineID =  key($airlinesdata);
+                          $default_airlineID =  key($airlinelist);
                         } else {
                           $default_airlineID = 0;
                       }
 
-			$airlinesdata['0'] = ' carrier';
-			ksort($airlinesdata);
-                        echo form_dropdown("carrier", $airlinesdata, set_value("carrier",$default_airlineID), "id='carrier' class='form-control select2'");
+			
+			$airlinelist['0'] = " Airlines";
+			ksort($airlinelist);
+                        echo form_dropdown("carrier", $airlinelist, set_value("carrier",$default_airlineID), "id='carrier' class='form-control select2'");
                         ?>
                         </div>
                         <span class="col-sm-4 control-label">
