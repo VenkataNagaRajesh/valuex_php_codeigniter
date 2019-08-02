@@ -24,7 +24,7 @@
                         <label for="carrier" class="col-sm-2 control-label">
                             <?=$this->lang->line("carrier")?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                         <?php
                         $airlinelist['0'] = " Airlines";
                          foreach($airlinesdata as $airline){
