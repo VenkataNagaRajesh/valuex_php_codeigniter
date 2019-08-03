@@ -421,7 +421,7 @@ $sWhere $sOrder $sLimit";
 	foreach($rResult as $data ) {
 		$q = "select distinct rbd_markup, flight_number, from_city, to_city,tier_markup, (val + ((rbd_markup * val)/100)) as bid_val , offer_id,bid_submit_date , dep_date, upgrade_type, carrier_code, src_point,  dest_point, cabin,src_point_name, cash,carrier_name, miles, dest_poin_name, dept_time,upgrade_cabin, cash_per FROM (
              SELECT (bid_value + ((pf.tier_markup * bid_value)/100)) as val,pf.dep_date,bid.upgrade_type,pf.flight_number,
-             pf.rbd_markup, pf.tier_markup ,bid.offer_id,oref.cash cash,oref.miles miles, oref.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name, pf.dept_time, dcabin.aln_data_value as upgrade_cabin
+             pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name, pf.dept_time, dcabin.aln_data_value as upgrade_cabin
              from VX_aln_bid bid
              LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )
              LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  pf.is_processed = 1 and pf.active = 1 )

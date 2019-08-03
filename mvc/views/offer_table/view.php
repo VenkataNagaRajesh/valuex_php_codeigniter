@@ -19,14 +19,14 @@
                         $pnr_ref = array_column($ofr,'pnr_ref');
 			$total_bid_price = array_sum(array_column($ofr,'bid_value'));
 			$total_cash_paid = array_sum(array_column($ofr,'cash'));
-			$cash_percentage =  $ofr[0]->cash_percentage;
+			$cash_percentage =  round($ofr[0]->cash_percentage);
 			$miles_percentage = round(100 - $cash_percentage);
                 ?>
 
 			<p>
 				<span>Offer AND BID Information</span>
 				<span>Offer Id:<?php echo $ofr[0]->offer_id?></span>
-				<span>Request:<?php echo date('d/m/Y',$ofr[0]->offer_date)?></span>
+				<span>Offer Date:<?php echo date('d/m/Y',$ofr[0]->offer_date)?></span>
 			</p>
 		</div>
 		<div class="off-pass-dtls">
