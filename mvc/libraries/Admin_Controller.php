@@ -597,7 +597,9 @@ class Admin_Controller extends MY_Controller {
 	
 	 public function sendMailTemplateParser($template,$data){
           $this->load->library('parser');
+		   $this->load->library('email');
 		   $data['base_url'] = base_url();
+		  
          // $template = $this->mailandsmstemplate_m->get_single_mailandsmstemplate(array("mailandsmstemplateID"=>$templateID))->template;		   
          // $message = $this->parser->parse_string($template, $data);
 		  $message = $this->parser->parse($template, $data,TRUE);
@@ -608,17 +610,34 @@ class Admin_Controller extends MY_Controller {
           if($data['tomail']) {                      
             $subject = $data['mail_subject'];
             $email = $data['tomail'];
-            $this->email->set_mailtype("html");
+			$config['protocol']='smtp';
+			$config['smtp_host']='mail.sweken.com';
+			$config['smtp_port']='26';
+			$config['smtp_timeout']='30';
+			$config['smtp_user']='info@sweken.com';
+			$config['smtp_pass']='Infoinfo-9!';
+			$config['charset']='utf-8';
+			$config['newline']="\r\n";
+			$config['wordwrap'] = TRUE;
+			$config['mailtype'] = 'html';
+			$this->email->initialize($config);
+           
             $this->email->from($siteinfos->email,$siteinfos->sname);
             $this->email->to($email);
             $this->email->subject($subject);
             $this->email->message($message);
 		
-            if($this->email->send()) {
+            /* if($this->email->send()) {
                     $this->mydebug->debug("mail sent successfully");
             } else {
                     $this->mydebug->debug($this->lang->line('mail_error'));
-            }
+            } */
+			
+			 if($this->email->send()){
+					  $this->mydebug->debug("email_sent Congragulation Email Send Successfully.");
+			 } else {
+					   $this->mydebug->debug("email_sent You have encountered an error ......".$this->email->print_debugger()) ;	  
+			 }
           }
      }	
 	 
