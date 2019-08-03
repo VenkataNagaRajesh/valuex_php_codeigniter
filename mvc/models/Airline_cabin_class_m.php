@@ -18,6 +18,17 @@ class Airline_cabin_class_m extends MY_Model {
         }
 
 
+
+	 function get_mapped_airlines() {
+
+		$this->db->distinct();
+		$this->db->select('carrier')->from('VX_aln_airline_cabin_class');
+		$query = $this->db->get();
+                $result = $query->result();
+
+                return array_column($result,'carrier');
+        }
+
 	function checkCarrierDataByID($id){
 		$this->db->select('*');
 		$this->db->from('VX_aln_airline_cabin_class');
@@ -31,6 +42,7 @@ class Airline_cabin_class_m extends MY_Model {
 			$arr[$v->airline_class]['cabin'] = $v->airline_cabin; 
 			$arr[$v->airline_class]['is_revenue'] = $v->is_revenue;
 			$arr[$v->airline_class]['order'] = $v->order;
+			 $arr[$v->airline_class]['rbd_markup'] = $v->rbd_markup;
 			
 		}
 		return $arr;
@@ -121,7 +133,7 @@ function getAirlinesToMap($array) {
 
 
 	function getCabinFromClassForCarrier($carrier_id , $class ) {
-		$this->db->select('airline_cabin as cabin_id , aca.code as cabin_code, aca.aln_data_value as cabin_name')->from('VX_aln_airline_cabin_class acc');	
+		$this->db->select('airline_cabin as cabin_id , acc.rbd_markup,  aca.code as cabin_code, aca.aln_data_value as cabin_name')->from('VX_aln_airline_cabin_class acc');	
 		$this->db->join('vx_aln_data_defns aca', 'aca.vx_aln_data_defnsID = acc.airline_cabin','LEFT');
 		$this->db->where('carrier', $carrier_id);
 		$this->db->where('airline_class',$class);
@@ -132,6 +144,8 @@ function getAirlinesToMap($array) {
 
 	}
 }
+
+		
 
 /* End of file user_m.php */
 /* Location: .//D/xampp/htdocs/school/mvc/models/user_m.php */

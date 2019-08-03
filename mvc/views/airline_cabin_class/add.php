@@ -27,9 +27,10 @@
                         <div class="col-sm-4">
                         <?php
 			 $userTypeID = $this->session->userdata('usertypeID');
-
 			 foreach($airlinesdata as $airline){
-                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+					if(!in_array($airline->vx_aln_data_defnsID,$mapped_airlines)){
+                                     		$airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+					}
                            }
 
 			if($userTypeID == 2){
@@ -69,7 +70,7 @@
                 </div>
 
 		  <div class="col-sm-2">
-                       <b style="color:orange;"> <?php echo "RBD Markup";?></b>
+                       <b style="color:orange;"> <?php echo "RBD Markup in %";?></b>
                 </div>
 
 </div>

@@ -75,12 +75,13 @@
                     <table id="carriermaptable" class="table table-bordered dataTable no-footer">
                        <thead>
                             <tr>
-				<th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
+				<th class="col-lg-1"><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
 				<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
                                 <th class="col-lg-1">Cabin</th>
 				<th class="col-lg-1">Class</th>
                                 <th class="col-lg-1"><?=$this->lang->line('is_revenue')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('order')?></th>
+				<th class="col-lg-1">RBD Markup</th>
                                 <?php if(permissionChecker('airline_cabin_class_edit')) { ?>
                                         <th class="col-lg-1 noExport"><?=$this->lang->line('airline_cabin_status')?></th>
                                 <?php } ?>
@@ -133,6 +134,7 @@
                   {"data": "airline_class" },
 		  {"data": "is_revenue" },
 		  {"data": "order" },
+		 {"data": "rbd_markup" },
 		  {"data": "active"},
                   {"data": "action"}
 

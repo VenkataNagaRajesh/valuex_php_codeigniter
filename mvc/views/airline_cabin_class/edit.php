@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-sm-10">
                 <form class="form-horizontal" role="form" method="post"  enctype="multipart/form-data">
-
+		<div id='key-events'>
 		 <?php
                         if(form_error('carrier'))
                             echo "<div class='form-group has-error' >";
@@ -25,20 +25,10 @@
                             <?=$this->lang->line("carrier")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-4">
-                        <?php
+			<input type="text" class="form-control" id="carrier_name" name="carrier_name" value="<?=set_value('carrier_name', $carrier_details->code)?>" readonly>
 
+			 <input type="hidden" class="form-control" id="carrier" name="carrier" value="<?=set_value("carrier",$airline['carrier'])?>" >
 
-			$userTypeID = $this->session->userdata('usertypeID');
-
-                         foreach($airlinesdata as $airlines){
-                                     $airlinelist[$airlines->vx_aln_data_defnsID] = $airlines->code;
-                           }
-
-                        $airlinelist['0'] = " Airlines";
-                        ksort($airlinelist);
-
-                        echo form_dropdown("carrier", $airlinelist, set_value("carrier",$airline['carrier']), "id='carrier' class='form-control select2'");
-                        ?>
                         </div>
                         <span class="col-sm-4 control-label">
                             <?php echo form_error('carrier'); ?>
@@ -56,13 +46,17 @@
                 </div>
 
 
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                         <b style="color:orange;"><?php echo "Revenue/Non-revenue";?></b>
                 </div>
 
 
                 <div class="col-sm-1">
                        <b style="color:orange;"> <?php echo "Order";?></b>
+                </div>
+
+		 <div class="col-sm-2">
+                       <b style="color:orange;"> <?php echo "RBD Markup in %";?></b>
                 </div>
 </div>
 
@@ -90,7 +84,7 @@
 
 
 
-			 <div class="col-sm-2">
+			 <div class="col-sm-3">
                             <?php
                                                           $toggle[1] = "Revenue";
                                                           $toggle[0] = "Non-Revenue";
@@ -107,6 +101,14 @@
 
 			    <input type="text" class="form-control"  name="<?=$val?>" id ="<?=$val?>" value="<?=set_value($val,$airline[$cl][order])?>" >
                         </div>
+
+			  <div class="col-sm-1">
+                                <?php $val = "airdata[".$cl."][rbd_markup]";
+                                ?>
+
+                            <input type="text" class="form-control"  name="<?=$val?>" id ="<?=$val?>" value="<?=set_value($val,$airline[$cl][rbd_markup])?>" >
+                        </div>
+
 </div>
 <?php } ?>
 
@@ -116,6 +118,7 @@
                             <input type="submit" class="btn btn-success" value="<?=$this->lang->line("edit_airline_cabin_class")?>" >
                         </div>
                     </div>
+		</div>
 
                 </form>
             </div>
@@ -128,9 +131,33 @@ $(document).ready(function(){
 $( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Class'
 		         });
 
+
+$(document).keypress(function (e) {
+            if (e.which == 13 && e.target.tagName != 'TEXTAREA') {
+              
+              var txt = $(e.target);
+             var allOther= $("input[type=text]:not([disabled])");
+              var index = jQuery.inArray(txt[0], allOther);
+             var next= $(allOther[index+1]);
+              if(next) next.focus();
+              debugger;
+              //Need to set focus to next active text field here.
+                return false;
+            }
+        });
+
 });
-
-
-
+$(document).ready(function () {
+    $('input').keyup(function (e) {
+        if (e.which == 39)
+            $(this).closest('div').next().find('input').focus();
+        else if (e.which == 37)
+            $(this).closest('div').prev().find('input').focus();
+        else if (e.which == 40)
+            $(this).closest('tr').next().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+        else if (e.which == 38)
+            $(this).closest('tr').prev().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+    });
+});
 
 </script>

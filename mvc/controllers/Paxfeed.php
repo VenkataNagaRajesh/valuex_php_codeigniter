@@ -20,6 +20,9 @@ class Paxfeed extends Admin_Controller {
 	
 	public function index() {
 
+
+
+		$this->paxfeed_m->process_tiermarkup(array("US0401"));
 		$pf_id = htmlentities(escapeString($this->uri->segment(3)));
 		 $this->data['headerassets'] = array(
                         'css' => array(
@@ -129,7 +132,8 @@ class Paxfeed extends Admin_Controller {
               $Reader -> ChangeSheet($Index);
               $i = 0;
                //$time_start = microtime(true);
-		$column = 0;                                          
+		$column = 0;                   
+		 $pax_insert_list = array();                       
              foreach ($Reader as $Row){
 			$column++;
 		$Row = array_map('trim', $Row);
@@ -389,10 +393,11 @@ class Paxfeed extends Admin_Controller {
 
 				$paxfeed['tier'] = $paxfeedraw["tier_markup"];
 
-				if ( $cabin->cabin_code != '') {
-				$paxfeed['rbd_markup'] = $this->preference_m->get_preference_value_bycode('RBD_'.$cabin->cabin_code,'7');
+				//$paxfeed['rbd_markup'] = $this->preference_m->get_preference_value_bycode('RBD_'.$cabin->cabin_code,'7');
+				if($cabin->rbd_markup) {
+				  $paxfeed['rbd_markup'] = $cabin->rbd_markup;
 				} else {
-					$paxfeed['rbd_markup'] = 0;
+					$paxfeed['rbd_markup']  = 0;
 				}
 					 if($this->paxfeed_m->checkPaxFeed($paxfeed)) {
 					
@@ -420,7 +425,7 @@ class Paxfeed extends Admin_Controller {
 						//	print_r($rafeed);exit;
                                                               $insert_id = $this->paxfeed_m->insert_paxfeed($paxfeed);
 								if ( $insert_id ) {
-
+								array_push($pax_insert_list,$paxfeed['pnr_ref']);
 							    $this->mydebug->paxfeed_log("Inserted pax record for row " . $column, 0);
 								} else{
 									$this->mydebug->paxfeed_log("Not inserted pax record for row " . $column .' not a valid data ', 1);
@@ -455,6 +460,9 @@ class Paxfeed extends Admin_Controller {
 		    if(file_exists($file)) {
 		    	unlink($file);					
 		    }			
+
+
+			 $this->paxfeed_m->process_tiermarkup(array_unique($pax_insert_list));
 			 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
 		     redirect(base_url("paxfeed/index")); 	
 		 }	
