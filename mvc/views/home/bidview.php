@@ -48,20 +48,20 @@
 													<div class="col-md-5">
 														<p><?php echo $result->from_city_code; ?></p>
 														<ul>
-															<li><?php echo date('d M Y',$result->dep_date); ?></li>
+															<li><?php echo date('d M',$result->dep_date); ?></li>
 															<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
-															<li><?=$result->time_diff?></li>
-															<li><?=date('H:i a',$result->dep_date+$result->dept_time)?></li>
+															<!--<li><?=$result->time_diff?></li>-->
+															<li><?=date('H:i A',$result->dep_date+$result->dept_time)?></li>
 														</ul>
 													</div>
 													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-fighter-jet"></i></p></div>
 													<div class="col-md-5">
 														<p><?php echo $result->to_city_code; ?></p>
 														<ul>
-															<li><?php echo date('d M Y',$result->arrival_date); ?></li>
+															<li><?php echo date('d M',$result->arrival_date); ?></li>
 															<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
-															<li><?=$result->time_diff?></li>
-															<li><?=date('H:i a',$result->arrival_date+$result->arrival_time)?></li>
+															<!--<li><?=$result->time_diff?></li>-->
+															<li><?=date('H:i A',$result->arrival_date+$result->arrival_time)?></li>
 														</ul>
 													</div>
 												</div>											
@@ -147,7 +147,7 @@
 						<div class="col-md-8 col-md-offset-2">
 							<div class="price-range">
 								<b id="mile-min"> </b>
-       										<input id="miles" data-slider-id='milesSlider' type="text" data-slider-min="0" data-slider-max="<?=$results[0]->miles?>" data-slider-step="5" data-slider-value="<?=$results[0]->miles/2?>" data-slider-handle="square"min-slider-handle="200"/>
+       										<input id="miles" data-slider-id='milesSlider' type="text" data-slider-min="0" data-slider-max="<?=$results[0]->miles?>" data-slider-step="5" data-slider-value="<?=$results[0]->miles/2?>" data-slider-handle="round"min-slider-handle="200"/>
 								<b id="mile-max"></b> 
 							</div>
 						</div>
@@ -186,7 +186,8 @@
 								<div class="col-md-4 actual-cash">
 									<p>Total Cash to be Paid <strong><i class="fa fa-dollar"></i> <b id="paid_cash"></b></strong></p>
 									<p>Total Miles to be Paid : <b id="paid_miles"></b> </p>
-									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$result->offer_id?>)">Pay Now</a>
+									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$result->offer_id?>)">Pay Now</a>	
+                                  					
 								</div>
 							</form>
 						</div>
@@ -202,6 +203,8 @@
 							<img class="img-responsive" src="<?php echo base_url('assets/home/images/multi-bid/mb3.jpg'); ?>" alt="img1">
 						</div>
 					</div>
+					<!--<div id="loading">
+					</div>-->
 				</div>
             </div>
         </div>
@@ -213,6 +216,7 @@ var mile_value = <?=$mile_value?>;
 var mile_proportion = <?=$mile_proportion?>;
 
 $(document).ready(function () {
+	
    $('#milesSlider .slider-selection').css({"background":"#0feded"});
 	   $('#milesSlider .slider-handle').css({"background":"#0feded"});	
    tot_avg = 0;
@@ -383,7 +387,12 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 	  
  }
  
- function saveBid(offer_id){
+ function saveBid(offer_id){	 
+	 	/* var lhtml = '<div class="ring">Loading<span></span></div>';
+		//$('.myloading').html(lhtml);
+		var image = "<?php echo base_url(). 'assets/home/images/Spinner.gif'; ?>";
+$('#loading').html("<img src='"+image+"' />"); */
+		
       var miles = $("#miles").slider('getValue');
       var tot_bid = getTotal();
 	  var pay_cash = tot_bid - Math.round(miles * mile_value);		
@@ -392,7 +401,7 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
           type: 'POST',
           url: "<?=base_url('homes/bidding/saveCardData')?>",          
 		  data: {"card_number" :$('#card_number').val(),"month_expiry":$('#month_expiry').val(),"year_expiry":$('#year_expiry').val(),"cvv":$('#cvv').val(),"offer_id":offer_id,"cash":pay_cash,"miles":miles,"tot_bid":tot_bid},
-          dataType: "html",			
+          dataType: "html",	         		  
           success: function(data) {
             var cardinfo = jQuery.parseJSON(data);              		
             if(cardinfo['status'] == "success"){
@@ -424,7 +433,8 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 				var status = cardinfo['status'];
 				alert($(status).text());
 			}			
-          } 
+          }
+			 		  
      }); 
  } 
  
