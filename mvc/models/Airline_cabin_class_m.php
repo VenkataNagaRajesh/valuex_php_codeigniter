@@ -24,6 +24,7 @@ class Airline_cabin_class_m extends MY_Model {
 		$this->db->where('carrier',$id);
 	        $query = $this->db->get();
 		$result = $query->result();
+		$arr = array();
 		foreach ($result as $v ) {
 			$arr['carrier'] = $v->carrier;
 			$arr[$v->airline_class]['map_id'] = $v->map_id;

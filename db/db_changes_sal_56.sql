@@ -1,0 +1,1 @@
+ insert into vx_aln_data_defns (aln_data_typeID,aln_data_value,alias,create_userID,modify_userID,create_date,modify_date) values ('20','Bid Received','bid_received','1','1','1554788423','1554788423');

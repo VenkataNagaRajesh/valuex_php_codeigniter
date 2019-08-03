@@ -98,7 +98,7 @@ class Bidding extends MY_Controller {
 			  $select_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),1);
 			  $unselect_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"));
 			  
-			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_complete','20');
+			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
 			  $unselect_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_unselect_cabin','20');
 			   $array['booking_status'] = $select_status;
                $array["modify_date"] = time(); 
@@ -243,7 +243,7 @@ class Bidding extends MY_Controller {
 			$data['cvv'] = $this->input->post("cvv");
             $data['date_added'] = time();			
             $id = $this->bid_m->save_card_data($data);
-			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_complete','20');
+			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
 			   $ref['cash'] = $this->input->post("cash");
 			   $ref['miles'] = $this->input->post("miles");
 			   $tot_bid = $this->input->post("tot_bid");

@@ -177,7 +177,7 @@ class Airline_cabin_class extends Admin_Controller {
             $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
 
 
-		   $userTypeID = $this->session->userdata('usertypeID');
+		 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
                 if($userTypeID == 2){
                         $this->data['airlinesdata'] = $this->airline_m->getClientAirline($userID);
@@ -185,10 +185,11 @@ class Airline_cabin_class extends Admin_Controller {
                    $this->data['airlinesdata'] = $this->airline_m->getAirlinesData();
                 }
 
+
 		 $id = htmlentities(escapeString($this->uri->segment(3)));
         if((int)$id) {
             $this->data['airline'] = $this->airline_cabin_class_m->checkCarrierDataByID($id);
-            if($this->data['airline']) {
+            if(count($this->data['airline']) > 0) {
                 if($_POST) {
                     $rules = $this->rules();
                     $this->form_validation->set_rules($rules);
