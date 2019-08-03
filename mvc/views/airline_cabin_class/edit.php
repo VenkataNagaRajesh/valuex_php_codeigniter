@@ -26,10 +26,16 @@
                         </label>
                         <div class="col-sm-4">
                         <?php
-                        $airlinelist['0'] = " Airlines";
-                         foreach($airlinesdata as $airline){
-                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+
+
+			$userTypeID = $this->session->userdata('usertypeID');
+
+                         foreach($airlinesdata as $airlines){
+                                     $airlinelist[$airlines->vx_aln_data_defnsID] = $airlines->code;
                            }
+
+                        $airlinelist['0'] = " Airlines";
+                        ksort($airlinelist);
 
                         echo form_dropdown("carrier", $airlinelist, set_value("carrier",$airline['carrier']), "id='carrier' class='form-control select2'");
                         ?>

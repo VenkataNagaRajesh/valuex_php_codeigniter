@@ -43,7 +43,7 @@ class Offer_issue_m extends MY_Model {
 		$this->db->join(' vx_aln_data_defns fc', 'fc.vx_aln_data_defnsID = pf.from_city AND fc.aln_data_typeID = 1', 'LEFT');
 		$this->db->join(' vx_aln_data_defns tc', 'tc.vx_aln_data_defnsID = pf.to_city AND tc.aln_data_typeID = 1', 'LEFT');
 		$this->db->where('offer_id',$offerid); 
-		$this->db->where('dd.alias','bid_complete');
+		$this->db->where('dd.alias','bid_received');
 		$this->db->where('pf.flight_number',$flight_number);
 		$this->db->group_by(array('pf.pnr_ref' , 'booking_status', 'from_city','to_city','carrier_code','carrier_c', 'from_city_name','to_city_name'));
 		$query = $this->db->get();
@@ -89,6 +89,7 @@ class Offer_issue_m extends MY_Model {
 		$this->db->where('bid.flight_number',$array['flight_number']);
 		$this->db->where('pf.dep_date',$array['flight_date']);
 		$this->db->where('bid.upgrade_type',$array['upgrade_type']);
+		$this->db->where('dd.alias','bid_received');
 		$this->db->order_by('bid_value','desc');
 		$this->db->order_by('bid_submit_date','asc');
 

@@ -59,7 +59,7 @@
                 </div>
 
 
-		<div class="col-sm-2">
+		<div class="col-sm-3">
                         <b style="color:orange;"><?php echo "Revenue/Non-revenue";?></b>
                 </div>
 
@@ -67,6 +67,11 @@
 		<div class="col-sm-1">
                        <b style="color:orange;"> <?php echo "Order";?></b>
                 </div>
+
+		  <div class="col-sm-2">
+                       <b style="color:orange;"> <?php echo "RBD Markup";?></b>
+                </div>
+
 </div>
 
 		<?php  $alphas = range('A', 'Z');
@@ -84,17 +89,17 @@
 				$airlinecabins['0'] = 'Select cabin';
 				ksort($airlinecabins);
 				$val = "airdata[".$cl."][cabin]";
-				echo form_dropdown($val, $airlinecabins, set_value($val), "id=$val   class='form-control hide-dropdown-icon'");
+				echo form_dropdown($val, $airlinecabins, set_value($val), "id=$val   class='form-control hide-dropdown-icon select2'");
 ?>                        </div>
 
 
 
-			 <div class="col-sm-2">
+			 <div class="col-sm-3">
                             <?php
                                                           $toggle[1] = "Revenue";
                                                           $toggle[0] = "Non-Revenue";
 				 $val = "airdata[".$cl."][is_revenue]";
-                     echo form_dropdown($val, $toggle,set_value($val,1), "id='$val' class='form-control hide-dropdown-icon'");
+                     echo form_dropdown($val, $toggle,set_value($val,1), "id='$val' class='form-control hide-dropdown-icon select2'");
                                                         ?>
                         </div>
 
@@ -105,6 +110,13 @@
 
 			    <input type="text" class="form-control"  name="<?=$val?>" id ="<?=$val?>" value="<?=set_value($val)?>" >
                         </div>
+
+			  <div class="col-sm-1">
+                                <?php $val = "airdata[".$cl."][rbd_markup]"; ?>
+
+                            <input type="text" class="form-control"  name="<?=$val?>" id ="<?=$val?>" value="<?=set_value($val)?>" >
+                        </div>
+
 </div>
 <?php } ?>
 
