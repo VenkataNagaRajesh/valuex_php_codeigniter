@@ -79,7 +79,7 @@
 				$airlinecabins['0'] = 'Select cabin';
 				ksort($airlinecabins);
 				$val = "airdata[".$cl."][cabin]";
-				echo form_dropdown($val, $airlinecabins, set_value($val,$airline[$cl][cabin]), "id=$val   class='form-control hide-dropdown-icon'");
+				echo form_dropdown($val, $airlinecabins, set_value($val,$airline[$cl][cabin]), "id=$val   class='form-control hide-dropdown-icon select2'");
 ?>                        </div>
 
 
@@ -89,7 +89,7 @@
                                                           $toggle[1] = "Revenue";
                                                           $toggle[0] = "Non-Revenue";
 				 $val = "airdata[".$cl."][is_revenue]";
-                     echo form_dropdown($val, $toggle,set_value($val,$airline[$cl][is_revenue]), "id='$val' class='form-control hide-dropdown-icon'");
+                     echo form_dropdown($val, $toggle,set_value($val,$airline[$cl][is_revenue]), "id='$val' class='form-control hide-dropdown-icon select2'");
                                                         ?>
                         </div>
 
