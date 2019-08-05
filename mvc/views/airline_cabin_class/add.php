@@ -109,13 +109,13 @@
 			 <div class="col-sm-1">
 				<?php $val = "airdata[".$cl."][order]"; ?>
 
-			    <input type="text" class="form-control"  name="<?=$val?>" id ="<?=$val?>" value="<?=set_value($val)?>" >
+			    <input type="text" class="form-control"  name="<?=$val?>" id ="order_list" value="<?=set_value($val)?>" >
                         </div>
 
 			  <div class="col-sm-1">
                                 <?php $val = "airdata[".$cl."][rbd_markup]"; ?>
 
-                            <input type="text" class="form-control"  name="<?=$val?>" id ="<?=$val?>" value="<?=set_value($val)?>" >
+                            <input type="text" class="form-control"  name="<?=$val?>" id ='markup_list' value="<?=set_value($val)?>" >
                         </div>
 
 </div>
@@ -124,7 +124,7 @@
 <br>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
-                            <input type="submit" class="btn btn-success" value="<?=$this->lang->line("add_airline_cabin_class")?>" >
+                            <input type="submit" class="btn btn-success" value="Save" >
                         </div>
                     </div>
 
@@ -140,6 +140,37 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Class'
 
 });
 
+$(document).ready(function () {
+    $('input').keyup(function (e) {
+        if (e.which == 39)
+            $(this).closest('div').next().find('input').focus();
+        else if (e.which == 37){
+            $(this).closest('div').prev().find('input').focus();
+                }
+        else if (e.which == 40){
+                var cur_e_name = $(this).attr('id');
+                $(this).closest('.form-group').next().find('input[id='+cur_e_name+']').focus();
+                }
+        else if (e.which == 38){
+                var cur_e_name = $(this).attr('id');
+                $(this).closest('.form-group').prev().find('input[id='+cur_e_name+']').focus();
+        }
+    });
+});
+
+
+$(document).keypress(function (e) {
+            if (e.which == 13 && e.target.tagName != 'TEXTAREA') {
+              var txt = $(e.target);
+             var allOther= $("input[type=text]:not([disabled])");
+              var index = jQuery.inArray(txt[0], allOther);
+             var next= $(allOther[index+1]);
+              if(next) next.focus();
+              debugger;
+              //Need to set focus to next active text field here.
+                return false;
+            }
+        });
 
 
 </script>

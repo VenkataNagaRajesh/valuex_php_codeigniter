@@ -99,14 +99,14 @@
 				<?php $val = "airdata[".$cl."][order]"; 
 				?>
 
-			    <input type="text" class="form-control"  name="<?=$val?>" id ="<?=$val?>" value="<?=set_value($val,$airline[$cl][order])?>" >
+			    <input type="text" class="form-control"  id="order_list" name="<?=$val?>" value="<?=set_value($val,$airline[$cl][order])?>" >
                         </div>
 
 			  <div class="col-sm-1">
                                 <?php $val = "airdata[".$cl."][rbd_markup]";
                                 ?>
 
-                            <input type="text" class="form-control"  name="<?=$val?>" id ="<?=$val?>" value="<?=set_value($val,$airline[$cl][rbd_markup])?>" >
+                            <input type="text" class="form-control markup"  id="markup_list" name="<?=$val?>" value="<?=set_value($val,$airline[$cl][rbd_markup])?>" >
                         </div>
 
 </div>
@@ -115,7 +115,7 @@
 <br>
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
-                            <input type="submit" class="btn btn-success" value="<?=$this->lang->line("edit_airline_cabin_class")?>" >
+                            <input type="submit" class="btn btn-success" value="Save" >
                         </div>
                     </div>
 		</div>
@@ -151,12 +151,17 @@ $(document).ready(function () {
     $('input').keyup(function (e) {
         if (e.which == 39)
             $(this).closest('div').next().find('input').focus();
-        else if (e.which == 37)
+        else if (e.which == 37){
             $(this).closest('div').prev().find('input').focus();
-        else if (e.which == 40)
-            $(this).closest('tr').next().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
-        else if (e.which == 38)
-            $(this).closest('tr').prev().find('td:eq(' + $(this).closest('td').index() + ')').find('input').focus();
+		}
+        else if (e.which == 40){
+		var cur_e_name = $(this).attr('id');
+		$(this).closest('.form-group').next().find('input[id='+cur_e_name+']').focus();
+		}
+        else if (e.which == 38){
+		var cur_e_name = $(this).attr('id');
+                $(this).closest('.form-group').prev().find('input[id='+cur_e_name+']').focus();
+	}
     });
 });
 

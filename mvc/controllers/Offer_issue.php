@@ -419,9 +419,8 @@ $sWhere $sOrder $sLimit";
 	$full_offerlist = array();
 	$partial_offerlist = array();	
 	foreach($rResult as $data ) {
-		$q = "select distinct rbd_markup, flight_number, from_city, to_city,tier_markup, (val + ((rbd_markup * val)/100)) as bid_val , offer_id,bid_submit_date , dep_date, upgrade_type, carrier_code, src_point,  dest_point, cabin,src_point_name, cash,carrier_name, miles, dest_poin_name, dept_time,upgrade_cabin, cash_per FROM (
-             SELECT (bid_value + ((pf.tier_markup * bid_value)/100)) as val,pf.dep_date,bid.upgrade_type,pf.flight_number,
-             pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name, pf.dept_time, dcabin.aln_data_value as upgrade_cabin
+		$q = "  SELECT distinct bid_id, bid.rank, bid_markup_val as bid_val,pf.dep_date,bid.upgrade_type,pf.flight_number,
+             pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,  dcabin.aln_data_value as upgrade_cabin
              from VX_aln_bid bid
              LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )
              LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  pf.is_processed = 1 and pf.active = 1 )
@@ -430,10 +429,10 @@ $sWhere $sOrder $sLimit";
              LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code and car.aln_data_typeID = 12)
              LEFT JOIN vx_aln_data_defns dcabin on (dcabin.vx_aln_data_defnsID = bid.upgrade_type and dcabin.aln_data_typeID = 13)
              WHERE bid.offer_id IN (".$data->offer_list .") AND bid.flight_number = " .$data->flight_number .
-          " ) as FirstSet order by bid_val desc,tier_markup desc , rbd_markup desc,cash_per desc,bid_submit_date asc"; 
+          " order by bid.rank desc"; 
 		$offers =  $this->install_m->run_query($q);
-		//var_dump($q);echo "<br><br>";
-		//var_dump($offers); echo "<br><br>";exit;
+		//var_dump($q);echo "<br><br>";exit;
+	//	var_dump($offers); echo "<br><br>";exit;
 		foreach ($offers as $feed ) {
 			$passenger_data = $this->offer_issue_m->getPassengerData($feed->offer_id,$feed->flight_number);	
 			//var_dump($passenger_data);exit;
@@ -672,7 +671,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'miles_used' => $feed->miles,
 							'flight_no' => $feed->carrier_name.$feed->flight_number,
 							'dep_date' => date('d-m-Y',$feed->dep_date),
-							'dep_time' => gmdate('H:i A',$feed->dept_time),
+							'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
 							'origin' => $feed->src_point_name,
 							'destination' => $feed->dest_point_name, 
 							'upgrade_to' => $feed->upgrade_cabin
