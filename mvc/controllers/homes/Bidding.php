@@ -57,13 +57,24 @@ class Bidding extends MY_Controller {
 			$result->time_diff = $dteDiff->format('%d days %H hours %i min');
             $this->data['passengers_count'] = count(explode(',',$result->pax_names)); 			
      	}
-//$this->data['passengers_count'] = 2;		
+       //$this->data['passengers_count'] = 2;		
        // echo $interval->format('%Y years %m months %d days %H hours %i minutes %s seconds');	 exit; 
         $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
         $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
 		$this->data['sent_mail_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 		$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
+		
+		if(!empty($this->session->userdata('pnr_ref'))){
+		  $airline = $this->bid_m->getAirlineLogoByPNR($_GET['pnr_ref']);
+		  if(!empty($airline->logo)){
+		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
+		  } else {
+			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+		  }		  
+		} else {
+			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');			
+		}
        	
 	  //  print_r($this->data['results']); exit;
 		$this->data["subview"] = "home/bidview";
