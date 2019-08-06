@@ -357,6 +357,9 @@ group by mz.market_id";
 		if($this->session->userdata('usertypeID') == 2){		
 			$this->db->where('create_userID',$this->session->userdata('loginuserID'));
 		}
+		if(!empty($this->input->get('carrier'))){
+			$this->db->where('airline_id',$this->input->get('carrier'));
+		}
 		$query = $this->db->get();
 		return $query->row('count');
 	}	
