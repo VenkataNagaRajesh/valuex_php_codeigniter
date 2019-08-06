@@ -599,7 +599,7 @@ class Admin_Controller extends MY_Controller {
           $this->load->library('parser');
 		   $this->load->library('email');
 		   $data['base_url'] = base_url();
-		  
+		 // $data['base_url'] = "http://valuex.sweken.com/";
          // $template = $this->mailandsmstemplate_m->get_single_mailandsmstemplate(array("mailandsmstemplateID"=>$templateID))->template;		   
          // $message = $this->parser->parse_string($template, $data);
 		  $message = $this->parser->parse($template, $data,TRUE);

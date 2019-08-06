@@ -4,7 +4,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="col-md-2">
-						<img class="img-responsive" src="<?php echo base_url('assets/home/images/emir.png'); ?>" alt="logo">
+						<img class="img-responsive" src="<?=$airline_logo?>" alt="logo">
 					</div>
 				</div>
 			</div>
@@ -21,7 +21,7 @@
 						<h2>Upgrade for Sure</h2>
 					</div>
 					<div class="tabulation animate-box">
-						<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="138"></iframe>
+						<iframe src="<?=$airline_video_link?>" width="100%" height="138"></iframe>
 					</div>
 				</div>
 				<div class="col-sm-5 col-md-4">				
@@ -36,7 +36,7 @@
 									else     
 										echo "<div class='col-sm-12' >";
 								  ?>
-									<input type="text" class="form-control" id="pnr" name="pnr" placeholder="PNR" value="<?=set_value('pnr')?>" >
+									<input type="text" class="form-control" id="pnr" name="pnr" placeholder="PNR" value="<?=set_value('pnr',$pnr_ref)?>" >
 									 <span>
 										<?php echo form_error('pnr'); ?>
 									</span>

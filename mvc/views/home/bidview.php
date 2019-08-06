@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="col-md-2">
-				<img class="img-responsive" src="<?php echo base_url('assets/home/images/emir.png'); ?>" alt="logo">
+				<img class="img-responsive" src="<?=$airline_logo?>" alt="logo">
 			</div>
 		</div>
 	</div>

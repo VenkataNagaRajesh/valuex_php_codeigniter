@@ -11,7 +11,7 @@ class Home extends MY_Controller {
          $this->load->model("reset_m");	$this->load->library('email');	 
 		 $this->load->library('session');
 		 $this->load->helper('form');
-         $this->load->library('form_validation');			 
+         $this->load->library('form_validation');	        		 
 	     $language = $this->session->userdata('lang');	  
 		$this->lang->load('home', $language);
 		
@@ -76,10 +76,29 @@ class Home extends MY_Controller {
 	
 	
 	public function index() {
+		//$_GET['pnr_ref'] = 'US0401';
         $this->data = array(
 				'widget' => $this->recaptcha->getWidget(),
 				'script' => $this->recaptcha->getScriptTag(),
 		);
+		if(!empty($_GET['pnr_ref'])){
+		  $airline = $this->bid_m->getAirlineLogoByPNR($_GET['pnr_ref']);
+		  if(!empty($airline->logo)){
+		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
+		  } else {
+			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+		  }
+		  if(!empty($airline->video_links)){
+		    $this->data['airline_video_link'] = str_replace('watch?v=','embed/',$airline->video_links);
+		  } else {
+		    $this->data['airline_video_link'] = 'https://www.youtube.com/embed/_O2_nTt1N6w';
+		  }		 
+		} else {
+			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+			$this->data['airline_video_link'] = 'https://www.youtube.com/embed/_O2_nTt1N6w';
+		}
+		$this->data['pnr_ref'] = $_GET['pnr_ref'];
+		
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);

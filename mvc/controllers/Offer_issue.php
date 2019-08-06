@@ -21,7 +21,17 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("airports_m");
 		$this->load->model("bid_m");
 		$language = $this->session->userdata('lang');		
-		$this->lang->load('offer', $language);		
+		$this->lang->load('offer', $language);	
+     /*  $data = array(
+        'first_name'   => 'Lakshmi',
+        'last_name' => 'Amujuru',
+                'tomail' => 'laxmicme@gmail.com',
+                'pnr_ref' => 'ASSS',
+        'coupon_code' => 'sssssssss',
+                'mail_subject' => "Upgrade Cabin Offer"
+        );
+          $this->sendMailTemplateParser('home/testtemplate',$data);
+       exit;  */ 
 	}	
 	
 
