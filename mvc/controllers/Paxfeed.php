@@ -323,6 +323,12 @@ class Paxfeed extends Admin_Controller {
                                         if(count($pnr_exist) > 0){
                                         $cabin_new_entry = $this->airline_cabin_class_m->validateCabinMapData($paxfeedraw['carrier_code'],$paxfeedraw['class']);
 					$cabin_old_entry = $this->airline_cabin_class_m->validateCabinMapData($pnr_exist->carrier_code,$pnr_exist->class);
+					$is_uniq_pnr_carrier_flight_psgr_num = $this->paxfeedraw_m->get_single_paxfeedraw(array('pnr_ref' => $paxfeedraw['pnr_ref'],'flight_number'=>$paxfeedraw['flight_number'],'carrier_code' => $paxfeedraw['carrier_code'],'pax_nbr' => $paxfeedraw['pax_nbr']));
+					if(count($is_uniq_pnr_carrier_flight_psgr_num) > 0 ){
+						$this->mydebug->paxfeed_log("Multi Pax entry, entry should be unique per pnr,carrier, flight_number, passenger number for row  " . $column , 1);
+                                                continue;
+
+					}
 					
                                           if($paxfeedraw['from_city'] != $pnr_exist->from_city){
 						$this->mydebug->paxfeed_log("Multi Pax entry,  invalid board point for row " . $column , 1);

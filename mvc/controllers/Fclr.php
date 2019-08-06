@@ -752,10 +752,10 @@ $sWhere $sOrder $sLimit";
 		*/
 		
 
-                $feed->average = round($bidAvg,2);
-                $feed->min = round($min,2);
-                $feed->max = round($max,2);
-		$feed->slider_start = round(($bidAvg - (2 * $bidSD)),2); 
+                $feed->average = round($bidAvg,1);
+                $feed->min = round($min,1);
+                $feed->max = round($max,1);
+		$feed->slider_start = round(($bidAvg - (2 * $bidSD)),1); 
 		 return  $feed;
 
  	}
