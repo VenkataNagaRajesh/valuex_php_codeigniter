@@ -12,6 +12,7 @@ class Bidding extends MY_Controller {
 		 $this->load->model("offer_issue_m");
 		 $this->load->model("offer_reference_m");
 		 $this->load->model("rafeed_m");
+		$this->load->model('install_m');
 		 $this->load->model("reset_m");
 		 $this->load->library('session');
          $this->load->helper('form');

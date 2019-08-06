@@ -135,6 +135,7 @@ $("#dep_from_date").datepicker({
     $('#offertable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+	"stateSave": true,
       "sAjaxSource": "<?php echo base_url('offer_issue/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#flight_number").val()},

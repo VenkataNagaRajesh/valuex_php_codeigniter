@@ -128,6 +128,7 @@
     $('#invfeedtable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+      "stateSave": true,
       "sAjaxSource": "<?php echo base_url('invfeed/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "orgAirport","value": $("#origin_airport").val()},

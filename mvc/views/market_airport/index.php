@@ -127,6 +127,7 @@
     $('#tztable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+      "stateSave": true,
       "sAjaxSource": "<?php echo base_url('market_airport/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "marketID","value": $("#market_id").val()},

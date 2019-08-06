@@ -222,6 +222,7 @@ function loaddatatable() {
     $('#fclrtable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+      "stateSave": true,
       "sAjaxSource": "<?php echo base_url('fclr/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#sflight_number").val()},
