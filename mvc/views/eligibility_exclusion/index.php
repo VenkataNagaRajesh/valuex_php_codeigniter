@@ -432,6 +432,7 @@ function loaddatatable() {
   $('#ruleslist').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+      "stateSave": true,
       "sAjaxSource": "<?php echo base_url('eligibility_exclusion/server_processing'); ?>",   
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "scarrier","value": $("#scarrier").val()},

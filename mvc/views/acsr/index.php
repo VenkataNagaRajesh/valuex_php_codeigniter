@@ -211,6 +211,7 @@ $(document).ready(function() {
   $('#ruleslist').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+	"stateSave": true,
       "sAjaxSource": "<?php echo base_url('acsr/server_processing'); ?>",   
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "origID","value": $("#orig_market_id").val()},

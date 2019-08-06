@@ -386,6 +386,7 @@ $sOrder $sLimit";
                 foreach ($rResult as $feed ) {
 			$feed->sno = $rownum;
 			$rownum++;
+			$feed->miles = number_format($feed->miles);
                         $feed->flight_date = date('d-m-Y',$feed->flight_date);
 			$feed->bid_submit_date =  date('d-m-Y H:i:s',$feed->bid_submit_date);
 			$feed->offer_date = date('d-m-Y',$feed->offer_date);
