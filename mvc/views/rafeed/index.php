@@ -197,7 +197,7 @@
        aoData.push({"name": "bookingCountry","value": $("#booking_country").val()},
                    {"name": "bookingCity","value": $("#booking_city").val()},
                    {"name": "boardPoint","value": $("#boarding_point").val()},
-                   {"name": "offPoint","value": $("#offPoint").val()},
+                   {"name": "offPoint","value": $("#off_point").val()},
                    {"name": "Class","value": $("#class").val()},
 			       {"name": "frequency","value": $("#frequency").val()},
                    {"name": "airLine","value": $("#airline_code").val()},

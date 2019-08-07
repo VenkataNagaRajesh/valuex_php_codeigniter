@@ -476,6 +476,7 @@ class Paxfeed extends Admin_Controller {
                                                                 if($k != 'day_of_week' && $k != 'season_id') {
                                                                         if($v == '' ){
                                                                         $this->mydebug->paxfeed_log("There is null value column ".$k. " in row " . $column, 1);
+									$this->paxfeedraw_m->delete_paxfeedraw($raw_pax_id);
                                                                         $insert_flag = 0;
                                                                 }
                                                                 }
