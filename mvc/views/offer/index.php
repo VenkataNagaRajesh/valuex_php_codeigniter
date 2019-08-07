@@ -158,6 +158,15 @@ $("#dep_from_date").datepicker({
                     "success": fnCallback
                          } ); }, 
 
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("biddatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("biddatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [ {"data": "sno" },{"data": "offer_id" },
 				   {"data": "passenger_list" },
 				   {"data": "pnr_ref"},

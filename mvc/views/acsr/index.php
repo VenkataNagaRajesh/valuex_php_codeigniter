@@ -235,6 +235,16 @@ $(document).ready(function() {
                     "data": aoData,
                     "success": fnCallback
                          } ); }, 
+
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("acsrdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("acsrdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [{"data": "id" },
                   {"data": "orig_level" },
                   {"data": "orig_level_value" },

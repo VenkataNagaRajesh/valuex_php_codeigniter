@@ -457,6 +457,16 @@ function loaddatatable() {
                     "data": aoData,
                     "success": fnCallback
                          } ); }, 
+
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("eerdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("eerdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [{"data": "chkbox" },
 		  {"data": "ruleno" },
                   {"data": "excl_reason_desc" },

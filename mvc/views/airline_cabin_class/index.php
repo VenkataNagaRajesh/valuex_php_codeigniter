@@ -129,6 +129,16 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
+
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("accdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("accdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [{"data": "chkbox" },
 		  {"data": "carrier_name"},
 		   {"data": "airline_cabin"},
