@@ -799,14 +799,21 @@ function time_dropdown($val) {
 
 
 
-			if(!empty($this->input->get('day') )){
-				$days = explode(',',$this->input->get('day'));
-				foreach($days as $day){
-					$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-					$sWhere .= 'FIND_IN_SET("'.$day.'",Subset.dayslist)';
-				}
-				
-			}
+
+                 if(!empty($this->input->get('day'))){
+                               $frstr = $this->input->get('day');
+                                $freq = $this->airports_m->getDefnsCodesListByType('14');
+                                 if ( $frstr != '0') {
+                                        $arr = str_split($frstr);
+                                        $freq_str = array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr);              
+                                        foreach($freq_str as $day){
+                                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                                $sWhere .= 'FIND_IN_SET("'.$day.'",SubSet.dayslist)';
+                                        }
+                                  }
+
+                        }
+
 
 
 		$sQuery = "

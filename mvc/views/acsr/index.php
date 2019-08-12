@@ -122,14 +122,7 @@
 <div class="col-sm-12">
 
 		 <div class="col-sm-2">
-
-                        <?php
-                 foreach($days_of_week as $day ) {
-                                $days[$day->vx_aln_data_defnsID] = $day->aln_data_value;
-                        }
-                 echo form_multiselect("day[]", $days, set_value("day"), "id='day' class='form-control select2'");
-
-                        ?>
+  <input type="text" class="form-control" placeholder="Frequency" id="day" name="day" value="<?=set_value('day')?>" >
 
                  </div>
 
