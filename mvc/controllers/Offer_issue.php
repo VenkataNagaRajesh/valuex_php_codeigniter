@@ -21,18 +21,37 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("airports_m");
 		$this->load->model("bid_m");
 		$language = $this->session->userdata('lang');		
-		$this->lang->load('offer', $language);	
-     /*  $data = array(
+		$this->lang->load('offer', $language);  
+     
+	}	
+	
+	function testmail(){
+		 $filename1 = base_url().'assets/home/images/emir.png';
+	  $filename2 = base_url()."assets/home/images/temp1-bnr.jpg";
+	  $filename3 = base_url().'assets/home/images/temp1-hdr-bg.jpg';
+	  
+	  $this->email->attach($filename1);
+      $cid1 = $this->email->attachment_cid($filename1);
+	  $this->email->attach($filename2);
+      $cid2 = $this->email->attachment_cid($filename2);	  
+      $this->email->attach($filename3);
+      $cid3 = $this->email->attachment_cid($filename3);
+	  
+	  $data = array(
         'first_name'   => 'Lakshmi',
         'last_name' => 'Amujuru',
-                'tomail' => 'laxmicme@gmail.com',
-                'pnr_ref' => 'ASSS',
+                'tomail' => 'swekenit@gmail.com',
+                'pnr_ref' => 'US0404',
         'coupon_code' => 'sssssssss',
                 'mail_subject' => "Upgrade Cabin Offer"
         );
-          $this->sendMailTemplateParser('home/testtemplate',$data);
-       exit;  */ 
-	}	
+		$data['logo_cid'] = $cid1;
+        $data['temp_cid'] = $cid2;
+        $data['bgr_file']  = $cid3;
+		$data['files'] = array($filename1,$filename2,$filename3);
+		
+          $this->sendMailTemplateParser('home/upgrade_offer_temp',$data);
+	}
 	
 
         public function view() {
@@ -191,8 +210,28 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 		'pnr_ref' => $offer->pnr_ref,
         'coupon_code' => $coupon_code, 		
 		'mail_subject' => "Upgrade Cabin Offer"		
-        ); 	   
-	  $this->sendMailTemplateParser('home/testtemplate',$data);	
+        ); 	
+
+       
+	  $filename1 = base_url().'assets/home/images/emir.png';
+	  $filename2 = base_url()."assets/home/images/temp1-bnr.jpg";
+	  $filename3 = base_url().'assets/home/images/temp1-hdr-bg.jpg';
+	  
+	  $this->email->attach($filename1);
+      $cid1 = $this->email->attachment_cid($filename1);
+	  $this->email->attach($filename2);
+      $cid2 = $this->email->attachment_cid($filename2);	  
+      $this->email->attach($filename3);
+      $cid3 = $this->email->attachment_cid($filename3);
+	  
+	    
+		$data['logo_cid'] = $cid1;
+        $data['temp_cid'] = $cid2;
+        $data['bgr_file']  = $cid3;
+		
+          $this->sendMailTemplateParser('home/upgrade_offer_temp',$data);
+       		
+	  //$this->sendMailTemplateParser('home/testtemplate',$data);	
 
 		}	
 		
