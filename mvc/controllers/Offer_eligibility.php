@@ -9,6 +9,7 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model("airline_cabin_class_m");
 		$this->load->model("offer_eligibility_m");
 		$this->load->model("eligibility_exclusion_m");
+		$this->load->model("airline_m");
 		$this->load->model("season_m");
 		$this->load->model('paxfeed_m');
 		$this->load->model("marketzone_m");
@@ -81,11 +82,18 @@ class Offer_eligibility extends Admin_Controller {
                 }
 
 
-		
+		                $userID = $this->session->userdata('loginuserID');
+                $userTypeID = $this->session->userdata('usertypeID');
+                if($userTypeID == 2){
+                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
+                           } else {
+                   $this->data['carriers'] = $this->airline_m->getAirlinesData();
+                }
+
 
 		$this->data['country'] = $this->rafeed_m->getCodesByType('2');
 		$this->data['city'] = $this->rafeed_m->getCodesByType('5');
-		$this->data['carriers'] = $this->rafeed_m->getCodesByType('12');
+		//$this->data['carriers'] = $this->rafeed_m->getCodesByType('12');
 		$this->data['airport'] = $this->rafeed_m->getCodesByType('1');
 		$this->data['cabin'] = $this->rafeed_m->getCodesByType('13');
 		$this->data['flights'] = $this->rafeed_m->getNamesByType('16');

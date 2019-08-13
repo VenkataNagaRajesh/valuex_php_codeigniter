@@ -365,6 +365,15 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','dc.c
                         }
 
 
+
+
+		                $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                         $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                        $sWhere .= 'inv.airline_id IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                
+                }
+
 			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
 			invfeed_id, flight_nbr, departure_date, do.code as origin_airport, 

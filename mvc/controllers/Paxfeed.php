@@ -8,6 +8,7 @@ class Paxfeed extends Admin_Controller {
 		$this->load->model('paxfeedraw_m');
 		$this->load->model('rafeed_m');
 		$this->load->model('airports_m');
+		$this->load->model('airline_m');
 		$this->load->model("airline_cabin_m");
 		$this->load->model('airline_cabin_class_m');
         	$this->load->model('preference_m');
@@ -70,8 +71,16 @@ class Paxfeed extends Admin_Controller {
                 }
 
 
+		$userID = $this->session->userdata('loginuserID');
+                $userTypeID = $this->session->userdata('usertypeID');
+                if($userTypeID == 2){
+                        $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+                           } else {
+                   $this->data['airlines'] = $this->airline_m->getAirlinesData();
+                }
+
                 $this->data['city'] = $this->airports_m->getDefnsCodesListByType('3');
-                $this->data['airlines'] = $this->rafeed_m->getCodesByType('12');
+                //$this->data['airlines'] = $this->rafeed_m->getCodesByType('12');
 		$this->data['country'] = $this->airports_m->getDefnsCodesListByType('2');
 		$this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
                 $this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
@@ -697,6 +706,13 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
                         }
 
 
+
+    $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                         $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                        $sWhere .= 'pax.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';              
+                }
 
 
 			

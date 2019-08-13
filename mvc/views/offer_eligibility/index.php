@@ -62,9 +62,14 @@
                                         <h4>Carrier & Status</h4>
                                         <div class="col-sm-12">
                                         <?php
-                        $carriers['0'] = 'Carrier';
-                        ksort($carriers);
-                                                echo form_dropdown("carrier", $carriers,set_value("carrier"), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
+		foreach($carriers as $airline){
+                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+         }
+                 $airlinelist[0]= 'Carrier';
+                  ksort($airlinelist);
+
+
+                                                echo form_dropdown("carrier", $airlinelist,set_value("carrier"), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
                                         </div>
                                         <div class="col-sm-12">
                                                 <?php
