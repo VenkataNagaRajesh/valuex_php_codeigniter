@@ -1,9 +1,9 @@
 <div style="width:1170px;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;background: #333;">
 	<div style="margin-left:-15px;margin-right:-15px;padding:0 15px;">
-		<img style="width:100px;" src="temp-images/emir.png" alt="logo">
+		<img style="width:100px;" src="<?=base_url('assets/home/images/emir.png')?>" alt="logo">
 	</div>
 </div>
-<div style="width:1200px;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;">
+<div style="width:1170px;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;">
 	<div class="row">
 		<div style="padding: 12px;border: solid 1px #333;margin-top:15px;font-family:century gothic;">
 			<div style="padding-left: 15px;padding-right: 15px;">
@@ -14,14 +14,14 @@
 				</p>
 			</div>
 			<div style="padding-left: 15px;padding-right: 15px;width: 50%;margin-left: 41.66667%;">
-				<img style="display: block;max-width: 100%;height: auto;" src="temp-images/temp2-logo.jpg" alt="temp bnr">
+				<img style="display: block;max-width: 100%;height: auto;" src="<?=base_url('assets/home/images/temp2-logo.jpg')?>" alt="temp bnr">
 			</div>
 			<div style="padding-left: 15px;padding-right: 15px;">
 				<h1 style="margin:0;color: #ff6633;font-weight: bold;font-size: 20px;">Hi !<span style="float: right;">Help Center | I'm Not Intrested</span></h1>
 				<p style="font-size:14px;margin: 10px 0;">
 					With AC Bid Upgrade you can enhance your travel experince by enjoying priority. One or more of yourupcoming flight (s) are eligible for bids	
 				</p>
-				<img style="display: block;max-width: 100%;height: auto;width: 100%;" src="temp-images/temp3-bnr.jpg" alt="temp bnr">
+				<img style="display: block;max-width: 100%;height: auto;width: 100%;" src="<?=base_url('assets/home/images/temp3-bnr.jpg')?>" alt="temp bnr">
 				<p class="col-md-4 bk-info" style="width: 33.33333%;position: relative;top: -50px;left: 30px;border: dotted 1px #f5f5f5;font-size: 15px;"><b>BOOKING REFERENECE: <b style="color:#fff;"><?=$pax_data->pnr_ref?></b></b></p>
 			</div>
 			<div style="padding-left: 15px;padding-right: 15px;">
