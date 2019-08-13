@@ -188,6 +188,17 @@ $("#dep_from_date").datepicker({
                     "success": fnCallback
                          } ); }, 
 
+
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("offerdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("offerdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
+
       "columns": [   {"data": "sno" },
 		   {"data": "offer_id" },
 		   {"data": "offer_date" },

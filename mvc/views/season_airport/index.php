@@ -94,6 +94,15 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("smarketdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("smarketdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [{"data": "temp_id" },
 		          {"data": "season_name"},
                   {"data": "airport" },

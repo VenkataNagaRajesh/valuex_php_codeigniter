@@ -132,6 +132,15 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
+		"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("aircabindatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("aircabindatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [{"data": "chkbox" },
 		   {"data": "airline_code"},
 		  {"data": "aircraft_name"},

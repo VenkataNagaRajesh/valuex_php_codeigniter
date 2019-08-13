@@ -225,6 +225,16 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); }, 
+
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("paxdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("paxdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [{"data": "chkbox" },
                   {"data": "airline_code" },
 				  {"data": "pnr_ref" },

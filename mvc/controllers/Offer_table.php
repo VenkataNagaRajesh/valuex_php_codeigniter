@@ -326,10 +326,10 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
                         MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status,
-			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank
+			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val
 
                 FROM ( 
-                                select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, bid_avg,
+                                select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, bid_avg,bid_markup_val,
                                 tcab.code as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank
                                 from  
                                         VX_aln_offer_ref oref 
@@ -345,7 +345,7 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
 
                         
                        INNER  JOIN (
-                                        select  flight_number,group_concat(distinct fqtv) as fqtv ,
+                                        select  flight_number,group_concat(distinct fqtv  SEPARATOR ' ') as fqtv ,
                                                 group_concat(distinct dep_date) as flight_date  ,
                                                 pnr_ref,group_concat(first_name, ' ' , last_name) as p_list , 
                                                 group_concat(distinct cab.code) as from_cabin  , fc.code as from_city, 
@@ -398,8 +398,8 @@ $sOrder $sLimit";
                 }
 
            if(isset($_REQUEST['export'])){
-		  $columns = array("id","Offer Date","Carrier","Flight Number","Flight Date","Board Point","Off Point","Current cabin","Bid Cabin","Bid Amount","Submit Date","PAX Names","FQTV NBR","PNR Reference","Number In Party","Average Fare","cash","miles","offer status");
-		  $rows = array("id","offer_date","carrier","flight_number","flight_date","from_city","to_city","from_cabin","to_cabin","bid_value","bid_submit_date","p_list","fqtv","pnr_ref","p_count","avg_fare","cash","miles","offer_status");
+		  $columns = array("id","Offer Date","Carrier","Flight Number","Flight Date","Board Point","Off Point","Current cabin","Bid Cabin","Bid Amount","Submit Date","PAX Names","FQTV NBR","PNR Reference","Number In Party","Average Fare","Markup Value","Rank","cash","miles","offer status");
+		  $rows = array("id","offer_date","carrier","flight_number","flight_date","from_city","to_city","from_cabin","to_cabin","bid_value","bid_submit_date","p_list","fqtv","pnr_ref","p_count","bid_avg","bid_markup_val","rank","cash","miles","offer_status");
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );

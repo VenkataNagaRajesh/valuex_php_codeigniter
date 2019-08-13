@@ -270,6 +270,16 @@ function loaddatatable() {
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
+
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("mzdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("mzdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [{"data": "cbox" },
 		  {"data": "market_name"},
 		  {"data": "airline_name"},
