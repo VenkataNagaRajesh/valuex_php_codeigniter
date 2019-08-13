@@ -12,6 +12,7 @@ class Bidding extends MY_Controller {
 		 $this->load->model("offer_issue_m");
 		 $this->load->model("offer_reference_m");
 		 $this->load->model("rafeed_m");
+		$this->load->model('install_m');
 		 $this->load->model("reset_m");
 		 $this->load->library('session');
          $this->load->helper('form');
@@ -24,8 +25,8 @@ class Bidding extends MY_Controller {
   
 
     public function index() {  
-     // $this->session->set_userdata('pnr_ref','F90487');
-     // $this->session->set_userdata('validation_check',1);	   
+      //$this->session->set_userdata('pnr_ref','F90442');
+      //$this->session->set_userdata('validation_check',1);	   
 
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
@@ -57,14 +58,26 @@ class Bidding extends MY_Controller {
 			$result->time_diff = $dteDiff->format('%d days %H hours %i min');
             $this->data['passengers_count'] = count(explode(',',$result->pax_names)); 			
      	}
-//$this->data['passengers_count'] = 2;		
+       //$this->data['passengers_count'] = 2;		
        // echo $interval->format('%Y years %m months %d days %H hours %i minutes %s seconds');	 exit; 
         $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
         $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
+		$this->data['sent_mail_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+		$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 		
+		if(!empty($this->session->userdata('pnr_ref'))){
+		  $airline = $this->bid_m->getAirlineLogoByPNR($_GET['pnr_ref']);
+		  if(!empty($airline->logo)){
+		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
+		  } else {
+			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+		  }		  
+		} else {
+			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');			
+		}
        	
-	   // print_r($this->data['results']); exit;
+	  //  print_r($this->data['results']); exit;
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);
 	}
@@ -82,6 +95,9 @@ class Bidding extends MY_Controller {
 	public function saveBidData(){		
 		if($this->input->post('offer_id')){ 		
 		  if($this->input->post('bid_action') == 1){
+			$data['cash'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
+			$data['miles'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
+			$data["cash_percentage"] = round((($data['cash']/ $this->input->post("tot_bid"))*100),2);
 			$data['offer_id'] = $this->input->post('offer_id');			
 			$data['bid_value'] = $this->input->post("bid_value");			
 			$data['fclr_id'] = $this->input->post("fclr_id");
@@ -94,7 +110,7 @@ class Bidding extends MY_Controller {
 			  $select_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),1);
 			  $unselect_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"));
 			  
-			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_complete','20');
+			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
 			  $unselect_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_unselect_cabin','20');
 			   $array['booking_status'] = $select_status;
                $array["modify_date"] = time(); 
@@ -112,7 +128,7 @@ class Bidding extends MY_Controller {
 			   $maildata = (array)$offer_data;
 			   $maildata['dep_date'] = date('d/m/Y',$maildata['dep_date']);
 			   $maildata['dep_time'] = gmdate('H:i A',$maildata['dept_time']);
-			   $maildata['cash'] = $this->input->post("cash");
+			   $maildata['cash'] = $this->input->post("bid_value");
 			    $this->load->library('parser');        
 			  $message = $this->parser->parse("home/bidsuccess-temp", $maildata);
 			  $message =html_entity_decode($message);
@@ -131,6 +147,15 @@ class Bidding extends MY_Controller {
                        //  $this->mydebug->debug("mailstatus : ".$status);
 				
 			  $json['status'] = "success";
+			  
+			    // calculate average and rank
+                  $bid_array['flight_number'] =  $data['flight_number'];
+                  $bid_array['upgrade_type'] = $data['upgrade_type'];
+                  $fly_data = $this->offer_issue_m->get_flight_date($data['offer_id'],$data['flight_number']);
+                  $bid_array['flight_date'] = $fly_data->dep_date;
+                  $bid_array['carrier_code'] = $fly_data->carrier_code;
+                  $this->offer_issue_m->calculateBidAvg($bid_array);
+								
 			  $this->session->unset_userdata('validation_check');
 			  $this->session->unset_userdata('pnr_ref');
     	    }	
@@ -230,7 +255,7 @@ class Bidding extends MY_Controller {
 			$data['cvv'] = $this->input->post("cvv");
             $data['date_added'] = time();			
             $id = $this->bid_m->save_card_data($data);
-			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_complete','20');
+			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
 			   $ref['cash'] = $this->input->post("cash");
 			   $ref['miles'] = $this->input->post("miles");
 			   $tot_bid = $this->input->post("tot_bid");
@@ -241,7 +266,7 @@ class Bidding extends MY_Controller {
 			   } else {
 				$ref["cash_percentage"] = 0;   
 			   }
-			   $this->mydebug->debug("cash per :".$ref["cash_percentage"]);
+			   $this->mydebug->debug("cash per :".$ref["cash_percentage"]); 
 			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
 			if($id){
 			  $json['status'] = "success";

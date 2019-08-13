@@ -88,6 +88,8 @@ $namelist = explode(',',$passenger_data->passengers);
 
 // update inv feed data about processed seats count
 
+	if ( $status == 'accept' ) {
+
         $inv = array();
         $inv['flight_nbr'] = $flight_number;
         $inv['airline_id'] = $passenger_data->carrier_code;
@@ -104,20 +106,19 @@ $namelist = explode(',',$passenger_data->passengers);
 	$upd['modify_date'] = time();
         $this->invfeed_m->update_entries($upd,$inv);
 
-if( $status == 'accept' ) {
 //accept 
-$bid_status = 'bid_accepted';
-$msg_txt = "Bid is accepted";
-$template ="home/upgradeoffertmp";
-} else if ( $status == 'reject' ) { 
-$bid_status = 'bid_cancel';	
-$msg_txt = 'Bid is rejected';
-$template ="home/bidreject-temp";	
-} else {
-	$this->session->set_flashdata('error', 'No Action Status');
-        redirect(base_url("offer_table/view/".$offer_id));
+		$bid_status = 'bid_accepted';
+		$msg_txt = "Bid is accepted";
+		$template ="home/upgradeoffertmp";
+	} else if ( $status == 'reject' ) { 
+		$bid_status = 'bid_reject';	
+		$msg_txt = 'Bid is rejected';
+		$template ="home/bidreject-temp";	
+	} else {
+		$this->session->set_flashdata('error', 'No Action Status');
+        	redirect(base_url("offer_table/view/".$offer_id));
 
-}
+	}
 
 
 // $offer_data = $this->bid_m->get_offer_data($offer_id);
@@ -198,7 +199,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 
 
-            $aColumns = array('MainSet.offer_id','MainSet.offer_date', 'SubSet.carrier','MainSet.flight_number', 'SubSet.flight_date' , 'SubSet.from_city', 'SubSet.to_city', 'SubSet.from_cabin','MainSet.to_cabin', 'MainSet.bid_value','MainSet.bid_submit_date','SubSet.p_list','SubSet.fqtv','MainSet.pnr_ref','1','MainSet.bid_value','MainSet.cash', 'MainSet.miles','MainSet.offer_status','SubSet.from_city_name', 'SubSet.to_city_name');
+            $aColumns = array('MainSet.offer_id','MainSet.offer_id','MainSet.offer_date', 'SubSet.carrier','MainSet.flight_number', 'SubSet.flight_date' , 'SubSet.from_city', 'SubSet.to_city', 'SubSet.from_cabin','MainSet.to_cabin', 'MainSet.bid_value','MainSet.bid_submit_date','SubSet.p_list','SubSet.fqtv','MainSet.pnr_ref','1','MainSet.bid_avg','MainSet.rank','MainSet.cash', 'MainSet.miles','MainSet.offer_status','SubSet.from_city_name', 'SubSet.to_city_name');
 
                 $sLimit = "";
 
@@ -325,11 +326,11 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
                         MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status,
-			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name
+			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val
 
                 FROM ( 
-                                select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, 
-                                tcab.code as to_cabin, oref.pnr_ref, bid.flight_number,oref.cash, oref.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status
+                                select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, bid_avg,bid_markup_val,
+                                tcab.code as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank
                                 from  
                                         VX_aln_offer_ref oref 
                                         INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id) 
@@ -344,7 +345,7 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
 
                         
                        INNER  JOIN (
-                                        select  flight_number,group_concat(distinct fqtv) as fqtv ,
+                                        select  flight_number,group_concat(distinct fqtv  SEPARATOR ' ') as fqtv ,
                                                 group_concat(distinct dep_date) as flight_date  ,
                                                 pnr_ref,group_concat(first_name, ' ' , last_name) as p_list , 
                                                 group_concat(distinct cab.code) as from_cabin  , fc.code as from_city, 
@@ -381,8 +382,11 @@ $sOrder $sLimit";
                 "aaData" => array()
           );
 		       $i = 1;
+		 $rownum = 1 + $_GET['iDisplayStart'];
                 foreach ($rResult as $feed ) {
-			$feed->avg_fare = $feed->bid_value;;
+			$feed->sno = $rownum;
+			$rownum++;
+			$feed->miles = number_format($feed->miles);
                         $feed->flight_date = date('d-m-Y',$feed->flight_date);
 			$feed->bid_submit_date =  date('d-m-Y H:i:s',$feed->bid_submit_date);
 			$feed->offer_date = date('d-m-Y',$feed->offer_date);
@@ -394,8 +398,8 @@ $sOrder $sLimit";
                 }
 
            if(isset($_REQUEST['export'])){
-		  $columns = array("id","Offer Date","Carrier","Flight Number","Flight Date","Board Point","Off Point","Current cabin","Bid Cabin","Bid Amount","Submit Date","PAX Names","FQTV NBR","PNR Reference","Number In Party","Average Fare","cash","miles","offer status");
-		  $rows = array("id","offer_date","carrier","flight_number","flight_date","from_city","to_city","from_cabin","to_cabin","bid_value","bid_submit_date","p_list","fqtv","pnr_ref","p_count","avg_fare","cash","miles","offer_status");
+		  $columns = array("id","Offer Date","Carrier","Flight Number","Flight Date","Board Point","Off Point","Current cabin","Bid Cabin","Bid Amount","Submit Date","PAX Names","FQTV NBR","PNR Reference","Number In Party","Average Fare","Markup Value","Rank","cash","miles","offer status");
+		  $rows = array("id","offer_date","carrier","flight_number","flight_date","from_city","to_city","from_cabin","to_cabin","bid_value","bid_submit_date","p_list","fqtv","pnr_ref","p_count","bid_avg","bid_markup_val","rank","cash","miles","offer_status");
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );

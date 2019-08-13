@@ -1,0 +1,2 @@
+ALTER TABLE VX_aln_bid ADD COLUMN rank int(11) NOT NULL DEFAULT 0 AFTER bid_value;
+ALTER TABLE VX_aln_bid ADD COLUMN bid_avg int(11) NOT NULL DEFAULT 0 AFTER bid_value;

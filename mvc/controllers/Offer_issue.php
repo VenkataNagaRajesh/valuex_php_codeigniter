@@ -21,8 +21,37 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("airports_m");
 		$this->load->model("bid_m");
 		$language = $this->session->userdata('lang');		
-		$this->lang->load('offer', $language);		
+		$this->lang->load('offer', $language);  
+     
 	}	
+	
+	function testmail(){
+		 $filename1 = base_url().'assets/home/images/emir.png';
+	  $filename2 = base_url()."assets/home/images/temp1-bnr.jpg";
+	  $filename3 = base_url().'assets/home/images/temp1-hdr-bg.jpg';
+	  
+	  $this->email->attach($filename1);
+      $cid1 = $this->email->attachment_cid($filename1);
+	  $this->email->attach($filename2);
+      $cid2 = $this->email->attachment_cid($filename2);	  
+      $this->email->attach($filename3);
+      $cid3 = $this->email->attachment_cid($filename3);
+	  
+	  $data = array(
+        'first_name'   => 'Lakshmi',
+        'last_name' => 'Amujuru',
+                'tomail' => 'swekenit@gmail.com',
+                'pnr_ref' => 'US0404',
+        'coupon_code' => 'sssssssss',
+                'mail_subject' => "Upgrade Cabin Offer"
+        );
+		$data['logo_cid'] = $cid1;
+        $data['temp_cid'] = $cid2;
+        $data['bgr_file']  = $cid3;
+		$data['files'] = array($filename1,$filename2,$filename3);
+		
+          $this->sendMailTemplateParser('home/upgrade_offer_temp',$data);
+	}
 	
 
         public function view() {
@@ -58,6 +87,7 @@ $this->data['headerassets'] = array(
                                                 'assets/datepicker/datepicker.js'
                 )
         );
+
 		$this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
                 $this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
 		 $this->data['carrier'] =  $this->airports_m->getDefnsCodesListByType('12');
@@ -180,13 +210,33 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 		'pnr_ref' => $offer->pnr_ref,
         'coupon_code' => $coupon_code, 		
 		'mail_subject' => "Upgrade Cabin Offer"		
-        ); 	   
-	  $this->sendMailTemplateParser('home/testtemplate',$data);	
+        ); 	
+
+       
+	  $filename1 = base_url().'assets/home/images/emir.png';
+	  $filename2 = base_url()."assets/home/images/temp1-bnr.jpg";
+	  $filename3 = base_url().'assets/home/images/temp1-hdr-bg.jpg';
+	  
+	  $this->email->attach($filename1);
+      $cid1 = $this->email->attachment_cid($filename1);
+	  $this->email->attach($filename2);
+      $cid2 = $this->email->attachment_cid($filename2);	  
+      $this->email->attach($filename3);
+      $cid3 = $this->email->attachment_cid($filename3);
+	  
+	    
+		$data['logo_cid'] = $cid1;
+        $data['temp_cid'] = $cid2;
+        $data['bgr_file']  = $cid3;
+		
+          $this->sendMailTemplateParser('home/upgrade_offer_temp',$data);
+       		
+	  //$this->sendMailTemplateParser('home/testtemplate',$data);	
 
 		}	
 		
-		$this->data["subview"] = "offer/index";
-		$this->load->view('_layout_main', $this->data);
+
+		redirect(base_url("offer_issue/index"));
 	}
 
 
@@ -212,8 +262,7 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 
 
 
-            $aColumns = array('MainSet.offer_id','SubSet.passenger_list','MainSet.pnr_ref','SubSet.from_city', 'SubSet.to_city','SubSet.flight_date',
-				'SubSet.carrier', 'SubSet.flight_number','SubSet.from_city_name', 'SubSet.to_city_name');
+            $aColumns = array('MainSet.offer_id','MainSet.offer_id','SubSet.passenger_list','MainSet.pnr_ref','SubSet.from_city', 'SubSet.to_city','SubSet.flight_date','SubSet.carrier', 'SubSet.flight_number','SubSet.from_city_name', 'SubSet.to_city_name');
 
                 $sLimit = "";
 
@@ -228,12 +277,12 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
                                 {
                                         if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
                                         {
-                                                if($_GET['iSortCol_0'] == 8){
-                                                        $sOrder .= " (s.order_no*-1) DESC ,";
-                                                } else {
+                                                //if($_GET['iSortCol_0'] == 8){
+                                                  //      $sOrder .= " (s.order_no*-1) DESC ,";
+                                                //} else {
                                                  $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
                                                         ".$_GET['sSortDir_'.$i] .", ";
-                                                }
+                                                //}
                                         }
                                 }
                                   $sOrder = substr_replace( $sOrder, "", -2 );
@@ -355,17 +404,27 @@ $sWhere $sOrder $sLimit";
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
           );
-                foreach ($rResult as $feed ) {
 
+		$rownum = 1 + $_GET['iDisplayStart'];
+                foreach ($rResult as $feed ) {
+			$feed->sno = $rownum;
+			$rownum++;
                         $boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->from_city_code));
+						$feed->source = $feed->from_city;
+						$feed->dest = $feed->to_city;
                         $feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->from_city.'</a>';
-                         $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->to_city_code));
+                        $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->to_city_code));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->to_city.'</a>';
 			
 			$feed->booking_status = btn_view('offer_issue/view/'.$feed->offer_id, $this->lang->line('view'));
-                        $feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default season";
+                        $feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default";
                         $feed->departure_date = date('d-m-Y',$feed->flight_date);
-			$feed->bid_info = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
+			$bid_cnt = $this->bid_m->getBidByOfferID($feed->offer_id);
+			if($bid_cnt > 0 ) {
+				$feed->bid_info = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
+			} else{
+				$feed->bid_info = 'No Bid';
+			}
 
                                 $output['aaData'][] = $feed;
 
@@ -374,7 +433,7 @@ $sWhere $sOrder $sLimit";
 
                 if(isset($_REQUEST['export'])){
 				  $columns = array('#','Passenger List','PNR Reference','Board Point','Off Point','Departure Date','Carrier','Flight Number');
-				  $rows = array("offer_id","passenger_list","pnr_ref","source_point","dest_point","departure_date","carrier","flight_number");
+				  $rows = array("offer_id","passenger_list","pnr_ref","source","dest","departure_date","carrier","flight_number");
 				  $this->exportall($output['aaData'],$columns,$rows);		
 				} else {	
 				  echo json_encode( $output );
@@ -399,7 +458,7 @@ $sWhere $sOrder $sLimit";
 			INNER JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20)
 			WHERE pf.dep_date >= ".$current_time. " AND pf.dep_date <= " . $tstamp  .
 			" AND dd.alias != 'excl' AND pext.exclusion_id = 0 AND 
-			dd.alias = 'bid_complete'  group by pf.flight_number, pf.carrier_code, pf.dep_date  order by pf.flight_number"; 
+			dd.alias = 'bid_received'  group by pf.flight_number, pf.carrier_code, pf.dep_date  order by pf.flight_number"; 
 
 	//var_dump($sQuery);exit;
 	$rResult = $this->install_m->run_query($sQuery);
@@ -409,9 +468,8 @@ $sWhere $sOrder $sLimit";
 	$full_offerlist = array();
 	$partial_offerlist = array();	
 	foreach($rResult as $data ) {
-		$q = "select distinct rbd_markup, flight_number, from_city, to_city,tier_markup, (val + ((rbd_markup * val)/100)) as bid_val , offer_id,bid_submit_date , dep_date, upgrade_type, carrier_code, src_point,  dest_point, cabin,src_point_name, cash,carrier_name, miles, dest_poin_name, dept_time,upgrade_cabin, cash_per FROM (
-             SELECT (bid_value + ((pf.tier_markup * bid_value)/100)) as val,pf.dep_date,bid.upgrade_type,pf.flight_number,
-             pf.rbd_markup, pf.tier_markup ,bid.offer_id,oref.cash cash,oref.miles miles, oref.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name, pf.dept_time, dcabin.aln_data_value as upgrade_cabin
+		$q = "  SELECT distinct bid_id, bid.rank, bid_markup_val as bid_val,pf.dep_date,bid.upgrade_type,pf.flight_number,
+             pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,  dcabin.aln_data_value as upgrade_cabin
              from VX_aln_bid bid
              LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )
              LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  pf.is_processed = 1 and pf.active = 1 )
@@ -420,10 +478,10 @@ $sWhere $sOrder $sLimit";
              LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code and car.aln_data_typeID = 12)
              LEFT JOIN vx_aln_data_defns dcabin on (dcabin.vx_aln_data_defnsID = bid.upgrade_type and dcabin.aln_data_typeID = 13)
              WHERE bid.offer_id IN (".$data->offer_list .") AND bid.flight_number = " .$data->flight_number .
-          " ) as FirstSet order by bid_val desc,tier_markup desc , rbd_markup desc,cash_per desc,bid_submit_date asc"; 
+          " order by bid.rank desc"; 
 		$offers =  $this->install_m->run_query($q);
-		//var_dump($q);echo "<br><br>";
-		//var_dump($offers); echo "<br><br>";exit;
+		//var_dump($q);echo "<br><br>";exit;
+	//	var_dump($offers); echo "<br><br>";exit;
 		foreach ($offers as $feed ) {
 			$passenger_data = $this->offer_issue_m->getPassengerData($feed->offer_id,$feed->flight_number);	
 			//var_dump($passenger_data);exit;
@@ -460,11 +518,16 @@ $sWhere $sOrder $sLimit";
                         $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
                         $acsr['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
 
+			$excl_arr = array();
+			$excl_arr = $acsr;
+			$excl_arr['frequency'] = $p_freq;
                         if($acsr['season_id'] == 0 ) {
                                 $acsr['frequency'] = $p_freq;
                         }
 
+			$excl_id = $this->eligibility_exclusion_m->apply_excl_rules_before_acsr($excl_arr);	
 
+			if ($excl_id == 0 ) {
 			$acsr_data = $this->acsr_m->apply_acsr_rules($acsr);	
 			$this->data['siteinfos'] = $this->reset_m->get_site();
 		/*	echo "pnr ref: " . $passenger_data->pnr_ref;
@@ -517,7 +580,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                         $this->email->send();
 
 				 $array = array();
-                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_cancel','20');
+                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
                         $array["modify_date"] = time();
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
 			$p_list = explode(',',$passenger_data->p_list);
@@ -657,7 +720,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'miles_used' => $feed->miles,
 							'flight_no' => $feed->carrier_name.$feed->flight_number,
 							'dep_date' => date('d-m-Y',$feed->dep_date),
-							'dep_time' => gmdate('H:i A',$feed->dept_time),
+							'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
 							'origin' => $feed->src_point_name,
 							'destination' => $feed->dest_point_name, 
 							'upgrade_to' => $feed->upgrade_cabin
@@ -733,9 +796,26 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 			}
 				}
 
+		}else {
+
+			//exclude
+			$array = array();
+                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
+                        $array["modify_date"] = time();
+                        $array["modify_userID"] = $this->session->userdata('loginuserID');
+
+
+                        // update extension table with new status
+                        $p_list = explode(',',$passenger_data->p_list);
+                        $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+				
+		}
+
 
 
 				}
+		
 
 			}
 			

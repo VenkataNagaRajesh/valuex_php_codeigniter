@@ -35,3 +35,7 @@ $lang['airline'] = 'Airline';
 $lang['add_flights'] = 'Add Flights';
 $lang['airline_aircraft'] = 'Aircraft';
 $lang['airline_seat_capacity'] = 'Seat Capacity';
+$lang['airline_logo'] = 'Logo';
+$lang['airline_file_browse']='File Upload';
+$lang['airline_clear'] = 'Clear';
+$lang['airline_video_links'] = 'Video Links';

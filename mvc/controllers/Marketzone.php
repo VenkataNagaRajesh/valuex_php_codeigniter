@@ -163,7 +163,6 @@ class Marketzone extends Admin_Controller {
                 }
 
 
-		$userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 		if($userTypeID == 2){
                         $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
@@ -383,7 +382,7 @@ class Marketzone extends Admin_Controller {
         }
 	if ( isset($id)){
 		if($id == 17){
-			$result = $this->marketzone_m->get_marketzones(null,$airline_id,array($market_id));
+			$result = $this->marketzone_m->get_marketzones(null,array($airline_id),array($market_id));
 			
 		   foreach ($result as $market) {                               
                echo "<option value=\"$market->market_id\">",$market->market_name,"</option>";
@@ -404,6 +403,40 @@ class Marketzone extends Admin_Controller {
      }
    }
 
+public function getSubdataTypesForSearch(){
+
+ $userTypeID = $this->session->userdata('usertypeID');
+                if($userTypeID == 2){
+                        $airlineIDS = $this->session->userdata('login_user_airlineID');
+                }else {
+			 $airlineIDS = array();
+		}
+
+        $id = $this->input->post('id');
+        if ( isset($id)){
+                if($id == 17){
+                        $result = $this->marketzone_m->get_marketzones(null,$airlineIDS);
+
+                   foreach ($result as $market) {
+               echo "<option value=\"$market->market_id\">",$market->market_name,"</option>";
+            }
+                } else {
+                  $result = $this->marketzone_m->getSubDataDefns($id);
+              $list = explode(',',$sub_id);
+          // echo "<option value='0'>", SELECT,"</option>";
+            foreach ($result as $defns) {
+                if ( $id == 4 || $id == 5 ) {
+                        echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->aln_data_value,"</option>";
+                }else {
+                        echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->code,"</option>";
+
+                }
+            }
+            }
+     }
+
+
+}
 function getSubListForExcl() {
 
 $id = $this->input->post('id');
@@ -421,7 +454,7 @@ $id = $this->input->post('id');
 		$result = array();
         if ( isset($id)){
                 if($id == 17){
-                        $result = $this->marketzone_m->get_marketzones(null,$airline_id);
+                        $result = $this->marketzone_m->get_marketzones(null,array($airline_id));
 
                    foreach ($result as $market) {
                echo "<option value=\"$market->market_id\">",$market->market_name,"</option>";
@@ -617,6 +650,37 @@ $aColumns =  array('MainSet.market_id','MainSet.market_name','MainSet.airline_na
                                 $sWhere .= 'MainSet.airlineID = '.$this->input->get('airlineID');
                         }
 
+
+			if(!empty($this->input->get('levelvalue'))){
+				$lval = explode(',',$this->input->get('levelvalue'));
+				foreach($lval as $val ) {
+					$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= ' FIND_IN_SET('.$val.',SubSet.level_id_list)';
+				}
+                        }
+
+
+			 if(!empty($this->input->get('inclvalue'))){
+                                $ival = explode(',',$this->input->get('inclvalue'));
+                                foreach($ival as $val ) {
+                                        $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= ' FIND_IN_SET('.$val.',SubSet.incl_id_list)';
+                                }
+                        }
+
+
+
+			 if(!empty($this->input->get('exclvalue'))){
+                                $exval = explode(',',$this->input->get('exclvalue'));
+                                foreach($exval as $val ) {
+                                        $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= ' FIND_IN_SET('.$val.',SubSet.excl_id_list)';
+                                }
+                        }
+
+
+
+
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 		if($userTypeID == 2){
@@ -626,7 +690,7 @@ $aColumns =  array('MainSet.market_id','MainSet.market_name','MainSet.airline_na
 
 $sQuery = "
 SELECT SQL_CALC_FOUND_ROWS MainSet.market_id,MainSet.market_name,MainSet.lname, MainSet.iname, MainSet.ename , SubSet.inclname, SubSet.exclname, SubSet.levelname, MainSet.active ,MainSet.level_id, MainSet.incl_id, MainSet.excl_id,MainSet.airline_name, MainSet.airlineID,
-SubSet.level_d_name, SubSet.incl_d_name , SubSet.excl_d_name, MainSet.airline_full_name
+SubSet.level_d_name, SubSet.incl_d_name , SubSet.excl_d_name, MainSet.airline_full_name,SubSet.level_id_list, SubSet.incl_id_list, SubSet.excl_id_list
 
 FROM
 (
@@ -642,11 +706,11 @@ FROM
 
 LEFT JOIN (
 		select
-    			FirstSet.market_id, FirstSet.level as levelname, ThirdSet.excl as exclname, SecondSet.incl as inclname, FirstSet.level_d_name, SecondSet.incl_d_name , ThirdSet.excl_d_name
+    			FirstSet.market_id, FirstSet.level as levelname, ThirdSet.excl as exclname, SecondSet.incl as inclname, FirstSet.level_d_name, SecondSet.incl_d_name , ThirdSet.excl_d_name,FirstSet.level_id_list, SecondSet.incl_id_list,ThirdSet.excl_id_list
 		from 
 			(         
 
-				 SELECT        m.market_id  as market_id  , 
+				 SELECT        m.market_id  as market_id  ,  m.amz_level_name as level_id_list,
 						COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS level , COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) ) as level_d_name
 						FROM VX_aln_market_zone m 
 						LEFT OUTER JOIN  vx_aln_data_defns c ON 
@@ -658,7 +722,7 @@ LEFT JOIN (
 		LEFT join 
 
 			(          
-				 SELECT        m.market_id  as market_id  , 
+				 SELECT        m.market_id  as market_id  , m.amz_incl_name as incl_id_list,
                                                 COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS incl, COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) ) as incl_d_name
                                                 FROM VX_aln_market_zone m 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 
@@ -671,7 +735,7 @@ LEFT JOIN (
 		LEFT JOIN 
 			(
 
-				  SELECT        m.market_id  as market_id  , 
+				  SELECT        m.market_id  as market_id  ,  m.amz_excl_name as excl_id_list,
                                                 COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS excl , COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name)) as excl_d_name 
                                                 FROM VX_aln_market_zone m 
                                                 LEFT OUTER JOIN  vx_aln_data_defns c ON 

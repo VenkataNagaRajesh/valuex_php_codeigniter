@@ -122,6 +122,7 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
                         return $query->result();
         }
 
+
 	function insert_marketzone($array) {
 		 $this->db->insert("VX_aln_market_zone",$array);
           	return $this->db->insert_id();
@@ -355,6 +356,9 @@ group by mz.market_id";
 		$this->db->select('count(*) count')->from('VX_aln_market_zone');
 		if($this->session->userdata('usertypeID') == 2){		
 			$this->db->where('create_userID',$this->session->userdata('loginuserID'));
+		}
+		if(!empty($this->input->get('carrier'))){
+			$this->db->where('airline_id',$this->input->get('carrier'));
 		}
 		$query = $this->db->get();
 		return $query->row('count');

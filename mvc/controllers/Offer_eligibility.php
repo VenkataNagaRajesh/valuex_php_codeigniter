@@ -96,7 +96,7 @@ class Offer_eligibility extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
 
         if($this->session->userdata('usertypeID') == 2){
-                   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
+                   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('s.create_userID' => $this->session->userdata('loginuserID')),null);
                 }else{
                    $this->data['seasonslist'] = $this->season_m->get_seasons();
                 }
@@ -253,7 +253,7 @@ class Offer_eligibility extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
                 if($userTypeID == 2){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                        $sWhere .= 'pf.carrier IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
+                        $sWhere .= 'pf.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
                 }
 	
 
@@ -262,17 +262,16 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext
 		 boarding_point, dai.code as carrier_code , off_point, season_id,pf.flight_number, fca.code as fcabin, 
             	tca.code as tcabin, dfre.code as day_of_week , sea.season_name,
             	pf.dep_date as departure_date, min,max,average,slider_start,from_cabin, to_cabin,
-		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, ex.excl_grp,
+		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, 
 		pf.pnr_ref
 		     from VX_aln_dtpf_ext pext 
 		     INNER JOIN VX_aln_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_processed = 1 and pf.active = 1)
 		     LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)
-		     LEFT JOIN VX_aln_eligibility_excl_rules ex on (pext.exclusion_id = ex.eexcl_id)
 		     LEFT JOIN VX_aln_season sea on (sea.VX_aln_seasonID = fc.season_id )
                      LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
 		     LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
 		     LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = pf.carrier_code AND dai.aln_data_typeID = 12)
-		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency AND dfre.aln_data_typeID = 14)
+		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = pf.frequency AND dfre.aln_data_typeID = 14)
 		     LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13)
                      LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13)
 		     INNER JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
@@ -290,16 +289,21 @@ $sWhere $sOrder $sLimit";
 		"iTotalDisplayRecords" => $rResultFilterTotal,
 		"aaData" => array()
 	  );
+
+		$rownum = 1 + $_GET['iDisplayStart'];
 		foreach ($rResult as $feed ) {
+			$feed->sno = $rownum;
+			$rownum++;
 			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
-			$feed->spoint = $feed->source_point."(".$boarding_markets.")";
-            $feed->dpoint = $feed->dest_point."(".$dest_markets.")";		
+			$feed->spoint = $feed->source_point;
+            $feed->dpoint = $feed->dest_point;		
 			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
 			 $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
                $feed->bstatus = $feed->booking_status;			  
 			if($feed->booking_status == 'Excluded') {
-				$feed->booking_status = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->excl_grp.'">'.$feed->booking_status.'</a>';
+				$excl_id = $this->eligibility_exclusion_m->getexclIdForGrpANDCabins($feed->exclusion_id,$feed->from_cabin,$feed->to_cabin);
+				$feed->booking_status = '<a href="'.base_url('eligibility_exclusion/index/'.$excl_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->exclusion_id.'">'.$feed->booking_status.'</a>';
 
 			}
             $feed->fclrID = $feed->fclr_id;
@@ -307,7 +311,7 @@ $sWhere $sOrder $sLimit";
 			$feed->fclr_id = '<a target="_new" style="color:blue;" href="'.base_url('fclr/index/'.$feed->fclr_id).'"  >'.$feed->fclr_id.'</a>';
 			$feed->dtpf_id = '<a target="_new" style="color:blue;" href="'.base_url('paxfeed/index/'.$feed->dtpf_id).'"  >'.$feed->dtpf_id.'</a>';
 
-			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default season";
+			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default";
 			$feed->departure_date = date('d-m-Y',$feed->departure_date);
                                 $output['aaData'][] = $feed;
 
@@ -397,7 +401,7 @@ $sWhere $sOrder $sLimit";
 
 						if($rule->frequency != '0' ) {
 
-							$query .= ' AND (FIND_IN_SET('.$f->frequency.',frequency))';
+							$query .= ' AND (FIND_IN_SET('.$p_freq.',frequency))';
 
 						}
 
@@ -428,21 +432,21 @@ $sWhere $sOrder $sLimit";
 						}
 
 
-						if($rule->flight_dep_start != 0 AND $rule->flight_dep_end != 0 ) {
+						if($rule->flight_dep_start != -1 AND $rule->flight_dep_end != -1 ) {
 
 							$query .= " AND (flight_dep_start <= ".$feed->dept_time." and flight_dep_end >= ".$feed->dept_time.")";
 						}
 
 							$result = $this->install_m->run_query($query);
 							if(count($result) > 0 ) {	
-								$matched = $result[0]->eexcl_id;
+								$matched = $result[0]->excl_grp;
 								break;
 							  }
 					}
 
 					if($matched > 0 ) {
 						$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-                                                $ext['exclusion_id'] = $result[0]->eexcl_id;
+                                                $ext['exclusion_id'] = $matched;
                                                 $this->offer_eligibility_m->insert_dtpfext($ext);
 
 					}else {

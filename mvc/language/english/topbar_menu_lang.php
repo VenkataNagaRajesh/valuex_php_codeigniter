@@ -167,16 +167,16 @@ $lang['menu_preference'] = 'Preference';
 $lang['menu_airline_client'] = 'Airline Client';
 
 $lang['menu_eligibility_exclusion'] = 'Eligibility Exclusion Rules';
-$lang['menu_rafeed'] = 'Revenue Accouting Feed';
-$lang['menu_invfeed'] = 'INV feed';
+$lang['menu_rafeed'] = 'Revenue Accouting';
+$lang['menu_invfeed'] = 'Inventory';
 $lang['menu_datatype'] = 'Datatype';
 $lang['menu_airline_cabin_class'] = 'Carrier Cabin Class Mapping'; 
-$lang['menu_paxfeed'] = 'PAX Feed';
+$lang['menu_paxfeed'] = 'PAX';
 $lang['menu_fclr'] = 'Fare Control Range';
 $lang['menu_acsr'] = 'Auto Confirm SetUp Rule';
 $lang['menu_offer_eligibility'] = 'Offer Eligibility';
 $lang['menu_event_status'] = 'Event Status';
 
-$lang['menu_offer_issue'] = 'Offer';
-$lang['menu_offer_table'] = 'Bid';
+$lang['menu_offer_issue'] = 'Offers';
+$lang['menu_offer_table'] = 'Bids';
 /* End Update Menu */

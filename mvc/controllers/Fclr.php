@@ -674,7 +674,7 @@ $sWhere $sOrder $sLimit";
 			$feed->source = $feed->source_point;
 			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip"  data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
 			 $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
-			  $feed->dest = $dest_markets ;
+			  $feed->dest = $feed->dest_point ;
                $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip"  data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
 
 			
@@ -690,7 +690,7 @@ $sWhere $sOrder $sLimit";
 			}*/
 
 
-			$feed->season_id = ($feed->season_name) ? ($feed->season_name) : 'default season';
+			$feed->season_id = ($feed->season_name) ? ($feed->season_name) : 'default';
 			$feed->start_date = ($feed->start_date) ? date('d-m-Y',$feed->start_date) : 'NA';
 			$feed->end_date = $feed->end_date ? date('d-m-Y',$feed->end_date) : 'NA';
 
@@ -752,10 +752,10 @@ $sWhere $sOrder $sLimit";
 		*/
 		
 
-                $feed->average = round($bidAvg,2);
-                $feed->min = round($min,2);
-                $feed->max = round($max,2);
-		$feed->slider_start = round(($bidAvg - (2 * $bidSD)),2); 
+                $feed->average = round($bidAvg,1);
+                $feed->min = round($min,1);
+                $feed->max = round($max,1);
+		$feed->slider_start = round(($bidAvg - (2 * $bidSD)),1); 
 		 return  $feed;
 
  	}

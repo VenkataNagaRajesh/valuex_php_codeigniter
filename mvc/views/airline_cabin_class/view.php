@@ -44,7 +44,7 @@
                                                  <td><?php echo  date('d/m/Y',$data->create_date);?></td>
                                                  <td><?php echo date('d/m/Y',$data->modify_date);?></td>
 
-                                        </tr>";
+                                        </tr>
                                <?php }
                         ?>
 			</tbody>

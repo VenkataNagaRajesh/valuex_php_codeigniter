@@ -202,6 +202,7 @@
     $('#paxfeedtable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+      "stateSave": true,
       "sAjaxSource": "<?php echo base_url('paxfeed/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "bookingCountry","value": $("#booking_country").val()},
@@ -224,6 +225,16 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); }, 
+
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("paxdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("paxdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [{"data": "chkbox" },
                   {"data": "airline_code" },
 				  {"data": "pnr_ref" },
@@ -400,6 +411,33 @@
 $( ".select2" ).select2();
 $('#start_date').datepicker();
 $('#end_date').datepicker();
+
+
+
+$("#start_date").datepicker({
+    }).on('changeDate', function (ev) {
+        $('#end_date').val("").datepicker("update");
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+        var minDate = new Date(formatDate);
+        $('#end_date').datepicker('setStartDate', minDate);
+         $("#end_date").datepicker("setDate" , $(this).val());
+    });
+
+    $("#end_date").datepicker()
+        .on('changeDate', function (selected) {
+
+                var dates = $(this).val();
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+
+            var maxDate = new Date(formatDate);
+            $('#start_date').datepicker('setEndDate', maxDate);
+        });
 
 $(document).ready(function() { 
 

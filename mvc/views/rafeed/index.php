@@ -197,7 +197,7 @@
        aoData.push({"name": "bookingCountry","value": $("#booking_country").val()},
                    {"name": "bookingCity","value": $("#booking_city").val()},
                    {"name": "boardPoint","value": $("#boarding_point").val()},
-                   {"name": "offPoint","value": $("#offPoint").val()},
+                   {"name": "offPoint","value": $("#off_point").val()},
                    {"name": "Class","value": $("#class").val()},
 			       {"name": "frequency","value": $("#frequency").val()},
                    {"name": "airLine","value": $("#airline_code").val()},
@@ -385,6 +385,33 @@ $( ".select2" ).select2();
 
 $("#start_date").datepicker();
 $("#end_date").datepicker();
+
+
+$("#start_date").datepicker({
+    }).on('changeDate', function (ev) {
+        $('#end_date').val("").datepicker("update");
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+        var minDate = new Date(formatDate);
+        $('#end_date').datepicker('setStartDate', minDate);
+         $("#end_date").datepicker("setDate" , $(this).val());
+    });
+
+    $("#end_date").datepicker()
+        .on('changeDate', function (selected) {
+
+                var dates = $(this).val();
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+
+            var maxDate = new Date(formatDate);
+            $('#start_date').datepicker('setEndDate', maxDate);
+        });
+
 
 
 $(document).ready(function () {

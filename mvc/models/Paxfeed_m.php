@@ -50,6 +50,28 @@ class Paxfeed_m extends MY_Model {
                 }
 	}
 
+
+
+	function process_tiermarkup($pnr_list){
+		foreach($pnr_list as $pnr){
+			$this->db->select('tier_markup,rbd_markup')->from('VX_aln_daily_tkt_pax_feed');
+			$this->db->where('pnr_ref',$pnr);
+			$this->db->order_by('tier','desc');
+			$this->db->order_by('rbd_markup','desc');
+			$query = $this->db->get();
+	                $data = $query->result();
+			if(count($data) >= 2) {
+				$arr = array();
+				$arr['rbd_markup'] = $data[0]->rbd_markup;
+				$arr['tier_markup'] = $data[0]->tier_markup;
+				$this->db->where('pnr_ref',$pnr);
+				$this->db->update('VX_aln_daily_tkt_pax_feed',$arr);
+			}
+		}
+
+
+	}
+
 	function update_paxfeed($data, $id = NULL) {
 		parent::update($data, $id);
 		return $id;

@@ -81,6 +81,7 @@
     $('#satable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+	"stateSave": true,
       "sAjaxSource": "<?php echo base_url('season_airport/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "seasonID","value": $("#seasonID").val()},
@@ -93,6 +94,15 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("smarketdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("smarketdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [{"data": "temp_id" },
 		          {"data": "season_name"},
                   {"data": "airport" },

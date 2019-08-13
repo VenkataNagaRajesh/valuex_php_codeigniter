@@ -1,0 +1,41 @@
+Array
+(
+)
+
+Array
+(
+)
+
+Array
+(
+    [photo] => Array
+        (
+            [name] => valuex new logo_3.png
+            [type] => image/png
+            [tmp_name] => C:\xampp\tmp\phpC234.tmp
+            [error] => 0
+            [size] => 40440
+        )
+
+)
+
+UPDATE `VX_aln_offer_ref` SET `offer_status` = '1987', `modify_date` = 1564724376
+WHERE `offer_id` = 4
+UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1564724379
+WHERE `dtpfext_id` IN('7')
+UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1564724379
+WHERE `dtpfext_id` IN('')
+UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1564724382
+WHERE `dtpfext_id` IN('46')
+UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1564724382
+WHERE `dtpfext_id` IN('')
+UPDATE `VX_aln_offer_ref` SET `offer_status` = '1987', `modify_date` = 1564724925
+WHERE `offer_id` = 4
+UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1564724927
+WHERE `dtpfext_id` IN('7')
+UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1564724927
+WHERE `dtpfext_id` IN('')
+UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '1987', `modify_date` = 1564724930
+WHERE `dtpfext_id` IN('46')
+UPDATE `VX_aln_dtpf_ext` SET `booking_status` = '3362', `modify_date` = 1564724930
+WHERE `dtpfext_id` IN('')

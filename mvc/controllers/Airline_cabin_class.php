@@ -82,21 +82,17 @@ class Airline_cabin_class extends Admin_Controller {
                 }
 
 
-		           $userTypeID = $this->session->userdata('usertypeID');
+
+            $this->data['airlinecabins'] = $this->airports_m->getDefnsCodesListByType('13');
+
+
+		  $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-
-
-            $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
-
-		 if($userTypeID == 2){
-                        $this->data['airlinesdata'] = $this->airline_m->getClientAirlineArr($userID);
-
+                if($userTypeID == 2){
+                        $this->data['airlinesdata'] = $this->airline_m->getClientAirline($userID);
                            } else {
-                        $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
-
+                   $this->data['airlinesdata'] = $this->airline_m->getAirlinesData();
                 }
-
-
 
 		$this->data["subview"] = "airline_cabin_class/index";
 		$this->load->view('_layout_main', $this->data);
@@ -118,18 +114,21 @@ class Airline_cabin_class extends Admin_Controller {
                 );
 
 
-	   $userTypeID = $this->session->userdata('usertypeID');
-                $userID = $this->session->userdata('loginuserID');
 
 	    $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
 	    $this->data['deflist'] = $this->airline_cabin_class_m->getListOfMappedCarriers();
 
-		if($userTypeID == 2){
-                        $this->data['airlinesdata'] = $this->airline_m->getClientAirlineArr($userID);
+
+                 $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                        $this->data['airlinesdata'] = $this->airline_m->getClientAirline($userID);
                            } else {
-			$this->data['airlinesdata'] = $this->airline_cabin_class_m->getAirlinesToMap($this->data['deflist']);
-				
+                        $this->data['airlinesdata'] = $this->airline_m->getAirlinesData();
                 }
+
+
+		$this->data['mapped_airlines'] = $this->airline_cabin_class_m->get_mapped_airlines();
 
 		if($_POST) {
 			$rules = $this->rules();
@@ -138,7 +137,6 @@ class Airline_cabin_class extends Admin_Controller {
 				$this->data["subview"] = "airline_cabin_class/add";
 				$this->load->view('_layout_main', $this->data);
 			} else {
-				$date_now = time(); 
 
 				foreach($this->input->post("airdata") as $k=>$v) {
 					if ($v['cabin'] != 0 && $v['order'] != '' && $v['order'] != 0 ) {
@@ -147,8 +145,9 @@ class Airline_cabin_class extends Admin_Controller {
                                 		$array["airline_cabin"] = $v['cabin'];
 						$array['is_revenue'] = $v['is_revenue'];
 						$array['order'] = $v['order'];
-                                		$array["create_date"] = $date_now;
-                                		$array["modify_date"] = $date_now;
+						$array['rbd_markup'] = $v['rbd_markup'] ? $v['rbd_markup'] : 0;
+                                		$array["create_date"] = time();
+                                		$array["modify_date"] = time();
                                 		$array["create_userID"] = $this->session->userdata('loginuserID');
                                 		$array["modify_userID"] = $this->session->userdata('loginuserID');
                                 		$array["active"] = 1;
@@ -177,29 +176,34 @@ class Airline_cabin_class extends Admin_Controller {
                 );
 		
 
-		$userTypeID = $this->session->userdata('usertypeID');
-                $userID = $this->session->userdata('loginuserID');
 
             $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
 
+
+		 $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
                 if($userTypeID == 2){
-                        $this->data['airlinesdata'] = $this->airline_m->getClientAirlineArr($userID);
+                        $this->data['airlinesdata'] = $this->airline_m->getClientAirline($userID);
                            } else {
-                        $this->data['airlinesdata'] = $this->airline_cabin_m->getAirlines();
+                   $this->data['airlinesdata'] = $this->airline_m->getAirlinesData();
                 }
 
 
 		 $id = htmlentities(escapeString($this->uri->segment(3)));
+
+		$this->data['carrier_details'] = $this->airline_m->get_single_airline(array('vx_aln_data_defnsID' => $id));
+
+
         if((int)$id) {
             $this->data['airline'] = $this->airline_cabin_class_m->checkCarrierDataByID($id);
-            if($this->data['airline']) {
+            if(count($this->data['airline']) > 0) {
                 if($_POST) {
-                    $rules = $this->rules();
+                    /*$rules = $this->rules();
                     $this->form_validation->set_rules($rules);
                     if ($this->form_validation->run() == FALSE) {
                         $this->data["subview"] = "/airline_cabin_class/edit";
                         $this->load->view('_layout_main', $this->data);
-                    } else { 
+                    } else { */
 				$this->airline_cabin_class_m->delete_airline_cabin_class(array('carrier'=>$id));
 				foreach($this->input->post("airdata") as $k=>$v) {
                                        if ($v['cabin'] != 0 && $v['order'] != '' && $v['order'] != 0 ) {
@@ -209,6 +213,7 @@ class Airline_cabin_class extends Admin_Controller {
                                                 $array["airline_cabin"] = $v['cabin'];
                                                 $array['is_revenue'] = $v['is_revenue'];
                                                 $array['order'] = $v['order'];
+						$array['rbd_markup'] = $v['rbd_markup'] ? $v['rbd_markup'] : 0;
                                                 $array["create_date"] = time();
                                                 $array["modify_date"] = time();
                                                 $array["create_userID"] = $this->session->userdata('loginuserID');
@@ -223,7 +228,7 @@ class Airline_cabin_class extends Admin_Controller {
 
                             $this->session->set_flashdata('success', $this->lang->line('menu_success'));
                             redirect(base_url("airline_cabin_class/index"));
-                    }
+                   // }
 
                 } else {
                     $this->data["subview"] = "/airline_cabin_class/edit";
@@ -310,7 +315,7 @@ class Airline_cabin_class extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('map_id','carrier','airline_cabin','airline_class','active');
+	    $aColumns =  array('map_id','ac.code','acl.code','airline_class','cm.is_revenue','cm.order','cm.rbd_markup','cm.active','ac.aln_data_value','acl.aln_data_value');
                 $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -324,12 +329,8 @@ class Airline_cabin_class extends Admin_Controller {
                                 {
                                         if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
                                         {
-                                                if($_GET['iSortCol_0'] == 8){
-                                                        $sOrder .= " (s.order_no*-1) DESC ,";
-                                                } else { 
                                                  $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
                                                         ".$_GET['sSortDir_'.$i] .", ";
-                                                }
                                         }
                                 }                               
                                   $sOrder = substr_replace( $sOrder, "", -2 );
@@ -395,8 +396,8 @@ class Airline_cabin_class extends Admin_Controller {
 
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, airline_class,  ac.aln_data_value as carrier_name, cm.carrier , 
-        acl.aln_data_value as airline_cabin,  cm.active , cm.is_revenue, cm.order 
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, airline_class,  ac.code as carrier_name, cm.carrier , 
+        acl.code as airline_cabin,  cm.active , cm.is_revenue, cm.order, cm.rbd_markup
         from VX_aln_airline_cabin_class cm 
         LEFT JOIN vx_aln_data_defns ac on (ac.vx_aln_data_defnsID = cm.carrier) 
         LEFT JOIN  vx_aln_data_defns acl on (acl.vx_aln_data_defnsID = cm.airline_cabin)

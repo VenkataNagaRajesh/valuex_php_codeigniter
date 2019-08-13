@@ -128,6 +128,7 @@
     $('#invfeedtable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+      "stateSave": true,
       "sAjaxSource": "<?php echo base_url('invfeed/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "orgAirport","value": $("#origin_airport").val()},
@@ -144,6 +145,15 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },
+
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("invdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("invdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
 
       "columns": [{"data": "chkbox" },
                   {"data": "airline_code" },

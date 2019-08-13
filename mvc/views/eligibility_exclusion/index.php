@@ -11,7 +11,7 @@
 					</div>
 					<div class="col-md-3 col-sm-3">
 						<div class="col-md-6 col-sm-6">
-							<?php $aln_datatypes['0'] = " Level ";
+							<?php $aln_datatypes['0'] = " Origin Level ";
                                    ksort($aln_datatypes);
 									echo form_dropdown("orig_level_id", $aln_datatypes, set_value("orig_level_id"), "id='orig_level_id' class='form-control select2'");?>
 						</div>
@@ -21,7 +21,7 @@
 					</div>
 					<div class="col-md-3 col-sm-3">
                          <div class="col-md-6 col-sm-6">
-							<?php $aln_datatypes['0'] = " Level ";
+							<?php $aln_datatypes['0'] = "Dest Level ";
                                     ksort($aln_datatypes);
 									echo form_dropdown("dest_level_id", $aln_datatypes, set_value("dest_level_id"), "id='dest_level_id' class='form-control select2'");?>
                           </div>
@@ -354,6 +354,10 @@
 <div class="col-sm-12">
 
 
+                          <div class="col-md-2">
+
+                <input type="text" class="form-control" placeholder='Exclusion ID' id="sexcl_id" name="sexcl_id" value="<?=set_value('sexcl_id',$sexcl_id)?>" >
+                                                </div>
 
 
           <div class="col-sm-2">
@@ -394,9 +398,9 @@
 							<th class="col-lg-1">Rule#</th>
 							<th class="col-lg-1"><?=$this->lang->line('desc')?></th>
 							<th class="col-lg-1"><?php echo "Origin Level";?></th>
-                            				<th class="col-lg-1"><?php echo "Orig Level Value";?></th>
+                            				<th class="col-lg-1"><?php echo "Orig Value";?></th>
 							<th class="col-lg-1"><?php echo "Dest Level";?></th>
-                            				<th class="col-lg-1"><?php echo "Dest Level Value";?></th>
+                            				<th class="col-lg-1"><?php echo "Dest Value";?></th>
 							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_efec_date')?></th>
                             				<th class="col-lg-1"><?=$this->lang->line('flight_disc_date')?></th>
@@ -428,6 +432,7 @@ function loaddatatable() {
   $('#ruleslist').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+      "stateSave": true,
       "sAjaxSource": "<?php echo base_url('eligibility_exclusion/server_processing'); ?>",   
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "scarrier","value": $("#scarrier").val()},
@@ -443,6 +448,7 @@ function loaddatatable() {
                    {"name": "startMins","value": $("#sflight_dep_start_mins").val()},
 		 {"name": "endHrs","value": $("#sflight_dep_end_hrs").val()},
                    {"name": "endMins","value": $("#sflight_dep_end_mins").val()},
+			 {"name": "excl_id","value": $("#sexcl_id").val()},
                    {"name": "active","value": $("#active").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -451,6 +457,16 @@ function loaddatatable() {
                     "data": aoData,
                     "success": fnCallback
                          } ); }, 
+
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("eerdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("eerdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [{"data": "chkbox" },
 		  {"data": "ruleno" },
                   {"data": "excl_reason_desc" },
@@ -617,8 +633,59 @@ $( ".select2" ).select2({closeOnSelect:false,
 $("#flight_efec_date").datepicker();
 $("#flight_disc_date").datepicker();
 
+$("#flight_efec_date").datepicker({
+    }).on('changeDate', function (ev) {
+	$('#flight_disc_date').val("").datepicker("update");
+	var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+	var formatDate = new Date(newDate).getTime();
+        var minDate = new Date(formatDate);
+        $('#flight_disc_date').datepicker('setStartDate', minDate);
+	 $("#flight_disc_date").datepicker("setDate" , $(this).val());
+    });
+
+    $("#flight_disc_date").datepicker()
+        .on('changeDate', function (selected) {
+
+		var dates = $(this).val();
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+
+            var maxDate = new Date(formatDate);
+            $('#flight_efec_date').datepicker('setEndDate', maxDate);
+        });
+
 $("#sflight_efec_date").datepicker();
 $("#sflight_disc_date").datepicker();
+
+$("#sflight_efec_date").datepicker({
+    }).on('changeDate', function (ev) {
+        $('#sflight_disc_date').val("").datepicker("update");
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+        var minDate = new Date(formatDate);
+        $('#sflight_disc_date').datepicker('setStartDate', minDate);
+         $("#sflight_disc_date").datepicker("setDate" , $(this).val());
+    });
+
+    $("#sflight_disc_date").datepicker()
+        .on('changeDate', function (selected) {
+
+                var dates = $(this).val();
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+
+            var maxDate = new Date(formatDate);
+            $('#sflight_efec_date').datepicker('setEndDate', maxDate);
+        });
+
 
 
 
@@ -905,6 +972,7 @@ $('#ruleslist').on('click', '.deleteRow', function() {
 
 
 });
+
 </script>
 
 

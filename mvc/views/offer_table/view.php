@@ -1,4 +1,13 @@
-<div class="off-dtl-page">
+<div class="box">
+  <div class="box-header" style="width:100%;">
+        <h3 class="box-title"><?=$this->lang->line('panel_title')?></h3>       
+        <ol class="breadcrumb">
+            <li><a href="<?=base_url("dashboard/index")?>"><?=$this->lang->line('menu_dashboard')?></a></li>
+			<li><a href="<?=base_url("offer_table/index")?>"><?="Back"?></a></li>
+            <li class="active"><?=$this->lang->line('panel_title')?> <?="view"?></li>
+        </ol>
+  </div><!-- /.box-header -->
+  <div class="off-dtl-page">
 	<div class="col-md-8">
 		<div class="title-bar">
 
@@ -10,14 +19,14 @@
                         $pnr_ref = array_column($ofr,'pnr_ref');
 			$total_bid_price = array_sum(array_column($ofr,'bid_value'));
 			$total_cash_paid = array_sum(array_column($ofr,'cash'));
-			$cash_percentage =  $ofr[0]->cash_percentage;
+			$cash_percentage =  round($ofr[0]->cash_percentage);
 			$miles_percentage = round(100 - $cash_percentage);
                 ?>
 
 			<p>
 				<span>Offer AND BID Information</span>
 				<span>Offer Id:<?php echo $ofr[0]->offer_id?></span>
-				<span>Request:<?php echo date('d/m/Y',$ofr[0]->offer_date)?></span>
+				<span>Offer Date:<?php echo date('d/m/Y',$ofr[0]->offer_date)?></span>
 			</p>
 		</div>
 		<div class="off-pass-dtls">
@@ -54,12 +63,10 @@
 	</div>
 	<div class="col-md-4">
 		<div class="off-status">
-		<?php $status_ofr = implode('<br>',array_column($ofr,'offer_status'));?>
-			<p>Status: <b><?php echo $status_ofr; ?></b></p>
 			<p><b>Offer Price</b><br>
 				<span>Total Price:</span><?php echo array_sum(array_column($ofr,'bid_value'));?><br>
 				<span>Mode:</span> <?php echo $cash_percentage;?>%  Cash, <?php echo $miles_percentage?>% Miles<br>
-				<span>Miles:</span> <?php echo array_sum(array_column($ofr,'miles'));?> <br>
+				<span>Miles:</span> <?php echo number_format(array_sum(array_column($ofr,'miles')));?> <br>
 				<span>Cash:</span> <?php echo array_sum(array_column($ofr,'cash'));?>
 			</p>
 		</div>
@@ -108,17 +115,17 @@
 						<td><?php echo $data->bid_value;?></td>
 						<td><?php echo $p_cnt * $data->min;?></td>
 						<td><?php echo $p_cnt * $data->max;?></td>
-						<td>3</td>
+						<td><?php echo $data->rank;?></td>
 						<td><?php echo $empty_seats ? $empty_seats : 0 ?></td>
 
 
 						<td>
 						<?php
-							if ($data->offer_status == 'Bid Completed' ) { 
+							if ($data->offer_status == 'Bid Received' ) { 
 						?>
-				<a href="<?php echo base_url('offer_table/processbid/'.$data->offer_id.'/'.$data->flight_number.'/accept'); ?>" onclick="<?php if( $empty_seats < $p_cnt) {?> alert('Insufficient seats'); return false; <?php } ?> ; var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Completed' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"><i class="fa fa-check-circle" aria-hidden="true"></i> </a>
+				<a href="<?php echo base_url('offer_table/processbid/'.$data->offer_id.'/'.$data->flight_number.'/accept'); ?>" onclick="<?php if( $empty_seats < $p_cnt) {?> alert('Insufficient seats'); return false; <?php } ?> ; var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"><i class="fa fa-check-circle" aria-hidden="true"></i> </a>
 
-					<a href="<?php echo base_url('offer_table/processbid/'.$data->offer_id.'/'.$data->flight_number.'/reject'); ?>"  onclick="var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Completed' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"  ><i class="fa fa-times-circle-o" aria-hidden="true"></i></a></td>
+					<a href="<?php echo base_url('offer_table/processbid/'.$data->offer_id.'/'.$data->flight_number.'/reject'); ?>"  onclick="var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"  ><i class="fa fa-times-circle-o" aria-hidden="true"></i></a></td>
 
 							<?php } else {
 								echo $data->offer_status;
@@ -129,4 +136,5 @@
 			</table>
 		</div>
 	</div>
+</div>
 </div>

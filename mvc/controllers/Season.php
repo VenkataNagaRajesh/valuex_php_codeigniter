@@ -166,6 +166,16 @@ class Season extends Admin_Controller {
         } else {
           $this->data['destID'] = 0;
         }
+		if(!empty($this->input->post('origValues'))){
+          $this->data['origValues'] = $this->input->post('origValues');
+        } else {
+          $this->data['origValues'] = 0;
+        }
+        if(!empty($this->input->post('destValues'))){
+          $this->data['destValues'] = $this->input->post('destValues');
+        } else {
+          $this->data['destValues'] = 0;
+        }
         if(!empty($this->input->post('active'))){
           $this->data['active'] = $this->input->post('active');
         } else {
@@ -182,16 +192,16 @@ class Season extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
 
         if($this->session->userdata('usertypeID') == 2){
-		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
+		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('s.create_userID' => $this->session->userdata('loginuserID')),null);
 		}else{
-		   $this->data['seasonslist'] = $this->season_m->get_seasons(); 
+		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(); 
 		}  
 		   foreach($this->data['seasonslist'] as $season){
              $season->ams_season_start_date = date('m/d/Y',$season->ams_season_start_date);
 		    $season->ams_season_end_date = date('m/d/Y',$season->ams_season_end_date);
             $season->dates = $this->createDateRange($season->ams_season_start_date,$season->ams_season_end_date);		
            }			
-       //print_r($this->data['seasonslist']); exit;
+      // print_r($this->data['seasonslist']); exit;
 		$this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 			if($userTypeID == 2){
 			  $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
@@ -346,9 +356,9 @@ class Season extends Admin_Controller {
 				
 
 				 if($this->session->userdata('usertypeID') == 2){
-			                   $seasonslist = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
+			                   $seasonslist = $this->season_m->get_seasons_where(array('s.create_userID' => $this->session->userdata('loginuserID')),null);
                 		}else{
-                   				$seasonslist = $this->season_m->get_seasons();
+                   				$seasonslist = $this->season_m->get_seasons_where();
                 		}
                   			 foreach($seasonslist as $season){
 				             $season->ams_season_start_date = date('m/d/Y',$season->ams_season_start_date);
@@ -632,11 +642,11 @@ class Season extends Admin_Controller {
 		if(!empty($this->input->get('origID'))){
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= 's.ams_orig_levelID = '.$this->input->get('origID');		 
-	     }
+	     }			 
 		if(!empty($this->input->get('destID'))){
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= 's.ams_dest_levelID = '.$this->input->get('destID');		 
-	     }
+	     }		 
 		if($this->input->get('active') != NULL){
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= 's.active = '.$this->input->get('active');		 
@@ -645,6 +655,14 @@ class Season extends Admin_Controller {
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= 
 		   " CONCAT(dd.code,'_',dd.aln_data_value) like '%".$this->input->get('airlinecode')."%'";		 
+	     }
+		if(!empty($this->input->get('origValues'))){
+		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+           $sWhere .= "s.ams_orig_level_value like '%".$this->input->get('origValues')."%'";		 
+	     }         
+        if(!empty($this->input->get('destValues'))){
+		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+           $sWhere .= "s.ams_dest_level_value like '%".$this->input->get('destValues')."%'";		 
 	     }		 
 			
 		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_dest_levelID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = s.airlineID LEFT JOIN VX_aln_client c ON c.userID = s.create_userID 
@@ -764,9 +782,9 @@ public function delete_season_bulk_records(){
 		}
 	}
      if($this->session->userdata('usertypeID') == 2){
-		   $json['seasonslist'] = $this->season_m->get_seasons_where(array('create_userID' => $this->session->userdata('loginuserID')),null);
+		   $json['seasonslist'] = $this->season_m->get_seasons_where(array('s.create_userID' => $this->session->userdata('loginuserID')),null);
 		}else{
-		   $json['seasonslist'] = $this->season_m->get_seasons(); 
+		   $json['seasonslist'] = $this->season_m->get_seasons_where(); 
 		}  
 		   foreach($json['seasonslist'] as $season){
              $season->ams_season_start_date = date('m/d/Y',$season->ams_season_start_date);

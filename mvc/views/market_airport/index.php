@@ -127,6 +127,7 @@
     $('#tztable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+      "stateSave": true,
       "sAjaxSource": "<?php echo base_url('market_airport/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "marketID","value": $("#market_id").val()},
@@ -142,6 +143,15 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
+		"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("marketairdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("marketairdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [{"data": "sno" },
 		  {"data": "market_name"},
 		  {"data": "carrier_code"},

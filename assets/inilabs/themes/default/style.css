@@ -4687,3 +4687,13 @@ table{
 	color: #212121 !important;
 	border:none !important;
 }
+.airline-type{
+    padding: 0;
+    margin: 12px 0;
+    margin-bottom: 0;
+}
+.airline-type select{
+	padding:4px;
+	height:28px;
+}
+

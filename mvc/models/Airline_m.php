@@ -40,7 +40,8 @@ class Airline_m extends MY_Model {
 	}
 	
 	public function getAirlineData($id){
-		$this->db->select('dd.*,dd.aln_data_value airline_name,dd.code,u.name modify_by,group_concat( distinct ac.aln_data_value,"/",sc.aln_data_value) as aircraft_seat_capacity,GROUP_CONCAT(d.aln_data_value SEPARATOR ", ") flights')->from('vx_aln_data_defns dd');	
+		$this->db->select('dd.*,dd.aln_data_value airline_name,dd.code,u.name modify_by,group_concat( distinct ac.aln_data_value,"/",sc.aln_data_value) as aircraft_seat_capacity,GROUP_CONCAT(d.aln_data_value SEPARATOR ", ") flights,a.logo,a.video_links')->from('vx_aln_data_defns dd');
+        $this->db->join('VX_aln_airline a','a.airlineID = dd.vx_aln_data_defnsID','LEFT');		
         $this->db->join('vx_aln_data_defns d','d.parentID = dd.vx_aln_data_defnsID AND d.aln_data_typeID = 16','LEFT');
 		$this->db->join('VX_airline_aircraft aa','aa.airlineID = dd.vx_aln_data_defnsID','LEFT');
 		$this->db->join('vx_aln_data_defns ac','ac.vx_aln_data_defnsID = aa.aircraftID AND ac.aln_data_typeID = 21','LEFT');
@@ -188,6 +189,29 @@ class Airline_m extends MY_Model {
 		$result = $query->result();
 		return $result;
 
+	}
+	
+	public function getAirlineLogo($id){
+		$query = $this->db->get_where('VX_aln_airline',array('airlineID'=>$id));
+		return $query->row();
+	}
+	
+	public function update_airlinelogo($data){
+		$airline = $this->getAirlineLogo($data['airlineID']);
+		if(empty($airline)){
+			$data['create_userID'] = $this->session->userdata('loginuserID');
+			$data['modify_userID'] = $this->session->userdata('loginuserID');
+			$data['create_date'] = time();
+			$data['modify_date'] = time();
+			$this->db->insert('VX_aln_airline',$data);
+		} else {
+			$data['modify_userID'] = $this->session->userdata('loginuserID');
+			$data['modify_date'] = time();			
+			$airlineID = $data['airlineID'];
+			unset($data['airlineID']);
+			$this->db->where('airlineID',$airlineID);
+			$this->db->update('VX_aln_airline',$data);
+		}
 	}
 }
 

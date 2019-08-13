@@ -183,6 +183,7 @@ if($end < $start ) {
 
 function valFrequency($num)
 {
+	if ( $num != '' ){
 	$arr = str_split($num);
 	$freq = range(1,7);
 	foreach($arr as $a ) {
@@ -204,6 +205,10 @@ function valFrequency($num)
     {
 	return true;
     }
+
+	} else {
+		return true;
+	}
 }
 	function valMarket($post_string){		
 	  if($post_string == '0'){
@@ -243,6 +248,7 @@ function valFrequency($num)
 	
 	public function index() {
 
+	$excl_id = htmlentities(escapeString($this->uri->segment(3)));
 	 $this->data['headerassets'] = array(
                 'css' => array(
                         'assets/select2/css/select2.css',
@@ -254,6 +260,12 @@ function valFrequency($num)
                                                 'assets/datepicker/datepicker.js'
                 )
         );
+
+
+		if($excl_id > 0 ) {
+
+			$this->data['sexcl_id'] = $excl_id;
+		}
 
 
 		if(!empty($this->input->post('sorig_market_id'))){
@@ -279,7 +291,6 @@ function valFrequency($num)
                 } else {
                          $this->data['toclass'] = 0;
                 }
-
 
 
 
@@ -813,6 +824,13 @@ function time_dropdown($val) {
                         }
 
 
+			 if(!empty($this->input->get('excl_id'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.eexcl_id = '.$this->input->get('excl_id');
+                        }
+
+
+
 		        if(!empty($this->input->get('nbrStart'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.flight_nbr_start <= '.$this->input->get('nbrStart');
@@ -857,6 +875,7 @@ function time_dropdown($val) {
 
 
 
+			
 
 
 
@@ -969,7 +988,7 @@ LEFT JOIN (
 		 $rule->chkbox = "<input type='checkbox'  class='deleteRow' value='".$rule->eexcl_id."'  /> #".$rownum ;
                                 $rownum++;
 
-		$rule->ruleno = 'Rule#'.$rule->excl_grp;
+		$rule->ruleno = $rule->excl_grp;
 		$rule->flight_efec_date = $rule->flight_efec_date ? date('d-m-Y',$rule->flight_efec_date) : 'NA';
                $rule->flight_disc_date = $rule->flight_disc_date ? date('d-m-Y',$rule->flight_disc_date) : 'NA';
 		if ( $rule->flight_dep_start != '-1'){

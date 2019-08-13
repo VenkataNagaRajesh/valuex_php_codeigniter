@@ -20,14 +20,19 @@ class Paxfeed extends Admin_Controller {
 	
 	public function index() {
 
+
+
+		$this->paxfeed_m->process_tiermarkup(array("US0401"));
 		$pf_id = htmlentities(escapeString($this->uri->segment(3)));
 		 $this->data['headerassets'] = array(
                         'css' => array(
                                 'assets/select2/css/select2.css',
-                                'assets/select2/css/select2-bootstrap.css'
+                                'assets/select2/css/select2-bootstrap.css',
+				'assets/datepicker/datepicker.css'
                         ),
                         'js' => array(
-                                'assets/select2/select2.js'
+                                'assets/select2/select2.js',
+				'assets/datepicker/datepicker.js'
                         )
                 );
 
@@ -127,13 +132,15 @@ class Paxfeed extends Admin_Controller {
               $Reader -> ChangeSheet($Index);
               $i = 0;
                //$time_start = microtime(true);
-		$column = 0;                                          
+		$column = 0;                   
+		 $pax_insert_list = array();                       
              foreach ($Reader as $Row){
 			$column++;
+		$Row = array_map('trim', $Row);
                  if($i == 0){ // header checking                                         
 
                   	$flag = 0 ;
-		        $Row = array_map('trim', $Row);
+		       // $Row = array_map('trim', $Row);
 	                $import_header = array_map('strtolower', $Row);
 
                         if(count(array_diff($header,$import_header)) == 0){
@@ -164,20 +171,35 @@ class Paxfeed extends Admin_Controller {
                                                 continue;
                                         }
 
-                                      $paxfeedraw['first_name'] = $Row[array_search('first name',$import_header)];
+                                      $paxfeedraw['first_name'] = trim($Row[array_search('first name',$import_header)]);
 
-                                       if ( strlen($paxfeedraw['first_name']) >= 99 || !ctype_alpha($paxfeedraw['first_name'])) {
+                                       if ( strlen($paxfeedraw['first_name']) >= 99 )  {
                                               $this->mydebug->paxfeed_log("First name should be of length 99 characters in row " . $column , 1);
                                                 continue;
                                         }
 
 
-                                      $paxfeedraw['last_name'] = $Row[array_search('last name',$import_header)];
+					if (!ctype_alpha($paxfeedraw['first_name'])){
+					 $this->mydebug->paxfeed_log( $paxfeedraw['first_name'] . " First name should contain alphabets only in row " .$column  , 1);
+                                                continue;
 
-					if ( strlen($paxfeedraw['last_name']) >= 99 || !ctype_alpha($paxfeedraw['last_name'])) {
+					}
+
+
+                                      $paxfeedraw['last_name'] = trim($Row[array_search('last name',$import_header)]);
+
+					if ( strlen($paxfeedraw['last_name']) >= 99  ) {
                                               $this->mydebug->paxfeed_log("Last name should be of length 99 characters in row " . $column , 1);
                                                 continue;
                                         }
+
+
+						 if (!ctype_alpha($paxfeedraw['last_name'])){
+                                         $this->mydebug->paxfeed_log("Last name should contain alphabets only in row " .$column  , 1);
+                                                continue;
+
+                                        }
+
 
                                       $paxfeedraw['ptc'] = $Row[array_search('ptc',$import_header)];
 
@@ -293,20 +315,94 @@ class Paxfeed extends Admin_Controller {
 
                                         }
 					
+
 					$exist_pax_raw = $this->paxfeedraw_m->checkPaxFeedRaw($paxfeedraw);
 				      if(!$exist_pax_raw) {
 
+		                       $pnr_exist = $this->paxfeedraw_m->get_single_paxfeedraw(array('pnr_ref' => $paxfeedraw['pnr_ref'],'flight_number'=>$paxfeedraw['flight_number']));
+                                        if(count($pnr_exist) > 0){
+                                        $cabin_new_entry = $this->airline_cabin_class_m->validateCabinMapData($paxfeedraw['carrier_code'],$paxfeedraw['class']);
+					$cabin_old_entry = $this->airline_cabin_class_m->validateCabinMapData($pnr_exist->carrier_code,$pnr_exist->class);
+					$is_uniq_pnr_carrier_flight_psgr_num = $this->paxfeedraw_m->get_single_paxfeedraw(array('pnr_ref' => $paxfeedraw['pnr_ref'],'flight_number'=>$paxfeedraw['flight_number'],'carrier_code' => $paxfeedraw['carrier_code'],'pax_nbr' => $paxfeedraw['pax_nbr']));
+					if(count($is_uniq_pnr_carrier_flight_psgr_num) > 0 ){
+						$this->mydebug->paxfeed_log("Multi Pax entry, entry should be unique per pnr,carrier, flight_number, passenger number for row  " . $column , 1);
+                                                continue;
+
+					}
+					
+                                          if($paxfeedraw['from_city'] != $pnr_exist->from_city){
+						$this->mydebug->paxfeed_log("Multi Pax entry,  invalid board point for row " . $column , 1);
+						continue;
+					}
+
+					if($paxfeedraw['to_city'] != $pnr_exist->to_city) {
+
+					 $this->mydebug->paxfeed_log("Multi Pax entry,  invalid off point for row " . $column , 1);
+                                                continue;
+					}
+
+					if($paxfeedraw['dep_date'] != $pnr_exist->dep_date) {
+
+					 $this->mydebug->paxfeed_log("Multi Pax entry,  invalid departure date for row " . $column , 1);
+                                                continue;
+
+					}
+				
+					if( $paxfeedraw['arrival_date'] != $pnr_exist->arrival_date ){
+					$this->mydebug->paxfeed_log("Multi Pax entry,  invalid arrival date for row " . $column , 1);
+                                                continue;
+					}
+
+	
+					if($paxfeedraw['arrival_time'] != $pnr_exist->arrival_time) {
+						 $this->mydebug->paxfeed_log("Multi Pax entry,  invalid arrival time for row " . $column , 1);
+                                                continue;
+					}
+
+
+					if($paxfeedraw['dept_time'] != $pnr_exist->dept_time) {
+						$this->mydebug->paxfeed_log("Multi Pax entry,  invalid departure time for row " . $column , 1);
+                                                continue;
+	
+					}	
+
+					if( $paxfeedraw['carrier_code'] != $pnr_exist->carrier_code) {
+
+						$this->mydebug->paxfeed_log("Multi Pax entry,  invalid carrier code for row " . $column , 1);
+                                                continue;
+					}
+
+					if($cabin_new_entry->cabin_id !=  $cabin_old_entry->cabin_id){
+                                                $this->mydebug->paxfeed_log("Multi Pax entry,  Invalid cabin for row " . $column , 1);
+                                                continue;
+                                        }
+
+					
+
+                                        //        $this->mydebug->paxfeed_log("Multi Pax entry, invalid data for row " . $column , 1);
+					//	$this->mydebug->paxfeed_log("Multi Pax entry ". print_r($paxfeedraw) , 1);
+					//	$this->mydebug->paxfeed_log("Multi Pax entry ". print_r($pnr_exist) , 1);
+					//	 $this->mydebug->paxfeed_log("Multi Pax entry ". print_r($cabin_new_entry) , 1);
+					//	$this->mydebug->paxfeed_log("Multi Pax entry ". print_r($cabin_old_entry) , 1);
+                                        }
+
+					
                                           $paxfeedraw['create_date'] = time();
                                           $paxfeedraw['modify_date'] = time();
                                           $paxfeedraw['create_userID'] = $this->session->userdata('loginuserID');
                                           $paxfeedraw['modify_userID'] = $this->session->userdata('loginuserID');
                                           $raw_pax_id = $this->paxfeedraw_m->insert_paxfeedraw($paxfeedraw);
+						if($raw_pax_id){
+							$this->mydebug->paxfeed_log("Raw feed id is inserted for row " . $column , 0);
+						}
 					} else {
 
 						// check pax raw in pf table
+							 $this->mydebug->paxfeed_log("Raw fields already exist for row " . $column , 0);
 
-						$exist_data = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id' => $exist_pax_raw));
+						$exist_data = $this->paxfeed_m->get_single_paxfeed(array('dtpfraw_id' => $exist_pax_raw));
 						if (count($exist_data) >= 1) {
+							$this->mydebug->paxfeed_log("Pax feed entry already exist for row " . $column , 0);
 							continue;
 						} else {
 							$raw_pax_id = $exist_pax_raw;
@@ -315,7 +411,6 @@ class Paxfeed extends Admin_Controller {
 						
 			             if ( $raw_pax_id ) {
 	
-					$this->mydebug->paxfeed_log("Raw feed id is inserted for row " . $column , 0);
 					$paxfeed = array();
 	 				$paxfeed['airline_code'] = $paxfeedraw['airline_code'];
                                         $paxfeed['pnr_ref'] = $paxfeedraw['pnr_ref'];
@@ -367,10 +462,11 @@ class Paxfeed extends Admin_Controller {
 
 				$paxfeed['tier'] = $paxfeedraw["tier_markup"];
 
-				if ( $cabin->cabin_code != '') {
-				$paxfeed['rbd_markup'] = $this->preference_m->get_preference_value_bycode('RBD_'.$cabin->cabin_code,'7');
+				//$paxfeed['rbd_markup'] = $this->preference_m->get_preference_value_bycode('RBD_'.$cabin->cabin_code,'7');
+				if($cabin->rbd_markup) {
+				  $paxfeed['rbd_markup'] = $cabin->rbd_markup;
 				} else {
-					$paxfeed['rbd_markup'] = 0;
+					$paxfeed['rbd_markup']  = 0;
 				}
 					 if($this->paxfeed_m->checkPaxFeed($paxfeed)) {
 					
@@ -380,6 +476,7 @@ class Paxfeed extends Admin_Controller {
                                                                 if($k != 'day_of_week' && $k != 'season_id') {
                                                                         if($v == '' ){
                                                                         $this->mydebug->paxfeed_log("There is null value column ".$k. " in row " . $column, 1);
+									$this->paxfeedraw_m->delete_paxfeedraw($raw_pax_id);
                                                                         $insert_flag = 0;
                                                                 }
                                                                 }
@@ -398,12 +495,15 @@ class Paxfeed extends Admin_Controller {
 						//	print_r($rafeed);exit;
                                                               $insert_id = $this->paxfeed_m->insert_paxfeed($paxfeed);
 								if ( $insert_id ) {
-
+								array_push($pax_insert_list,$paxfeed['pnr_ref']);
 							    $this->mydebug->paxfeed_log("Inserted pax record for row " . $column, 0);
 								} else{
 									$this->mydebug->paxfeed_log("Not inserted pax record for row " . $column .' not a valid data ', 1);
 								}
 						   }
+					}else {
+
+						$this->mydebug->paxfeed_log("Duplicate record for row ". $column, 0);
 					}
 			}
 		}
@@ -430,6 +530,9 @@ class Paxfeed extends Admin_Controller {
 		    if(file_exists($file)) {
 		    	unlink($file);					
 		    }			
+
+
+			 $this->paxfeed_m->process_tiermarkup(array_unique($pax_insert_list));
 			 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
 		     redirect(base_url("paxfeed/index")); 	
 		 }	

@@ -2,10 +2,6 @@
 	<h2 class="title-tool-bar">Offer Details</h2>
 	<div class="col-md-12 off-elg-filter-box">
 		<div class="auto-gen">
-			<a href="<?php echo base_url('offer_eligibility/generatedata') ?>">
-				<i class="fa fa-upload"></i>
-				<?=$this->lang->line('generate_offer_eligibility')?>
-			</a>
 			<a href="<?php echo base_url('offer_issue/run_offer_issue') ?>">
 				 <i class="fa fa-upload"></i>
 				 <?=$this->lang->line('offer_issue')?>
@@ -48,10 +44,10 @@
 				<div class="col-md-3 select-form">
 					<h4>Flight Number Range</h4>
 					<div class="col-sm-12">
-						<input type="text" class="form-control" placeholder="Enter Start range Flight Number" id="flight_number" name="flight_number" value="<?=set_value('flight_number',$flight_number)?>" >
+						<input type="text" class="form-control" placeholder="Start range" id="flight_number" name="flight_number" value="<?=set_value('flight_number',$flight_number)?>" >
 					</div>
 					<div class="col-sm-12">
-						<input type="text" class="form-control" placeholder="Enter End range Flight number" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
+						<input type="text" class="form-control" placeholder="End range" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
 					</div>
 				</div>
 				<div class="col-md-3">
@@ -82,6 +78,7 @@
 				<table id="offertable" class="table table-bordered">
 					 <thead>
 						<tr>
+							<th class="col-lg-1">#</th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('passenger_list')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
@@ -107,9 +104,38 @@
 $("#dep_from_date").datepicker();
 $("#dep_to_date").datepicker();
 
+
+$("#dep_from_date").datepicker({
+    }).on('changeDate', function (ev) {
+        $('#dep_to_date').val("").datepicker("update");
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+        var minDate = new Date(formatDate);
+        $('#dep_to_date').datepicker('setStartDate', minDate);
+         $("#dep_to_date").datepicker("setDate" , $(this).val());
+    });
+
+    $("#dep_to_date").datepicker()
+        .on('changeDate', function (selected) {
+
+                var dates = $(this).val();
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+
+            var maxDate = new Date(formatDate);
+            $('#dep_from_date').datepicker('setEndDate', maxDate);
+        });
+
+
+
     $('#offertable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+	"stateSave": true,
       "sAjaxSource": "<?php echo base_url('offer_issue/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#flight_number").val()},
@@ -132,7 +158,16 @@ $("#dep_to_date").datepicker();
                     "success": fnCallback
                          } ); }, 
 
-      "columns": [ {"data": "offer_id" },
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("biddatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("biddatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
+      "columns": [ {"data": "sno" },{"data": "offer_id" },
 				   {"data": "passenger_list" },
 				   {"data": "pnr_ref"},
 				   {"data": "source_point" },

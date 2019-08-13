@@ -122,14 +122,7 @@
 <div class="col-sm-12">
 
 		 <div class="col-sm-2">
-
-                        <?php
-                 foreach($days_of_week as $day ) {
-                                $days[$day->vx_aln_data_defnsID] = $day->aln_data_value;
-                        }
-                 echo form_multiselect("day[]", $days, set_value("day"), "id='day' class='form-control select2'");
-
-                        ?>
+  <input type="text" class="form-control" placeholder="Frequency" id="day" name="day" value="<?=set_value('day')?>" >
 
                  </div>
 
@@ -211,6 +204,7 @@ $(document).ready(function() {
   $('#ruleslist').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+	"stateSave": true,
       "sAjaxSource": "<?php echo base_url('acsr/server_processing'); ?>",   
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "origID","value": $("#orig_market_id").val()},
@@ -234,6 +228,16 @@ $(document).ready(function() {
                     "data": aoData,
                     "success": fnCallback
                          } ); }, 
+
+	"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("acsrdatatable", JSON.stringify(data));
+            },
+            "stateLoadCallback": function (settings) {
+                var data = JSON.parse(window.localStorage.getItem("acsrdatatable"));
+                if (data) data.start = 0;
+                return data;
+            },
+
       "columns": [{"data": "id" },
                   {"data": "orig_level" },
                   {"data": "orig_level_value" },
@@ -375,5 +379,31 @@ $( ".select2" ).select2({closeOnSelect:false,
 
 $("#flight_dep_date_start").datepicker();
 $("#flight_dep_date_end").datepicker();
+
+$("#flight_dep_date_start").datepicker({
+    }).on('changeDate', function (ev) {
+        $('#flight_dep_date_end').val("").datepicker("update");
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+        var minDate = new Date(formatDate);
+        $('#flight_dep_date_end').datepicker('setStartDate', minDate);
+         $("#flight_dep_date_end").datepicker("setDate" , $(this).val());
+    });
+
+    $("#flight_dep_date_end").datepicker()
+        .on('changeDate', function (selected) {
+
+                var dates = $(this).val();
+        var dates = $(this).val();
+        var dates1 = dates.split("-");
+        var newDate = dates1[1]+"/"+dates1[0]+"/"+dates1[2];
+        var formatDate = new Date(newDate).getTime();
+
+            var maxDate = new Date(formatDate);
+            $('#flight_dep_date_start').datepicker('setEndDate', maxDate);
+        });
+
 
 </script>
