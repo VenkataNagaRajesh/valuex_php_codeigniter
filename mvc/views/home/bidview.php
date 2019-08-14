@@ -41,27 +41,31 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php foreach($results as $result){ ?>
+										<?php $n=1; foreach($results as $result){ ?>
 										<tr>
-											<td>											
+										<td><div class="col-md-12"><p><?=$n?> . <?php echo $result->air_from_city; ?> To <?php echo $result->air_to_city; ?> </p></div></td>
+										</tr>
+										<tr>
+											<td>
+												
 												<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
 													<div class="col-md-5">
-														<p><?php echo $result->from_city_code; ?></p>
+														<p><?php echo $result->from_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time)?></span></p>
+														<small>Singapore</small>
 														<ul>
 															<li><?php echo date('d M',$result->dep_date); ?></li>
 															<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
 															<!--<li><?=$result->time_diff?></li>-->
-															<li><?=date('H:i A',$result->dep_date+$result->dept_time)?></li>
 														</ul>
 													</div>
-													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-fighter-jet"></i></p></div>
+													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
 													<div class="col-md-5">
-														<p><?php echo $result->to_city_code; ?></p>
+														<p><?php echo $result->to_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time)?></span></p>
+														<small>Bengaluru</small>
 														<ul>
 															<li><?php echo date('d M',$result->arrival_date); ?></li>
 															<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
 															<!--<li><?=$result->time_diff?></li>-->
-															<li><?=date('H:i A',$result->arrival_date+$result->arrival_time)?></li>
 														</ul>
 													</div>
 												</div>											
@@ -102,7 +106,7 @@
 											  </div>
 											</td>
 										</tr>
-										<?php } ?>
+										<?php $n++; } ?>
 									</tbody>
 								</table>
 							</div>

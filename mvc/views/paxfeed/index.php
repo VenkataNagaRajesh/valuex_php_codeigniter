@@ -71,10 +71,17 @@
 
 <div class="col-sm-2">
                <?php
-                        $airlines['0'] = ' Carrier';
-                        ksort($airlines);
+	foreach($airlines as $airline){
+                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+         }
+          $userTypeID = $this->session->userdata('usertypeID');
 
-                                   echo form_dropdown("carrier_code", $airlines,set_value("carrier_code",$carrier_code), "id='carrier_code' class='form-control hide-dropdown-icon select2'");    ?>
+                 $airlinelist[0]= 'Carrier';
+                  ksort($airlinelist);
+
+
+
+       echo form_dropdown("carrier_code", $airlinelist,set_value("carrier_code",$carrier_code), "id='carrier_code' class='form-control hide-dropdown-icon select2'");    ?>
 
 
                 </div>

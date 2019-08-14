@@ -27,10 +27,16 @@
                         </label>
                         <div class="col-sm-6">
 			<?php
+
+		
+                         foreach($airlines as $air){
+                                $airlinelist[$air->vx_aln_data_defnsID] = $air->code;
+                                }
+
 	
-			 $airlinesdata['0'] = 'Select Airlines';
-                        ksort($airlinesdata);
-				echo form_dropdown("airline_code", $airlinesdata, set_value("airline_code",$airline->airline_code), "id='airline_code' class='form-control select2'");
+			 $airlinelist['0'] = 'Select Airlines';
+                        ksort($airlinelist);
+				echo form_dropdown("airline_code", $airlinelist, set_value("airline_code",$airline->airline_code), "id='airline_code' class='form-control select2'");
 			?>
                         </div>
                         <span class="col-sm-4 control-label">

@@ -27,9 +27,24 @@
 					</div>
 					<div class="col-md-2 col-sm-3">
 						<?php
-							$airlines[0] = 'Carrier';
-							ksort($airlines);
-							echo form_dropdown("carrier_code", $airlines,set_value("carrier_code"), "id='carrier_code' class='form-control hide-dropdown-icon select2'"); ?>
+
+					foreach($airlines as $airline){
+                                                                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                                        }
+                                                        $userTypeID = $this->session->userdata('usertypeID');
+                                                        if($userTypeID == 2){
+                                                                $default_airlineID =  key($airlinelist);
+                                                        } else {
+                                                                $default_airlineID = 0;
+                                                        }
+
+
+
+
+                                                        $airlinelist[0]= 'Carrier';
+                                                        ksort($airlinelist);
+
+							echo form_dropdown("carrier_code", $airlinelist,set_value("carrier_code",$default_airlineID), "id='carrier_code' class='form-control hide-dropdown-icon select2'"); ?>
 					</div>
 					<div class="col-md-2 col-sm-3">
 						<input type="text" placeholder="Flight No" class="form-control" id="flight_number" name="flight_number" value="<?=set_value('flight_number')?>" >
@@ -102,9 +117,7 @@
 						<div class="col-md-12">
 
 		 <?php
-                                                        $airlines['0'] = 'Carrier';
-                                                        ksort($airlines);
-                                                        echo form_dropdown("scarrier", $airlines,set_value("scarrier",$scarrier_id), "id='scarrier' class='form-control hide-dropdown-icon select2'"); ?>
+                                                        echo form_dropdown("scarrier", $airlinelist,set_value("scarrier",$scarrier_id), "id='scarrier' class='form-control hide-dropdown-icon select2'"); ?>
 
 						</div>
 					</div>

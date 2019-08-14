@@ -4106,11 +4106,11 @@ fieldset[disabled] .btn-vk.active {
 	padding: 4px;
 	border-radius: 6px;
 	display: inline-block;
-	margin-right: 20px;
+	margin-right: 8px;
 	border: solid 1px #333;
 	text-align: center;
 	color: #333;
-	width:130px;
+	width: 156px;
 	font-weight:bold;
 	margin-bottom:10px;
 }
@@ -4438,6 +4438,7 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 }
 #hide-table table tr td{
 	text-align:center;
+	white-space: nowrap;
 }
 .title-tool-bar{
 	color: #fff;
@@ -4612,8 +4613,7 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 	padding: 0 12px;
 }
 .season-list-color{
-	width: 68px;
-	height: 28px;
+	height: 20px;
 	margin-bottom: 0;
 }
 .rafeed  .form-group .form-control{
@@ -4630,9 +4630,9 @@ table{
 #master{
 	table-layout: fixed; 
 }
-/*#tztable{
+#tztable{
    table-layout: fixed;	
-}*/
+}
 #rafeedtable{
    table-layout: fixed;
 }
@@ -4645,9 +4645,6 @@ table{
 }
 
 #defdata{
-   table-layout: fixed;
-}
-#fclrtable{
    table-layout: fixed;
 }
 #invfeedtable{
@@ -4696,4 +4693,6 @@ table{
 	padding:4px;
 	height:28px;
 }
-
+.breadcrumb > li + li::before {
+	color:#fff;
+}

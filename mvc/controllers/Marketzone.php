@@ -164,6 +164,7 @@ class Marketzone extends Admin_Controller {
 
 
                 $userID = $this->session->userdata('loginuserID');
+		$userTypeID = $this->session->userdata('usertypeID');
 		if($userTypeID == 2){
                         $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
                            } else {
