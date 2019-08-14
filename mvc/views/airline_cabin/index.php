@@ -34,9 +34,18 @@
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 10px;">
                       <div class='form-group'>
                            <div class="col-sm-2">
-               <?php $airlinesdata['0'] = " Airlines";
-			ksort($airlinesdata);
-                                   echo form_dropdown("airline_code", $airlinesdata,set_value("airline_code",$airliineID), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
+               <?php 
+
+                         foreach($airlines as $airline){
+                                $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+				}
+
+                                                        $airlinelist[0]= 'Carrier';
+                                                        ksort($airlinelist);
+
+
+
+                                   echo form_dropdown("airline_code", $airlinelist,set_value("airline_code",$airliineID), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
                  <div class="col-sm-2">
 

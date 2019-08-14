@@ -9,6 +9,7 @@ class Fclr extends Admin_Controller {
 		$this->load->model("fclr_m");
 		$this->load->model("season_m");
 		$this->load->model('airports_m');
+		$this->load->model('airline_m');
 		$this->load->model("marketzone_m");
 		$this->load->model('eligibility_exclusion_m');
 		$language = $this->session->userdata('lang');
@@ -459,7 +460,16 @@ class Fclr extends Admin_Controller {
 
 		$this->data['country'] = $this->rafeed_m->getCodesByType('2');
 		$this->data['city'] = $this->rafeed_m->getCodesByType('5');
-		$this->data['airlines'] = $this->rafeed_m->getCodesByType('12');
+
+		 $userID = $this->session->userdata('loginuserID');
+                $userTypeID = $this->session->userdata('usertypeID');
+                if($userTypeID == 2){
+                        $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+                           } else {
+                   $this->data['airlines'] = $this->airline_m->getAirlinesData();
+                }
+
+		//$this->data['airlines'] = $this->rafeed_m->getCodesByType('12');
 		$this->data['airports'] = $this->rafeed_m->getCodesByType('1');
 		$this->data['cabins'] = $this->rafeed_m->getCodesByType('13');
 		$this->data['marketzones'] = $this->marketzone_m->getMarketzones();

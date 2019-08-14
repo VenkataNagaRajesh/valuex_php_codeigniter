@@ -18,6 +18,7 @@ class Offer_table extends Admin_Controller {
 		$this->load->library('email');
 		$this->load->model('invfeed_m');
 		$this->load->model("reset_m");
+		$this->load->model("airline_m");
 		$this->load->model('acsr_m');
 		$this->load->model("airports_m");
 		$this->load->model('bid_m');
@@ -59,6 +60,15 @@ class Offer_table extends Admin_Controller {
                                                 'assets/datepicker/datepicker.js'
                 )
         );
+
+
+	$userID = $this->session->userdata('loginuserID');
+                $userTypeID = $this->session->userdata('usertypeID');
+                if($userTypeID == 2){
+                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
+                           } else {
+                   $this->data['carriers'] = $this->airline_m->getAirlinesData();
+                }
 
 
                 $this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
@@ -319,14 +329,27 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                                 $sWhere .= 'MainSet.offer_id = '.  $this->input->get('offer_id');
                         }
 
+                         if(!empty($this->input->get('carrier'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'SubSet.carrier_code = '.  $this->input->get('carrier');
+                        }
 
+                $userTypeID = $this->session->userdata('usertypeID');
+                $userID = $this->session->userdata('loginuserID');
+                if($userTypeID == 2){
+                         $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                        $sWhere .= 'SubSet.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                
+                }
+
+
+		
 
 
 $sQuery = " select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
                         MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status,
-			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val
+			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code
 
                 FROM ( 
                                 select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, bid_avg,bid_markup_val,
@@ -352,7 +375,7 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
 						tc.code as to_city, from_city as boarding_point , to_city as off_point, 
 						fc.aln_data_value as from_city_name, tc.aln_data_value as to_city_name,
 						 group_concat(distinct pf1.cabin) as from_cabin_id, 
-                                                 car.code as carrier
+                                                 car.code as carrier, pf1.carrier_code
                                         
                                         from VX_aln_daily_tkt_pax_feed pf1 
                                         LEFT JOIN vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)

@@ -73,9 +73,21 @@
                                 </div>
 
 				   <div class="col-md-2 select-form">
-                                        <h4>OfferID</h4>
+                                        <h4>OfferID/Carrier</h4>
                                         <div class="col-sm-12">
                                                 <input type="text" class="form-control" placeholder="OfferID" id="offer_id" name="offer_id" value="<?=set_value('offer_id')?>" >
+                                        </div>
+					 <div class="col-sm-12">
+                                                <?php
+
+                                 foreach($carriers as $airline){
+                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+         }
+
+                 $airlinelist[0]= 'Carrier';
+                  ksort($airlinelist);
+
+                                                        echo form_dropdown("carrier", $airlinelist,set_value("carrier",$car), "id='carrier' class='form-control hide-dropdown-icon select2'");     ?>
                                         </div>
 				</div>
 
@@ -177,6 +189,7 @@ $("#dep_from_date").datepicker({
                    {"name": "toCabin","value": $("#to_cabin").val()},
 		           {"name": "offer_id","value": $("#offer_id").val()},
 		           {"name": "pnr_ref","value": $("#pnr_ref").val()},
+				 {"name": "carrier","value": $("#carrier").val()},
 		           {"name": "offer_status","value": $("#offer_status").val()},
                   
                    ) //pushing custom parameters
