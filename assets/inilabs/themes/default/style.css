@@ -4438,6 +4438,7 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 }
 #hide-table table tr td{
 	text-align:center;
+	white-space: nowrap;
 }
 .title-tool-bar{
 	color: #fff;
@@ -4632,7 +4633,7 @@ table{
 }
 /*#tztable{
    table-layout: fixed;	
-}*/
+}
 #rafeedtable{
    table-layout: fixed;
 }
@@ -4647,9 +4648,6 @@ table{
 #defdata{
    table-layout: fixed;
 }
-#fclrtable{
-   table-layout: fixed;
-}
 #invfeedtable{
    table-layout: fixed;
 }
@@ -4658,7 +4656,7 @@ table{
 }
 #airlinetable{
    table-layout: fixed;
-}
+}*/
 .rowselected {
     background-color: #a6b4cd;
 }
@@ -4696,4 +4694,6 @@ table{
 	padding:4px;
 	height:28px;
 }
-
+.breadcrumb > li + li::before {
+	color:#fff;
+}

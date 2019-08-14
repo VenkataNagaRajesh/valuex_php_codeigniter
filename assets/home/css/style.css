@@ -596,6 +596,19 @@ figure {
 	font-weight:bold;
 	margin-right:8px;
 }
+.bid-info .time-bid{
+	color: #333 !important;
+	margin-left: 5px !important;
+}
+.bid-info{
+	text-align:center;
+}
+.bid-info small{
+	color: #333;
+	font-weight: bold;
+	position: relative;
+	top: -3px;
+}
 .bid-success-box p{
 	font-size:14px;
 }
