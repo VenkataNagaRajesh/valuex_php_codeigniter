@@ -221,8 +221,6 @@
 
 			</div>
 			<br>
-			<br>
-
 			<div class="season-highlight">
 					<span>Season</span><span>Highlights</span><br>
 					<!--<span class="default">Default</span><span class="default-high">&nbsp;</span><br>
