@@ -181,11 +181,20 @@ class Season extends Admin_Controller {
         } else {
             $this->data['active'] = 1;
         }
-		if(!empty($this->input->post('airlinecode'))){
+		/* if(!empty($this->input->post('airlinecode'))){
           $this->data['airlinecode'] = $this->input->post('airlinecode');
         } else {
           $this->data['airlinecode'] = "";
-        }
+        } */
+		if(!empty($this->input->post('filter_airline'))){
+          $this->data['filter_airline'] = $this->input->post('filter_airline');
+        } else {
+		  if($this->session->userdata('default_airline')){
+		     $this->data['filter_airline'] = $this->session->userdata('default_airline'); 
+		  } else {
+             $this->data['filter_airline'] = "";
+		  }
+        } 
         $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');
 		
                 $userTypeID = $this->session->userdata('usertypeID');
@@ -208,6 +217,7 @@ class Season extends Admin_Controller {
 		   } else {
 			   $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		   }
+		  // print_r($this->data['airlines']); exit;
 		$this->data["subview"] = "season/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
@@ -651,10 +661,14 @@ class Season extends Admin_Controller {
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= 's.active = '.$this->input->get('active');		 
 	     }
-        if($this->input->get('airlinecode') != NULL){
+        /* if($this->input->get('airlinecode') != NULL){
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= 
 		   " CONCAT(dd.code,'_',dd.aln_data_value) like '%".$this->input->get('airlinecode')."%'";		 
+	     } */
+		 if($this->input->get('filter_airline') != NULL){
+		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+           $sWhere .= " dd.vx_aln_data_defnsID like '%".$this->input->get('filter_airline')."%'"; 
 	     }
 		if(!empty($this->input->get('origValues'))){
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';

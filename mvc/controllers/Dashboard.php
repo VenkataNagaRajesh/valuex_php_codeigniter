@@ -107,14 +107,7 @@ class Dashboard extends Admin_Controller {
 		}
 
 		//$this->data['notices'] = $this->notice_m->get_order_by_notice(array('schoolyearID' => $schoolyearID));
-		if($userTypeID == 2){
-			$this->data['loginairlines'] = $this->airports_m->getDefinitionList($this->session->userdata('login_user_airlineID'));
-			if($this->input->get('carrier')){
-				$this->data['carrier'] = $this->input->get('carrier');
-			} else {
-				$this->data['carrier'] = 0;
-			}
-		}
+		
 		//print_r($this->data['loginairlines'] ); exit;
 		$this->data["subview"] = "dashboard/index";
 		$this->load->view('_layout_main', $this->data);

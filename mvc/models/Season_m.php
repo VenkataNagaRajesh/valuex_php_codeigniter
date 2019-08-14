@@ -153,8 +153,8 @@ class season_m extends MY_Model {
 		if($this->session->userdata('usertypeID') == 2){		
 			$this->db->where('create_userID',$this->session->userdata('loginuserID'));
 		}
-		if(!empty($this->input->get('carrier'))){
-			$this->db->where('airlineID',$this->input->get('carrier'));
+		if(!empty($this->session->userdata('default_airline'))){
+			$this->db->where('airlineID',$this->session->userdata('default_airline'));
 		}
 		$query = $this->db->get();
 		return $query->row('count');
