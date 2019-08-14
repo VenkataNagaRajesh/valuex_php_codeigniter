@@ -73,7 +73,7 @@
                                         </div>
                                         <div class="col-sm-12">
                                                 <?php
-                                                        $status['0'] = 'Booking Status';
+                                                        $status['0'] = 'Offer Status';
                                                         ksort($status);
                                                         echo form_dropdown("booking_status", $status,set_value("booking_status"), "id='booking_status' class='form-control hide-dropdown-icon select2'");    ?>
                                         </div>
