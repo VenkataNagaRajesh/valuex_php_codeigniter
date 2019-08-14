@@ -377,11 +377,20 @@ $sWhere $sOrder $sLimit";
                         $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
                         $upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
 			
-			if($upgrade['season_id'] == 0 ) {
-				$upgrade['frequency'] = $p_freq;
-			}
 
-			$upgrade['from_cabin'] = $feed->cabin;
+			 $upgrade['from_cabin'] = $feed->cabin;
+                        $data = array();
+                        if($upgrade['season_id'] > 0) {
+                                $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+                        }
+
+                         if((count($data) == 0 && $upgrade['season_id'] > 0) || $upgrade['season_id'] == 0) {
+                                $upgrade['season_id'] = 0;
+                                 $upgrade['frequency'] = $p_freq;
+                                $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+
+                          }
+
                          $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
 			 foreach($data as $f) {
 
