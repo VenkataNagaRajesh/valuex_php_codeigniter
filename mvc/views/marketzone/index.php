@@ -42,7 +42,7 @@
 							$userTypeID = $this->session->userdata('usertypeID');
                                                         if($userTypeID == 2){
                                                                 $default_airlineID =  key($airlinelist);
-                                                        } else {
+														} else {
 								$default_airlineID = 0;
 							}
 
