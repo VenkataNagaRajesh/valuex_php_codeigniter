@@ -201,7 +201,7 @@ class Season extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
 
         if($this->session->userdata('usertypeID') == 2){
-		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('s.create_userID' => $this->session->userdata('loginuserID')),null);
+		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(null,$this->session->userdata('login_user_airlineID'));
 		}else{
 		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(); 
 		}  
@@ -642,7 +642,8 @@ class Season extends Admin_Controller {
 			$userID = $this->session->userdata('loginuserID');
 			if($usertypeID == 2){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                $sWhere .= 'c.userID = '.$userID;	
+               // $sWhere .= 'c.userID = '.$userID;	
+			   $sWhere .= ' s.airlineID  IN ('.implode(',',$this->session->userdata('login_user_airlineID')).')';
 			}
 		
         if(!empty($this->input->get('seasonID'))){
@@ -666,7 +667,7 @@ class Season extends Admin_Controller {
            $sWhere .= 
 		   " CONCAT(dd.code,'_',dd.aln_data_value) like '%".$this->input->get('airlinecode')."%'";		 
 	     } */
-		 if($this->input->get('filter_airline') != NULL){
+		 if(!empty($this->input->get('filter_airline'))){
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= " dd.vx_aln_data_defnsID like '%".$this->input->get('filter_airline')."%'"; 
 	     }
@@ -678,8 +679,8 @@ class Season extends Admin_Controller {
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= "s.ams_dest_level_value like '%".$this->input->get('destValues')."%'";		 
 	     }		 
-			
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_dest_levelID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = s.airlineID LEFT JOIN VX_aln_client c ON c.userID = s.create_userID 
+		
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_dest_levelID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = s.airlineID  
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

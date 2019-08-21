@@ -480,7 +480,8 @@ $('#season_color').colorpicker({});
 $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: " value"});
 				 
-$(document).ready(function(){	
+$(document).ready(function(){
+    $('#color_airline_season').trigger('change');	
 	$('#ams_orig_levelID').trigger('change');
     $('#ams_dest_levelID').trigger('change');
     $('#origID').trigger('change');

@@ -25,7 +25,7 @@ class season_m extends MY_Model {
               $this->db->where($where);
 			}
 			if($wherein != null){
-				$this->db->where_in('airlineID',$wherein);
+				$this->db->where_in('s.airlineID',$wherein);
 			}
             $query = $this->db->get();
             return $query->result();
