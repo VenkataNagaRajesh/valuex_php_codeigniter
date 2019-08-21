@@ -4572,9 +4572,12 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 }
 .off-dtl-page .table-responsive tbody tr td .fa-check-circle{
 	color: #339933;
+	font-size:22px;
+	margin-right:15px;
 }
 .off-dtl-page .table-responsive tbody tr td .fa-times-circle-o{
 	color: red;
+	font-size:22px;
 }
 .off-dtl-page .table-responsive tbody tr td{
 	padding: 6px 15px;

@@ -3,7 +3,7 @@
 		<img style="width:100px;" src="{base_url}assets/home/images/emir.png" alt="logo">
 	</div>
 </div>
-<div style="width:1170px;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;font-family:century gothic;">
+<div style="width:1170px;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;font-family:century gothic;display: table;border: solid 1px #ddd;margin-top: 15px;">
 	<div>
 		<div style="width: 8.33333%;position: relative;min-height: 1px;padding-left: 15px;padding-right: 15px;float:left;">
 			<img style="width:auto;display: block;height:auto;" src="{base_url}assets/home/images/temp2-logo.jpg" alt="logo">
@@ -73,7 +73,7 @@
 						<ul style="list-style: none;padding-left: 0;">
 							<li style="float: left;margin-right: 10px;"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/fb.png" alt="fb"></li>
 							<li style="float: left;margin-right: 10px;"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/pinterest.png" alt="pinterest"></li>
-							<li style="float: left;margin-right: 10px;"><img style="width:39px;display: block;height:auto;" src="{base_url}/assets/home/images/twitter.png" alt="twitter"></li>
+							<li style="float: left;margin-right: 10px;background:#000;"><img style="width:39px;display: block;height:auto;" src="{base_url}/assets/home/images/twitter.png" alt="twitter"></li>
 						</ul>
 					</div>
 				</div>
