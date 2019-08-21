@@ -67,7 +67,11 @@ class Paxfeed extends Admin_Controller {
 		if(!empty($this->input->post('carrier_code'))){
                 $this->data['carrier_code'] = $this->input->post('carrier_code');
                 } else {
-                    $this->data['carrier_code'] = 0;
+                    if($this->session->userdata('usertypeID') == 2){
+					 $this->data['carrier_code'] = $this->session->userdata('default_airline');
+				   } else {					
+                     $this->data['carrier_code'] = 0;
+				   }
                 }
 
 

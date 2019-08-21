@@ -108,6 +108,15 @@ class Offer_eligibility extends Admin_Controller {
                 }else{
                    $this->data['seasonslist'] = $this->season_m->get_seasons();
                 }
+        if($this->input->post('carrier')){
+		   $this->data['carrier'] = $this->input->post('carrier');
+	     } else {
+		   if($userTypeID == 2){
+             $this->data['carrier'] = $this->session->userdata('default_airline');
+		   } else {
+			 $this->data['carrier'] = 0;
+		   }
+         }
 
 		$this->data["subview"] = "offer_eligibility/index";
 		$this->load->view('_layout_main', $this->data);

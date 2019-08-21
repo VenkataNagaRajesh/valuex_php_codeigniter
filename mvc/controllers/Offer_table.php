@@ -69,7 +69,16 @@ class Offer_table extends Admin_Controller {
                            } else {
                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
                 }
-
+				
+				 if($this->input->post('carrier')){
+				   $this->data['car'] = $this->input->post('carrier');
+				 } else {
+				   if($userTypeID == 2){
+					 $this->data['car'] = $this->session->userdata('default_airline');
+				   } else {
+					 $this->data['car'] = 0;
+				   }
+                 }
 
                 $this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
 		$this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');

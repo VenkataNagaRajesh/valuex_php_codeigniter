@@ -345,9 +345,16 @@ function valFrequency($num)
                   foreach($types as $type){
                         $this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
                   }
-
-
-
+         if($this->input->post('scarrier')){
+		   $this->data['scarrier'] = $this->input->post('scarrier');
+	     } else {
+		   if($userTypeID == 2){
+             $this->data['scarrier'] = $this->session->userdata('default_airline');
+		   } else {
+			 $this->data['scarrier'] = 0;
+		   }
+         }
+		 
 		$this->data["subview"] = "eligibility_exclusion/index";
 		$this->load->view('_layout_main', $this->data);		
 	}

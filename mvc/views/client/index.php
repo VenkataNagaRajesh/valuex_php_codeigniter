@@ -24,7 +24,7 @@
                 <div class="col-sm-4 col-md-3">			   
                  <?php $list = array("0" => "Select Carrier");               
                   		foreach($airlines as $airline){
-						  $list[$airline->vx_aln_data_defnsID] = $airline->aln_data_value."(".$airline->code.")";	
+						  $list[$airline->vx_aln_data_defnsID] = $airline->code;	
 						}				
 				   echo form_dropdown("airlineID", $list,set_value("airlineID",$airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>	

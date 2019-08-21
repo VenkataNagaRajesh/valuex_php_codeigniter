@@ -75,7 +75,7 @@
 
                                                      
 			foreach($airlines as $airline){
-                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->aln_data_value.'('.$airline->code.')';
+                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
                                                          }
 
                         $airlinelist['0'] = ' Carrier';

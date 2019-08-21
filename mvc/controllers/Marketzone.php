@@ -180,9 +180,12 @@ class Marketzone extends Admin_Controller {
 		  foreach($types as $type){
 			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
 		  }
+		  
+		  
 
 		if($userTypeID == 2){
 		$this->data['treedata'] = $this->marketzone_m->getAirportsMarketData($this->session->userdata('login_user_airlineID'));
+		 $this->data['sairline_id'] = $this->session->userdata('default_airline');
 		} else {
 
 			 $this->data['treedata'] = $this->marketzone_m->getAirportsMarketData();

@@ -146,7 +146,7 @@
 				<div class="col-md-12">
 					<div class="mzone-filter col-md-12 col-sm-12">
 						<div class="col-md-2 col-sm-3">
-							<?php echo form_dropdown("sairline_id", $airlinelist,set_value("sairline_id"), "id='sairline_id' class='form-control hide-dropdown-icon select2'");?>
+							<?php echo form_dropdown("sairline_id", $airlinelist,set_value("sairline_id",$sairline_id), "id='sairline_id' class='form-control hide-dropdown-icon select2'");?>
 						</div>
 						<div class="col-md-2 col-sm-3">
 							<?php $marketlist = array("0" => "Marketzone");

@@ -75,7 +75,7 @@ class Airline_cabin extends Admin_Controller {
 
 	public function index() {
 
-
+          $userTypeID = $this->session->userdata('usertypeID');
 		  $this->data['headerassets'] = array(
                         'css' => array(
                                 'assets/select2/css/select2.css',
@@ -91,7 +91,11 @@ class Airline_cabin extends Admin_Controller {
 	        if(!empty($this->input->post('airline_code'))){
                   $this->data['airlineID'] = $this->input->post('airline_code');
                 } else {
-                  $this->data['airlineID'] = 0;
+                  if($userTypeID == 2){
+					  $this->data['airlineID'] = $this->session->userdata('default_airline');
+				  } else {
+					  $this->data['airlineID'] = 0;	
+				  }
                 }
 
 

@@ -45,7 +45,7 @@
 
 
 
-                                   echo form_dropdown("airline_code", $airlinelist,set_value("airline_code",$airliineID), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("airline_code", $airlinelist,set_value("airline_code",$airlineID), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
                  <div class="col-sm-2">
 

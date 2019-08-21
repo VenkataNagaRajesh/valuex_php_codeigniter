@@ -69,7 +69,7 @@
                   ksort($airlinelist);
 
 
-                                                echo form_dropdown("carrier", $airlinelist,set_value("carrier"), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
+                                                echo form_dropdown("carrier", $airlinelist,set_value("carrier",$carrier), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
                                         </div>
                                         <div class="col-sm-12">
                                                 <?php
