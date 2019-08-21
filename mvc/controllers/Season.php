@@ -181,18 +181,27 @@ class Season extends Admin_Controller {
         } else {
             $this->data['active'] = 1;
         }
-		if(!empty($this->input->post('airlinecode'))){
+		/* if(!empty($this->input->post('airlinecode'))){
           $this->data['airlinecode'] = $this->input->post('airlinecode');
         } else {
           $this->data['airlinecode'] = "";
-        }
+        } */
+		if(!empty($this->input->post('filter_airline'))){
+          $this->data['filter_airline'] = $this->input->post('filter_airline');
+        } else {
+		  if($this->session->userdata('default_airline')){
+		     $this->data['filter_airline'] = $this->session->userdata('default_airline'); 
+		  } else {
+             $this->data['filter_airline'] = 0;
+		  }
+        } 
         $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');
 		
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 
         if($this->session->userdata('usertypeID') == 2){
-		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('s.create_userID' => $this->session->userdata('loginuserID')),null);
+		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(null,$this->session->userdata('login_user_airlineID'));
 		}else{
 		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(); 
 		}  
@@ -208,6 +217,7 @@ class Season extends Admin_Controller {
 		   } else {
 			   $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		   }
+		  // print_r($this->data['airlines']); exit;
 		$this->data["subview"] = "season/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
@@ -632,7 +642,8 @@ class Season extends Admin_Controller {
 			$userID = $this->session->userdata('loginuserID');
 			if($usertypeID == 2){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                $sWhere .= 'c.userID = '.$userID;	
+               // $sWhere .= 'c.userID = '.$userID;	
+			   $sWhere .= ' s.airlineID  IN ('.implode(',',$this->session->userdata('login_user_airlineID')).')';
 			}
 		
         if(!empty($this->input->get('seasonID'))){
@@ -651,10 +662,14 @@ class Season extends Admin_Controller {
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= 's.active = '.$this->input->get('active');		 
 	     }
-        if($this->input->get('airlinecode') != NULL){
+        /* if($this->input->get('airlinecode') != NULL){
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= 
 		   " CONCAT(dd.code,'_',dd.aln_data_value) like '%".$this->input->get('airlinecode')."%'";		 
+	     } */
+		 if(!empty($this->input->get('filter_airline'))){
+		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+           $sWhere .= " dd.vx_aln_data_defnsID like '%".$this->input->get('filter_airline')."%'"; 
 	     }
 		if(!empty($this->input->get('origValues'))){
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
@@ -664,8 +679,8 @@ class Season extends Admin_Controller {
 		   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= "s.ams_dest_level_value like '%".$this->input->get('destValues')."%'";		 
 	     }		 
-			
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_dest_levelID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = s.airlineID LEFT JOIN VX_aln_client c ON c.userID = s.create_userID 
+		
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_dest_levelID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = s.airlineID  
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

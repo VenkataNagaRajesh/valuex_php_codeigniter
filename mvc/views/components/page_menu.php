@@ -26,7 +26,7 @@
                                 <?=$this->session->userdata("usertype")?>
                             </a>
 							
-							<?php if($this->session->userdata('usertypeID') == 2 && $this->router->fetch_class()=='dashboard'){ 
+							<?php if($this->session->userdata('usertypeID') == 2){ 
 								$carray[0] = 'Select Carrier';
 								      foreach($loginairlines as $airline){ 
 								        $carray[$airline->vx_aln_data_defnsID] = $airline->code;
@@ -59,11 +59,16 @@
 			
 			<script>
 			  $('#login_airline').change( function(){
-				if($(this).val() == 0){
-				  window.location = "<?=base_url('dashboard/index')?>"; 	
-				} else {
-				  window.location = "<?=base_url('dashboard/index?carrier=')?>" +$(this).val();
-				}
+				  $.ajax({
+					  async: false,
+					  type: 'POST',
+					  url: "<?=base_url('general/defaultAirline')?>",          
+					  data: {"airline":$(this).val()},
+					  dataType: "html",                     
+					  success: function(data) {
+						window.location.reload(true);			
+					 }
+				 });
 			  });
 			
 			</script>

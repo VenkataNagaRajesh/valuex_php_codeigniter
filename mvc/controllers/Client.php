@@ -181,12 +181,22 @@ class Client extends Admin_Controller {
 	}
 
 	public function index() {
-		$this->data['airlines'] = $this->airline_m->getAirlinesData();
+		$userTypeID = $this->session->userdata('usertypeID');
+		$userID = $this->session->userdata('loginuserID');
+		if($userTypeID == 2){
+			  $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+		   } else {
+			   $this->data['airlines'] = $this->airline_m->getAirlinesData();
+		   }
 		
 		if(!empty($this->input->post('airlineID'))){	
 		   $this->data['airlineID'] = $this->input->post('airlineID');
 		} else {
-		  $this->data['airlineID'] = 0;
+			if($userTypeID == 2){
+		      $this->data['airlineID'] = $this->session->userdata('default_airline');
+			} else {
+			  $this->data['airlineID'] = 0;	
+			}
 		}
 		
 		if(!empty($this->input->post('active'))){	

@@ -12,7 +12,7 @@
 						<div class="col-md-12">
 							<?php
 								 foreach($airlines as $airline){
-									$airlinelist[$airline->vx_aln_data_defnsID] = $airline->airline_name;
+									$airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
 								  }							
 
 
@@ -27,7 +27,7 @@
 								$airlinelist[0]=$this->lang->line("season_select_airline");
 								ksort($airlinelist);
 
-								echo form_dropdown("airlineID", $airlinelist,set_value("airlineID",$default_airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'"); ?>
+								echo form_dropdown("airlineID", $airlinelist,set_value("airlineID",$filter_airline), "id='airlineID' class='form-control hide-dropdown-icon select2'"); ?>
 						</div>
 					</div>
 					<div class="col-md-3 col-sm-3 select-form">
@@ -138,7 +138,12 @@
 				   echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
 				<div class="col-sm-3 col-md-2">			   
-				  <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>
+				 <!-- <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>-->
+				  <?php $alist = array("0" => "Select Airline");               
+				    foreach($airlines as $air){
+					  $alist[$air->vx_aln_data_defnsID] = $air->code;
+					}				
+				  echo form_dropdown("filter_airline", $alist,set_value("filter_airline",$filter_airline), "id='filter_airline' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
 				<div class="col-sm-3 col-md-2">			   
 				  <?php $olist = array("0" => " Origin Level");               
@@ -476,6 +481,7 @@ $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: " value"});
 				 
 $(document).ready(function(){
+    $('#color_airline_season').trigger('change');	
 	$('#ams_orig_levelID').trigger('change');
     $('#ams_dest_levelID').trigger('change');
     $('#origID').trigger('change');
@@ -673,12 +679,14 @@ $("#dest_all").click(function(){
 				$('#ams_dest_levelID').trigger('change');
 			    var dest_level = seasoninfo['ams_dest_level_value'].split(',');
 				$('#ams_dest_level_value').val(dest_level).trigger('change'); 
-				$('#ams_season_start_date').val(seasoninfo['ams_season_start_date']);
-				$('#ams_season_end_date').val(seasoninfo['ams_season_end_date']);
+				//$('#ams_season_start_date').val(seasoninfo['ams_season_start_date']);
+				//$('#ams_season_end_date').val(seasoninfo['ams_season_end_date']);
+				sdate = seasoninfo['ams_season_start_date'].split("-");
+				edate = seasoninfo['ams_season_end_date'].split("-");
 				
-                $("#ams_season_start_date").datepicker("setDate", new Date(seasoninfo['ams_season_start_date']));
+                $("#ams_season_start_date").datepicker("setDate", new Date(sdate[1]+"-"+sdate[0]+"-"+sdate[2]));
 			
-				$("#ams_season_end_date").datepicker("setDate", new Date(seasoninfo['ams_season_end_date']));
+				$("#ams_season_end_date").datepicker("setDate", new Date(edate[1]+"-"+edate[0]+"-"+edate[2]));
 							
 				$("input[name=is_return_inclusive][value=" + seasoninfo['is_return_inclusive'] + "]").attr('checked', 'checked');				
 				console.log($('input[type=radio][name=is_return_inclusive]:checked').val());
@@ -700,7 +708,8 @@ $("#dest_all").click(function(){
 	  {"name": "destID","value": $("#destID").val()},
 	  {"name": "origValues","value": $("#origValues").val()},	  
 	  {"name": "destValues","value": $("#destValues").val()},
-	  {"name": "airlinecode","value": $("#airlinecode").val()}),     
+	 // {"name": "airlinecode","value": $("#airlinecode").val()}),
+      {"name": "filter_airline","value": $("#filter_airline").val()}),	  
 	  //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',

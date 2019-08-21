@@ -90,5 +90,19 @@ echo '<option value="0">Area</option>';
 		}		 
 	}
 	
+	public function defaultAirline(){
+		$this->session->set_userdata('default_airline',$this->input->post('airline'));
+		$json='default airline changed';
+       if (isset($_SERVER)) {		
+		    header('Access-Control-Allow-Origin: *');
+			header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+			header('Access-Control-Max-Age: 1000');
+			header('Access-Control-Allow-Credentials: true');
+			header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+		}
+		$this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($json));		
+	}
+	
 	
 }

@@ -573,8 +573,8 @@ class Airline extends Admin_Controller {
            $sWhere .= ' d.aln_data_typeID = 12 ';
 
            if($this->session->userdata('usertypeID') == 2){  
-                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                  $sWhere .= 'd.vx_aln_data_defnsID = '.$this->session->userdata('login_user_airlineID');		
+              $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+			  $sWhere .= 'd.vx_aln_data_defnsID IN ('.implode(',',$this->session->userdata('login_user_airlineID')).')';		
             } 		   
 		  
 		  $sGroup = " GROUP BY d.vx_aln_data_defnsID ";  

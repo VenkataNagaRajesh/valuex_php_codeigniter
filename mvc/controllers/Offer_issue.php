@@ -104,6 +104,16 @@ $this->data['headerassets'] = array(
                 $this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
 //		 $this->data['carrier'] =  $this->airports_m->getDefnsCodesListByType('12');
 
+          if($this->input->post('carrier')){
+		   $this->data['car'] = $this->input->post('carrier');
+	     } else {
+		   if($userTypeID == 2){
+             $this->data['car'] = $this->session->userdata('default_airline');
+		   } else {
+			 $this->data['car'] = 0;
+		   }
+         }
+		 
 	$this->data["subview"] = "offer/index";
                 $this->load->view('_layout_main', $this->data);
 

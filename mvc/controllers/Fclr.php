@@ -1,3 +1,4 @@
+
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Fclr extends Admin_Controller {
@@ -475,6 +476,17 @@ class Fclr extends Admin_Controller {
 		$this->data['marketzones'] = $this->marketzone_m->getMarketzones();
 		//$this->data['flights'] = $this->rafeed_m->getNamesByType('16');
 		$this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14'); 
+		
+		if($this->input->post('scarrier')){
+		   $this->data['scarrier_id'] = $this->input->post('scarrier');
+	     } else {
+		   if($userTypeID == 2){
+             $this->data['scarrier_id'] = $this->session->userdata('default_airline');
+		   } else {
+			 $this->data['scarrier_id'] = 0;
+		   }
+         }
+		 		
 		$this->data["subview"] = "fclr/index";
 		$this->load->view('_layout_main', $this->data);
 	}

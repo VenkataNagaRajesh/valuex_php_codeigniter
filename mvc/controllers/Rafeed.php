@@ -57,7 +57,11 @@ class Rafeed extends Admin_Controller {
 		if(!empty($this->input->post('airline_code'))){
                    $this->data['airline_code'] = $this->input->post('airline_code');
                 } else {
-                  $this->data['airline_code'] = 0;
+				  if($this->session->userdata('usertypeID') == 2){
+					 $this->data['airline_code'] = $this->session->userdata('default_airline');
+				   } else {					
+                     $this->data['airline_code'] = 0;
+				   }
                 }
                 if(!empty($this->input->post('class'))){
                 $this->data['cla'] = $this->input->post('class');

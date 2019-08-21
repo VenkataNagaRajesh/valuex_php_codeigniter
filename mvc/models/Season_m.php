@@ -25,7 +25,7 @@ class season_m extends MY_Model {
               $this->db->where($where);
 			}
 			if($wherein != null){
-				$this->db->where_in('airlineID',$wherein);
+				$this->db->where_in('s.airlineID',$wherein);
 			}
             $query = $this->db->get();
             return $query->result();
@@ -36,6 +36,9 @@ class season_m extends MY_Model {
 
 		 $this->db->select('*')->from('VX_aln_season');
 		if($id != 0){ $this->db->where('airlineID',$id); }
+		if($this->session->userdata('usertypeID') == 2){
+		   $this->db->where_in('airlineID',$this->session->userdata('login_user_airlineID'));
+		}
 		$query = $this->db->get();
             return $query->result();
 
@@ -151,10 +154,11 @@ class season_m extends MY_Model {
 	public function seasonTotalCount(){
 		$this->db->select('count(*) count')->from('VX_aln_season');
 		if($this->session->userdata('usertypeID') == 2){		
-			$this->db->where('create_userID',$this->session->userdata('loginuserID'));
+			//$this->db->where('create_userID',$this->session->userdata('loginuserID'));
+			$this->db->where_in('airlineID',$this->session->userdata('login_user_airlineID'));
 		}
-		if(!empty($this->input->get('carrier'))){
-			$this->db->where('airlineID',$this->input->get('carrier'));
+		if(!empty($this->session->userdata('default_airline'))){
+			$this->db->where('airlineID',$this->session->userdata('default_airline'));
 		}
 		$query = $this->db->get();
 		return $query->row('count');

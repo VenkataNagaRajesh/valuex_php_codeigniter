@@ -170,6 +170,16 @@ class Admin_Controller extends MY_Controller {
 				redirect(base_url('exceptionpage/error'));
 			}
 		}
+		
+		if($this->session->userdata('usertypeID') == 2){
+			$this->load->model('airports_m');
+			$this->data['loginairlines'] = $this->airports_m->getDefinitionList($this->session->userdata('login_user_airlineID'));
+			if($this->session->userdata('default_airline')){
+				$this->data['carrier'] = $this->session->userdata('default_airline');
+			} else {
+				$this->data['carrier'] = 0;
+			}
+		}
 	}
 
 	public function usercreatemail($email=NULL, $username=NULL, $password=NULL) {
