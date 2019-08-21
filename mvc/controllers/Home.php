@@ -133,7 +133,7 @@ class Home extends MY_Controller {
 	}	
 	
 	public function upgradeoffer() {		
-		$this->data["subview"] = "home/upgradeoffer";
+		$this->data["subview"] = "home/upgradeoffertmp";
 		$this->load->view('_layout_home', $this->data);
 	}		
 	public function paysuccess() {
