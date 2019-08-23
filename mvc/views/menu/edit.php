@@ -6,7 +6,7 @@
 
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li><a href="<?=base_url("menu/index")?>">Manu Management</a></li>
+            <li><a href="<?=base_url("menu/index")?>">Back</a></li>
             <li class="active">Add Menu</li>
         </ol>
     </div><!-- /.box-header -->

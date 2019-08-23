@@ -6,7 +6,7 @@
 
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li><a href="<?=base_url("mailandsmstemplate/index")?>"><?=$this->lang->line('menu_mailandsmstemplate')?></a></li>
+            <li><a href="<?=base_url("mailandsmstemplate/index")?>"><?php //echo $this->lang->line('menu_mailandsmstemplate'); ?>Back</a></li>
             <li class="active"><?=$this->lang->line('menu_add')?> <?=$this->lang->line('menu_mailandsmstemplate')?></li>
         </ol>
     </div><!-- /.box-header -->

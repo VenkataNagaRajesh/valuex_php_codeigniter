@@ -3,7 +3,7 @@
         <div class="col-sm-6">
             <ol class="breadcrumb">            
               <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>             
-              <li><a href="<?=base_url("airline/index")?>"><?=$this->lang->line('menu_airline')?></a></li>             
+              <li><a href="<?=base_url("airline/index")?>"><?php //echo $this->lang->line('menu_airline'); ?>Back</a></li>             
               <li class="active"><?=$this->lang->line('view')?></li>            
             </ol>
          </div>

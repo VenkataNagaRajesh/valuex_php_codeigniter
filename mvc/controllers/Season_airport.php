@@ -123,13 +123,14 @@ class Season_airport extends Admin_Controller {
 			  
             }
 
-            $sQuery="SELECT SQL_CALC_FOUND_ROWS s.season_name,sap.*,ma.aln_data_value airport,mc.aln_data_value country,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active FROM ".$table." sap 
+            $sQuery="SELECT SQL_CALC_FOUND_ROWS s.season_name,sap.*,ma.aln_data_value airport,mc.aln_data_value country,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active,car.code as carrier_code FROM ".$table." sap 
             JOIN VX_aln_season s on (s.VX_aln_seasonID = sap.seasonID) 
             LEFT JOIN vx_aln_master_data m on (m.airportID = ".$col." ) 
             LEFT JOIN vx_aln_data_defns ma ON (ma.vx_aln_data_defnsID = m.airportID)          
             LEFT JOIN vx_aln_data_defns mc ON (mc.vx_aln_data_defnsID = m.countryID) 
             LEFT JOIN vx_aln_data_defns mr ON (mr.vx_aln_data_defnsID = m.regionID) 
             LEFT JOIN vx_aln_data_defns mar ON (mar.vx_aln_data_defnsID = m.areaID)
+			LEFT JOIN vx_aln_data_defns car ON (car.vx_aln_data_defnsID = s.airlineID)
             $sWhere $sOrder $sLimit";
 		  //print_r($sQuery); exit;
                 $rResult = $this->install_m->run_query($sQuery);

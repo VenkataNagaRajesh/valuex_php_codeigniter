@@ -54,6 +54,7 @@
               <thead>
                <tr>
                  <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+				 <th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>
 			     <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
                  <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>
 				 <th class="col-lg-1"><?=$this->lang->line('country')?></th>				
@@ -104,6 +105,7 @@
             },
 
       "columns": [{"data": "temp_id" },
+		          {"data": "carrier_code"},
 		          {"data": "season_name"},
                   {"data": "airport" },
 		          {"data": "country" },		          

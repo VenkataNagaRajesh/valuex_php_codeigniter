@@ -17,7 +17,7 @@ class season_m extends MY_Model {
 	}
 
      function get_seasons_where($where=null,$wherein=null){
-            $this->db->select('s.*,,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level')->from('VX_aln_season s');
+            $this->db->select('s.*,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level')->from('VX_aln_season s');
 			$this->db->join('vx_aln_data_types dt1','dt1.vx_aln_data_typeID = s.ams_orig_levelID','LEFT');
 			$this->db->join('vx_aln_data_types dt2','dt2.vx_aln_data_typeID = s.ams_dest_levelID','LEFT');
 			$this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = s.airlineID','LEFT');

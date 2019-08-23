@@ -279,7 +279,7 @@ function seasoncalender (seasonlist = '[]') {
 			} else {
 			name[ new Date( season_data[i]['dates'][k] )] = season_data[i]['season_name']+'(Airline:'+season_data[i]['airline_code']+',Origin:'+season_data[i]['orig_level']+',Destination:'+season_data[i]['dest_level']+')' ;
 			}
-                    			
+          console.log(season_data[i]['season_name']+'(Airline:'+season_data[i]['airline_code']+',Origin:'+season_data[i]['orig_level']+',Destination:'+season_data[i]['dest_level']+')' );          			
 	   } 
 	    $("<style> .season"+season_data[i]['VX_aln_seasonID'] + " { color:#fffff !important;  background:"+season_data[i]['season_color'] + " !important;} </style>").appendTo("head");		
 		
