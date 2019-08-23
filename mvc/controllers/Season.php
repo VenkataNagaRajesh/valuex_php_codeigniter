@@ -569,7 +569,7 @@ class Season extends Admin_Controller {
 	public function getSeasonInfo() {
 		$id = $this->input->post('season_id');
 		if((int)$id) {
-          $season = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
+          $season = $this->season_m->get_seasons_where(array('VX_aln_seasonID'=>$id))[0];
 		  $season->ams_season_start_date=date('d-m-Y',$season->ams_season_start_date);
 		  $season->ams_season_end_date=date('d-m-Y',$season->ams_season_end_date);
 		   $season->dates = $this->createDateRange($season->ams_season_start_date,$season->ams_season_end_date);
