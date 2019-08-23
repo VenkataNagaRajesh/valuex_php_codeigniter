@@ -16,12 +16,12 @@ $lang['view'] = 'View';
 
 $lang['file_clear'] = 'Clear';
 $lang['file_browse'] = 'File Browse';
-$lang['airline_name']='Airline';
+$lang['airline_name']='Carrier';
 $lang['airline_country']='Country';
 $lang['airline_state']='State';
 $lang['airline_region']='Region';
 $lang['airline_area']='Area';
-$lang['airline_code']='Airline Code';
+$lang['airline_code']='Carrier Code';
 $lang['airline_active'] = 'Active';
 $lang['airport_information'] = 'Airline Information';
 $lang['airline_created_user'] = 'Created By';

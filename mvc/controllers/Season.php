@@ -748,7 +748,7 @@ class Season extends Admin_Controller {
 		   $season->action .= btn_delete('season/delete/'.$season->VX_aln_seasonID, $this->lang->line('delete'));			 
 		  }
 		  if(permissionChecker('season_view') ) {
-		   //$season->action .= btn_view('season/view/'.$season->VX_aln_seasonID, $this->lang->line('view'));
+		   $season->action .= btn_view('season/view/'.$season->VX_aln_seasonID, $this->lang->line('view'));
 		  }
 			$status = $season->active;
 			$season->active = "<div class='onoffswitch-small' id='".$season->VX_aln_seasonID."'>";
