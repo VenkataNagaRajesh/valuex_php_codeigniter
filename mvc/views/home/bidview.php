@@ -238,12 +238,15 @@ $(document).ready(function () {
        	
     $('#bid_min_<?=$result->flight_number?>').text(<?php echo explode(',',$result->min)[$i]; ?>);
     $('#bid_max_<?=$result->flight_number?>').text(<?php echo explode(',',$result->max)[$i]; ?>);
-	var tot_avg = tot_avg + <?=explode(',',$result->avg)[$i]?>;
+	//var tot_avg = tot_avg + <?=explode(',',$result->avg)[$i]?>;
     changeColors(<?=$result->flight_number?>);
-  <?php } } } ?>  
-  $("#tot").text(tot_avg*<?=$passengers_count?>);
-  $("#bidtot").text(tot_avg*<?=$passengers_count?>);  
-  mileSliderUpdate();
+  <?php } } } ?>    
+ // $("#tot").text(tot_avg*<?=$passengers_count?>);
+  //$("#bidtot").text(tot_avg*<?=$passengers_count?>);  
+    var total = getTotal();
+	$("#tot").text(total);
+	$("#bidtot").text(total);
+    mileSliderUpdate();
  
 });
 <?php foreach($results as $result){  if($result->fclr != null){ ?> 
@@ -319,7 +322,7 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
             $("#bid_slider_<?=$result->flight_number?>").slider('setAttribute', 'max', Math.round(info['max']));
 		    $("#bid_slider_<?=$result->flight_number?>").slider('setAttribute', 'min', Math.round(info['min']));
 		    $("#bid_slider_<?=$result->flight_number?>").slider('setValue', Math.round(info['average']));
-			$("#bid_min_<?=$result->flight_number?>").text(Math.round(info['max']));
+			$("#bid_max_<?=$result->flight_number?>").text(Math.round(info['max']));
 			$("#bid_min_<?=$result->flight_number?>").text(Math.round(info['min']));
 			var tot_avg = getTotal();
 			 $("#tot").text(tot_avg);
