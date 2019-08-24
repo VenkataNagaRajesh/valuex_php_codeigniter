@@ -9,6 +9,7 @@ $lang['country'] = 'Country';
 $lang['state'] = 'State';
 $lang['region'] = 'Region';
 $lang['area'] = 'Area';
+$lang['season_airline'] = 'Carrier';
 $lang['action'] = "Action";
 $lang['view'] = 'View';
 $lang['edit'] = 'Edit';

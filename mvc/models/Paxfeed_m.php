@@ -54,18 +54,25 @@ class Paxfeed_m extends MY_Model {
 
 	function process_tiermarkup($pnr_list){
 		foreach($pnr_list as $pnr){
-			$this->db->select('tier_markup,rbd_markup')->from('VX_aln_daily_tkt_pax_feed');
+			$this->db->select('max(tier_markup) as tier_markup,max(rbd_markup) as rbd_markup,flight_number,carrier_code,from_city,to_city')->from('VX_aln_daily_tkt_pax_feed');
 			$this->db->where('pnr_ref',$pnr);
-			$this->db->order_by('tier','desc');
-			$this->db->order_by('rbd_markup','desc');
+			$this->db->group_by(array('flight_number','carrier_code','from_city','to_city'));
 			$query = $this->db->get();
 	                $data = $query->result();
-			if(count($data) >= 2) {
+			if(count($data) >0) {
+			 foreach($data as $v){
 				$arr = array();
-				$arr['rbd_markup'] = $data[0]->rbd_markup;
-				$arr['tier_markup'] = $data[0]->tier_markup;
-				$this->db->where('pnr_ref',$pnr);
+				$arr['rbd_markup'] = $v->rbd_markup;
+				$arr['tier_markup'] = $v->tier_markup;
+				$where = array();
+				$where['pnr_ref'] = $pnr;
+				$where['flight_number'] = $v->flight_number;
+				$where['carrier_code'] = $v->carrier_code;
+				$where['from_city'] = $v->from_city;
+				$where['to_city'] = $v->to_city;
+				$this->db->where($where);
 				$this->db->update('VX_aln_daily_tkt_pax_feed',$arr);
+				}
 			}
 		}
 

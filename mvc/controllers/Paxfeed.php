@@ -391,6 +391,12 @@ class Paxfeed extends Admin_Controller {
                                         }
 
 					
+                                        if( $paxfeedraw['class'] != $pnr_exist->class) {
+
+                                                $this->mydebug->paxfeed_log("Multi Pax entry,  invalid class for row " . $column , 1);
+                                                continue;
+                                        }
+
 
                                         //        $this->mydebug->paxfeed_log("Multi Pax entry, invalid data for row " . $column , 1);
 					//	$this->mydebug->paxfeed_log("Multi Pax entry ". print_r($paxfeedraw) , 1);

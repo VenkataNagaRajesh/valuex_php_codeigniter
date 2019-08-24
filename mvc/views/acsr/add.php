@@ -4,7 +4,7 @@
         <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>       
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li><a href="<?=base_url("acsr/index")?>"></i> <?=$this->lang->line('menu_acsr')?></a></li>
+            <li><a href="<?=base_url("acsr/index")?>"></i> <?php //echo $this->lang->line('menu_acsr');?> Back</a></li>
             <li class="active"><?=$this->lang->line('menu_add')?> <?=$this->lang->line('menu_acsr')?></li>
         </ol>
     </div><!-- /.box-header -->

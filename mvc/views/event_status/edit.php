@@ -3,7 +3,7 @@
         <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li><a href="<?=base_url("event_status/index")?>"><?=$this->lang->line('menu_event_status')?></a></li>
+            <li><a href="<?=base_url("event_status/index")?>"><?php //echo $this->lang->line('menu_event_status'); ?>Back</a></li>
             <li class="active"><?=$this->lang->line('edit_event_status')?></li>
         </ol>
     </div><!-- /.box-header -->

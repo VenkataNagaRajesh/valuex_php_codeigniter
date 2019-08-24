@@ -504,7 +504,41 @@ class Season extends Admin_Controller {
         );	
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if ((int)$id) {
-			$this->data['season'] = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
+			$season = $this->season_m->get_seasons_where(array('VX_aln_seasonID'=>$id))[0];
+			 $season->ams_season_start_date = date('d-m-Y',$season->ams_season_start_date);	  
+		     $season->ams_season_end_date = date('d-m-Y',$season->ams_season_end_date);
+		  
+		     $season->is_return_inclusive = ($season->is_return_inclusive)?"yes":"no";
+			 $orig_where = explode(',',$season->ams_orig_level_value);
+			 $dest_where = explode(',',$season->ams_dest_level_value);
+			 if($season->orig_type == 17){
+			   $orig_values = $this->marketzone_m->get_marketzones($orig_where); 
+               $orig_level_values = implode(', ',array_map(function ($object) { return $object->market_name; }, $orig_values));			   
+			} else {
+               $orig_values = $this->airports_m->getDefinitionList($orig_where);
+			   if($season->orig_type == 4 || $season->orig_type == 5){
+			   $orig_level_values = implode(', ',array_map(function ($object) { return $object->aln_data_value; }, $orig_values));
+			   } else {
+			    $orig_level_values = implode(', ',array_map(function ($object) { return $object->code; }, $orig_values));
+			   }
+			}
+			if($season->dest_type == 17){
+			  $dest_values = $this->marketzone_m->get_marketzones($dest_where);
+			  $dest_level_values = implode(', ',array_map(function ($object) { return $object->market_name; }, $dest_values));
+			} else {
+              $dest_values = $this->airports_m->getDefinitionList($dest_where);
+			   if($season->dest_type == 4 || $season->dest_type == 5){
+              $dest_level_values = implode(', ',array_map(function ($object) { return $object->aln_data_value; }, $dest_values));
+			   } else {
+              $dest_level_values = implode(', ',array_map(function ($object) { return $object->code; }, $dest_values));
+			   }			  
+			}
+			
+            $season->orig_level_values = $orig_level_values;
+			$season->dest_level_values = $dest_level_values;			
+		   
+			$this->data["season"] = $season; 
+			//print_r($this->data['season'] ); exit;
 			if($this->data["season"]) {
 				$this->data["subview"] = "season/view";
 				$this->load->view('_layout_main', $this->data);
@@ -535,7 +569,7 @@ class Season extends Admin_Controller {
 	public function getSeasonInfo() {
 		$id = $this->input->post('season_id');
 		if((int)$id) {
-          $season = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
+          $season = $this->season_m->get_seasons_where(array('VX_aln_seasonID'=>$id))[0];
 		  $season->ams_season_start_date=date('d-m-Y',$season->ams_season_start_date);
 		  $season->ams_season_end_date=date('d-m-Y',$season->ams_season_end_date);
 		   $season->dates = $this->createDateRange($season->ams_season_start_date,$season->ams_season_end_date);
@@ -714,7 +748,7 @@ class Season extends Admin_Controller {
 		   $season->action .= btn_delete('season/delete/'.$season->VX_aln_seasonID, $this->lang->line('delete'));			 
 		  }
 		  if(permissionChecker('season_view') ) {
-		   //$season->action .= btn_view('season/view/'.$season->VX_aln_seasonID, $this->lang->line('view'));
+		   $season->action .= btn_view('season/view/'.$season->VX_aln_seasonID, $this->lang->line('view'));
 		  }
 			$status = $season->active;
 			$season->active = "<div class='onoffswitch-small' id='".$season->VX_aln_seasonID."'>";

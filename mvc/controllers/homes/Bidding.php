@@ -59,7 +59,9 @@ class Bidding extends MY_Controller {
             $this->data['passengers_count'] = count(explode(',',$result->pax_names)); 			
      	}
        //$this->data['passengers_count'] = 2;		
-       // echo $interval->format('%Y years %m months %d days %H hours %i minutes %s seconds');	 exit; 
+       // echo $interval->format('%Y years %m months %d days %H hours %i minutes %s seconds');	 
+	  // echo $this->data['passengers_count']; 
+	  // exit; 
         $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
         $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
