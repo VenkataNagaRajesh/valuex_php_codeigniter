@@ -268,7 +268,7 @@
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+				{ extend: 'pdf', orientation: 'landscape', pageSize: 'LEGAL',exportOptions: { columns: "thead th:not(.noExport)" } },
                 { text: 'ExportAll', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({

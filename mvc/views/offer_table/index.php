@@ -239,7 +239,7 @@ $("#dep_from_date").datepicker({
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } } ,
+				{ extend: 'pdf', orientation: 'landscape', pageSize: 'LEGAL',exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } } ,
                 { text: 'ExportAll', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
