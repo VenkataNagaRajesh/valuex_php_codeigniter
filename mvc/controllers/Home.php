@@ -128,7 +128,7 @@ class Home extends MY_Controller {
         $this->data['offer_data'] = $this->bid_m->get_offer_data($offer_id);
 		
         // print_r($this->data['offer_data']); exit;		
-		$this->data["subview"] = "home/bidsuccess";
+		$this->data["subview"] = "home/bidsuccess-temp";
 		$this->load->view('_layout_home', $this->data);
 	}	
 	
@@ -145,7 +145,7 @@ class Home extends MY_Controller {
 	public function temp1() {
         $dtpf_id = htmlentities(escapeString($this->uri->segment(3)));	
         $this->data['pax_data'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$dtpf_id));		
-		$this->data["subview"] = "home/temp1";
+		$this->data["subview"] = "home/temp-1";
 		$this->load->view('_layout_home', $this->data);
 	}
 	public function temp2() {
