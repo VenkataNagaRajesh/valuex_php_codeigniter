@@ -236,10 +236,10 @@ $("#dep_from_date").datepicker({
      dom: 'B<"clear">lfrtip',
      //buttons: [ 'copy', 'csv', 'excel','pdf' ]
       buttons: [
-	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } } ,
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } } ,
                 { text: 'ExportAll', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
@@ -261,11 +261,11 @@ $("#dep_from_date").datepicker({
 
  "columnDefs":  [ {"targets":12,
                          render: function ( data, type, row, meta ) {
-                       console.log(type);                                                
-			console.log($(data).text() + '(' +  $(data).attr("data-original-title") + ' ) ');
-//			console.log($(data).attr('data-original-title'));
-//			console.log($(data).text());
+                       console.log(type);                                 
+			
+
                                                 if(type == 'export'){
+													console.log($(data).text() + '(' +  $(data).attr("data-original-title") + ' ) ');
                           			return $(data).text() + '(' +  $(data).attr("data-original-title") + ' ) ';
                                                 } else {
                                                   return data;  
