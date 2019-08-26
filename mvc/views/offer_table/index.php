@@ -117,10 +117,8 @@
 							<th class="col-lg-1"><?=$this->lang->line('bid_cabin')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('bid_amount')?></th>
 							 <th class="col-lg-1"><?php echo "Submit Date";?></th>
-							<th class="col-lg-1"><?=$this->lang->line('pax_names')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('fqtv')?></th>
+							<th class="col-lg-1">Pax Details</th>
 							<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('number_psgr')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('avg_p')?></th>
 							<th class="col-lg-1">Rank</th>
 							<th class="col-lg-1"><?=$this->lang->line('cash')?></th>
@@ -225,9 +223,7 @@ $("#dep_from_date").datepicker({
                    {"data": "bid_value" },
 		     {"data": "bid_submit_date" },
 		   {"data": "p_list" },
-		   {"data": "fqtv" },
                    {"data": "pnr_ref" },
-                {"data": "p_count" },
 		 {"data": "bid_avg" },
 		{"data": "rank" },
                 {"data": "cash" },
@@ -261,7 +257,21 @@ $("#dep_from_date").datepicker({
 						  });
                         }
                  }				
-            ]	 
+            ],
+
+ "columnDefs":  [ {"targets":12,
+                         render: function ( data, type, row, meta ) {
+                       console.log(type);                                                
+			console.log($(data).text() + '(' +  $(data).attr("data-original-title") + ' ) ');
+//			console.log($(data).attr('data-original-title'));
+//			console.log($(data).text());
+                                                if(type == 'export'){
+                          			return $(data).text() + '(' +  $(data).attr("data-original-title") + ' ) ';
+                                                } else {
+                                                  return data;  
+                                                }                      
+                   }} ]
+
     });
 	
 	

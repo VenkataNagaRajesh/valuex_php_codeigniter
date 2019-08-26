@@ -377,9 +377,9 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
 
                         
                        INNER  JOIN (
-                                        select  flight_number,group_concat(distinct fqtv  SEPARATOR ' ') as fqtv ,
+                                        select  flight_number,group_concat(distinct first_name, ' ' , last_name , ' fqtv: ' , fqtv SEPARATOR '<br>'  ) as p_list ,group_concat(distinct fqtv) as fqtv,
                                                 group_concat(distinct dep_date) as flight_date  ,
-                                                pnr_ref,group_concat(first_name, ' ' , last_name) as p_list , 
+                                                pnr_ref, 
                                                 group_concat(distinct cab.code) as from_cabin  , fc.code as from_city, 
 						tc.code as to_city, from_city as boarding_point , to_city as off_point, 
 						fc.aln_data_value as from_city_name, tc.aln_data_value as to_city_name,
@@ -422,7 +422,10 @@ $sOrder $sLimit";
                         $feed->flight_date = date('d-m-Y',$feed->flight_date);
 			$feed->bid_submit_date =  date('d-m-Y H:i:s',$feed->bid_submit_date);
 			$feed->offer_date = date('d-m-Y',$feed->offer_date);
-			$feed->p_count = count(explode(',',$feed->p_list));
+			$feed->p_count = count(explode('<br>',$feed->p_list));
+			$feed->pp_list = str_replace('<br>',',' ,$feed->p_list);
+			$feed->p_list = '<a href="#" style="color:blue;"  data-placement="top" data-toggle="tooltip" data-original-title="'.$feed->p_list.'">'.$feed->p_count.'</a>';
+
 			$feed->action = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
                                 $output['aaData'][] = $feed;
             $feed->id = $i;
@@ -430,8 +433,8 @@ $sOrder $sLimit";
                 }
 
            if(isset($_REQUEST['export'])){
-		  $columns = array("id","Offer Date","Carrier","Flight Number","Flight Date","Board Point","Off Point","Current cabin","Bid Cabin","Bid Amount","Submit Date","PAX Names","FQTV NBR","PNR Reference","Number In Party","Average Fare","Markup Value","Rank","cash","miles","offer status");
-		  $rows = array("id","offer_date","carrier","flight_number","flight_date","from_city","to_city","from_cabin","to_cabin","bid_value","bid_submit_date","p_list","fqtv","pnr_ref","p_count","bid_avg","bid_markup_val","rank","cash","miles","offer_status");
+		  $columns = array("id","Offer Date","Carrier","Flight Number","Flight Date","Board Point","Off Point","Current cabin","Bid Cabin","Bid Amount","Submit Date","PAX Names","PNR Reference","Number In Party","Average Fare","Markup Value","Rank","cash","miles","offer status");
+		  $rows = array("id","offer_date","carrier","flight_number","flight_date","from_city","to_city","from_cabin","to_cabin","bid_value","bid_submit_date","pp_list","pnr_ref","p_count","bid_avg","bid_markup_val","rank","cash","miles","offer_status");
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );
