@@ -3,7 +3,7 @@
         <h3 class="box-title"><?=$this->lang->line('panel_title')?></h3>       
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><?=$this->lang->line('menu_dashboard')?></a></li>
-			<li><a href="<?=base_url("offer_table/index")?>"><?="Back"?></a></li>
+			<li><a href="<?=base_url("$return/index")?>"><?="Back"?></a></li>
             <li class="active"><?=$this->lang->line('panel_title')?> <?="view"?></li>
         </ol>
   </div><!-- /.box-header -->

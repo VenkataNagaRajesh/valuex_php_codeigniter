@@ -30,7 +30,14 @@ class Offer_table extends Admin_Controller {
 
         public function view() {
                 $id = htmlentities(escapeString($this->uri->segment(3)));
+		$return = htmlentities(escapeString($this->uri->segment(4)));
+		if($return == 'return'){
+			 $return = htmlentities(escapeString($this->uri->segment(5)));
+		} else {
+			$return = 'offer_table';
+		}
 
+			$this->data["return"] = $return;
                 if ((int)$id) {
                         $this->data["ofr"] = $this->offer_issue_m->getOfferDetailsById($id);
 

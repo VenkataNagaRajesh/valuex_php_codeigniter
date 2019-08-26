@@ -261,11 +261,7 @@ $("#dep_from_date").datepicker({
 
  "columnDefs":  [ {"targets":12,
                          render: function ( data, type, row, meta ) {
-                       console.log(type);                                 
-			
-
                                                 if(type == 'export'){
-													console.log($(data).text() + '(' +  $(data).attr("data-original-title") + ' ) ');
                           			return $(data).text() + '(' +  $(data).attr("data-original-title") + ' ) ';
                                                 } else {
                                                   return data;  
