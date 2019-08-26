@@ -261,8 +261,11 @@ $("#dep_from_date").datepicker({
 
  "columnDefs":  [ {"targets":12,
                          render: function ( data, type, row, meta ) {
+					var str = $(data).attr("data-original-title");
+					var str = str.replace(/<br>/g, ",");
                                                 if(type == 'export'){
-                          			return $(data).text() + '(' +  $(data).attr("data-original-title") + ' ) ';
+						console.log($(data).attr("data-original-title"));
+                          			return $(data).text() + '(' +  str + ' ) ';
                                                 } else {
                                                   return data;  
                                                 }                      
