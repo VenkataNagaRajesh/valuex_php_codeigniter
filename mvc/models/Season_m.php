@@ -78,16 +78,18 @@ class season_m extends MY_Model {
 		$this->db->select('VX_aln_seasonID')->from('VX_aln_season ss');
 		$this->db->join('VX_season_airport_origin_map om','om.seasonID = ss.VX_aln_seasonID','LEFT');
 		$this->db->join('VX_season_airport_dest_map dm','dm.seasonID = ss.VX_aln_seasonID','LEFT');
+		$this->db->join('vx_aln_data_defns do','do.alias =  ss.ams_orig_levelID and do.aln_data_typeID = 23','LEFT');
+		 $this->db->join('vx_aln_data_defns dd','dd.alias =  ss.ams_dest_levelID and dd.aln_data_typeID = 23','LEFT');
 		$this->db->where('airlineID' , $carrierID);
 		$this->db->where('dest_airportID' , $dest_id);
 		$this->db->where('orig_airportID' , $orig_id);
-
-		$this->db->where('active' , '1');
+		$this->db->where('ss.active' , '1');
 	//	$this->db->where('year(FROM_UNIXTIME(ams_season_start_date))' , $current_year);
         //        $this->db->where('year(FROM_UNIXTIME(ams_season_end_date)) ' , $current_year);
 
 	        $this->db->where('((ams_season_start_date <= '.$current_yr_date.' AND ams_season_end_date >= ' . $current_yr_date . ') OR (ams_season_start_date <= ' .$old_yr_date .  ' AND ams_season_end_date >= '  . $old_yr_date.'))');
-		$this->db->order_by('VX_aln_seasonID','desc');
+		$this->db->order_by('do.code asc, dd.code asc');
+		//$this->db->order_by('VX_aln_seasonID','desc');
 // select CONCAT(day(FROM_UNIXTIME(ams_season_start_date)),'-',month(FROM_UNIXTIME(ams_season_start_date)),'-',year(FROM_UNIXTIME(ams_season_start_date))) as date , FROM_UNIXTIME(ams_season_start_date) , day(FROM_UNIXTIME(ams_season_start_date)) as day ,month(FROM_UNIXTIME(ams_season_start_date)) as mon from VX_aln_season where CONCAT(day(FROM_UNIXTIME(ams_season_start_date)),'-',month(FROM_UNIXTIME(ams_season_start_date)),'-',year(FROM_UNIXTIME(ams_season_start_date))) = '1-6-2019';
 		 $this->db->limit(1);
                 $query = $this->db->get();

@@ -503,11 +503,26 @@ $('#ams_orig_levelID').change(function(e){
 	$(this).parent().removeClass('has-error');
 	$('#ams_orig_level_value').val(null).trigger('change')
      var level_id = $(this).val();                 
+     var airline_id = $('#airlineID').val();
+		 if( level_id == '17' ) {
+                if($('#airlineID').val() == '0') {
+                        alert('select Airline');
+                        $("#ams_orig_levelID").val(0);
+                           $('#ams_orig_levelID').trigger('change');
+
+                        return false;
+                }
+        }
+
     $.ajax({ 
              async: false,            
 	         type: 'POST',            
              url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-             data: "id=" + level_id,            
+		 data: {
+                           "id":level_id,
+                           "airline_id":airline_id,
+                                },
+
              dataType: "html",                                  
              success: function(data) {               
                 $('#ams_orig_level_value').html(data); 
@@ -515,6 +530,7 @@ $('#ams_orig_levelID').change(function(e){
       }); 
 });
 	
+
 $('#origID').change(function(e){
 	$(this).parent().removeClass('has-error');
 	$('#origValues').val(null).trigger('change')
@@ -551,11 +567,26 @@ $('#ams_dest_levelID').change(function(e){
 	$(this).parent().removeClass('has-error');
 	$('#ams_dest_level_value').val(null).trigger('change')
      var level_id = $(this).val();                 
+	  var airline_id = $('#airlineID').val();
+                 if( level_id == '17' ) {
+                if($('#airlineID').val() == '0') {
+                        alert('select Airline');
+                        $("#ams_dest_levelID").val(0);
+                           $('#ams_dest_levelID').trigger('change');
+
+                        return false;
+                }
+        }
+
     $.ajax({ 
              async: false,            
 	         type: 'POST',            
              url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-             data: "id=" + level_id,            
+		 data: {
+                           "id":level_id,
+                           "airline_id":airline_id,
+                                },
+
              dataType: "html",                                  
              success: function(data) {               
                $('#ams_dest_level_value').html(data);

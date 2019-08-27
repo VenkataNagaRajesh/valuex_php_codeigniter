@@ -239,7 +239,7 @@ $("#dep_from_date").datepicker({
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } } ,
+				{ extend: 'pdf', orientation: 'landscape', pageSize: 'LEGAL',exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } } ,
                 { text: 'ExportAll', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
@@ -261,12 +261,11 @@ $("#dep_from_date").datepicker({
 
  "columnDefs":  [ {"targets":12,
                          render: function ( data, type, row, meta ) {
-                       console.log(type);                                 
-			
-
+					var str = $(data).attr("data-original-title");
+					var str = str.replace(/<br>/g, ",");
                                                 if(type == 'export'){
-													console.log($(data).text() + '(' +  $(data).attr("data-original-title") + ' ) ');
-                          			return $(data).text() + '(' +  $(data).attr("data-original-title") + ' ) ';
+						console.log($(data).attr("data-original-title"));
+                          			return $(data).text() + '(' +  str + ' ) ';
                                                 } else {
                                                   return data;  
                                                 }                      
