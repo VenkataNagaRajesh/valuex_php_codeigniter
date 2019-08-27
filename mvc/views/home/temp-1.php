@@ -1,12 +1,12 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <div style="min-width: 245px;max-width: 1920px;position: relative;padding: 10px;border: 1px dotted #ddd;">
 	<div style="margin-left:auto;margin-right:auto;width:100%;padding-left: 15px;padding-right: 15px;background: #333;">
-		<img style="width:150px;" src="<?=base_url()?>assets/home/images/emir.png" alt="logo">
+		<img style="width:120px;" src="<?=base_url()?>assets/home/images/emir.png" alt="logo">
 	</div>
 	<div style="border: solid 1px #ddd;width:100%;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;">
 		<div style="position: relative;min-height: 1px;">
 			<div style="background-image: url(../assets/home/images/temp1-hdr-bg.jpg);margin-top: 15px;background-repeat: no-repeat;width: 100%;background-size: cover;">
-				<h1 style="margin-bottom:8px;color: #fff;font-size: 24px;font-weight: bold;padding:12px;font-family:calibri;"><span>Hi!</span><span style="float: right !important;color:#333;">Booking Reference : <b></b></span></h1>
+				<h1 style="margin-bottom:8px;color: #fff;font-size: 24px;font-weight: bold;padding:12px;font-family:calibri;"><span>Hi PAX Name! </span><span style="float: right !important;color:#333;">Booking Reference : PNR Ref<b></b></span></h1>
 			</div>
 			<div>
 				<img style="width: 100%;display: block;max-width: 100%;height: auto;" src="<?=base_url()?>assets/home/images/temp3-bnr.jpg" alt="temp bnr">
