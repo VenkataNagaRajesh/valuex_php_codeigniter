@@ -450,9 +450,10 @@ $sWhere $sOrder $sLimit";
 			$feed->booking_status = btn_view('offer_issue/view/'.$feed->offer_id, $this->lang->line('view'));
                         $feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default";
                         $feed->departure_date = date('d-m-Y',$feed->flight_date);
-			$bid_cnt = $this->bid_m->getBidByOfferID($feed->offer_id);
+			$bid_cnt = $this->bid_m->getBidByOfferID($feed->offer_id);	
+			$return_url = 'offer_issue';
 			if($bid_cnt > 0 ) {
-				$feed->bid_info = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
+				$feed->bid_info = btn_view('offer_table/view/'.$feed->offer_id.'/return/'.$return_url, $this->lang->line('view'));
 			} else{
 				$feed->bid_info = 'No Bid';
 			}
