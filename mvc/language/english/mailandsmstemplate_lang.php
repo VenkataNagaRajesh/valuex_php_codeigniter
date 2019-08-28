@@ -1,7 +1,7 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "Mail / SMS Template";
+$lang['panel_title'] = "Mail Template";
 $lang['add_title'] = "Add a template";
 $lang['slno'] = "#";
 $lang['mailandsmstemplate_name'] = "Name";

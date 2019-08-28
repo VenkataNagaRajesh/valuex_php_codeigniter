@@ -51,7 +51,8 @@ class Offer_issue extends Admin_Controller {
         $data['bgr_file']  = $cid3;
 		$data['files'] = array($filename1,$filename2,$filename3);
 		
-          $this->sendMailTemplateParser('home/upgrade_offer_temp',$data);
+          //$this->sendMailTemplateParser('home/upgrade_offer_temp',$data);
+		  $this->sendMailTemplateParser('home/temp-1',$data);
 	}
 	
 

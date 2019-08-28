@@ -829,15 +829,26 @@ class CI_Security {
 	 */
 	protected function _sanitize_naughty_html($matches)
 	{
-		static $naughty_tags    = array(
+		/* static $naughty_tags    = array(
 			'alert', 'area', 'prompt', 'confirm', 'applet', 'audio', 'basefont', 'base', 'behavior', 'bgsound',
 			'blink', 'body', 'embed', 'expression', 'form', 'frameset', 'frame', 'head', 'html', 'ilayer',
 			'iframe', 'input', 'button', 'select', 'isindex', 'layer', 'link', 'meta', 'keygen', 'object',
 			'plaintext', 'style', 'script', 'textarea', 'title', 'math', 'video', 'svg', 'xml', 'xss'
+		); */
+		
+		static $naughty_tags    = array(
+			'alert', 'area', 'prompt', 'confirm', 'applet', 'audio', 'basefont', 'base', 'behavior', 'bgsound',
+			'blink', 'body', 'embed', 'expression', 'form', 'frameset', 'frame', 'head', 'html', 'ilayer',
+			'iframe', 'input', 'button', 'select', 'isindex', 'layer', 'link', 'keygen', 'object',
+			'plaintext', 'style', 'script', 'textarea', 'math', 'video', 'svg', 'xml', 'xss'
 		);
 
-		static $evil_attributes = array(
+		/* static $evil_attributes = array(
 			'on\w+', 'style', 'xmlns', 'formaction', 'form', 'xlink:href', 'FSCommand', 'seekSegmentTime'
+		); */
+		
+		static $evil_attributes = array(
+			'on\w+','xmlns', 'formaction', 'form', 'xlink:href', 'FSCommand', 'seekSegmentTime'
 		);
 
 		// First, escape unclosed tags

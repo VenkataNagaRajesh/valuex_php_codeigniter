@@ -41,9 +41,9 @@ class Mailandsmstemplate_m extends MY_Model {
 	}
 
 	function get_order_by_mailandsmstemplate_with_usertypeID() {
-		$this->db->select('mailandsmstemplate.*,usertype.usertype,cat.name category');
+		$this->db->select('mailandsmstemplate.*,cat.name category');
 		$this->db->from('mailandsmstemplate');
-		$this->db->join('usertype', 'usertype.usertypeID = mailandsmstemplate.usertypeID', 'LEFT');
+		//$this->db->join('usertype', 'usertype.usertypeID = mailandsmstemplate.usertypeID', 'LEFT');
 		$this->db->join('mailandsmscategory cat','cat.catID = mailandsmstemplate.catID','LEFT');
 		$query = $this->db->get();
 		return $query->result();
@@ -57,13 +57,11 @@ class Mailandsmstemplate_m extends MY_Model {
 	function setDefault($catID,$mailandsmstemplateID){
 		$this->db->set('default', 0);
 		$this->db->where('catID',$catID);
-		$this->db->where('type','email');
 		$this->db->update('mailandsmstemplate');
 		
 		$this->db->set('default', 1);
 		$this->db->where('mailandsmstemplateID',$mailandsmstemplateID);
-		$this->db->update('mailandsmstemplate');
-		
+		$this->db->update('mailandsmstemplate');		
 		return true;
 	}
 }

@@ -377,15 +377,15 @@ class Marketzone extends Admin_Controller {
    public function getSubdataTypes(){
 	
 	$id = $this->input->post('id');
-	$market_id = $this->input->post('market_id');
+	//$market_id = $this->input->post('market_id');
 	$airline_id = $this->input->post('airline_id');
-	if($this->input->post('sub_id')){
-              $sub_id = $this->input->post('sub_id');
-         }else{
-             $sub_id = null;
-        }
 	if ( isset($id)){
 		if($id == 17){
+			if($this->input->post('market_id')){
+				 $market_id = $this->input->post('market_id');
+			} else{
+				$market_id = '';
+			}
 			$result = $this->marketzone_m->get_marketzones(null,array($airline_id),array($market_id));
 			
 		   foreach ($result as $market) {                               
