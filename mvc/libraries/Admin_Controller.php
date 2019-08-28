@@ -606,11 +606,12 @@ class Admin_Controller extends MY_Controller {
 	 }	
 	
 	 public function sendMailTemplateParser($template,$data){
-          $this->load->library('parser');
+           $this->load->library('parser');
 		   $this->load->library('email');
-		   $data['base_url'] = base_url();		 
-         // $template = $this->mailandsmstemplate_m->get_single_mailandsmstemplate(array("mailandsmstemplateID"=>$templateID))->template;		   
-         // $message = $this->parser->parse_string($template, $data);
+		   $data['base_url'] = base_url(); 
+           //$data['base_url'] = 'http://valuex.sweken.com/';           		   
+          // $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template)->template;		   
+         // $message = $this->parser->parse_string($tpl, $data);
 		  $message = $this->parser->parse($template, $data,TRUE);
           $message =html_entity_decode($message);
           $siteinfos = $this->reset_m->get_site();

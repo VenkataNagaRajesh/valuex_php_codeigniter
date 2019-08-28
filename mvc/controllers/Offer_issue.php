@@ -27,32 +27,17 @@ class Offer_issue extends Admin_Controller {
 	}	
 	
 	function testmail(){
-		 $filename1 = base_url().'assets/home/images/emir.png';
-	  $filename2 = base_url()."assets/home/images/temp1-bnr.jpg";
-	  $filename3 = base_url().'assets/home/images/temp1-hdr-bg.jpg';
-	  
-	  $this->email->attach($filename1);
-      $cid1 = $this->email->attachment_cid($filename1);
-	  $this->email->attach($filename2);
-      $cid2 = $this->email->attachment_cid($filename2);	  
-      $this->email->attach($filename3);
-      $cid3 = $this->email->attachment_cid($filename3);
-	  
+	    
 	  $data = array(
         'first_name'   => 'Lakshmi',
         'last_name' => 'Amujuru',
-                'tomail' => 'swekenit@gmail.com',
-                'pnr_ref' => 'US0404',
+        'tomail' => 'swekenit@gmail.com',
+        'pnr_ref' => 'US0404',
         'coupon_code' => 'sssssssss',
-                'mail_subject' => "Upgrade Cabin Offer"
-        );
-		$data['logo_cid'] = $cid1;
-        $data['temp_cid'] = $cid2;
-        $data['bgr_file']  = $cid3;
-		$data['files'] = array($filename1,$filename2,$filename3);
-		
-          //$this->sendMailTemplateParser('home/upgrade_offer_temp',$data);
-		  $this->sendMailTemplateParser('home/temp-1',$data);
+        'mail_subject' => "Upgrade Cabin Offer",
+		'bidnow_link' => base_url('home/index')		
+        );			
+          $this->sendMailTemplateParser('upgrade_offer',$data);		 
 	}
 	
 

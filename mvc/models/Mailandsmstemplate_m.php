@@ -64,4 +64,13 @@ class Mailandsmstemplate_m extends MY_Model {
 		$this->db->update('mailandsmstemplate');		
 		return true;
 	}
+	
+	function getDefaultMailTemplateByCat($cat){
+		$this->db->select('t.*')->from('mailandsmstemplate t');
+		$this->db->join('mailandsmscategory c','c.catID = t.catID','LEFT');
+		$this->db->where('c.alias',$cat);
+		$this->db->where('t.default',1);
+		$query = $this->db->get();
+		return $query->row();
+	}
 }
