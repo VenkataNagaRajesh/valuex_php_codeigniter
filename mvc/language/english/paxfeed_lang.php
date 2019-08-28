@@ -9,7 +9,7 @@ $lang['active'] = 'Status';
 $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
 
-$lang['upload_paxfeed'] = 'Upload Paxfeed';
+$lang['upload_paxfeed'] = 'Upload Pax Feed';
 $lang['view'] = 'View';
 
 $lang['file_clear'] = 'Clear';
