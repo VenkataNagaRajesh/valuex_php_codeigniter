@@ -31,13 +31,15 @@ class Offer_issue extends Admin_Controller {
 	  $data = array(
         'first_name'   => 'Lakshmi',
         'last_name' => 'Amujuru',
-        'tomail' => 'swekenit@gmail.com',
+        'tomail' => 'laxmicme@gmail.com',
         'pnr_ref' => 'US0404',
         'coupon_code' => 'sssssssss',
-        'mail_subject' => "Upgrade Cabin Offer",
+        'mail_subject' => "Upgrade Cabin Offerss",
 		'bidnow_link' => base_url('home/index')		
         );			
-          $this->sendMailTemplateParser('upgrade_offer',$data);		 
+		       
+          $this->sendMailTemplateParser('upgrade_offer',$data);
+           // $this->sendMailTemplateParser('home/temp-2',$data);		  
 	}
 	
 
