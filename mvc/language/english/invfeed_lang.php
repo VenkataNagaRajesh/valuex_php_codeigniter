@@ -1,7 +1,7 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "Invfeed";
+$lang['panel_title'] = "INV Feed";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
 $lang['active'] = 'Status';
@@ -9,12 +9,12 @@ $lang['active'] = 'Status';
 $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
 
-$lang['upload_invfeed'] = 'Upload INVfeed';
+$lang['upload_invfeed'] = 'Upload INV feed';
 $lang['view'] = 'View';
 
 $lang['file_clear'] = 'Clear';
 $lang['file_browse'] = 'File Browse';
-$lang['download_format'] = 'InvFeed Download Format';
+$lang['download_format'] = 'INV Feed Download Format';
 $lang['flight_number']='Flight Number';
 $lang['airline_code'] = 'Airline  Code';
 $lang['cabin'] = 'Cabin';

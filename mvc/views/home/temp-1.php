@@ -1,12 +1,27 @@
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<!doctype html>
+<html dir="">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title></title>
+<style>
+	@media screen and (min-width: 320px) and (max-width: 850px) {
+		.mobile h1 span{
+			float:none !important;
+			display:table;
+		}
+	}
+</style>
+</head>
+<body>
 <div style="min-width: 245px;max-width: 1100px;position: relative;padding: 10px;margin:0 auto;">
 	<div style="margin-left:auto;margin-right:auto;width:100%;padding-left: 15px;padding-right: 15px;background: #333;">
 		<img style="width:120px;" src="<?=base_url()?>assets/home/images/emir.png" alt="logo">
 	</div>
 	<div style="border: solid 1px #ddd;width:100%;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;">
 		<div style="position: relative;min-height: 1px;">
-			<div style="background-image: url(../assets/home/images/temp1-hdr-bg.jpg);margin-top: 15px;background-repeat: no-repeat;width: 100%;background-size: cover;">
-				<h1 style="margin-bottom:8px;color: #fff;font-size: 14px;font-weight: bold;padding:12px;font-family:calibri;"><span>Hi PAX Name! </span><span style="float: right !important;color:#333;">Booking Reference : PNR Ref<b></b></span></h1>
+			<div class="mobile" style="background-image: url(../assets/home/images/temp1-hdr-bg.jpg);margin-top: 15px;background-repeat: no-repeat;width: 100%;background-size: cover;">
+				<h1 style="margin-bottom:8px;color: #fff;font-size: 14px;font-weight: bold;padding:12px;font-family:calibri;"><span>Hi PAX Name! </span><span style="float: right;color:#333;">Booking Reference : PNR Ref<b></b></span></h1>
 			</div>
 			<div>
 				<img style="width: 100%;display: block;max-width: 100%;height: auto;" src="<?=base_url()?>assets/home/images/temp3-bnr.jpg" alt="temp bnr">
@@ -53,5 +68,15 @@
 				</p>
 			</div>
 		</div>
+		<div class="share">
+			<p><b>SHARE: </b></p>
+			<ul style="list-style: none;padding-left: 0;display: table;">
+				<li style="float: left;margin-right: 10px;"><a href="www.facebook.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/fb.png" alt="fb"></a></li>
+				<li style="float: left;margin-right: 10px;"><a href="www.pintrest.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/pinterest.png" alt="pinterest"></a></li>
+				<li style="float: left;margin-right: 10px;"><a href="www.twitter.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/twitter.png" alt="twitter"></a></li>
+			</ul>
+		</div>
 	</div>
 </div>
+</body>
+</html>
