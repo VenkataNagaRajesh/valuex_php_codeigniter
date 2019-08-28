@@ -3591,8 +3591,6 @@ fieldset[disabled] .btn-vk.active {
   border-radius: 3px;
   boder: 1px solid #F24E56;
 }
-
-
 .main-footer {
   background: #fff;
   padding: 15px;
@@ -3605,4 +3603,33 @@ fieldset[disabled] .btn-vk.active {
   transition: transform .3s ease-in-out,margin .3s ease-in-out;
   margin-left: 220px;
   z-index: 820;
+}
+.top-bar-title{
+	text-align: center;
+	margin-bottom: 0;
+	position: relative;
+	top: 6px;
+	font-weight: bold;
+	font-size: 2em;
+	text-transform: uppercase;
+	color: #333;
+	letter-spacing: 6px;
+}
+@media screen and (max-width: 767px) {
+	.top-bar-title {
+		font-size: 9px;
+	}
+}
+.user-menu .user-icon i {
+    font-size: 16px;
+    background: #000;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    border-radius: 50%;
+    padding-top: 5px;
+}
+.mbl-user-name {
+    display: none;
 }
