@@ -609,7 +609,7 @@ class Airline extends Admin_Controller {
 		    $airline->action .= btn_view('airline/view/'.$airline->vx_aln_data_defnsID, $this->lang->line('view'));
 		  }
 		  if(permissionChecker('airline_edit')){ 	
-		   $airline->action .= '<a href="'.base_url('airline/addFlights/'.$airline->vx_aln_data_defnsID).'" class="btn btn-warning btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Add Flights"><i class="fa fa-plus"></i></a>';
+		  // $airline->action .= '<a href="'.base_url('airline/addFlights/'.$airline->vx_aln_data_defnsID).'" class="btn btn-warning btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Add Flights"><i class="fa fa-plus"></i></a>';
 		  }  	   
 			$status = $airline->active;
 			$airline->active = "<div class='onoffswitch-small' id='".$airline->vx_aln_data_defnsID."'>";
