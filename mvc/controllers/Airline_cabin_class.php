@@ -417,7 +417,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, airline_class,  ac.code as carrie
 		
 	 $rownum = 1 + $_GET['iDisplayStart'];	
                 foreach($rResult as $list){
-			$list->chkbox = "<input type='checkbox'  class='deleteRow' value='".$list->map_id."'  /> #".$rownum ;
+			$list->chkbox = "<input type='checkbox'  class='deleteRow' value='".$list->map_id."'  /> ".$rownum ;
                                 $rownum++;
 		   $list->is_revenue = ($list->is_revenue)?"yes":"no";
                         if(permissionChecker('airline_cabin_class_edit') ) {

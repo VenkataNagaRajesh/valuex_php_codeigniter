@@ -553,7 +553,7 @@ class Airports_master extends Admin_Controller {
 
 	  foreach($rResult as $airport){		 	
 
-		 $airport->chkbox = "<input type='checkbox'  class='deleteRow' value='".$airport->vx_amdID."'  /> #".$rownum ;
+		 $airport->chkbox = "<input type='checkbox'  class='deleteRow' value='".$airport->vx_amdID."'  /> ".$rownum ;
                                 $rownum++;
 
 		  if(permissionChecker('airports_master_edit')){ 			

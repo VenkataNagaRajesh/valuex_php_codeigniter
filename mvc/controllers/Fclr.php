@@ -687,7 +687,7 @@ $sWhere $sOrder $sLimit";
 		$rownum = 1 + $_GET['iDisplayStart'];
 		foreach ($rResult as $feed ) {
 
-			 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->fclr_id."'  /> #".$rownum ;
+			 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->fclr_id."'  /> ".$rownum ;
                                 $rownum++;
 
 			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));

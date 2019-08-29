@@ -560,7 +560,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , 
 
                 foreach($rResult as $list){
 
-			$list->chkbox = "<input type='checkbox'  class='deleteRow' value='".$list->cabin_map_id."'  /> #".$rownum ;
+			$list->chkbox = "<input type='checkbox'  class='deleteRow' value='".$list->cabin_map_id."'  /> ".$rownum ;
                                 $rownum++;
 
 			$list->img_cnt = $this->airline_cabin_m->getImagesCount($list->cabin_map_id);

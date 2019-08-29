@@ -603,7 +603,7 @@ class Rafeed extends Admin_Controller {
 $rownum = 1 + $_GET['iDisplayStart'];
 
 	  foreach($rResult as $feed){		 	
-		$feed->cbox = "<input type='checkbox'  class='deleteRow' value='".$feed->rafeed_id."'  /> #".$rownum ;
+		$feed->cbox = "<input type='checkbox'  class='deleteRow' value='".$feed->rafeed_id."'  /> ".$rownum ;
 		$rownum++;
 
 		$feed->departure_date = date('d/m/Y',$feed->departure_date);

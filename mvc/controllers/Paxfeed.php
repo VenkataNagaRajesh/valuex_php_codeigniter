@@ -758,7 +758,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 	  $i = 1;
 	 $rownum = 1 + $_GET['iDisplayStart'];
 	  foreach($rResult as $feed){	
-		 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->dtpf_id."'  /> #".$rownum ;
+		 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->dtpf_id."'  /> ".$rownum ;
                                 $rownum++;
 
 		$feed->dep_date = date('d/m/Y',$feed->dep_date);

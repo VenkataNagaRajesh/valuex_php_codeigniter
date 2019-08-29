@@ -992,7 +992,7 @@ LEFT JOIN (
 	 $rownum = 1 + $_GET['iDisplayStart'];
 
 	  foreach($rResult as $rule){	
-		 $rule->chkbox = "<input type='checkbox'  class='deleteRow' value='".$rule->eexcl_id."'  /> #".$rownum ;
+		 $rule->chkbox = "<input type='checkbox'  class='deleteRow' value='".$rule->eexcl_id."'  /> ".$rownum ;
                                 $rownum++;
 
 		$rule->ruleno = $rule->excl_grp;

@@ -772,7 +772,7 @@ on MainSet.market_id = SubSet.market_id
 	$rownum = 1 + $_GET['iDisplayStart'];
 
                 foreach($rResult as $marketzone){
-			    $marketzone->cbox = "<input type='checkbox'  class='deleteRow' value='".$marketzone->market_id."'  /> #".$rownum ;
+			    $marketzone->cbox = "<input type='checkbox'  class='deleteRow' value='".$marketzone->market_id."'  /> ".$rownum ;
 				$rownum++;
                         if(permissionChecker('marketzone_edit') ) {
 				//$marketzone->action .= btn_edit('marketzone/edit/'.$marketzone->market_id, $this->lang->line('edit'));
