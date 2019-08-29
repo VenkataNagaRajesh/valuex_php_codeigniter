@@ -24,10 +24,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="orig_level_id" class="col-sm-2 control-label">
+                        <label for="orig_level_id" class="col-sm-3 control-label">
                             <?=$this->lang->line("orig_level_id")?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                         <?php
                         echo form_dropdown("orig_level_id", $aln_datatypes, set_value("orig_level_id",$rule->orig_level_id), "id='orig_level_id' class='form-control select2'");
                         ?>
@@ -44,10 +44,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="orig_level_value" class="col-sm-2 control-label">
+                        <label for="orig_level_value" class="col-sm-3 control-label">
                             <?=$this->lang->line("orig_level_value")?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                                  <select  name="orig_level_value[]"  id="orig_level_value" class="form-control select2" multiple="multiple">
                                 </select>
                         </div>
@@ -69,10 +69,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="dest_level_id" class="col-sm-2 control-label">
+                        <label for="dest_level_id" class="col-sm-3 control-label">
                             <?=$this->lang->line("dest_level_id")?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                         <?php
                         echo form_dropdown("dest_level_id", $aln_datatypes, set_value("dest_level_id",$rule->dest_level_id), "id='dest_level_id' class='form-control select2'");
                         ?>
@@ -88,10 +88,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="dest_level_value" class="col-sm-2 control-label">
+                        <label for="dest_level_value" class="col-sm-3 control-label">
                             <?=$this->lang->line("dest_level_value")?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                                  <select  name="dest_level_value[]"  id="dest_level_value" class="form-control select2" multiple="multiple">
                                 </select>
                         </div>
@@ -111,14 +111,20 @@
                         else
                             echo "<div class='form-group'>";
                     ?>
-                        <label for="carrier_code" class="col-sm-2 control-label">
+                        <label for="carrier_code" class="col-sm-3 control-label">
                             <?=$this->lang->line('carrier_code')?>
                         </label>
-                        <div class="col-sm-6">
-                        <?php
-                        $carriers[0] = 'Select Carrier';
-                        ksort($carriers);
-                          echo form_dropdown("carrier_code", $carriers,set_value("carrier_code",$rule->carrier_code), "id='carrier_code' class='form-control hide-dropdown-icon select2'");
+                        <div class="col-sm-5">
+
+		 <?php
+                                         foreach($carriers as $airline){
+                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                                         }
+
+                        $airlinelist['0'] = ' Carrier';
+                        ksort($airlinelist);
+
+                          echo form_dropdown("carrier_code", $airlinelist,set_value("carrier_code",$rule->carrier_code), "id='carrier_code' class='form-control hide-dropdown-icon select2'");
                                                    ?>
 
                         </div>
@@ -135,10 +141,13 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="flight_nbr_start" class="col-sm-2 control-label">
+                        <label for="flight_nbr_start" class="col-sm-3 control-label">
                             <?=$this->lang->line('flight_nbr_start');?>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
+			<?php
+				$rule->flight_nbr_start = $rule->flight_nbr_start ? $rule->flight_nbr_start : '';
+			?>
                             <input type="text" class="form-control" id="flight_nbr_start" name="flight_nbr_start" value="<?=set_value('flight_nbr_start',$rule->flight_nbr_start)?>" >
                         </div>
                         <span class="col-sm-4 control-label">
@@ -153,10 +162,13 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="flight_nbr_end" class="col-sm-2 control-label">
+                        <label for="flight_nbr_end" class="col-sm-3 control-label">
                             <?=$this->lang->line('flight_nbr_end');?>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
+			<?php
+				$rule->flight_nbr_end = $rule->flight_nbr_end ? $rule->flight_nbr_end : ''; 
+			?>
                             <input type="text" class="form-control" id="flight_nbr_end" name="flight_nbr_end" value="<?=set_value('flight_nbr_end',$rule->flight_nbr_end)?>" >
                         </div>
                         <span class="col-sm-4 control-label">
@@ -174,10 +186,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="flight_dep_date_start" class="col-sm-2 control-label">
-                            <?=$this->lang->line('flight_dep_date_start')?>
+                        <label for="flight_dep_date_start" class="col-sm-3 control-label">
+                            Flight Effective Date <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                             <input type="text" class="form-control" id="flight_dep_date_start" name="flight_dep_date_start" value="<?=set_value('flight_dep_date_start',date('d-m-Y',$rule->flight_dep_date_start))?>" >
                         </div>
                         <span class="col-sm-4 control-label">
@@ -193,10 +205,10 @@
                         else     
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="flight_dep_date_end" class="col-sm-2 control-label">
-                            <?=$this->lang->line('flight_dep_date_end')?>
+                        <label for="flight_dep_date_end" class="col-sm-3 control-label">
+                            Flight Discontinue Date <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                             <input type="text" class="form-control" id="flight_dep_date_end" name="flight_dep_date_end" value="<?=set_value('flight_dep_date_end',date('d-m-Y',$rule->flight_dep_date_end))?>" >
                         </div>
                         <span class="col-sm-4 control-label">
@@ -212,15 +224,22 @@
                         else
                             echo "<div class='form-group'>";
                     ?>
-                        <label for="flight_dep_time_start" class="col-sm-2 control-label">
+                        <label for="flight_dep_time_start" class="col-sm-3 control-label">
                             <?=$this->lang->line('flight_dep_time_start');?>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
 				<div class="col-sm-4">
                            <?php
+
+			if($rule->flight_dep_time_start != '-1' ) {
+                                        $start_arr = explode(':',gmdate('H:i', $rule->flight_dep_start));
+                        }else {
+                                        $start_arr[0] = '-1';
+                                        $start_arr[1] = '-1';
+                        }
+
 				$hrs['-1'] = 'Hrs';
 				ksort($hrs);
-			$start_arr = explode(':',gmdate('H:i', $rule->flight_dep_time_start));
 
                                     echo form_dropdown("flight_dep_start_hrs", $hrs,set_value("flight_dep_start_hrs",$start_arr[0]), "id='flight_dep_start_hrs' class='form-control hide-dropdown-icon select2'");
                                  ?>
@@ -246,13 +265,19 @@
                         else
                             echo "<div class='form-group'>";
                     ?>
-                        <label for="flight_dep_time_end" class="col-sm-2 control-label">
+                        <label for="flight_dep_time_end" class="col-sm-3 control-label">
                             <?=$this->lang->line('flight_dep_time_end')?>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
 				<div class="col-sm-4">
                            <?php
-                        $end_arr = explode(':',gmdate('H:i', $rule->flight_dep_time_end));
+                        if($rule->flight_dep_time_end != '-1' ) {
+	                        $end_arr = explode(':',gmdate('H:i', $rule->flight_dep_time_end));
+                        }else{
+                                $end_arr[0] = '-1';
+                                 $end_arr[1] = '-1';
+                        }
+
 
                                      echo form_dropdown("flight_dep_end_hrs", $hrs,set_value("flight_dep_end_hrs",$end_arr[0]), "id='flight_dep_end_hrs' class='form-control hide-dropdown-icon select2'");
                                                    ?>
@@ -271,48 +296,25 @@
 
 
                      <?php
-                        if(form_error('season'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="season" class="col-sm-2 control-label">
-                            <?=$this->lang->line('season');?>
-                        </label>
-                        <div class="col-sm-6">
-<?php
-			$seasons['0'] = 'Select Season';
-			ksort($seasons);
-                 echo form_dropdown("season", $seasons, set_value("season",$rule->season_id), "id='season' class='form-control select2'");
-
-     ?>                   </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('season'); ?>
-                        </span>
-                    </div>
-
-
-
-		
-                     <?php
                         if(form_error('frequency'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="frequency" class="col-sm-2 control-label">
+                        <label for="frequency" class="col-sm-3 control-label">
                             <?=$this->lang->line('frequency');?>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
 <?php
 		$freq = $this->airports_m->getDefnsCodesListByType('14');
 
-		if($rule->frequency != 0 ) {
-                         $arr = explode(',',$rule->frequency);
-                            $rule->frequency = implode('',array_map(function($x) use ($freq) { return $freq[$x]; }, $arr));
+			if($rule->frequency != 0 ) {
+                        	 $arr = explode(',',$rule->frequency);
+                            	$rule->frequency = implode('',array_map(function($x) use ($freq) { return $freq[$x]; }, $arr));
 
-
-                        }
+                        }else {
+				$rule->frequency = '';
+			}
 
      ?> 
 
@@ -331,16 +333,16 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="upgrade_from_cabin_type" class="col-sm-2 control-label">
-                            <?=$this->lang->line('upgrade_from');?>
+                        <label for="upgrade_from_cabin_type" class="col-sm-3 control-label">
+                            <?=$this->lang->line('upgrade_from');?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
 
 <?php
 			$cabin_list['0'] = 'Select From Cabin';
 			ksort($cabin_list);
 			foreach ($cabin_type as $cabin) {
-				$cabin_list[$cabin->vx_aln_data_defnsID] = $cabin->aln_data_value;
+				$cabin_list[$cabin->vx_aln_data_defnsID] = $cabin->code;
 			}
                          echo form_dropdown("upgrade_from_cabin_type", $cabin_list,set_value("upgrade_from_cabin_type",$rule->upgrade_from_cabin_type), "id='upgrade_from_cabin_type' class='form-control hide-dropdown-icon select2'");
 
@@ -357,10 +359,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="upgrade_to_cabin_type" class="col-sm-2 control-label">
-                            <?=$this->lang->line('upgrade_to');?>
+                        <label for="upgrade_to_cabin_type" class="col-sm-3 control-label">
+                            <?=$this->lang->line('upgrade_to');?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
 <?php
 			$cabin_list['0'] = 'Select To Cabin';
 			ksort($cabin_list);
@@ -380,10 +382,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="memp" class="col-sm-2 control-label">
-                            <?=$this->lang->line('memp');?>
+                        <label for="memp" class="col-sm-3 control-label">
+                            <?=$this->lang->line('memp');?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
 
 		  <input type="text" class="form-control" id="memp" name="memp" value="<?=set_value('memp',$rule->memp)?>" >
 
@@ -399,10 +401,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="min_bid_price" class="col-sm-2 control-label">
-                            <?=$this->lang->line('min_bid_price');?>
+                        <label for="min_bid_price" class="col-sm-3 control-label">
+                            <?=$this->lang->line('min_bid_price');?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
 
                   <input type="text" class="form-control" id="min_bid_price" name="min_bid_price" value="<?=set_value('min_bid_price',$rule->min_bid_price)?>" >
 
@@ -420,10 +422,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="action_type" class="col-sm-2 control-label">
-                            <?=$this->lang->line('action_type');?>
+                        <label for="action_type" class="col-sm-3 control-label">
+                            <?=$this->lang->line('action_type');?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
 <?php
 
 			$action_type_list['0'] = 'Select Action Type';

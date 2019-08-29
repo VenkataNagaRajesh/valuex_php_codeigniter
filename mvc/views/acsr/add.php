@@ -26,10 +26,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="orig_level_id" class="col-sm-2 control-label">
+                        <label for="orig_level_id" class="col-sm-3 control-label">
                             <?=$this->lang->line("orig_level_id")?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                         <?php
                         echo form_dropdown("orig_level_id", $aln_datatypes, set_value("orig_level_id"), "id='orig_level_id' class='form-control select2'");
                         ?>
@@ -47,10 +47,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="orig_level_value" class="col-sm-2 control-label">
+                        <label for="orig_level_value" class="col-sm-3 control-label">
                             <?=$this->lang->line("orig_level_value")?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                                  <select  name="orig_level_value[]"  id="orig_level_value" class="form-control select2" multiple="multiple">
                                 </select>
                         </div>
@@ -73,10 +73,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="dest_level_id" class="col-sm-2 control-label">
+                        <label for="dest_level_id" class="col-sm-3 control-label">
                             <?=$this->lang->line("dest_level_id")?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                         <?php
                         echo form_dropdown("dest_level_id", $aln_datatypes, set_value("dest_level_id"), "id='dest_level_id' class='form-control select2'");
                         ?>
@@ -93,10 +93,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="dest_level_value" class="col-sm-2 control-label">
+                        <label for="dest_level_value" class="col-sm-3 control-label">
                             <?=$this->lang->line("dest_level_value")?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                                  <select  name="dest_level_value[]"  id="dest_level_value" class="form-control select2" multiple="multiple">
                                 </select>
                         </div>
@@ -115,14 +115,19 @@
                         else
                             echo "<div class='form-group'>";
                     ?>
-                        <label for="carrier_code" class="col-sm-2 control-label">
+                        <label for="carrier_code" class="col-sm-3 control-label">
                             <?=$this->lang->line('carrier_code')?>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                         <?php
-			$carriers[0] = 'Select Carrier';
-			ksort($carriers);
-                          echo form_dropdown("carrier_code", $carriers,set_value("carrier_code"), "id='carrier_code' class='form-control hide-dropdown-icon select2'");
+                                         foreach($carriers as $airline){
+                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                                         }
+
+                        $airlinelist['0'] = ' Carrier';
+                        ksort($airlinelist);
+
+                          echo form_dropdown("carrier_code", $airlinelist,set_value("carrier_code"), "id='carrier_code' class='form-control hide-dropdown-icon select2'");
                                                    ?>
 
                         </div>
@@ -140,10 +145,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="flight_nbr_start" class="col-sm-2 control-label">
+                        <label for="flight_nbr_start" class="col-sm-3 control-label">
                             <?=$this->lang->line('flight_nbr_start');?>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                             <input type="text" class="form-control" id="flight_nbr_start" name="flight_nbr_start" value="<?=set_value('flight_nbr_start')?>" >
                         </div>
                         <span class="col-sm-4 control-label">
@@ -158,10 +163,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="flight_nbr_end" class="col-sm-2 control-label">
+                        <label for="flight_nbr_end" class="col-sm-3 control-label">
                             <?=$this->lang->line('flight_nbr_end');?>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
                             <input type="text" class="form-control" id="flight_nbr_end" name="flight_nbr_end" value="<?=set_value('flight_nbr_end')?>" >
                         </div>
                         <span class="col-sm-4 control-label">
@@ -179,10 +184,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="flight_dep_date_start" class="col-sm-2 control-label">
-                            <?=$this->lang->line('flight_dep_date_start')?>
-                        </label>
-                        <div class="col-sm-6">
+                        <label for="flight_dep_date_start" class="col-sm-3 control-label"> 
+                            Flight Effective Date <span class="text-red">*</span>
+                        </label> 
+                        <div class="col-sm-5">
                             <input type="text" class="form-control" id="flight_dep_date_start" name="flight_dep_date_start" value="<?=set_value('flight_dep_date_start')?>" >
                         </div>
                         <span class="col-sm-4 control-label">
@@ -198,10 +203,10 @@
                         else     
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="flight_dep_date_end" class="col-sm-2 control-label">
-                            <?=$this->lang->line('flight_dep_date_end')?>
-                        </label>
-                        <div class="col-sm-6">
+                        <label for="flight_dep_date_end" class="col-sm-3 control-label"> 
+                            Flight Discontinue Date <span class="text-red">*</span>
+                        </label> 
+                        <div class="col-sm-5">
                             <input type="text" class="form-control" id="flight_dep_date_end" name="flight_dep_date_end" value="<?=set_value('flight_dep_date_end')?>" >
                         </div>
                         <span class="col-sm-4 control-label">
@@ -217,10 +222,10 @@
                         else
                             echo "<div class='form-group'>";
                     ?>
-                        <label for="flight_dep_time_start" class="col-sm-2 control-label">
+                        <label for="flight_dep_time_start" class="col-sm-3 control-label">
                             <?=$this->lang->line('flight_dep_time_start');?>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
 				<div class="col-sm-4">
 			
                            <?php
@@ -251,10 +256,10 @@
                         else
                             echo "<div class='form-group'>";
                     ?>
-                        <label for="flight_dep_time_end" class="col-sm-2 control-label">
+                        <label for="flight_dep_time_end" class="col-sm-3 control-label">
                             <?=$this->lang->line('flight_dep_time_end')?>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
 				<div class="col-sm-4">
                            <?php
                                      echo form_dropdown("flight_dep_end_hrs", $hrs,set_value("flight_dep_end_hrs"), "id='flight_dep_end_hrs' class='form-control hide-dropdown-icon select2'");
@@ -273,29 +278,6 @@
                     </div>
 
 
-                     <?php
-                        if(form_error('season'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="season" class="col-sm-2 control-label">
-                            <?=$this->lang->line('season');?>
-                        </label>
-                        <div class="col-sm-6">
-<?php
-			$seasons['0'] = 'Select Season';
-			ksort($seasons);
-                 echo form_dropdown("season", $seasons, set_value("season"), "id='season' class='form-control select2'");
-
-     ?>                   </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('season'); ?>
-                        </span>
-                    </div>
-
-
-
 		
                      <?php
                         if(form_error('frequency'))
@@ -303,10 +285,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="frequency" class="col-sm-2 control-label">
+                        <label for="frequency" class="col-sm-3 control-label">
                             <?=$this->lang->line('frequency');?>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-5">
 			<input type="text" class="form-control" id="frequency" name="frequency" value="<?=set_value('frequency')?>" >
                        </div>
                         <span class="col-sm-4 control-label">
@@ -322,10 +304,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="upgrade_from_cabin_type" class="col-sm-2 control-label">
-                            <?=$this->lang->line('upgrade_from');?>
-                        </label>
-                        <div class="col-sm-6">
+                        <label for="upgrade_from_cabin_type" class="col-sm-3 control-label"> 
+                            <?=$this->lang->line('upgrade_from');?> <span class="text-red">*</span>
+                        </label> 
+                        <div class="col-sm-5">
 
 <?php
 			$cabin_list['0'] = 'Select From Cabin';
@@ -348,10 +330,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="upgrade_to_cabin_type" class="col-sm-2 control-label">
-                            <?=$this->lang->line('upgrade_to');?>
-                        </label>
-                        <div class="col-sm-6">
+                        <label for="upgrade_to_cabin_type" class="col-sm-3 control-label">
+                            <?=$this->lang->line('upgrade_to');?> <span class="text-red">*</span>
+                        </label> 
+                        <div class="col-sm-5">
 <?php
 			$cabin_list['0'] = 'Select To Cabin';
 			ksort($cabin_list);
@@ -371,10 +353,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="memp" class="col-sm-2 control-label">
-                            <?=$this->lang->line('memp');?>
-                        </label>
-                        <div class="col-sm-6">
+                        <label for="memp" class="col-sm-3 control-label"> 
+                            <?=$this->lang->line('memp');?> <span class="text-red">*</span>
+                        </label> 
+                        <div class="col-sm-5">
 
 		  <input type="text" class="form-control" id="memp" name="memp" value="<?=set_value('memp')?>" >
 
@@ -390,10 +372,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="min_bid_price" class="col-sm-2 control-label">
-                            <?=$this->lang->line('min_bid_price');?>
-                        </label>
-                        <div class="col-sm-6">
+                        <label for="min_bid_price" class="col-sm-3 control-label"> 
+                            <?=$this->lang->line('min_bid_price');?> <span class="text-red">*</span>
+                        </label> 
+                        <div class="col-sm-5">
 
                   <input type="text" class="form-control" id="min_bid_price" name="min_bid_price" value="<?=set_value('min_bid_price')?>" >
 
@@ -411,10 +393,10 @@
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="action_type" class="col-sm-2 control-label">
-                            <?=$this->lang->line('action_type');?>
-                        </label>
-                        <div class="col-sm-6">
+                        <label for="action_type" class="col-sm-3 control-label">
+                            <?=$this->lang->line('action_type');?> <span class="text-red">*</span>
+                        </label> 
+                        <div class="col-sm-5">
 <?php
 
 			$action_type_list['0'] = 'Select Action Type';

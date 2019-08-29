@@ -113,6 +113,7 @@ class Paxfeed extends Admin_Controller {
 
 	public function upload(){
 	
+	$pax_insert_list = array();
 	 if($_FILES){
 		 if (empty($_FILES['file']['name'])) {
             $this->session->set_flashdata('error',"Please select File");			
@@ -146,7 +147,6 @@ class Paxfeed extends Admin_Controller {
               $i = 0;
                //$time_start = microtime(true);
 		$column = 0;                   
-		 $pax_insert_list = array();                       
              foreach ($Reader as $Row){
 			$column++;
 		$Row = array_map('trim', $Row);
@@ -549,7 +549,6 @@ class Paxfeed extends Admin_Controller {
 		    if(file_exists($file)) {
 		    	unlink($file);					
 		    }			
-
 
 			 $this->paxfeed_m->process_tiermarkup(array_unique($pax_insert_list));
 			 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
