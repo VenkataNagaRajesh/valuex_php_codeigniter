@@ -8,8 +8,8 @@ $lang['active'] = 'Status';
 
 $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
-$lang['download_rafeed_format'] = 'Download Rafeed Upload Format';
-$lang['upload_rafeed'] = 'Upload RAfeed';
+$lang['download_rafeed_format'] = 'Download RA Feed Upload Format';
+$lang['upload_rafeed'] = 'Upload RA Feed';
 $lang['view'] = 'View';
 
 $lang['file_clear'] = 'Clear';
