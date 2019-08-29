@@ -8,5 +8,5 @@ CKEDITOR.editorConfig = function(config) {
     config.removePlugins = 'iframe';
     config.contentsLangDirection = 'rtl';
     config.allowedContent = true;
-    config.fullPage = true;    
+   // config.fullPage = true;    
 };

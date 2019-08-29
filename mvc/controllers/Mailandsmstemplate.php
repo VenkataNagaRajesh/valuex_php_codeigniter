@@ -110,8 +110,9 @@ class Mailandsmstemplate extends Admin_Controller {
 			$this->data['mailtemplate'] = $this->mailandsmstemplate_m->get_mailandsmstemplate($id);
 			if($this->data['mailtemplate']) {			
 				$this->data['categories'] = $this->mailandsmstemplate_m->get_categories();
-				if($_POST) { 
-				         $this->input->post('email_template', FALSE);
+				if($_POST) {
+                         					
+				        
 					    $rules = $this->rules();
 						$this->form_validation->set_rules($rules);
 						if ($this->form_validation->run() == FALSE) {
@@ -122,7 +123,7 @@ class Mailandsmstemplate extends Admin_Controller {
 							$array = array(
 								'name' => $this->input->post('email_name'),						
 								'catID' => $this->input->post('category'),
-								'template' => $this->input->post('email_template'),								
+								'template' => $this->input->post('email_template',FALSE),				
 								'modify_userID' => $this->session->userdata('loginuserID'),
 								'modify_date' => time()
 							 );							 
