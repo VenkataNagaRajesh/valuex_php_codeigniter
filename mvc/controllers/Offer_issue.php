@@ -8,9 +8,9 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("airline_cabin_m");
 		$this->load->model("airline_cabin_class_m");
 		$this->load->model("offer_issue_m");
-	    $this->load->model("offer_eligibility_m");
+	        $this->load->model("offer_eligibility_m");
 		$this->load->model('offer_reference_m');
-		 $this->load->model('airline_m');
+		$this->load->model('airline_m');
 		$this->load->model("eligibility_exclusion_m");
 		$this->load->model("season_m");
 		$this->load->model("marketzone_m");
@@ -500,7 +500,7 @@ $sWhere $sOrder $sLimit";
 	$full_offerlist = array();
 	$partial_offerlist = array();	
 	foreach($rResult as $data ) {
-		$q = "  SELECT distinct bid_id, bid.rank, bid_markup_val as bid_val,pf.dep_date,bid.upgrade_type,pf.flight_number,
+		$q = "  SELECT distinct bid_id, bid.rank, bid_value as bid_val,pf.dep_date,pf.dept_time,pf.arrival_time,bid.upgrade_type,pf.flight_number,
              pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,  dcabin.aln_data_value as upgrade_cabin
              from VX_aln_bid bid
              LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )
@@ -510,7 +510,7 @@ $sWhere $sOrder $sLimit";
              LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code and car.aln_data_typeID = 12)
              LEFT JOIN vx_aln_data_defns dcabin on (dcabin.vx_aln_data_defnsID = bid.upgrade_type and dcabin.aln_data_typeID = 13)
              WHERE bid.offer_id IN (".$data->offer_list .") AND bid.flight_number = " .$data->flight_number .
-          " order by bid.rank desc"; 
+          " order by bid.rank asc"; 
 		$offers =  $this->install_m->run_query($q);
 		//var_dump($q);echo "<br><br>";exit;
 	//	var_dump($offers); echo "<br><br>";exit;
@@ -536,23 +536,25 @@ $sWhere $sOrder $sLimit";
 
 			$passenger_cnt =  count($namelist);
 			
-			$acsr = array();
-			$acsr['from_city'] = $feed->from_city;
-			$acsr['to_city'] = $feed->to_city;
-			$acsr['flight_number'] = $feed->flight_number;
-			$acsr['dep_date'] = $feed->dep_date;
-			$acsr['from_cabin'] = $feed->cabin;
-			$acsr['to_cabin'] = $feed->upgrade_type;
-			$acsr['carrier_code'] = $feed->carrier_code;
-                        $day_of_week = date('w', $feed->dep_date);
-                      $day = ($day_of_week)?$day_of_week:7;
+			// apply excl rules herer something might have chnaged....!!!
 
-                        $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
-                        $acsr['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
 
 			$excl_arr = array();
-			$excl_arr = $acsr;
+			$excl_arr['from_city'] = $feed->from_city;
+                        $excl_arr['to_city'] = $feed->to_city;
+                        $excl_arr['flight_number'] = $feed->flight_number;
+                        $excl_arr['dep_date'] = $feed->dep_date;
+                        $excl_arr['from_cabin'] = $feed->cabin;
+                        $excl_arr['to_cabin'] = $feed->upgrade_type;
+                        $excl_arr['carrier_code'] = $feed->carrier_code;
+                        $day_of_week = date('w', $feed->dep_date);
+                        $day = ($day_of_week)?$day_of_week:7;
+                        $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
 			$excl_arr['frequency'] = $p_freq;
+			$excl_arr['dept_time'] = $feed->dept_time;
+			$excl_arr['arrival_time'] = $feed->arrival_time;
+
+
                         if($acsr['season_id'] == 0 ) {
                                 $acsr['frequency'] = $p_freq;
                         }
@@ -560,7 +562,46 @@ $sWhere $sOrder $sLimit";
 			$excl_id = $this->eligibility_exclusion_m->apply_excl_rules_before_acsr($excl_arr);	
 
 			if ($excl_id == 0 ) {
-			$acsr_data = $this->acsr_m->apply_acsr_rules($acsr);	
+
+			 // get list of acsr that are partially matching 
+
+                        $acsr = array();
+                        $acsr['from_city'] = $feed->from_city;
+                        $acsr['to_city'] = $feed->to_city;
+                        $acsr['dep_date'] = $feed->dep_date;
+                        $acsr['from_cabin'] = $feed->cabin;
+                        $acsr['to_cabin'] = $feed->upgrade_type;
+
+			$acsr_rules = $this->acsr_m->apply_acsr_rules(0,$acsr);	
+
+			if(count($acsr_rules) > 0)  {
+			foreach ($acsr_rules as $acsr_rule )  {
+				$acsrquery = $this->acsr_m->apply_acsr_rules(1);
+				$acsrquery .= ' AND acsr_id = ' .$acsr_rule->acsr_id;
+				if($acsr_rule->frequency != '0' ) {
+                                      $acsrquery .= ' AND (FIND_IN_SET('.$p_freq.',frequency))';
+                                }
+
+				if($acsr_rule->carrier != 0 ) {
+                                      $acsrquery .= " AND  (carrier = ".$feed->carrier_code. ")";
+                                 }
+				
+				 if($acsr_rule->flight_nbr_start != '0' AND $acsr_rule->flight_nbr_end != 0 ) {
+                                         $acsrquery .= " AND  (flight_nbr_start <= ". $feed->flight_number. " and flight_nbr_end >= " . $feed->flight_number. ")";
+
+                                  }
+
+				   if($acsr_rule->flight_dep_time_start != -1 AND $acsr_rule->flight_dep_time_end != -1 ) {
+
+                                                        $acsrquery .= " AND (flight_dep_time_start <= ".$feed->dept_time." and flight_dep_time_end >= ".$feed->dept_time.")";
+                                    }
+				$acsr_match_result = $this->install_m->run_query($acsrquery);
+				$acsr_data = $acsr_match_result[0];
+                                if(count($acsr_data) > 0 ) { // acsr rule matched for the appropriate case
+                                      break;
+                                }
+			} // forloop for acsr rules
+				
 			$this->data['siteinfos'] = $this->reset_m->get_site();
 		/*	echo "pnr ref: " . $passenger_data->pnr_ref;
 			echo "<br>";
@@ -572,7 +613,8 @@ $sWhere $sOrder $sLimit";
 			echo "<br> memp = " .  $acsr_data->memp;	
 			echo "<br>";*/
 			//var_dump($acsr_data);	echo "<br>";exit;
-			if(($acsr_data->status == 'reject' && $feed->bid_val < $acsr_data->min_bid_price) ) {			
+
+			if(($acsr_data->status == 'reject' && ($feed->bid_val/$passenger_cnt) < $acsr_data->min_bid_price) ) {			
 					// send mail min bid value not met
 					// update pf entry status and VX_aln_offer_ref status as bid not accepted
 		//		echo "rejected ---<br>";
@@ -627,7 +669,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 				echo $acsr_data->status . "<br>";
 				echo $feed->bid_val . "<br>";
 				echo $acsr_data->min_bid_price . "<br>";exit;*/
-				if ( $acsr_data->status == 'accept' && $feed->bid_val > $acsr_data->min_bid_price ) { 
+				if ( $acsr_data->status == 'accept' && ($feed->bid_val/$passenger_cnt) > $acsr_data->min_bid_price ) { 
 
 				  if (($cabin_seats -  $passenger_cnt) < $acsr_data->memp) {
 					
@@ -827,6 +869,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 			}
 				}
+		} // have partial acsr rules 
 
 		}else {
 
