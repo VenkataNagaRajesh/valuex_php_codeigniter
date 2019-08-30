@@ -750,7 +750,7 @@ $("#dest_all").click(function(){
                     "success": fnCallback
 			 } ); },	  
       "columns": [{"data": "chkbox" },
-                  {"data": "season_name" },
+                   {"data": "season_name" },
 				 // {"data": "airline_name" },
 				  {"data": "airline_code" },
 				  {"data": "orig_level" },
@@ -761,8 +761,11 @@ $("#dest_all").click(function(){
 				  {"data": "ams_season_end_date" },
 				  {"data": "is_return_inclusive" },
 				  {"data": "season_color"},
-                  {"data": "active"},
+	            <?php if (permissionChecker('season_edit')){ ?>
+	              {"data": "active"},
+    		  <?php } if(permissionChecker('season_edit') || permissionChecker('season_delete')){ ?>
                   {"data": "action"}
+			  <?php } ?>
 				  ],			     
      dom: 'B<"clear">lfrtip',
      //buttons: [ 'copy', 'csv', 'excel','pdf' ]	  

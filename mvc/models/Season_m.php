@@ -104,12 +104,12 @@ class season_m extends MY_Model {
 	}
 
 
-	function getSeasonsList($airlineID = null){
+	function getSeasonsList($airlineID = array()){
                 $this->db->select('VX_aln_seasonID,season_name');
                 $this->db->from('VX_aln_season');
                 $this->db->where('active','1');
-				if($this->session->userdata('usertypeID') == 2){
-					$this->db->where('create_userID',$this->session->userdata('loginuserID'));
+				if($this->session->userdata('usertypeID') != 1){
+					$this->db->where_in('airlineID',$this->session->userdata('login_user_airlineID'));
 				}
                 $query = $this->db->get();
 			    $result = $query->result();
@@ -158,7 +158,7 @@ class season_m extends MY_Model {
 	
 	public function seasonTotalCount(){
 		$this->db->select('count(*) count')->from('VX_aln_season');
-		if($this->session->userdata('usertypeID') == 2){		
+		if($this->session->userdata('usertypeID') != 1 ){		
 			//$this->db->where('create_userID',$this->session->userdata('loginuserID'));
 			$this->db->where_in('airlineID',$this->session->userdata('login_user_airlineID'));
 		}

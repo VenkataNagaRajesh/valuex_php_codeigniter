@@ -6,6 +6,7 @@ class User extends Admin_Controller {
 		parent::__construct();
 		$this->load->model("user_m");
 		$this->load->model('usertype_m');
+		$this->load->model('airline_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('user', $language);
 	}
@@ -72,8 +73,22 @@ class User extends Admin_Controller {
 				'label' => $this->lang->line("user_password"),
 				'rules' => 'trim|required|min_length[4]|max_length[40]|xss_clean'
 			),
+			array(
+				'field' => 'airlineID',
+				'label' => $this->lang->line("user_airline"),
+				'rules' => 'trim|max_length[10]|xss_clean|callback_valAirlines'
+			)
 		);
 		return $rules;
+	}
+	
+	public function valAirlines(){
+		if(count($this->input->post('airlineID')) > 0){
+			return TRUE;
+		} else {
+			$this->form_validation->set_message("valAirlines", "%s Required");
+			return FALSE;
+		}
 	}
 
 	public function photoupload() {
@@ -134,10 +149,13 @@ class User extends Admin_Controller {
 	public function add() {
 		$this->data['headerassets'] = array(
 			'css' => array(
-				'assets/datepicker/datepicker.css'
+				'assets/datepicker/datepicker.css',
+				'assets/select2/css/select2.css',
+                'assets/select2/css/select2-bootstrap.css'
 			),
 			'js' => array(
-				'assets/datepicker/datepicker.js'
+				'assets/datepicker/datepicker.js',
+				'assets/select2/select2.js'
 			)
 		);
 		if($this->session->userdata('usertypeID') == 2){
@@ -145,11 +163,17 @@ class User extends Admin_Controller {
 		} else {
 		  $this->data['usertypes'] = $this->usertype_m->get_usertype();
 		}
+		
+		if($this->session->userdata('usertypeID') == 1){
+		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
+		} else if($this->session->userdata('usertypeID') == 2){
+		   $this->data['airlinelist'] = $this->airline_m->getClientAirline($userID);
+		} else {
+		   $this->data['airlinelist'] = $this->airline_m->getUserAirlines($userID);	
+		}		
+		
 		if($_POST) {
 			$rules = $this->rules();
-			 if($this->session->userdata('usertypeID') == 2){
-				unset($rules[8]);
-			 }
 			$this->form_validation->set_rules($rules);
 			if ($this->form_validation->run() == FALSE) {
 				$this->data["subview"] = "user/add";
@@ -172,16 +196,22 @@ class User extends Admin_Controller {
 				$array["create_usertype"] = $this->session->userdata('usertype');
 				$array["active"] = 1;
 				$array['photo'] = $this->upload_data['file']['file_name'];
+				$array["usertypeID"] = $this->input->post("usertypeID");
 				
-                if($this->session->userdata('usertypeID') == 2){
-				 $array["usertypeID"] = 5;
-				} else {
-				 $array["usertypeID"] = $this->input->post("usertypeID");
-				}
 				// For Email
 				$this->usercreatemail($this->input->post('email'), $this->input->post('username'), $this->input->post('password'));
 
 				$this->user_m->insert_user($array);
+				$userID = $this->db->insert_id();
+				 $link['userID'] = $userID;
+				 $link["create_date"] = time();
+				 $link["modify_date"] = time();
+				 $link["create_userID"] = $this->session->userdata('loginuserID');
+				 $link["modify_userID"] = $this->session->userdata('loginuserID');
+				 foreach($this->input->post('airlineID') as $airlineID){
+				  $link['airlineID'] = $airlineID;
+				  $this->user_m->insert_user_airline($link);
+				 }
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("user/index"));
 			}
@@ -208,24 +238,35 @@ class User extends Admin_Controller {
 	public function edit() {
 		$this->data['headerassets'] = array(
 			'css' => array(
-				'assets/datepicker/datepicker.css'
+				'assets/datepicker/datepicker.css',
+				'assets/select2/css/select2.css',
+                'assets/select2/css/select2-bootstrap.css'
 			),
 			'js' => array(
-				'assets/datepicker/datepicker.js'
+				'assets/datepicker/datepicker.js',
+				'assets/select2/select2.js'
 			)
 		);
 
 		$id = htmlentities(escapeString($this->uri->segment(3)));
-		$this->data['usertypes'] = $this->usertype_m->get_usertype();
+		if($this->session->userdata('usertypeID') == 2){
+		  $this->data['usertypes'] = array();
+		} else {
+		  $this->data['usertypes'] = $this->usertype_m->get_usertype();
+		}
+		if($this->session->userdata('usertypeID') == 1){
+		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
+		} else if($this->session->userdata('usertypeID') == 2){
+		   $this->data['airlinelist'] = $this->airline_m->getClientAirline($userID);
+		} else {
+		   $this->data['airlinelist'] = $this->airline_m->getUserAirlines($userID);	
+		}
 		if((int)$id) {
 			$this->data['user'] = $this->user_m->get_user($id);
+			//print_r($this->data['user']); exit;
 			if($this->data['user']) {
 				$rules = $this->rules();				
-				if($this->session->userdata('usertypeID') == 2){				 
-				  unset($rules[8]);
-				} 
-				unset($rules[11]);
-								
+				unset($rules[11]);								
 				$this->form_validation->set_rules($rules);
 				if ($this->form_validation->run() == FALSE) {
 					echo validation_errors();
@@ -242,13 +283,33 @@ class User extends Admin_Controller {
 					$array["jod"] = date("Y-m-d", strtotime($this->input->post("jod")));					
 					$array["modify_date"] = date("Y-m-d h:i:s");
 					$array["username"] = $this->input->post('username');
-					$array['photo'] = $this->upload_data['file']['file_name'];
-					
-					if($this->session->userdata('usertypeID') != 2){
-					 $array["usertypeID"] = $this->input->post("usertypeID");
-					}
-
+					$array['photo'] = $this->upload_data['file']['file_name'];					
+					$array["usertypeID"] = $this->input->post("usertypeID");
 					$this->user_m->update_user($array, $id);
+					
+					 $airlines = array();
+					 if(!empty($this->data['user']->airlineIDs)){
+					 $airlines = explode(',',$this->data['user']->airlineIDs);
+					 }
+					 $delete_list = array_diff($airlines,$this->input->post('airlineID'));
+					 if(!empty($delete_list)){
+					 $this->user_m->delete_user_airline($id,$delete_list);
+					 }
+					 $insert_list = array_diff($this->input->post('airlineID'),$airlines);
+					// print_r( $insert_list); exit;
+					  if(!empty($insert_list)){
+					  $link['userID'] = $id;					
+					  $link["modify_date"] = time();
+                      $link["create_date"] = time();
+                      $link["create_userID"] = $this->session->userdata('loginuserID');					  
+					  $link["modify_userID"] = $this->session->userdata('loginuserID');
+					  foreach($insert_list as $airlineID){
+					   $link['airlineID'] = $airlineID;
+					   $this->user_m->insert_user_airline($link);
+					  }
+					 }
+
+					
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url("user/index"));
 				}
@@ -276,6 +337,7 @@ class User extends Admin_Controller {
 					}
 				}
 				$this->user_m->delete_user($id);
+				$this->user_m->delete_user_airline($id);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("user/index"));
 			} else {
@@ -289,7 +351,7 @@ class User extends Admin_Controller {
 	public function view() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if ((int)$id) {
-			$this->data["user"] = $this->user_m->get_user_by_usertype($id);
+			$this->data["user"] = $this->user_m->get_user($id);
 			if($this->data["user"]) {
 				$this->data["subview"] = "user/view";
 				$this->load->view('_layout_main', $this->data);
