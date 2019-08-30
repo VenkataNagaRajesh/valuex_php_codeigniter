@@ -381,7 +381,7 @@ class Definition_data extends Admin_Controller {
 	$rownum = 1 + $_GET['iDisplayStart'];
 	  foreach($rResult as $defdata){		 	
 
-		 $defdata->chkbox = "<input type='checkbox'  class='deleteRow' value='".$defdata->vx_aln_data_defnsID."'  /> #".$rownum ;
+		 $defdata->chkbox = "<input type='checkbox'  class='deleteRow' value='".$defdata->vx_aln_data_defnsID."'  /> ".$rownum ;
                                 $rownum++;
 		  if(permissionChecker('definition_data_edit')){ 			
 			$defdata->action = btn_edit('definition_data/edit/'.$defdata->vx_aln_data_defnsID, $this->lang->line('edit'));

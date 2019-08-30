@@ -143,6 +143,9 @@ on MainSet.market_id = SubSet.market_id WHERE MainSet.market_id =".$id;
 		$this->db->select('market_id,market_name');
 		$this->db->from('VX_aln_market_zone');
 		$this->db->where('active','1');
+		if($this->session->userdata('usertypeID') != 1){
+			$this->db->where_in('airline_id',$this->session->userdata('login_user_airlineID'));
+		}
 		$query = $this->db->get();
 		 $result = $query->result();
 
@@ -354,7 +357,7 @@ group by mz.market_id";
 
     function marketzoneTotalCount(){
 		$this->db->select('count(*) count')->from('VX_aln_market_zone');
-		if($this->session->userdata('usertypeID') == 2){		
+		if($this->session->userdata('usertypeID') != 1){		
 			//$this->db->where('create_userID',$this->session->userdata('loginuserID'));
 			$this->db->where_in('airline_id',$this->session->userdata('login_user_airlineID'));
 		}

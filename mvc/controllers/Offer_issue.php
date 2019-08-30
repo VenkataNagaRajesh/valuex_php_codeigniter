@@ -34,7 +34,7 @@ class Offer_issue extends Admin_Controller {
         'tomail' => 'laxmicme@gmail.com',
         'pnr_ref' => 'US0404',
         'coupon_code' => 'sssssssss',
-        'mail_subject' => "Upgrade Cabin Offerss",
+        'mail_subject' => "Upgrade Cabin Offerss US0404",
 		'bidnow_link' => base_url('home/index')		
         );			
 		       

@@ -33,6 +33,32 @@
                             <?php echo form_error('name'); ?>
                         </span>
                     </div>
+					
+					 <?php 
+                        if(form_error('airlineID')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+					   <label for="airlineID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("user_airline")?><span class="text-red">*</span>
+                       </label>
+                        <div class="col-sm-6">
+						  <select name="airlineID[]" id="airlineID" class="form-control select2" multiple="multiple">
+                            <?php 
+                              $airlines[0]=$this->lang->line("client_select_airline");
+							  foreach($airlinelist as $airline){
+								 // $airlines[$airline->vx_aln_data_defnsID] = $airline->airline_name;
+								  echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->code.'</option>';
+							  } 
+							 // echo form_dropdown("airlineID", $airlines,set_value("airlineID",$client->airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'");
+							?>
+							</select>
+                        </div>
+						<span class="col-sm-4 control-label">
+                            <?php echo form_error('airlineID'); ?>
+                        </span>
+                    </div>
 
                     <?php
                         if(form_error('dob'))
@@ -277,6 +303,14 @@
 </div>
 
 <script type="text/javascript">
+$( ".select2" ).select2({closeOnSelect:false,
+		         placeholder: "Select airline"});
+				 
+$(document).ready(function(){
+	var airlines = [<?=$user->airlineIDs?>];
+	$('#airlineID').val(airlines).trigger('change');  				 
+});
+
 $('#dob').datepicker({ startView: 2 });
 $('#jod').datepicker({ dateFormat : 'dd-mm-yyyy' });
 

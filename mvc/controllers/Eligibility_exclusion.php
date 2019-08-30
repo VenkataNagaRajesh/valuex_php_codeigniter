@@ -8,6 +8,7 @@ class Eligibility_exclusion extends Admin_Controller {
 		$this->load->model('marketzone_m');
 		$this->load->model('eligibility_exclusion_m');
 		$this->load->model('airline_m');
+		$this->load->model('user_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('eligibility_exclusion', $language);	
 	}
@@ -332,7 +333,9 @@ function valFrequency($num)
                 $userID = $this->session->userdata('loginuserID');
                 if($userTypeID == 2){
                         $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           } else {
+                           }  else if($userTypeID != 1){
+						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+						   }else {
                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
                 }
 
@@ -992,7 +995,7 @@ LEFT JOIN (
 	 $rownum = 1 + $_GET['iDisplayStart'];
 
 	  foreach($rResult as $rule){	
-		 $rule->chkbox = "<input type='checkbox'  class='deleteRow' value='".$rule->eexcl_id."'  /> #".$rownum ;
+		 $rule->chkbox = "<input type='checkbox'  class='deleteRow' value='".$rule->eexcl_id."'  /> ".$rownum ;
                                 $rownum++;
 
 		$rule->ruleno = $rule->excl_grp;

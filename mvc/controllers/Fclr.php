@@ -12,6 +12,7 @@ class Fclr extends Admin_Controller {
 		$this->load->model('airline_m');
 		$this->load->model("marketzone_m");
 		$this->load->model('eligibility_exclusion_m');
+		$this->load->model('user_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('fclr', $language);	
 	}	
@@ -465,7 +466,9 @@ class Fclr extends Admin_Controller {
                 $userTypeID = $this->session->userdata('usertypeID');
                 if($userTypeID == 2){
                         $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                           } else {
+                           } else if($userTypeID != 1){
+						     $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+						   } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 }
 
@@ -479,7 +482,7 @@ class Fclr extends Admin_Controller {
 		if($this->input->post('scarrier')){
 		   $this->data['scarrier_id'] = $this->input->post('scarrier');
 	     } else {
-		   if($userTypeID == 2){
+		   if($userTypeID != 1){
              $this->data['scarrier_id'] = $this->session->userdata('default_airline');
 		   } else {
 			 $this->data['scarrier_id'] = 0;
@@ -643,7 +646,7 @@ class Fclr extends Admin_Controller {
 
                   $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
+                if($userTypeID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'fc.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
                 }
@@ -687,7 +690,7 @@ $sWhere $sOrder $sLimit";
 		$rownum = 1 + $_GET['iDisplayStart'];
 		foreach ($rResult as $feed ) {
 
-			 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->fclr_id."'  /> #".$rownum ;
+			 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->fclr_id."'  /> ".$rownum ;
                                 $rownum++;
 
 			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
@@ -714,7 +717,7 @@ $sWhere $sOrder $sLimit";
 			$feed->season_id = ($feed->season_name) ? ($feed->season_name) : 'default';
 			$feed->start_date = ($feed->start_date) ? date('d-m-Y',$feed->start_date) : 'NA';
 			$feed->end_date = $feed->end_date ? date('d-m-Y',$feed->end_date) : 'NA';
-
+            $feed->action = '';
                   if(permissionChecker('fclr_edit')){
 
 			 $feed->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_fclr"  data-placement="top" onclick="editfclr('.$feed->fclr_id.')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></a>';

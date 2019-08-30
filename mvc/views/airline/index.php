@@ -1,18 +1,18 @@
 
 <div class="box">
-    <div class="box-header">
+    <div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
 		<ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active"><?=$this->lang->line('menu_airline')?></li>
         </ol>
     </div><!-- /.box-header -->
-	 <h5 class="page-header">     
+	<!-- <h5 class="page-header">     
 		 <a href="<?php echo base_url('airline/addFlights') ?>" data-toggle="tooltip" data-title="Add Flights" data-placement="left" class="btn btn-danger">
              <i class="fa fa-plus"></i>
-             <!--<?=$this->lang->line('add_flights')?>-->
+            <?=$this->lang->line('add_flights')?>
          </a>
-	 </h5>
+	 </h5>-->
     <!-- form start -->
     <div class="box-body">
         <div class="row">

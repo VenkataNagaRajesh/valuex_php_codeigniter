@@ -411,7 +411,7 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','dc.c
 	  foreach($rResult as $feed){		 	
 		$feed->departure_date = date('d/m/Y',$feed->departure_date);
 
-		 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->invfeed_id."'  /> #".$rownum ;
+		 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->invfeed_id."'  /> ".$rownum ;
                                 $rownum++;
 
 

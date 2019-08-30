@@ -56,9 +56,16 @@ class user_m extends MY_Model {
 		return $query->result();		
 	}
 
-	function get_user($array=NULL, $signal=FALSE) {
-		$query = parent::get($array, $signal);
-		return $query;
+	function get_user($userID) {
+		/* $query = parent::get($array, $signal);
+		return $query; */
+		$this->db->select('u.*,group_concat(ua.airlineID) airlineIDs,group_concat(dd.code) airlines')->from('user u');
+		$this->db->join('VX_user_airline ua','ua.userID=u.userID','LEFT');
+        $this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = ua.airlineID','LEFT');		
+		$this->db->where('u.userID',$userID);	
+		$query = $this->db->get();
+		//print_r($this->db->last_query()); exit;
+		return $query->row();
 	}
 
 	function get_order_by_user($array=NULL) {
@@ -94,6 +101,34 @@ class user_m extends MY_Model {
 		$this->db->where('usertypeID !=',2);
 		$query = $this->db->get();		
 		return $query->row('count');
-	}	
+	}
+
+    function getUserAirlines($userID){
+		$this->db->select('dd.*')->from('VX_user_airline ua');
+		$this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = ua.airlineID','LEFT');
+		$this->db->where('ua.userID',$userID);
+		$query = $this->db->get();		
+		return $query->result();		
+	}
+	function getAirlinesByUser($userID){
+		$this->db->select('airlineID')->from('VX_user_airline');
+		$this->db->where('userID',$userID);
+		$query = $this->db->get();
+		return $query->result();
+	}
+
+    function insert_user_airline($data){
+		$this->db->insert('VX_user_airline',$data);
+		return $this->db->insert_id();
+	}
+
+    function delete_user_airline($userID,$airlineIDs =array()){
+		if(!empty($airlineIDs)){
+		  $this->db->where_in('airlineID',$airlineIDs);
+		}
+		$this->db->where('userID',$userID);
+		$this->db->delete('VX_user_airline');		
+		return TRUE;
+	 }
 }
 

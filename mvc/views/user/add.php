@@ -33,6 +33,31 @@
                             <?php echo form_error('name'); ?>
                         </span>
                     </div>
+					
+					<?php 
+                        if(form_error('airlineID')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+					   <label for="airlineID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("user_airline")?><span class="text-red">*</span>
+                       </label>
+                        <div class="col-sm-6">
+						      <select name="airlineID[]" id="airlineID" class="form-control select2" multiple="multiple">				 
+                            <?php 
+                              $airlines[0]=$this->lang->line("client_select_airline");					
+							   foreach($airlinelist as $airline){								
+								 echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->code.'</option>';
+							  } 
+							
+							?>
+							 </select>
+                        </div>
+						<span class="col-sm-4 control-label">
+                            <?php echo form_error('airlineID'); ?>
+                        </span>
+                    </div>
 
                     <?php
                         if(form_error('dob'))
@@ -69,23 +94,6 @@
                             <?php echo form_error('sex'); ?>
                         </span>
                     </div>
-
-                    <?php
-                     /*    if(form_error('religion'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group' >"; */
-                    ?>
-                   <!--     <label for="religion" class="col-sm-2 control-label">
-                            <?=$this->lang->line("user_religion")?>
-                        </label>
-                        <div class="col-sm-6">
-                            <input type="text" class="form-control" id="religion" name="religion" value="<?=set_value('religion')?>" >
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('religion'); ?>
-                        </span>
-                    </div>-->
 
                     <?php
                         if(form_error('email'))
@@ -296,6 +304,14 @@
 </div>
 
 <script type="text/javascript">
+$( ".select2" ).select2({closeOnSelect:false,
+		         placeholder: "Select airline"});
+				 
+$(document).ready(function(){	
+	var airlines = [<?php echo implode(',',$this->input->post("airlineID")); ?>];
+	$('#airlineID').val(airlines).trigger('change');  
+});
+
 $('#dob').datepicker({ startView: 2 });
 $('#jod').datepicker({ dateFormat : 'dd-mm-yyyy' });
 
