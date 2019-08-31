@@ -8,6 +8,7 @@ class Airline extends Admin_Controller {
 		$this->load->model("marketzone_m");
 		$this->load->model("market_airport_map_m");
 		$this->load->model("airline_m");
+		$this->load->model("user_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('airline', $language);
         $this->data['icon'] = $this->menu_m->getMenu(array("link"=>"airports_master"))->icon; 		
@@ -274,6 +275,11 @@ class Airline extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if ((int)$id) {
 			$this->data["airline"] = $this->airline_m->getAirlineData($id); 
+			$this->data['airline']->gallery = $this->airline_m->getImagesByType($id,'gallery');
+			$this->data['airline']->upgrade_offer_mail_template1 = $this->airline_m->getImagesByType($id,'upgrade_offer_mail_template1');
+			$this->data['airline']->upgrade_offer_mail_template2 = $this->airline_m->getImagesByType($id,'upgrade_offer_mail_template2');
+			$this->data['airline']->upgrade_offer_mail_template3 = $this->airline_m->getImagesByType($id,'upgrade_offer_mail_template3');
+			$this->data['airline']->airline_logo = $this->airline_m->getImagesByType($id,'airline_logo');
 			//print_r($this->data["airline"]); exit;
 			if($this->data["airline"]) {
 				$this->data["subview"] = "airline/view";
@@ -572,7 +578,7 @@ class Airline extends Admin_Controller {
             $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= ' d.aln_data_typeID = 12 ';
 
-           if($this->session->userdata('usertypeID') == 2){  
+           if($this->session->userdata('usertypeID') != 1){  
               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 			  $sWhere .= 'd.vx_aln_data_defnsID IN ('.implode(',',$this->session->userdata('login_user_airlineID')).')';		
             } 		   
@@ -610,7 +616,11 @@ class Airline extends Admin_Controller {
 		  }
 		  if(permissionChecker('airline_edit')){ 	
 		  // $airline->action .= '<a href="'.base_url('airline/addFlights/'.$airline->vx_aln_data_defnsID).'" class="btn btn-warning btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Add Flights"><i class="fa fa-plus"></i></a>';
-		  }  	   
+		  } 
+
+           if(permissionChecker('airline_gallery')){ 	
+		      $airline->action .= '<a href="'.base_url('airline/gallery/'.$airline->vx_aln_data_defnsID).'" class="btn btn-warning btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Upload Images"><i class="fa fa-plus"></i></a>';
+		  } 		  
 			$status = $airline->active;
 			$airline->active = "<div class='onoffswitch-small' id='".$airline->vx_aln_data_defnsID."'>";
             $airline->active .= "<input type='checkbox' id='myonoffswitch".$airline->vx_aln_data_defnsID."' class='onoffswitch-small-checkbox' name='paypal_demo'";
@@ -692,6 +702,95 @@ class Airline extends Admin_Controller {
 		$json['data']->seat_capacity = implode(',',$seat_capacity);
 		$this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($json)); 
+	}
+	
+	public function gallery(){
+		$this->data['headerassets'] = array(
+			'css' => array(				
+				'assets/select2/css/select2.css',
+				'assets/select2/css/select2-bootstrap.css'
+			),
+			'js' => array(				
+				'assets/select2/select2.js'
+			)
+		);
+        $this->data['airlineID'] = htmlentities(escapeString($this->uri->segment(3)));
+		$userTypeID = $this->session->userdata('usertypeID');
+		$userID = $this->session->userdata('loginuserID');
+		if($userTypeID == 2){
+          $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+        } else if($userTypeID != 1){
+		  $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+		} else {
+           $this->data['airlines'] = $this->airline_m->getAirlinesData();
+        }
+      	
+		if($this->input->post()){	   		   
+          if($_FILES["image"]['name'] !="") {
+			  $this->mydebug->debug($_FILES["image"]['name']);
+			 $airline = $this->airline_m->getAirlineData($this->input->post('airlineID'));
+			 $imgcount = $this->airline_m->getImagesCount($this->input->post('airlineID'),$this->input->post('img_type'));
+			 //print_r($imgcount); exit;
+			if($this->input->post('img_type') == "gallery" && $imgcount > 4){
+			  echo "Gallery Images count(5) Exceeded"; 
+			} else if($this->input->post('img_type') != "gallery" && $imgcount > 0){
+			  echo "Mail template Image count(1) Exceeded"; exit;
+			} else {
+			$airline->airline_name = $airline->airline_name . $_FILES["image"]['name'];
+			$file_name = $_FILES["image"]['name'];
+			$random = rand(1, 10000000000000000);
+	    	$makeRandom = hash('sha512', $random.$airline->airline_name.$file_name . config_item("encryption_key"));
+			$file_name_rename = $makeRandom;
+            $explode = explode('.', $file_name);
+            if(count($explode) >= 2) {
+				if($this->input->post('img_type') == "upgrade_offer_mail_template2"){
+					$config['width'] = '344';
+				    $config['height'] = '438';
+				} else if($this->input->post('img_type') == "upgrade_offer_mail_template1" || $this->input->post('img_type') == "upgrade_offer_mail_template3" ){
+					$config['width'] = '732';
+				    $config['height'] = '184';
+				} else if($this->input->post('img_type') == "airline_logo"){
+					$config['width'] = '84';
+				    $config['height'] = '60';
+				}else {
+					$config['width'] = '416';
+				    $config['height'] = '290';
+				}
+				//print_r($config);				
+	            $new_file = $file_name_rename.'.'.end($explode);
+				$config['upload_path'] = "./uploads/images";
+				$config['allowed_types'] = "gif|jpg|png";
+				$config['file_name'] = $new_file;
+				$config['max_size'] = '1024';
+				//$config['max_width'] = '3000';
+				//$config['max_height'] = '3000';
+				$this->load->library('upload', $config);
+				if($this->upload->do_upload("image")) {
+					$this->upload_data['file'] =  $this->upload->data();			 			  
+                    $gallery= array(
+					  'airlineID' => $this->input->post('airlineID'),
+					  'type' => $this->input->post('img_type'),
+					  'image' => $new_file,
+					  'create_date' => time(),
+					  'create_userID' => $this->session->userdata('loginuserID')					 
+					);					
+                   $galleryID = $this->airline_m->add_gallery($gallery);
+                    if($galleryID){
+						echo "success";
+					   $this->session->set_flashdata('success', $this->lang->line('menu_success'));	
+					}				   
+				} else {
+					$error = array('error' => $this->upload->display_errors());					
+					echo $error['error'];
+				 }
+			   }
+			  } 
+			}			
+		}else{
+			
+		  $this->data['subview'] = 'airline/airline_gallery';
+		  $this->load->view('_layout_main',$this->data);
+		}
 	}
 
 }
