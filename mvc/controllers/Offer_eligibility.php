@@ -354,8 +354,8 @@ $sWhere $sOrder $sLimit";
 		$sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf.cabin and cab.aln_data_typeID = 13 ) where cab.aln_data_value != 'Business'  AND is_processed = 0 order by dtpf_id";
 		$rResult = $this->install_m->run_query($sQuery);
 
-		$exclQuery = "SELECT * from VX_aln_eligibility_excl_rules ";
-		$excl = $this->install_m->run_query($exclQuery);
+		/*$exclQuery = "SELECT * from VX_aln_eligibility_excl_rules ";
+		$excl = $this->install_m->run_query($exclQuery);*/
 /*
 		$fclrQuery = " SELECT  boarding_point, off_point,flight_number,  group_concat(price SEPARATOR ';') as code_price           FROM (                select boarding_point, off_point , flight_number , group_concat(fca.code,' ' , tca.code ,' min ', min, ' max ' , max,' average ', average ,' slider_start ' , slider_start) as price from VX_aln_fare_control_range fc LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin)  LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin) group by boarding_point ,off_point,flight_number,from_cabin,to_cabin)  as MainSet                  group by  boarding_point, off_point, flight_number
  " ;
@@ -403,7 +403,7 @@ $sWhere $sOrder $sLimit";
 
                           }
 
-                         $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+                         //$data = $this->fclr_m->getUpgradeCabinsData($upgrade);
 			 foreach($data as $f) {
 
 				$rules = $this->eligibility_exclusion_m->apply_exclusion_rules();

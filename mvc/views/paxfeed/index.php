@@ -25,6 +25,13 @@
                   </a>
                                  <?php } ?>
 
+			 &nbsp;&nbsp;
+                        <a href="<?php echo base_url('paxfeed/process_fclr_matching_report') ?>"  class="btn btn-danger">
+                                 <i class="fa fa-upload"></i>
+                                 FCLR Matching Report
+                        </a>
+
+
               </h5>
 			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 
@@ -184,6 +191,8 @@
                         <th class="col-lg-1"><?=$this->lang->line('booking_city')?></th>
                          <th class="col-lg-1"><?=$this->lang->line('office_id')?></th>
                          <th class="col-lg-1"><?=$this->lang->line('channel')?></th>
+			<th class="col-lg-1">FCLR Report</th>
+			<th class="col-lg-1">FCLR Data</th>
 			
 			
 		 <th class="col-lg-1 noExport"><?=$this->lang->line('active')?></th>
@@ -270,6 +279,8 @@
 				 {"data": "booking_city" },
                                   {"data": "office_id"},
 				    {"data": "channel" },
+					{"data": "is_fclr_processed"},
+                                    {"data": "fclr_data" },
 				{"data": "active"},
 				  {"data": "action"}
 				  ],			     
