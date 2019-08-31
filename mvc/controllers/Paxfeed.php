@@ -11,8 +11,8 @@ class Paxfeed extends Admin_Controller {
 		$this->load->model('airline_m');
 		$this->load->model("airline_cabin_m");
 		$this->load->model('airline_cabin_class_m');
-        	$this->load->model('preference_m');
-
+        $this->load->model('preference_m');
+        $this->load->model('user_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('paxfeed', $language);
         $this->data['icon'] = $this->menu_m->getMenu(array("link"=>"airline_cabin"))->icon;		
@@ -79,7 +79,9 @@ class Paxfeed extends Admin_Controller {
                 $userTypeID = $this->session->userdata('usertypeID');
                 if($userTypeID == 2){
                         $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                           } else {
+                           } else if($userTypeID != 1){
+						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+						   }  else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 }
 

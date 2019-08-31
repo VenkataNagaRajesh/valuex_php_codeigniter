@@ -14,7 +14,7 @@ class Offer_table extends Admin_Controller {
 		$this->load->model("season_m");
 		$this->load->model("marketzone_m");
 		$this->load->model("fclr_m");
-		
+		$this->load->model("user_m");
 		$this->load->library('email');
 		$this->load->model('invfeed_m');
 		$this->load->model("reset_m");
@@ -73,14 +73,16 @@ class Offer_table extends Admin_Controller {
                 $userTypeID = $this->session->userdata('usertypeID');
                 if($userTypeID == 2){
                         $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           } else {
+                           }else if($userTypeID != 1){
+						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
+						   } else {
                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
                 }
 				
 				 if($this->input->post('carrier')){
 				   $this->data['car'] = $this->input->post('carrier');
 				 } else {
-				   if($userTypeID == 2){
+				   if($userTypeID != 1){
 					 $this->data['car'] = $this->session->userdata('default_airline');
 				   } else {
 					 $this->data['car'] = 0;
@@ -352,7 +354,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
+                if($userTypeID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'SubSet.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                
                 }

@@ -137,10 +137,14 @@ class User extends Admin_Controller {
 	}
 
 	public function index() {
-		if($this->session->userdata('usertypeID') == 2){
-		$this->data['users'] = $this->user_m->get_user_by_usertype(null,array("u.usertypeID" => 5,"u.create_userID"=>$this->session->userdata('loginuserID')));
+		/* if($this->session->userdata('usertypeID') == 2){
+		 $this->data['users'] = $this->user_m->get_user_by_usertype(null,array("u.usertypeID" => 5,"u.create_userID"=>$this->session->userdata('loginuserID')));
 		} else {
 		$this->data['users'] = $this->user_m->getUsers();	
+		} */
+		$this->data['users'] = array();
+		if($this->session->userdata('usertypeID') == 1){
+		 $this->data['users'] = $this->user_m->getUsers();	
 		}
 		$this->data["subview"] = "user/index";
 		$this->load->view('_layout_main', $this->data);

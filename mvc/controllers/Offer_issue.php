@@ -21,6 +21,7 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model('acsr_m');
 		$this->load->model("airports_m");
 		$this->load->model("bid_m");
+		$this->load->model("user_m");
 		$language = $this->session->userdata('lang');		
 		$this->lang->load('offer', $language);  
      
@@ -82,7 +83,9 @@ $this->data['headerassets'] = array(
                 $userTypeID = $this->session->userdata('usertypeID');
                 if($userTypeID == 2){
                         $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           } else {
+                           }else if($userTypeID != 1){
+						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
+						   } else {
                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
                 }
 
@@ -95,7 +98,7 @@ $this->data['headerassets'] = array(
           if($this->input->post('carrier')){
 		   $this->data['car'] = $this->input->post('carrier');
 	     } else {
-		   if($userTypeID == 2){
+		   if($userTypeID != 1){
              $this->data['car'] = $this->session->userdata('default_airline');
 		   } else {
 			 $this->data['car'] = 0;
@@ -377,7 +380,7 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 
 		$userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
+                if($userTypeID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'SubSet.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';              
                 }

@@ -9,8 +9,8 @@ class Rafeed extends Admin_Controller {
 		$this->load->model('airports_m');
 		$this->load->model("season_m");
 		$this->load->model("airline_m");
-		$language = $this->session->userdata('lang');
-		
+		$this->load->model("user_m");
+		$language = $this->session->userdata('lang');		
 		$this->lang->load('rafeed', $language);	
 		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"rafeed"))->icon;
 	}	
@@ -107,7 +107,9 @@ class Rafeed extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
                 if($userTypeID == 2){
                         $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                           } else {
+                           } else if($userTypeID != 1){
+						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+						   } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 }
 
@@ -555,7 +557,7 @@ class Rafeed extends Admin_Controller {
 
 		  $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
+                if($userTypeID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'rf.carrier IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                
                 }
