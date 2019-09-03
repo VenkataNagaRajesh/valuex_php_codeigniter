@@ -7,7 +7,9 @@
         disallowedContent : 'img{width,height}',
         customConfig: '../ckeditor/config.js',
         uiColor: '#3592E0',
-        codeSnippet_theme: 'atelier-dune.light'
+        codeSnippet_theme: 'atelier-dune.light',
+		/* fullPage: true,
+	    allowedContent: true */
     });
     });
 
@@ -64,6 +66,28 @@
                            </div>
                            <span class="col-sm-4 control-label">
                                <?php echo form_error('category'); ?>
+                           </span>
+                       </div>
+					   
+					   <?php
+                           if(form_error('airlineID'))
+                               echo "<div class='form-group has-error' >";
+                           else
+                               echo "<div class='form-group' >";
+                       ?>
+                           <label for="email_user" class="col-sm-1 control-label">
+                               <?=$this->lang->line("mailandsmstemplate_airline")?>
+                           </label>
+                           <div class="col-sm-4">
+                               <?php                                                                   
+                                  foreach ($airlines as $airline) {
+                                    $carrier[$airline->vx_aln_data_defnsID] = $airline->code;
+                                  }                                                  
+                                echo form_dropdown("airlineID", $carrier, set_value("airlineID",$airline->airlineID), "id='airlineID' class='form-control'");
+                               ?>
+                           </div>
+                           <span class="col-sm-4 control-label">
+                               <?php echo form_error('airlineID'); ?>
                            </span>
                        </div>
                       

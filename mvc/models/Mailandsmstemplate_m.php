@@ -41,10 +41,11 @@ class Mailandsmstemplate_m extends MY_Model {
 	}
 
 	function get_order_by_mailandsmstemplate_with_usertypeID() {
-		$this->db->select('mailandsmstemplate.*,cat.name category');
+		$this->db->select('mailandsmstemplate.*,cat.name category,a.aln_data_value airline_name,a.code airline_code');
 		$this->db->from('mailandsmstemplate');
 		//$this->db->join('usertype', 'usertype.usertypeID = mailandsmstemplate.usertypeID', 'LEFT');
 		$this->db->join('mailandsmscategory cat','cat.catID = mailandsmstemplate.catID','LEFT');
+		$this->db->join('vx_aln_data_defns a','a.vx_aln_data_defnsID = mailandsmstemplate.airlineID','LEFT');
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -54,9 +55,10 @@ class Mailandsmstemplate_m extends MY_Model {
 		return $query->result();
 	}
 	
-	function setDefault($catID,$mailandsmstemplateID){
+	function setDefault($catID,$mailandsmstemplateID,$airlineID){
 		$this->db->set('default', 0);
 		$this->db->where('catID',$catID);
+		$this->db->where('airlineID',$airlineID);
 		$this->db->update('mailandsmstemplate');
 		
 		$this->db->set('default', 1);

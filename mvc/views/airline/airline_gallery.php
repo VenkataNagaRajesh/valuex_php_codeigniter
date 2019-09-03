@@ -127,7 +127,9 @@ $('.select2').select2();
 			request.send(formdata);
 			 request.onload = function(data) { 			
 			   if(request.responseText == 'success'){
-                    	//$("#"+index).remove();                 					
+				   console.log(index);
+                    	//$("#"+index).remove();
+                       removeform(index);						
                         toastr["success"]("Success")
                         toastr.options = {
                             "closeButton": true,

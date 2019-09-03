@@ -1,0 +1,1 @@
+alter table mailandsmstemplate add column airlineID int(11) NOT NULL;
