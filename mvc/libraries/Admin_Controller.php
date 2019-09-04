@@ -609,11 +609,12 @@ class Admin_Controller extends MY_Controller {
            $this->load->library('parser');
 		   $this->load->library('email');
 		   $data['base_url'] = base_url(); 
-           $data['base_url'] = 'http://valuex.sweken.com/';
-           $data['bidnow_link'] = 'http://valuex.sweken.com/home/index';		   
-           $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template)->template;		   
-          $message = $this->parser->parse_string($tpl, $data);
-		 //  $message = $this->parser->parse($template, $data,TRUE);
+          // $data['base_url'] = 'http://valuex.sweken.com/';
+          // $data['bidnow_link'] = 'http://valuex.sweken.com/home/index';		   
+          // $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template)->template;		   
+         // $message = $this->parser->parse_string($tpl, $data);
+		 // print_r($data); exit;
+		   $message = $this->parser->parse($template, $data,TRUE);
           $message =html_entity_decode($message);
           $siteinfos = $this->reset_m->get_site();
 		  $this->mydebug->debug($data['tomail']);		  

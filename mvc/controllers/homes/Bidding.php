@@ -12,6 +12,7 @@ class Bidding extends MY_Controller {
 		 $this->load->model("offer_issue_m");
 		 $this->load->model("offer_reference_m");
 		 $this->load->model("rafeed_m");
+		 $this->load->model('mailandsmstemplate_m');
 		$this->load->model('install_m');
 		 $this->load->model("reset_m");
 		 $this->load->library('session');
@@ -19,10 +20,13 @@ class Bidding extends MY_Controller {
          $this->load->library('form_validation');
          $this->load->library('email');		 
 	     $language = $this->session->userdata('lang');	  
-		$this->lang->load('bidding', $language);       		
-      
-	}
+		$this->lang->load('bidding', $language);
+        $this->load->library('parser'); 
+
+		}
   
+  
+ 
 
     public function index() {  
       //$this->session->set_userdata('pnr_ref','F90442');
@@ -133,23 +137,10 @@ class Bidding extends MY_Controller {
 			   $maildata['dep_date'] = date('d/m/Y',$maildata['dep_date']);
 			   $maildata['dep_time'] = gmdate('H:i A',$maildata['dept_time']);
 			   $maildata['cash'] = $this->input->post("bid_value");
-			    $this->load->library('parser');        
-			  $message = $this->parser->parse("home/bidsuccess-temp", $maildata);
-			  $message =html_entity_decode($message);
-			  $siteinfos = $this->reset_m->get_site();
-			   $tomail = explode(',',$maildata['email_list'])[0];
-                            /* $this->mydebug->debug($maildata);
-                            $this->mydebug->debug("Bid Submition ToMails ID : ".$tomail); */
-				$subject = "Your bid has been Successfully Submitted";				
-                                     //  $tomail = 'lakshmi.amujuru@sweken.com';
-				$this->email->set_mailtype("html");
-				$this->email->from($siteinfos->email,$siteinfos->sname);
-				$this->email->to($tomail);
-				$this->email->subject($subject);
-				$this->email->message($message);
-			   $status =  $this->email->send();
-                       //  $this->mydebug->debug("mailstatus : ".$status);
-				
+			   $maildata['base_url'] = "http://valuex.sweken.com/";			    		
+			   $maildata['tomail'] = explode(',',$maildata['email_list'])[0];                          
+				$maildata['tomail'] = 'swekenit@gmail.com';
+				$this->sendMail($maildata);
 			  $json['status'] = "success";
 			  
 			    // calculate average and rank
@@ -180,6 +171,33 @@ class Bidding extends MY_Controller {
 		$this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($json));
 	}
+	
+	 public function sendMail($data){
+	  $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat('bid_success')->template;
+	  $message = $this->parser->parse_string($tpl, $data);
+	  $message =html_entity_decode($message);
+	  $siteinfos = $this->reset_m->get_site();			  
+	  $subject = "Your bid has been Successfully Submitted";		
+     
+	 $config['protocol']='smtp';
+	 $config['smtp_host']='mail.sweken.com';
+	 $config['smtp_port']='26';
+	 $config['smtp_timeout']='30';
+	 $config['smtp_user']='info@sweken.com';
+	 $config['smtp_pass']='Infoinfo-9!';
+	 $config['charset']='utf-8';
+	 $config['newline']="\r\n";
+	 $config['wordwrap'] = TRUE;
+	 $config['mailtype'] = 'html';
+	 $this->email->initialize($config);
+		$this->email->set_mailtype("html");
+		$this->email->from($siteinfos->email,$siteinfos->sname);
+		$this->email->to($data['tomail']);
+		$this->email->subject($subject);
+		$this->email->message($message);
+	   $status =  $this->email->send(); 
+	   return $status;
+  }
 	
 	protected function rules() {
 		$rules = array(

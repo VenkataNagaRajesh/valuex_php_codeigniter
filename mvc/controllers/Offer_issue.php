@@ -27,20 +27,18 @@ class Offer_issue extends Admin_Controller {
      
 	}	
 	
-	function testmail(){
-	    
+	function testmail(){	    
 	  $data = array(
         'first_name'   => 'Lakshmi',
         'last_name' => 'Amujuru',
-        'tomail' => 'laxmicme@gmail.com',
+        'tomail' => 'swekenit@gmail.com',
         'pnr_ref' => 'US0404',
         'coupon_code' => 'sssssssss',
         'mail_subject' => "Upgrade Cabin Offerss US0404",
 		'bidnow_link' => base_url('home/index')		
-        );			
-		       
-          $this->sendMailTemplateParser('upgrade_offer',$data);
-           // $this->sendMailTemplateParser('home/temp-2',$data);		  
+        );			       
+          $this->sendMailTemplateParser('bid_success',$data);
+         //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);		  
 	}
 	
 
