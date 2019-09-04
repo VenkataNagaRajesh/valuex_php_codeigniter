@@ -4,8 +4,8 @@
 
        
         <ol class="breadcrumb">
-            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li class="active">Back</li>
+            <li><a href="<?=base_url("dashboard/index")?>"><?=$this->lang->line('menu_dashboard')?></a></li>
+            <li class="active"><a href="<?=base_url("airline/index")?>">Back</a></li>
 			<li class="active"><?='Gallery'?></li>
         </ol>
     </div><!-- /.box-header -->

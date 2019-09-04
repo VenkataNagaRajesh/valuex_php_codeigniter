@@ -14,6 +14,7 @@ class Bidding extends MY_Controller {
 		 $this->load->model("rafeed_m");
 		 $this->load->model('mailandsmstemplate_m');
 		$this->load->model('install_m');
+		$this->load->model('airline_m');
 		 $this->load->model("reset_m");
 		 $this->load->library('session');
          $this->load->helper('form');
@@ -80,12 +81,17 @@ class Bidding extends MY_Controller {
 		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
 		  } else {
 			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
-		  }		  
+		  }
+
+         $this->data['images'] = $this->airline_m->getImagesByType($airline->airlineID,'gallery');
+         $this->data['airline_video_link'] = str_replace('watch?v=','embed/',$airline->video_links);		 
 		} else {
 			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');			
 		}
+		
+		
        	
-	  //  print_r($this->data['results']); exit;
+	  //  print_r($this->data['airline_video_link']); exit;
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);
 	}
