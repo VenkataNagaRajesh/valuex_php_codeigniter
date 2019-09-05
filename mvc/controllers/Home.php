@@ -166,8 +166,9 @@ class Home extends MY_Controller {
 	}
 	public function feedback() {		
 		$this->data["subview"] = "home/feedback";
+		//$this->data["subview"] = "home/star";
 		$this->load->view('_layout_home', $this->data);
-	}	
+	}  	
 	
 	public function sendMail(){
 		$dtpf_id = 60;

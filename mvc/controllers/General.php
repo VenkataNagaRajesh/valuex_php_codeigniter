@@ -104,5 +104,25 @@ echo '<option value="0">Area</option>';
         $this->output->set_output(json_encode($json));		
 	}
 	
+      public function submitFeedback(){
+		 $data = $_POST;	
+          if(empty($data['customer_service'])){
+			  $data['customer_service'] = 0;
+		  }
+         	 
+		 $this->load->model('bid_m');
+         $this->bid_m->addFeedBack($data);	 
+		 $json['status'] = 'Success'; 
+	     if (isset($_SERVER)) {		
+		    header('Access-Control-Allow-Origin: *');
+			header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+			header('Access-Control-Max-Age: 1000');
+			header('Access-Control-Allow-Credentials: true');
+			header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+		}
+		$this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($json));	 
+      }
+	
 	
 }
