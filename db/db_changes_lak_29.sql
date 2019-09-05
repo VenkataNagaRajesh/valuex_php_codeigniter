@@ -10,3 +10,4 @@
   `date` int(11) NOT NULL,
   PRIMARY KEY (`feedbackID`)  
 );
+insert into permissions set name='feedback',description='Feedback';
