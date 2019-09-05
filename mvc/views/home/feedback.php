@@ -87,7 +87,7 @@
 						
                 <div class="post-action">
                     <!-- Rating Bar -->
-					<input id="customer_service" class="rating rating-loading ratingbar" data-min="0" data-max="5" data-step="1">
+					<input id="customer_service" class="rating-loading ratingbar" data-min="0" data-max="5" data-step="1">
                 </div>
            
 						<p>Is there anything you would like to tell us?</p>
