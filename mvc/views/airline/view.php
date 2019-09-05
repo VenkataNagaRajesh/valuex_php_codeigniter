@@ -45,6 +45,81 @@
 				<iframe src="<?=str_replace('watch?v=','embed/',$airline->video_links)?>" width="100%" height="130"></iframe>
 			</div>
         </div>
+		<div class="col-md-12 airline-cabin-img" style="padding:0">
+		  <h2>Gallery</h2>
+             		  
+		  <?php
+             foreach($airline->gallery as $image){
+ 		         $array = array("src" => base_url('uploads/images/'.$image->image),
+                                'width' => '150px',
+                                'height' => '150px',
+                                'class' => 'img-rounded'
+                          );
+				echo img($array);
+			 }
+            ?>
+						
+		</div>
+		<div class="col-md-12 airline-cabin-img" style="padding:0">
+		  <h2>Upgrade Offer Mail Template 1</h2>
+             		  
+		  <?php
+             foreach($airline->upgrade_offer_mail_template1 as $image){
+ 		         $array = array("src" => base_url('uploads/images/'.$image->image),
+                                'width' => '150px',
+                                'height' => '150px',
+                                'class' => 'img-rounded'
+                          );
+				echo img($array);
+			 }
+            ?>
+						
+		</div>
+		<div class="col-md-12 airline-cabin-img" style="padding:0">
+		  <h2>Upgrade Offer Mail Template 2</h2>
+             		  
+		  <?php
+             foreach($airline->upgrade_offer_mail_template2 as $image){
+ 		         $array = array("src" => base_url('uploads/images/'.$image->image),
+                                'width' => '150px',
+                                'height' => '150px',
+                                'class' => 'img-rounded'
+                          );
+				echo img($array);
+			 }
+            ?>
+						
+		</div>
+		<div class="col-md-12 airline-cabin-img" style="padding:0">
+		  <h2>Upgrade Offer Mail Template 3</h2>
+             		  
+		  <?php
+             foreach($airline->upgrade_offer_mail_template3 as $image){
+ 		         $array = array("src" => base_url('uploads/images/'.$image->image),
+                                'width' => '150px',
+                                'height' => '150px',
+                                'class' => 'img-rounded'
+                          );
+				echo img($array);
+			 }
+            ?>
+						
+		</div>
+		<div class="col-md-12 airline-cabin-img" style="padding:0">
+		  <h2>Airline Logo for Mail Template(84*60)</h2>
+             		  
+		  <?php
+             foreach($airline->airline_logo as $image){
+ 		         $array = array("src" => base_url('uploads/images/'.$image->image),
+                                'width' => '150px',
+                                'height' => '150px',
+                                'class' => 'img-rounded'
+                          );
+				echo img($array);
+			 }
+            ?>
+						
+		</div>
 		</div>
   </section>
 </div>

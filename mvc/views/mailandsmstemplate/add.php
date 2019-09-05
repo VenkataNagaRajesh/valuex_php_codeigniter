@@ -1,5 +1,19 @@
  <script type="text/javascript" src="<?php echo base_url(); ?>assets/ckeditor/ckeditor.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/ckfinder/ckfinder.js"></script>
+	<script>
+    $(document).ready(function(){
+
+        CKEDITOR.replace( 'email_template', {
+        disallowedContent : 'img{width,height}',
+        customConfig: '../ckeditor/config.js',
+        uiColor: '#3592E0',
+        codeSnippet_theme: 'atelier-dune.light',
+		fullPage: true,
+	    allowedContent: true
+    });
+    });
+
+</script>
 <div class="box">
     <div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa icon-template"></i> <?=$this->lang->line('panel_title')?></h3>
@@ -52,6 +66,28 @@
                            </div>
                            <span class="col-sm-4 control-label">
                                <?php echo form_error('category'); ?>
+                           </span>
+                       </div>
+					   
+					   <?php
+                           if(form_error('airlineID'))
+                               echo "<div class='form-group has-error' >";
+                           else
+                               echo "<div class='form-group' >";
+                       ?>
+                           <label for="email_user" class="col-sm-1 control-label">
+                               <?=$this->lang->line("mailandsmstemplate_airline")?>
+                           </label>
+                           <div class="col-sm-4">
+                               <?php                                                                   
+                                  foreach ($airlines as $airline) {
+                                    $carrier[$airline->vx_aln_data_defnsID] = $airline->code;
+                                  }                                                  
+                                echo form_dropdown("airlineID", $carrier, set_value("airlineID",$airlineID), "id='airlineID' class='form-control'");
+                               ?>
+                           </div>
+                           <span class="col-sm-4 control-label">
+                               <?php echo form_error('airlineID'); ?>
                            </span>
                        </div>
                       

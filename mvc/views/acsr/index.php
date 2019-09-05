@@ -178,7 +178,6 @@
 			      <th class="col-lg-1"><?=$this->lang->line('flight_dep_time_start')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('flight_dep_time_end')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('flight_nbr_range')?></th>
-				<th class="col-lg-1"><?=$this->lang->line('season')?></th>
 			        <th class="col-lg-1"><?=$this->lang->line('upgrade_from')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('upgrade_to')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('memp')?></th>
@@ -249,7 +248,6 @@ $(document).ready(function() {
                   {"data": "flight_dep_time_start" },
                   {"data": "flight_dep_time_end" },
                   {"data": "flight_nbr" },
-				  {"data": "season_name" },
                   {"data": "from_cabin"},
                   {"data": "to_cabin" },
 				  {"data": "memp" },

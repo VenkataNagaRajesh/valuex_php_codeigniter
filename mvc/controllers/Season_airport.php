@@ -35,11 +35,10 @@ class Season_airport extends Admin_Controller {
             $this->data['type'] = 'vx_season_airport_origin_map';
           }
 
-		 if($this->session->userdata('usertypeID') == 2){
-		   $this->data['seasonslist'] = $this->season_m->getSeasonsList($this->session->userdata('login_user_airlineID'));
-		  }else{
+		
 		   $this->data['seasonslist'] = $this->season_m->getSeasonsList(); 
-		  } 
+		 
+		 
 		$this->data['airports_list'] = $this->airports_m->getDefns('1');
 		$this->data["subview"] = "season_airport/index";
 		$this->load->view('_layout_main', $this->data);
@@ -115,7 +114,7 @@ class Season_airport extends Admin_Controller {
         		$sWhere .= $col.' = '.$this->input->get('airportID');
         	}
 			
-		   if($this->session->userdata('usertypeID') == 2){  
+		   if($this->session->userdata('usertypeID') != 1){  
                $seasonslist = $this->season_m->getSeasonsList($this->session->userdata('login_user_airlineID'));
 			 // $markets = array_column($marketzones, 'market_id'); 
 			   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';

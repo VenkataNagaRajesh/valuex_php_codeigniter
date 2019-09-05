@@ -10,6 +10,7 @@ class Invfeed extends Admin_Controller {
 		$this->load->model("airline_cabin_m");
 		$this->load->model("airline_m");
 		$this->load->model('airports_m');
+		$this->load->model('user_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('invfeed', $language);
         $this->data['icon'] = $this->menu_m->getMenu(array("link"=>"invfeed"))->icon;			
@@ -66,7 +67,9 @@ class Invfeed extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
                 if($userTypeID == 2){
                         $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                           } else {
+                           } else if($userTypeID != 1){
+						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+						   } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 }
 
@@ -373,7 +376,7 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','dc.c
 
 		                $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
+                if($userTypeID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'inv.airline_id IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                
                 }
@@ -411,7 +414,7 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','dc.c
 	  foreach($rResult as $feed){		 	
 		$feed->departure_date = date('d/m/Y',$feed->departure_date);
 
-		 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->invfeed_id."'  /> #".$rownum ;
+		 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->invfeed_id."'  /> ".$rownum ;
                                 $rownum++;
 
 

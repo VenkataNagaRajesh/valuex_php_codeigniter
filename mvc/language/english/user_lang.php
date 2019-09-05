@@ -51,3 +51,4 @@ $lang['mail_valid'] = "The To field must contain a valid email address.";
 $lang['mail_subject'] = "The Subject field is required.";
 $lang['mail_success'] = 'Email send successfully!';
 $lang['mail_error'] = 'oops! Email not send!';
+$lang['user_airline'] = 'Airline';

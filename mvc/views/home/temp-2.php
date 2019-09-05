@@ -18,18 +18,18 @@
 <body>
 <div style="min-width: 245px;max-width: 1100px;position: relative;padding: 10px;margin:0 auto;">
 	<div style="margin-left:auto;margin-right:auto;width:100%;padding-left: 15px;padding-right: 15px;background: #333;">
-		<img style="width:120px;" src="<?=base_url()?>assets/home/images/emir.png" alt="logo">
+		<img style="width:120px;" src="{base_url}assets/home/images/emir.png" alt="logo">
 	</div>
-	<div style="border: solid 1px #ddd;width:100%;margin:0px auto;padding:10px 15px;display:inline-block;">
-		<div class="data-block" style="width:70%;position: relative;min-height: 1px;float: left;padding-right:15px;">
+	<div style="border: solid 1px #ddd;width:100%;margin:0px auto;padding:10px 14px;display:inline-block;">
+		<div class="data-block" style="width:70%;position: relative;min-height: 1px;float: left;padding-right:20px;">
 			<div>
-				<img style="margin-right: auto;margin-left: auto;display: block;max-width: 100%;height: auto;" src="<?=base_url()?>assets/home/images/temp2-logo.jpg" alt="temp bnr">
+				<img style="margin-right: auto;margin-left: auto;display: block;max-width: 100%;height: auto;" src="{base_url}assets/home/images/temp2-logo.jpg" alt="temp bnr">
 			</div>
-			<h1 style="margin-bottom: 10px;color: #ff6633;font-weight: bold;text-align: center;font-size: 30px;margin-top: 1em;">Hi Pappala</h1>
+			<h1 style="margin-bottom: 10px;color: #ff6633;font-weight: bold;text-align: center;font-size: 30px;margin-top: 1em;">Hi {first_name}</h1>
 			<p style="text-align: center;margin-bottom:10px;font-size: 14px;">
 				With AC Bid Upgrade you can enhance your travel experince by enjoying priority. One or more of yourupcoming flight (s) are eligible for bids
 			</p>
-			<p style="text-align: center"><a style="background: #ff6633;font-weight: bold;padding: 8px 26px;font-size: 23px;border-radius: 33px;border: none;color: #fff;text-decoration: none;" href="#" class="btn btn-danger" type="button">BID NOW</a></p>
+			<p style="text-align: center"><a style="background: #ff6633;font-weight: bold;padding: 8px 26px;font-size: 23px;border-radius: 33px;border: none;color: #fff;text-decoration: none;" href="{bidnow_link}" class="btn btn-danger" type="button">BID NOW</a></p>
 			<p style="text-align: center;font-size:12px">
 				<span>Value X S.r.l. via Paleocapa, 7 - 20121 Milan - Italy - Tax code and VAT number: IT11876271005</span><br>
 				You are receiving this email because you subscribed to the Travel Alert service, accepting Value X-  Terms of Service and Privacy Policy .
@@ -63,16 +63,16 @@
 				</table>
 			</div>
 		</div>
-		<div class="img-block" style="width: 30%;float: left;position: relative;margin: 12px 0;">
-			<img style="display: block;height: auto;width:100%;" src="<?=base_url()?>assets/home/images/temp2-bnr.jpg" alt="temp2 bnr">
-			<p style="text-align: center;float: right !important;border: dotted 1px #333;margin: 10px 0px;padding: 3px 15px;"><b>BOOKING REFERENECE: <span style="color:#ff6633;">[pnr_ref]</span></b></p>
+		<div class="img-block" style="width: 28%;float: left;position: relative;margin: 12px 0;">
+			<img style="display: block;height: auto;width:100%;" src="{base_url}assets/home/images/temp2-bnr.jpg" alt="temp2 bnr">
+			<p style="text-align: center;float: right !important;border: dotted 1px #333;margin: 10px 0px;padding: 3px 15px;"><b>BOOKING REFERENECE: <span style="color:#ff6633;">{pnr_ref}</span></b></p>
 		</div>
-		<div style="width:100%;">
+		<div style="width:100%;display:table;">
 			<p><b>SHARE: </b></p>
 			<ul style="list-style: none;padding-left: 0;display: table;">
-				<li style="float: left;margin-right: 10px;"><a href="www.facebook.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/fb.png" alt="fb"></a></li>
-				<li style="float: left;margin-right: 10px;"><a href="www.pintrest.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/pinterest.png" alt="pinterest"></a></li>
-				<li style="float: left;margin-right: 10px;"><a href="www.twitter.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/twitter.png" alt="twitter"></a></li>
+				<li style="float: left;margin-right: 10px;"><a href="www.facebook.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/fb.png" alt="fb"></a></li>
+				<li style="float: left;margin-right: 10px;"><a href="www.pintrest.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/pinterest.png" alt="pinterest"></a></li>
+				<li style="float: left;margin-right: 10px;"><a href="www.twitter.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/twitter.png" alt="twitter"></a></li>
 			</ul>
 		</div>
 	</div>

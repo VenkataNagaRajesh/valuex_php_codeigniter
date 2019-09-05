@@ -11,8 +11,10 @@ class Paxfeed extends Admin_Controller {
 		$this->load->model('airline_m');
 		$this->load->model("airline_cabin_m");
 		$this->load->model('airline_cabin_class_m');
-        	$this->load->model('preference_m');
-
+        $this->load->model('user_m');
+        $this->load->model('preference_m');
+		$this->load->model('season_m');
+		$this->load->model('fclr_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('paxfeed', $language);
         $this->data['icon'] = $this->menu_m->getMenu(array("link"=>"airline_cabin"))->icon;		
@@ -79,7 +81,9 @@ class Paxfeed extends Admin_Controller {
                 $userTypeID = $this->session->userdata('usertypeID');
                 if($userTypeID == 2){
                         $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                           } else {
+                           } else if($userTypeID != 1){
+						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+						   }  else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 }
 
@@ -113,6 +117,7 @@ class Paxfeed extends Admin_Controller {
 
 	public function upload(){
 	
+	$pax_insert_list = array();
 	 if($_FILES){
 		 if (empty($_FILES['file']['name'])) {
             $this->session->set_flashdata('error',"Please select File");			
@@ -146,7 +151,6 @@ class Paxfeed extends Admin_Controller {
               $i = 0;
                //$time_start = microtime(true);
 		$column = 0;                   
-		 $pax_insert_list = array();                       
              foreach ($Reader as $Row){
 			$column++;
 		$Row = array_map('trim', $Row);
@@ -550,7 +554,6 @@ class Paxfeed extends Admin_Controller {
 		    	unlink($file);					
 		    }			
 
-
 			 $this->paxfeed_m->process_tiermarkup(array_unique($pax_insert_list));
 			 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
 		     redirect(base_url("paxfeed/index")); 	
@@ -569,7 +572,7 @@ class Paxfeed extends Admin_Controller {
 		
 $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'last_name','ptc.code','fqtv','dca.code','seg_nbr',
 		   'flight_number','dep_date','dept_time','arrival_date','arrival_time','class', 'dcab.code','df.code','dt.code',
-			'tier','dfre.code','pax_contact_email','phone','cou.code','cit.code','office_id','channel','pax.active',
+			'tier','dfre.code','pax_contact_email','phone','cou.code','cit.code','office_id','channel','is_fclr_processed','fclr_data','pax.active',
 			'ptc.aln_data_value','dca.aln_data_value','dcab.aln_data_value','df.aln_data_value','dt.aln_data_value',
 			'dfre.aln_data_value','cou.aln_data_value','cit.aln_data_value');
 	
@@ -728,7 +731,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
 
-			dtpf_id,first_name, last_name, pnr_ref, pax_nbr,flight_number, pax.ptc ,ptc.code as ptc_code, fqtv, seg_nbr, dep_date, class ,dt.code as to_city,
+			dtpf_id,first_name, last_name, pnr_ref, pax_nbr,flight_number, pax.ptc ,ptc.code as ptc_code, fqtv, seg_nbr, dep_date, class ,dt.code as to_city, is_fclr_processed, fclr_data,
 			df.code as from_city, pax_contact_email, phone, cou.code as booking_country, cit.code as booking_city, office_id, 
 			pax.airline_code , channel, dca.code as carrier_code, dcab.code as cabin, pax.arrival_time,
 			pax.dept_time, pax.arrival_date,pax.frequency,pax.tier,dfre.code as frequency,
@@ -759,13 +762,19 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 	  $i = 1;
 	 $rownum = 1 + $_GET['iDisplayStart'];
 	  foreach($rResult as $feed){	
-		 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->dtpf_id."'  /> #".$rownum ;
+		 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->dtpf_id."'  /> ".$rownum ;
                                 $rownum++;
 
 		$feed->dep_date = date('d/m/Y',$feed->dep_date);
 		$feed->arrival_date = date('d/m/Y',$feed->arrival_date);
 		$feed->dept_time = gmdate("H:i:s", $feed->dept_time);
 		$feed->arrival_time = gmdate("H:i:s", $feed->arrival_time);
+		$feed->is_fclr_processed = $feed->is_fclr_processed ? 'Yes': 'No';
+		if ($feed->is_fclr_processed)  {
+			$feed->fclr_data = $feed->fclr_data ? 'Matched' : 'No Data';
+		} else {
+			$feed->fclr_data = 'NA';
+		}
 
 		  if(permissionChecker('paxfeed_delete')){
 		   $feed->action .= btn_delete('paxfeed/delete/'.$feed->dtpf_id, $this->lang->line('delete'));			 
@@ -784,8 +793,8 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 			$output['aaData'][] = $feed;				
 		}
 		if(isset($_REQUEST['export'])){
-		  $columns = array("#","Airline Code","PNR Reference","PAX Number","First Name","Last Name","PTC","FQTV","Carrier Code","Seg Number","Flight Number","Departure Date","Departure Time","Arrival Date","Arrival Time","Class","Cabin","Board Point","Off Point","Tier","Frequency","Pax Contact Email","Phone","Booking Country","Booking City","Office","Channel");
-		  $rows = array("id","airline_code","pnr_ref","pax_nbr","first_name","last_name","ptc_code","fqtv","carrier_code","seg_nbr","flight_number","dep_date","dept_time","arrival_date","arrival_time","class","cabin","from_city","to_city","tier","frequency","pax_contact_email","phone","booking_country","booking_city","office_id","channel");
+		  $columns = array("#","Airline Code","PNR Reference","PAX Number","First Name","Last Name","PTC","FQTV","Carrier Code","Seg Number","Flight Number","Departure Date","Departure Time","Arrival Date","Arrival Time","Class","Cabin","Board Point","Off Point","Tier","Frequency","Pax Contact Email","Phone","Booking Country","Booking City","Office","Channel",'FCLR Report','FCLR Data');
+		  $rows = array("id","airline_code","pnr_ref","pax_nbr","first_name","last_name","ptc_code","fqtv","carrier_code","seg_nbr","flight_number","dep_date","dept_time","arrival_date","arrival_time","class","cabin","from_city","to_city","tier","frequency","pax_contact_email","phone","booking_country","booking_city","office_id","channel",'is_fclr_processed','fclr_data');
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );
@@ -847,6 +856,50 @@ if(!empty($data_id_array)) {
                         }
     }
 }
+}
+
+public function process_fclr_matching_report() {
+
+                $sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf.cabin and cab.aln_data_typeID = 13 ) where cab.aln_data_value != 'Business'  AND is_fclr_processed = 0 order by dtpf_id";
+                $rResult = $this->install_m->run_query($sQuery);
+
+		foreach ($rResult as $feed ) {
+			 $this->paxfeed_m->update_paxfeed(array('is_fclr_processed' => '1'), $feed->dtpf_id);
+			$upgrade = array();
+                        $upgrade['boarding_point'] = $feed->from_city;
+                        $upgrade['off_point'] = $feed->to_city;
+                        $upgrade['flight_number'] = $feed->flight_number;
+                        $upgrade['carrier_code'] = $feed->carrier_code;
+
+                        $day_of_week = date('w', $feed->dep_date);
+                        $day = ($day_of_week)?$day_of_week:7;
+
+                        $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
+                        $upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
+
+
+                         $upgrade['from_cabin'] = $feed->cabin;
+                        $data = array();
+                        if($upgrade['season_id'] > 0) {
+                                $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+                        }
+			
+			 if((count($data) == 0 && $upgrade['season_id'] > 0) || $upgrade['season_id'] == 0) {
+                                $upgrade['season_id'] = 0;
+                                 $upgrade['frequency'] = $p_freq;
+                                $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+
+                          }
+
+			if(count($data) > 0 ) {
+				$fclr_data = implode(',',array_column($data,'fclr_id'));
+				$this->paxfeed_m->update_paxfeed(array('fclr_data' => $fclr_data), $feed->dtpf_id);
+			}
+
+
+		}
+
+	redirect(base_url("paxfeed/index"));	
 }
 
 }

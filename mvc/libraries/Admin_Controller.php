@@ -171,7 +171,7 @@ class Admin_Controller extends MY_Controller {
 			}
 		}
 		
-		if($this->session->userdata('usertypeID') == 2){
+		if($this->session->userdata('usertypeID') != 1){
 			$this->load->model('airports_m');
 			$this->data['loginairlines'] = $this->airports_m->getDefinitionList($this->session->userdata('login_user_airlineID'));
 			if($this->session->userdata('default_airline')){
@@ -609,10 +609,12 @@ class Admin_Controller extends MY_Controller {
            $this->load->library('parser');
 		   $this->load->library('email');
 		   $data['base_url'] = base_url(); 
-           //$data['base_url'] = 'http://valuex.sweken.com/';           		   
+          // $data['base_url'] = 'http://valuex.sweken.com/';
+          // $data['bidnow_link'] = 'http://valuex.sweken.com/home/index';		   
           // $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template)->template;		   
          // $message = $this->parser->parse_string($tpl, $data);
-		  $message = $this->parser->parse($template, $data,TRUE);
+		 // print_r($data); exit;
+		   $message = $this->parser->parse($template, $data,TRUE);
           $message =html_entity_decode($message);
           $siteinfos = $this->reset_m->get_site();
 		  $this->mydebug->debug($data['tomail']);		  

@@ -27,3 +27,4 @@ $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
 $lang['add_template'] = 'Add Template';
 $lang['update_template'] = 'Update Template';
+$lang['mailandsmstemplate_airline'] = 'Carrier';

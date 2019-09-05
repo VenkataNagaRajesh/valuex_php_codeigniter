@@ -34,7 +34,7 @@
                                     }
                                 }
                                 
-                                echo form_dropdown("users", $array, set_value("users"), "id='users' class='form-control select2'");
+                                echo form_dropdown("users", $array, set_value("users"), "id='users' class='form-control'");
                             ?>
                         </div>
                         <span class="col-sm-4 control-label">
@@ -81,7 +81,7 @@
                                         $usrID = $username;
                                     }
 
-                                    echo form_dropdown("username", $array, set_value("username", $usrID), "id='username' class='form-control select2'");
+                                    echo form_dropdown("username", $array, set_value("username", $usrID), "id='username' class='form-control'");
                                 ?>
 
                             </div>

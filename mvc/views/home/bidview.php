@@ -117,7 +117,7 @@
 						</div>
 					</div>
 					<div class="col-md-2">
-						<div class="side-image">
+						<!--<div class="side-image">
 							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb1.jpg'); ?>" alt="img1">
 						</div>
 						<div class="side-image">
@@ -134,7 +134,12 @@
 						</div>
 						<div class="side-image">
 							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb3.jpg'); ?>" alt="img1">
+						</div>-->
+						<?php foreach($images as $img){ ?>
+							<div class="side-image">
+							<img class="img-responsive img-thumbnail" src="<?php echo base_url('uploads/images/'.$img->image); ?>" alt="img1">
 						</div>
+						<?php } ?>
 					</div>
 				</div>
                 <div id="payment" class="">
@@ -198,14 +203,21 @@
 					</div>
 					<div class="col-md-3">
 						<div class="side-video">
-							<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="180"></iframe>
+							<!--<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="180"></iframe>-->
+							<iframe src="<?=$airline_video_link?>" width="100%" height="180"></iframe>
 						</div>
-						<div class="side-image">
+						
+						<!--<div class="side-image">
 							<img class="img-responsive" src="<?php echo base_url('assets/home/images/multi-bid/mb2.jpg'); ?>" alt="img1">
 						</div>
 						<div class="side-image">
 							<img class="img-responsive" src="<?php echo base_url('assets/home/images/multi-bid/mb3.jpg'); ?>" alt="img1">
-						</div>
+						</div>-->
+						<?php $i=1; foreach($images as $img){ if($i < 3){ ?>
+						  <div class="side-image">
+							<img class="img-responsive" src="<?php echo base_url('uploads/images/'.$img->image); ?>" alt="img1">
+						  </div> 
+						<?php }$i++;} ?>
 					</div>
 					<!--<div id="loading">
 					</div>-->

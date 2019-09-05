@@ -48,9 +48,7 @@
                 <div class="profile-view-tab">
                     <p><span><?=$this->lang->line("user_sex")?> </span>: <?=$user->sex?></p>
                 </div>
-                <div class="profile-view-tab">
-                    <p><span><?=$this->lang->line("user_religion")?> </span>: <?=$user->religion?></p>
-                </div>
+               
                 <div class="profile-view-tab">
                     <p><span><?=$this->lang->line("user_email")?> </span>: <?=$user->email?></p>
                 </div>
@@ -63,6 +61,10 @@
 
                 <div class="profile-view-tab">
                     <p><span><?=$this->lang->line("user_username")?> </span>: <?=$user->username?></p>
+                </div>
+				
+				<div class="profile-view-tab">
+                    <p><span><?=$this->lang->line("user_airline")?> </span>: <?=$user->airlines?></p>
                 </div>
 
             </div>

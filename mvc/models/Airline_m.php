@@ -213,5 +213,25 @@ class Airline_m extends MY_Model {
 			$this->db->update('VX_aln_airline',$data);
 		}
 	}
+	
+	public function add_gallery($data){
+		$this->db->insert('VX_airline_gallery',$data);
+		return $this->db->insert_id();
+	}
+	
+	public function getImagesCount($id,$type){
+		$this->db->select('count(*) tot')->from('VX_airline_gallery');
+		$this->db->where('airlineID',$id);
+		$this->db->where('type',$type);
+		$query = $this->db->get();
+		return $query->row('tot');
+	}
+	public function getImagesByType($id,$type){
+		$this->db->select('*')->from('VX_airline_gallery');
+		$this->db->where('airlineID',$id);
+		$this->db->where('type',$type);
+		$query = $this->db->get();
+		return $query->result();
+	}
 }
 

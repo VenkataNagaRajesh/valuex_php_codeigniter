@@ -16,6 +16,7 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model("fclr_m");
 		$this->load->model("season_m");
 		$this->load->model("airports_m");
+		$this->load->model("user_m");
 		$language = $this->session->userdata('lang');
 		//$this->load->library('encrypt');
 		$this->lang->load('offer_eligibility', $language);	
@@ -86,7 +87,9 @@ class Offer_eligibility extends Admin_Controller {
                 $userTypeID = $this->session->userdata('usertypeID');
                 if($userTypeID == 2){
                         $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           } else {
+                           }  else if($userTypeID != 1){
+						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
+						   } else {
                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
                 }
 
@@ -103,15 +106,15 @@ class Offer_eligibility extends Admin_Controller {
 	$userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 
-        if($this->session->userdata('usertypeID') == 2){
-                   $this->data['seasonslist'] = $this->season_m->get_seasons_where(array('s.create_userID' => $this->session->userdata('loginuserID')),null);
+        if($this->session->userdata('usertypeID') != 1){
+                    $this->data['seasonslist'] = $this->season_m->get_seasons_where(null,$this->session->userdata('login_user_airlineID'));
                 }else{
                    $this->data['seasonslist'] = $this->season_m->get_seasons();
                 }
         if($this->input->post('carrier')){
 		   $this->data['carrier'] = $this->input->post('carrier');
 	     } else {
-		   if($userTypeID == 2){
+		   if($userTypeID != 1){
              $this->data['carrier'] = $this->session->userdata('default_airline');
 		   } else {
 			 $this->data['carrier'] = 0;
@@ -268,7 +271,7 @@ class Offer_eligibility extends Admin_Controller {
 
 		                  $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
+                if($userTypeID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'pf.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
                 }
@@ -351,8 +354,8 @@ $sWhere $sOrder $sLimit";
 		$sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf.cabin and cab.aln_data_typeID = 13 ) where cab.aln_data_value != 'Business'  AND is_processed = 0 order by dtpf_id";
 		$rResult = $this->install_m->run_query($sQuery);
 
-		$exclQuery = "SELECT * from VX_aln_eligibility_excl_rules ";
-		$excl = $this->install_m->run_query($exclQuery);
+		/*$exclQuery = "SELECT * from VX_aln_eligibility_excl_rules ";
+		$excl = $this->install_m->run_query($exclQuery);*/
 /*
 		$fclrQuery = " SELECT  boarding_point, off_point,flight_number,  group_concat(price SEPARATOR ';') as code_price           FROM (                select boarding_point, off_point , flight_number , group_concat(fca.code,' ' , tca.code ,' min ', min, ' max ' , max,' average ', average ,' slider_start ' , slider_start) as price from VX_aln_fare_control_range fc LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin)  LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin) group by boarding_point ,off_point,flight_number,from_cabin,to_cabin)  as MainSet                  group by  boarding_point, off_point, flight_number
  " ;
@@ -400,7 +403,7 @@ $sWhere $sOrder $sLimit";
 
                           }
 
-                         $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+                         //$data = $this->fclr_m->getUpgradeCabinsData($upgrade);
 			 foreach($data as $f) {
 
 				$rules = $this->eligibility_exclusion_m->apply_exclusion_rules();

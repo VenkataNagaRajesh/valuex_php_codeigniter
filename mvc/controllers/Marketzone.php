@@ -167,11 +167,18 @@ class Marketzone extends Admin_Controller {
 		$userTypeID = $this->session->userdata('usertypeID');
 		if($userTypeID == 2){
                         $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                           } else {
+                           } else if($userTypeID != 1){
+						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+						   } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 }
-        if($this->session->userdata('usertypeID') == 2){ 
-		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,$this->session->userdata('login_user_airlineID'));
+       // if($this->session->userdata('usertypeID') == 2){
+        if($this->session->userdata('usertypeID') != 1){ 
+          if(!empty($this->session->userdata('login_user_airlineID'))){			
+		    $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,$this->session->userdata('login_user_airlineID'));
+		  } else {
+			$this->data['marketzones'] = array();  
+		  }
 		} else {
 		  $this->data['marketzones'] = $this->marketzone_m->get_marketzones();
 		}
@@ -181,9 +188,9 @@ class Marketzone extends Admin_Controller {
 			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
 		  }
 		  
-		  
+		 // print_r($this->data['marketzones']); exit;
 
-		if($userTypeID == 2){
+		if($userTypeID != 1){
 		$this->data['treedata'] = $this->marketzone_m->getAirportsMarketData($this->session->userdata('login_user_airlineID'));
 		 $this->data['sairline_id'] = $this->session->userdata('default_airline');
 		} else {
@@ -293,7 +300,9 @@ class Marketzone extends Admin_Controller {
 		  }
           if($userTypeID == 2){
              $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-          } else {
+          } else if($userTypeID != 1 && $userTypeID != 2){
+			 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+		  } else {
              $this->data['airlines'] = $this->airline_m->getAirlinesData();
           }
 
@@ -687,7 +696,7 @@ $aColumns =  array('MainSet.market_id','MainSet.market_name','MainSet.airline_na
 
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-		if($userTypeID == 2){
+		if($userTypeID != 1){
 			 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 			$sWhere .= 'MainSet.airlineID IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';			
                 } 
@@ -772,7 +781,7 @@ on MainSet.market_id = SubSet.market_id
 	$rownum = 1 + $_GET['iDisplayStart'];
 
                 foreach($rResult as $marketzone){
-			    $marketzone->cbox = "<input type='checkbox'  class='deleteRow' value='".$marketzone->market_id."'  /> #".$rownum ;
+			    $marketzone->cbox = "<input type='checkbox'  class='deleteRow' value='".$marketzone->market_id."'  /> ".$rownum ;
 				$rownum++;
                         if(permissionChecker('marketzone_edit') ) {
 				//$marketzone->action .= btn_edit('marketzone/edit/'.$marketzone->market_id, $this->lang->line('edit'));

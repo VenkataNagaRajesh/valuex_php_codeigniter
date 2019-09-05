@@ -41,6 +41,53 @@ class Acsr_m extends MY_Model {
         }
 
 
+	function apply_acsr_rules($param = 0, $array = array()){
+		
+			$query = " select acsr_id, min_bid_price,memp,  orig_level, dest_level,frequency, flight_dep_date_start, flight_dep_date_end, carrier_code, flight_dep_time_start, flight_dep_time_end , flight_nbr_start, flight_nbr_end, dd. alias as status, upgrade_from_cabin_type, upgrade_to_cabin_type, SubSet.active ";
+
+		$query .= " from (SELECT        acsr.*, IFNULL(group_concat(distinct cc.airportID) , group_concat(distinct mapo.airport_id))  as orig_level, IFNULL(group_concat(distinct c.airportID) ,group_concat(distinct map.airport_id)) as dest_level FROM VX_aln_auto_confirm_setup_rules acsr LEFT OUTER JOIN  vx_aln_master_data c ON (
+(find_in_set(c.countryID, acsr.dest_level_value) AND acsr.dest_level_id  = 2) OR
+(find_in_set(c.cityID, acsr.dest_level_value) AND acsr.dest_level_id  = 3) OR
+(find_in_set(c.airportID, acsr.dest_level_value) AND acsr.dest_level_id  = 1) OR
+(find_in_set(c.regionID, acsr.dest_level_value) AND acsr.dest_level_id  = 4) OR
+(find_in_set(c.areaID, acsr.dest_level_value) AND acsr.dest_level_id  = 5)
+  ) LEFT OUTER JOIN VX_market_airport_map map on (find_in_set(map.market_id, acsr.dest_level_value) AND acsr.dest_level_id  = 17) LEFT OUTER JOIN  vx_aln_master_data cc ON ((find_in_set(cc.countryID, acsr.orig_level_value) AND acsr.orig_level_id  = 2) OR
+(find_in_set(cc.cityID, acsr.orig_level_value) AND acsr.orig_level_id  = 3) OR
+(find_in_set(cc.airportID, acsr.orig_level_value) AND acsr.orig_level_id  = 1) OR
+(find_in_set(cc.regionID, acsr.orig_level_value) AND acsr.orig_level_id  = 4) OR
+(find_in_set(cc.areaID, acsr.orig_level_value) AND acsr.orig_level_id  = 5) )
+LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, acsr.orig_level_value) AND acsr.orig_level_id  = 17) group by acsr.acsr_id) as SubSet  LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = SubSet.action_type and dd.aln_data_typeID = 19) WHERE SubSet.active = 1  ";
+
+		if(count($array) > 0) {
+		 $date_format =  date('d-m', $array['dep_date']);
+                $current_year =  date("Y");
+                $prv_year = $current_year - 1;
+                 $current_yr_date = strtotime($date_format.'-'.$current_year);
+                 $old_yr_date = strtotime($date_format.'-'.$prv_year);
+
+			if(!empty($array['from_city']) && !empty($array['to_city'])) {
+			     $query .= " AND   (FIND_IN_SET(".$array['from_city'].", orig_level)) AND  (FIND_IN_SET(".$array['to_city'].",dest_level)) ";
+			}
+			
+                       if(!empty($array['from_cabin']) && !empty($array['to_cabin']) ){
+				$query .= " AND upgrade_from_cabin_type = " . $array['from_cabin'] . " AND upgrade_to_cabin_type = ".$array['to_cabin'];
+			}
+                         
+			$query .= " AND ((flight_dep_date_start <= ".$current_yr_date." AND flight_dep_date_end >= " . $current_yr_date . ") OR ( flight_dep_date_start <= ".$old_yr_date." AND flight_dep_date_end >= "  . $old_yr_date.")) ";
+		
+
+		}
+		if($param == 0 ) {
+			$query .= ' order by acsr_id desc';
+                         $result = $this->install_m->run_query($query);
+                        return $result;
+                } else{
+                        return $query;
+                }
+
+	}
+
+/*
    function apply_acsr_rules($array) {
                 $date_format =  date('d-m', $array['dep_date']);
                 $current_year =  date("Y");
@@ -56,7 +103,7 @@ class Acsr_m extends MY_Model {
                                 LEFT JOIN VX_market_airport_map sair on  (sair.market_id = orig_market_id) 
 				LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = acsr.action_type and dd.aln_data_typeID = 19)
                               where  acsr.active = 1 AND sair.airport_id =".$array['from_city']. "  AND dair.airport_id =". $array['to_city'] .*/
-			$query = "select acsr_id, min_bid_price,memp, season_id, orig_level, dest_level,frequency, flight_dep_date_start, flight_dep_date_end, carrier_code, flight_dep_time_start, flight_dep_time_end , flight_nbr_start, flight_nbr_end, dd. alias as status, upgrade_from_cabin_type, upgrade_to_cabin_type, SubSet.active from (SELECT        acsr.*, IFNULL(group_concat(distinct cc.airportID) , group_concat(distinct mapo.airport_id))  as orig_level, IFNULL(group_concat(distinct c.airportID) ,group_concat(distinct map.airport_id)) as dest_level FROM VX_aln_auto_confirm_setup_rules acsr LEFT OUTER JOIN  vx_aln_master_data c ON (
+/*			$query = "select acsr_id, min_bid_price,memp, season_id, orig_level, dest_level,frequency, flight_dep_date_start, flight_dep_date_end, carrier_code, flight_dep_time_start, flight_dep_time_end , flight_nbr_start, flight_nbr_end, dd. alias as status, upgrade_from_cabin_type, upgrade_to_cabin_type, SubSet.active from (SELECT        acsr.*, IFNULL(group_concat(distinct cc.airportID) , group_concat(distinct mapo.airport_id))  as orig_level, IFNULL(group_concat(distinct c.airportID) ,group_concat(distinct map.airport_id)) as dest_level FROM VX_aln_auto_confirm_setup_rules acsr LEFT OUTER JOIN  vx_aln_master_data c ON (
 (find_in_set(c.countryID, acsr.dest_level_value) AND acsr.dest_level_id  = 2) OR
 (find_in_set(c.cityID, acsr.dest_level_value) AND acsr.dest_level_id  = 3) OR
 (find_in_set(c.airportID, acsr.dest_level_value) AND acsr.dest_level_id  = 1) OR
@@ -91,7 +138,7 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, acsr.
                 return $result[0];
         }
 
-
+*/
 
 	function update_acsr($data, $id = NULL) {
 		parent::update($data, $id);
@@ -103,7 +150,10 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, acsr.
 	}
 	
 	function acsrTotalCount(){
-		$this->db->select('count(*) count')->from('VX_aln_auto_confirm_setup_rules');		
+		$this->db->select('count(*) count')->from('VX_aln_auto_confirm_setup_rules');
+        if($this->session->userdata('usertypeID') != 1 ){		
+			$this->db->where_in('carrier_code',$this->session->userdata('login_user_airlineID'));
+		}		
 		$query = $this->db->get();		
 		return $query->row('count');
 	}

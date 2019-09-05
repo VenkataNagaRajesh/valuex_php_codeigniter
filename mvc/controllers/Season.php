@@ -9,6 +9,7 @@ class Season extends Admin_Controller {
 		$this->load->model("airline_m");
 		$this->load->model("trigger_m");
 		$this->load->model("marketzone_m");
+		$this->load->model("user_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('season', $language);	
 	}
@@ -200,20 +201,22 @@ class Season extends Admin_Controller {
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
 
-        if($this->session->userdata('usertypeID') == 2){
+        if($this->session->userdata('usertypeID') != 1){			
 		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(null,$this->session->userdata('login_user_airlineID'));
 		}else{
 		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(); 
 		}  
 		   foreach($this->data['seasonslist'] as $season){
              $season->ams_season_start_date = date('m/d/Y',$season->ams_season_start_date);
-		    $season->ams_season_end_date = date('m/d/Y',$season->ams_season_end_date);
+		     $season->ams_season_end_date = date('m/d/Y',$season->ams_season_end_date);
             $season->dates = $this->createDateRange($season->ams_season_start_date,$season->ams_season_end_date);		
            }			
       // print_r($this->data['seasonslist']); exit;
 		$this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 			if($userTypeID == 2){
 			  $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+		   } else if($userTypeID != 1 && $userTypeID != 2){
+			 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		   } else {
 			   $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		   }
@@ -272,6 +275,8 @@ class Season extends Admin_Controller {
 	   $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
 	   if($usertypeID == 2){
 	      $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+	   } else if($userTypeID != 1 && $userTypeID != 2){
+		  $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 	   } else {
 		   $this->data['airlines'] = $this->airline_m->getAirlinesData();
 	   }
@@ -674,7 +679,7 @@ class Season extends Admin_Controller {
 			
 			$usertypeID = $this->session->userdata('usertypeID');
 			$userID = $this->session->userdata('loginuserID');
-			if($usertypeID == 2){
+			if($usertypeID != 1){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                // $sWhere .= 'c.userID = '.$userID;	
 			   $sWhere .= ' s.airlineID  IN ('.implode(',',$this->session->userdata('login_user_airlineID')).')';
@@ -733,10 +738,10 @@ class Season extends Admin_Controller {
 	$rownum = 1 + $_GET['iDisplayStart'];
 	  foreach($rResult as $season){	
 
-		 $season->chkbox = "<input type='checkbox'  class='deleteRow' value='".$season->VX_aln_seasonID."'  /> #".$rownum ;
+		 $season->chkbox = "<input type='checkbox'  class='deleteRow' value='".$season->VX_aln_seasonID."'  /> ".$rownum ;
                                 $rownum++;
           $season->ams_season_start_date = date('d-m-Y',$season->ams_season_start_date);	  
-		  $season->ams_season_end_date = date('d-m-Y',$season->ams_season_end_date);
+		  //$season->ams_season_end_date = date('d-m-Y',$season->ams_season_end_date);
 		  
 		  $season->is_return_inclusive = ($season->is_return_inclusive)?"yes":"no";
 		  
