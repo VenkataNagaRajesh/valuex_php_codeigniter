@@ -1510,8 +1510,11 @@ body > .header .logo .icon {
   color: #333;
   width:96%;
   float:left;
-  margin-right: 9px;
-  margin-bottom: 12px;
+   margin-right: 6px;
+    margin-bottom: 12px;
+    padding: 1px 0;
+    border: solid 1px #999;
+    border-radius: 3px
 }
 input.btn-success{
 	color: #fff;
@@ -2031,7 +2034,7 @@ Component: timeline
 	border-color: #ff5b57;*/
 	font-size: 13px;
 	background: #ff6633;
-	padding: 4px 11px;
+	padding: 6px 12px;
 	border: solid 1px #999;
 	color: #fff;
 	margin:0 0 10px;
@@ -4210,7 +4213,7 @@ fieldset[disabled] .btn-vk.active {
 .fclr-bar .fclr-table-add{
 	background: #fff;
 	border: solid 1px #999;
-	margin-bottom: 15px;
+	margin-bottom: 0px;
 	padding: 15px 0;
 	clear: both;
 }
@@ -4345,7 +4348,7 @@ fieldset[disabled] .btn-vk.active {
 	margin: 10px 0;
 }
 .off-elg-filter-box .btn-danger{
-	margin: 10px 0 2px;
+	margin: 10px 0;
 }
 .off-elg h2{
 	margin:10px 0;
@@ -4675,6 +4678,9 @@ table{
 }
 .airline-cabin-img .col-md-3{
 	padding: 0 6px;
+}
+.fclr-bar .form-horizontal .form-group .form-control{
+	margin-bottom:12px;
 }
 .airline-cabin-img h2{
 	background: #ff6633;

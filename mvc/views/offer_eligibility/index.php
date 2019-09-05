@@ -9,7 +9,6 @@
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class="form-group">
 				<div class="col-md-2 select-form">
-					<h4>Board/Off Point</h4>
 					<div class="col-sm-12">
 						<?php
 						$airport['0'] = 'Boarding Point';
@@ -24,7 +23,6 @@
 					</div>
 				</div>
 				<div class="col-md-2 select-form">
-					<h4>Cabins</h4>
 					<div class="col-sm-12">
 					<?php
                         $cabin['0'] = 'From Cabin';
@@ -41,7 +39,6 @@
 
 
 		 <div class="col-md-2 select-form">
-                                        <h4>Season & Frequency</h4>
                                         <div class="col-sm-12">
                                         <?php
 
@@ -59,7 +56,6 @@
 
 
 <div class="col-md-2 select-form">
-                                        <h4>Carrier & Status</h4>
                                         <div class="col-sm-12">
                                         <?php
 		foreach($carriers as $airline){
@@ -81,7 +77,6 @@
 
 
 				<div class="col-md-2 select-form">
-					<h4>Flight Nbr Range</h4>
 					<div class="col-sm-12">
 						<input type="text" class="form-control" placeholder="Start range" id="flight_number" name="flight_number" value="<?=set_value('flight_number',$flight_number)?>" >
 					</div>
@@ -90,7 +85,6 @@
 					</div>
 				</div>
 				<div class="col-md-2">
-					<h4>Dep Date Range</h4>
 					<div class="col-sm-12">
 						 <div class="input-group">
 							<input type="text" class="form-control" placeholder="Dep Start" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
@@ -104,7 +98,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-2 pull-right">
+				<div class="col-sm-3">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				   <button type="button" class="btn btn-danger" onclick="downloadOfferEligibility()">Download</button>
                 </div>	             				

@@ -67,7 +67,7 @@
 			<img style="display: block;height: auto;width:100%;" src="<?=base_url()?>assets/home/images/temp2-bnr.jpg" alt="temp2 bnr">
 			<p style="text-align: center;float: right !important;border: dotted 1px #333;margin: 10px 0px;padding: 3px 15px;"><b>BOOKING REFERENECE: <span style="color:#ff6633;">[pnr_ref]</span></b></p>
 		</div>
-		<div class="share">
+		<div style="width:100%;">
 			<p><b>SHARE: </b></p>
 			<ul style="list-style: none;padding-left: 0;display: table;">
 				<li style="float: left;margin-right: 10px;"><a href="www.facebook.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/fb.png" alt="fb"></a></li>

@@ -60,7 +60,7 @@
                  </div>
 
 
-                <div class="col-sm-3 col-md-2">
+                <div class="col-sm-3 col-md-3">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabinmap()">Download</button>
                 </div>
