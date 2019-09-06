@@ -1,22 +1,21 @@
+
 <div class="box">
     <div class="box-header">
         <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
            
-            <li class="active"><?=$this->lang->line('menu_airline_cabin_class')?></li>           
+            <li class="active"><?=$this->lang->line('menu_airline_cabin')?></li>           
         </ol>
     </div><!-- /.box-header -->
-	 <h5 class="page-header">
-
-                <?php
-                    if(permissionChecker('airline_cabin_class_add')) {
+	<h5 class="page-header">
+			<?php
+                    if(permissionChecker('airline_cabin_def_add')) {
                 ?>
-                        <a href="<?php echo base_url('airline_cabin_class/add') ?>" data-toggle="tooltip" data-title="Add Carrier Cabin Class Mapping" data-placement="left" class="btn btn-danger">
+                        <a href="<?php echo base_url('airline_cabin_def/add') ?>" data-toggle="tooltip" data-title="Add Airline Cabin" data-placement="left" class="btn btn-danger">
                             <i class="fa fa-plus"></i>
                         </a>
-		<?php } ?>
-
+			<?php } ?>
 	</h5>
     <!-- form start -->
     <div class="box-body">
@@ -27,28 +26,29 @@
                   <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
                </ul>
 
-	<br/> <br/>                
-       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+	<br/> <br/>
+
+
+                    
+
+       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 10px;">
                       <div class='form-group'>
-                           <div class="col-sm-3 col-md-2">
-               <?php $airlinelist['0'] = " Airlines";
-			  foreach($airlinesdata as $airline){
-                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
-                           }
-                                   echo form_dropdown("carrier", $airlinelist,set_value("carrier",$carrer), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
+                           <div class="col-sm-2">
+               <?php 
+
+                         foreach($airlinesdata as $airline){
+                                $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+				}
+
+                                                        $airlinelist[0]= 'Carrier';
+                                                        ksort($airlinelist);
+
+
+
+                                   echo form_dropdown("carrier", $airlinelist,set_value("carrier",$airlineID), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
-                 <div class="col-sm-3 col-md-2">
 
-			<?php
-			
-                        $airlinecabins['0'] = " Cabin";
-			ksort($airlinecabins);
-                        echo form_dropdown("airline_cabin", $airlinecabins,set_value("airline_cabin",$cabinID), "id='airline_cabin' class='form-control hide-dropdown-icon select2'");    ?>
-
-
-                 </div>
-
-		 <div class="col-sm-3 col-md-2">
+		 <div class="col-sm-2">
 
                         <?php
                         $map_status['-1'] = ' Status';
@@ -60,47 +60,47 @@
                  </div>
 
 
-                <div class="col-sm-3 col-md-3">
+                <div class="col-sm-4">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
-				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabinmap()">Download</button>
+				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabins()">Download</button>			   
                 </div>
+				
                           </div>
                          </form>
 
 		
+
+
+ <div class="col-md-12">
+                <div class="col-md-12">
+                        <div class="tab-content table-responsive" id="hide-table">
+                                <table id="cabindeftable" class="table table-bordered dataTable no-footer">
+                                  <thead>
+                                           <tr>
 		
-	       <div class="tab-content">
-                <div id="all" class="tab-pane active">
-                  <div id="hide-table">
-                    <table id="carriermaptable" class="table table-bordered dataTable no-footer">
-                       <thead>
-                            <tr>
-				<th class="col-lg-1"><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
-				<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
+				 <th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
+                                <th class="col-lg-1">Carrier</th>
                                 <th class="col-lg-1">Cabin</th>
-				<th class="col-lg-1">Class</th>
-                                <th class="col-lg-1"><?=$this->lang->line('is_revenue')?></th>
-				<th class="col-lg-1"><?=$this->lang->line('order')?></th>
-				<th class="col-lg-1">RBD Markup</th>
-                                <?php if(permissionChecker('airline_cabin_class_edit')) { ?>
-                                        <th class="col-lg-1 noExport"><?=$this->lang->line('airline_cabin_status')?></th>
+				<th class="col-lg-1">Level</th>
+                                                <th class="col-lg-1">Description</th>
+                                <?php if(permissionChecker('airline_cabin_edit')) { ?>
+                                  <th class="col-lg-1 noExport"><?=$this->lang->line('airline_cabin_status')?></th>
                                 <?php } ?>
 
-                                 <?php if(permissionChecker('airline_cabin_class_edit') || permissionChecker('airline_cabin_class_view') ||  permissionChecker('airline_cabin_class_delete')) { ?>
+                                 <?php if(permissionChecker('airline_cabin_edit') ||  permissionChecker('airline_cabin_delete')) { ?>
                                 <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
 
-	
-                            </tr>
-                        </thead>
-						<tbody>                           
-                        </tbody>
-                    <tbody>
-					</tbody>
-					</table>
-				  </div>
-                </div>
-              </div>
+
+                                           </tr>
+                                   </thead>
+                                   <tbody>
+                                        </tbody>
+                                </table>
+                         </div>
+                 </div>
+        </div>
+
             </div>
 		  </div>
         </div>
@@ -111,16 +111,16 @@
 <script type="text/javascript">
   $(document).ready(function() {
 
+  
   $( ".select2" ).select2();
 
-    $('#carriermaptable').DataTable( {
+    $('#cabindeftable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
       "stateSave": true,
-      "sAjaxSource": "<?php echo base_url('airline_cabin_class/server_processing'); ?>",	  
+      "sAjaxSource": "<?php echo base_url('airline_cabin_def/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "carrier","value": $("#carrier").val()},
-		   {"name": "cabinID","value": $("#airline_cabin").val()},
 			{"name": "active","value": $("#active").val()})
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -129,31 +129,28 @@
                     "data": aoData,
                     "success": fnCallback
                          } ); },      
-
-	"stateSaveCallback": function (settings, data) {
-                window.localStorage.setItem("accdatatable", JSON.stringify(data));
+		"stateSaveCallback": function (settings, data) {
+                window.localStorage.setItem("aircabindatatable", JSON.stringify(data));
             },
             "stateLoadCallback": function (settings) {
-                var data = JSON.parse(window.localStorage.getItem("accdatatable"));
+                var data = JSON.parse(window.localStorage.getItem("aircabindatatable"));
                 if (data) data.start = 0;
                 return data;
             },
 
       "columns": [{"data": "chkbox" },
-		  {"data": "carrier_name"},
-		   {"data": "airline_cabin"},
-                  {"data": "airline_class" },
-		  {"data": "is_revenue" },
-		  {"data": "order" },
-		 {"data": "rbd_markup" },
+		   {"data": "carrier_name"},
+		  {"data": "cabin"},
+		  {"data": "level"},
+		  {"data": "desc"},
 		  {"data": "active"},
                   {"data": "action"}
 
 				  ],			   
 	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
 	dom: 'B<"clear">lfrtip',
-    //buttons: [ 'copy', 'csv', 'excel','pdf' ]
-	 buttons: [ {text: 'Delete',
+   // buttons: [ 'copy', 'csv', 'excel','pdf' ]
+     buttons: [ {text: 'Delete',
 				  action: function ( e, dt, node, config ) {
 				    if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
 						var ids = [];
@@ -165,33 +162,32 @@
 						var ids_string = ids.toString();  // array to string conversion 
 						$.ajax({
 							type: "POST",
-							url: "<?php echo base_url('airline_cabin_class/delete_carrier_map_bulk_records'); ?>",
+							url: "<?php echo base_url('airline_cabin/delete_airline_cabins_bulk_records'); ?>",
 							data: {data_ids:ids_string},
 							success: function(result) {
-							   $('#carriermaptable').DataTable().ajax.reload();
-					           $('#bulkDelete').prop("checked",false);
+							   $('#cabindeftable').DataTable().ajax.reload();
+					   $('#bulkDelete').prop("checked",false);
 							},
 							async:false
 						});
-					}
+					}  
 				  }
 	            },
-	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
+				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
+				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export'} },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },{ text: 'ExportAll', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
-                                url: "<?php echo base_url('airline_cabin_class/server_processing'); ?>?page=all&&export=1",
+                                url: "<?php echo base_url('airline_cabin_def/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"carrier": $("#carrier").val(),"cabinID":$("#airline_cabin").val(),"active": $("#active").val()},
+                                data: {sSearch: $("input[type=search]").val(),"airlineID": $("#carrier").val(),"active": $("#active").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
 							$a.attr("href",data.file);
 							$("body").append($a);
-							$a.attr("download","airline_cabin_class.xls");
+							$a.attr("download","airline_cabin.xls");
 							$a[0].click();
 							$a.remove();
 						  });
@@ -199,27 +195,36 @@
                  }	                
             ] ,
 	 "autoWidth": false,
-     "columnDefs": [ {"targets": 0,"width": "30px" },{ "width": "30px", "targets": 5 } ]
+     "columnDefs":  [ {"targets":5,
+	                 render: function ( data, type, row, meta ) {
+                       console.log(type);						 
+						if(type == 'export'){
+                          return $(data).attr("href");
+						} else {
+						  return data;	
+						}                      
+                   }} ]
+	 
     });
   });
   
-  function downloadCabinmap(){
-	 $.ajax({
-          url: "<?php echo base_url('airline_cabin_class/server_processing'); ?>?page=all&&export=1",
-          type: 'get',
-          data: {"carrier": $("#carrier").val(),"cabinID":$("#airline_cabin").val(),"active": $("#active").val()},
-          dataType: 'json'
-      }).done(function(data){
-		var $a = $("<a>");
-		$a.attr("href",data.file);
-		$("body").append($a);
-		$a.attr("download","airline_cabin_class.xls");
-		$a[0].click();
-		$a.remove();
-		}); 
+  function downloadCabins(){
+	  $.ajax({
+           url: "<?php echo base_url('airline_cabin_def/server_processing'); ?>?page=all&&export=1",
+           type: 'get',
+           data: {"airlineID": $("#carrier").val(),"cabinID": $("#airline_cabin").val(),"active": $("#active").val()},
+           dataType: 'json'
+       }).done(function(data){
+		  var $a = $("<a>");
+		  $a.attr("href",data.file);
+		  $("body").append($a);
+		  $a.attr("download","airline_cabin.xls");
+		  $a[0].click();
+		  $a.remove();
+		 });
   }
   
-   $('#carriermaptable tbody').on('mouseover', 'tr', function () {
+   $('#cabindeftable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
         html: true
@@ -228,7 +233,7 @@
 
  var status = '';
   var id = 0;
- $('#carriermaptable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
+ $('#cabindeftable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");
@@ -240,7 +245,7 @@
       if((status != '' || status != null) && (id !='')) {
           $.ajax({
               type: 'POST',
-              url: "<?=base_url('airline_cabin_class/active')?>",
+              url: "<?=base_url('airline_cabin_def/active')?>",
               data: "id=" + id + "&status=" + status,
               dataType: "html",
               success: function(data) {
@@ -287,7 +292,8 @@
       }
   }); 
 
- $(document).ready(function () {
+  
+$(document).ready(function() {
 
 $("#bulkDelete").on('click',function() { // bulk checked
         var status = this.checked;
@@ -307,7 +313,6 @@ $("#bulkDelete").on('click',function() { // bulk checked
 
 
 
-
 $('#deleteTriger').on("click", function(event){ // triggering delete one by one
         if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
             var ids = [];
@@ -319,10 +324,10 @@ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
             var ids_string = ids.toString();  // array to string conversion 
             $.ajax({
                 type: "POST",
-                url: "<?php echo base_url('airline_cabin_class/delete_carrier_map_bulk_records'); ?>",
+                url: "<?php echo base_url('marketzone/delete_mz_bulk_records'); ?>",
                 data: {data_ids:ids_string},
                 success: function(result) {
-                   $('#carriermaptable').DataTable().ajax.reload();
+                   $('#cabindeftable').DataTable().ajax.reload();
 		   $('#bulkDelete').prop("checked",false);
                 },
                 async:false
@@ -331,12 +336,10 @@ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
     }); 
 
 
+$('#cabindeftable').on('click', '.deleteRow', function() {
+	$(this).not("#bulkDelete").closest('tr').toggleClass('rowselected', this.checked);
+});
 
-   $('#carriermaptable').on('click', '.deleteRow', function() {
-        $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
-    });
 
-
- });
-  
+});
 </script>

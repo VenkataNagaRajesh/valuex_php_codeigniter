@@ -1,4 +1,4 @@
-<link href='<?= base_url() ?>assets/bootstrap-star-rating/css/star-rating.min.css' type='text/css' rel='stylesheet'>
+<link href='<?= base_url() ?>assets/bootstrap-star-rating/css/star-rating.css' type='text/css' rel='stylesheet'>
 <!-- Bootstrap Star Rating JS -->
 	<script src='<?= base_url() ?>assets/bootstrap-star-rating/js/star-rating.min.js' type='text/javascript'></script>
 <div class="container top-bar">
@@ -10,7 +10,7 @@
 		</div>
 	</div>
 </div>
-<div class="container">
+<div class="container feed-back">
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
 			<div class="feedback-widget">

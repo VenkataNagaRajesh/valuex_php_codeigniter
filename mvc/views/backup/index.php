@@ -1,6 +1,6 @@
 
 <div class="box">
-    <div class="box-header">
+    <div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa fa-download"></i> <?=$this->lang->line('panel_title')?></h3>
 
        
@@ -20,7 +20,7 @@
                     <div class="form-group">
                         <div class="col-md-1 rep-mar">
                             <input type="hidden" value="0" name="hidden">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-danger">
                               <i class="fa fa-download"></i> <?=$this->lang->line("backup_submit")?>
                             </button>
                         </div>

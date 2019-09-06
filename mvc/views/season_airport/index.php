@@ -41,7 +41,7 @@
 				 echo form_dropdown("airportID", $list,set_value("airportID",$airportID), "id='airportID' class='form-control hide-dropdown-icon select2'");    ?>
             </div>
 			
-            <div class="col-sm-3 col-md-2">
+            <div class="col-sm-3 col-md-3">
               <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 			  <button type="button" class="btn btn-danger" onclick="downloadSeasonAirport()">Download</button>
             </div>			

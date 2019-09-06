@@ -1,6 +1,7 @@
 <div class="fclr-bar">
 <?php  if(permissionChecker('fclr_add')) {  ?>
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Fare Control Range</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;border-radius: 2px;
+    border:solid 1px #999;padding: 6px 5px;">Fare Control Range</h2>
 	<p class="card-header" data-toggle="collapse" data-target="#fclrAdd"><button style="margin:1px 0;" type="button" class="btn btn-danger pull-right" data-placement="left" title="Add FCLR" data-toggle="tooltip" id='fclr_add_btn' ><i class="fa fa-plus"></i></button></p>
  <?php } ?>
 	<div class="col-md-12 fclr-table-add collapse" id="fclrAdd">
@@ -80,8 +81,8 @@
 						<input type="text" class="form-control" id="slider_start" placeholder="slider-start" name="slider_start" value="<?=set_value('slider_start')?>" >
 					</div>
 					<input type="hidden" class="form-control" id="fclr_id" name="fclr_id"   value="" >
-					<div class="col-md-3 col-sm-4 pull-right">
-						<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savefclr();">ADD FCLR</a>
+					<div class="col-md-3 col-sm-4">
+						<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savefclr();">Add FCLR</a>
 						<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
 					</div>
 				</div>

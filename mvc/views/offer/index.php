@@ -10,11 +10,10 @@
 				 <i class="fa fa-upload"></i>
 				 <?php echo "AUTO ACSR"?>
 			</a>
-		</div>
+		</div><br>
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">	
 			<div class="form-group">
 				<div class="col-md-3 select-form">
-					<h4>Board/Off Point</h4>
 					<div class="col-sm-12">
 						<?php
 							$airports['0'] = 'Boarding Point';
@@ -29,7 +28,6 @@
 					</div>
 				</div>
 				<div class="col-md-3 select-form">
-					<h4>PNR Ref and Carrier</h4>
 					<div class="col-sm-12">
 	<input type="text" class="form-control" placeholder="Pnr ref" id="pnr_ref" name="pnr_ref" value="<?=set_value('pnr_ref')?>" >
 
@@ -48,7 +46,6 @@
 					</div>
 				</div>
 				<div class="col-md-3 select-form">
-					<h4>Flight Number Range</h4>
 					<div class="col-sm-12">
 						<input type="text" class="form-control" placeholder="Start range" id="flight_number" name="flight_number" value="<?=set_value('flight_number',$flight_number)?>" >
 					</div>
@@ -57,7 +54,6 @@
 					</div>
 				</div>
 				<div class="col-md-3">
-					<h4>Departure Date Range</h4>
 					<div class="col-sm-12">
 						<div class="input-group">
 							<input type="text" class="form-control" placeholder="Enter Dep From date" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
