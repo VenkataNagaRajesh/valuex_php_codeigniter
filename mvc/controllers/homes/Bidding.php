@@ -179,6 +179,7 @@ class Bidding extends MY_Controller {
 	}
 	
 	 public function sendMail($data){
+		 $this->mydebug->debug($data);
 	  $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat('bid_success')->template;
 	  $message = $this->parser->parse_string($tpl, $data);
 	  $message =html_entity_decode($message);

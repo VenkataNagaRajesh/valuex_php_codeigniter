@@ -16,12 +16,12 @@
 <body>
 <div style="min-width: 245px;max-width: 1100px;position: relative;padding: 10px;margin:0 auto;font-family:century gothic;">
 	<div style="margin-left:auto;margin-right:auto;width:100%;padding-left: 15px;padding-right: 15px;background: #333;">
-		<img style="width:120px;" src="<?=base_url()?>assets/home/images/emir.png" alt="logo">
+		<img style="width:120px;" src="{base_url}assets/home/images/emir.png" alt="logo">
 	</div>
 	<div style="border: solid 1px #ddd;width:100%;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;">
 		<div style="width:100%;margin-top:10px;">
 			<div style="width:10%;float:left;">
-				<img style="width:auto;display: block;height:54px;" src="<?=base_url()?>assets/home/images/temp2-logo.jpg" alt="logo">
+				<img style="width:auto;display: block;height:54px;" src="{base_url}assets/home/images/temp2-logo.jpg" alt="logo">
 			</div>
 			<div class="strip" style="width:90%;float:left;">
 				<div style="background: #f5f5f5;height: 38px;margin: 16px 0;"></div>
@@ -77,9 +77,9 @@
 		<div class="share">
 			<p><b>SHARE: </b></p>
 			<ul style="list-style: none;padding-left: 0;display: table;">
-				<li style="float: left;margin-right: 10px;"><a href="www.facebook.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/fb.png" alt="fb"></a></li>
-				<li style="float: left;margin-right: 10px;"><a href="www.pintrest.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/pinterest.png" alt="pinterest"></a></li>
-				<li style="float: left;margin-right: 10px;"><a href="www.twitter.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/twitter.png" alt="twitter"></a></li>
+				<li style="float: left;margin-right: 10px;"><a href="www.facebook.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/fb.png" alt="fb"></a></li>
+				<li style="float: left;margin-right: 10px;"><a href="www.pintrest.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/pinterest.png" alt="pinterest"></a></li>
+				<li style="float: left;margin-right: 10px;"><a href="www.twitter.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/twitter.png" alt="twitter"></a></li>
 			</ul>
 		</div>
 	</div>

@@ -8,18 +8,16 @@
             <li class="active"><?=$this->lang->line('menu_usertype')?></li>
         </ol>
     </div><!-- /.box-header -->
-	<?php 
-         $usertype = $this->session->userdata("usertype");
-         if(permissionChecker('usertype_add')) {?>
-         <h5 class="page-header">
-             <a href="<?php echo base_url('usertype/add') ?>" data-toggle="tooltip" data-title="Add Role" data-placement="left" class="btn btn-danger">
-                 <i class="fa fa-plus"></i> 
-             </a>
-         </h5>
-     <?php } ?>
+	
+        
+        
+   
     <!-- form start -->
     <div class="box-body">
         <div class="row">
+		    <h5 class="page-header">
+             <p>Average Rating : <?=round($avg_rating)?></p>
+         </h5>
             <div class="col-sm-12">
                 <div id="hide-table">
                     <table id="feedbacktab" class="table table-striped table-bordered table-hover dataTable no-footer">

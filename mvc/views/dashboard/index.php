@@ -62,7 +62,8 @@ $userArray = array(
  		'acsr'              => $dashboardWidget['acsr'],
 		'eligibility_exclusion'=> $dashboardWidget['eerule'],
 		'sent_offer_mails'  => $dashboardWidget['sent_offer_mails']->count,
-		'bid_complete'      => $dashboardWidget['bid_complete']->count
+		'bid_complete'      => $dashboardWidget['bid_complete']->count,
+		'feedback'          => $dashboardWidget['feedback']->count
   ),
   '2' => array(
         'marketzone'        => $dashboardWidget['marketzone'],
