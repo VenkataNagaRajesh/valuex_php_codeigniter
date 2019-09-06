@@ -910,9 +910,9 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 		  $cdata = array();
 		   foreach($result->to_cabins as $value){
             $cdata = explode('-',$value);              		
-			// if($cdata[2] != $exclude){
+			if($cdata[2] != $exclude){
 			    $result->tocabins[] = array('cabin_name' => $cabins[$cdata[0]]); 
-			// }              
+		    }              
            }
 			if($result->fclr != null && !empty($result->tocabins)){			
 				$info['dep_date'] = date('d-m-Y',$result->dep_date);
