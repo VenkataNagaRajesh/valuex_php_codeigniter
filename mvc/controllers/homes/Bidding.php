@@ -143,9 +143,9 @@ class Bidding extends MY_Controller {
 			   $maildata['dep_date'] = date('d/m/Y',$maildata['dep_date']);
 			   $maildata['dep_time'] = gmdate('H:i A',$maildata['dept_time']);
 			   $maildata['cash'] = $this->input->post("bid_value");
-			   $maildata['base_url'] = "http://valuex.sweken.com/";			    		
+			   $maildata['base_url'] = base_url();			    		
 			   $maildata['tomail'] = explode(',',$maildata['email_list'])[0];                          
-				$maildata['tomail'] = 'swekenit@gmail.com';
+				//$maildata['tomail'] = 'swekenit@gmail.com';
 				$this->sendMail($maildata);
 			  $json['status'] = "success";
 			  
@@ -179,7 +179,7 @@ class Bidding extends MY_Controller {
 	}
 	
 	 public function sendMail($data){
-		 $this->mydebug->debug($data);
+		// $this->mydebug->debug($data);
 	  $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat('bid_success')->template;
 	  $message = $this->parser->parse_string($tpl, $data);
 	  $message =html_entity_decode($message);
