@@ -30,8 +30,8 @@
 				<div class="col-sm-2 col-xs-6">
                   <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                 </div>
-				<div class="col-sm-1">
-                  <button type="button" class="btn btn-danger" name="download" onclick="downloadData()"  id="download">Download</button>
+				<div class="col-sm-2">
+                  <button type="button" class="form-control btn btn-danger" name="download" onclick="downloadData()"  id="download">Download</button>
                 </div>
             </div>				
 	 </form>

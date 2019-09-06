@@ -4667,6 +4667,9 @@ table{
 #airlinetable{
    table-layout: fixed;
 }
+.pax-view .form-horizontal .form-group .form-control{
+	margin:12px 0;
+}
 .rowselected {
     background-color: #a6b4cd;
 }

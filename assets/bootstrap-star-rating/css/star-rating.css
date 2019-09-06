@@ -16,7 +16,12 @@
     background: transparent url('../img/loading.gif') top left no-repeat;
     border: none;
 }
-
+.feed-back .rating-sm {
+    font-size: 1.5em !important;
+}
+.feed-back .rating-container .star {
+	margin: 0 6px;
+}
 /*
  * Stars & Input
  */
@@ -62,10 +67,10 @@
     left: 0;
     top: 0;
     margin: auto;
-    color: #fde16d;
+    color: #ff6633;
     white-space: nowrap;
     overflow: hidden;
-    -webkit-text-stroke: 1px #777;
+    /*-webkit-text-stroke: 1px #777;*/
     text-shadow: 1px 1px #999;
 }
 

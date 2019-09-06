@@ -2,9 +2,8 @@
 	<h2 class="title-tool-bar">Bid Details</h2>
 	<div class="col-md-12 off-elg-filter-box">
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">	
-			<div class="form-group">
+			<div class="form-group"><br><br>
 				<div class="col-md-2 select-form">
-					<h4>Board/Off Point</h4>
 					<div class="col-sm-12">
 						<?php
 							$airports['0'] = 'Select Boarding Point';
@@ -19,7 +18,6 @@
 					</div>
 				</div>
 				<div class="col-md-2 select-form">
-					<h4>Cabins</h4>
 					<div class="col-sm-12">
 						<?php
 							$cabins['0'] = 'Select From Cabin';
@@ -34,7 +32,6 @@
 					</div>
 				</div>
 				<div class="col-md-2 select-form">
-					<h4>Flight Range</h4>
 					<div class="col-sm-12">
 						<input type="text" class="form-control" placeholder="Start range " id="flight_number" name="flight_number" value="<?=set_value('flight_number',$flight_number)?>" >
 					</div>
@@ -43,7 +40,6 @@
 					</div>
 				</div>
 				<div class="col-md-2">
-					<h4>Dep Date Range</h4>
 					<div class="col-sm-12">
 						<div class="input-group">
 							<input type="text" class="form-control" placeholder="Dep Start Date" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
@@ -59,7 +55,6 @@
 				</div>
 
 				<div class="col-md-2 select-form">
-                                        <h4>PNR/Offer Status</h4>
                                         <div class="col-sm-12">
                                                 <input type="text" class="form-control" placeholder="PNR Ref" id="pnr_ref" name="pnr_ref" value="<?=set_value('pnr_ref')?>" >
                                         </div>
@@ -73,7 +68,6 @@
                                 </div>
 
 				   <div class="col-md-2 select-form">
-                                        <h4>OfferID/Carrier</h4>
                                         <div class="col-sm-12">
                                                 <input type="text" class="form-control" placeholder="OfferID" id="offer_id" name="offer_id" value="<?=set_value('offer_id')?>" >
                                         </div>
