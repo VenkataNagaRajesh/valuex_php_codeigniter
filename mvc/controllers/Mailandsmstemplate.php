@@ -105,7 +105,7 @@ class Mailandsmstemplate extends Admin_Controller {
 						'name' => $this->input->post('email_name'),						
 						'catID' => $this->input->post('category'),
 						'airlineID' => $this->input->post('airlineID'),
-						'template' => $this->input->post('email_template'),
+						'template' => $this->input->post('email_template',FALSE),
 						'create_userID' => $this->session->userdata('loginuserID'),
 						'create_date' => time(),
 						'modify_userID' => $this->session->userdata('loginuserID'),

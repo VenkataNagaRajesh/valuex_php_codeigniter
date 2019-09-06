@@ -138,5 +138,11 @@ class bid_m extends MY_Model {
 		return $query->row();
 	}
 	
+	function addFeedBack($data){
+		$data['date'] = time();
+		$this->db->insert('VX_aln_feedback',$data);
+		return $this->db->insert_id();
+	}
+	
 }
 
