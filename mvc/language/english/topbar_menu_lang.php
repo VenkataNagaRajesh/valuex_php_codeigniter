@@ -180,4 +180,5 @@ $lang['menu_event_status'] = 'Event Status';
 
 $lang['menu_offer_issue'] = 'Offers';
 $lang['menu_offer_table'] = 'Bids';
+$lang['menu_airline_cabin_def'] = 'Carrier Cabin Definition';
 /* End Update Menu */
