@@ -137,11 +137,13 @@ $namelist = explode(',',$passenger_data->passengers);
 //accept 
 		$bid_status = 'bid_accepted';
 		$msg_txt = "Bid is accepted";
-		$template ="home/upgradeoffertmp";
+		//$template ="home/upgradeoffertmp";
+		$template='bid_accepted';
 	} else if ( $status == 'reject' ) { 
 		$bid_status = 'bid_reject';	
 		$msg_txt = 'Bid is rejected';
-		$template ="home/bidreject-temp";	
+		//$template ="home/bidreject-temp";
+		$template = "bid_reject";
 	} else {
 		$this->session->set_flashdata('error', 'No Action Status');
         	redirect(base_url("offer_table/view/".$offer_id));

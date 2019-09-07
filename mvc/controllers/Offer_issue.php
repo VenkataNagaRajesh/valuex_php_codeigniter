@@ -32,13 +32,14 @@ class Offer_issue extends Admin_Controller {
         'first_name'   => 'Lakshmi',
         'last_name' => 'Amujuru',
         'tomail' => 'swekenit@gmail.com',
-        'pnr_ref' => 'US0404',
+        'pnr_ref' => 'AS0414',
         'coupon_code' => 'sssssssss',
-        'mail_subject' => "Upgrade Cabin Offerss US0404",
+        'mail_subject' => "Upgrade Cabin Offerss AS0414",
 		'bidnow_link' => base_url('home/index')		
         );			       
-          $this->sendMailTemplateParser('bid_success',$data);
-         //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);		  
+          //$this->sendMailTemplateParser('bid_accepted',$data);
+         //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);
+           // $this->upgradeOfferMail($data);		 
 	}
 	
 
@@ -240,9 +241,10 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
         $data['temp_cid'] = $cid2;
         $data['bgr_file']  = $cid3;
 		
-          $this->sendMailTemplateParser('home/upgrade_offer_temp',$data);
+          //$this->sendMailTemplateParser('home/upgrade_offer_temp',$data);
        		
 	  //$this->sendMailTemplateParser('home/testtemplate',$data);	
+	    $this->upgradeOfferMail($data);
 
 		}	
 		
@@ -635,13 +637,21 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 ';
 
 
-                         $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+                        /*  $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
                          //$this->email->from('testsweken321@gmail.com', 'ADMIN');
                          $this->email->to($emails_list[0]);
                          $this->email->subject("Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point);
                         $this->email->message($message);
-                        $this->email->send();
-
+                        $this->email->send(); */					
+						
+						 $rejectmail = array(
+							'first_name'   => $namelist[0],
+							'last_name' => '',
+							'tomail' => $emails_list[0],
+							'pnr_ref' => $passenger_data->pnr_ref,									
+							'mail_subject' => "Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point		
+							); 
+                        $this->sendMailTemplateParser('bid_reject',$rejectmail);
 				 $array = array();
                         $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
                         $array["modify_date"] = time();
@@ -789,7 +799,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'upgrade_to' => $feed->upgrade_cabin
                              							
 						 ); 			 
-					  $this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);	
+					  //$this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);
+                      $this->sendMailTemplateParser('bid_accepted',$e_data);					  
 
 			 $array = array();
                         $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
@@ -886,7 +897,43 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 		redirect(base_url("offer_table/index"));
 
 
-		}		
+		}
+
+    public function upgradeOfferMail($maildata){
+		$pnr_ref = $maildata['pnr_ref'];
+		$results = $this->bid_m->getPassengers($pnr_ref);
+		$exclude = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
+		$cabins  = $this->airline_cabin_m->getAirlineCabins();
+		//print_r($results); exit;
+		foreach($results as $result){
+		  $result->to_cabins = explode(',',$result->to_cabins);
+		  $cdata = array();
+		   foreach($result->to_cabins as $value){
+            $cdata = explode('-',$value);              		
+			if($cdata[2] != $exclude){
+			    $result->tocabins[] = array('cabin_name' => $cabins[$cdata[0]]); 
+		    }              
+           }
+			if($result->fclr != null && !empty($result->tocabins)){			
+				$info['dep_date'] = date('d-m-Y',$result->dep_date);
+				$info['dep_time'] = date('H:i:s',$result->dept_time);
+				$info['carrier_code'] = $result->carrier_code;
+				$info['flight_number'] = $result->flight_number;
+				$info['from_city'] = $result->air_from_city;
+				$info['to_city'] = $result->air_to_city;
+				$info['seat_no'] = $result->seat_no;
+				$info['current_cabin'] = $result->current_cabin;
+				$info['cabins'] = $result->tocabins;
+				$offerdata[] = $info;
+		    }
+		}
+		
+		$pax_names = $this->bid_m->getPaxNames($pnr_ref);
+		 $maildata['offer_data'] = $offerdata;		
+      
+//print_r($maildata); exit;		
+		$this->sendMailTemplateParser('upgrade_offer',$maildata);
+	}		
 		
 
 }

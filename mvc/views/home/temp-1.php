@@ -36,22 +36,29 @@
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Time</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Origin</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Destination</th>
-						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Cabin no</th>
+						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Current Cabin</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Seat No</th>
-						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Offer</th>
+						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Upgrade To</th>
+										
 					</tr>
 				</thead>
 			  <tbody>
+			    <!--{offer_data}-->
 					<tr style="white-space:nowrap;">
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{dep_date}</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{carrier_code}{flight_number}</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{dep_time}</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{from_city}</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{to_city}</td>
-						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{cabin} Class</td>
+						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{current_cabin}</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{seat_no}</td>
-						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">${cash} USD</td>
-					</tr>
+						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">						
+						{cabins}
+						 <p>{cabin_name}</p>
+						{/cabins}						
+						</td>						
+					  </tr>
+					<!--{/offer_data}-->
 				</tbody>
 			</table>
 		</div>

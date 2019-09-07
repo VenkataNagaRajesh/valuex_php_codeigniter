@@ -37,7 +37,7 @@
 											<th>Flight Information</th>
 											<th style="text-align:left;">Upgrade To Cabin</th>
 											<th>Bid Amount</th>
-											<th>Action</th>
+											<!--<th>Action</th>-->
 										</tr>
 									</thead>
 									<tbody>
@@ -74,11 +74,20 @@
 												<div class="bid-radio col-md-12">
 												   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
 												   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>								      
-													<label class="radio-inline <?=($status == $excluded_status)?"bid-visible":""?>">
+													<label class="cabins-<?=$result->flight_number?> radio-inline <?=($status == $excluded_status)?"bid-visible":""?>" >
 														<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0 )?"checked":''; ?> ><?php echo $cabins[$value]; ?>
 													</label><br>
-												   <?php if($status != $excluded_status) { $i++; } } } ?>									
-												</div>	
+												   <?php if($status != $excluded_status) { $i++; } } } ?>
+												   <?php if($i != 0){?>
+                                               		<label class="checkbox-inline<?=($result->fclr == null)?"bid-visible":""?>">
+														<input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid 
+													</label>	
+												   <?php } ?>													
+											  <!-- <div class="<?=($result->fclr == null)?"bid-visible":""?>">
+											       <b><input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid <br></b>								
+												</div>	-->												   
+                                              </div>
+                                                											
 											</td>
 											<td>
 												<?php if($result->fclr != null){
@@ -93,18 +102,18 @@
 													 }	?>       
 												
 													<div class="price-range col-md-12">		
-													Min <i class="fa fa-dollar"></i> <b id="bid_min_<?=$result->flight_number?>"></b>
+													<b>Min</b> <i class="fa fa-dollar"></i> <b id="bid_min_<?=$result->flight_number?>"></b>
 															<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
-														Max <i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b>
+													<b>Max</b> <i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b>
 													</div>
 												<?php }  ?>
 											</td>
-											<td>
+											<!--<td>
 											  <div class="<?=($result->fclr == null)?"bid-visible":""?>">
 											  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="1" checked/> Yes <br>
 											  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="0"/> No
 											  </div>
-											</td>
+											</td>-->
 										</tr>
 										<?php $n++; } ?>
 									</tbody>
@@ -297,7 +306,7 @@ $("#bid_slider_<?=$result->flight_number?>").on("slide", function(slideEvt) {
     mileSliderUpdate();	
     changeColors(<?=$result->flight_number?>);	 
 });
-$("#bid_slider_<?=$result->flight_number?>").on("click", function(slideEvt) { console.log("vvvvvvvv");
+$("#bid_slider_<?=$result->flight_number?>").on("click", function(slideEvt) { 
 	var tot_avg = getTotal();
 	$("#tot").text(tot_avg);
 	$("#bidtot").text(tot_avg);	 
@@ -305,10 +314,13 @@ $("#bid_slider_<?=$result->flight_number?>").on("click", function(slideEvt) { co
     changeColors(<?=$result->flight_number?>);	 
 });
 //action click
-$('input[type=radio][name=bid_action_<?=$result->flight_number?>]').click(function(){
-	 if($(this).val() == 0){
+$('input[type=checkbox][name=bid_action_<?=$result->flight_number?>]').click(function(){	
+	 if($(this). prop("checked") == true){
+	   $('.cabins-'+<?=$result->flight_number?>).addClass('bid-visible');
+	  
 	   $("#bid_slider_<?=$result->flight_number?>").slider('disable'); 
 	 } else {
+	    $('.cabins-'+<?=$result->flight_number?>).removeClass('bid-visible');
 	   $("#bid_slider_<?=$result->flight_number?>").slider('enable');  
 	 }
 	var tot_avg = getTotal();
@@ -348,9 +360,10 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 
  function getTotal(){
 		var tot_avg = 0;
-		<?php foreach($results as $result){  if($result->fclr != null){ ?>
-		   var action = $('input[type=radio][name=bid_action_<?=$result->flight_number?>]:checked').val();		  
-		  if(action == 1){	
+		<?php foreach($results as $result){  if($result->fclr != null){ ?>//$(this). prop("checked") == true
+		  // var action = $('input[type=checkbox][name=bid_action_<?=$result->flight_number?>]:checked').val();	  
+		  //if(action == 1){
+         if($('input[type=checkbox][name=bid_action_<?=$result->flight_number?>]').prop("checked") == false){    			  
 		   tot_avg = tot_avg+$("#bid_slider_<?=$result->flight_number?>").slider('getValue')*<?=$passengers_count?>;
 		  }
 		<?php } } ?>
@@ -380,13 +393,8 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 	    //$('#bid_slider_'+id+'Slider .slider-selection').css({"background":"#009900"}); 
 		//$('#bid_slider_'+id+'Slider .slider-handle').css({"background":"#009900"});
 		$('#bid_slider_'+id+'Slider .slider-selection').css({"background":" -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"},{"background":" -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"}); 
-     } 
-	 
+     }  
 	
-	// $('#bid_slider_'+id+'Slider .slider-selection').css({"background":" -webkit-linear-gradient(top, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"}); 
-	
-	// $('#bid_slider_'+id+'Slider .slider-handle').css({"background":"  -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"},{"background":"-webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"});
-	//$('#bid_slider_'+id+'Slider .slider-selection').css({"background":"  -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"},{"background":"-webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"});
 	 
 	 
 	 
@@ -431,7 +439,12 @@ $('#loading').html("<img src='"+image+"' />"); */
 				var upgrade = $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]:checked').val().split('|');
 				var upgrade_type = upgrade[0];	
 				var fclr_id = upgrade[1];
-				var bid_action = $('input[type=radio][name=bid_action_<?=$result->flight_number?>]:checked').val();
+				//var bid_action = $('input[type=radio][name=bid_action_<?=$result->flight_number?>]:checked').val();
+				if($('input[type=checkbox][name=bid_action_<?=$result->flight_number?>]').prop("checked") == false){
+					var bid_action = 1;
+				} else {
+					var bid_action = 0;
+				}
 				$.ajax({
 				  async: false,
 				  type: 'POST',
