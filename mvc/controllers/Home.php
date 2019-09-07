@@ -141,6 +141,16 @@ class Home extends MY_Controller {
 		$this->load->view('_layout_home', $this->data);
 	}
 	
+	public function bidresubmit() {		
+		$this->data["subview"] = "home/bidre-submit";
+		$this->load->view('_layout_home', $this->data);
+	}
+	
+	public function bidcancel() {		
+		$this->data["subview"] = "home/bid-cancel";
+		$this->load->view('_layout_home', $this->data);
+	}
+	
 	public function paysuccess() {
         $offer_id = htmlentities(escapeString($this->uri->segment(3)));	
         $this->data['offer_data'] = $this->offer_reference_m->get_single_offer_ref(array("offer_id" => $offer_id));		

@@ -78,8 +78,8 @@
 
 /* Side Menu  Start */
 .sidebar .sidebar-menu > li > a:hover {
-  background-color:  #232a2f !important;
-  color: #EEEEEE !important;
+  background-color:  #000 !important;
+  color: #f8a20c !important;
 }
 .sidebar .sidebar-menu .treeview-menu > li > a:hover {
   background-color: #232a2f;
