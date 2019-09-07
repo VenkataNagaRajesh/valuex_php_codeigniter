@@ -78,9 +78,11 @@
 														<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0 )?"checked":''; ?> ><?php echo $cabins[$value]; ?>
 													</label><br>
 												   <?php if($status != $excluded_status) { $i++; } } } ?>
+												   <?php if($i != 0){?>
                                                		<label class="checkbox-inline<?=($result->fclr == null)?"bid-visible":""?>">
 														<input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid 
-													</label>									   
+													</label>	
+												   <?php } ?>													
 											  <!-- <div class="<?=($result->fclr == null)?"bid-visible":""?>">
 											       <b><input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid <br></b>								
 												</div>	-->												   
@@ -315,6 +317,7 @@ $("#bid_slider_<?=$result->flight_number?>").on("click", function(slideEvt) {
 $('input[type=checkbox][name=bid_action_<?=$result->flight_number?>]').click(function(){	
 	 if($(this). prop("checked") == true){
 	   $('.cabins-'+<?=$result->flight_number?>).addClass('bid-visible');
+	  
 	   $("#bid_slider_<?=$result->flight_number?>").slider('disable'); 
 	 } else {
 	    $('.cabins-'+<?=$result->flight_number?>).removeClass('bid-visible');
