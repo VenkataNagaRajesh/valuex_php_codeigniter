@@ -133,9 +133,11 @@ function getAirlinesToMap($array) {
 
 
 	function getCabinFromClassForCarrier($carrier_id , $class ) {
-		$this->db->select('airline_cabin as cabin_id , acc.rbd_markup,  aca.code as cabin_code, aca.aln_data_value as cabin_name')->from('VX_aln_airline_cabin_class acc');	
-		$this->db->join('vx_aln_data_defns aca', 'aca.vx_aln_data_defnsID = acc.airline_cabin','LEFT');
-		$this->db->where('carrier', $carrier_id);
+		$this->db->select('airline_cabin as cabin_id , acc.rbd_markup,  cdef.cabin as cabin_code,  cdef.desc as cabin_name')->from('VX_aln_airline_cabin_class acc');	
+		$this->db->join('VX_aln_airline_cabin_def cdef', 'cdef.carrier = acc.carrier','INNER');
+		$this->db->join('vx_aln_data_defns aca', 'aca.vx_aln_data_defnsID = acc.airline_cabin and aca.alias = cdef.level and aca.aln_data_typeID = 13','INNER');
+
+		$this->db->where('acc.carrier', $carrier_id);
 		$this->db->where('airline_class',$class);
 		 $this->db->limit(1);
 		$query = $this->db->get();
@@ -146,8 +148,9 @@ function getAirlinesToMap($array) {
 
 
 	function validateCabinMapData($carrier_code,$class) {
-		$this->db->select('airline_cabin as cabin_id , acc.rbd_markup,  aca.code as cabin_code, aca.aln_data_value as cabin_name')->from('VX_aln_airline_cabin_class acc');
-                $this->db->join('vx_aln_data_defns aca', 'aca.vx_aln_data_defnsID = acc.airline_cabin and aca.aln_data_typeID = 13','LEFT');
+		$this->db->select('airline_cabin as cabin_id , acc.rbd_markup,  cdef.cabin as cabin_code, cdef.desc as cabin_name')->from('VX_aln_airline_cabin_class acc');
+		$this->db->join('VX_aln_airline_cabin_def cdef','cdef.carrier = acc.carrier','INNER');
+                $this->db->join('vx_aln_data_defns aca', 'aca.vx_aln_data_defnsID = acc.airline_cabin  and aca.alias = cdef.level and aca.aln_data_typeID = 13','INNER');
 		$this->db->join('vx_aln_data_defns car', 'car.vx_aln_data_defnsID = acc.carrier and car.aln_data_typeID = 12','LEFT');
                 $this->db->where('car.code', $carrier_code);
                 $this->db->where('airline_class',$class);

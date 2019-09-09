@@ -338,13 +338,17 @@
                         </label>
                         <div class="col-sm-5">
 
-<?php
+			 <select  name="upgrade_from_cabin_type"  id='upgrade_from_cabin_type' class="form-control select2">
+                                <option value=0>From Cabin</option>
+                                                        </select>
+
+<?php /*
 			$cabin_list['0'] = 'Select From Cabin';
 			ksort($cabin_list);
 			foreach ($cabin_type as $cabin) {
 				$cabin_list[$cabin->vx_aln_data_defnsID] = $cabin->code;
 			}
-                         echo form_dropdown("upgrade_from_cabin_type", $cabin_list,set_value("upgrade_from_cabin_type",$rule->upgrade_from_cabin_type), "id='upgrade_from_cabin_type' class='form-control hide-dropdown-icon select2'");
+                         echo form_dropdown("upgrade_from_cabin_type", $cabin_list,set_value("upgrade_from_cabin_type",$rule->upgrade_from_cabin_type), "id='upgrade_from_cabin_type' class='form-control hide-dropdown-icon select2'"); */
 
      ?>                   </div>
                         <span class="col-sm-4 control-label">
@@ -363,10 +367,17 @@
                             <?=$this->lang->line('upgrade_to');?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-5">
+
+                        <select  name="upgrade_to_cabin_type"  id='upgrade_to_cabin_type' class="form-control select2">
+                                <option value=0>To Cabin</option>
+                                                        </select>
+
 <?php
+
+			/*
 			$cabin_list['0'] = 'Select To Cabin';
 			ksort($cabin_list);
-                         echo form_dropdown("upgrade_to_cabin_type", $cabin_list,set_value("upgrade_to_cabin_type",$rule->upgrade_to_cabin_type), "id='upgrade_to_cabin_type' class='form-control hide-dropdown-icon select2'");
+                         echo form_dropdown("upgrade_to_cabin_type", $cabin_list,set_value("upgrade_to_cabin_type",$rule->upgrade_to_cabin_type), "id='upgrade_to_cabin_type' class='form-control hide-dropdown-icon select2'"); */
 
      ?>                   </div>
                         <span class="col-sm-4 control-label">
@@ -502,6 +513,48 @@ $('#orig_level_value').val(src_level).trigger('change');
 
 var dest_level = [<?php echo $rule->dest_level_value;?>];
 $('#dest_level_value').val(dest_level).trigger('change');
+
+
+
+$('#carrier_code').change(function(event) {    
+  var carrier = $('#carrier_code').val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('airline_cabin_class/getCabinDataFromCarrier')?>",            
+              data: {
+                           "carrier":carrier,
+                    },
+             dataType: "html",                                  
+             success: function(data) {               
+                                $('#upgrade_from_cabin_type').html(data);
+                                $("#upgrade_from_cabin_type option").html(function(i,str){
+                                        return str.replace(/From Cabin|Cabin/g,
+                                 function(m,n){
+                                        return (m == "From Cabin")?"Cabin":"From Cabin";
+                                 });
+});
+                                $('#upgrade_to_cabin_type').html(data);
+
+                                $("#upgrade_to_cabin_type option").html(function(i,str){
+                                        return str.replace(/To Cabin|Cabin/g,
+                                 function(m,n){
+                                        return (m == "To Cabin")?"Cabin":"To Cabin";
+                                 });
+                                });
+
+                                
+                                }        
+      });       
+});
+
+$('#carrier_code').trigger('change');
+$('#upgrade_from_cabin_type').trigger('change');
+$('#upgrade_to_cabin_type').trigger('change');
+$('#upgrade_from_cabin_type').val('<?=$rule->upgrade_from_cabin_type?>').trigger('change');
+$('#upgrade_to_cabin_type').val('<?=$rule->upgrade_to_cabin_type?>').trigger('change');
+
+
+
 });
 
 $('#orig_level_id').change(function(event) {    

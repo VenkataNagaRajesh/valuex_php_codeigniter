@@ -35,15 +35,15 @@
 			  foreach($airlinesdata as $airline){
                                      $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
                            }
-                                   echo form_dropdown("carrier", $airlinelist,set_value("carrier",$carrer), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("carrier", $airlinelist,set_value("carrier",$carrier), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
                  <div class="col-sm-3 col-md-2">
 
-			<?php
 			
-                        $airlinecabins['0'] = " Cabin";
-			ksort($airlinecabins);
-                        echo form_dropdown("airline_cabin", $airlinecabins,set_value("airline_cabin",$cabinID), "id='airline_cabin' class='form-control hide-dropdown-icon select2'");    ?>
+			 <select  name="airline_cabin"  id='airline_cabin' class="form-control select2">
+                                <option value=0>Cabin</option>
+                                                        </select>
+
 
 
                  </div>
@@ -109,9 +109,30 @@
 
 
 <script type="text/javascript">
+
+
   $(document).ready(function() {
 
   $( ".select2" ).select2();
+
+$('#carrier').change(function(event) {    
+  var carrier = $(this).val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('airline_cabin_class/getCabinDataFromCarrier')?>",            
+
+             data: {
+                           "carrier":carrier,
+                                },
+             dataType: "html",                                  
+             success: function(data) {               
+             $('#airline_cabin').html(data); }        
+      });       
+});
+
+$('#carrier').trigger('change');
+$('#airline_cabin').val('<?=$cabinID?>').trigger('change');
+
 
     $('#carriermaptable').DataTable( {
       "bProcessing": true,
@@ -289,6 +310,7 @@
 
  $(document).ready(function () {
 
+
 $("#bulkDelete").on('click',function() { // bulk checked
         var status = this.checked;
         $(".deleteRow").each( function() {
@@ -339,4 +361,9 @@ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
 
  });
   
+
+
+
+
+
 </script>

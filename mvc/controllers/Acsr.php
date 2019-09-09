@@ -8,7 +8,9 @@ class Acsr extends Admin_Controller {
 		$this->load->model('marketzone_m');
 		$this->load->model('acsr_m');
 		$this->load->model('airline_m');
+		$this->load->model('airline_cabin_def_m');
 		$this->load->model('season_m');
+		$this->load->model('airline_m');
 		$this->load->model('eligibility_exclusion_m');
 		$this->load->model('user_m');
 		$language = $this->session->userdata('lang');
@@ -49,7 +51,7 @@ class Acsr extends Admin_Controller {
 			 array(
                                 'field' => 'carrier_code',
                                 'label' => $this->lang->line("carrier_code"),
-                                'rules' => 'trim|max_length[200]|xss_clean'
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
                        ),
 
 			array(
@@ -351,6 +353,17 @@ if($end < $start ) {
                 }
 
 
+		 $userID = $this->session->userdata('loginuserID');
+                $userTypeID = $this->session->userdata('usertypeID');
+                if($userTypeID == 2){
+                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
+                           } else if($userTypeID != 1){
+                                                 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);
+                                                   } else {
+                   $this->data['carriers'] = $this->airline_m->getAirlinesData();
+                }
+
+
 		 $this->data['marketzones'] = $this->marketzone_m->getMarketzones();
            	$this->data['cabin_type'] = $this->airports_m->getDefns('13'); // airline class types
            	$this->data['days_of_week'] = $this->airports_m->getDefns('14'); // days of week
@@ -358,6 +371,16 @@ if($end < $start ) {
            	$this->data['mins'] = $this->eligibility_exclusion_m->time_dropdown('60',5);
                 $this->data['seasons'] = $this->season_m->getSeasonsList();
         	$this->data['action_types'] = $this->airports_m->getDefns('19');
+
+         if($this->input->post('scarrier')){
+                   $this->data['scarrier'] = $this->input->post('scarrier');
+             } else {
+                   if($userTypeID == 2){
+             $this->data['scarrier'] = $this->session->userdata('default_airline');
+                   } else {
+                         $this->data['scarrier'] = 0;
+                   }
+         }
 
 		$this->data["subview"] = "acsr/index";
 		$this->load->view('_layout_main', $this->data);		
@@ -850,14 +873,16 @@ FROM
 (
            select acsr_id, orig.alias as orig_level,dest.alias as dest_level,
               flight_dep_date_start, flight_dep_date_end, flight_dep_time_start, flight_dep_time_end, CONCAT(flight_nbr_start,'-',flight_nbr_end) 
-              as flight_nbr, at.aln_data_value as action_typ, fc.aln_data_value as from_cabin , tc.aln_data_value as to_cabin,  acsr.active , 
+              as flight_nbr, at.aln_data_value as action_typ, fdef.cabin as from_cabin , tdef.cabin as to_cabin,  acsr.active , 
               acsr.upgrade_from_cabin_type, acsr.upgrade_to_cabin_type  ,acsr.flight_nbr_start, acsr.memp, acsr.min_bid_price,
               acsr.flight_nbr_end, car.code as carrier
               from VX_aln_auto_confirm_setup_rules acsr 
                LEFT JOIN vx_aln_data_types orig on (orig.vx_aln_data_typeID = acsr.orig_level_id) 
               LEFT JOIN vx_aln_data_types dest on (dest.vx_aln_data_typeID = acsr.dest_level_id) 
-              LEFT JOIN  vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = acsr.upgrade_from_cabin_type AND fc.aln_data_typeID = 13) 
-              LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID  = acsr.upgrade_to_cabin_type AND fc.aln_data_typeID = 13)
+		INNER JOIN VX_aln_airline_cabin_def fdef on (fdef.carrier = acsr.carrier_code)
+              INNER JOIN  vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = acsr.upgrade_from_cabin_type AND fc.aln_data_typeID = 13 and fc.alias = fdef.level) 
+		INNER JOIN VX_aln_airline_cabin_def tdef on (tdef.carrier = acsr.carrier_code)
+              INNER JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID  = acsr.upgrade_to_cabin_type AND fc.aln_data_typeID = 13 AND tc.alias = tdef.level )
               LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID  = acsr.carrier_code AND car.aln_data_typeID = 12)
               LEFT JOIN  vx_aln_data_defns at on (at.vx_aln_data_defnsID = acsr.action_type ) 
 

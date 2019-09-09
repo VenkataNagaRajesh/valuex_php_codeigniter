@@ -144,7 +144,86 @@ function getAirlinesToMap($array) {
 
 
 	}
+
+	function getDummyCabinsList(){
+		$this->db->select('alias, code')->from('vx_aln_data_defns');
+		$this->db->where('aln_data_typeID','13');
+		$query = $this->db->get();
+                $data = $query->result();
+		return $data;
+	}
 		
+
+	function getCabinsDataForCarrier($carrier, $ret = 0){
+		$this->db->select('dd.vx_aln_data_defnsID ,cd.level, cd.cabin')->from('VX_aln_airline_cabin_def cd');
+		$this->db->join('vx_aln_data_defns dd', 'dd.alias = cd.level and dd.aln_data_typeID = 13','LEFT');
+		$this->db->where('cd.carrier',$carrier);
+		$query = $this->db->get();
+                $data = $query->result();
+		$result = array();
+	//	if(count($data) > 0 ) {
+			foreach($data as $res){
+				$result[$res->vx_aln_data_defnsID] = $res->cabin;
+			}
+			if($ret == 1 ) {
+				return $data;
+			} else {
+				return $result;
+			}
+				
+	//	} 
+			/*else {
+
+				$this->db->select('dd.vx_aln_data_defnsID , cd.cabin')->from('VX_aln_airline_cabin_def cd');
+		                $this->db->join('vx_aln_data_defns dd', 'dd.alias = cd.level and dd.aln_data_typeID = 13','LEFT');
+                		$this->db->where('cd.carrier',0);
+                		$query = $this->db->get();
+                		$data = $query->result();
+				foreach($data as $res){
+                                	$result[$res->vx_aln_data_defnsID] = $res->cabin;
+                        	}       
+                        	if($ret == 1 ) {
+					return $data;
+				} else {
+					return $result;
+				}
+				
+		}*/
+		
+		
+	}
+
+	function getCabinIDForCarrierANDCabin($carrier,$cabin){
+                $this->db->select('dd.vx_aln_data_defnsID , cd.cabin')->from('VX_aln_airline_cabin_def cd');
+                $this->db->join('vx_aln_data_defns dd', 'dd.alias = cd.level and dd.aln_data_typeID = 13','LEFT');
+                $this->db->where('cd.carrier',$carrier);
+		$this->db->where('cd.cabin',$cabin);
+		$this->db->limit(1);
+                $query = $this->db->get();
+                $result = $query->row();
+		if(count($result > 0 )) {
+               		 return $result->vx_aln_data_defnsID;
+		} else {
+
+			return 0;
+		}
+
+
+
+		/*else {
+			$this->db->select('dd.vx_aln_data_defnsID , cd.cabin')->from('VX_aln_airline_cabin_def cd');
+	                $this->db->join('vx_aln_data_defns dd', 'dd.alias = cd.level and dd.aln_data_typeID = 13','LEFT');
+        	        $this->db->where('cd.carrier',0);
+                	$this->db->where('cd.cabin',$cabin);
+               		 $this->db->limit(1);
+               		 $query = $this->db->get();
+                	$result = $query->row();
+			 return $result->vx_aln_data_defnsID;
+		}*/
+		
+		
+        }
+
 }
 
 /* End of file user_m.php */

@@ -128,13 +128,15 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, ex.or
 
 	function getDataForEditRule($grp_id) {
 
-	 $sql = "select  excl_grp, group_concat(df.code ,'-', dt.code  ) as cabins ,
+	 $sql = "select  excl_grp, group_concat(fdef.cabin ,'-', tdef.cabin  ) as cabins ,
 		excl_reason_desc, orig_level_id, dest_level_id, orig_level_value, 
 		dest_level_value ,flight_efec_date, flight_disc_date, flight_dep_start, 
-		flight_dep_end, flight_nbr_start, flight_nbr_end, carrier, frequency 
+		flight_dep_end, flight_nbr_start, flight_nbr_end, ex.carrier, frequency 
 		  from VX_aln_eligibility_excl_rules ex 
-		LEFT JOIN  vx_aln_data_defns df on (df.vx_aln_data_defnsID = ex.upgrade_from_cabin_type )  
-		LEFT JOIN vx_aln_data_defns dt on (dt.vx_aln_data_defnsID = ex.upgrade_to_cabin_type )  
+		INNER JOIN VX_aln_airline_cabin_def fdef on (fdef.carrier = ex.carrier)
+		INNER JOIN  vx_aln_data_defns df on (df.alias = fdef.level and df.aln_data_typeID = 13 AND df.vx_aln_data_defnsID = ex.upgrade_from_cabin_type )  
+		INNER JOIN VX_aln_airline_cabin_def tdef on (tdef.carrier = ex.carrier)
+		INNER JOIN  vx_aln_data_defns dt on (dt.alias = tdef.level and dt.aln_data_typeID = 13 AND dt.vx_aln_data_defnsID = ex.upgrade_to_cabin_type ) 
 		where excl_grp = " . $grp_id. "  group by excl_reason_desc, 
 		 orig_level_id, dest_level_id, orig_level_value, dest_level_value ,flight_efec_date, flight_disc_date, flight_dep_start, 
 		flight_dep_end, flight_nbr_start, flight_nbr_end, carrier, frequency";

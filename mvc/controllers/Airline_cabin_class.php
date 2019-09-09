@@ -5,6 +5,7 @@ class Airline_cabin_class extends Admin_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model('airline_cabin_class_m');
+		$this->load->model('airline_cabin_def_m');
 		$this->load->model('airline_cabin_m');
 		$this->load->model('airports_m');
 		$this->load->model('airline_m');
@@ -83,7 +84,7 @@ class Airline_cabin_class extends Admin_Controller {
 
 
 
-            $this->data['airlinecabins'] = $this->airports_m->getDefnsCodesListByType('13');
+            //$this->data['airlinecabins'] = $this->airports_m->getDefnsCodesListByType('13');
 
 
 		  $userTypeID = $this->session->userdata('usertypeID');
@@ -177,7 +178,6 @@ class Airline_cabin_class extends Admin_Controller {
 		
 
 
-            $this->data['airlinecabins'] = $this->airline_cabin_m->getAirlineCabins();
 
 
 		 $userTypeID = $this->session->userdata('usertypeID');
@@ -196,6 +196,7 @@ class Airline_cabin_class extends Admin_Controller {
 
         if((int)$id) {
             $this->data['airline'] = $this->airline_cabin_class_m->checkCarrierDataByID($id);
+		$this->data['airlinecabins'] = $this->airline_cabin_def_m->getCabinsDataForCarrier($id);
             if(count($this->data['airline']) > 0) {
                 if($_POST) {
                     /*$rules = $this->rules();
@@ -315,7 +316,7 @@ class Airline_cabin_class extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('map_id','ac.code','acl.code','airline_class','cm.is_revenue','cm.order','cm.rbd_markup','cm.active','ac.aln_data_value','acl.aln_data_value');
+	    $aColumns =  array('cm.map_id','ac.code','def.cabin','airline_class','cm.is_revenue','cm.order','cm.rbd_markup','cm.active','ac.aln_data_value','def.desc');
                 $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -396,11 +397,12 @@ class Airline_cabin_class extends Admin_Controller {
 
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, airline_class,  ac.code as carrier_name, cm.carrier , 
-        acl.code as airline_cabin,  cm.active , cm.is_revenue, cm.order, cm.rbd_markup
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS cm.map_id, airline_class,  ac.code as carrier_name, cm.carrier , 
+        def.cabin as airline_cabin,  cm.active , cm.is_revenue, cm.order, cm.rbd_markup
         from VX_aln_airline_cabin_class cm 
-        LEFT JOIN vx_aln_data_defns ac on (ac.vx_aln_data_defnsID = cm.carrier) 
-        LEFT JOIN  vx_aln_data_defns acl on (acl.vx_aln_data_defnsID = cm.airline_cabin)
+        LEFT JOIN vx_aln_data_defns ac on (ac.vx_aln_data_defnsID = cm.carrier ) 
+       INNER JOIN VX_aln_airline_cabin_def def on (def.carrier = cm.carrier )  
+        INNER JOIN vx_aln_data_defns cab on (cab.alias = def.level and cab.aln_data_typeID = 13 and cm.airline_cabin = cab.vx_aln_data_defnsID)
  $sWhere $sOrder $sLimit";
                 $rResult = $this->install_m->run_query($sQuery);
                 $sQuery = "SELECT FOUND_ROWS() as total";
@@ -455,6 +457,52 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, airline_class,  ac.code as carrie
 				  echo json_encode( $output );
 				}
         }
+
+
+
+public function getCabinDataFromCarrier(){
+
+        $carrier = $this->input->post('carrier');
+	if($carrier) {
+		$result = $this->airline_cabin_def_m->getCabinsDataForCarrier($carrier,1);
+			echo "<option value=\"0\">",Cabin,"</option>";
+			 foreach ($result as $defns) {
+                        echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->cabin,"</option>";
+
+                	}
+            } else {
+		echo "<option value=\"0\">",Cabin,"</option>";
+
+	   }
+
+}
+
+public function getCabinLevelDataForCarrier() {
+
+
+	 $carrier = $this->input->post('carrier');
+	 $result = $this->airline_cabin_def_m->getCabinsDataForCarrier($carrier,1);
+	$ret = array();
+	foreach($result as $res ) {
+		$ret['span']['flevel'.$res->level] =  $res->cabin;
+		$ret['span']['tlevel'.$res->level] =  $res->cabin;
+	}
+
+	$result1 = $result;
+// Y= 4, W= 3, C = 2, F = 1
+	foreach($result as $r1) {
+		foreach($result1 as $r2 ) {
+			if($r1->level > $r2->level) {
+				$ret['level']['level'.$r1->level.'-level'.$r2->level] = $r1->cabin.'-'.$r2->cabin;
+			}
+		}
+	}
+
+                 $this->output->set_content_type('application/json');
+                 $this->output->set_output(json_encode($ret));
+
+}
+
 
 
 public function delete_carrier_map_bulk_records(){

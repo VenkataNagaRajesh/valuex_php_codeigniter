@@ -89,9 +89,13 @@
                         <div class="col-sm-2"> <?php
 				$airlinecabins['0'] = 'Select cabin';
 				ksort($airlinecabins);
-				$val = "airdata[".$cl."][cabin]";
-				echo form_dropdown($val, $airlinecabins, set_value($val), "id=$val   class='form-control hide-dropdown-icon select2'");
-?>                        </div>
+				$val = "airdata[$cl][cabin]";
+				$str = "airdata_".$cl."_cabin";
+				?>
+				<select  name="<?=$val?>"  id='<?=$str?>' class="form-control select2">
+				<option value=0>Cabin</option>
+                                                        </select>
+                        </div>
 
 
 
@@ -137,6 +141,30 @@
 $(document).ready(function(){
 $( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Class'
 		         });
+
+
+$('#carrier').change(function(event) {    
+  var carrier = $(this).val();                 
+
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('airline_cabin_class/getCabinDataFromCarrier')?>",            
+              data: {
+                           "carrier":carrier,
+                    },
+             dataType: "html",                                  
+             success: function(data) {               
+	<?php
+		$alphas = range('A', 'Z');
+                        foreach ($alphas as $cl) {
+				$str = "airdata_".$cl."_cabin";
+				?> var varname='<?php echo $str; ?>';
+				$('#'+varname).html(data);
+			<?php }
+?>
+				}        
+      });       
+});
 
 });
 

@@ -571,9 +571,9 @@ class Paxfeed extends Admin_Controller {
 
 		
 $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'last_name','ptc.code','fqtv','dca.code','seg_nbr',
-		   'flight_number','dep_date','dept_time','arrival_date','arrival_time','class', 'dcab.code','df.code','dt.code',
+		   'flight_number','dep_date','dept_time','arrival_date','arrival_time','class', 'cdef.cabin','df.code','dt.code',
 			'tier','dfre.code','pax_contact_email','phone','cou.code','cit.code','office_id','channel','is_fclr_processed','fclr_data','pax.active',
-			'ptc.aln_data_value','dca.aln_data_value','dcab.aln_data_value','df.aln_data_value','dt.aln_data_value',
+			'ptc.aln_data_value','dca.aln_data_value','cdef.desc','df.aln_data_value','dt.aln_data_value',
 			'dfre.aln_data_value','cou.aln_data_value','cit.aln_data_value');
 	
 		$sLimit = "";
@@ -733,8 +733,8 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 
 			dtpf_id,first_name, last_name, pnr_ref, pax_nbr,flight_number, pax.ptc ,ptc.code as ptc_code, fqtv, seg_nbr, dep_date, class ,dt.code as to_city, is_fclr_processed, fclr_data,
 			df.code as from_city, pax_contact_email, phone, cou.code as booking_country, cit.code as booking_city, office_id, 
-			pax.airline_code , channel, dca.code as carrier_code, dcab.code as cabin, pax.arrival_time,
-			pax.dept_time, pax.arrival_date,pax.frequency,pax.tier,dfre.code as frequency,
+			pax.airline_code , channel, dca.code as carrier_code, cdef.cabin as cabin, pax.arrival_time,
+			pax.dept_time, pax.arrival_date,pax.frequency,pax.tier,dfre.code as frequency,cdef.desc,
 			pax.active  FROM VX_aln_daily_tkt_pax_feed pax 
 			LEFT JOIN vx_aln_data_defns df on (df.vx_aln_data_defnsID = pax.from_city) 
 			LEFT JOIN vx_aln_data_defns dt on  (dt.vx_aln_data_defnsID = pax.to_city) 
@@ -742,7 +742,8 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 			LEFT JOIN vx_aln_data_defns cou  on (cou.vx_aln_data_defnsID = pax.booking_country) 
                         LEFT JOIN vx_aln_data_defns cit on  (cit.vx_aln_data_defnsID = pax.booking_city) 
 			LEFT JOIN  vx_aln_data_defns dca on (dca.vx_aln_data_defnsID = pax.carrier_code)	
-			LEFT JOIN  vx_aln_data_defns dcab on (dcab.vx_aln_data_defnsID = pax.cabin)
+			INNER JOIN VX_aln_airline_cabin_def cdef on (cdef.carrier = pax.carrier_code)
+			INNER JOIN  vx_aln_data_defns dcab on (dcab.vx_aln_data_defnsID = pax.cabin and dcab.aln_data_typeID = 13 and dcab.alias = cdef.level)
 			LEFT JOIN  vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = pax.ptc)
 		$sWhere			
 		$sOrder

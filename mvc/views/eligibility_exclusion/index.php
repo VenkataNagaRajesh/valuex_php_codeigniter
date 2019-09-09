@@ -118,22 +118,22 @@
 									</td>
 									<td>	
 										<label class="btn btn-success">
-											<span>Y</span>
+											<span id='tlevel4'>Y</span>
 										</label>
 									</td>
 									<td>
 										<label class="btn btn-success">
-											<span>W</span>
+											<span id='tlevel3'>W</span>
 										</label>
 									</td>
 									<td>
 										<label class="btn btn-success">
-											<span>C</span>
+											<span id='tlevel2'>C</span>
 										</label>
 									</td>
 									<td>
 										<label class="btn btn-success">
-											<span>F</span>
+											<span id='tlevel1'>F</span>
 										</label>
 									</td>
 								</tr>
@@ -141,7 +141,7 @@
 									<input type="hidden" class="form-control" id="excl_id" name="excl_id"   value="" >
 									<td>
 										<label class="btn btn-success">
-											<span>Y</span>
+											<span id='flevel4'>Y</span>
 										</label>
 									</td>
 									<td class="block">
@@ -152,7 +152,7 @@
 									<td>	
 										<div class="btn-group" data-toggle="buttons">		
 											<label class="btn btn-success">
-												<input type="checkbox" autocomplete="off" name='cabin_list' value='Y-W'>
+												<input type="checkbox" autocomplete="off" name='cabin_list' id='level4-level3' value='Y-W'>
 												<span class="glyphicon glyphicon-ok"></span>
 											</label>
 										</div>			
@@ -160,7 +160,7 @@
 									<td>
 										<div class="btn-group" data-toggle="buttons">		
 											<label class="btn btn-success">
-												<input type="checkbox" autocomplete="off" name='cabin_list' value='Y-C' >
+												<input type="checkbox" autocomplete="off" name='cabin_list' id='level4-level2' value='Y-C' >
 												<span class="glyphicon glyphicon-ok"></span>
 											</label>
 										</div>
@@ -168,40 +168,7 @@
 									<td>
 										<div class="btn-group" data-toggle="buttons">		
 											<label class="btn btn-success">
-												<input type="checkbox" autocomplete="off" name='cabin_list' value='Y-F'>
-												<span class="glyphicon glyphicon-ok"></span>
-											</label>
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<label class="btn btn-success">
-											<span>W</span>
-										</label>
-									</td>
-									<td class="block">
-										<label class="btn btn-success">
-											<span>&nbsp;</span>
-										</label>
-									</td>
-									<td class="block">
-										<label class="btn btn-success">
-											<span>&nbsp;</span>
-										</label>
-									</td>
-									<td>
-										<div class="btn-group" data-toggle="buttons">		
-											<label class="btn btn-success">
-												<input type="checkbox" autocomplete="off" name='cabin_list'  value='W-C'>
-												<span class="glyphicon glyphicon-ok"></span>
-											</label>
-										</div>
-									</td>
-									<td>
-										<div class="btn-group" data-toggle="buttons">		
-											<label class="btn btn-success">
-												<input type="checkbox" autocomplete="off" name='cabin_list' value='W-F'>
+												<input type="checkbox" autocomplete="off" name='cabin_list' id='level4-level1' value='Y-F'>
 												<span class="glyphicon glyphicon-ok"></span>
 											</label>
 										</div>
@@ -210,7 +177,40 @@
 								<tr>
 									<td>
 										<label class="btn btn-success">
-											<span>C</span>
+											<span id='flevel3'>W</span>
+										</label>
+									</td>
+									<td class="block">
+										<label class="btn btn-success">
+											<span>&nbsp;</span>
+										</label>
+									</td>
+									<td class="block">
+										<label class="btn btn-success">
+											<span>&nbsp;</span>
+										</label>
+									</td>
+									<td>
+										<div class="btn-group" data-toggle="buttons">		
+											<label class="btn btn-success">
+												<input type="checkbox" autocomplete="off" name='cabin_list'  id='level3-level2' value='W-C'>
+												<span class="glyphicon glyphicon-ok"></span>
+											</label>
+										</div>
+									</td>
+									<td>
+										<div class="btn-group" data-toggle="buttons">		
+											<label class="btn btn-success">
+												<input type="checkbox" autocomplete="off" name='cabin_list' id='level3-level1' value='W-F'>
+												<span class="glyphicon glyphicon-ok"></span>
+											</label>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<label class="btn btn-success">
+											<span id='flevel2'>C</span>
 										</label>
 									</td>
 									<td class="block">
@@ -231,7 +231,7 @@
 									<td>
 										<div class="btn-group" data-toggle="buttons">		
 											<label class="btn btn-success">
-												<input type="checkbox" autocomplete="off" name='cabin_list' value='C-F'>
+												<input type="checkbox" autocomplete="off" name='cabin_list' id='level2-level1' value='C-F'>
 												<span class="glyphicon glyphicon-ok"></span>
 											</label>
 										</div>
@@ -328,7 +328,12 @@
 
 
 	   <div class="col-sm-2">
+		 <select  name="sfrom_class"  id='sfrom_class' class="form-control select2">
+                                <option value=0>From Cabin</option>
+                                                        </select>
+
                <?php
+		/*
                         $class_list['0'] = ' From Cabin';
                         foreach ($class_type as $class) {
                                 $class_list[$class->vx_aln_data_defnsID] = $class->code;
@@ -336,17 +341,25 @@
 
 			ksort($class_type);
 
-                                   echo form_dropdown("sfrom_class", $class_list,set_value("sfrom_class",$fromclass), "id='sfrom_class' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("sfrom_class", $class_list,set_value("sfrom_class",$fromclass), "id='sfrom_class' class='form-control hide-dropdown-icon select2'");   */ ?>
 
                 </div>
 
 
 	     <div class="col-sm-2">
+
+ <select  name="sto_class"  id='sto_class' class="form-control select2">
+                                <option value=0>To Cabin</option>
+                                                        </select>
+
+
                <?php
+
+		/*
                         $class_list['0'] = ' To Cabin';
 			ksort($class_list);
 
-                                   echo form_dropdown("sto_class", $class_list,set_value("sto_class",$toclass), "id='sto_class' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("sto_class", $class_list,set_value("sto_class",$toclass), "id='sto_class' class='form-control hide-dropdown-icon select2'");   */ ?>
 
                 </div>
 </div></div>
@@ -424,6 +437,73 @@
 </div>
 <script>
 $(document).ready(function() {	 
+
+$('#carrier').change(function(event) {    
+  var carrier = $('#carrier').val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('airline_cabin_class/getCabinLevelDataForCarrier')?>",            
+              data: {
+                           "carrier":carrier,
+                    },
+             dataType: "html",                                  
+             success: function(data) {               
+		 var info = jQuery.parseJSON(data);
+
+			for (var key in info['span'])
+			{
+				$('#'+key).text(info['span'][key]);
+				
+			}
+
+			 for (var key in info['level'])
+                        {
+				$('#'+key).val(info['level'][key]);
+                                
+                        }
+
+            }        
+      });       
+});
+
+
+$('#scarrier').change(function(event) {    
+  var carrier = $('#scarrier').val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('airline_cabin_class/getCabinDataFromCarrier')?>",            
+              data: {
+                           "carrier":carrier,
+                    },
+             dataType: "html",                                  
+             success: function(data) {               
+                                $('#sfrom_class').html(data);
+                                $("#sfrom_class option").html(function(i,str){
+                                        return str.replace(/From Cabin|Cabin/g,
+                                 function(m,n){
+                                        return (m == "From Cabin")?"Cabin":"From Cabin";
+                                 });
+});
+                                $('#sto_class').html(data);
+
+                                $("#sto_class option").html(function(i,str){
+                                        return str.replace(/To Cabin|Cabin/g,
+                                 function(m,n){
+                                        return (m == "To Cabin")?"Cabin":"To Cabin";
+                                 });
+                                });
+
+                                
+                                }        
+      });       
+});
+
+$('#sfrom_class').trigger('change');
+$('#sto_class').trigger('change');
+
+$('#sfrom_class').val('<?=$fromclass?>').trigger('change');
+$('#sto_class').val('<?=$toclass?>').trigger('change');
+
 loaddatatable();
 });
 
