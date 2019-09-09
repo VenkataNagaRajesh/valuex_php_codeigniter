@@ -9,7 +9,6 @@
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class="form-group">
 				<div class="col-md-2 select-form">
-					<h4>Board/Off Point</h4>
 					<div class="col-sm-12">
 						<?php
 						$airport['0'] = 'Boarding Point';
@@ -50,7 +49,6 @@
 
 
 				<div class="col-md-2 select-form">
-					<h4>Cabins</h4>
 					<div class="col-sm-12">
 
 	 <select  name="from_cabin"  id='from_cabin' class="form-control select2">
@@ -78,7 +76,6 @@
 
 
 		 <div class="col-md-2 select-form">
-                                        <h4>Season & Frequency</h4>
                                         <div class="col-sm-12">
                                         <?php
 
@@ -95,8 +92,28 @@
                                 </div>
 
 
+<div class="col-md-2 select-form">
+                                        <div class="col-sm-12">
+                                        <?php
+		foreach($carriers as $airline){
+                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+         }
+                 $airlinelist[0]= 'Carrier';
+                  ksort($airlinelist);
+
+
+                                                echo form_dropdown("carrier", $airlinelist,set_value("carrier",$carrier), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
+                                        </div>
+                                        <div class="col-sm-12">
+                                                <?php
+                                                        $status['0'] = 'Offer Status';
+                                                        ksort($status);
+                                                        echo form_dropdown("booking_status", $status,set_value("booking_status"), "id='booking_status' class='form-control hide-dropdown-icon select2'");    ?>
+                                        </div>
+                                </div>
+
+
 				<div class="col-md-2 select-form">
-					<h4>Flight Nbr Range</h4>
 					<div class="col-sm-12">
 						<input type="text" class="form-control" placeholder="Start range" id="flight_number" name="flight_number" value="<?=set_value('flight_number',$flight_number)?>" >
 					</div>
@@ -105,7 +122,6 @@
 					</div>
 				</div>
 				<div class="col-md-2">
-					<h4>Dep Date Range</h4>
 					<div class="col-sm-12">
 						 <div class="input-group">
 							<input type="text" class="form-control" placeholder="Dep Start" id="dep_from_date" name="dep_from_date" value="<?=set_value('dep_from_date',$dep_from_date)?>" >
@@ -119,7 +135,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-2 pull-right">
+				<div class="col-sm-3">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				   <button type="button" class="btn btn-danger" onclick="downloadOfferEligibility()">Download</button>
                 </div>	             				

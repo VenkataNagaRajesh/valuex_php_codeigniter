@@ -80,8 +80,8 @@
 
 
                 <div class="col-sm-3 col-md-2">
-                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
-				  <button type="button" class="btn btn-danger" onclick="downloadMarketAirport()">Download</button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter" style="padding: 6px 12px;">Filter</button>
+				  <button type="button" class="btn btn-danger" onclick="downloadMarketAirport()" data-title="Download" data-toggle="tooltip" data-placement="top" style="padding: 6px 12px;"><i class="fa fa-download"></i></button>
                 </div>
                           </div>
                          </form>

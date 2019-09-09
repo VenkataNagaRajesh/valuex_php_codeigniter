@@ -3,12 +3,14 @@
 class Feedback extends Admin_Controller {
 
 	function __construct() {
-		parent::__construct();		
+		parent::__construct();	
+        $this->load->model('bid_m');		
 		$language = $this->session->userdata('lang');
 		$this->lang->load('feedback', $language);	
 	}
 
 	public function index() {
+		$this->data['avg_rating'] = $this->bid_m->avgFeedback();
 		$this->data["subview"] = "feedback/index";
 		$this->load->view('_layout_main', $this->data);
 		

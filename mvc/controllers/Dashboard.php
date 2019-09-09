@@ -59,6 +59,12 @@ class Dashboard extends Admin_Controller {
 			$this->data['dashboardWidget']['bid_complete']->link = "offer_table";
 			$this->data['dashboardWidget']['bid_complete']->icon = "fa-list-alt";
 			$this->data['dashboardWidget']['bid_complete']->menu = 'Total Bids';
+			
+			$this->data['dashboardWidget']['feedback']->count = round($this->bid_m->avgFeedback());
+			$this->data['dashboardWidget']['feedback']->link = "feedback";
+			$this->data['dashboardWidget']['feedback']->icon = "fa-star";
+			$this->data['dashboardWidget']['feedback']->menu = 'Average Rating';
+			
 			//print_r($this->data['dashboardWidget']['bid_complete_offers']); exit;
 		
 			$marketzones = $this->marketzone_m->marketzoneTotalCount();

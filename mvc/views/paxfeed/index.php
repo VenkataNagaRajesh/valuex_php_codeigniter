@@ -1,4 +1,4 @@
-<div class="box">
+<div class="box pax-view">
     <div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
 
@@ -151,7 +151,7 @@
 
 
 
-                <div class="col-md-2 col-sm-6">
+                <div class="col-md-3 col-sm-6">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				   <button type="button" class="btn btn-danger" onclick="downloadPAXFeed()">Download</button>
                 </div>	             				
@@ -159,7 +159,6 @@
 			 </form>			
 
 <div class="col-md-12">
-                <div class="col-md-12">
                         <div class="tab-content table-responsive" id="hide-table">
                <table id="paxfeedtable" class="table table-bordered dataTable no-footer">
                  <thead>
@@ -206,7 +205,6 @@
                  </tbody>
               </table>
             </div>
-			</div>
 		</div>
           </div>
        </div>

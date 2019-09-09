@@ -55,7 +55,7 @@
                  </div>              				
 			    
                  
-                <div class="col-sm-2">
+                <div class="col-sm-2" style="padding:0;">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				  <button type="button" class="btn btn-danger" onclick="downloadMasterData()">Download</button>
                 </div>	             				

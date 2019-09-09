@@ -28,7 +28,7 @@
 
 
               </h5>
-			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
+			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0;">		   
 			<div class='form-group'>			 
 
 			 <div class="col-sm-2">
@@ -90,7 +90,7 @@
                 </div>
 
 
-                <div class="col-md-2 col-sm-6">
+                <div class="col-md-3 col-sm-6"><br>
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				  <button type="button" class="btn btn-danger" onclick="downloadINVFeed()">Download</button>
                 </div>	             				

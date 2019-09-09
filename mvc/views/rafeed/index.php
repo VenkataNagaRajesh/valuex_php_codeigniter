@@ -131,7 +131,7 @@
 
 
 
-                <div class="col-sm-2 pull-right">
+                <div class="col-sm-3">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
 				  <button type="button" class="btn btn-danger" onclick="downloadRAFeed()">Download</button>
                 </div>	             				
