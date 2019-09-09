@@ -18,8 +18,8 @@
 					</div>
 				</div>
 
+
                                    <div class="col-md-2 select-form">
-                                        <h4>OfferID/Carrier</h4>
                                         <div class="col-sm-12">
                                                 <input type="text" class="form-control" placeholder="OfferID" id="offer_id" name="offer_id" value="<?=set_value('offer_id')?>" >
                                         </div>
@@ -36,7 +36,6 @@
                                                         echo form_dropdown("carrier", $airlinelist,set_value("carrier",$car), "id='carrier' class='form-control hide-dropdown-icon select2'");     ?>
                                         </div>
                                 </div>
-
 
 
 				<div class="col-md-2 select-form">
@@ -101,23 +100,6 @@
                                         </div>
                                 </div>
 
-				   <div class="col-md-2 select-form">
-                                        <div class="col-sm-12">
-                                                <input type="text" class="form-control" placeholder="OfferID" id="offer_id" name="offer_id" value="<?=set_value('offer_id')?>" >
-                                        </div>
-					 <div class="col-sm-12">
-                                                <?php
-
-                                 foreach($carriers as $airline){
-                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
-         }
-
-                 $airlinelist[0]= 'Carrier';
-                  ksort($airlinelist);
-
-                                                        echo form_dropdown("carrier", $airlinelist,set_value("carrier",$car), "id='carrier' class='form-control hide-dropdown-icon select2'");     ?>
-                                        </div>
-				</div>
 
 			
 				<div class="col-sm-2 pull-right">
