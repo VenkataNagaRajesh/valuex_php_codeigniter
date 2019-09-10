@@ -289,7 +289,7 @@ class Airline_cabin_def extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('map_id','ac.code','acl.code','airline_class','cm.is_revenue','cm.order','cm.rbd_markup','cm.active','ac.aln_data_value','acl.aln_data_value');
+	    $aColumns =  array('map_id','ac.code','cm.cabin','cm.level','cm.desc','cm.active','ac.aln_data_value');
                 $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -375,6 +375,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, cabin,level , cm.desc , ac.code a
           cm.active 
         from VX_aln_airline_cabin_def cm 
         LEFT JOIN vx_aln_data_defns ac on (ac.vx_aln_data_defnsID = cm.carrier) 
+	INNER JOIN vx_aln_data_defns dd on (dd.alias = cm.level and dd.aln_data_typeID = 13)
  $sWhere $sOrder $sLimit";
                 $rResult = $this->install_m->run_query($sQuery);
                 $sQuery = "SELECT FOUND_ROWS() as total";

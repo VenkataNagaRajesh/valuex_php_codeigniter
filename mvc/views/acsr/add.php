@@ -308,14 +308,18 @@
                             <?=$this->lang->line('upgrade_from');?> <span class="text-red">*</span>
                         </label> 
                         <div class="col-sm-5">
+			 <select  name="upgrade_from_cabin_type"  id='upgrade_from_cabin_type' class="form-control select2">
+                                <option value=0>From Cabin</option>
+                                                        </select>
 
-<?php
+
+<?php /*
 			$cabin_list['0'] = 'Select From Cabin';
 			ksort($cabin_list);
 			foreach ($cabin_type as $cabin) {
 				$cabin_list[$cabin->vx_aln_data_defnsID] = $cabin->aln_data_value;
 			}
-                         echo form_dropdown("upgrade_from_cabin_type", $cabin_list,set_value("upgrade_from_cabin_type"), "id='upgrade_from_cabin_type' class='form-control hide-dropdown-icon select2'");
+                         echo form_dropdown("upgrade_from_cabin_type", $cabin_list,set_value("upgrade_from_cabin_type"), "id='upgrade_from_cabin_type' class='form-control hide-dropdown-icon select2'");*/
 
      ?>                   </div>
                         <span class="col-sm-4 control-label">
@@ -334,10 +338,14 @@
                             <?=$this->lang->line('upgrade_to');?> <span class="text-red">*</span>
                         </label> 
                         <div class="col-sm-5">
-<?php
+			 <select  name="upgrade_to_cabin_type"  id='upgrade_to_cabin_type' class="form-control select2">
+                                <option value=0>To Cabin</option>
+                                                        </select>
+
+<?php/*
 			$cabin_list['0'] = 'Select To Cabin';
 			ksort($cabin_list);
-                         echo form_dropdown("upgrade_to_cabin_type", $cabin_list,set_value("upgrade_to_cabin_type"), "id='upgrade_to_cabin_type' class='form-control hide-dropdown-icon select2'");
+                         echo form_dropdown("upgrade_to_cabin_type", $cabin_list,set_value("upgrade_to_cabin_type"), "id='upgrade_to_cabin_type' class='form-control hide-dropdown-icon select2'");*/
 
      ?>                   </div>
                         <span class="col-sm-4 control-label">
@@ -446,6 +454,47 @@ $('#amz_level_id').trigger('change');
         var excl = [<?php echo implode(',',$this->input->post("amz_excl_value")); ?>];
         $('#amz_excl_value').val(excl).trigger('change');
 
+$('#carrier_code').change(function(event) {    
+  var carrier = $('#carrier_code').val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('airline_cabin_class/getCabinDataFromCarrier')?>",            
+              data: {
+                           "carrier":carrier,
+                    },
+             dataType: "html",                                  
+             success: function(data) {               
+                                $('#upgrade_from_cabin_type').html(data);
+                                $("#upgrade_from_cabin_type option").html(function(i,str){
+                                        return str.replace(/From Cabin|Cabin/g,
+                                 function(m,n){
+                                        return (m == "From Cabin")?"Cabin":"From Cabin";
+                                 });
+});
+                                $('#upgrade_to_cabin_type').html(data);
+
+                                $("#upgrade_to_cabin_type option").html(function(i,str){
+                                        return str.replace(/To Cabin|Cabin/g,
+                                 function(m,n){
+                                        return (m == "To Cabin")?"Cabin":"To Cabin";
+                                 });
+                                });
+
+                                
+                                }        
+      });       
+});
+
+$('#upgrade_from_cabin_type').trigger('change');
+$('#upgrade_to_cabin_type').trigger('change');
+<?php
+$from_cabin = $this->input->post("upgrade_from_cabin_type") ? $this->input->post("upgrade_from_cabin_type") : 0;
+$to_cabin =  $this->input->post("upgrade_to_cabin_type") ? $this->input->post("upgrade_to_cabin_type") : 0;
+?>
+$('#upgrade_from_cabin_type').val('<?=$from_cabin?>').trigger('change');
+$('#upgrade_to_cabin_type').val('<?=$to_cabin?>').trigger('change');
+
+
 });
 
 $("#checkbox_src_level").click(function(){
@@ -540,6 +589,7 @@ $('#dest_level_id').trigger('change');
 
         var dest = [<?php echo implode(',',$this->input->post("dest_level_value")); ?>];
         $('#dest_level_value').val(dest).trigger('change');
+
 
 
 });

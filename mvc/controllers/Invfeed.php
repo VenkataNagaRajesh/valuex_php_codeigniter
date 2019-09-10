@@ -8,6 +8,7 @@ class Invfeed extends Admin_Controller {
 		$this->load->model('rafeed_m');
 		$this->load->model("invfeedraw_m");
 		$this->load->model("airline_cabin_m");
+		$this->load->model('airline_cabin_def_m');
 		$this->load->model("airline_m");
 		$this->load->model('airports_m');
 		$this->load->model('user_m');
@@ -171,12 +172,16 @@ class Invfeed extends Admin_Controller {
 
 							}
 
-							$cabin_arr = array('Y','W','C','F');
+							 $invfeed_carrier =   $this->airports_m->getDefIdByTypeAndCode($invfeedraw['airline'],'12');
 
 							$invfeedraw['cabin'] =  $Row[array_search('cabin',$import_header)];
+							
+
+                                        $cabin_arr = array_values($this->airline_cabin_def_m->getCabinsDataForCarrier( $invfeed_carrier));
+
 							if(!in_array($invfeedraw['cabin'],$cabin_arr)){
 
-								$this->mydebug->invfeed_log("Cabin should be in Y,W,C,F " . $column , 1);
+								$this->mydebug->invfeed_log("Cabin should be in ". implode(',',$cabin_arr) . ' in ' .  $column , 1);
                                                                 continue;
 
 							}
@@ -196,7 +201,7 @@ class Invfeed extends Admin_Controller {
                                                          $invfeed['departure_date'] = strtotime(str_replace('-','/',$invfeedraw['departure_date']));
                                                          $invfeed['origin_airport'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['origin_airport'],'1');
 							 $invfeed['dest_airport'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['dest_airport'],'1');
-                                                         $invfeed['cabin'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['cabin'],13);
+                                                         $invfeed['cabin'] = $this->airline_cabin_def_m->getCabinIDForCarrierANDCabin($invfeed['airline_id'],$invfeedraw['cabin']);
                                                          $invfeed['empty_seats'] = $invfeedraw['empty_seats'] ;
 
                                                         $insert_flag = 1;
@@ -278,7 +283,7 @@ class Invfeed extends Admin_Controller {
 
 
 		
-$aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','dc.code', 'departure_date', 'empty_seats','sold_seats', 'inv.active','da.aln_data_value','do.aln_data_value','ds.aln_data_value','dc.aln_data_value');
+$aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','cdef.cabin', 'departure_date', 'empty_seats','sold_seats', 'inv.active','da.aln_data_value','do.aln_data_value','ds.aln_data_value','cdef.desc');
 	
 		$sLimit = "";
 		
@@ -385,13 +390,14 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','dc.c
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
 			invfeed_id, flight_nbr, departure_date, do.code as origin_airport, 
 		        departure_date, sold_seats, empty_seats,
-			ds.code as dest_airport, dc.code as cabin, 
+			ds.code as dest_airport, cdef.cabin as cabin, 
 			da.code as airline_code ,
 			inv.active   FROM VX_aln_daily_inv_feed inv  
 			LEFT JOIN vx_aln_data_defns do on (do.vx_aln_data_defnsID = inv.origin_airport) 
 			LEFT JOIN vx_aln_data_defns ds on  (ds.vx_aln_data_defnsID = inv.dest_airport) 
-			LEFT JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = inv.cabin)  
-			LEFT JOIN  vx_aln_data_defns da on (da.vx_aln_data_defnsID = inv.airline_id)  
+			LEFT JOIN  vx_aln_data_defns da on (da.vx_aln_data_defnsID = inv.airline_id)
+			INNER JOIN VX_aln_airline_cabin_def cdef on (cdef.carrier = inv.airline_id)
+			INNER JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = inv.cabin and dc.aln_data_typeID = 13 and cdef.level = dc.alias)  
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

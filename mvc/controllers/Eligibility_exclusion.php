@@ -7,6 +7,7 @@ class Eligibility_exclusion extends Admin_Controller {
 		$this->load->model("airports_m");
 		$this->load->model('marketzone_m');
 		$this->load->model('eligibility_exclusion_m');
+		$this->load->model('airline_cabin_def_m');
 		$this->load->model('airline_m');
 		$this->load->model('user_m');
 		$language = $this->session->userdata('lang');
@@ -47,7 +48,7 @@ class Eligibility_exclusion extends Admin_Controller {
 			 array(
                                 'field' => 'carrier',
                                 'label' => $this->lang->line("carrier"),
-                                'rules' => 'trim|max_length[200]|xss_clean'
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valDestLevel'
                        ),
 
 
@@ -475,6 +476,8 @@ public function save() {
                                 $json['status'] = validation_errors();
 	
 				$json['errors'] = array(
+		
+		'desc' => form_error('desc'),
                 'orig_level_id' => form_error('orig_level_id'),
                 'dest_level_id' => form_error('dest_level_id'),
 		'orig_level_value' => form_error('orig_level_value'),
@@ -558,8 +561,9 @@ public function save() {
 					$this->eligibility_exclusion_m->delete_data_bygrp($excl_grp_id);
 					foreach($cabins as $c ){
                                                 $spl = explode('-',$c);
-                                                $array['upgrade_from_cabin_type'] = $this->airports_m->getDefIdByTypeAndCode($spl[0],'13');
-                                                $array['upgrade_to_cabin_type'] = $this->airports_m->getDefIdByTypeAndCode($spl[1],'13');
+                                                $array['upgrade_from_cabin_type'] = $this->airline_cabin_def_m->getCabinIDForCarrierANDCabin($array["carrier"],$spl[0]);
+
+                                                $array['upgrade_to_cabin_type'] = $this->airline_cabin_def_m->getCabinIDForCarrierANDCabin($array["carrier"],$spl[1]);
                                                 $this->eligibility_exclusion_m->insert_eligibility_rule($array);
                                         }
 
@@ -575,8 +579,8 @@ public function save() {
                                         $array['excl_grp'] = $max_cnt + 1;
 					foreach($cabins as $c ){
 						$spl = explode('-',$c);
-						$array['upgrade_from_cabin_type'] = $this->airports_m->getDefIdByTypeAndCode($spl[0],'13');
-						$array['upgrade_to_cabin_type'] = $this->airports_m->getDefIdByTypeAndCode($spl[1],'13');
+						$array['upgrade_from_cabin_type']  = $this->airline_cabin_def_m->getCabinIDForCarrierANDCabin($array["carrier"],$spl[0]);
+						$array['upgrade_to_cabin_type'] =  $this->airline_cabin_def_m->getCabinIDForCarrierANDCabin($array["carrier"],$spl[1]);
 						$this->eligibility_exclusion_m->insert_eligibility_rule($array);
 					}
                                         $json['action'] = 'add';
@@ -924,14 +928,17 @@ FROM
 (
            select eexcl_id,excl_reason_desc, orig.alias as orig_level,dest.alias as dest_level,
               flight_efec_date, flight_disc_date, flight_dep_start, flight_dep_end, CONCAT(flight_nbr_start,'-',flight_nbr_end) 
-              as flight_nbr,fc.code as from_class , tc.code as to_class,  ex.active , 
+              as flight_nbr,fdef.cabin as from_class , tdef.cabin as to_class,  ex.active , 
               ex.upgrade_from_cabin_type, ex.upgrade_to_cabin_type  ,ex.flight_nbr_start,
 	      ex.flight_nbr_end, car.code as carrier_code, ex.excl_grp,ex.carrier
               from VX_aln_eligibility_excl_rules ex 
 	       LEFT JOIN vx_aln_data_types orig on (orig.vx_aln_data_typeID = ex.orig_level_id) 
               LEFT JOIN vx_aln_data_types dest on (dest.vx_aln_data_typeID = ex.dest_level_id) 
-              LEFT JOIN  vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type AND fc.aln_data_typeID = 13) 
-              LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID  = ex.upgrade_to_cabin_type AND fc.aln_data_typeID = 13)
+	      INNER JOIN VX_aln_airline_cabin_def fdef on (fdef.carrier = ex.carrier)
+	      INNER JOIN vx_aln_data_defns fc on (fc.alias = fdef.level and fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type AND fc.aln_data_typeID = 13) 
+	      INNER JOIN VX_aln_airline_cabin_def tdef on (tdef.carrier = ex.carrier)
+	      INNER JOIN vx_aln_data_defns tc on (tc.alias = tdef.level and tc.vx_aln_data_defnsID = ex.upgrade_to_cabin_type AND tc.aln_data_typeID = 13)
+		
               LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID  = ex.carrier AND car.aln_data_typeID = 12)
 
 ) as MainSet

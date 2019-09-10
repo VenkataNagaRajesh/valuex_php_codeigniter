@@ -105,8 +105,8 @@ class Airline_cabin extends Admin_Controller {
                   $this->data['aircraftID'] = 0;
                 }
 
-                if(!empty($this->input->post('airline_class'))){
-                $this->data['classID'] = $this->input->post('airline_class');
+                if(!empty($this->input->post('airline_cabin'))){
+                $this->data['classID'] = $this->input->post('airline_cabin');
                 } else {
                   $this->data['classID'] = 0;
                 }
@@ -544,10 +544,12 @@ class Airline_cabin extends Admin_Controller {
 
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , ac.aln_data_value as a_code, 
-        acl.aln_data_value as airline_cabin, video_links, cm.active , cr.aln_data_value as aircraft_name
+        cdef.cabin as airline_cabin, video_links, cm.active , cr.aln_data_value as aircraft_name
         from VX_aln_airline_cabin_map cm 
         LEFT JOIN vx_aln_data_defns ac on (ac.vx_aln_data_defnsID = cm.airline_code) 
-        LEFT JOIN  vx_aln_data_defns acl on (acl.vx_aln_data_defnsID = cm.airline_cabin)
+	INNER JOIN VX_aln_airline_cabin_def cdef on (cdef.carrier = cm.airline_code)
+        INNER JOIN  vx_aln_data_defns acl on (acl.vx_aln_data_defnsID = cm.airline_cabin and acl.alias = cdef.level and  acl.aln_data_typeID = 13 )
+
         LEFT JOIN  vx_aln_data_defns cr on (cr.vx_aln_data_defnsID = cm.aircraft_id)
  $sWhere $sOrder $sLimit";
                 $rResult = $this->install_m->run_query($sQuery);

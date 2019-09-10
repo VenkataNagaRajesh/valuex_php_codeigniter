@@ -401,13 +401,14 @@ $sQuery = "
                                         select  flight_number,
                                                 group_concat(distinct dep_date) as flight_date  ,
                                                 pnr_ref,group_concat(first_name, ' ' , last_name SEPARATOR '<br>' ) as passenger_list ,  from_city as from_city_code, to_city as to_city_code, 
-                                                group_concat(distinct cab.aln_data_value) as from_cabin  , fc.aln_data_value as from_city_name, fc.code as from_city, tc.code as to_city, tc.aln_data_value as to_city_name,
+                                                group_concat(distinct cdef.desc) as from_cabin  , fc.aln_data_value as from_city_name, fc.code as from_city, tc.code as to_city, tc.aln_data_value as to_city_name,
                                                 car.code as carrier , pf1.carrier_code
                                          from VX_aln_daily_tkt_pax_feed pf1 
                                         LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = pf1.ptc AND ptc.aln_data_typeID = 18)
                                         LEFT JOIN vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
                                         LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
-                                        LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13)
+					INNER JOIN VX_aln_airline_cabin_def cdef on (cdef.carrier = pf1.carrier_code)
+                                        INNER JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 and cab.alias = cdef.level)
                                         LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
                                         where pf1.is_processed = 1  
                                        group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
@@ -492,14 +493,15 @@ $sWhere $sOrder $sLimit";
 	$partial_offerlist = array();	
 	foreach($rResult as $data ) {
 		$q = "  SELECT distinct bid_id, bid.rank, bid_value as bid_val,pf.dep_date,pf.dept_time,pf.arrival_time,bid.upgrade_type,pf.flight_number,
-             pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,  dcabin.aln_data_value as upgrade_cabin
+             pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,  cdef.desc as upgrade_cabin
              from VX_aln_bid bid
              LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )
              LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  pf.is_processed = 1 and pf.active = 1 )
              LEFT JOIN vx_aln_data_defns df on (df.vx_aln_data_defnsID = pf.from_city and df.aln_data_typeID = 1)
              LEFT JOIN vx_aln_data_defns dt on (dt.vx_aln_data_defnsID = pf.to_city and dt.aln_data_typeID = 1)
              LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code and car.aln_data_typeID = 12)
-             LEFT JOIN vx_aln_data_defns dcabin on (dcabin.vx_aln_data_defnsID = bid.upgrade_type and dcabin.aln_data_typeID = 13)
+	     INNER JOIN VX_aln_airline_cabin_def cdef on (cdef.carrier = pf.carrier_code)
+             INNER JOIN vx_aln_data_defns dcabin on (dcabin.vx_aln_data_defnsID = bid.upgrade_type and dcabin.aln_data_typeID = 13 and cdef.level = dcabin.alias)
              WHERE bid.offer_id IN (".$data->offer_list .") AND bid.flight_number = " .$data->flight_number .
           " order by bid.rank asc"; 
 		$offers =  $this->install_m->run_query($q);

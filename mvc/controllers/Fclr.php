@@ -6,6 +6,7 @@ class Fclr extends Admin_Controller {
 		parent::__construct();
 		$this->load->model("rafeed_m");
 		$this->load->model("airline_cabin_m");
+		$this->load->model('airline_cabin_def_m');
 		$this->load->model("fclr_m");
 		$this->load->model("season_m");
 		$this->load->model('airports_m');
@@ -502,7 +503,7 @@ class Fclr extends Admin_Controller {
 		$usertypeID = $this->session->userdata('usertypeID');	  
 
 
-	 $aColumns = array('fclr_id','dbp.code','dop.code','dai.code','flight_number','season_name','sea.ams_season_start_date', 'sea.ams_season_end_date','dfre.code','fca.code','tca.code','average','min','max','slider_start','fc.active','dop.code','dbp.code','dai.code','dfre.aln_data_value', 'dop.aln_data_value', 'dbp.aln_data_value', 'dai.aln_data_value', 'fca.aln_data_value', 'tca.aln_data_value');
+	 $aColumns = array('fclr_id','dbp.code','dop.code','dai.code','flight_number','season_name','sea.ams_season_start_date', 'sea.ams_season_end_date','dfre.code','fdef.cabin','tdef.cabin','average','min','max','slider_start','fc.active','dop.code','dbp.code','dai.code','dfre.aln_data_value', 'dop.aln_data_value', 'dbp.aln_data_value', 'dai.aln_data_value', 'fdef.desc', 'tdef.desc');
 		
 	
 		$sLimit = "";
@@ -656,19 +657,23 @@ class Fclr extends Admin_Controller {
 
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code as carrier_code , off_point, 
-		season_id,flight_number, fca.code as fcabin, sea.season_name,
-            	tca.code as tcabin,  dfre.code as day_of_week , fc.active, sea.ams_season_start_date as start_date, sea.ams_season_end_date as end_date,
+		season_id,flight_number, fdef.cabin as fcabin, sea.season_name,
+            	tdef.cabin as tcabin,  dfre.code as day_of_week , fc.active, sea.ams_season_start_date as start_date, sea.ams_season_end_date as end_date,
             	min,max,average,slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point,
-		dfre.aln_data_value, dop.aln_data_value, dbp.aln_data_value, dai.aln_data_value, fca.aln_data_value, tca.aln_data_value
+		dfre.aln_data_value, dop.aln_data_value, dbp.aln_data_value, dai.aln_data_value, fdef.desc,tdef.desc 
 		
                     FROM VX_aln_fare_control_range  fc
                      LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = fc.boarding_point) 
 		     LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = fc.off_point)    
 		     LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = fc.carrier_code)
 		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency)
-		     LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin)
-                     LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin)
+		     INNER JOIN VX_aln_airline_cabin_def fdef on (fdef.carrier = fc.carrier_code)
+
+		     INNER JOIN vx_aln_data_defns fca on (fca.alias = fdef.level and fca.aln_data_typeID = 13 AND fca.vx_aln_data_defnsID = fc.from_cabin)
+		     
+		     INNER JOIN VX_aln_airline_cabin_def tdef on (tdef.carrier = fc.carrier_code)
+                     INNER JOIN vx_aln_data_defns tca on (tca.alias = tdef.level and tca.aln_data_typeID = 13 AND tca.vx_aln_data_defnsID = fc.to_cabin)
 		     LEFT JOIN VX_aln_season sea on (sea.VX_aln_seasonID = fc.season_id )
 		     LEFT JOIN VX_market_airport_map smap on (smap.airport_id = fc.boarding_point ) 
 		     LEFT JOIN VX_market_airport_map dmap on (dmap.airport_id = fc.off_point)
@@ -881,12 +886,27 @@ $rResult2 = $this->install_m->run_query($sQuery);
 $rResult = array_merge($rResult1, $rResult2);
 */
 
+$list = $this->airline_cabin_def_m->getDummyCabinsList();
+$list1 = $list;
+$cabin_map_arr = array();
+//Y-4, W-3, C-2, F-1
+foreach($list as $l1 ) {
+	foreach($list1 as $l2){
+		if($l1->alias > $l2->alias){
+			$temp = array($l1->code,$l2->code);
+		$cabin_map_arr[] = $temp;
+		}
+	}
+
+}
+
+/*
 $cabin_map_arr = array(
 			array('Y','W'),
 			array('Y','C'),
 			array('W','C')
 		     );
-
+*/
 //with out season calculation on day_of_week
 // for 7 days in a week each entery for multiple levels
 

@@ -9,6 +9,7 @@ class Rafeed extends Admin_Controller {
 		$this->load->model('airports_m');
 		$this->load->model("season_m");
 		$this->load->model("airline_m");
+		$this->load->model('airline_cabin_def_m');
 		$this->load->model("user_m");
 		$language = $this->session->userdata('lang');		
 		$this->lang->load('rafeed', $language);	
@@ -289,11 +290,12 @@ class Rafeed extends Admin_Controller {
                                                 continue;
                                         }
 					$cabin = $Row[array_search('cabin',$import_header)];
-				      $rafeed['cabin'] = 
-					     $this->airports_m->getDefIdByTypeAndCode($cabin,'13');
-					$cabin_arr = array('Y','W','C','F');
+				      $rafeed['cabin'] = $this->airline_cabin_def_m->getCabinIDForCarrierANDCabin($rafeed['carrier'],$cabin);
+		
+					$cabin_arr = array_values($this->airline_cabin_def_m->getCabinsDataForCarrier($rafeed['carrier']));
+
 					if(!in_array($cabin,$cabin_arr)){
-						$this->mydebug->rafeed_log("cabin should in Y,W,C,F " . $column, 1);
+						$this->mydebug->rafeed_log("cabin should in " . implode(',',$cabin_arr) . 'in row ' .$column, 1);
 						continue;
 					}
   				      $rafeed['class'] = $Row[array_search('class',$import_header)];
@@ -425,7 +427,7 @@ class Rafeed extends Admin_Controller {
 
 	$aColumns = array('rafeed_id','airline_code','ticket_number','coupon_number','dc.code','dci.code','dico.code','dici.code','dbp.code','dop.code','prorated_price','dcla.code','class','fare_basis','rf.departure_date','day_of_week','dai.code', 'dam.code','dcar.code','rf.flight_number','office_id','channel','dpax.code','rf.active','dfre.aln_data_value' , 'dc.aln_data_value', 'dci.aln_data_value', 'dico.aln_data_value',
                                 'dici.aln_data_value', 'dai.aln_data_value', 'dam.aln_data_value', 'dcar.aln_data_value', 'dbp.aln_data_value',
-                                'dop.aln_data_value','dcla.aln_data_value');
+                                'dop.aln_data_value','def.desc');
 		
 	
 		$sLimit = "";
@@ -567,10 +569,10 @@ class Rafeed extends Admin_Controller {
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS rafeed_id,ticket_number, coupon_number, dc.code as booking_country , 
 				dfre.code as day_of_week,  dfre.aln_data_value , dc.aln_data_value, dci.aln_data_value, dico.aln_data_value,
 				dici.aln_data_value, dai.aln_data_value, dam.aln_data_value, dcar.aln_data_value, dbp.aln_data_value,
-				dop.aln_data_value,dcla.aln_data_value,
+				dop.aln_data_value,def.desc,
 			   dci.code as  booking_city, dico.code as issuance_country, dici.code as issuance_city,dcar.code as carrier_code,
 			    dai.code as operating_airline_code, dam.code as marketing_airline_code, flight_number, dbp.code as boarding_point, 
-                           dop.code as off_point,  dcla.code as cabin ,  departure_date, prorated_price, class,
+                           dop.code as off_point,  def.cabin as cabin ,  departure_date, prorated_price, class,
                            office_id, channel, dpax.code as pax_type ,rf.active  ,rf.airline_code, rf.fare_basis
                            FROM VX_aln_ra_feed rf  
                           LEFT JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = rf.booking_country) 
@@ -582,7 +584,8 @@ class Rafeed extends Admin_Controller {
 			  LEFT JOIN vx_aln_data_defns dcar on (dcar.vx_aln_data_defnsID = rf.carrier)
                           LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = rf.boarding_point)  
                           LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = rf.off_point) 
-                           LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) 
+			 INNER JOIN VX_aln_airline_cabin_def def on (def.carrier = rf.carrier)
+                           INNER JOIN vx_aln_data_defns dcla on (dcla.alias = def.level and dcla.aln_data_typeID = 13 and rf.cabin = dcla.vx_aln_data_defnsID) 
 			   LEFT JOIN vx_aln_data_defns dpax on (dpax.vx_aln_data_defnsID = rf.pax_type) 
 			  LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = rf.day_of_week) 
 		$sWhere			

@@ -87,11 +87,16 @@
 
 
     <div class="col-sm-2">
+
+	 <select  name="class"  id='class' class="form-control select2">
+                                <option value=0>Cabin</option>
+                                                        </select>
+
                <?php
-                        $cabin['0'] = ' Cabin';
+                        /*$cabin['0'] = ' Cabin';
                         ksort($cabin);
 
-                                   echo form_dropdown("class", $cabin,set_value("class",$cla), "id='class' class='form-control hide-dropdown-icon select2'");    ?>
+                                   echo form_dropdown("class", $cabin,set_value("class",$cla), "id='class' class='form-control hide-dropdown-icon select2'");   */ ?>
 
                 </div>
 
@@ -188,6 +193,25 @@
 </div>
 <script>
  $(document).ready(function() {	 
+$('#airline_code').change(function(event) {    
+  var carrier = $('#airline_code').val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('airline_cabin_class/getCabinDataFromCarrier')?>",            
+              data: {
+                           "carrier":carrier,
+                    },
+             dataType: "html",                                  
+             success: function(data) {               
+                                $('#class').html(data);
+                                }        
+      });       
+});
+
+$('#airline_code').trigger('change');
+
+$('#class').val('<?=$cla?>').trigger('change');
+
 	
     $('#rafeedtable').DataTable( {
       "bProcessing": true,

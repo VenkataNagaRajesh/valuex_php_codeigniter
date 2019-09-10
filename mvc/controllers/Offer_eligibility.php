@@ -134,9 +134,9 @@ class Offer_eligibility extends Admin_Controller {
 
 		
 	    $aColumns = array('dtpfext_id','pext.dtpf_id','pext.fclr_id','sea.season_name','dbp.code','dop.code','pf.pnr_ref','pf.dep_date','dai.code','pf.flight_number',
-			 'fca.code','tca.code','dfre.code','fc.average','fc.min','fc.max','fc.slider_start',
-			 'bs.aln_data_value','dbp.aln_data_value','dop.aln_data_value','dai.aln_data_value','fca.aln_data_value',
-			 'tca.aln_data_value','dfre.aln_data_value','pf.pnr_ref');
+			 'fdef.cabin','tdef.cabin','dfre.code','fc.average','fc.min','fc.max','fc.slider_start',
+			 'bs.aln_data_value','dbp.aln_data_value','dop.aln_data_value','dai.aln_data_value','fdef.desc',
+			 'tdef.desc','dfre.aln_data_value','pf.pnr_ref');
 	
 		$sLimit = "";
 		
@@ -279,8 +279,8 @@ class Offer_eligibility extends Admin_Controller {
 
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext_id ,
-		 boarding_point, dai.code as carrier_code , off_point, season_id,pf.flight_number, fca.code as fcabin, 
-            	tca.code as tcabin, dfre.code as day_of_week , sea.season_name,
+		 boarding_point, dai.code as carrier_code , off_point, season_id,pf.flight_number, fdef.cabin as fcabin, 
+            	tdef.cabin as tcabin, dfre.code as day_of_week , sea.season_name,
             	pf.dep_date as departure_date, min,max,average,slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, 
 		pf.pnr_ref
@@ -292,8 +292,10 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext
 		     LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
 		     LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = pf.carrier_code AND dai.aln_data_typeID = 12)
 		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = pf.frequency AND dfre.aln_data_typeID = 14)
-		     LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13)
-                     LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13)
+		     INNER JOIN VX_aln_airline_cabin_def fdef on (fdef.carrier = pf.carrier_code)
+		     INNER JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13 and fca.alias = fdef.level)
+		     INNER JOIN VX_aln_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code)
+                     INNER JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13 and tca.alias = tdef.level)
 		     INNER JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
 
 $sWhere $sOrder $sLimit";
@@ -367,6 +369,7 @@ $sWhere $sOrder $sLimit";
 
 		$this->paxfeed_m->update_paxfeed(array('is_processed' => '1'), $feed->dtpf_id);
 		$cabin = $this->airline_cabin_class_m->getCabinFromClassForCarrier($feed->carrier_code,$feed->class);
+
 		/*
 		$array = array();
 		$array['from_city'] = $feed->from_city;

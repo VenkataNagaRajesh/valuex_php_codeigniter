@@ -129,10 +129,11 @@ class Offer_issue_m extends MY_Model {
 
 	}
 
-public function getBidInfoFromOfferID($offer_id, $flight_number) {
-	$this->db->select(' bid.*, oref.*, dd.aln_data_value as upgrade_cabin_name')->from('VX_aln_bid bid');
-	 $this->db->join('VX_aln_offer_ref oref', 'oref.offer_id =  bid.offer_id', 'LEFT');
-	$this->db->join('vx_aln_data_defns dd', 'dd.vx_aln_data_defnsID = bid.upgrade_type AND dd.aln_data_typeID = 13', 'LEFT');
+public function getBidInfoFromOfferID($offer_id, $flight_number,$carrier_code) {
+	$this->db->select(' bid.*, oref.*, cdef.desc as upgrade_cabin_name')->from('VX_aln_bid bid');
+	$this->db->join('VX_aln_offer_ref oref', 'oref.offer_id =  bid.offer_id', 'LEFT');
+	$this->db->join('VX_aln_airline_cabin_def cdef', 'cdef.carrier = '.$carrier_code, 'INNER');
+	$this->db->join('vx_aln_data_defns dd', 'dd.vx_aln_data_defnsID = bid.upgrade_type AND dd.aln_data_typeID = 13 AND cdef.level = dd.alias', 'INNER');
 	$this->db->where('bid.offer_id',$offer_id);
 	$this->db->where('bid.flight_number',$flight_number);
 	$this->db->limit(1);
@@ -151,7 +152,7 @@ $query = " select  SQL_CALC_FOUND_ROWS
                         MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status  , SubSet.carrier_code, MainSet.min,MainSet.max , SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, MainSet.rank
 
                 FROM ( 
-                               select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, rank,tcab.aln_data_value as to_cabin, upgrade_type as to_cabin_code, oref.pnr_ref, bid.flight_number,oref.cash_percentage, bid.cash, bid.miles, fclr.min, fclr.max , bs.aln_data_value as offer_status from  VX_aln_offer_ref oref   INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id)   LEFT JOIN vx_aln_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13)  INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  and pf.flight_number = bid.flight_number) INNER JOIN VX_aln_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) INNER JOIN VX_aln_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type) LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) WHERE  oref.offer_id = ".$id."
+                               select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, rank,tdef.desc as to_cabin, upgrade_type as to_cabin_code, oref.pnr_ref, bid.flight_number,oref.cash_percentage, bid.cash, bid.miles, fclr.min, fclr.max , bs.aln_data_value as offer_status from  VX_aln_offer_ref oref   INNER JOIN VX_aln_bid bid on (bid.offer_id = oref.offer_id)    INNER JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  and pf.flight_number = bid.flight_number) INNER JOIN VX_aln_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code) INNER JOIN vx_aln_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13 AND tdef.level = tcab.alias)  INNER JOIN VX_aln_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) INNER JOIN VX_aln_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type) LEFT JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) WHERE  oref.offer_id = ".$id."
                      ) as MainSet 
 
                         
@@ -159,13 +160,15 @@ $query = " select  SQL_CALC_FOUND_ROWS
                                         select  flight_number,group_concat(distinct fqtv) as fqtv ,
                                                 group_concat(distinct dep_date) as flight_date  ,
                                                 pnr_ref,group_concat(first_name, ' ' , last_name, ':', ptc.code, ':', pax_contact_email, ':' , phone , ':' , fqtv, ':', tier SEPARATOR '<br>' ) as p_list ,  from_city as from_city_code, to_city as to_city_code,
-                                                group_concat(distinct cab.aln_data_value) as from_cabin  , fc.code as from_city, tc.code as to_city, 
+                                                group_concat(distinct fdef.desc) as from_cabin  , fc.code as from_city, tc.code as to_city, 
                                                 car.code as carrier , pf1.carrier_code
                                          from VX_aln_daily_tkt_pax_feed pf1 
 					LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = pf1.ptc AND ptc.aln_data_typeID = 18)
                                         LEFT JOIN vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
                                         LEFT JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
-                                        LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13)
+					INNER JOIN VX_aln_airline_cabin_def fdef on (fdef.carrier  = pf1.carrier_code )
+                                        INNER JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 AND fdef.level = cab.alias)
+				
                                         LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
                                         where pf1.is_processed = 1  
                                        group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code

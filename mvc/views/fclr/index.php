@@ -57,16 +57,27 @@
 							echo form_dropdown("frequency", $days_of_week, set_value("frequency"), "id='frequency' class='form-control hide-dropdown-icon select2'");?>  
 					</div>
 					<div class="col-md-2 col-sm-3">
+ <select  name="upgrade_from_cabin_type"  id='upgrade_from_cabin_type' class="form-control select2">
+                                <option value=0>From Cabin</option>
+                                                        </select>
+
+
 						<?php
-							$cabins['0'] = 'From Cabin';
+						/*	$cabins['0'] = 'From Cabin';
 							ksort($cabins);
-							echo form_dropdown("upgrade_from_cabin_type", $cabins,set_value("upgrade_from_cabin_type"), "id='upgrade_from_cabin_type' class='form-control hide-dropdown-icon select2'"); ?>   
+							echo form_dropdown("upgrade_from_cabin_type", $cabins,set_value("upgrade_from_cabin_type"), "id='upgrade_from_cabin_type' class='form-control hide-dropdown-icon select2'"); */?>   
 					</div>
 					<div class="col-md-2 col-sm-3">
-						<?php
+
+<select  name="upgrade_to_cabin_type"  id='upgrade_to_cabin_type' class="form-control select2">
+                                <option value=0>To Cabin</option>
+                                                        </select>
+
+
+						<?php/*
 							$cabins['0'] = 'To Cabin';
 							ksort($cabins);
-							echo form_dropdown("upgrade_to_cabin_type", $cabins,set_value("upgrade_to_cabin_type"), "id='upgrade_to_cabin_type' class='form-control hide-dropdown-icon select2'");?> 
+							echo form_dropdown("upgrade_to_cabin_type", $cabins,set_value("upgrade_to_cabin_type"), "id='upgrade_to_cabin_type' class='form-control hide-dropdown-icon select2'");*/?> 
 					</div>
 					<div class="col-md-2 col-sm-3">
 						<input type="text" class="form-control" id="min" placeholder="min" name="min" value="<?=set_value('min')?>" >
@@ -125,18 +136,27 @@
 
 					  <div class="col-md-2 col-sm-3 select-form">
                                                 <div class="col-md-12">
+
+ <select  name="sfrom_cabin"  id='sfrom_cabin' class="form-control select2">
+                                <option value=0>From Cabin</option>
+                                                        </select>
+
 				 <?php
-                                                        $cabins['0'] = 'From Cabin';
+                                      /*                  $cabins['0'] = 'From Cabin';
                                                         ksort($cabins);
-                                                        echo form_dropdown("sfrom_cabin", $cabins,set_value("sfrom_cabin",$sfrom_cabin), "id='sfrom_cabin' class='form-control hide-dropdown-icon select2'"); ?>
+                                                        echo form_dropdown("sfrom_cabin", $cabins,set_value("sfrom_cabin",$sfrom_cabin), "id='sfrom_cabin' class='form-control hide-dropdown-icon select2'");*/ ?>
 
                                                 </div>
                                                 <div class="col-md-12">
+			<select  name="sto_cabin"  id='sto_cabin' class="form-control select2">
+                                <option value=0>To Cabin</option>
+                                                        </select>
 
-				   <?php
+
+				   <?php/*
                                                         $cabins['0'] = 'To Cabin';
                                                         ksort($cabins);
-                                                        echo form_dropdown("sto_cabin", $cabins,set_value("sto_cabin",$sto_cabin), "id='sto_cabin' class='form-control hide-dropdown-icon select2'"); ?>
+                                                        echo form_dropdown("sto_cabin", $cabins,set_value("sto_cabin",$sto_cabin), "id='sto_cabin' class='form-control hide-dropdown-icon select2'"); */?>
 
                                                 </div>
                                         </div>
@@ -228,6 +248,82 @@
 	
 $("#dep_from_date").datepicker();
 $("#dep_to_date").datepicker();
+
+
+$('#carrier_code').change(function(event) {    
+  var carrier = $('#carrier_code').val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('airline_cabin_class/getCabinDataFromCarrier')?>",            
+              data: {
+                           "carrier":carrier,
+                    },
+             dataType: "html",                                  
+             success: function(data) {               
+                                $('#upgrade_from_cabin_type').html(data);
+                                $("#upgrade_from_cabin_type option").html(function(i,str){
+                                        return str.replace(/From Cabin|Cabin/g,
+                                 function(m,n){
+                                        return (m == "From Cabin")?"Cabin":"From Cabin";
+                                 });
+});
+                                $('#upgrade_to_cabin_type').html(data);
+
+                                $("#upgrade_to_cabin_type option").html(function(i,str){
+                                        return str.replace(/To Cabin|Cabin/g,
+                                 function(m,n){
+                                        return (m == "To Cabin")?"Cabin":"To Cabin";
+                                 });
+                                });
+
+                                
+                                }        
+      });       
+});
+
+$('#upgrade_from_cabin_type').trigger('change');
+$('#upgrade_to_cabin_type').trigger('change');
+
+
+
+$('#scarrier').change(function(event) {    
+  var carrier = $('#scarrier').val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('airline_cabin_class/getCabinDataFromCarrier')?>",            
+              data: {
+                           "carrier":carrier,
+                    },
+             dataType: "html",                                  
+             success: function(data) {               
+                                $('#sfrom_cabin').html(data);
+				$("#sfrom_cabin option").html(function(i,str){
+  					return str.replace(/From Cabin|Cabin/g,
+    				 function(m,n){
+         				return (m == "From Cabin")?"Cabin":"From Cabin";
+     				 });
+});
+				$('#sto_cabin').html(data);
+
+				$("#sto_cabin option").html(function(i,str){
+                                        return str.replace(/To Cabin|Cabin/g,
+                                 function(m,n){
+                                        return (m == "To Cabin")?"Cabin":"To Cabin";
+                                 });
+				});
+
+				
+                                }        
+      });       
+});
+
+$('#sfrom_cabin').trigger('change');
+$('#sto_cabin').trigger('change');
+
+$('#sfrom_cabin').val('<?=$sfrom_cabin?>').trigger('change');
+$('#sto_cabin').val('<?=$sto_cabin?>').trigger('change');
+
+
 loaddatatable();
 });
 
