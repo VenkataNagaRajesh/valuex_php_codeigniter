@@ -75,7 +75,7 @@
 												   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
 												   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>								      
 													<label class="cabins-<?=$result->flight_number?> radio-inline <?=($status == $excluded_status)?"bid-visible":""?>" >
-														<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0 )?"checked":''; ?> ><?php echo $cabins[$value]; ?>
+														<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($status == $bid_received )?"checked":''; ?> ><?php echo $cabins[$value]; ?>
 													</label><br>
 												   <?php if($status != $excluded_status) { $i++; } } } ?>
 												   <?php if($i != 0){?>
@@ -94,7 +94,7 @@
 													  $i=0;
 													 foreach($result->to_cabins as $key => $value) {		 
 													  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
-													   if($status == $sent_mail_status){
+													   if($status == $bid_received){
 														 break;  
 													   } else {
 														   $i++;
@@ -103,7 +103,7 @@
 												
 													<div class="price-range col-md-12">		
 													<b>Min</b> <i class="fa fa-dollar"></i> <b id="bid_min_<?=$result->flight_number?>"></b>
-															<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
+															<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo $result->sliderval; ?>" data-slider-handle="round"min-slider-handle="200"/>
 													<b>Max</b> <i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b>
 													</div>
 												<?php }  ?>
@@ -249,7 +249,7 @@ $(document).ready(function () {
 	<?php $i=0; $flag =0;
 	 foreach($result->to_cabins as $key => $value) {		 
 	  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
-       if($status == $sent_mail_status){
+       if($status == $bid_received){
 		 $flag = 1;
 		 break;  
 	   } else {
@@ -409,7 +409,7 @@ $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(functi
 	 //$("#mile1").slider('setValue', Math.round(miles)* mile_proportion);
 	  $("#mile-max").text( Math.round(Math.round(miles)* mile_proportion)+' Miles');
 	  $("#miles").slider('setAttribute', 'max', Math.round(Math.round(miles)* mile_proportion));	  
-	  $("#miles").slider('setValue',0);  
+	  $("#miles").slider('setValue',<?=$bid_miles?>);  
 	  $("#miles").slider('setAttribute', 'step', Math.round(1/mile_value)); 
 	  
  }
@@ -449,7 +449,7 @@ $('#loading').html("<img src='"+image+"' />"); */
 				  async: false,
 				  type: 'POST',
 				  url: "<?=base_url('homes/bidding/saveBidData')?>",          
-				  data: {"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id,'bid_action':bid_action,"tot_cash":pay_cash,"tot_miles":miles,"tot_bid":tot_bid,"type":"submit"},
+				  data: {"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id,'bid_action':bid_action,"tot_cash":pay_cash,"tot_miles":miles,"tot_bid":tot_bid,"type":"resubmit"},
 				  dataType: "html",			
 				  success: function(data) {
 					var info = jQuery.parseJSON(data);              		

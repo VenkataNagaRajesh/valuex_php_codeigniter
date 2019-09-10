@@ -44,9 +44,10 @@
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Time</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Origin</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Destination</th>
-						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Cabin no</th>
+						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Cabin</th>
+						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Upgrade To</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Seat No</th>
-						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Offer</th>
+						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Bid</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -57,6 +58,7 @@
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{from_city}</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{to_city}</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{cabin} Class</td>
+						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{upgrade_type} Class</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{seat_no}</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">${cash} USD</td>
 					</tr>
