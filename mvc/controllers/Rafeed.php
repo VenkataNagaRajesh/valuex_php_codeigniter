@@ -229,7 +229,7 @@ class Rafeed extends Admin_Controller {
    				      $rafeed['carrier'] = 
 					    $this->airports_m->getDefIdByTypeAndCode($carrier,'12');
 
-					if(strlen($carrier) >= 3 || !ctype_alpha($carrier)){
+					if(strlen($carrier) != 2 || !ctype_alpha($carrier)){
                                                 $this->mydebug->rafeed_log("Carrier should  be 2 alpha code in row " . $column, 1);
                                                 continue;
                                         }
@@ -238,7 +238,7 @@ class Rafeed extends Admin_Controller {
 				      $rafeed['booking_country'] = 
 					    $this->airports_m->getDefIdByTypeAndCode($booking_country,'2');
 
-					  if(strlen($booking_country) >= 3 || !ctype_alpha($booking_country)){
+					  if(strlen($booking_country) != 2 || !ctype_alpha($booking_country)){
                                                 $this->mydebug->rafeed_log("Boking country should be 2 alpha code in row " . $column, 1);
                                                 continue;
                                         }
@@ -248,7 +248,7 @@ class Rafeed extends Admin_Controller {
 					    $this->airports_m->getDefIdByTypeAndCode($booking_city,'3');
 	
 
-					if(strlen($booking_city) >= 4 || !ctype_alpha($booking_city)){
+					if(strlen($booking_city) !=3 || !ctype_alpha($booking_city)){
                                                 $this->mydebug->rafeed_log("Boking city should be 3 alpha code in row " . $column, 1);
                                                 continue;
                                         }
@@ -257,7 +257,7 @@ class Rafeed extends Admin_Controller {
 				      $rafeed['issuance_country'] = 
 					   $this->airports_m->getDefIdByTypeAndCode($issuance_country,'2');
 
-					 if(strlen($issuance_country) >= 3 || !ctype_alpha($issuance_country)){
+					 if(strlen($issuance_country) != 2 || !ctype_alpha($issuance_country)){
                                                 $this->mydebug->rafeed_log("Issueance country should be 2 alpha code in row " . $column, 1);
                                                 continue;
                                         }
@@ -266,7 +266,7 @@ class Rafeed extends Admin_Controller {
                                       $rafeed['issuance_city'] = 
 					     $this->airports_m->getDefIdByTypeAndCode($issuance_city,'3');
 
-					 if(strlen($issuance_city) >= 4 || !ctype_alpha($issuance_city)){
+					 if(strlen($issuance_city) != 3 || !ctype_alpha($issuance_city)){
                                                 $this->mydebug->rafeed_log("Issueance city should be 3 alpha code in row " . $column, 1);
                                                 continue;
                                         }
@@ -276,7 +276,7 @@ class Rafeed extends Admin_Controller {
 				      $rafeed['boarding_point'] =
 					     $this->airports_m->getDefIdByTypeAndCode($boarding_point,'1');
 
-					if(strlen($boarding_point) >= 4 || !ctype_alpha($boarding_point)){
+					if(strlen($boarding_point) != 3 || !ctype_alpha($boarding_point)){
                                                 $this->mydebug->rafeed_log(" Boarding point should be 3 alpha code in row " . $column, 1);
                                                 continue;
                                         }
@@ -285,7 +285,7 @@ class Rafeed extends Admin_Controller {
 
 				      $rafeed['off_point'] =
 					     $this->airports_m->getDefIdByTypeAndCode($off_point,'1');
-                                       if(strlen($off_point) >= 4 || !ctype_alpha($off_point)){
+                                       if(strlen($off_point) != 3 || !ctype_alpha($off_point)){
                                                 $this->mydebug->rafeed_log("Off point should be 3 alpha code in row " . $column, 1);
                                                 continue;
                                         }
@@ -316,7 +316,7 @@ class Rafeed extends Admin_Controller {
 				      $rafeed['marketing_airline_code'] = 
 					    $this->airports_m->getDefIdByTypeAndCode($marketing_airline_code,'12');
 
-				 if(strlen($marketing_airline_code) >= 3 || !ctype_alpha($marketing_airline_code)){
+				 if(strlen($marketing_airline_code) != 2 || !ctype_alpha($marketing_airline_code)){
                                                 $this->mydebug->rafeed_log("MKT airine should be 2 alpha code in row " . $column, 1);
                                                 continue;
                                         }
@@ -326,7 +326,7 @@ class Rafeed extends Admin_Controller {
 					    $this->airports_m->getDefIdByTypeAndCode($operating_airline_code,'12');
 
 
-					 if(strlen($operating_airline_code) >= 3 || !ctype_alpha($operating_airline_code)){
+					 if(strlen($operating_airline_code) != 2 || !ctype_alpha($operating_airline_code)){
                                                 $this->mydebug->rafeed_log("Operating airline should be 2 alpha code in row " . $column, 1);
                                                 continue;
                                         }
