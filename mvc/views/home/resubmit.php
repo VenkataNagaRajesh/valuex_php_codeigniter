@@ -176,9 +176,9 @@
 										<div class="col-md-12">
 											<label for="cardNumber">Card number</label>
 											<div class="input-group">
-												<input type="number" class="form-control" name="card_number" id="card_number"
+												<input type="number" class="form-control" name="card_number" id="card_number" 
 													oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" placeholder="Enter Card Number" maxlength="16"
-												/>
+												value="<?=set_value('card_number',$card_data->card_number)?>"/>
 												<span class="input-group-addon"><i class="fa fa-credit-card"></i></span>
 											</div>
 										</div>
@@ -186,12 +186,12 @@
 									<div class="form-group card-exp">
 										<div class="col-md-6">
 											<label for="cardExpiry">Expiry Date</label>
-											<input type="number" class="form-control" name="month_expiry" id="month_expiry" placeholder="MM" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2"/>
-											/ <input type="number" class="form-control" name="year_expiry" id="year_expiry" placeholder="YY" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2"/>
+											<input type="number" class="form-control" name="month_expiry" id="month_expiry" placeholder="MM" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2" value="<?=set_value('month_expiry',$card_data->month_expiry)?>"/>
+											/ <input type="number" class="form-control" name="year_expiry" id="year_expiry" placeholder="YY" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2" value="<?=set_value('year_expiry',$card_data->year_expiry)?>"/>
 										</div>
 										<div class="col-md-6">
 											<label for="cardCVC" style="position: relative;margin-left: auto;margin-right: 2em;">CVV</label>
-											<input type="number" class="form-control pull-right" name="cvv" id="cvv" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="3" />
+											<input type="number" class="form-control pull-right" name="cvv" id="cvv" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="3" value="<?=set_value('cvv',$card_data->cvv)?>"/>
 										</div>
 									</div>
 									<div class="col-md-12">
@@ -204,7 +204,7 @@
 								<div class="col-md-4 actual-cash">
 									<p>Total Cash to be Paid <strong><i class="fa fa-dollar"></i> <b id="paid_cash"></b></strong></p>
 									<p>Total Miles to be Paid : <b id="paid_miles"></b> </p>
-									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$result->offer_id?>)">Pay Now</a>	
+									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$result->offer_id?>)">Submit</a>	
                                   					
 								</div>
 							</form>
