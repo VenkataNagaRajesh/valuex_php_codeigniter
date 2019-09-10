@@ -157,7 +157,7 @@ class bid_m extends MY_Model {
 	}
 
     function getBidData($offer_id){
-       $this->db->select('*')->from('vx_aln_bid');
+       $this->db->select('*')->from('VX_aln_bid');
        $this->db->where('offer_id',$offer_id);
        $query = $this->db->get();
        return $query->result(); 

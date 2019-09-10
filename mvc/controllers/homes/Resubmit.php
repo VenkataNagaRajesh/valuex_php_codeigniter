@@ -34,6 +34,9 @@ class Resubmit extends MY_Controller {
 		$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 				
         $status = $this->bid_m->getOfferStatus($this->input->get('pnr_ref'));
+		if(empty($status)){
+			redirect(base_url('home/index'));
+		}
         if($status->status_no != $this->data['bid_received']){
 			$this->data['message'] = $status->status;
 			$this->data['pnr_ref'] = $this->input->get('pnr_ref');
