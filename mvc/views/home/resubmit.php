@@ -151,6 +151,7 @@
 						<?php } ?>
 					</div>
 				</div>
+				
                 <div id="payment" class="">
 					<div class="col-md-9">
 						<div class="col-md-2 back-btn">
@@ -231,10 +232,34 @@
 					<!--<div id="loading">
 					</div>-->
 				</div>
+			
+			<?php if($this->router->fetch_class() == 'cancel'){ ?> 	
+            <div class="modal fade cust-mdl" id="myModal" role="dialog">
+					<div class="modal-dialog">
+					  <div class="modal-content mdl_log">
+						<div class="modal-header mdl_hdr">
+						  Confirmation
+						</div>
+						<div class="modal-body">
+							<div class="mdl-frm">
+							   Are You Sure Do You Want to Cancel This Offer ?
+							   <a href="<?=base_url('homes/cancel/page')?>"><button class="btn btn-primary">Yes</button></a>
+							   <button class="btn btn-primary" data-dismiss="modal">No</button>
+							</div>
+						</div>
+						<!--<div class="modal-footer">
+						  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>-->
+					  </div>    
+					</div>
+	           </div>
+			<?php } ?>			   
             </div>
         </div>
 	</div>
 </div>
+
+
 
 <script>
 var mile_value = <?=$mile_value?>;
@@ -268,6 +293,10 @@ $(document).ready(function () {
 	$("#tot").text(total);
 	$("#bidtot").text(total);
     mileSliderUpdate();
+	
+	<?php if($this->router->fetch_class() == 'cancel'){ ?> 	
+        $('#myModal').modal({backdrop: 'static'});    
+   <?php } ?>
  
 });
 <?php foreach($results as $result){  if($result->fclr != null){ ?> 
@@ -470,7 +499,10 @@ $('#loading').html("<img src='"+image+"' />"); */
      }); 
  } 
  
+ 
+ 
 </script>
+
 
 
 
