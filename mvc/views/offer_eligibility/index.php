@@ -26,7 +26,6 @@
 
 
 <div class="col-md-2 select-form">
-                                        <h4>Carrier & Status</h4>
                                         <div class="col-sm-12">
                                         <?php
                 foreach($carriers as $airline){
@@ -88,27 +87,6 @@
                                         </div>
                                         <div class="col-sm-12">
 		<input type="text" class="form-control" placeholder='frequency' id="frequency" name="frequency" value="<?=set_value('frequency')?>" >
-                                        </div>
-                                </div>
-
-
-<div class="col-md-2 select-form">
-                                        <div class="col-sm-12">
-                                        <?php
-		foreach($carriers as $airline){
-                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
-         }
-                 $airlinelist[0]= 'Carrier';
-                  ksort($airlinelist);
-
-
-                                                echo form_dropdown("carrier", $airlinelist,set_value("carrier",$carrier), "id='carrier' class='form-control hide-dropdown-icon select2'");    ?>
-                                        </div>
-                                        <div class="col-sm-12">
-                                                <?php
-                                                        $status['0'] = 'Offer Status';
-                                                        ksort($status);
-                                                        echo form_dropdown("booking_status", $status,set_value("booking_status"), "id='booking_status' class='form-control hide-dropdown-icon select2'");    ?>
                                         </div>
                                 </div>
 
