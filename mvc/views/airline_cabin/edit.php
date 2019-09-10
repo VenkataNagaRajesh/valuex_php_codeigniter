@@ -77,10 +77,15 @@
                             <?=$this->lang->line("airline_cabin")?>
                         </label>
                         <div class="col-sm-6">
+ <select  name="airline_cabin"  id='airline_cabin' class="form-control select2">
+                                <option value=0>Cabin</option>
+                                                        </select>
+
 				
-<?php		        	$airlinecabins['0'] = 'Select cabin';       
+
+<?php	/*	        	$airlinecabins['0'] = 'Select cabin';       
 				ksort($airlinecabins);
-			echo form_dropdown("airline_cabin", $airlinecabins, set_value("airline_cabin",$airline->airline_cabin), "id='airline_cabin' class='form-control select2'");
+			echo form_dropdown("airline_cabin", $airlinecabins, set_value("airline_cabin",$airline->airline_cabin), "id='airline_cabin' class='form-control select2'"); */
 ?>
                         </div>
                         <span class="col-sm-4 control-label">
@@ -189,6 +194,28 @@ $.ajax({     async: false,
 $('#airline_code').trigger('change');
 var aircraftID = '<?=$airline->aircraft_id?>';
 $('#airline_aircraft').val(aircraftID).trigger('change');
+
+$('#airline_code').trigger('change');
+
+$('#airline_code').change(function(event) {    
+  var carrier = $('#airline_code').val();                 
+$.ajax({     async: false,            
+             type: 'POST',            
+             url: "<?=base_url('airline_cabin_class/getCabinDataFromCarrier')?>",            
+              data: {
+                           "carrier":carrier,
+                    },
+             dataType: "html",                                  
+             success: function(data) {               
+                                $('#airline_cabin').html(data);
+                                }        
+      });       
+});
+
+$('#airline_code').trigger('change');
+$('#airline_cabin').val('<?=$airline->airline_cabin;?>').trigger('change');
+
+
 
 
 
