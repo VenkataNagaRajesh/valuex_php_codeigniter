@@ -16,8 +16,8 @@ class bid_m extends MY_Model {
 	  $this->db->where('aln_data_typeID','13');
   }
   
-   function getPassengers($pnr_ref){
-	 $this->db->select("tpf.cabin,tpf.pnr_ref,tpf.seat_no,cab.aln_data_value current_cabin,group_concat(distinct fclr.fclr_id) fclr,group_concat(distinct fclr.to_cabin,'-',fclr.fclr_id,'-',pfe.booking_status) to_cabins,group_concat( distinct round(fclr.min)) min,group_concat( distinct round(fclr.max)) max,group_concat( distinct round(fclr.average)) avg,group_concat( distinct round(fclr.slider_start)) slider_position,tpf.flight_number,tpf.dep_date, tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat( pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.miles,oref.offer_id,air_city1.aln_data_value air_from_city,air_city2.aln_data_value air_to_city")->from('VX_aln_daily_tkt_pax_feed tpf');	
+   function getPassengers($pnr_ref,$bidstatus = NULL){
+	 $this->db->select("tpf.cabin,tpf.pnr_ref,tpf.seat_no,cab.aln_data_value current_cabin,group_concat(distinct fclr.fclr_id) fclr,group_concat(distinct fclr.to_cabin,'-',fclr.fclr_id,'-',pfe.booking_status) to_cabins,group_concat( distinct round(fclr.min)) min,group_concat( distinct round(fclr.max)) max,group_concat( distinct round(fclr.average)) avg,group_concat( distinct round(fclr.slider_start)) slider_position,tpf.flight_number,tpf.dep_date, tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat( pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.miles,oref.offer_id,air_city1.aln_data_value air_from_city,air_city2.aln_data_value air_to_city,bid.bid_value,bid.miles bid_miles,bid.upgrade_type bid_upgrade")->from('VX_aln_daily_tkt_pax_feed tpf');	
       $this->db->join('VX_aln_dtpf_ext pfe','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');		 
 	//  $this->db->join('vx_aln_data_defns dd','(dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20)','LEFT');
 	
@@ -35,13 +35,17 @@ class bid_m extends MY_Model {
 	  $this->db->join('vx_aln_master_data m2','m2.airportID = c2.vx_aln_data_defnsID','LEFT');
 	  $this->db->join('vx_aln_data_defns air_city1','(air_city1.vx_aln_data_defnsID = m1.cityID AND air_city1.aln_data_typeID = 3)','LEFT');
 	  $this->db->join('vx_aln_data_defns air_city2','(air_city2.vx_aln_data_defnsID = m2.cityID AND air_city2.aln_data_typeID = 3)','LEFT');
-	 // $this->db->join('','','LEFT');
-	  $this->db->where('dd.alias','sent_offer_mail');
+	 $this->db->join('VX_aln_bid bid','(bid.offer_id = oref.offer_id AND tpf.flight_number = bid.flight_number)','LEFT');
+      if(!empty($bidstatus)){
+        $this->db->where('dd.alias',$bidstatus);
+      } else {
+	    $this->db->where('dd.alias','sent_offer_mail');
+      }
 	   $this->db->where("tpf.pnr_ref",$pnr_ref);
 	  // $this->db->where("oref.coupon_code",$this->hash('7k7BXu'));
 	  // $this->db->where('tpf.pnr_ref','WQ1235');
 	  // $this->db->where('oref.offer_id',$offer_id);
-	   $this->db->group_by('tpf.flight_number');
+	    $this->db->group_by('tpf.flight_number');
 	    $query = $this->db->get();
 	 // print_r($this->db->last_query()); exit;
 	  
@@ -51,6 +55,7 @@ class bid_m extends MY_Model {
   public function getPaxNames($pnr_ref){
 	  $this->db->select("group_concat(first_name,' ', last_name SEPARATOR ' ,') as pax_names")->from('VX_aln_daily_tkt_pax_feed');
 	  $this->db->where('pnr_ref',$pnr_ref);
+	  $this->db->group_by('flight_number');
 	  $query = $this->db->get();
 	  return $query->row('pax_names');
   }
@@ -70,7 +75,8 @@ class bid_m extends MY_Model {
 	  $this->db->join('vx_aln_data_defns car','(car.vx_aln_data_defnsID = tpf.carrier_code AND car.aln_data_typeID = 12)','LEFT');
       $this->db->where('oref.offer_id',$offer_id);	  
 	 // $this->db->where('dd.alias','sent_offer_mail');
-	  $query = $this->db->get();     
+	  $query = $this->db->get();
+       $this->mydebug->debug($this->db->last_query());	  
 	  return $query->row(); 
    } 
   
@@ -148,6 +154,26 @@ class bid_m extends MY_Model {
 		$this->db->select('sum(customer_service)/count(*) avg')->from('VX_aln_feedback');
 		$query = $this->db->get();
 		return $query->row('avg');
+	}
+
+    function getBidData($offer_id){
+       $this->db->select('*')->from('VX_aln_bid');
+       $this->db->where('offer_id',$offer_id);
+       $query = $this->db->get();
+       return $query->result(); 
+    }
+
+    function addBidHistory($data){
+       $this->db->insert('VX_aln_bid_history',$data);
+       return true;
+    }
+	
+	function getOfferStatus($pnr_ref){
+		$this->db->select('ref.offer_status status_no,d.aln_data_value status')->from('VX_aln_offer_ref ref');
+		$this->db->join('vx_aln_data_defns d','(d.vx_aln_data_defnsID = ref.offer_status AND d.aln_data_typeID = 20)','LEFT');
+		$this->db->where('ref.pnr_ref',$pnr_ref);
+		$query = $this->db->get();
+		return $query->row();
 	}
 	
 }

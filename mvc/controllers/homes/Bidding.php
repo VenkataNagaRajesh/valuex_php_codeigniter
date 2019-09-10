@@ -109,6 +109,10 @@ class Bidding extends MY_Controller {
 	public function saveBidData(){		
 		if($this->input->post('offer_id')){ 		
 		  if($this->input->post('bid_action') == 1){
+            if($this->input->post('type') == 'resubmit'){
+               $this->saveBiddingHistory($this->input->post('offer_id'));
+            }
+           
 			$data['cash'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
 			$data['miles'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
 			$data["cash_percentage"] = round((($data['cash']/ $this->input->post("tot_bid"))*100),2);
@@ -121,9 +125,21 @@ class Bidding extends MY_Controller {
 			$data['active'] = 1;
             $id = $this->bid_m->save_bid_data($data);			
           if($id){
-			  $select_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),1);
-			  $unselect_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"));
-			  
+              if($this->input->post('type') == 'resubmit'){
+                $select_passengers_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_received',$this->input->post("fclr_id"),1);
+                $select_passengers_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_unselect_cabin',$this->input->post("fclr_id"),1);
+                $select_passengers_data->p_list = $select_passengers_data1->p_list;
+				$select_passengers_data->p_list .= (!empty($select_passengers_data2->p_list))?','.$select_passengers_data2->p_list:'';
+                // print_r('Select Passengers Data '.$select_passengers_data2->p_list);
+                 $unselect_passengers_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_received',$this->input->post("fclr_id"));
+                  $unselect_passengers_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_unselect_cabin',$this->input->post("fclr_id")); 
+                 $unselect_passengers_data->p_list = $unselect_passengers_data1->p_list;
+				 $unselect_passengers_data->p_list .= (!empty($unselect_passengers_data2->p_list))?','.$unselect_passengers_data2->p_list:''; 
+				// print_r('UNSelect Passengers Data '.$select_passengers_data->p_list); exit;
+              } else {
+			     $select_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),1);
+			     $unselect_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"));
+			  }
 			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
 			  $unselect_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_unselect_cabin','20');
 			   $array['booking_status'] = $select_status;
@@ -136,7 +152,34 @@ class Bidding extends MY_Controller {
 			   $this->mydebug->debug($unselect_passengers_data->p_list); */
 			   
              $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $select_status,"modify_date"=>time()),$select_p_list);
-		    $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);			   
+		    $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);
+              
+               // updating bid status tracker
+              if($this->input->post('type') == 'resubmit'){
+                 $tracker = array();				 
+				 $tracker['comment'] = 'Bid Resubmited By Customer';
+			     $tracker["create_date"] = time();
+                 $tracker["modify_date"] = time(); 				  
+                 $p_list1 = explode(',',$select_passengers_data2->p_list); 			  
+				 if(!empty($select_passengers_data2->p_list)){				                                         
+              	 foreach($p_list1 as $id) {
+                    $tracker['booking_status_from'] = $unselect_status;
+				    $tracker['booking_status_to'] = $select_status;
+					$tracker['dtpfext_id'] = $id;
+                    $this->offer_issue_m->insert_dtpf_tracker($tracker);
+				 }
+				}
+                $p_list2 = explode(',',$unselect_passengers_data1->p_list);                 
+				if(!empty($unselect_passengers_data1->p_list)){
+              	 foreach($p_list2 as $id) {
+                    $tracker['booking_status_from'] = $select_status;
+				    $tracker['booking_status_to'] = $unselect_status;
+					$tracker['dtpfext_id'] = $id;
+                    $this->offer_issue_m->insert_dtpf_tracker($tracker);
+				 }
+				}
+              }
+ 			   
 			   //send bid success mail
 			   $offer_data = $this->bid_m->get_offer_data($this->input->post("offer_id"));
 			   $maildata = (array)$offer_data;
@@ -144,7 +187,8 @@ class Bidding extends MY_Controller {
 			   $maildata['dep_time'] = gmdate('H:i A',$maildata['dept_time']);
 			   $maildata['cash'] = $this->input->post("bid_value");
 			   $maildata['base_url'] = base_url();			    		
-			   $maildata['tomail'] = explode(',',$maildata['email_list'])[0];                          
+			   $maildata['tomail'] = explode(',',$maildata['email_list'])[0]; 
+               $maildata['type'] = $this->input->post('type');			   
 				//$maildata['tomail'] = 'swekenit@gmail.com';
 				$this->sendMail($maildata);
 			  $json['status'] = "success";
@@ -161,7 +205,13 @@ class Bidding extends MY_Controller {
 			  $this->session->unset_userdata('pnr_ref');
     	    }	
 		  } else {
-			 $extention_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail'); 
+             if($this->input->post('type') == 'resubmit'){
+                 $extention_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_received');
+                 $extention_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_unselect_cabin');
+                 $extention_data = $extention_data1->p_list.','.$extention_data->p_list;
+             } else {
+        		 $extention_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail'); 
+             }
 			 $no_bid_Status = $this->rafeed_m->getDefIdByTypeAndAlias('no_bid','20');
 			// $this->mydebug->debug("extension list");
 			  $p_list = explode(',',$extention_data->p_list);
@@ -179,13 +229,21 @@ class Bidding extends MY_Controller {
 	}
 	
 	 public function sendMail($data){
-		// $this->mydebug->debug($data);
-	  $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat('bid_success')->template;
+		 //$this->mydebug->debug($data);
+		if($data['type'] == 'resubmit'){
+			$template = 'bid_resubmit';
+			$subject = 'Submitted';
+		} else {
+			$template = 'bid_success';
+			$subject = 'Re-Submitted';
+		}
+	  $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template)->template;
 	  $message = $this->parser->parse_string($tpl, $data);
 	  $message =html_entity_decode($message);
 	  $siteinfos = $this->reset_m->get_site();			  
-	  $subject = "Your bid has been Successfully Submitted";		
-     
+	  $subject = "Your bid has been Successfully ".$subject;
+	  
+    
 	 $config['protocol']='smtp';
 	 $config['smtp_host']='mail.sweken.com';
 	 $config['smtp_port']='26';
@@ -202,7 +260,8 @@ class Bidding extends MY_Controller {
 		$this->email->to($data['tomail']);
 		$this->email->subject($subject);
 		$this->email->message($message);
-	   $status =  $this->email->send(); 
+	   $status =  $this->email->send();
+       $this->mydebug->debug('Bid Submition Template sent to '.$data['tomail']); 
 	   return $status;
   }
 	
@@ -307,6 +366,15 @@ class Bidding extends MY_Controller {
 		$this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($json));
 	}
+
+    public function saveBiddingHistory($offer_id){
+         $bid_data = $this->bid_m->getBidData($offer_id);
+         foreach($bid_data as $data){
+            $data->date = time();
+            $this->bid_m->addBidHistory($data);
+         }
+      return true;        
+    }
 	
 	
 

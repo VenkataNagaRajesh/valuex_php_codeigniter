@@ -18,7 +18,7 @@
 	<div style="margin-left:auto;margin-right:auto;width:100%;background: #333;">
 		<img style="width:120px;" src="{base_url}assets/home/images/emir.png" alt="logo">
 	</div>
-	<div style="border: solid 1px #ddd;width:100%;margin-right: auto;margin-left: auto;">
+	<div style="border: solid 1px #ddd;width:100%;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;">
 		<div style="position: relative;min-height: 1px;padding:12px;">
 			<div class="mobile" style="background-image: url({base_url}/assets/home/images/temp1-hdr-bg.jpg);margin-top: 15px;background-repeat: no-repeat;width: 100%;background-size: cover;">
 				<h1 style="margin-bottom:8px;color: #fff;font-size: 14px;font-weight: bold;padding:12px;font-family:calibri;"><span>Hi {first_name}! </span><span style="float: right;color:#333;">Booking Reference : {pnr_ref}<b></b></span></h1>
@@ -27,7 +27,7 @@
 				<img style="width: 100%;display: block;max-width: 100%;height: auto;" src="{base_url}assets/home/images/temp3-bnr.jpg" alt="temp bnr">
 			</div>
 		</div>
-		<div style="font-family:calibri;font-weight:500;position: relative;min-height: 1px;margin-top:10px;margin-bottom:10px;overflow: auto;padding:12px;">
+		<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;margin-bottom: 20px;">
 			<table style="border-collapse: collapse;border-spacing: 0;width:100%;">
 				<thead style="background: #ff6633;color: #fff;text-transform: capitalize;">
 					<tr style="white-space:nowrap;">
