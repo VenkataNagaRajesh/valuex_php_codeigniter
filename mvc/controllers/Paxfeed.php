@@ -267,6 +267,14 @@ class Paxfeed extends Admin_Controller {
                                                 continue;
 
 					}
+
+
+					 $cabin_new_entry = $this->airline_cabin_class_m->validateCabinMapData($paxfeedraw['carrier_code'],$paxfeedraw['class']);
+
+					if(count($cabin_new_entry) != 1) {
+						$this->mydebug->paxfeed_log("Cabin - class mapping data not proper in row " . $column , 1);
+                                                continue;
+					}
                                       $paxfeedraw['from_city'] = $Row[array_search('board point',$import_header)];
 					if( strlen($paxfeedraw['from_city']) != 3 || !ctype_alpha($paxfeedraw['from_city'])){
                                                 $this->mydebug->paxfeed_log("Board Point should be 3 letter code in row " . $column , 1);
