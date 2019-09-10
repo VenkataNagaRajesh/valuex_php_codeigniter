@@ -21,7 +21,7 @@
 		<img style="width:120px;" src="{base_url}assets/home/images/emir.png" alt="logo">
 	</div>
 	<div style="border: solid 1px #ddd;width:100%;margin:0px auto;padding:10px 14px;display:inline-block;">
-		<div class="data-block" style="width:70%;position: relative;min-height: 1px;float: left;padding-right:20px;">
+		<div class="data-block" style="width:70%;position: relative;min-height: 1px;float: left;">
 			<div>
 				<img style="margin-right: auto;margin-left: auto;display: block;max-width: 100%;height: auto;" src="{base_url}assets/home/images/temp2-logo.jpg" alt="temp bnr">
 			</div>
