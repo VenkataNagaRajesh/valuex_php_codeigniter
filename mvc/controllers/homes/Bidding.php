@@ -26,10 +26,7 @@ class Bidding extends MY_Controller {
 
 		}
   
-  
- 
-
-    public function index() {  
+      public function index() {  
       //$this->session->set_userdata('pnr_ref','F90442');
       //$this->session->set_userdata('validation_check',1);	   
 
@@ -208,7 +205,7 @@ class Bidding extends MY_Controller {
              if($this->input->post('type') == 'resubmit'){
                  $extention_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_received');
                  $extention_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_unselect_cabin');
-                 $extention_data = $extention_data1->p_list.','.$extention_data->p_list;
+                 $extention_data->p_list = $extention_data1->p_list.','.$extention_data->p_list;
              } else {
         		 $extention_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail'); 
              }
