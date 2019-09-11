@@ -665,6 +665,25 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                         $this->offer_eligibility_m->update_dtpfext($array,$p_list);
 
 
+			// update tracker about change in status
+                        $tracker = array();
+                                $tracker['booking_status_from'] = $passenger_data->booking_status;
+                                $tracker['booking_status_to'] = $array['booking_status'];
+                                $tracker['comment'] = 'Bid Rejected by ACSR';
+                                $tracker["create_date"] = time();
+                                $tracker["modify_date"] = time();
+                                $tracker["create_userID"] = $this->session->userdata('loginuserID');
+                                $tracker["modify_userID"] = $this->session->userdata('loginuserID');
+                        //      var_dump($p_list);exit;
+
+                                foreach($p_list as $id) {
+                                        $tracker['dtpfext_id'] = $id;
+                                        $this->offer_issue_m->insert_dtpf_tracker($tracker);
+                                }
+
+
+
+
 			} else {
 			/*
 				echo $acsr_data->status . "<br>";
@@ -719,6 +738,25 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 				   // update extension table with new status
 
                         $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+			 // update tracker about change in status
+                        $tracker = array();
+                                $tracker['booking_status_from'] = $passenger_data->booking_status;
+                                $tracker['booking_status_to'] = $array['booking_status'];
+                                $tracker['comment'] = 'No Seats Avaiable updated by ACSR';
+                                $tracker["create_date"] = time();
+                                $tracker["modify_date"] = time();
+                                $tracker["create_userID"] = $this->session->userdata('loginuserID');
+                                $tracker["modify_userID"] = $this->session->userdata('loginuserID');
+                        //      var_dump($p_list);exit;
+
+                                foreach($p_list as $id) {
+                                        $tracker['dtpfext_id'] = $id;
+                                        $this->offer_issue_m->insert_dtpf_tracker($tracker);
+                                }
+
+
+
 
 				} else {
 		//	echo "accepetd";
@@ -814,6 +852,26 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 			$p_list = explode(',',$passenger_data->p_list);
                         $this->offer_eligibility_m->update_dtpfext($array,$p_list);
 
+
+			 // update tracker about change in status
+                        $tracker = array();
+                                $tracker['booking_status_from'] = $passenger_data->booking_status;
+                                $tracker['booking_status_to'] = $array['booking_status'];
+                                $tracker['comment'] = 'Bid is Accepted updated by Acsr';
+                                $tracker["create_date"] = time();
+                                $tracker["modify_date"] = time();
+                                $tracker["create_userID"] = $this->session->userdata('loginuserID');
+                                $tracker["modify_userID"] = $this->session->userdata('loginuserID');
+                        //      var_dump($p_list);exit;
+
+                                foreach($p_list as $id) {
+                                        $tracker['dtpfext_id'] = $id;
+                                        $this->offer_issue_m->insert_dtpf_tracker($tracker);
+                                }
+
+
+
+
 	          } else {
 
 
@@ -863,6 +921,25 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                         $p_list = explode(',',$passenger_data->p_list);
                         $this->offer_eligibility_m->update_dtpfext($array,$p_list);
 
+			 // update tracker about change in status
+                        $tracker = array();
+                                $tracker['booking_status_from'] = $passenger_data->booking_status;
+                                $tracker['booking_status_to'] = $array['booking_status'];
+                                $tracker['comment'] = 'Offer Date expired updated by ACSR';
+                                $tracker["create_date"] = time();
+                                $tracker["modify_date"] = time();
+                                $tracker["create_userID"] = $this->session->userdata('loginuserID');
+                                $tracker["modify_userID"] = $this->session->userdata('loginuserID');
+                        //      var_dump($p_list);exit;
+
+                                foreach($p_list as $id) {
+                                        $tracker['dtpfext_id'] = $id;
+                                        $this->offer_issue_m->insert_dtpf_tracker($tracker);
+                                }
+
+
+
+
 
 
 		  }
@@ -885,6 +962,25 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                         // update extension table with new status
                         $p_list = explode(',',$passenger_data->p_list);
                         $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+			 // update tracker about change in status
+                        $tracker = array();
+                                $tracker['booking_status_from'] = $passenger_data->booking_status;
+                                $tracker['booking_status_to'] = $array['booking_status'];
+                                $tracker['comment'] = 'Excluded updated by ACSR';
+                                $tracker["create_date"] = time();
+                                $tracker["modify_date"] = time();
+                                $tracker["create_userID"] = $this->session->userdata('loginuserID');
+                                $tracker["modify_userID"] = $this->session->userdata('loginuserID');
+                        //      var_dump($p_list);exit;
+
+                                foreach($p_list as $id) {
+                                        $tracker['dtpfext_id'] = $id;
+                                        $this->offer_issue_m->insert_dtpf_tracker($tracker);
+                                }
+
+
+
 
 				
 		}

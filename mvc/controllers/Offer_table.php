@@ -156,11 +156,13 @@ $namelist = explode(',',$passenger_data->passengers);
 		$msg_txt = "Bid is accepted";
 		//$template ="home/upgradeoffertmp";
 		$template='bid_accepted';
+		$comment = 'Bid accepted manually';
 	} else if ( $status == 'reject' ) { 
 		$bid_status = 'bid_reject';	
 		$msg_txt = 'Bid is rejected';
 		//$template ="home/bidreject-temp";
 		$template = "bid_reject";
+		$comment = 'Bid rejected manually';
 	} else {
 		$this->session->set_flashdata('error', 'No Action Status');
         	redirect(base_url("offer_table/view/".$offer_id));
@@ -234,6 +236,26 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                         // update extension table with new status
                         $p_list = explode(',',$passenger_data->p_list);
                         $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+	
+			 // update tracker about change in status
+                        $tracker = array();
+                                $tracker['booking_status_from'] = $passenger_data->booking_status;
+                                $tracker['booking_status_to'] = $array['booking_status'];
+                                $tracker['comment'] = $comment;
+                                $tracker["create_date"] = time();
+                                $tracker["modify_date"] = time();
+                                $tracker["create_userID"] = $this->session->userdata('loginuserID');
+                                $tracker["modify_userID"] = $this->session->userdata('loginuserID');
+                        //      var_dump($p_list);exit;
+
+                                foreach($p_list as $id) {
+                                        $tracker['dtpfext_id'] = $id;
+                                        $this->offer_issue_m->insert_dtpf_tracker($tracker);
+                                }
+
+
+
 
 		 	 $this->session->set_flashdata('success', $msg_txt);
                             redirect(base_url("offer_table/view/".$offer_id));
