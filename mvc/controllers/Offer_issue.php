@@ -37,7 +37,7 @@ class Offer_issue extends Admin_Controller {
         'mail_subject' => "Upgrade Cabin Offerss AS0414",
 		'bidnow_link' => base_url('home/index')		
         );			       
-          //$this->sendMailTemplateParser('bid_accepted',$data);
+          $this->sendMailTemplateParser('bid_accepted',$data);
          //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);
            // $this->upgradeOfferMail($data);		 
 	}
