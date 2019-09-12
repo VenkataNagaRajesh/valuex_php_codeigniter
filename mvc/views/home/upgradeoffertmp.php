@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <title></title>
 <style>
 	@media screen and (min-width: 320px) and (max-width: 850px) {
@@ -90,13 +91,16 @@
 					<li><span style="display: inline-block;width: 38%;font-weight: bold;text-transform: capitalize;font-size: 12px;">Miles Used:</span> {miles_used} Miles</li>
 				</ul>
 			</div>
-			<div class="share">
+			<div style="float:left;">
 				<p><b>SHARE: </b></p>
 				<ul style="list-style: none;padding-left: 0;display: table;">
 					<li style="float: left;margin-right: 10px;"><a href="www.facebook.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/fb.png" alt="fb"></a></li>
 					<li style="float: left;margin-right: 10px;"><a href="www.pintrest.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/pinterest.png" alt="pinterest"></a></li>
 					<li style="float: left;margin-right: 10px;"><a href="www.twitter.com"><img style="width:39px;display: block;height:auto;" src="<?=base_url()?>assets/home/images/twitter.png" alt="twitter"></a></li>
 				</ul>
+			</div>
+			<div style="margin-top:3em;margin-bottom:2em;">
+				<a href="{feedback_link}" type="button"><button type="button" style="color:#fff;background:#ff6633;border:none;padding: 5px;border-radius:2px;margin-right:3px;font-weight:bold;font-size:14px;"><i class="fa fa-comments-o" aria-hidden="true"></i> Give Feedback</button></a>
 			</div>
 		</div>
 	</div>

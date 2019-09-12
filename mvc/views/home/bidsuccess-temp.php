@@ -18,13 +18,13 @@
 	<div style="margin-left:auto;margin-right:auto;width:100%;padding-left: 15px;padding-right: 15px;background: #333;">
 		<img style="width:120px;" src="{base_url}assets/home/images/emir.png" alt="logo">
 	</div>
-	<div style="border: solid 1px #ddd;width:100%;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;">
+	<div style="border: solid 1px #ddd;width:100%;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;display:inline-block;">
 		<div style="width:100%;margin-top:10px;">
 			<div style="width:10%;float:left;">
 				<img style="width:auto;display: block;height:54px;" src="{base_url}assets/home/images/temp2-logo.jpg" alt="logo">
 			</div>
 			<div class="strip" style="width:90%;float:left;">
-				<div style="background: #f5f5f5;height: 38px;margin: 16px 0;"></div>
+				<div style="background:#f5f5f5;height:38px;margin:3px 0 12px;"></div>
 			</div>
 		</div>
 		<div style="width:100%;">
@@ -76,13 +76,17 @@
 				<span style="font-weight: bold;color: #ff6633;">www.valuex.com</span>
 			</p>
 		</div>
-		<div class="share">
+		<div>
 			<p><b>SHARE: </b></p>
 			<ul style="list-style: none;padding-left: 0;display: table;">
 				<li style="float: left;margin-right: 10px;"><a href="www.facebook.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/fb.png" alt="fb"></a></li>
 				<li style="float: left;margin-right: 10px;"><a href="www.pintrest.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/pinterest.png" alt="pinterest"></a></li>
 				<li style="float: left;margin-right: 10px;"><a href="www.twitter.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/twitter.png" alt="twitter"></a></li>
 			</ul>
+		</div>
+		<div style="float:right;margin-bottom:20px;">
+			<a href="#" type="button"><button type="button" style="color:#fff;background:#ff6633;border:none;padding: 7px;border-radius:2px;margin-right:3px;text-transform:uppercase;font-weight:bold;font-size:14px;">Re-submit</button></a>
+			<a href="#" type="button"><button type="button" style="color:#fff;background:#ff6633;border:none;padding: 7px;border-radius:2px;margin-right:3px;text-transform:uppercase;font-weight:bold;font-size:14px;">Cancel</button></a>
 		</div>
 	</div>
 </div>
