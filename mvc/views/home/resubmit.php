@@ -234,17 +234,20 @@
 				</div>
 			
 			<?php if($this->router->fetch_class() == 'cancel'){ ?> 	
-            <div class="modal fade cust-mdl" id="myModal" role="dialog">
+            <div class="modal fade canc-popup" id="myModal" role="dialog">
 					<div class="modal-dialog">
 					  <div class="modal-content mdl_log">
-						<div class="modal-header mdl_hdr">
-						  Confirmation
+						<div class="modal-header">
+						  <h1>Please confirm Offer Cancellation</h1>
 						</div>
 						<div class="modal-body">
-							<div class="mdl-frm">
-							   Are You Sure Do You Want to Cancel This Offer ?
-							   <a href="<?=base_url('homes/cancel/page')?>"><button class="btn btn-primary">Yes</button></a>
-							   <button class="btn btn-primary" data-dismiss="modal">No</button>
+							<div class="canc-form">
+							   <p><b>Are You Sure Do You Want to Cancel This Offer ?</b></p>
+							   <a href="<?=base_url('homes/cancel/page')?>">
+							   <p>
+									<button class="btn btn-danger">Yes</button></a>
+									<button class="btn btn-danger" data-dismiss="modal">No</button>
+								</p>
 							</div>
 						</div>
 						<!--<div class="modal-footer">

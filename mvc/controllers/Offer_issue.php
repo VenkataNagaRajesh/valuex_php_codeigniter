@@ -37,7 +37,7 @@ class Offer_issue extends Admin_Controller {
         'mail_subject' => "Upgrade Cabin Offerss AS0414",
 		'bidnow_link' => base_url('home/index')		
         );			       
-          //$this->sendMailTemplateParser('bid_accepted',$data);
+          $this->sendMailTemplateParser('bid_accepted',$data);
          //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);
            // $this->upgradeOfferMail($data);		 
 	}
@@ -836,8 +836,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
 							'origin' => $feed->src_point_name,
 							'destination' => $feed->dest_point_name, 
-							'upgrade_to' => $feed->upgrade_cabin
-                             							
+							'upgrade_to' => $feed->upgrade_cabin,
+                            'feedback_link' => base_url('home/feedback?pnr_ref='.$passenger_data->pnr_ref) 							
 						 ); 			 
 					  //$this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);
                       $this->sendMailTemplateParser('bid_accepted',$e_data);					  

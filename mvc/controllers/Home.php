@@ -179,9 +179,15 @@ class Home extends MY_Controller {
 		$this->data["subview"] = "home/mailerror";
 		$this->load->view('_layout_home', $this->data);
 	}
-	public function feedback() {		
+	public function feedback() {
+		//$_GET['pnr_ref'] = 'AS0414';
+        if(empty($this->input->get('pnr_ref'))){
+			redirect(base_url('home/index'));
+		}		
+		$this->data['pnr_ref'] = $this->input->get('pnr_ref');
+		$names = $this->bid_m->getPaxNames($this->input->get('pnr_ref'));
+		$this->data['name'] = explode(',',$names)[0];
 		$this->data["subview"] = "home/feedback";
-		//$this->data["subview"] = "home/star";
 		$this->load->view('_layout_home', $this->data);
 	}  	
 	
