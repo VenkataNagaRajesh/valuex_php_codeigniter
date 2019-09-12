@@ -20,7 +20,7 @@
 				</div>
 				<div class="feedback-bar">
 					<h3>
-						Hi Ram !!
+						Hi <?=$name?> !!
 						<span class="pull-right">Connect with us 
 							<a href="#"><i class="fa fa-facebook"></i></a>
 							<a href="#"><i class="fa fa-twitter"></i></a>
@@ -137,7 +137,7 @@
 		$.ajax({
 		   		url: '<?= base_url("general/submitFeedback")?>',
 		   		type: 'post',
-		   		data: {pnr_ref:'AS0413',overall_experience: overall_experience, time_response: time_response,our_support: our_support,overall_satisfaction: overall_satisfaction,customer_service: customer_service,message:message},
+		   		data: {pnr_ref:'<?=$pnr_ref?>',overall_experience: overall_experience, time_response: time_response,our_support: our_support,overall_satisfaction: overall_satisfaction,customer_service: customer_service,message:message},
 		   		success: function(response){
                    alert("Thank You for Giving FeedBack");		   			
 					window.location = "<?=base_url('home/index')?>";
