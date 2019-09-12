@@ -50,11 +50,11 @@ class MY_Controller extends CI_Controller {
 				//$this->mydebug->debug("cal date : ".date('d.m.Y', $added_timestamp));
 				//$this->mydebug->debug("dep date : ".date('d.m.Y', $offer_data->dep_date));
 				//echo $result;
-				if($added_timestamp > $offer_data->dep_date){
+				 if($added_timestamp > $offer_data->dep_date){
 					$error ="Offer Expired";
 				} else {
 					$error = '';
-				}
+				} 
 			} else {
 				$error = "This Offer Status Not matched";
 			}
