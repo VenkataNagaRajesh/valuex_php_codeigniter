@@ -272,7 +272,7 @@ public function getDefnsCodesListByType($type) {
 
 function getDefDataCodeByIDANDType($defId,$type) {
 
-	 $this->db->select('code');
+	 	$this->db->select('code');
                 $this->db->from('vx_aln_data_defns');
                 $this->db->where('aln_data_typeID',$type);
                 $this->db->where('vx_aln_data_defnsID',$defId);
@@ -282,6 +282,20 @@ function getDefDataCodeByIDANDType($defId,$type) {
                 return $name->code;
 
 }
+
+function getDefDataForAirlineCabin($defId,$type,$carrier) {
+
+                $this->db->select('cdef.level,cdef.cabin');
+                $this->db->from('VX_aln_airline_cabin_def cdef');
+                $this->db->join('vx_aln_data_defns aca', 'aca.vx_aln_data_defnsID = '.$defId.' and aca.alias = cdef.level and aca.aln_data_typeID = '.$type,'INNER');
+		$this->db->where('cdef.carrier', $carrier);
+                $this->db->limit(1);
+                $query = $this->db->get();
+                $name = $query->row();
+                return $name;
+
+}
+
 
 }
 
