@@ -71,11 +71,12 @@ class Offer_issue_m extends MY_Model {
 			  $this->db->where('pext.fclr_id !=',$fclr_id);
 			}
 		}
-		if($fclr_id != null){
+		if($flight_number != null){
 		$this->db->where('pf.flight_number',$flight_number);
 		}
 		$this->db->group_by('pf.pnr_ref' , 'booking_status');
 		$query = $this->db->get();
+		//$this->mydebug->debug($this->db->last_query());
         $passgr = $query->row();		
 		return $passgr;
 	}

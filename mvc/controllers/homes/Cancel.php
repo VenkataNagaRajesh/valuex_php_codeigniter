@@ -70,7 +70,7 @@ class Cancel extends MY_Controller {
 		$this->data['card_data'] = $this->bid_m->getCardData($this->data['results'][0]->offer_id);
 		$this->session->set_userdata('cancel_offer',$this->data['results'][0]->offer_id);
         //print_r($this->data['card_data']); exit;
-        $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
+        $this->data['cabins']  = $this->bid_m->get_cabins($this->data['results'][0]->carrier);
         $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
 		
@@ -107,7 +107,7 @@ class Cancel extends MY_Controller {
 		$this->offer_reference_m->update_offer_ref($ref,$this->session->userdata('cancel_offer'));
 		 $extention_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->session->userdata('cancel_offer'),null,'bid_received');
          $extention_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->session->userdata('cancel_offer'),null,'bid_unselect_cabin');
-         $extention_data->p_list = $extention_data1->p_list.','.$extention_data->p_list;            
+         $extention_data->p_list = $extention_data1->p_list.','.$extention_data2->p_list;            
 		 $p_list = explode(',',$extention_data->p_list);		   
          $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $bid_cancel,"modify_date"=>time()),$p_list);
 		 

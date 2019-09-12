@@ -26,8 +26,8 @@ class Bidding extends MY_Controller {
 
 		}
   
-      public function index() {  
-      //$this->session->set_userdata('pnr_ref','F90442');
+    public function index() {  
+      //$this->session->set_userdata('pnr_ref','AS0414');
       //$this->session->set_userdata('validation_check',1);	   
 
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
@@ -62,11 +62,9 @@ class Bidding extends MY_Controller {
 			$result->time_diff = $dteDiff->format('%d days %H hours %i min');
             $this->data['passengers_count'] = count(explode(',',$result->pax_names)); 			
      	}
-       //$this->data['passengers_count'] = 2;		
-       // echo $interval->format('%Y years %m months %d days %H hours %i minutes %s seconds');	 
-	  // echo $this->data['passengers_count']; 
-	  // exit; 
-        $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
+       
+        //$this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
+		$this->data['cabins']  = $this->bid_m->get_cabins($this->data['results'][0]->carrier);
         $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
 		$this->data['sent_mail_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
@@ -185,7 +183,9 @@ class Bidding extends MY_Controller {
 			   $maildata['cash'] = $this->input->post("bid_value");
 			   $maildata['base_url'] = base_url();			    		
 			   $maildata['tomail'] = explode(',',$maildata['email_list'])[0]; 
-               $maildata['type'] = $this->input->post('type');			   
+               $maildata['type'] = $this->input->post('type');
+               $maildata['resubmit_link'] = base_url('homes/resubmit?pnr_ref='.$maildata['pnr_ref']);
+			   $maildata['cancel_link'] = base_url('homes/cancel?pnr_ref='.$maildata['pnr_ref']);			   
 				//$maildata['tomail'] = 'swekenit@gmail.com';
 				$this->sendMail($maildata);
 			  $json['status'] = "success";

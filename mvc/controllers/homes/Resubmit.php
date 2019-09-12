@@ -22,8 +22,8 @@ class Resubmit extends MY_Controller {
          $this->load->library('email');		 
 	     $language = $this->session->userdata('lang');	  
 		 $this->lang->load('bidding', $language);
-         $this->load->library('parser'); 
-	 }
+         $this->load->library('parser');
+    }
 
      function index(){ 
         if(empty($this->input->get('pnr_ref'))){
@@ -44,7 +44,9 @@ class Resubmit extends MY_Controller {
 		    $this->load->view('_layout_home', $this->data);
 		} else {		
 		 $this->data['results'] = $this->bid_m->getPassengers($this->input->get('pnr_ref'),'bid_received');    
-
+         if(empty($this->data['results'])){ 
+			redirect(base_url('home/index'));
+		}
         foreach($this->data['results'] as $result ){			
 			$result->pax_names = $this->bid_m->getPaxNames($this->input->get('pnr_ref'));
 			$tocabins = array();
@@ -68,8 +70,8 @@ class Resubmit extends MY_Controller {
      	}
         $bid_data = $this->bid_m->getBidData($this->data['results'][0]->offer_id);
 		$this->data['card_data'] = $this->bid_m->getCardData($this->data['results'][0]->offer_id);
-        //print_r($this->data['card_data']); exit;
-        $this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
+       // print_r($this->data['results']); exit;
+        $this->data['cabins']  = $this->bid_m->get_cabins($this->data['results'][0]->carrier);
         $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
          $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
 		
