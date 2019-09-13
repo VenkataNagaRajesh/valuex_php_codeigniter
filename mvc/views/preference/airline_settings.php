@@ -19,7 +19,7 @@
                             echo "<div class='form-group'>";
                     ?>
                         <label for="airline_id" class="col-sm-2 control-label">
-                            Carrier
+                            Select Carrier
                         </label>
                         <div class="col-sm-2">
                            <?php
@@ -40,7 +40,7 @@
                                                    ?>
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('airlineID'); ?>
+                            <?php echo form_error('airline_id'); ?>
                         </span>
                     </div>
 
@@ -81,7 +81,10 @@ $.ajax({     async: false,
       });       
 });
 
-$('#airline_id').trigger('change');
-
+<?php if ( $airlineID > 0) { ?>
+$('#airline_id').val('<?=$airlineID?>').trigger('change');
+<?php } else {?>
+   $('#airline_id').trigger('change');
+<?php } ?>
 });
 </script>
