@@ -65,8 +65,12 @@ class Bidding extends MY_Controller {
        
         //$this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
 		$this->data['cabins']  = $this->bid_m->get_cabins($this->data['results'][0]->carrier);
-        $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
-         $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
+       // $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
+        // $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;
+		
+          $this->data['mile_value'] = $this->preference_m->get_preference_value_bycode('MILES_DOLLAR','24',$this->data['results'][0]->carrier);	
+         $this->data['mile_proportion'] = $this->preference_m->get_preference_value_bycode('MIN_CASH_PROPORTION','24',$this->data['results'][0]->carrier);	
+		 
 		$this->data['sent_mail_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 		$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 		

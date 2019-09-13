@@ -71,8 +71,12 @@ class Cancel extends MY_Controller {
 		$this->session->set_userdata('cancel_offer',$this->data['results'][0]->offer_id);
         //print_r($this->data['card_data']); exit;
         $this->data['cabins']  = $this->bid_m->get_cabins($this->data['results'][0]->carrier);
-        $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
-         $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;		
+		
+        // $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
+        // $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;
+		
+          $this->data['mile_value'] = $this->preference_m->get_preference_value_bycode('MILES_DOLLAR','24',$this->data['results'][0]->carrier);	
+         $this->data['mile_proportion'] = $this->preference_m->get_preference_value_bycode('MIN_CASH_PROPORTION','24',$this->data['results'][0]->carrier);	
 		
 		if(!empty($this->input->get('pnr_ref'))){
 		  $airline = $this->bid_m->getAirlineLogoByPNR($this->input->get('pnr_ref'));

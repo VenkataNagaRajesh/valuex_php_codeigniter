@@ -35,9 +35,14 @@ class MY_Controller extends CI_Controller {
 	
 	public function allowValidation($pnr_ref){
 		$status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
-		$bid_confirmation = $this->preference_m->get_preference(array("pref_code" => 'BID_CONFIRMATION'))->pref_value;
-		$bid_expire = $this->preference_m->get_preference(array("pref_code" => 'BID_EXPIRE'))->pref_value;
+		//$bid_confirmation = $this->preference_m->get_preference(array("pref_code" => 'BID_CONFIRMATION'))->pref_value;
+		//$bid_expire = $this->preference_m->get_preference(array("pref_code" => 'BID_EXPIRE'))->pref_value;
+					
 		$offer_data = $this->offer_reference_m->getOfferDataByRef($pnr_ref);
+		
+		 $bid_confirmation = $this->preference_m->get_preference_value_bycode('BID_CONFIRMATION','24',$offer_data->carrier_code);	
+         $bid_expire = $this->preference_m->get_preference_value_bycode('BID_EXPIRE','24',$offer_data->carrier_code);
+		
 		//print_r($offer_data); exit;
 		//$this->mydebug->debug($status);
 		//$this->mydebug->debug($offer_data->offer_status);
