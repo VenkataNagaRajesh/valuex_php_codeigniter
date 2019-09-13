@@ -66,6 +66,8 @@ class Pref_setting extends Admin_Controller {
         );
 
 
+
+
 	                $userID = $this->session->userdata('loginuserID');
                 $userTypeID = $this->session->userdata('usertypeID');
                 if($userTypeID == 2){
@@ -79,6 +81,10 @@ class Pref_setting extends Admin_Controller {
        // $this->data['preferences'] = $this->preference_m->get_preferenceslist(array('pref_type' => '7'));
                 //print_r( $this->data['preferences']); exit;
                 if($_POST){
+			  if(!empty($this->input->post('airline_id'))){
+	        	          $this->data['airlineID'] = $this->input->post('airline_id');
+        	        }
+
 			//$is_default_values =  $this->input->post('pref_default_values');
 			$airline_id = $this->input->post('airline_id');
            foreach($_POST as $key => $value){
@@ -114,7 +120,9 @@ class Pref_setting extends Admin_Controller {
 			}
                    }
                   $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                  redirect(base_url("pref_setting/airline_settings"));
+		$this->data["subview"] = "preference/airline_settings";
+                  $this->load->view('_layout_main', $this->data);
+                  //redirect(base_url("pref_setting/airline_settings"));
                 } else {
                   $this->data["subview"] = "preference/airline_settings";
                   $this->load->view('_layout_main', $this->data);
@@ -190,8 +198,12 @@ class Pref_setting extends Admin_Controller {
 
                         }
                    }
+			
                   $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                  redirect(base_url("pref_setting/user_preferences"));
+		$this->data["subview"] = "preference/user_preferences";
+                  $this->load->view('_layout_main', $this->data);
+
+                  //redirect(base_url("pref_setting/user_preferences"));
                 } else {
                   $this->data["subview"] = "preference/user_preferences";
                   $this->load->view('_layout_main', $this->data);
@@ -232,7 +244,13 @@ class Pref_setting extends Admin_Controller {
 				echo "<input type='hidden' id='pref_default_values' name='pref_default_values' value='1'>";
 				
 			}*/
-			
+
+			if($pref_type_id == '24' ){
+				$airline_name = $this->airports_m->getDefDataCodeByIDANDType($id,'12');
+				echo "<h4 style='color:orange'> Preferences list for Carrier <b> " .$airline_name ."</b></h4>";
+			}
+
+			if(count($preferences) > 0 ) {
 			 foreach($preferences as $pref) { if($pref->active == 1) { 
                         if(form_error('prefvalue-'.$pref->VX_aln_preferenceID))
                             echo "<div class='form-group has-error' >";
@@ -273,6 +291,9 @@ class Pref_setting extends Admin_Controller {
                        echo " </span>";
                     	echo "</div>";
                                     } } 
+			} else {
+				echo "No Preferences Set";
+			}
 
                 } 
 
