@@ -154,13 +154,12 @@ class Cancel extends MY_Controller {
 	public function sendMail($data){
 		 $this->mydebug->debug($data);
 		 $template = 'bid_cancel';
-	  $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template)->template;
+	  $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['carrier'])->template;
 	  $message = $this->parser->parse_string($tpl, $data,TRUE);
 	 // $this->mydebug->debug($message);
 	  $message =html_entity_decode($message);
 	  $siteinfos = $this->reset_m->get_site();			  
-	  $subject = "Your bid has been Successfully Cancelled";
-	     
+	  $subject = "Your bid has been Successfully Cancelled";	     
 	 $config['protocol']='smtp';
 	 $config['smtp_host']='mail.sweken.com';
 	 $config['smtp_port']='26';

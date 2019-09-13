@@ -67,12 +67,14 @@ class Mailandsmstemplate_m extends MY_Model {
 		return true;
 	}
 	
-	function getDefaultMailTemplateByCat($cat){
+	function getDefaultMailTemplateByCat($cat,$airlineID){
 		$this->db->select('t.*')->from('mailandsmstemplate t');
 		$this->db->join('mailandsmscategory c','c.catID = t.catID','LEFT');
 		$this->db->where('c.alias',$cat);
+		$this->db->where('airlineID',$airlineID);
 		$this->db->where('t.default',1);
 		$query = $this->db->get();
+		$this->mydebug->debug($this->db->last_query());
 		return $query->row();
 	}
 }

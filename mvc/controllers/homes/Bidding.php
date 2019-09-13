@@ -185,7 +185,8 @@ class Bidding extends MY_Controller {
 			   $maildata['tomail'] = explode(',',$maildata['email_list'])[0]; 
                $maildata['type'] = $this->input->post('type');
                $maildata['resubmit_link'] = base_url('homes/resubmit?pnr_ref='.$maildata['pnr_ref']);
-			   $maildata['cancel_link'] = base_url('homes/cancel?pnr_ref='.$maildata['pnr_ref']);			   
+			   $maildata['cancel_link'] = base_url('homes/cancel?pnr_ref='.$maildata['pnr_ref']);
+               			   
 			  // $maildata['tomail'] = 'swekenit@gmail.com';
 				$this->sendMail($maildata);
 			  $json['status'] = "success";
@@ -235,7 +236,7 @@ class Bidding extends MY_Controller {
 			$subject = 'Submitted';
 		}
 		//$template = 'bid_success';
-	  $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template)->template;
+	  $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['carrier'])->template;
 	  $message = $this->parser->parse_string($tpl, $data);
 	 // $this->mydebug->debug($message);
 	  $message =html_entity_decode($message);

@@ -611,7 +611,7 @@ class Admin_Controller extends MY_Controller {
 		   $data['base_url'] = base_url(); 
           // $data['base_url'] = 'http://valuex.sweken.com/';
            $data['bidnow_link'] = base_url('home/index');		   
-           $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template)->template;
+           $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['airlineID'])->template;
            $tpl = str_replace(array('<!--{','}-->'),array('{','}'),$tpl);		   
           $message = $this->parser->parse_string($tpl, $data);
 		  //$this->mydebug->debug($tpl); exit;

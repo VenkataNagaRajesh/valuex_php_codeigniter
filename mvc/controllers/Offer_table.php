@@ -187,7 +187,8 @@ $namelist = explode(',',$passenger_data->passengers);
         'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
         'origin' => $passenger_data->from_city_name,
         'destination' => $passenger_data->to_city_name,
-        'upgrade_to' => $offer_data->upgrade_cabin_name
+        'upgrade_to' => $offer_data->upgrade_cabin_name,
+		'airlineID' => $passenger_data->carrier_code
    );
 //var_dump($maildata);exit;
                                                                                                  $message = '

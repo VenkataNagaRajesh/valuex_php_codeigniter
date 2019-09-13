@@ -128,7 +128,7 @@ $this->data['headerassets'] = array(
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
 /*		$sQuery = " select group_concat(distinct pfe.dtpfext_id) as pf_list , group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names , booking_status, pnr_ref , flight_number, carrier_code, from_city,to_city,dep_date, dep_time, arrival_time, fci.aln_data_value as from_city_name , tci.aln_data_value as to_city_name, group_concat(distinct pfe.fclr_id)  as fclr_list ,group_concat(pax_contact_email) as email_list , cab.aln_data_value as cabin from VX_aln_dtpf_ext pfe LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_aln_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN vx_aln_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  cab on (cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13) where  dd.alias = 'new'  group by tpf.pnr_ref, flight_number, carrier_code, from_city, to_city ,dep_date,booking_status, from_city_name, to_city_name, dep_time, arrival_time, cabin";*/
-		$sQuery = " select tpf.pnr_ref, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_aln_dtpf_ext pfe LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_aln_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN vx_aln_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  cab on (cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13) where  tpf.is_processed = 1 and tpf.active = 1  AND dd.alias = 'new'  group by tpf.pnr_ref ,  booking_status";
+		$sQuery = " select tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_aln_dtpf_ext pfe LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_aln_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN vx_aln_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  cab on (cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13) where  tpf.is_processed = 1 and tpf.active = 1  AND dd.alias = 'new'  group by tpf.pnr_ref ,  booking_status";
 
 		$rResult = $this->install_m->run_query($sQuery);
 
@@ -222,7 +222,8 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 		'tomail' => $emails_list[0],
 		'pnr_ref' => $offer->pnr_ref,
         'coupon_code' => $coupon_code, 		
-		'mail_subject' => "Upgrade Cabin Offer"		
+		'mail_subject' => "Upgrade Cabin Offer"	,
+        'airlineID' => $offer->carrier_code		
         ); 	
 
        
@@ -652,7 +653,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'first_name'   => $namelist[0],
 							'last_name' => '',
 							'tomail' => $emails_list[0],
-							'pnr_ref' => $passenger_data->pnr_ref,									
+							'pnr_ref' => $passenger_data->pnr_ref,
+                            'airlineID' => $feed->carrier_code,							
 							'mail_subject' => "Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point		
 							); 
                         $this->sendMailTemplateParser('bid_reject',$rejectmail);
@@ -834,6 +836,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'origin' => $feed->src_point_name,
 							'destination' => $feed->dest_point_name, 
 							'upgrade_to' => $feed->upgrade_cabin,
+							'airlineID' => $feed->carrier_code,
                             'feedback_link' => base_url('home/feedback?pnr_ref='.$passenger_data->pnr_ref) 							
 						 ); 			 
 					  //$this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);
