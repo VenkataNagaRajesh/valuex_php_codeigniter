@@ -21,6 +21,7 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model('acsr_m');
 		$this->load->model("airports_m");
 		$this->load->model("bid_m");
+		$this->load->model('preference_m');
 		$this->load->model("user_m");
 		$language = $this->session->userdata('lang');		
 		$this->lang->load('offer', $language);  
@@ -468,7 +469,8 @@ $sWhere $sOrder $sLimit";
   function auto_acsr() {
 	$this->load->model('preference_m');
 	
-	$days = $this->preference_m->get_preference_value_bycode('CONFIRM_WINDOW','7');
+	$days = $this->preference_m->get_application_preference_value('CONFIRM_WINDOW','7');
+
 	$current_time = time();
 	$tstamp = $current_time + ($days * 86400);
 
@@ -763,16 +765,11 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 				// check preference before accepting for cutoff time.
 
-			       $cabin_type = $this->airports_m->getDefDataCodeByIDANDType($feed->upgrade_type,'13');
-				$cutoff_time = 0;
-				if( $cabin_type == 'Y') {
-					$cutoff_time  = $this->preference_m->get_preference_value_bycode('OFFER_ACPT_ECO','7');
-				} else if ($cabin_type == 'W') {
-
-					$cutoff_time  = $this->preference_m->get_preference_value_bycode('OFFER_ACPT_PEY','7');
-				}
-
-					$cutoff_time_in_secs = $cutoff_time * 3600 ;
+			       $cabin_type = $this->airports_m->getDefDataForAirlineCabin($feed->cabin,'13',$feed->carrier_code);
+			       $cutoff_time = 0;
+				$cutoff_time  = $this->preference_m->get_preference_value_bycode('OFFER_ACPT_LEVEL'.$cabin_type->level,'24',$feed->carrier_code);
+					
+				$cutoff_time_in_secs = $cutoff_time * 3600 ;
 
 				if( ($feed->dep_date - $current_time ) > $cutoff_time_in_secs ) {	
 				//update sold seats or allocated seats in inv feed

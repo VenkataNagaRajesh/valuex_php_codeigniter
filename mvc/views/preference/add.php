@@ -14,29 +14,6 @@
             <div class="col-sm-8">
                 <form class="form-horizontal" role="form" method="post">
 
-                    <?php 
-                        if(form_error('categoryID')) 
-                            echo "<div class='form-group has-error' >";
-                        else     
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="categoryID" class="col-sm-2 control-label">
-                            <?=$this->lang->line("preference_category")?><span class="text-red">*</span>
-                        </label>
-                        <div class="col-sm-6">
-                            <?php
-							 $clist[0]=$this->lang->line("preference_select_category");
-						     foreach($catlist as $cat){
-								 $clist[$cat->vx_aln_data_defnsID] = $cat->aln_data_value;
-							 }							
-						   echo form_dropdown("categoryID", $clist,set_value("categoryID"), "id='categoryID' class='form-control hide-dropdown-icon select2'"); 
-						   ?>
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('categoryID'); ?>
-                        </span>
-                    </div>
-					
 					<?php 
                         if(form_error('pref_type')) 
                             echo "<div class='form-group has-error' >";
@@ -59,6 +36,31 @@
                             <?php echo form_error('pref_type'); ?>
                         </span>
                     </div>
+
+			 <?php
+                        if(form_error('categoryID'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="categoryID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("preference_category")?><span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-6">
+                            <?php
+                                                         $clist[0]=$this->lang->line("preference_select_category");
+                                                     foreach($catlist as $cat){
+                                                                 $clist[$cat->vx_aln_data_defnsID] = $cat->aln_data_value;
+                                                         }
+                                                   echo form_dropdown("categoryID", $clist,set_value("categoryID"), "id='categoryID' class='form-control hide-dropdown-icon select2'");
+                                                   ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('categoryID'); ?>
+                        </span>
+                    </div>
+
+
 					
 					<?php 
                         if(form_error('pref_code')) 

@@ -21,6 +21,33 @@ class preference_m extends MY_Model {
 		return TRUE;
 	}
 
+
+	function get_preferenceslist($array){
+		$this->db->select('*')->from('VX_aln_preference');
+		$this->db->where($array);
+		$this->db->where('active','1');
+		 $query = $this->db->get();
+                $result = $query->result();
+		return $result;
+		
+
+	}
+
+
+	 function get_preferenceslist_not_in($type ,$array,$where){
+                $this->db->select('*')->from('VX_aln_preference');
+                $this->db->where_not_in($type,$array);
+		$this->db->where('active','1');
+		$this->db->where($where);
+                 $query = $this->db->get();
+                $result = $query->result();
+                return $result;
+
+
+        }
+
+
+
 	function update_preference($data, $id = NULL) {
 		parent::update($data, $id);
 		return $id;
@@ -42,15 +69,48 @@ class preference_m extends MY_Model {
 		return $query->row();
 	}
 
-	function get_preference_value_bycode($code,$type){
+	// for getiing airline/user specific preferences;
+	// 1. check with airline/userid
+	// 2. if not avaiable for case1 then return default value
 
+	function get_preference_value_bycode($code,$type,$id){
 		$this->db->select('pref_value')->from('VX_aln_preference');
 		$this->db->where('pref_code',$code);	
 		$this->db->where('pref_type',$type);
-
+		$this->db->where('pref_type_value',$id);
+		$this->db->where('active',1);
+		$this->db->limit(1);
 		$query = $this->db->get();
 		$data = $query->row();
-		return $data->pref_value;
+		if(count($data) > 0 ) {
+			return $data->pref_value;
+		} else {
+			$this->db->select('pref_value')->from('VX_aln_preference');
+	                $this->db->where('pref_code',$code);
+        	        $this->db->where('pref_type',$type);
+                	$this->db->where('pref_type_value','0');
+			$this->db->limit(1);
+        	        $query = $this->db->get();
+	                $data = $query->row();
+			if(count($data) > 0 ) {
+                        	return $data->pref_value;
+                	}
+			
+		}
+
+	}
+
+
+	function get_application_preference_value($code,$type) {
+
+		 $this->db->select('pref_value')->from('VX_aln_preference');
+                $this->db->where('pref_code',$code);
+                $this->db->where('pref_type',$type);
+                $this->db->where('active',1);
+                $this->db->limit(1);
+                $query = $this->db->get();
+                $data = $query->row();
+		return $data->pref_value;	
 
 	}
 }

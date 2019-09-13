@@ -139,7 +139,7 @@ class Preference extends Admin_Controller {
                 )
         );
       $this->data['catlist'] = $this->airports_m->getDefns(6);
-      $this->data['pref_types'] = $this->airports_m->getDefdataTypes(null,array(7,8));
+      $this->data['pref_types'] = $this->airports_m->getDefdataTypes(null,array(7,8,24));
       $this->data['valuetypes'] = $this->airports_m->getDefdataTypes(null,array(9,10,11));	 
      //  print_r( $this->data['valuetypes']); exit;	  
 		if($_POST) {
@@ -189,7 +189,7 @@ class Preference extends Admin_Controller {
 			$this->data['preference'] = $this->preference_m->get_preference(array('VX_aln_preferenceID'=>$id));
 			 if($this->data['preference']) {
 			  $this->data['catlist'] = $this->airports_m->getDefns(6);
-			  $this->data['pref_types'] = $this->airports_m->getDefdataTypes(null,array('7','8'));
+			  $this->data['pref_types'] = $this->airports_m->getDefdataTypes(null,array('7','8','24'));
 			  $this->data['valuetypes'] = $this->airports_m->getDefdataTypes(null,array('9','10','11'));	 	  
 				if($_POST) {
 					$rules = $this->rules();
@@ -419,5 +419,7 @@ class Preference extends Admin_Controller {
 		   echo "Select Value Type";
 		}
 	}
+
+
 
 }

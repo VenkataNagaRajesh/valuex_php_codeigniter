@@ -486,7 +486,7 @@ class Paxfeed extends Admin_Controller {
 						$paxfeed['tier_markup'] = 0;
 					  }*/
 				if ( $paxfeedraw["tier_markup"] ) {
-				$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T'.$paxfeedraw["tier_markup"].'_MARKUP','7');
+				$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T'.$paxfeedraw["tier_markup"].'_MARKUP','24',$paxfeed['carrier_code'] );
 				} else {
 					$paxfeed['tier_markup'] = 0;
 				}
