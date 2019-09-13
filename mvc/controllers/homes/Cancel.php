@@ -134,9 +134,50 @@ class Cancel extends MY_Controller {
                $this->offer_issue_m->insert_dtpf_tracker($tracker);
 			 }
 		  }
+		  
+		   //send bid cancel mail
+			   $offer_data = $this->bid_m->get_offer_data($this->session->userdata('cancel_offer'));
+			   $maildata = (array)$offer_data;
+			   $maildata['dep_date'] = date('d/m/Y',$maildata['dep_date']);
+			   $maildata['dep_time'] = gmdate('H:i A',$maildata['dept_time']);			  
+			   $maildata['base_url'] = base_url();			    		
+			   $maildata['tomail'] = explode(',',$maildata['email_list'])[0]; 
+               $maildata['first_name'] = explode(',',$maildata['pax_names'])[0];
+               //$maildata['tomail'] = 'swekenit@gmail.com';
+				$this->sendMail($maildata);
 		 
 		$this->data['pnr_ref'] = $this->session->userdata('ref');
 		$this->data['subview'] = 'home/cancel-page';
 		$this->load->view('_layout_home', $this->data);	
 	}
+	
+	public function sendMail($data){
+		 $this->mydebug->debug($data);
+		 $template = 'bid_cancel';
+	  $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template)->template;
+	  $message = $this->parser->parse_string($tpl, $data,TRUE);
+	 // $this->mydebug->debug($message);
+	  $message =html_entity_decode($message);
+	  $siteinfos = $this->reset_m->get_site();			  
+	  $subject = "Your bid has been Successfully Cancelled";
+	     
+	 $config['protocol']='smtp';
+	 $config['smtp_host']='mail.sweken.com';
+	 $config['smtp_port']='26';
+	 $config['smtp_timeout']='30';
+	 $config['smtp_user']='info@sweken.com';
+	 $config['smtp_pass']='Infoinfo-9!';
+	 $config['charset']='utf-8';
+	 $config['newline']="\r\n";
+	 $config['wordwrap'] = TRUE;
+	 $config['mailtype'] = 'html';
+	 $this->email->initialize($config);
+		$this->email->set_mailtype("html");
+		$this->email->from($siteinfos->email,$siteinfos->sname);
+		$this->email->to($data['tomail']);
+		$this->email->subject($subject);
+		$this->email->message($message);
+	   $status =  $this->email->send();
+       return $status;
+  }
 }

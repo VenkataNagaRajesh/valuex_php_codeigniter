@@ -85,8 +85,8 @@
 			</ul>
 		</div>
 		<div style="float:right;margin-bottom:20px;">
-			<a href="#" type="button"><button type="button" style="color:#fff;background:#ff6633;border:none;padding: 7px;border-radius:2px;margin-right:3px;text-transform:uppercase;font-weight:bold;font-size:14px;">Re-submit</button></a>
-			<a href="#" type="button"><button type="button" style="color:#fff;background:#ff6633;border:none;padding: 7px;border-radius:2px;margin-right:3px;text-transform:uppercase;font-weight:bold;font-size:14px;">Cancel</button></a>
+			<a href="{resubmit_link}" type="button" style="color:#fff;background:#ff6633;border:none;padding: 7px;border-radius:2px;margin-right:3px;text-transform:uppercase;font-weight:bold;font-size:14px;">Re-submit</a>
+			<a href="{cancel_link}" type="button" style="color:#fff;background:#ff6633;border:none;padding: 7px;border-radius:2px;margin-right:3px;text-transform:uppercase;font-weight:bold;font-size:14px;">Cancel</a>
 		</div>
 	</div>
 </div>

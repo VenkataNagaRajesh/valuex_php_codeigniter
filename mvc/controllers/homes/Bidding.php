@@ -27,8 +27,8 @@ class Bidding extends MY_Controller {
 		}
   
     public function index() {  
-      //$this->session->set_userdata('pnr_ref','AS0414');
-      //$this->session->set_userdata('validation_check',1);	   
+     // $this->session->set_userdata('pnr_ref','AS0414');
+     // $this->session->set_userdata('validation_check',1);	   
 
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
@@ -186,7 +186,7 @@ class Bidding extends MY_Controller {
                $maildata['type'] = $this->input->post('type');
                $maildata['resubmit_link'] = base_url('homes/resubmit?pnr_ref='.$maildata['pnr_ref']);
 			   $maildata['cancel_link'] = base_url('homes/cancel?pnr_ref='.$maildata['pnr_ref']);			   
-				//$maildata['tomail'] = 'swekenit@gmail.com';
+			  // $maildata['tomail'] = 'swekenit@gmail.com';
 				$this->sendMail($maildata);
 			  $json['status'] = "success";
 			  
@@ -226,16 +226,18 @@ class Bidding extends MY_Controller {
 	}
 	
 	 public function sendMail($data){
-		 //$this->mydebug->debug($data);
+		 $this->mydebug->debug($data);
 		if($data['type'] == 'resubmit'){
 			$template = 'bid_resubmit';
-			$subject = 'Submitted';
+			$subject = 'Re-Submitted';
 		} else {
 			$template = 'bid_success';
-			$subject = 'Re-Submitted';
+			$subject = 'Submitted';
 		}
+		//$template = 'bid_success';
 	  $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template)->template;
 	  $message = $this->parser->parse_string($tpl, $data);
+	 // $this->mydebug->debug($message);
 	  $message =html_entity_decode($message);
 	  $siteinfos = $this->reset_m->get_site();			  
 	  $subject = "Your bid has been Successfully ".$subject;

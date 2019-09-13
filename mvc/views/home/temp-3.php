@@ -81,7 +81,7 @@
 					<span>Value X S.r.l. via Paleocapa, 7 - 20121 Milan - Italy - Tax code and VAT number: IT11876271005</span><br>
 					You are receiving this email because you subscribed to the Travel Alert service, accepting Value X-  Terms of Service and Privacy Policy .
 				</p>
-				<p style="text-align:center;margin-top:12px;"><a type="button" href="#" style="background: #ff6633;font-weight:bold;padding:8px 26px;font-size: 23px;border-radius: 33px;border:none;color:#fff;font-family:century gothic;text-decoration:none;">BID NOW</a></p>
+				<p style="text-align:center;margin-top:12px;"><a type="button" href="{bidnow_link}" style="background: #ff6633;font-weight:bold;padding:8px 26px;font-size: 23px;border-radius: 33px;border:none;color:#fff;font-family:century gothic;text-decoration:none;">BID NOW</a></p>
 			</div>
 		</div>
 		<div class="share">

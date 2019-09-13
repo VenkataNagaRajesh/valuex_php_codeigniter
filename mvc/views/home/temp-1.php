@@ -66,7 +66,7 @@
 			<p style="margin-bottom: 10px;font-size: 14px;color: #333;font-family:calibri;font-weight:500;text-align:center;">
 				With AC Bid Upgrade you can enhance your travel experince by enjoying priority. One or more of yourupcoming flight (s) are eligible for bids
 			</p>
-			<p style="text-align:center;"><a type="button" href="#" style="background: #ff6633;font-weight:bold;padding:8px 26px;font-size: 23px;border-radius: 33px;border:none;color:#fff;font-family:calibri;text-decoration:none;">BID NOW</a></p>
+			<p style="text-align:center;"><a type="button" href="{bidnow_link}" style="background: #ff6633;font-weight:bold;padding:8px 26px;font-size: 23px;border-radius: 33px;border:none;color:#fff;font-family:calibri;text-decoration:none;">BID NOW</a></p>
 			<div class="info">
 				<p style="margin-bottom: 10px;font-weight:500;font-size: 14px;color: #333;font-family: calibri;text-align:center;">
 					<span><b>Help Center | I'm Not Intrested</b></span><br>

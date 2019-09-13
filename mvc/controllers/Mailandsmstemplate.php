@@ -347,7 +347,8 @@ class Mailandsmstemplate extends Admin_Controller {
 		  }
 		  if(permissionChecker('mailandsmstemplate_delete')){
 		   $template->action .= btn_delete('mailandsmstemplate/delete/'.$template->mailandsmstemplateID, $this->lang->line('delete'));	
-$template->action .= '<a href="base_url("mailandsmstemplate/makedefault/'.$template->mailandsmstemplateID.')" class="btn btn-success btn-xs mrg">Make Default</a>';			   
+		    $link = base_url('mailandsmstemplate/makedefault/'.$template->mailandsmstemplateID);
+$template->action .= '<a href="'.$link.'" class="btn btn-success btn-xs mrg">Make Default</a>';			   
 		  }
 		  $output['aaData'][] = $template;				
 		}					
