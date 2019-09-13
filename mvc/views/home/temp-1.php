@@ -16,7 +16,7 @@
 <body>
 <div style="min-width: 245px;max-width: 1100px;position: relative;padding: 10px;margin:0 auto;">
 	<div style="margin-left:auto;margin-right:auto;width:100%;background: #333;">
-		<img style="width:120px;" src="{base_url}assets/home/images/emir.png" alt="logo">
+		<img style="width:120px;" src="{logo}" alt="logo">
 	</div>
 	<div style="border: solid 1px #ddd;width:100%;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;">
 		<div style="position: relative;min-height: 1px;padding:12px;">
@@ -24,7 +24,7 @@
 				<h1 style="margin-bottom:8px;color: #fff;font-size: 14px;font-weight: bold;padding:12px;font-family:calibri;"><span>Hi {first_name}! </span><span style="float: right;color:#333;">Booking Reference : {pnr_ref}<b></b></span></h1>
 			</div>
 			<div>
-				<img style="width: 100%;display: block;max-width: 100%;height: auto;" src="{base_url}assets/home/images/temp3-bnr.jpg" alt="temp bnr">
+				<img style="width: 100%;display: block;max-width: 100%;height: auto;" src="{upgrade_offer_mail_template1}" alt="temp bnr">
 			</div>
 		</div>
 		<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;margin-bottom: 20px;">

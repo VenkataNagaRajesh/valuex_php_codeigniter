@@ -16,12 +16,12 @@
 <body>
 <div style="min-width: 245px;max-width: 1100px;position: relative;padding: 10px;margin:0 auto;font-family:century gothic;">
 	<div style="margin-left:auto;margin-right:auto;width:100%;padding-left: 15px;padding-right: 15px;background: #333;">
-		<img style="width:120px;" src="{base_url}assets/home/images/emir.png" alt="logo">
+		<img style="width:120px;" src="{logo}" alt="logo">
 	</div>
 	<div style="border: solid 1px #ddd;width:100%;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;">
 		<div style="width:100%;margin-top:10px;">
 			<div style="width:10%;float:left;">
-				<img style="width:auto;display: block;height:54px;" src="{base_url}assets/home/images/temp2-logo.jpg" alt="logo">
+				<img style="width:auto;display: block;height:54px;" src="{airline_logo}" alt="logo">
 			</div>
 			<div class="strip" style="width:90%;float:left;">
 				<div style="background: #f5f5f5;height: 38px;margin: 16px 0;"></div>

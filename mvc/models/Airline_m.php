@@ -226,10 +226,12 @@ class Airline_m extends MY_Model {
 		$query = $this->db->get();
 		return $query->row('tot');
 	}
-	public function getImagesByType($id,$type){
+	public function getImagesByType($id,$type=null){
 		$this->db->select('*')->from('VX_airline_gallery');
 		$this->db->where('airlineID',$id);
-		$this->db->where('type',$type);
+		if(!empty($type)){
+		 $this->db->where('type',$type);
+		}
 		$query = $this->db->get();
 		return $query->result();
 	}

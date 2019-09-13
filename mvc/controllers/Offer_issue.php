@@ -36,9 +36,11 @@ class Offer_issue extends Admin_Controller {
         'pnr_ref' => 'AS0414',
         'coupon_code' => 'sssssssss',
         'mail_subject' => "Upgrade Cabin Offerss AS0414",
-		'bidnow_link' => base_url('home/index')		
+		'bidnow_link' => base_url('home/index'),
+        'airlineID' => 4079		
         );			       
           $this->sendMailTemplateParser('bid_accepted',$data);
+		  exit;
          //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);
            // $this->upgradeOfferMail($data);		 
 	}

@@ -21,7 +21,7 @@
 		<div style="border: solid 1px #ddd;width:100%;margin:0px auto;padding:10px 14px;display:inline-block;">
 			<div style="width:100%;margin-top:10px;">
 				<div style="width:10%;float:left;">
-					<img style="width:auto;display: block;height:54px;" src="{base_url}assets/home/images/temp2-logo.jpg" alt="logo">
+					<img style="width:auto;display: block;height:54px;" src="{airline_logo}" alt="logo">
 				</div>
 				<div class="strip" style="width:90%;float:left;">
 					<div style="background: #f5f5f5;height: 38px;margin: 16px 0;"></div>

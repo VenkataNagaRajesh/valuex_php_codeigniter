@@ -18,12 +18,12 @@
 <body>
 <div style="min-width: 245px;max-width: 1100px;position: relative;padding: 10px;margin:0 auto;">
 	<div style="margin-left:auto;margin-right:auto;width:100%;padding-left: 15px;padding-right: 15px;background: #333;">
-		<img style="width:120px;" src="{base_url}assets/home/images/emir.png" alt="logo">
+		<img style="width:120px;" src="{logo}" alt="logo">
 	</div>
 	<div style="border: solid 1px #ddd;width:100%;margin:0px auto;padding:10px 14px;display:inline-block;">
 		<div class="data-block" style="width:70%;position: relative;min-height: 1px;float: left;">
 			<div>
-				<img style="margin-right: auto;margin-left: auto;display: block;max-width: 100%;height: auto;" src="{base_url}assets/home/images/temp2-logo.jpg" alt="temp bnr">
+				<img style="margin-right: auto;margin-left: auto;display: block;max-width: 100%;height: auto;" src="{airline_logo}" alt="temp bnr">
 			</div>
 			<h1 style="margin-bottom: 10px;color: #ff6633;font-weight: bold;text-align: center;font-size: 30px;margin-top: 1em;">Hi {first_name}</h1>
 			<p style="text-align: center;margin-bottom:10px;font-size: 14px;">
@@ -70,7 +70,7 @@
 			</div>
 		</div>
 		<div class="img-block" style="width: 28%;float: left;position: relative;margin: 12px 0;">
-			<img style="display: block;height: auto;width:100%;" src="{base_url}assets/home/images/temp2-bnr.jpg" alt="temp2 bnr">
+			<img style="display: block;height: auto;width:100%;" src="{upgrade_offer_mail_template2}" alt="temp2 bnr">
 			<p style="text-align: center;float: right !important;border: dotted 1px #333;margin: 10px 0px;padding: 3px 15px;"><b>BOOKING REFERENECE: <span style="color:#ff6633;">{pnr_ref}</span></b></p>
 		</div>
 		<div style="width:100%;display:table;">
