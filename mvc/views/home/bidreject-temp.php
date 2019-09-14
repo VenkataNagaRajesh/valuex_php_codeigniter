@@ -16,7 +16,7 @@
 <body>
 	<div style="min-width: 245px;max-width: 1100px;position: relative;padding: 10px;margin:0 auto;">
 		<div style="margin-left:auto;margin-right:auto;width:100%;padding-left: 15px;padding-right: 15px;background: #333;">
-			<img style="width:120px;" src="{base_url}assets/home/images/emir.png" alt="logo">
+			<img style="width:120px;" src="{logo}" alt="logo">
 		</div>
 		<div style="border: solid 1px #ddd;width:100%;margin:0px auto;padding:10px 14px;display:inline-block;">
 			<div style="width:100%;margin-top:10px;">

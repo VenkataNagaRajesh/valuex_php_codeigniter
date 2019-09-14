@@ -85,9 +85,9 @@ class MY_Controller extends CI_Controller {
 		   }
 		  $data['logo'] = $this->bid_m->getAirlineLogoByPNR($data['pnr_ref'])->logo;
 		   if(!empty($data['airline_logo'])){
-			 $this->data['logo'] = base_url('uploads/images/'.$data['logo']);  
+			 $data['logo'] = base_url('uploads/images/'.$data['logo']);  
 		   }else{
-			 $this->data['logo'] = base_url('assets/home/images/emir.png');  
+			 $data['logo'] = base_url('assets/home/images/emir.png');  
 		   }	
 	   $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($data['template'],$data['carrier'])->template;
 	   $message = $this->parser->parse_string($tpl, $data,TRUE);
