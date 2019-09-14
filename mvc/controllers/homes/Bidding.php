@@ -13,8 +13,8 @@ class Bidding extends MY_Controller {
 		 $this->load->model("offer_reference_m");
 		 $this->load->model("rafeed_m");
 		 $this->load->model('mailandsmstemplate_m');
-		$this->load->model('install_m');
-		$this->load->model('airline_m');
+		 $this->load->model('install_m');
+		 $this->load->model('airline_m');
 		 $this->load->model("reset_m");
 		 $this->load->library('session');
          $this->load->helper('form');
@@ -27,7 +27,7 @@ class Bidding extends MY_Controller {
 		}
   
     public function index() {  
-     // $this->session->set_userdata('pnr_ref','AS0414');
+      //$this->session->set_userdata('pnr_ref','AS0416');
      // $this->session->set_userdata('validation_check',1);	   
 
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
@@ -190,10 +190,18 @@ class Bidding extends MY_Controller {
                $maildata['type'] = $this->input->post('type');
                $maildata['resubmit_link'] = base_url('homes/resubmit?pnr_ref='.$maildata['pnr_ref']);
 			   $maildata['cancel_link'] = base_url('homes/cancel?pnr_ref='.$maildata['pnr_ref']);
+			   
+			   if($maildata['type'] == 'resubmit'){
+					$maildata['template'] = 'bid_resubmit';
+					$maildata['subject'] = 'Your bid has been Successfully Re-Submitted';
+				} else {
+					$maildata['template'] = 'bid_success';
+					$maildata['subject'] = 'Your bid has been Successfully Submitted';
+				}
                			   
 			  // $maildata['tomail'] = 'swekenit@gmail.com';
 				$this->sendMail($maildata);
-			  $json['status'] = "success";
+			    $json['status'] = "success";
 			  
 			    // calculate average and rank
                   $bid_array['flight_number'] =  $data['flight_number'];
@@ -229,45 +237,6 @@ class Bidding extends MY_Controller {
 		$this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($json));
 	}
-	
-	 public function sendMail($data){
-		 $this->mydebug->debug($data);
-		if($data['type'] == 'resubmit'){
-			$template = 'bid_resubmit';
-			$subject = 'Re-Submitted';
-		} else {
-			$template = 'bid_success';
-			$subject = 'Submitted';
-		}
-		//$template = 'bid_success';
-	  $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['carrier'])->template;
-	  $message = $this->parser->parse_string($tpl, $data);
-	 // $this->mydebug->debug($message);
-	  $message =html_entity_decode($message);
-	  $siteinfos = $this->reset_m->get_site();			  
-	  $subject = "Your bid has been Successfully ".$subject;
-	  
-    
-	 $config['protocol']='smtp';
-	 $config['smtp_host']='mail.sweken.com';
-	 $config['smtp_port']='26';
-	 $config['smtp_timeout']='30';
-	 $config['smtp_user']='info@sweken.com';
-	 $config['smtp_pass']='Infoinfo-9!';
-	 $config['charset']='utf-8';
-	 $config['newline']="\r\n";
-	 $config['wordwrap'] = TRUE;
-	 $config['mailtype'] = 'html';
-	 $this->email->initialize($config);
-		$this->email->set_mailtype("html");
-		$this->email->from($siteinfos->email,$siteinfos->sname);
-		$this->email->to($data['tomail']);
-		$this->email->subject($subject);
-		$this->email->message($message);
-	   $status =  $this->email->send();
-       $this->mydebug->debug('Bid Submition Template sent to '.$data['tomail']); 
-	   return $status;
-  }
 	
 	protected function rules() {
 		$rules = array(

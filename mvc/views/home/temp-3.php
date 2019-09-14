@@ -20,7 +20,7 @@
 <body>
 <div style="min-width: 245px;max-width: 1100px;position: relative;padding: 10px;margin:0 auto;">
 	<div style="margin-left:auto;margin-right:auto;width:100%;padding-left: 15px;padding-right: 15px;background: #333;">
-		<img style="width:120px;" src="{base_url}assets/home/images/emir.png" alt="logo">
+		<img style="width:120px;" src="{logo}" alt="logo">
 	</div>
 	<div style="border: solid 1px #ddd;width:100%;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;">
 		<div style="margin-top:12px;" class="upgrade-title">
@@ -31,14 +31,14 @@
 			</p>
 		</div>
 		<div style="width: 100%;">
-			<img style="margin:0 auto;display: block;max-width: 100%;height: auto;" src="{base_url}assets/home/images/temp2-logo.jpg" alt="temp bnr">
+			<img style="margin:0 auto;display: block;max-width: 100%;height: auto;" src="{airline_logo}" alt="temp bnr">
 		</div>
 		<div style="width:100%;display:table;">
 			<h1 class="head-title" style="margin:0;color: #ff6633;font-weight: bold;font-size: 16px;">Hi !<span style="float: right;"><a href="#">Help Center | I'm Not Intrested</a></span></h1>
 			<p style="font-size:14px;margin: 10px 0;text-align:center;">
 				With AC Bid Upgrade you can enhance your travel experince by enjoying priority. One or more of yourupcoming flight (s) are eligible for bids	
 			</p>
-			<img style="display: block;max-width: 100%;height: auto;width: 100%;" src="<?=base_url('assets/home/images/temp3-bnr.jpg')?>" alt="temp bnr">
+			<img style="display: block;max-width: 100%;height: auto;width: 100%;" src="{upgrade_offer_mail_template3}" alt="temp bnr">
 			<p class="col-md-4" style="position: relative;top: -50px;left: 30px;border: dotted 1px #f5f5f5;font-size: 15px;"><b>BOOKING REFERENECE: <b style="color:#fff;"><?=$pax_data->pnr_ref?></b></b></p>
 		</div>
 		<div style="font-weight:500;position: relative;min-height: 1px;margin-top: -25px;overflow: auto;width:100%;margin-bottom: 20px;">

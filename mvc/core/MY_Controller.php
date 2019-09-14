@@ -31,6 +31,13 @@ class MY_Controller extends CI_Controller {
         }
 		$this->load->model('rafeed_m');
 		$this->load->model('preference_m');
+		$this->load->model('mailandsmstemplate_m');
+		$this->load->model('bid_m');
+		$this->load->model('airline_m');
+		$this->load->library('parser');
+		 $this->load->library('email');
+		 $this->load->library('session');
+		 $this->load->model('reset_m');
 	}
 	
 	public function allowValidation($pnr_ref){
@@ -66,6 +73,46 @@ class MY_Controller extends CI_Controller {
 			return $error;
 	    }
 	}
+	
+	public function sendMail($data){
+		 $this->mydebug->debug($data);
+		 $template = 'bid_cancel';
+		 
+		  $this->load->model('airline_m');
+		 $template_images = $this->airline_m->getImagesByType($data['carrier']);
+		   foreach($template_images as $img){
+			   $data[$img->type] = base_url('uploads/images/'.$img->image);
+		   }
+		  $data['logo'] = $this->bid_m->getAirlineLogoByPNR($data['pnr_ref'])->logo;
+		   if(!empty($data['airline_logo'])){
+			 $data['logo'] = base_url('uploads/images/'.$data['logo']);  
+		   }else{
+			 $data['logo'] = base_url('assets/home/images/emir.png');  
+		   }	
+	   $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($data['template'],$data['carrier'])->template;
+	   $message = $this->parser->parse_string($tpl, $data,TRUE);
+	   // $this->mydebug->debug($message);
+	  $message =html_entity_decode($message);
+	  $siteinfos = $this->reset_m->get_site();  	     
+		 $config['protocol']='smtp';
+		 $config['smtp_host']='mail.sweken.com';
+		 $config['smtp_port']='26';
+		 $config['smtp_timeout']='30';
+		 $config['smtp_user']='info@sweken.com';
+		 $config['smtp_pass']='Infoinfo-9!';
+		 $config['charset']='utf-8';
+		 $config['newline']="\r\n";
+		 $config['wordwrap'] = TRUE;
+		 $config['mailtype'] = 'html';
+		 $this->email->initialize($config);
+		$this->email->set_mailtype("html");
+		$this->email->from($siteinfos->email,$siteinfos->sname);
+		$this->email->to($data['tomail']);
+		$this->email->subject($data['subject']);
+		$this->email->message($message);
+	   $status =  $this->email->send();
+       return $status;
+   }
 
 }
 
