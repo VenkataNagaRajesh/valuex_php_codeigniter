@@ -151,7 +151,14 @@ class Cancel extends MY_Controller {
 			   $maildata['template'] = 'bid_cancel';
 			   $maildata['subject'] = 'Your bid has been Successfully Cancelled';
 				$this->sendMail($maildata);
-		 
+				
+		  $airline = $this->bid_m->getAirlineLogoByPNR($this->session->userdata('ref'));
+		  if(!empty($airline->logo)){
+		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
+		  } else {
+			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+		  }
+      		
 		$this->data['pnr_ref'] = $this->session->userdata('ref');
 		$this->data['subview'] = 'home/cancel-page';
 		$this->load->view('_layout_home', $this->data);	

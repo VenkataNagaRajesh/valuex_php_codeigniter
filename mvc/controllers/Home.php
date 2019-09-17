@@ -153,7 +153,13 @@ class Home extends MY_Controller {
 	
 	public function paysuccess() {
         $offer_id = htmlentities(escapeString($this->uri->segment(3)));	
-        $this->data['offer_data'] = $this->offer_reference_m->get_single_offer_ref(array("offer_id" => $offer_id));		
+        $this->data['offer_data'] = $this->offer_reference_m->get_single_offer_ref(array("offer_id" => $offer_id));
+         $airline = $this->bid_m->getAirlineLogoByPNR($this->data['offer_data']->pnr_ref);
+		  if(!empty($airline->logo)){
+		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
+		  } else {
+			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+		  }			
 		$this->data["subview"] = "home/paysuccess";
 		$this->load->view('_layout_home', $this->data);
 	}
@@ -183,7 +189,13 @@ class Home extends MY_Controller {
 		//$_GET['pnr_ref'] = 'AS0414';
         if(empty($this->input->get('pnr_ref'))){
 			redirect(base_url('home/index'));
-		}		
+		}
+        $airline = $this->bid_m->getAirlineLogoByPNR($this->input->get('pnr_ref'));
+		  if(!empty($airline->logo)){
+		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
+		  } else {
+			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+		  }		
 		$this->data['pnr_ref'] = $this->input->get('pnr_ref');
 		$names = $this->bid_m->getPaxNames($this->input->get('pnr_ref'));
 		$this->data['name'] = explode(',',$names)[0];

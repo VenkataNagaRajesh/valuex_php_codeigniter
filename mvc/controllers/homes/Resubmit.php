@@ -40,6 +40,12 @@ class Resubmit extends MY_Controller {
         if($status->status_no != $this->data['bid_received']){
 			$this->data['message'] = $status->status;
 			$this->data['pnr_ref'] = $this->input->get('pnr_ref');
+			$airline = $this->bid_m->getAirlineLogoByPNR($this->input->get('pnr_ref'));
+			  if(!empty($airline->logo)){
+				$this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
+			  } else {
+				$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+			  }
 			$this->data["subview"] = "home/not-resubmit";
 		    $this->load->view('_layout_home', $this->data);
 		} else {		

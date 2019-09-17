@@ -164,7 +164,7 @@ class bid_m extends MY_Model {
 	function getAirlineLogoByPNR($pnr_ref){
 		$this->db->select("a.*,d.aln_data_value")->from('VX_aln_airline a');
 		$this->db->join('vx_aln_data_defns d','d.vx_aln_data_defnsID = a.airlineID','LEFT');
-		$this->db->join('VX_aln_daily_tkt_pax_feed p','p.airline_code = d.vx_aln_data_defnsID','LEFT');
+		$this->db->join('VX_aln_daily_tkt_pax_feed p','p.carrier_code = d.vx_aln_data_defnsID','LEFT');
 		$this->db->where('p.pnr_ref',$pnr_ref);
 		$query = $this->db->get();
 		return $query->row();
