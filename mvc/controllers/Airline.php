@@ -813,9 +813,9 @@ class Airline extends Admin_Controller {
 		   $airline = $this->airline_m->getGalleryImage($this->input->post('galleryID'));
 		 if($airline->image != 'defualt.png') {
 			if(file_exists(FCPATH.'uploads/images/'.$airline->image)) {
-			  unlink(FCPATH.'uploads/images/'.$airline->image);
+			  //unlink(FCPATH.'uploads/images/'.$airline->image);
 			}
-			$this->airline_m->deleteGalleryImage($this->input->post('galleryID'));		
+			//$this->airline_m->deleteGalleryImage($this->input->post('galleryID'));		
 		 }	 
 		 $json['status'] = 'Success'; 
 	     if (isset($_SERVER)) {		
