@@ -808,6 +808,26 @@ class Airline extends Admin_Controller {
 		  $this->load->view('_layout_main',$this->data);
 		}
 	}
+	
+	public function deleteImage(){
+		   $airline = $this->airline_m->getGalleryImage($this->input->post('galleryID'));
+		 if($airline->image != 'defualt.png') {
+			if(file_exists(FCPATH.'uploads/images/'.$airline->image)) {
+			  unlink(FCPATH.'uploads/images/'.$airline->image);
+			}
+			$this->airline_m->deleteGalleryImage($this->input->post('galleryID'));		
+		 }	 
+		 $json['status'] = 'Success'; 
+	     if (isset($_SERVER)) {		
+		    header('Access-Control-Allow-Origin: *');
+			header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+			header('Access-Control-Max-Age: 1000');
+			header('Access-Control-Allow-Credentials: true');
+			header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+		}
+		$this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($json));
+	}
 
 }
 

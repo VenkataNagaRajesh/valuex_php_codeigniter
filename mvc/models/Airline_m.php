@@ -235,5 +235,16 @@ class Airline_m extends MY_Model {
 		$query = $this->db->get();
 		return $query->result();
 	}
+	
+	public function getGalleryImage($galleryID){
+        $query = $this->db->get_where('VX_airline_gallery',array('galleryID'=>$galleryID));
+		return $query->row();		
+	}
+	
+    public function deleteGalleryImage($galleryID){
+        $this->db->where('galleryID',$galleryID);
+		$this->db->delete('VX_airline_gallery');
+		return TRUE;
+	}
 }
 

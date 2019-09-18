@@ -48,9 +48,9 @@
 		<div class="adm-brands">
 			<div class="col-md-12 airline-cabin-img" style="padding:0">
 				<h2>Gallery</h2>				
-				  <?php $i=1;
+				  <?php
 					 foreach($airline->gallery as $image){ ?>
-					 <div class="col-md-2" id="al-gallery-<?=$i?>">
+					 <div class="col-md-2" id="al-gallery-<?=$image->galleryID?>">
 						 <div class="img-box"> 
 							<?php $array = array("src" => base_url('uploads/images/'.$image->image),
 											'width' => '150px',
@@ -59,11 +59,11 @@
 									  );
 							echo img($array); ?>
 							<div class="middle">
-								<button type="button" class="btn btn-danger btn-sm btn-del" id="del-btn-<?=$i?>"><i class="fa fa-trash"></i></button>
+								<button type="button" class="btn btn-danger btn-sm btn-del" id="del-btn-<?=$image->galleryID?>"><i class="fa fa-trash"></i></button>
 							</div>
 						</div>
 					</div>
-					<?php $i++; }?>
+					<?php }?>
 				</div>
 			</div>
 			<div class="col-md-12 airline-cabin-img" style="padding:0">
@@ -130,10 +130,18 @@
 	</div>
  </section>
   <script>
-  <?php $i=1;
-	 foreach($airline->gallery as $image){ ?>
-		$("#del-btn-"+<?=$i?>).click(function(){
-			$("#al-gallery-"+<?=$i?>).remove();
+  <?php  foreach($airline->gallery as $image){ ?>
+		$("#del-btn-<?=$image->galleryID?>").click(function(){
+			$.ajax({ 
+			 async: false,            
+			 type: 'POST',            
+			 url: "<?=base_url('airline/deleteImage')?>",            
+			 data: {"galleryID": <?=$image->galleryID?>},            
+			 dataType: "html",                                  
+			 success: function(data) {
+				$("#al-gallery-<?=$image->galleryID?>").remove();
+			 }
+		  });			
 		});
 	 <?php } ?>
 	</script>
