@@ -13,7 +13,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-10">
-                <form class="form-horizontal" role="form" method="post">
+                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                      <h5>Images Uploader</h5>        
 					<?php 
                         if(form_error('airlineID')) 
@@ -35,7 +35,12 @@
                             <?php echo form_error('airlineID'); ?>
                         </span>
                     </div>
-					<div class='form-group' > 
+					<?php 
+                        if(form_error('img_type')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
                         <label for="username" class="col-sm-2 control-label">
                             <?='Image type'?>
                         </label>
@@ -49,18 +54,36 @@
                              <option value="airline_logo">Airline Logo Mail template(84*60)</option>					 
                              </select>
                             </div>
-                        </div>                        
+                        </div>  
+                         <span class="col-sm-4 control-label">
+                            <?php echo form_error('img_type'); ?>
+                        </span>						
+                    </div>
+					  <?php
+                        if(form_error('images'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="images" class="col-sm-2 control-label">
+                            <?='Images'?>
+                        </label>                				  
+		                <input type="file"  name="images[]" id="images" multiple>    <hr>
+						 <div id="images-upload">
+
+		                 </div>
+						 <span class="col-sm-4 control-label">
+                            <?php echo form_error('images'); ?>
+                        </span>
+ 					</div>
+					<div class='form-group' >  
+                       <div class="col-sm-offset-2 col-sm-8">					
+                          <button type="submit" class="btn btn-primary">Upload</button>                          
+					  </div>
                     </div>
 				</form>
-              <div class="container"> 
-                				  
-		              <input type="file"  name="images[]" id="images" multiple>
-				 
-		         <hr>
-			 </div>
-		   <div id="images-to-upload">
-
-		    </div><!-- end #images-to-upload -->
+              <!-- end #images-to-upload -->
+			
 
 		<hr>
 
@@ -76,7 +99,7 @@
 
 $('.select2').select2();
  
- var fileCollection = new Array();
+  var fileCollection = new Array();
 		$('#images').on('change',function(e){
 			var airlineID = $('#airlineID').val();
 			var img_type = $('#img_type').val();
@@ -91,13 +114,11 @@ $('.select2').select2();
 				var reader = new FileReader();
 				reader.readAsDataURL(file);
 				reader.onload = function(e){
-					var template = '<form action="/upload" id="'+i+'">'+					   
-						'<img src="'+e.target.result+'" width="40px;"> '+
-						'<label>Image Title</label> <input type="text" name="name">'+				
-						' <button type="submit" class="btn btn-sm btn-info upload">Upload</button>'+
-						' <a class="btn btn-sm btn-danger remove" onclick="removeform('+i+')" >Remove</a>'+						
-					'</form>';
-					$('#images-to-upload').append(template);
+				
+				var template = '<div id="'+i+'">'+                                       
+                               '<img src="'+e.target.result+'" width="100px;"> '+                                 
+                               '<a class="btn btn-sm btn-danger remove" onclick="removeform('+i+')" >Remove</a>'+'</div><br>'; 
+					$('#images-upload').append(template);
 				};
 			});
 		   } else{
@@ -107,10 +128,10 @@ $('.select2').select2();
 		
 		function removeform(formid){
 			$("#"+formid).remove();			
-		}
+		} 
 				
 		
-		$(document).on('submit','form',function(e){
+		/* $(document).on('submit','form',function(e){
 			e.preventDefault();
 			var airlineID = $('#airlineID').val();
 			var img_type = $('#img_type').val();		
@@ -170,7 +191,7 @@ $('.select2').select2();
                         }
                     }
 			   }		
-		});		
+		});	 */	
 		
 		
      
