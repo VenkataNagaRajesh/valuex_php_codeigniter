@@ -11,7 +11,7 @@
 		</div>
 		<div class="fh5co-hero">
 			<div class="fh5co-cover container">
-				<img class="img-responsive" src="<?=$airline_logo?>" alt="login bg">
+				<img class="img-responsive" src="<?php echo base_url('assets/home/images/login-bg.png'); ?>" alt="login bg">
 			</div>
 		</div>
 		<div class="container pnr-box">

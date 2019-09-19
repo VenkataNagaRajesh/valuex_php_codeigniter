@@ -217,7 +217,7 @@
 		  });			
 		});
 	 <?php } ?>
-	  <?php  foreach($airline->airline_logo as $image){ ?>
+	  <?php foreach($airline->airline_logo as $image){ ?>
 		$("#del-btn-<?=$image->galleryID?>").click(function(){
 			$.ajax({ 
 			 async: false,            
