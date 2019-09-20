@@ -557,10 +557,10 @@ class Airports_master extends Admin_Controller {
                                 $rownum++;
 
 		  if(permissionChecker('airports_master_edit')){ 			
-			$airport->action = btn_edit('airports_master/edit/'.$airport->vx_amdID, $this->lang->line('edit'));
+			//$airport->action = btn_edit('airports_master/edit/'.$airport->vx_amdID, $this->lang->line('edit'));
 		  }
 		  if(permissionChecker('airports_master_delete')){
-		   $airport->action .= btn_delete('airports_master/delete/'.$airport->vx_amdID, $this->lang->line('delete'));			 
+		   //$airport->action .= btn_delete('airports_master/delete/'.$airport->vx_amdID, $this->lang->line('delete'));			 
 		  }
 		  if(permissionChecker('airports_master_view') ) {
 		    $airport->action .= btn_view('airports_master/view/'.$airport->vx_amdID, $this->lang->line('view'));
