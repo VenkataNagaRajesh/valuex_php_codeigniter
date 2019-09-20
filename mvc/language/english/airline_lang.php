@@ -10,7 +10,7 @@ $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
 
 $lang['add_airline'] = 'Add Airline';
-$lang['update_airline'] = 'Update Airline';
+$lang['update_airline'] = 'Update';
 $lang['upload_airline'] = 'Upload Airline';
 $lang['view'] = 'View';
 

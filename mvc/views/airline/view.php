@@ -18,15 +18,15 @@
 				     <p><span><?=$this->lang->line("airline_id")?> </span>: <?=$airline->vx_aln_data_defnsID?></p>
 					 <p><span><?=$this->lang->line("airline_name")?> </span>: <?=$airline->airline_name?></p>
 					 <p><span><?=$this->lang->line("airline_code")?> </span>: <?=$airline->code?></p>
-					 <p><span><?=$this->lang->line("airline_active")?> </span>: <?=($airline->active)?'Anable':'Disable'?></p>
+					 <p><span><?=$this->lang->line("airline_active")?> </span>: <?=($airline->active)?'Enable':'Disable'?></p>
 					 <p><span><?=$this->lang->line("airline_created_user")?> </span>: <?=$airline->modify_by?></p>
 					 <p><span><?=$this->lang->line("airline_created_date")?> </span>: <?=date('d/m/Y',$airline->modify_date)?></p>
 					
 					 
 				</div>
-                <div class="profile-view-tab">
+                <!--<div class="profile-view-tab">
 				    <p><span><?=$this->lang->line("airline_flights")?> </span>: <?=$airline->flights?></p>
-                </div>				
+                </div>-->				
 			</div>
 			<?php if(!empty($airline->logo) || !empty($airline->video_links)){ ?>
 			<div class="col-md-12 airline-cabin-img" style="padding:0">
