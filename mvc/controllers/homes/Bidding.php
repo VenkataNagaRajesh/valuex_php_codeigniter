@@ -27,8 +27,8 @@ class Bidding extends MY_Controller {
 		}
   
     public function index() {  
-      //$this->session->set_userdata('pnr_ref','AS0416');
-     // $this->session->set_userdata('validation_check',1);	   
+      //$this->session->set_userdata('pnr_ref','AS0414');
+      //$this->session->set_userdata('validation_check',1);	   
 
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
@@ -349,6 +349,29 @@ class Bidding extends MY_Controller {
       return true;        
     }
 	
-	
+	public function getCabinImages(){
+		$json['cabin_images'] = $this->bid_m->getCarrierCabinImages($this->input->post('carrierID'),$this->input->post('cabin'));
+        $cabin_videos = $this->bid_m->getCarrierCabinVideos($this->input->post('carrierID'),$this->input->post('cabin'));
+		$json['cabin_videos'] = array();		
+		
+			foreach($cabin_videos as $link){
+				$links = explode(',',$link->video_links);
+				if(count($links) > 0){
+					foreach($links as $lin){
+					$json['cabin_videos'][]=str_replace('watch?v=','embed/',$lin);
+					}
+				}
+		    }
+		
+		 if (isset($_SERVER)) {		
+		    header('Access-Control-Allow-Origin: *');
+			header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+			header('Access-Control-Max-Age: 1000');
+			header('Access-Control-Allow-Credentials: true');
+			header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+		}
+		$this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($json));	
+	}
 
 }

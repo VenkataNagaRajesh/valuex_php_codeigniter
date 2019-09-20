@@ -144,11 +144,7 @@
 						<div class="side-image">
 							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb3.jpg'); ?>" alt="img1">
 						</div>-->
-						<?php foreach($images as $img){ ?>
-							<div class="side-image">
-							<img class="img-responsive img-thumbnail" src="<?php echo base_url('uploads/images/'.$img->image); ?>" alt="img1">
-						</div>
-						<?php } ?>
+						
 					</div>
 				</div>
 				
@@ -213,8 +209,7 @@
 					</div>
 					<div class="col-md-3">
 						<div class="side-video">
-							<!--<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="180"></iframe>-->
-							<iframe src="<?=$airline_video_link?>" width="100%" height="180"></iframe>
+							<!--<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="180"></iframe>-->							
 						</div>
 						
 						<!--<div class="side-image">
@@ -223,11 +218,13 @@
 						<div class="side-image">
 							<img class="img-responsive" src="<?php echo base_url('assets/home/images/multi-bid/mb3.jpg'); ?>" alt="img1">
 						</div>-->
-						<?php $i=1; foreach($images as $img){ if($i < 3){ ?>
-						  <div class="side-image">
+						<?php //$i=1; foreach($images as $img){ if($i < 3){ ?>
+						  <!--<div class="side-image">
 							<img class="img-responsive" src="<?php echo base_url('uploads/images/'.$img->image); ?>" alt="img1">
-						  </div> 
-						<?php }$i++;} ?>
+						  </div>--> 
+						<?php// }$i++;} ?>
+						<div class="side-image">
+						</div>
 					</div>
 					<!--<div id="loading">
 					</div>-->
@@ -289,6 +286,7 @@ $(document).ready(function () {
     $('#bid_max_<?=$result->flight_number?>').text(<?php echo explode(',',$result->max)[$i]; ?>);
 	//var tot_avg = tot_avg + <?=explode(',',$result->avg)[$i]?>;
     changeColors(<?=$result->flight_number?>);
+	updateCabinMedia(<?=$result->flight_number?>);
   <?php } } } ?>    
  // $("#tot").text(tot_avg*<?=$passengers_count?>);
   //$("#bidtot").text(tot_avg*<?=$passengers_count?>);  
@@ -302,6 +300,36 @@ $(document).ready(function () {
    <?php } ?>
  
 });
+function updateCabinMedia(flight_number){
+	var upgrade = $('input[type=radio][name=bid_cabin_'+flight_number+']:checked').val().split('|');
+	var upgrade_type = upgrade[0];	
+	$.ajax({
+          async: false,
+          type: 'POST',
+          url: "<?=base_url('homes/bidding/getCabinImages')?>",          
+		  data: {"cabin" :upgrade_type,"carrierID":<?=$results[0]->carrier?>},
+          dataType: "html",			
+          success: function(data) {
+			   $('.side-image').html('');
+               $('.side-video').html('');				   
+            var cabin_media = jQuery.parseJSON(data); 
+			var imghtml = ''; var videohtml = '';
+			
+			//dynamic Cabin images
+			for (i = 0; i < cabin_media['cabin_images'].length; i++) {			 
+			 imghtml += '<img class="img-responsive" src="<?=base_url("uploads/images/")?>'+cabin_media['cabin_images'][i]['image']+'" alt="img1">';
+			}
+             $('.side-image').html(imghtml);
+			 
+			//Dynamic Cabin Videos
+            for (i = 0; i < cabin_media['cabin_videos'].length; i++) {			 
+			 videohtml += '<iframe src="'+cabin_media['cabin_videos'][i]+'" width="100%" height="180"></iframe>';
+			}
+            $('.side-video').html(videohtml);	 	
+          }
+     });
+}
+
 <?php foreach($results as $result){  if($result->fclr != null){ ?> 
 $('#bid_slider_<?=$result->flight_number?>').slider({
 	tooltip: 'always',
@@ -367,6 +395,7 @@ $('input[type=checkbox][name=bid_action_<?=$result->flight_number?>]').click(fun
 $('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]').change(function(){
 	var bid_cabin = $(this).val();
 	var result = $(this).val().split('|');
+	updateCabinMedia(<?=$result->flight_number?>);
        $.ajax({
           async: false,
           type: 'POST',

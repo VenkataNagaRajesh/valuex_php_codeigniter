@@ -214,7 +214,23 @@ class bid_m extends MY_Model {
          return $arr;
 	}
 
-    
+    public function getCarrierCabinImages($airlineID,$cabin){
+		$this->db->select('i.image')->from('VX_aln_airline_cabin_map m');
+		$this->db->join('VX_aln_airline_cabin_images i','i.airline_cabin_map_id = m.cabin_map_id','LEFT');
+		$this->db->where('m.airline_code',$airlineID);
+		$this->db->where('m.airline_cabin',$cabin);
+		$query = $this->db->get();
+		return $query->result();
+	}
+	
+	public function getCarrierCabinVideos($airlineID,$cabin){
+		$this->db->select('video_links')->from('VX_aln_airline_cabin_map');
+		$this->db->where('airline_code',$airlineID); //2250 |           966
+		$this->db->where('airline_cabin',$cabin);
+		$query = $this->db->get();
+		//$this->mydebug->debug($this->db->last_query());
+		return $query->result();
+	}
 	
 }
 
