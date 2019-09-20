@@ -183,10 +183,10 @@ class Rafeed extends Admin_Controller {
 			   foreach ($Reader as $Row){
 				$column++;
 			//	print_r($Row);exit;
+				$Row = array_map('trim', $Row);
 				if($i == 0){ // header checking						
 					
 				  $flag = 0 ;						 
-				  $Row = array_map('trim', $Row);
 				   $import_header = array_map('strtolower', $Row);
 				  if(count(array_diff($header,$import_header)) == 0){
 					$this->mydebug->rafeed_log("Header matched for " . $_FILES['file']['name'] , 0);
