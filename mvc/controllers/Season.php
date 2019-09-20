@@ -741,7 +741,7 @@ class Season extends Admin_Controller {
 		 $season->chkbox = "<input type='checkbox'  class='deleteRow' value='".$season->VX_aln_seasonID."'  /> ".$rownum ;
                                 $rownum++;
           $season->ams_season_start_date = date('d-m-Y',$season->ams_season_start_date);	  
-		  //$season->ams_season_end_date = date('d-m-Y',$season->ams_season_end_date);
+		  $season->ams_season_end_date = date('d-m-Y',$season->ams_season_end_date);
 		  
 		  $season->is_return_inclusive = ($season->is_return_inclusive)?"yes":"no";
 		  
