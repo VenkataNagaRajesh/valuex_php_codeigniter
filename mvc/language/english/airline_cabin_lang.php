@@ -1,11 +1,11 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "Airline Cabin MAP Data";
-$lang['add_title'] = "Add Airline Cabin";
-$lang['edit_airline_cabin'] = 'Edit Airline Cabin';
-$lang['add_airline_cabin'] = 'Add Cabin Mapping';
-$lang['update_airline_cabin'] = 'Update Cabin Mapping';
+$lang['panel_title'] = "Cabin Gallery";
+$lang['add_title'] = "Add Cabin Gallery";
+$lang['edit_airline_cabin'] = 'Edit Cabin Gallery';
+$lang['add_airline_cabin'] = 'Add Cabin Gallery';
+$lang['update_airline_cabin'] = 'Update Cabin Gallery';
 $lang['slno'] = "#";
 $lang['name'] = "Name ";
 $lang['airline_name'] = 'Airlines Name';
