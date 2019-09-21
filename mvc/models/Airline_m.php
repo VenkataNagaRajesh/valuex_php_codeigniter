@@ -246,5 +246,11 @@ class Airline_m extends MY_Model {
 		$this->db->delete('VX_airline_gallery');
 		return TRUE;
 	}
+	
+	public function deleteAirlineLogo($airlineID){
+        $this->db->where('airlineID',$airlineID);
+		$this->db->delete('VX_aln_airline');
+		return TRUE;
+	}
 }
 

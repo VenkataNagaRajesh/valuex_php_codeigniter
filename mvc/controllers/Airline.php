@@ -813,9 +813,9 @@ class Airline extends Admin_Controller {
 		   $airline = $this->airline_m->getGalleryImage($this->input->post('galleryID'));
 		 if($airline->image != 'defualt.png') {
 			if(file_exists(FCPATH.'uploads/images/'.$airline->image)) {
-			  //unlink(FCPATH.'uploads/images/'.$airline->image);
+			  unlink(FCPATH.'uploads/images/'.$airline->image);
 			}
-			//$this->airline_m->deleteGalleryImage($this->input->post('galleryID'));		
+			$this->airline_m->deleteGalleryImage($this->input->post('galleryID'));		
 		 }	 
 		 $json['status'] = 'Success'; 
 	     if (isset($_SERVER)) {		
@@ -827,6 +827,18 @@ class Airline extends Admin_Controller {
 		}
 		$this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($json));
+	}	
+	
+	public function deleteAirlineLogo(){
+		$id = htmlentities(escapeString($this->uri->segment(3)));
+		$airline = $this->airline_m->getAirlineData($id);	 
+		 if($airline->logo != 'defualt.png') {
+			if(file_exists(FCPATH.'uploads/images/'.$airline->logo)) {
+			  unlink(FCPATH.'uploads/images/'.$airline->image);
+			}
+			$this->airline_m->deleteAirlineLogo($id);		
+		 }	 
+		redirect(base_url('airline/edit/'.$id));
 	}
 
 }
