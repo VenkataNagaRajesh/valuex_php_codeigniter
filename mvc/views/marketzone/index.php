@@ -1,6 +1,6 @@
 <div class="mzones">
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:84%;margin-right:16px;">Market Zones</h2>
-	<span data-toggle="collapse" data-target="#treeview"><button type="button" class="btn btn-danger pull-right mbl-tree-btn" style="margin:1px 9px;"><i class="fa fa-tree"></i> Tree View</button></span>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:86%;margin-right:8px;">Market Zones</h2>
+	<span data-toggle="collapse" data-target="#treeview"><button type="button" class="btn btn-danger pull-right mbl-tree-btn" style="margin:0;"><i class="fa fa-tree"></i> Tree View</button></span>
 	<div class="col-md-12 collapse" id="treeview">
 		<div class="col-md-8 col-md-offset-2 tree-box">
 			<div class="srch-buttons">
@@ -26,8 +26,8 @@
 	</div>
 	<span class="card-header" data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id = 'add_zone_button' class="btn btn-danger" style="margin:1px 0;" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></span>
 	<div class="col-md-12 collapse" id="mzonesAdd">
-		<div class="col-md-12">
 		<form class="form-horizontal" role="form" method="post" id='add_zone' enctype="multipart/form-data">
+		<div class="col-md-12">
 			<div class="mzone-config col-md-12">
 				<div class="col-md-12 zone-info1">
 					<h2>Market Zone Configuration</h2>
@@ -125,7 +125,7 @@
 		</div>
 	</form>
 	</div>
-	<div class="col-md-12">
+	<div class="col-md-12" style="padding:0;">
 		<div class="mzones-list-bar">
 
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="margin-bottom:-1em;">
@@ -143,7 +143,7 @@
 
                    </div>
 				</div>
-				<div class="col-md-12">
+				<div class="col-md-12" style="padding:0;">
 					<div class="mzone-filter col-md-12 col-sm-12">
 						<div class="col-md-2 col-sm-3">
 							<?php echo form_dropdown("sairline_id", $airlinelist,set_value("sairline_id",$sairline_id), "id='sairline_id' class='form-control hide-dropdown-icon select2'");?>
@@ -201,35 +201,32 @@
 			</form>
 		</div>
 	</div>
-	<div class="col-md-12">
-		<div class="col-md-12">
-			<div class="tab-content table-responsive" id="hide-table">
-				<table id="tztable" class="table table-bordered dataTable no-footer">
-				  <thead>
-					   <tr>
-						      
-							<th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/> #
-							<th><?=$this->lang->line('market_name')?></th>
-							<th><?php echo "Airline";?></th>
-							<th><?=$this->lang->line('level_type')?></th>
-							<th><?=$this->lang->line('amz_level_value')?></th>
-							<th><?=$this->lang->line('amz_incl_type')?></th>
-							<th><?=$this->lang->line('amz_incl_value')?></th>
-							<th><?=$this->lang->line('amz_excl_type')?></th>
-							<th><?=$this->lang->line('amz_excl_value')?></th>
-							 <?php if(permissionChecker('marketzone_edit')) { ?>
-								 <th class="noExport"><?=$this->lang->line('marketzone_status')?></th>
-							<?php } ?>                       
-							<?php if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_view') ||  permissionChecker('marketzone_detete')) { ?>
-						   <th class="noExport"><?=$this->lang->line('action')?></th>
-						   <?php } ?>
-					   </tr>
-				   </thead>
-				   <tbody>
-					</tbody>
-				</table>
-			 </div>
-		 </div>
+	<div class="col-md-12" style="padding:0;">
+		<div class="tab-content table-responsive" id="hide-table">
+			<table id="tztable" class="table table-bordered dataTable no-footer">
+			  <thead>
+				   <tr>				      
+						<th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/> #
+						<th><?=$this->lang->line('market_name')?></th>
+						<th><?php echo "Airline";?></th>
+						<th><?=$this->lang->line('level_type')?></th>
+						<th><?=$this->lang->line('amz_level_value')?></th>
+						<th><?=$this->lang->line('amz_incl_type')?></th>
+						<th><?=$this->lang->line('amz_incl_value')?></th>
+						<th><?=$this->lang->line('amz_excl_type')?></th>
+						<th><?=$this->lang->line('amz_excl_value')?></th>
+						 <?php if(permissionChecker('marketzone_edit')) { ?>
+							 <th class="noExport"><?=$this->lang->line('marketzone_status')?></th>
+						<?php } ?>                       
+						<?php if(permissionChecker('marketzone_edit') || permissionChecker('marketzone_view') ||  permissionChecker('marketzone_detete')) { ?>
+					   <th class="noExport"><?=$this->lang->line('action')?></th>
+					   <?php } ?>
+				   </tr>
+			   </thead>
+			   <tbody>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 
