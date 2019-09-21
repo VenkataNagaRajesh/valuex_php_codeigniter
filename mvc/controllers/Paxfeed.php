@@ -499,25 +499,29 @@ class Paxfeed extends Admin_Controller {
 				} else {
 					$paxfeed['rbd_markup']  = 0;
 				}
+				$is_null_flag = 0;
+
+				foreach ($paxfeed as $k=>$v) {
+                                       if($k != 'day_of_week' && $k != 'season_id') {
+                                            if($v == '' ){
+                                                 $this->mydebug->paxfeed_log("There is null value column ".$k. " in row " . $column, 1);
+                                                 $this->paxfeedraw_m->delete_paxfeedraw($raw_pax_id);
+                                                  $is_null_flag = 1;
+                                             }
+                                       }
+                               }
+
+				if($is_null_flag == 1){
+					$this->mydebug->paxfeed_log("Improper data for row ". $column. " skipping ..", 1);
+					continue;
+
+				}
+
+
+
+			
 					 if($this->paxfeed_m->checkPaxFeed($paxfeed)) {
 					
-
-							  $insert_flag = 1;
-                                                        foreach ($paxfeed as $k=>$v) {
-                                                                if($k != 'day_of_week' && $k != 'season_id') {
-                                                                        if($v == '' ){
-                                                                        $this->mydebug->paxfeed_log("There is null value column ".$k. " in row " . $column, 1);
-									$this->paxfeedraw_m->delete_paxfeedraw($raw_pax_id);
-                                                                        $insert_flag = 0;
-                                                                }
-                                                                }
-                                                         }
-
-							
-							if ( $insert_flag == '0' ) {
-								$this->mydebug->paxfeed_log("Improper data for row ". $column. " skipping ..", 1);
-							} else {
-
 							     $paxfeed['dtpfraw_id' ] = $raw_pax_id;
                                                              $paxfeed['create_date'] = time();
                                                              $paxfeed['modify_date'] = time();
@@ -531,7 +535,6 @@ class Paxfeed extends Admin_Controller {
 								} else{
 									$this->mydebug->paxfeed_log("Not inserted pax record for row " . $column .' not a valid data ', 1);
 								}
-						   }
 					}else {
 
 						$this->mydebug->paxfeed_log("Duplicate record for row ". $column, 0);
