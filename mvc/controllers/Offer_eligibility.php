@@ -353,7 +353,7 @@ $sWhere $sOrder $sLimit";
 
    function generatedata() {
 
-		$sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf.cabin and cab.aln_data_typeID = 13 ) where cab.aln_data_value != 'Business'  AND is_processed = 0 order by dtpf_id";
+		$sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed  WHERE is_processed = 0 order by dtpf_id";
 		$rResult = $this->install_m->run_query($sQuery);
 
 		/*$exclQuery = "SELECT * from VX_aln_eligibility_excl_rules ";
