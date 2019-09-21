@@ -52,14 +52,25 @@
                                         <span class="image-preview-input-title">
                                         <?=$this->lang->line('airline_file_browse')?></span>
                                         <input type="file" accept="image/png, image/jpeg, image/gif" name="photo"/>
+										
                                     </div>
-                                </span>
+                                </span>								
                             </div>
                         </div>
 
                         <span class="col-sm-4">
                             <?php echo form_error('photo'); ?>
                         </span>
+						<?php if(!empty($airline->logo)){
+       							$array = array(
+								"src" => base_url('uploads/images/'.$airline->logo),
+								'width' => '50px',
+								'height' => '35px'
+								//'class' => 'img-rounded'
+							   );	?>
+			
+		<a href="<?php echo base_url('airline/deleteAirlineLogo/'.$airline->vx_aln_data_defnsID); ?>" onclick="return confirm('you are about to delete a record. This cannot be undone. are you sure?')" class="btn btn-danger btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><?php echo img($array)?></a>
+										<?php } ?>
                     </div>
 					
 					 <div class='form-group' >
