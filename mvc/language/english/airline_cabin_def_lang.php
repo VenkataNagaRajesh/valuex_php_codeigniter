@@ -1,11 +1,11 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "Carrier Cabin Definition";
-$lang['add_title'] = "Add Carrier Cabin Definition";
-$lang['edit_airline_cabin_def'] = 'Edit Cabin Cabin Definition';
-$lang['add_airline_cabin_def'] = 'Add Cabin Definition';
-$lang['update_airline_cabin_def'] = 'Edit Cabin Definition Data';
+$lang['panel_title'] = "Cabin Mapping";
+$lang['add_title'] = "Add Cabin Mapping";
+$lang['edit_airline_cabin_def'] = 'Edit Cabin Mapping';
+$lang['add_airline_cabin_def'] = 'Add Cabin Mapping';
+$lang['update_airline_cabin_def'] = 'Edit Cabin Mapping Data';
 $lang['slno'] = "#";
 $lang['airline_cabin_create_date'] = 'Create Date';
 $lang['airline_cabin_modify_date'] = 'Modify Date';

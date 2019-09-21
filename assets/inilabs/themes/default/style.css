@@ -4694,6 +4694,13 @@ table{
 	padding: 4px 12px;
 	font-weight:bold;
 }
+.airline-view-hdr h2{
+	background: #ff6633;
+	color: #fff;
+	font-size: 15px;
+	padding: 4px 12px;
+	font-weight:bold;
+}
 .ui-state-active{	
     background: #ff6633 !important;   
     color: #fff !important;

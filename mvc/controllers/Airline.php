@@ -723,74 +723,122 @@ class Airline extends Admin_Controller {
 		  $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
            $this->data['airlines'] = $this->airline_m->getAirlinesData();
-        }
-      	
-		if($this->input->post()){	   		   
-          if($_FILES["image"]['name'] !="") {
-			  $this->mydebug->debug($_FILES["image"]['name']);
+        }	
+		
+          if(!empty($_FILES) && $this->input->post()) {	
+                  
 			 $airline = $this->airline_m->getAirlineData($this->input->post('airlineID'));
 			 $imgcount = $this->airline_m->getImagesCount($this->input->post('airlineID'),$this->input->post('img_type'));
-			 //print_r($imgcount); exit;
-			if($this->input->post('img_type') == "gallery" && $imgcount > 4){
-			  echo "Gallery Images count(5) Exceeded"; 
-			} else if($this->input->post('img_type') != "gallery" && $imgcount > 0){
-			  echo "Mail template Image count(1) Exceeded"; exit;
-			} else {
-			$airline->airline_name = $airline->airline_name . $_FILES["image"]['name'];
-			$file_name = $_FILES["image"]['name'];
-			$random = rand(1, 10000000000000000);
-	    	$makeRandom = hash('sha512', $random.$airline->airline_name.$file_name . config_item("encryption_key"));
-			$file_name_rename = $makeRandom;
-            $explode = explode('.', $file_name);
-            if(count($explode) >= 2) {
-				if($this->input->post('img_type') == "upgrade_offer_mail_template2"){
-					$config['width'] = '344';
-				    $config['height'] = '438';
-				} else if($this->input->post('img_type') == "upgrade_offer_mail_template1" || $this->input->post('img_type') == "upgrade_offer_mail_template3" ){
-					$config['width'] = '732';
-				    $config['height'] = '184';
-				} else if($this->input->post('img_type') == "airline_logo"){
-					$config['width'] = '84';
-				    $config['height'] = '60';
-				}else {
-					$config['width'] = '416';
-				    $config['height'] = '290';
-				}
-				//print_r($config);				
-	            $new_file = $file_name_rename.'.'.end($explode);
-				$config['upload_path'] = "./uploads/images";
-				$config['allowed_types'] = "gif|jpg|png";
-				$config['file_name'] = $new_file;
-				$config['max_size'] = '1024';
-				//$config['max_width'] = '3000';
-				//$config['max_height'] = '3000';
-				$this->load->library('upload', $config);
-				if($this->upload->do_upload("image")) {
-					$this->upload_data['file'] =  $this->upload->data();			 			  
-                    $gallery= array(
-					  'airlineID' => $this->input->post('airlineID'),
-					  'type' => $this->input->post('img_type'),
-					  'image' => $new_file,
-					  'create_date' => time(),
-					  'create_userID' => $this->session->userdata('loginuserID')					 
-					);					
-                   $galleryID = $this->airline_m->add_gallery($gallery);
-                    if($galleryID){
-						echo "success";
-					   $this->session->set_flashdata('success', $this->lang->line('menu_success'));	
-					}				   
-				} else {
-					$error = array('error' => $this->upload->display_errors());					
-					echo $error['error'];
-				 }
-			   }
-			  } 
-			}			
-		}else{
 			
+			if($this->input->post('img_type') == "gallery" && $imgcount > 4){
+			  //echo "Gallery Images count(5) Exceeded";			 
+               $this->session->set_flashdata('error', 'Gallery Images count(5) Exceeded');	
+               $this->data['subview'] = 'airline/airline_gallery';
+		       $this->load->view('_layout_main',$this->data);			   
+			} else if($this->input->post('img_type') != "gallery" && $imgcount > 0){
+			  //echo "Mail template Image count(1) Exceeded"; exit;
+			  $this->session->set_flashdata('error', 'Mail template Image count(1) Exceeded');
+              $this->data['subview'] = 'airline/airline_gallery';
+		      $this->load->view('_layout_main',$this->data);			  
+			} else {
+				$cpt = count($_FILES['images']['name']);			
+			   for($i=0; $i<$cpt; $i++)	{
+				   $imgcount = $this->airline_m->getImagesCount($this->input->post('airlineID'),$this->input->post('img_type'));
+               $file_name = $_FILES["images"]['name'][$i];
+                   $random = rand(1, 10000000000000000);
+				   $makeRandom = hash('sha512',$this->input->post('airlineID').$random.$imgcount.config_item("encryption_key"));
+                   $file_name_rename = $makeRandom;
+            	   $explode = explode('.', $file_name);
+            	if(count($explode) >= 2) {
+				    $new_file = $file_name_rename.'.'.end($explode);
+					$_FILES['image']['name'] = $_FILES['images']['name'][$i];
+			 		$_FILES['image']['type'] = $_FILES['images']['type'][$i]; 
+					$_FILES['image']['tmp_name'] = $_FILES['images']['tmp_name'][$i]; 
+					$_FILES['image']['error'] = $_FILES['images']['error'][$i]; 
+					$_FILES['image']['size'] = $_FILES['images']['size'][$i]; 
+                     if($this->input->post('img_type') == "upgrade_offer_mail_template2"){
+						$config['width'] = '344';
+						$config['height'] = '438';
+					} else if($this->input->post('img_type') == "upgrade_offer_mail_template1" || $this->input->post('img_type') == "upgrade_offer_mail_template3" ){
+						$config['width'] = '732';
+						$config['height'] = '184';
+					} else if($this->input->post('img_type') == "airline_logo"){
+						$config['width'] = '84';
+						$config['height'] = '60';
+					}else {
+						$config['width'] = '416';
+						$config['height'] = '290';
+					}
+					$config['upload_path'] = "./uploads/images";
+					$config['allowed_types'] = 'gif|jpg|png'; 
+			 		$config['file_name'] = $new_file;
+                    $config['max_size'] = '1024';
+                                	//$config['max_width'] = '3000';
+                                	//$config['max_height'] = '3000';
+                                	$this->load->library('upload', $config);
+			
+                			$this->upload->initialize($config);
+                			if($this->upload->do_upload('image')){
+						$this->upload_data['file'] =  $this->upload->data();			 			  
+						$gallery= array(
+						  'airlineID' => $this->input->post('airlineID'),
+						  'type' => $this->input->post('img_type'),
+						  'image' => $new_file,
+						  'create_date' => time(),
+						  'create_userID' => $this->session->userdata('loginuserID')					 
+						);					
+					   $galleryID = $this->airline_m->add_gallery($gallery);
+						if($galleryID){
+						  $this->session->set_flashdata('success', $this->lang->line('menu_success'));	   
+						}				   
+					} else {
+						$error = array('error' => $this->upload->display_errors());					
+						//echo $error['error'];
+						 $this->session->set_flashdata('success', $error);	
+						  $this->data['subview'] = 'airline/airline_gallery';
+		                  $this->load->view('_layout_main',$this->data);
+					 }					  
+				   }
+				}
+				redirect(base_url('airline/index'));	
+			  } 
+						
+		}else{			
 		  $this->data['subview'] = 'airline/airline_gallery';
 		  $this->load->view('_layout_main',$this->data);
 		}
+	}
+	
+	public function deleteImage(){
+		   $airline = $this->airline_m->getGalleryImage($this->input->post('galleryID'));
+		 if($airline->image != 'defualt.png') {
+			if(file_exists(FCPATH.'uploads/images/'.$airline->image)) {
+			  unlink(FCPATH.'uploads/images/'.$airline->image);
+			}
+			$this->airline_m->deleteGalleryImage($this->input->post('galleryID'));		
+		 }	 
+		 $json['status'] = 'Success'; 
+	     if (isset($_SERVER)) {		
+		    header('Access-Control-Allow-Origin: *');
+			header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+			header('Access-Control-Max-Age: 1000');
+			header('Access-Control-Allow-Credentials: true');
+			header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+		}
+		$this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($json));
+	}	
+	
+	public function deleteAirlineLogo(){
+		$id = htmlentities(escapeString($this->uri->segment(3)));
+		$airline = $this->airline_m->getAirlineData($id);	 
+		 if($airline->logo != 'defualt.png') {
+			if(file_exists(FCPATH.'uploads/images/'.$airline->logo)) {
+			  unlink(FCPATH.'uploads/images/'.$airline->image);
+			}
+			$this->airline_m->deleteAirlineLogo($id);		
+		 }	 
+		redirect(base_url('airline/edit/'.$id));
 	}
 
 }

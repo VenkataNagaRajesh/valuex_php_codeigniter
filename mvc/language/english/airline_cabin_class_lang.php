@@ -1,8 +1,8 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "Carrier Cabin Class Map";
-$lang['add_title'] = "Add Carrier Cabin Class Mapping";
+$lang['panel_title'] = "Cabin Class Mapping";
+$lang['add_title'] = "Add Cabin Class Mapping";
 $lang['edit_airline_cabin_class'] = 'Edit Cabin Class Mapping';
 $lang['add_airline_cabin_class'] = 'Add Cabin Class Mapping';
 $lang['update_airline_cabin_class'] = 'Update Cabin Class Mapping';

@@ -84,7 +84,7 @@ class bid_m extends MY_Model {
   }
   
    public function get_offer_data($offer_id){
-	   $this->db->select("def.desc cabin,udef.desc upgrade_type,tpf.seat_no,tpf.pnr_ref,tpf.carrier_code  carrier,tpf.dep_date,tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,tpf.flight_number,c1.aln_data_value from_city,c2.aln_data_value to_city,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.cash,oref.miles")->from(' VX_aln_dtpf_ext pfe');	
+	   $this->db->select("def.desc cabin,udef.desc upgrade_type,tpf.seat_no,tpf.pnr_ref,tpf.carrier_code  carrier,tpf.dep_date,tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,tpf.flight_number,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.cash,oref.miles")->from(' VX_aln_dtpf_ext pfe');	
 	  $this->db->join('vx_aln_data_defns dd','(dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20)','LEFT');
 	  $this->db->join('VX_aln_daily_tkt_pax_feed tpf','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');
 	  $this->db->join('VX_aln_fare_control_range fclr','(fclr.fclr_id = pfe.fclr_id AND fclr.from_cabin=tpf.cabin)','LEFT');	
@@ -164,7 +164,7 @@ class bid_m extends MY_Model {
 	function getAirlineLogoByPNR($pnr_ref){
 		$this->db->select("a.*,d.aln_data_value")->from('VX_aln_airline a');
 		$this->db->join('vx_aln_data_defns d','d.vx_aln_data_defnsID = a.airlineID','LEFT');
-		$this->db->join('VX_aln_daily_tkt_pax_feed p','p.airline_code = d.vx_aln_data_defnsID','LEFT');
+		$this->db->join('VX_aln_daily_tkt_pax_feed p','p.carrier_code = d.vx_aln_data_defnsID','LEFT');
 		$this->db->where('p.pnr_ref',$pnr_ref);
 		$query = $this->db->get();
 		return $query->row();
@@ -214,7 +214,23 @@ class bid_m extends MY_Model {
          return $arr;
 	}
 
-    
+    public function getCarrierCabinImages($airlineID,$cabin){
+		$this->db->select('i.image')->from('VX_aln_airline_cabin_map m');
+		$this->db->join('VX_aln_airline_cabin_images i','i.airline_cabin_map_id = m.cabin_map_id','LEFT');
+		$this->db->where('m.airline_code',$airlineID);
+		$this->db->where('m.airline_cabin',$cabin);
+		$query = $this->db->get();
+		return $query->result();
+	}
+	
+	public function getCarrierCabinVideos($airlineID,$cabin){
+		$this->db->select('video_links')->from('VX_aln_airline_cabin_map');
+		$this->db->where('airline_code',$airlineID); //2250 |           966
+		$this->db->where('airline_cabin',$cabin);
+		$query = $this->db->get();
+		//$this->mydebug->debug($this->db->last_query());
+		return $query->result();
+	}
 	
 }
 

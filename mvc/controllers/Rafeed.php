@@ -183,10 +183,10 @@ class Rafeed extends Admin_Controller {
 			   foreach ($Reader as $Row){
 				$column++;
 			//	print_r($Row);exit;
+				$Row = array_map('trim', $Row);
 				if($i == 0){ // header checking						
 					
 				  $flag = 0 ;						 
-				  $Row = array_map('trim', $Row);
 				   $import_header = array_map('strtolower', $Row);
 				  if(count(array_diff($header,$import_header)) == 0){
 					$this->mydebug->rafeed_log("Header matched for " . $_FILES['file']['name'] , 0);
@@ -212,7 +212,7 @@ class Rafeed extends Admin_Controller {
                                         }
 
 
-				      $rafeed['prorated_price'] = $Row[array_search('cpn value',$import_header)];
+				      $rafeed['prorated_price'] = round($Row[array_search('cpn value',$import_header)],2);
 					if(!is_numeric($rafeed['prorated_price'])){
                                                 $this->mydebug->rafeed_log("PRice should be numeric in row " . $column, 1);
                                                 continue;
@@ -349,20 +349,25 @@ class Rafeed extends Admin_Controller {
                                                 continue;
                                         }
 
+
+					$is_null_flag = 0;
+					foreach ($rafeed as $k=>$v) {
+                                            if($k != 'day_of_week' && $k != 'season_id') {
+                                                 if($v == '' ){
+                                                    $this->mydebug->rafeed_log("There is null value column ".$k. " in row " . $column, 1);
+                                                    $is_null_flag = 1;
+                                               }
+                                        }
+                                    }
+					if($is_null_flag == 1) {
+					 $this->mydebug->rafeed_log("Improper data for row ". $column. " skipping ..", 1);
+						continue;
+					}
+
+
+
 					//var_dump($rafeed);exit;
 						if($this->rafeed_m->checkRaFeed($rafeed)) {
-								
-							$insert_flag = 1;
-							foreach ($rafeed as $k=>$v) {
-								if($k != 'day_of_week' && $k != 'season_id') {
-									if($v == '' ){
-									$this->mydebug->rafeed_log("There is null value column ".$k. " in row " . $column, 1);
-									$insert_flag = 0;
-								}
-								}
-							 }
-
-							if ( $insert_flag == '1' ) {
                                                           $rafeed['create_date'] = time();
                                                           $rafeed['modify_date'] = time();
                                                           $rafeed['create_userID'] = $this->session->userdata('loginuserID');
@@ -373,20 +378,17 @@ class Rafeed extends Admin_Controller {
 								$this->mydebug->rafeed_log("uploaded row " . $column , 0);
 								} else{
 
-									$this->mydebug->rafeed_log("Record not inserted for row " . $column , 0);
+									$this->mydebug->rafeed_log("Record not inserted for row " . $column , 1);
 								}
-							} else {
-
-								$this->mydebug->rafeed_log("Not proper data for  row " . $column, 1);
-								continue;
-							}
 						}else{
 							$this->mydebug->rafeed_log("Duplicate Entry", 1);
+							continue;
 						}
 
 					   	 } 						
 						else{
 							$this->mydebug->rafeed_log("coulmns count didn't match for " . $column, '1');
+							
 						}
 					   } else {
 						$this->mydebug->rafeed_log("Header mismatch", 1);
