@@ -785,7 +785,7 @@ class Airline extends Admin_Controller {
                      $this->load->library('upload', $config);
 			
                 			$this->upload->initialize($config);
-                			if($this->upload->do_upload('image')){
+                			if($this->upload->do_upload('image')){							
 						$this->upload_data['file'] =  $this->upload->data();			 			  
 						$gallery= array(
 						  'airlineID' => $this->input->post('airlineID'),
@@ -793,15 +793,17 @@ class Airline extends Admin_Controller {
 						  'image' => $new_file,
 						  'create_date' => time(),
 						  'create_userID' => $this->session->userdata('loginuserID')					 
-						);					
+						);
+                          		
 					   $galleryID = $this->airline_m->add_gallery($gallery);
 						if($galleryID){
 						  $this->session->set_flashdata('success', $this->lang->line('menu_success'));	   
 						}				   
 					} else {
-						$error = array('error' => $this->upload->display_errors());					
+						$error = array('error' => $this->upload->display_errors());
+                      $this->mydebug->debug($error);						
 						//echo $error['error'];
-						 $this->session->set_flashdata('success', $error);	
+						 $this->session->set_flashdata('error', $error['error']);	
 						  $this->data['subview'] = 'airline/airline_gallery';
 		                  $this->load->view('_layout_main',$this->data);
 					 }					  
