@@ -53,20 +53,18 @@
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Origin</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Destination</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Cabin no</th>
-						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Seat No</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Offer</th>
 					</tr>
 				</thead>
 			  <tbody>
 					<tr style="white-space:nowrap;">
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{dep_date}</td>
-						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{carrier_code}{flight_number}</td>
+						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{flight_no}</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{dep_time}</td>
-						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{from_city_code}</td>
-						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{to_city_code}</td>
-						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{cabin} Class</td>
-						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{seat_no}</td>
-						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">${cash} USD</td>
+						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{origin}</td>
+						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{destination}</td>
+						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{upgrade_to} Class</td>						
+						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">${cash_paid} USD</td>
 					</tr>
 				</tbody>
 			</table>
