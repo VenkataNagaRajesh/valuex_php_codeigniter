@@ -10,7 +10,6 @@
     <div class="box-body rafeed">
         <div class="row">
             <div class="col-sm-12">              
-
               <h5 class="page-header">                        
 		<?php if(permissionChecker('rafeed_upload')) { ?>
                   <a href="<?php echo base_url('rafeed/upload') ?>" class="btn btn-danger">
@@ -24,7 +23,6 @@
                       <?=$this->lang->line('download_rafeed_format')?>
                   </a>
                                  <?php } ?>
-
 
               </h5>
 			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
@@ -137,9 +135,7 @@
                 </div>	             				
 			  </div>
 			 </form>			
-
-<div class="col-md-12">
-                <div class="col-md-12">
+                <div class="col-md-12" style="padding:0;">
                         <div class="tab-content table-responsive" id="hide-table">
                                 <table id="rafeedtable" class="table table-bordered dataTable no-footer">
                                   <thead>
@@ -184,9 +180,6 @@
                                 </table>
                          </div>
                  </div>
-        </div>
-
-
           </div>
        </div>
    </div>

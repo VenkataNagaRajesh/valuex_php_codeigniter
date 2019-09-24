@@ -1,6 +1,6 @@
 
 <div class="box">
-    <div class="box-header">
+    <div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
 
         <ol class="breadcrumb">
@@ -15,9 +15,9 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-		    <h5 class="page-header">
-             <p>Average Rating : <?=round($avg_rating)?></p>
-         </h5>
+			<div class="col-md-12">
+				<h5 class="page-header"><p>Average Rating : <?=round($avg_rating)?></p></h5>
+			</div>
             <div class="col-sm-12">
                 <div id="hide-table">
                     <table id="feedbacktab" class="table table-striped table-bordered table-hover dataTable no-footer">
