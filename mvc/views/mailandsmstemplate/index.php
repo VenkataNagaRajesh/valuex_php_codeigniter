@@ -31,7 +31,7 @@
 				   echo form_dropdown("filter_airline", $list,set_value("filter_airline",$filter_airline), "id='filter_airline' class='form-control select2'");    ?>
                 </div>                 	    
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                 </div>	             				
 			  </div>
 			 </form>

@@ -3990,7 +3990,7 @@ fieldset[disabled] .btn-vk.active {
 	margin: 10px 0;
 	border-radius:3px;
 	background:#fff;
-	padding: 12px 10px;
+	padding: 15px;
 }
 .table-reponsive .table thead th{
 	font-weight:bold;
@@ -4157,10 +4157,11 @@ fieldset[disabled] .btn-vk.active {
 	padding: 0;
 }
 .seasons  .season-table{
-	margin-top: 15px;
+	margin: 9px 0;
 	background: #fff;
 	padding: 15px 20px;
 	clear: both;
+	border:solid 1px #999;
 }
 .seasons  .season-table .table .onoffswitch-small-inner::before {
 	background:#109610;
@@ -4448,8 +4449,9 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 	font-weight: bold;
 	font-size: 18px;
 	background: #ff6633;
-	padding: 5px 15px;
+	padding: 6px 15px;
 	margin: 1px 0;
+	border:solid 1px #999;
 }
 .simpleTree-label:hover {
     font-weight: bold;
@@ -4638,7 +4640,7 @@ table{
   border-collapse: collapse;
   word-wrap:break-word; 
 }
-#master{
+/*#master{
 	table-layout: fixed; 
 }
 #tztable{
@@ -4666,7 +4668,7 @@ table{
 }
 #airlinetable{
    table-layout: fixed;
-}
+}*/
 .pax-view .form-horizontal .form-group .form-control{
 	margin:12px 0;
 }

@@ -204,7 +204,7 @@ class bid_m extends MY_Model {
 	
 	function get_cabins($carrier){
 		$this->db->select('acd.*,def.vx_aln_data_defnsID')->from('VX_aln_airline_cabin_def acd');
-		$this->db->join('VX_aln_data_defns def','(def.alias = acd.level) and aln_data_typeID = 13','INNER');
+		$this->db->join('vx_aln_data_defns def','(def.alias = acd.level) and aln_data_typeID = 13','INNER');
 		$this->db->where('acd.carrier',$carrier);
 		$query = $this->db->get();
 		 $result = $query->result();

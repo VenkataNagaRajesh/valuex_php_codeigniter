@@ -209,6 +209,7 @@ class Bidding extends MY_Controller {
                   $fly_data = $this->offer_issue_m->get_flight_date($data['offer_id'],$data['flight_number']);
                   $bid_array['flight_date'] = $fly_data->dep_date;
                   $bid_array['carrier_code'] = $fly_data->carrier_code;
+		  $bid_array['from_cabin'] = $fly_data->cabin;
                   $this->offer_issue_m->calculateBidAvg($bid_array);
 								
 			  $this->session->unset_userdata('validation_check');

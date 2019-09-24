@@ -195,12 +195,12 @@ class Paxfeed extends Admin_Controller {
                                                 continue;
                                         }
 
-
+					/*
 					if (!ctype_alpha($paxfeedraw['first_name'])){
 					 $this->mydebug->paxfeed_log( $paxfeedraw['first_name'] . " First name should contain alphabets only in row " .$column  , 1);
                                                 continue;
 
-					}
+					}*/
 
 
                                       $paxfeedraw['last_name'] = trim($Row[array_search('last name',$import_header)]);
@@ -209,13 +209,13 @@ class Paxfeed extends Admin_Controller {
                                               $this->mydebug->paxfeed_log("Last name should be of length 99 characters in row " . $column , 1);
                                                 continue;
                                         }
-
+					/*
 
 						 if (!ctype_alpha($paxfeedraw['last_name'])){
                                          $this->mydebug->paxfeed_log("Last name should contain alphabets only in row " .$column  , 1);
                                                 continue;
 
-                                        }
+                                        }*/
 
 
                                       $paxfeedraw['ptc'] = $Row[array_search('ptc',$import_header)];
@@ -872,7 +872,7 @@ if(!empty($data_id_array)) {
 
 public function process_fclr_matching_report() {
 
-                $sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf LEFT JOIN vx_aln_data_defns cab on (cab.vx_aln_data_defnsID = pf.cabin and cab.aln_data_typeID = 13 ) where cab.aln_data_value != 'Business'  AND is_fclr_processed = 0 order by dtpf_id";
+                $sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf where is_fclr_processed = 0 order by dtpf_id";
                 $rResult = $this->install_m->run_query($sQuery);
 
 		foreach ($rResult as $feed ) {
