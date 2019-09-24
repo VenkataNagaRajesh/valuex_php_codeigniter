@@ -37,7 +37,7 @@
                             echo "<div class='form-group' >";
                     ?>
                         <label for="photo" class="col-sm-2 control-label">
-                            <?=$this->lang->line("airline_logo")?>
+                            <?=$this->lang->line("airline_logo")?> (392 * 105)
                         </label>
                         <div class="col-sm-6">
                             <div class="input-group image-preview">

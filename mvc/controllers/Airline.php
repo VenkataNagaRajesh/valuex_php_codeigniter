@@ -65,10 +65,15 @@ class Airline extends Admin_Controller {
 				$config['upload_path'] = "./uploads/images";
 				$config['allowed_types'] = "gif|jpg|png";
 				$config['file_name'] = $new_file;
-				$config['max_size'] = '1024';
-				$config['max_width'] = '3000';
-				$config['max_height'] = '3000';
+				//$config['max_size'] = '1024';
+				//$config['max_width'] = '3000';
+				//$config['max_height'] = '3000';
+				$config['max_width'] = '392';
+				$config['max_height'] = '105';
+                $config['min_width'] = '392';
+				$config['min_height'] = '105';				
 				$this->load->library('upload', $config);
+				$this->upload->initialize($config);
 				if(!$this->upload->do_upload("photo")) {
 					$this->form_validation->set_message("photoupload", $this->upload->display_errors());
 	     			return FALSE;
@@ -757,25 +762,27 @@ class Airline extends Admin_Controller {
 					$_FILES['image']['error'] = $_FILES['images']['error'][$i]; 
 					$_FILES['image']['size'] = $_FILES['images']['size'][$i]; 
                      if($this->input->post('img_type') == "upgrade_offer_mail_template2"){
-						$config['width'] = '344';
-						$config['height'] = '438';
+						 $width = '344';
+						 $height = '438';
 					} else if($this->input->post('img_type') == "upgrade_offer_mail_template1" || $this->input->post('img_type') == "upgrade_offer_mail_template3" ){
-						$config['width'] = '732';
-						$config['height'] = '184';
+						  $width = '732';
+						  $height = '184';
 					} else if($this->input->post('img_type') == "airline_logo"){
-						$config['width'] = '84';
-						$config['height'] = '60';
+						 $width = '84';
+						 $height = '60';
 					}else {
-						$config['width'] = '416';
-						$config['height'] = '290';
+						 $width = '416';
+						 $height = '290';
 					}
 					$config['upload_path'] = "./uploads/images";
 					$config['allowed_types'] = 'gif|jpg|png'; 
 			 		$config['file_name'] = $new_file;
                     $config['max_size'] = '1024';
-                                	//$config['max_width'] = '3000';
-                                	//$config['max_height'] = '3000';
-                                	$this->load->library('upload', $config);
+                    $config['max_width'] = $width;
+                    $config['max_height'] = $height;
+					$config['min_width'] = $width;
+                    $config['min_height'] = $height;
+                     $this->load->library('upload', $config);
 			
                 			$this->upload->initialize($config);
                 			if($this->upload->do_upload('image')){
