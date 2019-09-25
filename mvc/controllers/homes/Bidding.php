@@ -28,7 +28,18 @@ class Bidding extends MY_Controller {
   
     public function index() {  
       //$this->session->set_userdata('pnr_ref','AS0414');
-      //$this->session->set_userdata('validation_check',1);	   
+      //$this->session->set_userdata('validation_check',1);	 
+       if(!empty($this->input->get('pnr_ref'))){
+		   $this->data['error'] = $this->allowValidation($this->input->get('pnr_ref'));
+           if(empty($this->data['error'])){
+			 $this->session->set_userdata('validation_check', 1);
+			 $this->session->set_userdata('pnr_ref',$this->input->get('pnr_ref'));
+		   } else {
+			  // print_r($this->data['error']); exit;
+			  $this->session->set_flashdata('error', $this->data['error']);
+			  redirect(base_url('home/index?pnr_ref='.$this->input->get('pnr_ref'))); 
+		   } 
+	   }  
 
 		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
 			redirect(base_url('home/index'));
@@ -75,7 +86,7 @@ class Bidding extends MY_Controller {
 		$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 		
 		if(!empty($this->session->userdata('pnr_ref'))){
-		  $airline = $this->bid_m->getAirlineLogoByPNR($_GET['pnr_ref']);
+		  $airline = $this->bid_m->getAirlineLogoByPNR($this->session->userdata('pnr_ref'));
 		  if(!empty($airline->logo)){
 		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
 		  } else {

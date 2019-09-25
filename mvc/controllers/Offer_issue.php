@@ -32,17 +32,17 @@ class Offer_issue extends Admin_Controller {
 	  $data = array(
         'first_name'   => 'Lakshmi',
         'last_name' => 'Amujuru',
-        'tomail' => 'swekenit@gmail.com',
-        'pnr_ref' => 'AS0414',
+        'tomail' => 'laxmicme@gmail.com',
+        'pnr_ref' => 'BA1257',
         'coupon_code' => 'sssssssss',
-        'mail_subject' => "Upgrade Cabin Offerss AS0414",
+        'mail_subject' => "Upgrade Cabin Offerss BA1257",
 		'bidnow_link' => base_url('home/index'),
         'airlineID' => 4079		
         );			       
-          $this->sendMailTemplateParser('bid_accepted',$data);
-		  exit;
+          //$this->sendMailTemplateParser('bid_accepted',$data);
+		 // exit;
          //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);
-           // $this->upgradeOfferMail($data);		 
+            $this->upgradeOfferMail($data);		 
 	}
 	
 
