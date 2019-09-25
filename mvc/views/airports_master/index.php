@@ -60,8 +60,7 @@
 				  <button type="button" class="btn btn-danger" onclick="downloadMasterData()">Download</button>
                 </div>	             				
 			  </div>
-			 </form>
-			<div class="col-md-12">			 
+			 </form>		 
             <div id="hide-table">
                <table id="master" class="table table-bordered dataTable no-footer">
                  <thead>
@@ -86,7 +85,6 @@
                  </tbody>
               </table>
             </div>
-			</div>
           </div>
        </div>
    </div>

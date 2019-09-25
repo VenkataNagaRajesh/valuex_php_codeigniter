@@ -65,10 +65,15 @@ class Airline extends Admin_Controller {
 				$config['upload_path'] = "./uploads/images";
 				$config['allowed_types'] = "gif|jpg|png";
 				$config['file_name'] = $new_file;
-				$config['max_size'] = '1024';
-				$config['max_width'] = '3000';
-				$config['max_height'] = '3000';
+				//$config['max_size'] = '1024';
+				//$config['max_width'] = '3000';
+				//$config['max_height'] = '3000';
+				$config['max_width'] = '392';
+				$config['max_height'] = '105';
+                $config['min_width'] = '392';
+				$config['min_height'] = '105';				
 				$this->load->library('upload', $config);
+				$this->upload->initialize($config);
 				if(!$this->upload->do_upload("photo")) {
 					$this->form_validation->set_message("photoupload", $this->upload->display_errors());
 	     			return FALSE;
@@ -757,28 +762,30 @@ class Airline extends Admin_Controller {
 					$_FILES['image']['error'] = $_FILES['images']['error'][$i]; 
 					$_FILES['image']['size'] = $_FILES['images']['size'][$i]; 
                      if($this->input->post('img_type') == "upgrade_offer_mail_template2"){
-						$config['width'] = '344';
-						$config['height'] = '438';
+						 $width = '344';
+						 $height = '438';
 					} else if($this->input->post('img_type') == "upgrade_offer_mail_template1" || $this->input->post('img_type') == "upgrade_offer_mail_template3" ){
-						$config['width'] = '732';
-						$config['height'] = '184';
+						  $width = '732';
+						  $height = '184';
 					} else if($this->input->post('img_type') == "airline_logo"){
-						$config['width'] = '84';
-						$config['height'] = '60';
+						 $width = '84';
+						 $height = '60';
 					}else {
-						$config['width'] = '416';
-						$config['height'] = '290';
+						 $width = '416';
+						 $height = '290';
 					}
 					$config['upload_path'] = "./uploads/images";
 					$config['allowed_types'] = 'gif|jpg|png'; 
 			 		$config['file_name'] = $new_file;
                     $config['max_size'] = '1024';
-                                	//$config['max_width'] = '3000';
-                                	//$config['max_height'] = '3000';
-                                	$this->load->library('upload', $config);
+                    $config['max_width'] = $width;
+                    $config['max_height'] = $height;
+					$config['min_width'] = $width;
+                    $config['min_height'] = $height;
+                     $this->load->library('upload', $config);
 			
                 			$this->upload->initialize($config);
-                			if($this->upload->do_upload('image')){
+                			if($this->upload->do_upload('image')){							
 						$this->upload_data['file'] =  $this->upload->data();			 			  
 						$gallery= array(
 						  'airlineID' => $this->input->post('airlineID'),
@@ -786,15 +793,17 @@ class Airline extends Admin_Controller {
 						  'image' => $new_file,
 						  'create_date' => time(),
 						  'create_userID' => $this->session->userdata('loginuserID')					 
-						);					
+						);
+                          		
 					   $galleryID = $this->airline_m->add_gallery($gallery);
 						if($galleryID){
 						  $this->session->set_flashdata('success', $this->lang->line('menu_success'));	   
 						}				   
 					} else {
-						$error = array('error' => $this->upload->display_errors());					
+						$error = array('error' => $this->upload->display_errors());
+                      $this->mydebug->debug($error);						
 						//echo $error['error'];
-						 $this->session->set_flashdata('success', $error);	
+						 $this->session->set_flashdata('error', $error['error']);	
 						  $this->data['subview'] = 'airline/airline_gallery';
 		                  $this->load->view('_layout_main',$this->data);
 					 }					  

@@ -33,7 +33,7 @@
 
 
               </h5>
-			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
+			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0">		   
 			<div class='form-group'>			 
 
 			 <div class="col-sm-2">
@@ -158,7 +158,7 @@
 			  </div>
 			 </form>			
 
-<div class="col-md-12">
+<div class="col-md-12" style="padding:0;">
                         <div class="tab-content table-responsive" id="hide-table">
                <table id="paxfeedtable" class="table table-bordered dataTable no-footer">
                  <thead>
