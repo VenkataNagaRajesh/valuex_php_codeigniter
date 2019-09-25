@@ -10,6 +10,7 @@ class Rafeed extends Admin_Controller {
 		$this->load->model("season_m");
 		$this->load->model("airline_m");
 		$this->load->model('airline_cabin_def_m');
+		$this->load->model('airline_cabin_class_m');
 		$this->load->model("user_m");
 		$language = $this->session->userdata('lang');		
 		$this->lang->load('rafeed', $language);	
@@ -298,6 +299,8 @@ class Rafeed extends Admin_Controller {
 						$this->mydebug->rafeed_log("cabin should in " . implode(',',$cabin_arr) . 'in row ' .$column, 1);
 						continue;
 					}
+
+
   				      $rafeed['class'] = $Row[array_search('class',$import_header)];
 					$class_arr = range('A','Z');
 					 if(!in_array($rafeed['class'],$class_arr)){
@@ -305,6 +308,12 @@ class Rafeed extends Admin_Controller {
                                                 continue;
                                         }
 
+				     $cabin_class_data = $this->airline_cabin_class_m->getCabinFromClassForCarrier($rafeed['carrier'],$rafeed['class']);
+				     if($cabin_class_data->cabin_id != $rafeed['cabin']) {
+						$this->mydebug->rafeed_log("Class - cabin Mapping not matched for row " . $column, 1);
+                                                continue;
+
+					}
 					
 				      $rafeed['departure_date'] =  
 					     strtotime(str_replace('-','/',$Row[array_search('flight date',$import_header)]));

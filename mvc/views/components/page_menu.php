@@ -6,9 +6,12 @@
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
                         <div class="pull-left image">
-                            <!--<img style="display:block" src="<?=base_url("uploads/images/".$this->session->userdata('photo'));
-                                ?>" class="img-circle" alt="" />-->
-							<span class="user-icon"><i class="fa fa-user"></i></span>
+                           <?php if($this->session->userdata('photo') == 'defualt.png' || empty($this->session->userdata('photo'))){ ?>                               
+                               <span class="user-icon"><i class="fa fa-user"></i></span>
+							  <?php }else{ ?>
+							   <img src="<?=base_url("uploads/images/".$this->session->userdata('photo')); 
+                                ?>" class="user-logo" alt="" />
+							  <?php } ?>
                         </div>
 
                         <div class="pull-left info">

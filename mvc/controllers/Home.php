@@ -117,7 +117,8 @@ class Home extends MY_Controller {
 		           $this->load->view('_layout_home', $this->data);
 				}				
 			}			
-		} else {			
+		} else {
+           $this->data['error'] = $this->session->flashdata('error');			
 		   $this->data["subview"] = "home/index";
 		   $this->load->view('_layout_home', $this->data);
 		}     		

@@ -185,14 +185,16 @@ class Client extends Admin_Controller {
 		$userID = $this->session->userdata('loginuserID');
 		if($userTypeID == 2){
 			  $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-		   } else {
-			   $this->data['airlines'] = $this->airline_m->getAirlinesData();
+		   } else if($userTypeID != 1){
+			 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+			}else {
+			 $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		   }
 		
 		if(!empty($this->input->post('airlineID'))){	
 		   $this->data['airlineID'] = $this->input->post('airlineID');
 		} else {
-			if($userTypeID == 2){
+			if($userTypeID != 1){
 		      $this->data['airlineID'] = $this->session->userdata('default_airline');
 			} else {
 			  $this->data['airlineID'] = 0;	
@@ -598,6 +600,15 @@ class Client extends Admin_Controller {
 			if($usertypeID == 2){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                 $sWhere .= 'c.userID = '.$this->session->userdata('loginuserID');	
+			}
+			
+			if($userTypeID != 1){
+				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+				$airlines = $this->user_m->getUserAirlines($userID);
+				foreach($airlines as $airline){
+				  $airline_list[] = $airline->vx_aln_data_defnsID;
+				}
+			   $sWhere .= 'ca.airlineID IN ('.implode($airline_list).')';		
 			}
 			
 			if($this->input->get('airlineID') > 0 ){
