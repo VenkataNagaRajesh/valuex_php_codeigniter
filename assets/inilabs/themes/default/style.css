@@ -4618,7 +4618,7 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 	margin-bottom:10px;
 }
 .box-body .form-horizontal{
-	padding: 0 12px;
+	padding: 0px;
 }
 .season-list-color{
 	height: 20px;
@@ -4721,4 +4721,8 @@ table{
 }
 .breadcrumb > li + li::before {
 	color:#fff;
+}
+.table > thead > tr > th, .table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > td, .table > tbody > tr > td, .table > tfoot > tr > td {
+    padding: 4px 8px !important;
+	vertical-align: middle !important;
 }
