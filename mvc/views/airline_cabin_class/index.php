@@ -1,4 +1,4 @@
-<div class="box">
+<div class="box ar-cabin">
     <div class="box-header">
         <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
@@ -27,7 +27,8 @@
                   <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
                </ul>
 
-	<br/> <br/>                
+	<br/> <br/>    
+<div class="col-md-12">	
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
                            <div class="col-sm-3 col-md-2">
@@ -66,9 +67,9 @@
                 </div>
                           </div>
                          </form>
-
+		</div>
 		
-		
+		<div class="col-md-12">
 	       <div class="tab-content">
                 <div id="all" class="tab-pane active">
                   <div id="hide-table">
@@ -95,8 +96,6 @@
                         </thead>
 						<tbody>                           
                         </tbody>
-                    <tbody>
-					</tbody>
 					</table>
 				  </div>
                 </div>
@@ -106,7 +105,7 @@
         </div>
     </div>
 </div>
-
+</div>
 
 <script type="text/javascript">
 
