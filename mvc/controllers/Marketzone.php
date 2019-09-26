@@ -473,15 +473,29 @@ $id = $this->input->post('id');
                echo "<option value=\"$market->market_id\">",$market->market_name,"</option>";
             }
                 } else {
+		
 			
+		 if($level_id == 17 ) {
+        	                $airports_list = $this->marketzone_m->getAirportsForMarketsList($level_value);
+				foreach ($airports_list as $airport ) {
+					$temp = array();
+					$temp = $this->marketzone_m->getParentsofAirportByType($airport,$id);
+					$result = array_merge($result,$temp);
+				}
+
+		 } else {
                   foreach ($level_value as $level){
-			$tenp = array();
+			$temp = array();
 			$temp = $this->marketzone_m->getChildsList($level,$id);
 			$result = array_merge($result,$temp);	
 		  }
+		}
               $list = explode(',',$sub_id);
           // echo "<option value='0'>", SELECT,"</option>";
-            foreach ($result as $defns) {
+
+	  $result1 = array_unique($result, SORT_REGULAR);
+	   if(count($result1) > 0 ) {
+            foreach ($result1 as $defns) {
                 if ( $id == 4 || $id == 5 ) {
                         echo "<option value=\"$defns->vx_aln_data_defnsID\">",$defns->aln_data_value,"</option>";
                 }else {
@@ -489,6 +503,8 @@ $id = $this->input->post('id');
 
                 }
             }
+
+	}
             }
      }
 

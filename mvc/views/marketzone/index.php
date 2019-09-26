@@ -482,6 +482,8 @@ $('#airline_id').change(function(event) {
 
 $('#amz_level_id').change(function(event) {    
         $('#amz_level_value').val(null).trigger('change');
+	$('#amz_excl_id').val(0).trigger('change');
+	$('#amz_excl_value').val(null).trigger('change');
   var level_id = $(this).val();                 
   var airline_id = $('#airline_id').val();
   var market_id = $('#market_id').val();
