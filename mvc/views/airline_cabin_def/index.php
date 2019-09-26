@@ -1,5 +1,5 @@
 
-<div class="box">
+<div class="box ar-cab-def">
     <div class="box-header">
         <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
@@ -30,8 +30,8 @@
 
 
                     
-
-       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 10px;">
+<div class="col-md-12">
+       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
                            <div class="col-sm-2">
                <?php 
@@ -68,10 +68,8 @@
                           </div>
                          </form>
 
-		
+		</div>
 
-
- <div class="col-md-12">
                 <div class="col-md-12">
                         <div class="tab-content table-responsive" id="hide-table">
                                 <table id="cabindeftable" class="table table-bordered dataTable no-footer">
@@ -99,7 +97,6 @@
                                 </table>
                          </div>
                  </div>
-        </div>
 
             </div>
 		  </div>

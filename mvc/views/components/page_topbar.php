@@ -323,9 +323,12 @@
                         <?php } ?>-->
                         <li class="dropdown user user-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <!--<img src="<?=base_url("uploads/images/".$this->session->userdata('photo')); 
-                                ?>" class="user-logo" alt="" />-->
-                                <span class="user-icon"><i class="fa fa-user"></i></span>
+							  <?php if($this->session->userdata('photo') == 'defualt.png' || empty($this->session->userdata('photo'))){ ?>                               
+                               <span class="user-icon"><i class="fa fa-user"></i></span>
+							  <?php }else{ ?>
+							   <img src="<?=base_url("uploads/images/".$this->session->userdata('photo')); 
+                                ?>" class="user-logo" alt="" />
+							  <?php } ?>
                                 <span class="mbl-user-name">
                                     <?php
                                         $name = $this->session->userdata('name');

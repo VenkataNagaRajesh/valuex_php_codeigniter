@@ -610,7 +610,8 @@ class Admin_Controller extends MY_Controller {
 		   $this->load->library('email');
 		   $data['base_url'] = base_url(); 
           // $data['base_url'] = 'http://valuex.sweken.com/';
-           $data['bidnow_link'] = base_url('home/index');
+           //$data['bidnow_link'] = base_url('home/index');
+		    $data['bidnow_link'] = base_url('homes/bidding?pnr_ref='.$data['pnr_ref']);
 		   $this->load->model('airline_m');
            $template_images = $this->airline_m->getImagesByType($data['airlineID']);
 		   foreach($template_images as $img){
@@ -625,7 +626,7 @@ class Admin_Controller extends MY_Controller {
                      
            $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['airlineID'])->template;
            $tpl = str_replace(array('<!--{','}-->'),array('{','}'),$tpl);		   
-          $message = $this->parser->parse_string($tpl, $data);
+          $message = $this->parser->parse_string($tpl, $data,true);
 		  //$this->mydebug->debug($tpl); exit;
 		 // print_r($tpl); exit;
 		  // $message = $this->parser->parse($template, $data,TRUE);
