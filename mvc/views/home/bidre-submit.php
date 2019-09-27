@@ -15,10 +15,10 @@
 </head>
 <body>
 <div style="min-width: 245px;max-width: 1100px;position: relative;padding: 10px;margin:0 auto;font-family:century gothic;">
-	<div style="margin-left:auto;margin-right:auto;width:100%;padding-left: 15px;padding-right: 15px;background: #333;">
-		<img style="width:120px;" src="{logo}" alt="logo">
+	<div style="margin-left:auto;margin-right:auto;width:100%;padding-left: 15px;padding-right: 15px;background: {mail_header_color};">
+		<img style="width:120px;" src="{logo}" alt="logo" width="120">
 	</div>
-	<div style="border: solid 1px #ddd;width:100%;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;">
+	<div style="width:100%;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;">
 		<div style="width:100%;margin-top:10px;">
 			<div style="width:10%;float:left;">
 				<img style="width:auto;display: block;height:54px;" src="{airline_logo}" alt="logo">
@@ -76,14 +76,24 @@
 				<span style="font-weight: bold;color: #ff6633;">www.valuex.com</span>
 			</p>
 		</div>
-		<div class="share">
-			<p><b>SHARE: </b></p>
-			<ul style="list-style: none;padding-left: 0;display: table;">
-				<li style="float: left;margin-right: 10px;"><a href="www.facebook.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/fb.png" alt="fb"></a></li>
-				<li style="float: left;margin-right: 10px;"><a href="www.pintrest.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/pinterest.png" alt="pinterest"></a></li>
-				<li style="float: left;margin-right: 10px;"><a href="www.twitter.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/twitter.png" alt="twitter"></a></li>
-			</ul>
-		</div>
+		
+		<table style="width:10%;">
+		        <tr><td>
+				  <h5><b>SHARE</b></h5>
+				</td></tr>
+		  		<tr>
+				
+					<td>
+						<a href="www.facebook.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/fb.png" alt="fb" width="50"></a>
+					</td>
+					<td>
+						<a href="www.twitter.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/twitter.png" alt="twitter" width="50"></a>
+					</td>
+					<td>
+						<a href="www.pinterest.com"><img style="width:39px;display: block;height:auto;" src="{base_url}assets/home/images/pinterest.png" alt="pinterest" width="50"></a>
+					</td>
+				</tr>
+		</table>
 	</div>
 </div>
 </body>
