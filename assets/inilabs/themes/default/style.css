@@ -4726,3 +4726,10 @@ table{
     padding: 4px 8px !important;
 	vertical-align: middle !important;
 }
+.ar-cabin .nav-tabs-custom {
+	display:inline-block;
+	padding-bottom:20px;
+}
+.ar-cab-def .nav-tabs-custom {
+	display:inline;
+}

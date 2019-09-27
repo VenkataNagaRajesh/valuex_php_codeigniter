@@ -271,7 +271,7 @@ group by mz.market_id";
 
 
 	function getChildsList($parentID,$type){
-                 $query = "select vx_aln_data_defnsID, aln_data_value,code FROM 
+                 $query = "select vx_aln_data_defnsID, aln_data_value, code FROM 
                                         ( SELECT * from 
                                         ( SELECT * from vx_aln_data_defns  order by parentID, vx_aln_data_defnsID) 
                                           vx_aln_data_defns, (select @pv := ".$parentID.") 
@@ -301,9 +301,30 @@ group by mz.market_id";
 				ORDER BY T1.lvl DESC";
 
 		$result = $this->install_m->run_query($query);
-		return array_column($result,'vx_aln_data_defnsID');
+		return $result;
 
 	}
+
+
+function getParentsofAirportByType($airportID,$id) {
+                $query = "SELECT T2.vx_aln_data_defnsID , T2.aln_data_value, T2.code
+                          FROM (
+                                SELECT
+                                        @r AS _id,
+                                        (SELECT @r := parentID FROM vx_aln_data_defns WHERE vx_aln_data_defnsID = _id) AS parentID,
+                                        @l := @l + 1 AS lvl
+                                FROM
+                                        (SELECT @r := ".$airportID.", @l := 0) vars,
+                                        vx_aln_data_defns m
+                                        WHERE @r <> 0) T1
+                                JOIN vx_aln_data_defns T2
+                                        ON T1._id = T2.vx_aln_data_defnsID WHERE T2.aln_data_typeID = ".$id."
+                                ORDER BY T1.lvl DESC";
+
+                $result = $this->install_m->run_query($query);
+		return $result;
+
+        }
 
 
 	function getMarketsForAirportID($airport_id) {
@@ -324,6 +345,16 @@ group by mz.market_id";
                 $result =  $query->result();
                 return array_column($result,'airport_id');
         }
+
+   function getAirportsForMarketsList($market_list) {
+                $this->db->select('airport_id')->from('VX_market_airport_map');
+                $this->db->where_in('market_id',$market_list);
+                $query = $this->db->get();
+                $result =  $query->result();
+                return array_column($result,'airport_id');
+        }
+
+
 
 
 	function getAirportsMarketData($airline_in = array()) { 

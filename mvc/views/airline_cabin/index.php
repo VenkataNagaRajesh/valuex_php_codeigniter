@@ -84,12 +84,7 @@
 				
                           </div>
                          </form>
-
-		
-
-
- <div class="col-md-12">
-                <div class="col-md-12">
+                <div class="col-md-12" style="padding:0;">
                         <div class="tab-content table-responsive" id="hide-table">
                                 <table id="cabintable" class="table table-bordered dataTable no-footer">
                                   <thead>
@@ -117,8 +112,6 @@
                                 </table>
                          </div>
                  </div>
-        </div>
-
             </div>
 		  </div>
         </div>
