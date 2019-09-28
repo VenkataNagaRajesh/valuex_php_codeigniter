@@ -81,6 +81,15 @@
                             <input type="text" class="form-control" id="video_links" name="video_links" value="<?=set_value('video_links', $airline->video_links)?>" >
                         </div>                     
                     </div>
+					<div class='form-group' >
+                        <label for="airline" class="col-sm-2 control-label">
+                            Mail template header color
+                        </label>
+                        <div class="col-sm-2">
+                            <input type="color" class="form-control" id="mail_header_color" name="mail_header_color" value="<?=set_value('mail_header_color',$airline->mail_header_color)?>" >
+                        </div>                     
+                    </div>
+					
 					
 					<?php 
                       /*   if(form_error('aircraft')) 

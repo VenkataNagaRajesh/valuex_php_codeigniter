@@ -28,16 +28,17 @@ class Offer_issue extends Admin_Controller {
      
 	}	
 	
-	function testmail(){	    
+	function testmail(){
+//lakshmi.amujuru@sweken.com,sirisha.majji@sweken.com,swekenit@gmail.com,anitha.jeereddi@sweken.com	    
 	  $data = array(
         'first_name'   => 'Lakshmi',
         'last_name' => 'Amujuru',
-        'tomail' => 'laxmicme@gmail.com',
+        'tomail' => 'lakshmi.amujuru@sweken.com',
         'pnr_ref' => 'BA1257',
         'coupon_code' => 'sssssssss',
-        'mail_subject' => "Upgrade Cabin Offerss BA1257",
+        'mail_subject' => "test mail",
 		'bidnow_link' => base_url('home/index'),
-        'airlineID' => 4079		
+        'airlineID' => 5418		
         );			       
           //$this->sendMailTemplateParser('bid_accepted',$data);
 		 // exit;

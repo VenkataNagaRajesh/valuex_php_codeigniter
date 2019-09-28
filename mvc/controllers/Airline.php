@@ -214,9 +214,11 @@ class Airline extends Admin_Controller {
 			$this->data['airline'] = $this->airline_m->getAirlineData($id);	
             $airline = $this->airline_m->getAirlineLogo($id);	
             if(!empty($airline)){
-			  $this->data['airline']->video_links = $airline->video_links;	
+			  $this->data['airline']->video_links = $airline->video_links;
+              $this->data['airline']->mail_header_color = $airline->mail_header_color;				  
 			} else {
-			  $this->data['airline']->video_links = '';	
+			  $this->data['airline']->video_links = '';
+              $this->data['airline']->mail_header_color = '';			  
 			}			
 			if($this->data['airline']) {
 				if($_POST) {	//print_r($_FILES); exit;
@@ -241,6 +243,7 @@ class Airline extends Admin_Controller {
 						$this->airline_m->update_airline($data,$id); 
                         $array['logo'] = $this->upload_data['file']['file_name'];
 						$array['video_links'] = $this->input->post('video_links');
+						$array['mail_header_color'] = $this->input->post('mail_header_color');
 						$array['airlineID'] = $id;
 						$this->airline_m->update_airlinelogo($array);
 						$this->session->set_flashdata('success', $this->lang->line('menu_success'));

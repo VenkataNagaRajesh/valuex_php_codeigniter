@@ -1,0 +1,1 @@
+alter table VX_aln_airline add column mail_header_color varchar(50) NOT NULL;

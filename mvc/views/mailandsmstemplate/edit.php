@@ -8,7 +8,7 @@
         customConfig: '../ckeditor/config.js',
         uiColor: '#3592E0',
         codeSnippet_theme: 'atelier-dune.light',
-		/* fullPage: true,
+		 /* fullPage: true,
 	    allowedContent: true */
     });
     });

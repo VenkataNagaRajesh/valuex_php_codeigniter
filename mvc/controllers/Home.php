@@ -149,6 +149,7 @@ class Home extends MY_Controller {
 	
 	public function bidcancel() {		
 		$this->data["subview"] = "home/bid-cancel";
+		$this->data["subview"] = "home/outlook4";
 		$this->load->view('_layout_home', $this->data);
 	}
 	
