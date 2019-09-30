@@ -757,7 +757,7 @@ $sWhere $sOrder $sLimit";
 	}
 	
 
-
+/*
 	function calculate_Min_Max($fromCabin ,$toCabin ) {
 
 		 $fromCabinAvg = array_sum($fromCabin)/count($fromCabin);
@@ -771,14 +771,6 @@ $sWhere $sOrder $sLimit";
                 $bidSD =  sqrt(pow($fromCabinSD,2) + pow($toCabinSD,2));
                 $max = $bidAvg + (3 * $bidSD);
                 $min = $bidAvg - (3 * $bidSD);
-/*
-		echo "FAverage:" . $fromCabinAvg. "<br>";
-		echo "toavg:" . $toCabinAvg . "<br>";
-		echo "BID AVG" . $bidAvg .  "<br>";
-		echo "F SD:" . $fromCabinSD . "<br>";
-		echo "T SD:" . $toCabinSD . "<br>";
-		echo "sigma:" .  $bidSD . "<br>";exit;
-		*/
 		
 
                 $feed->average = round($bidAvg,1);
@@ -788,6 +780,27 @@ $sWhere $sOrder $sLimit";
 		 return  $feed;
 
  	}
+
+*/
+
+
+ function calculate_Min_Max($fromCabinSD, $toCabinSD,  $fromCabinAvg, $toCabinAvg ) {
+
+
+                $bidAvg = $toCabinAvg - $fromCabinAvg;
+
+                $bidSD =  sqrt(pow($fromCabinSD,2) + pow($toCabinSD,2));
+                $max = $bidAvg + (3 * $bidSD);
+                $min = $bidAvg - (3 * $bidSD);
+                
+
+                $feed->average = round($bidAvg,1);
+                $feed->min = round($min,1);
+                $feed->max = round($max,1);
+                $feed->slider_start = round(($bidAvg - (2 * $bidSD)),1); 
+                 return  $feed;
+
+        }
 
 
    function active() {
@@ -913,12 +926,12 @@ $cabin_map_arr = array(
 $rResult1 = array();
 foreach ($cabin_map_arr as $cabin_arr) {
 $sQuery =  " 
-SELECT SuperSet.code as from_cabin, SubSet1.code as to_cabin, SuperSet.flight_number, SuperSet.boarding_point, SuperSet.off_point, SuperSet.price as l_price, SubSet1.price as u_price,SuperSet.day_of_week,SuperSet.carrier , SuperSet.cabin as from_cabin_code , SubSet1.cabin as to_cabin_code from  (SELECT dcla.code ,rf.carrier, cabin ,day_of_week ,flight_number, boarding_point,off_point ,  group_concat(prorated_price)  as price,dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)   LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)                LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND  rf.season_id = 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[0]."' AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,rf.carrier  order by flight_number, day_of_week) as SuperSet
+SELECT SuperSet.code as from_cabin, SubSet1.code as to_cabin, SuperSet.flight_number, SuperSet.boarding_point, SuperSet.off_point, SuperSet.from_sd as from_sd, SuperSet.from_avg as from_avg,SubSet1.to_sd , SubSet1.to_avg,SuperSet.day_of_week,SuperSet.carrier , SuperSet.cabin as from_cabin_code , SubSet1.cabin as to_cabin_code from  (SELECT dcla.code ,rf.carrier, cabin ,day_of_week ,flight_number, boarding_point,off_point ,  avg(prorated_price) as from_avg, std(prorated_price)  as from_sd,dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)   LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)                LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND  rf.season_id = 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[0]."' AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,rf.carrier  order by flight_number, day_of_week) as SuperSet
 INNER JOIN (
-select MainSet.code, MainSet.cabin ,MainSet.day_of_week, MainSet.price, MainSet.boarding_point, MainSet.off_point , MainSet.flight_number ,MainSet.carrier from (SELECT acc.order as porder , dcla.code ,rf.carrier, cabin ,day_of_week ,flight_number, boarding_point,off_point ,  group_concat(prorated_price)  as price,dai.code as carrier_code  FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)  LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where." AND  rf.season_id = 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[1]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , acc.order , day_of_week,flight_number, boarding_point,off_point,rf.carrier  order by acc.order desc
+select MainSet.code, MainSet.cabin ,MainSet.day_of_week, MainSet.to_sd, MainSet.to_avg, MainSet.boarding_point, MainSet.off_point , MainSet.flight_number ,MainSet.carrier from (SELECT acc.order as porder , dcla.code ,rf.carrier, cabin ,day_of_week ,flight_number, boarding_point,off_point ,  std(prorated_price)  as to_sd, avg(prorated_price) as to_avg, dai.code as carrier_code  FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)  LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where." AND  rf.season_id = 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[1]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , acc.order , day_of_week,flight_number, boarding_point,off_point,rf.carrier  order by acc.order desc
 ) as MainSet
         INNER JOIN
-        ( select max(corder) as porder,cabin ,  boarding_point,off_point,day_of_week,flight_number  , carrier from (SELECT acc.order as corder  , dcla.code ,rf.carrier,  group_concat(prorated_price)  as price, cabin ,day_of_week ,flight_number, boarding_point,off_point , dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)    LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND  rf.season_id = 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[1]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , acc.order , day_of_week,flight_number, boarding_point,off_point,rf.carrier  order by acc.order desc) as MainSet group by  flight_number, boarding_point, off_point, carrier,day_of_week,cabin
+        ( select max(corder) as porder,cabin ,  boarding_point,off_point,day_of_week,flight_number  , carrier from (SELECT acc.order as corder  , dcla.code ,rf.carrier,  std(prorated_price)  as to_sd, avg(prorated_price)  as to_avg, cabin ,day_of_week ,flight_number, boarding_point,off_point , dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)    LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND  rf.season_id = 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[1]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , acc.order , day_of_week,flight_number, boarding_point,off_point,rf.carrier  order by acc.order desc) as MainSet group by  flight_number, boarding_point, off_point, carrier,day_of_week,cabin
         ) SubSet  ON (MainSet.flight_number = SubSet.flight_number AND MainSet.boarding_point = SubSet.boarding_point AND MainSet.off_point = SubSet.off_point AND MainSet.day_of_week = SubSet.day_of_week AND MainSet.carrier = SubSet.carrier AND MainSet.porder = SubSet.porder )) as SubSet1 on (SuperSet.flight_number = SubSet1.flight_number AND SuperSet.boarding_point = SubSet1.boarding_point AND SuperSet.off_point = SubSet1.off_point AND SuperSet.day_of_week = SubSet1.day_of_week AND SuperSet.carrier = SubSet1.carrier) 
 ";
 $rResult = $this->install_m->run_query($sQuery);
@@ -929,12 +942,12 @@ $rResult2 = array();
 foreach ($cabin_map_arr as $cabin_arr) {
 $sQuery =  " 
 
-SELECT SuperSet.code as from_cabin, SubSet1.code as to_cabin, SuperSet.flight_number, SuperSet.boarding_point, SuperSet.off_point, SuperSet.price as l_price, SubSet1.price as u_price,SuperSet.season_id,SuperSet.carrier ,SuperSet.cabin as from_cabin_code , SubSet1.cabin as to_cabin_code from  (SELECT dcla.code ,rf.carrier,season_id, cabin ,flight_number, boarding_point,off_point ,  group_concat(prorated_price)  as price,dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)   LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)                LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND   rf.season_id > 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[0]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , season_id,flight_number, boarding_point,off_point,season_id,rf.carrier  order by flight_number, season_id) as SuperSet
+SELECT SuperSet.code as from_cabin, SubSet1.code as to_cabin, SuperSet.flight_number, SuperSet.boarding_point, SuperSet.off_point, SuperSet.from_sd,  SuperSet.from_avg, SubSet1.to_avg, SubSet1.to_sd, SuperSet.season_id,SuperSet.carrier ,SuperSet.cabin as from_cabin_code , SubSet1.cabin as to_cabin_code from  (SELECT dcla.code ,rf.carrier,season_id, cabin ,flight_number, boarding_point,off_point ,  std(prorated_price)  as from_sd, avg(prorated_price) as from_avg, dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)   LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)                LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND   rf.season_id > 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[0]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , season_id,flight_number, boarding_point,off_point,season_id,rf.carrier  order by flight_number, season_id) as SuperSet
 INNER JOIN (
-select MainSet.code, MainSet.cabin ,MainSet.season_id, MainSet.price, MainSet.boarding_point, MainSet.off_point , MainSet.flight_number ,MainSet.carrier from (SELECT acc.order as porder , dcla.code ,rf.carrier,season_id, cabin ,flight_number, boarding_point,off_point ,  group_concat(prorated_price)  as price,dai.code as carrier_code  FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)  LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND   rf.season_id > 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[1]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , acc.order , season_id,flight_number, boarding_point,off_point,season_id,rf.carrier  order by acc.order desc
+select MainSet.code, MainSet.cabin ,MainSet.season_id, MainSet.to_sd, MainSet.to_avg, MainSet.boarding_point, MainSet.off_point , MainSet.flight_number ,MainSet.carrier from (SELECT acc.order as porder , dcla.code ,rf.carrier,season_id, cabin ,flight_number, boarding_point,off_point ,  std(prorated_price)  as to_sd,  avg(prorated_price)  as to_avg ,dai.code as carrier_code  FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)  LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND   rf.season_id > 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[1]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , acc.order , season_id,flight_number, boarding_point,off_point,season_id,rf.carrier  order by acc.order desc
 ) as MainSet
         INNER JOIN
-        ( select max(corder) as porder,cabin ,  boarding_point,off_point,season_id,flight_number  , carrier from (SELECT acc.order as corder  , dcla.code ,rf.carrier, group_concat(prorated_price)  as price, cabin ,season_id ,flight_number, boarding_point,off_point , dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)    LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND  rf.season_id > 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[1]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , acc.order , season_id,flight_number, boarding_point,off_point,season_id,rf.carrier  order by acc.order desc) as MainSet group by  flight_number, boarding_point, off_point, carrier,season_id,cabin
+        ( select max(corder) as porder,cabin ,  boarding_point,off_point,season_id,flight_number  , carrier from (SELECT acc.order as corder  , dcla.code ,rf.carrier, std(prorated_price)  as to_sd, avg(prorated_price) as to_avg, cabin ,season_id ,flight_number, boarding_point,off_point , dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)    LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND  rf.season_id > 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[1]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , acc.order , season_id,flight_number, boarding_point,off_point,season_id,rf.carrier  order by acc.order desc) as MainSet group by  flight_number, boarding_point, off_point, carrier,season_id,cabin
         ) SubSet  ON (MainSet.flight_number = SubSet.flight_number AND MainSet.boarding_point = SubSet.boarding_point AND MainSet.off_point = SubSet.off_point AND MainSet.season_id = SubSet.season_id AND MainSet.carrier = SubSet.carrier AND MainSet.porder = SubSet.porder )) as SubSet1 on (SuperSet.flight_number = SubSet1.flight_number AND SuperSet.boarding_point = SubSet1.boarding_point AND SuperSet.off_point = SubSet1.off_point AND SuperSet.season_id = SubSet1.season_id AND SuperSet.carrier = SubSet1.carrier) 
 ";
 $rResult = $this->install_m->run_query($sQuery);
@@ -959,20 +972,20 @@ $rResult = array_merge($rResult1,$rResult2);
 			$array['carrier_code'] = $feed->carrier;
 
 
-			$fromCabin = explode(',',$feed->l_price);
-			$toCabin  = explode(',',$feed->u_price);
+			//$fromCabin = explode(',',$feed->l_price);
+			//$toCabin  = explode(',',$feed->u_price);
 
-			if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
+			//if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
                                 $array['from_cabin'] = $feed->from_cabin_code;
                                 $array['to_cabin'] = $feed->to_cabin_code;
-                                $data = $this->calculate_Min_Max($fromCabin, $toCabin );
+                                $data = $this->calculate_Min_Max($feed->from_sd, $feed->to_sd, $feed->from_avg, $feed->to_avg);
                                 $array1['average'] = $data->average;
                                 $array1['min'] = $data->min;
                                 $array1['max'] = $data->max;
                                 $array1['slider_start'] = $data->slider_start;
                                 $this->fclr_m->checkANDInsertFCLR($array,$array1);
 
-                         }
+                         //}
 
                 }
 
