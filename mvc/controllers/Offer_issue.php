@@ -36,7 +36,7 @@ class Offer_issue extends Admin_Controller {
         'tomail' => 'lakshmi.amujuru@sweken.com',
         'pnr_ref' => 'BA1257',
         'coupon_code' => 'sssssssss',
-        'mail_subject' => "test mail",
+        'mail_subject' => "upgrade offer template 2",
 		'bidnow_link' => base_url('home/index'),
         'airlineID' => 5418		
         );			       
@@ -234,7 +234,7 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
         ); 	
 
        
-	  $filename1 = base_url().'assets/home/images/emir.png';
+	  /* $filename1 = base_url().'assets/home/images/emir.png';
 	  $filename2 = base_url()."assets/home/images/temp1-bnr.jpg";
 	  $filename3 = base_url().'assets/home/images/temp1-hdr-bg.jpg';
 	  
@@ -243,12 +243,12 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 	  $this->email->attach($filename2);
       $cid2 = $this->email->attachment_cid($filename2);	  
       $this->email->attach($filename3);
-      $cid3 = $this->email->attachment_cid($filename3);
+      $cid3 = $this->email->attachment_cid($filename3); */
 	  
 	    
-		$data['logo_cid'] = $cid1;
+		/* $data['logo_cid'] = $cid1;
         $data['temp_cid'] = $cid2;
-        $data['bgr_file']  = $cid3;
+        $data['bgr_file']  = $cid3; */
 		
           //$this->sendMailTemplateParser('home/upgrade_offer_temp',$data);
        		
@@ -1024,8 +1024,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 				$info['dep_time'] = date('H:i:s',$result->dept_time);
 				$info['carrier_code'] = $result->carrier_code;
 				$info['flight_number'] = $result->flight_number;
-				$info['from_city'] = $result->air_from_city;
-				$info['to_city'] = $result->air_to_city;
+				$info['from_city'] = $result->from_city_code;
+				$info['to_city'] = $result->to_city_code;
 				$info['seat_no'] = $result->seat_no;
 				$info['current_cabin'] = $result->current_cabin;
 				$info['cabins'] = $result->tocabins;
