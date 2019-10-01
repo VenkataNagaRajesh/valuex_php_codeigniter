@@ -4733,3 +4733,7 @@ table{
 .ar-cab-def .nav-tabs-custom {
 	display:inline;
 }
+.topbar-hdr{
+	position: absolute;
+	right: 0;
+}
