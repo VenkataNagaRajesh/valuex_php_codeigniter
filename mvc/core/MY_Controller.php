@@ -83,12 +83,19 @@ class MY_Controller extends CI_Controller {
 		   foreach($template_images as $img){
 			   $data[$img->type] = base_url('uploads/images/'.$img->image);
 		   }
-		  $data['logo'] = $this->bid_m->getAirlineLogoByPNR($data['pnr_ref'])->logo;
+		   $airline_info = $this->bid_m->getAirlineLogoByPNR($data['pnr_ref']);
+		   $data['logo'] = $airline_info->logo;
 		   if(!empty($data['airline_logo'])){
 			 $data['logo'] = base_url('uploads/images/'.$data['logo']);  
 		   }else{
 			 $data['logo'] = base_url('assets/home/images/emir.png');  
-		   }	
+		   }
+
+          $data['mail_header_color'] = $airline_info->mail_header_color;
+		   if(empty($data['mail_header_color'])){
+			 $data['mail_header_color'] = '#333';  
+		   }
+		   
 	   $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($data['template'],$data['carrier'])->template;
 	   $message = $this->parser->parse_string($tpl, $data,TRUE);
 	   // $this->mydebug->debug($message);

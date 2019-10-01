@@ -609,7 +609,7 @@ class Admin_Controller extends MY_Controller {
            $this->load->library('parser');
 		   $this->load->library('email');
 		   $data['base_url'] = base_url(); 
-          // $data['base_url'] = 'http://valuex.sweken.com/';
+           $data['base_url'] = 'http://valuex.sweken.com/';
            //$data['bidnow_link'] = base_url('home/index');
 		    $data['bidnow_link'] = base_url('homes/bidding?pnr_ref='.$data['pnr_ref']);
 		   $this->load->model('airline_m');
@@ -617,19 +617,29 @@ class Admin_Controller extends MY_Controller {
 		   foreach($template_images as $img){
 			   $data[$img->type] = base_url('uploads/images/'.$img->image);
 		   } 
-           $data['logo'] = $this->bid_m->getAirlineLogoByPNR($data['pnr_ref'])->logo;
+           $airline_info = $this->bid_m->getAirlineLogoByPNR($data['pnr_ref']);
+		   $data['logo'] = $airline_info->logo;
 		   if(!empty($data['logo'])){
 			 $data['logo'] = base_url('uploads/images/'.$data['logo']);  
 		   }else{
 			 $data['logo'] = base_url('assets/home/images/emir.png');  
 		   }
-                     
+		   $data['mail_header_color'] = $airline_info->mail_header_color;
+		   if(empty($data['mail_header_color'])){
+			 $data['mail_header_color'] = '#333';  
+		   }
+		   /* $data['upgrade_offer_mail_template1'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
+		   $data['upgrade_offer_mail_template3'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
+		    $data['upgrade_offer_mail_template2'] = $data['base_url'] .'assets/home/images/temp2-bnr.jpg';
+		    $data['logo'] =$data['base_url'] .'assets/home/images/emir.png';  
+            $data['airline_logo'] = $data['base_url'] .'assets/home/images/temp2-logo.jpg';  */           
            $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['airlineID'])->template;
            $tpl = str_replace(array('<!--{','}-->'),array('{','}'),$tpl);		   
           $message = $this->parser->parse_string($tpl, $data,true);
 		  //$this->mydebug->debug($tpl); exit;
-		 // print_r($tpl); exit;
-		  // $message = $this->parser->parse($template, $data,TRUE);
+		  
+		  // $template="home/temp-2";		
+		   //$message = $this->parser->parse($template, $data);
           $message =html_entity_decode($message);
           $siteinfos = $this->reset_m->get_site();
 		  $this->mydebug->debug($data['tomail'].'----'.$template);		  

@@ -339,8 +339,8 @@ class Rafeed extends Admin_Controller {
                                                 $this->mydebug->rafeed_log("Operating airline should be 2 alpha code in row " . $column, 1);
                                                 continue;
                                         }
-					$season_id = $this->season_m->getSeasonForDateANDAirlineID($rafeed['departure_date'],$rafeed['carrier'],$rafeed['boarding_point'],$rafeed['off_point']);
-				     $rafeed['season_id'] = $season_id; 
+					$season_list = $this->season_m->getSeasonForDateANDAirlineIDForRAFeed($rafeed['departure_date'],$rafeed['carrier'],$rafeed['boarding_point'],$rafeed['off_point']);
+				     //$rafeed['season_id'] = $season_id; 
 					$rafeed['flight_number'] = substr($Row[array_search('flight number',$import_header)], 2);
 
 					if(strlen($rafeed['flight_number']) >= 7 ){
@@ -382,7 +382,25 @@ class Rafeed extends Admin_Controller {
                                                           $rafeed['create_userID'] = $this->session->userdata('loginuserID');
                                                           $rafeed['modify_userID'] = $this->session->userdata('loginuserID');
 						//	print_r($rafeed);exit;
-                                                       		 $insert_id = $this->rafeed_m->insert_rafeed($rafeed);
+								if (count($season_list) > 0 ) {
+									$first_flag = 0 ;
+									foreach($season_list as $season_id) {
+										$rafeed['season_id'] = $season_id;
+										
+										if($first_flag == 0) {
+											$insert_id = $this->rafeed_m->insert_rafeed($rafeed);
+                                                                                        $main_season_record_id = $insert_id;
+                                                                                } else {
+											$rafeed['sub_season_record'] = $main_season_record_id ;												$insert_id = $this->rafeed_m->insert_rafeed($rafeed);  
+										}
+										$first_flag++;
+
+									} 
+								
+								} else {
+									$rafeed['season_id'] = 0;
+                                                       		        $insert_id = $this->rafeed_m->insert_rafeed($rafeed);
+								}
 								if ( $insert_id ) {
 								$this->mydebug->rafeed_log("uploaded row " . $column , 0);
 								} else{
@@ -576,7 +594,8 @@ class Rafeed extends Admin_Controller {
                 }
 
 
-			
+			$sWhere .=  ($sWhere == '')?' WHERE ':' AND ';
+			$sWhere .=  " rf.sub_season_record = 0 " ;
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS rafeed_id,ticket_number, coupon_number, dc.code as booking_country , 
 				dfre.code as day_of_week,  dfre.aln_data_value , dc.aln_data_value, dci.aln_data_value, dico.aln_data_value,
 				dici.aln_data_value, dai.aln_data_value, dam.aln_data_value, dcar.aln_data_value, dbp.aln_data_value,

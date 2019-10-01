@@ -125,6 +125,10 @@ class Rafeed_m extends MY_Model {
 
 	public function delete_rafeed($id){
 		parent::delete($id);
+		$this->db->where('sub_season_record',$id);
+                $this->db->delete('VX_aln_ra_feed');
+              return TRUE;
+	
 	}
 	
 }
