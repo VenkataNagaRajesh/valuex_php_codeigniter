@@ -335,7 +335,7 @@ function valFrequency($num)
                 if($userTypeID == 2){
                         $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
                            }  else if($userTypeID != 1){
-						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
 						   }else {
                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
                 }
