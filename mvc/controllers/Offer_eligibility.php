@@ -236,6 +236,9 @@ class Offer_eligibility extends Admin_Controller {
 
 			if(!empty($this->input->get('frequency'))){
                                $frstr = $this->input->get('frequency');
+				if($frstr == '*' ){
+					$frstr = '1234567';
+				}
                                 $freq = $this->airports_m->getDefnsCodesListByType('14');
                                  if ( $frstr != '0') {
                                         $arr = str_split($frstr);

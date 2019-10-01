@@ -139,6 +139,12 @@ class Acsr extends Admin_Controller {
 
 function valFrequency($num)
 {
+
+
+   if($num == '*' ) {
+
+	return true;
+    } else {
         $arr = str_split($num);
         $freq = range(1,7);
 
@@ -165,6 +171,8 @@ if ($num != '' ){
 
 } else {
 	return true;
+}
+
 }
 }
 
@@ -410,7 +418,7 @@ if($end < $start ) {
                 if($userTypeID == 2){
                         $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
                            }  else if($userTypeID != 1 ){
-						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
 						   } else {
                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
                 }
@@ -475,6 +483,9 @@ if($end < $start ) {
 
 				$freq = $this->airports_m->getDefnsCodesListByType('14');
                                         $frstr = $this->input->post("frequency") ? $this->input->post("frequency") : 0;
+					if($frstr == '*') {
+						$frstr = '1234567';
+					}
                                         if ( $frstr != '0') {
                                                 $arr = str_split($frstr);
                                                 $array["frequency"]  = implode(',',array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr));
@@ -606,6 +617,9 @@ if($end < $start ) {
 
                                $freq = $this->airports_m->getDefnsCodesListByType('14');
                                         $frstr = $this->input->post("frequency") ? $this->input->post("frequency") : 0;
+					if($frstr == '*'){
+						$frstr = '1234567';
+					}
                                         if ( $frstr != '0') {
                                                 $arr = str_split($frstr);
                                                 $array["frequency"]  = implode(',',array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr));
@@ -847,6 +861,9 @@ function time_dropdown($val) {
 
                  if(!empty($this->input->get('day'))){
                                $frstr = $this->input->get('day');
+				if($frstr == '*') {
+					$frstr = '1234567';
+				}
                                 $freq = $this->airports_m->getDefnsCodesListByType('14');
                                  if ( $frstr != '0') {
                                         $arr = str_split($frstr);

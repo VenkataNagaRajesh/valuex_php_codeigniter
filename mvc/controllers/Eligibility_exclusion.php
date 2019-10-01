@@ -185,31 +185,39 @@ if($end < $start ) {
 
 function valFrequency($num)
 {
-	if ( $num != '' ){
-	$arr = str_split($num);
-	$freq = range(1,7);
-	foreach($arr as $a ) {
-		if( !in_array($a, $freq) ) {
-			$this->form_validation->set_message("valFrequency", "%s must be in 1-7");
-			return false;
-		}
 
-	}
-    if (count($arr) > 7 )
-    {
-	$this->form_validation->set_message("valFrequency", "%s must be 7 digits");
-         return false;
-    }else if (count($arr) != count(array_unique($arr))){
-		$this->form_validation->set_message("valFrequency", "%s contains duplicate values");
-		return false;
-	}
-    else
-    {
-	return true;
-    }
+	if($num == '*') {
+		return true;
 
 	} else {
-		return true;
+		if ( $num != '' ){
+			$arr = str_split($num);
+			$freq = range(1,7);
+			foreach($arr as $a ) {
+				if( !in_array($a, $freq) ) {
+					$this->form_validation->set_message("valFrequency", "%s must be in 1-7");
+					return false;
+				}
+
+			}
+
+    			if (count($arr) > 7 )
+    			{
+				$this->form_validation->set_message("valFrequency", "%s must be 7 digits");
+         			return false;
+    			}else if (count($arr) != count(array_unique($arr))){
+				$this->form_validation->set_message("valFrequency", "%s contains duplicate values");
+				return false;
+			}
+    			else
+    				{
+				return true;
+    			}
+
+		} else {
+			return true;
+		}
+
 	}
 }
 	function valMarket($post_string){		
@@ -546,6 +554,9 @@ public function save() {
 
 					$freq = $this->airports_m->getDefnsCodesListByType('14');
 					$frstr = $this->input->post("frequency") ? $this->input->post("frequency") : 0; 
+					if($frstr == '*'){
+						$frstr = '1234567';
+					}
 					if ( $frstr != '0') {
 						$arr = str_split($frstr);
 						$array["frequency"]  = implode(',',array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr));				
@@ -896,6 +907,9 @@ function time_dropdown($val) {
 		 if(!empty($this->input->get('sfrequency'))){
                                $frstr = $this->input->get('sfrequency');
                                 $freq = $this->airports_m->getDefnsCodesListByType('14');
+				if($frstr == '*'){
+					$frstr = '1234567';
+				}
                                  if ( $frstr != '0') {
                                         $arr = str_split($frstr);
                                         $freq_str = array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr);                                       

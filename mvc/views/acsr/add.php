@@ -116,7 +116,7 @@
                             echo "<div class='form-group'>";
                     ?>
                         <label for="carrier_code" class="col-sm-3 control-label">
-                            <?=$this->lang->line('carrier_code')?>
+                            <?=$this->lang->line('carrier_code')?><span class="text-red">*</span>
                         </label>
                         <div class="col-sm-5">
                         <?php
@@ -442,17 +442,6 @@ $( ".select2" ).select2({closeOnSelect:false,
 				
 
 $(document).ready(function(){
-$('#amz_incl_id').trigger('change');
-$('#amz_excl_id').trigger('change');
-$('#amz_level_id').trigger('change');
-        var level = [<?php echo implode(',',$this->input->post("amz_level_value")); ?>];
-        $('#amz_level_value').val(level).trigger('change');
-
-        var incl = [<?php echo implode(',',$this->input->post("amz_incl_value")); ?>];
-        $('#amz_incl_value').val(incl).trigger('change');
-
-        var excl = [<?php echo implode(',',$this->input->post("amz_excl_value")); ?>];
-        $('#amz_excl_value').val(excl).trigger('change');
 
 $('#carrier_code').change(function(event) {    
   var carrier = $('#carrier_code').val();                 
@@ -584,13 +573,14 @@ $("#flight_dep_date_start").datepicker({
 $(document).ready(function(){
 $('#orig_level_id').trigger('change');
 $('#dest_level_id').trigger('change');
+
         var orig = [<?php echo implode(',',$this->input->post("orig_level_value")); ?>];
-        $('#orig_level_value').val(level).trigger('change');
+        $('#orig_level_value').val(orig).trigger('change');
 
         var dest = [<?php echo implode(',',$this->input->post("dest_level_value")); ?>];
         $('#dest_level_value').val(dest).trigger('change');
 
-
+$('#carrier_code').trigger('change');
 
 });
 
