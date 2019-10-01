@@ -503,7 +503,7 @@ $sWhere $sOrder $sLimit";
 	$partial_offerlist = array();	
 	foreach($rResult as $data ) {
 		$q = "  SELECT distinct bid_id, bid.rank, bid_value as bid_val,pf.dep_date,pf.dept_time,pf.arrival_time,bid.upgrade_type,pf.flight_number,
-             pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,  cdef.desc as upgrade_cabin
+             pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,car.aln_data_value as car_name ,cdef.desc as upgrade_cabin
              from VX_aln_bid bid
              LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )
              LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  pf.is_processed = 1 and pf.active = 1 )
@@ -840,10 +840,11 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'flight_no' => $feed->carrier_name.$feed->flight_number,
 							'dep_date' => date('d-m-Y',$feed->dep_date),
 							'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
-							'origin' => $feed->src_point_name,
-							'destination' => $feed->dest_point_name, 
+							'origin' => $feed->src_point,
+							'destination' => $feed->dest_point, 
 							'upgrade_to' => $feed->upgrade_cabin,
 							'airlineID' => $feed->carrier_code,
+							'carrier_name' => $feed->car_name,
                             'feedback_link' => base_url('home/feedback?pnr_ref='.$passenger_data->pnr_ref) 							
 						 ); 			 
 					  //$this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);
