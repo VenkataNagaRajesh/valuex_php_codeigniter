@@ -295,7 +295,7 @@ $('#to_cabin').val('<?=$tocabin?>').trigger('change');
             },
             "stateLoadCallback": function (settings) {
                 var data = JSON.parse(window.localStorage.getItem("acsrdatatable"));
-                if (data) data.start = 0;
+                //if (data) data.start = 0;
                 return data;
             },
 

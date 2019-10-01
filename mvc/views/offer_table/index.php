@@ -256,7 +256,7 @@ $("#dep_from_date").datepicker({
             },
             "stateLoadCallback": function (settings) {
                 var data = JSON.parse(window.localStorage.getItem("offerdatatable"));
-                if (data) data.start = 0;
+                //if (data) data.start = 0;
                 return data;
             },
 
