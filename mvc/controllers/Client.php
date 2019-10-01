@@ -602,7 +602,7 @@ class Client extends Admin_Controller {
                 $sWhere .= 'c.userID = '.$this->session->userdata('loginuserID');	
 			}
 			
-			if($userTypeID != 1){
+			if($usertypeID != 1){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 				$airlines = $this->user_m->getUserAirlines($userID);
 				foreach($airlines as $airline){

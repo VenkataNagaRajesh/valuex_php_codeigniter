@@ -628,17 +628,18 @@ class Admin_Controller extends MY_Controller {
 		   if(empty($data['mail_header_color'])){
 			 $data['mail_header_color'] = '#333';  
 		   }
-		  // $data['upgrade_offer_mail_template1'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
-		  // $data['upgrade_offer_mail_template3'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
-		   // $data['logo'] =$data['base_url'] .'assets/home/images/emir.png';  
-          //  $data['airline_logo'] = $data['base_url'] .'assets/home/images/temp2-logo.jpg';            
+		   /* $data['upgrade_offer_mail_template1'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
+		   $data['upgrade_offer_mail_template3'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
+		    $data['upgrade_offer_mail_template2'] = $data['base_url'] .'assets/home/images/temp2-bnr.jpg';
+		    $data['logo'] =$data['base_url'] .'assets/home/images/emir.png';  
+            $data['airline_logo'] = $data['base_url'] .'assets/home/images/temp2-logo.jpg';  */           
            $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['airlineID'])->template;
            $tpl = str_replace(array('<!--{','}-->'),array('{','}'),$tpl);		   
-          $message = $this->parser->parse_string($tpl, $data);
+          $message = $this->parser->parse_string($tpl, $data,true);
 		  //$this->mydebug->debug($tpl); exit;
 		  
-		  // $template="home/outlook4";		
-		 //  $message = $this->parser->parse($template, $data,TRUE);
+		  // $template="home/temp-2";		
+		   //$message = $this->parser->parse($template, $data);
           $message =html_entity_decode($message);
           $siteinfos = $this->reset_m->get_site();
 		  $this->mydebug->debug($data['tomail'].'----'.$template);		  

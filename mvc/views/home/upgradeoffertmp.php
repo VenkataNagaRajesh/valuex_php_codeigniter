@@ -36,7 +36,7 @@
 		</div>
 		<div style="width:100%;">
 			<p style="font-size: 14px;color: #ff6633;font-weight: bold;margin-right: 8px;">Congratulations {first_name} {last_name}</p>
-			<p style="font-size: 14px;">Emirates Airlines has accepted your Upgrade Offer!</p>
+			<p style="font-size: 14px;">{carrier_name} has accepted your Upgrade Offer!</p>
 			<ul>
 				<li style="font-size: 14px;line-height:20px;margin: 0 0 12px;">Your Flight has been Upgraded to {upgrade_to} at the Time of your Check-in, You will Receive a {upgrade_to} boarding pass</li>
 				<li style="font-size: 14px;line-height:20px;margin: 0 0 12px;">You will also Shortly Receive a new E-ticket via Email reflecting this Upgrade!</li>
@@ -52,7 +52,7 @@
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Time</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Origin</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Destination</th>
-						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Cabin no</th>
+						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Cabin</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Offer</th>
 					</tr>
 				</thead>
@@ -64,7 +64,7 @@
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{origin}</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{destination}</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{upgrade_to} Class</td>						
-						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">${cash_paid} USD</td>
+						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">${bid_value} USD</td>
 					</tr>
 				</tbody>
 			</table>
@@ -78,7 +78,7 @@
 								<span>(Note : Prices Shown are in united Sates Dollars.)</span><br>
 								<span>Welcome Onboard!</span>
 							</p>
-							<p style="font-size: 14px;"><b>Valuex Travels,</b> Emirates Airlines</p>
+							<p style="font-size: 14px;"><b>Valuex Travels,</b> {carrier_name}</p>
 							<p style="font-size: 14px;">
 								<span style="font-weight: bold;color: #ff6633;">----</span><br>
 								<span style="font-weight: bold;color: #ff6633;">www.valuex.com</span>
@@ -94,7 +94,7 @@
 							<div style="background: #f5f5f5;padding: 15px;margin-bottom: 10px;">
 								<ul style="list-style: none;padding-left: 0;">
 									<li><span style="display: inline-block;width: 38%;font-weight: bold;text-transform: capitalize;font-size: 12px;">Card No:</span> {card_number}</li>
-									<li><span style="display: inline-block;width: 38%;font-weight: bold;text-transform: capitalize;font-size: 12px;">Cash Pai:</span> ${cash_paid}</li>
+									<li><span style="display: inline-block;width: 38%;font-weight: bold;text-transform: capitalize;font-size: 12px;">Cash Paid:</span> ${cash_paid}</li>
 									<li><span style="display: inline-block;width: 38%;font-weight: bold;text-transform: capitalize;font-size: 12px;">Loyality No:</span> 134568</li>
 									<li><span style="display: inline-block;width: 38%;font-weight: bold;text-transform: capitalize;font-size: 12px;">Miles Used:</span> {miles_used} Miles</li>
 								</ul>

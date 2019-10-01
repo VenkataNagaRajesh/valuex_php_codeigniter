@@ -36,7 +36,7 @@ class Offer_issue extends Admin_Controller {
         'tomail' => 'lakshmi.amujuru@sweken.com',
         'pnr_ref' => 'BA1257',
         'coupon_code' => 'sssssssss',
-        'mail_subject' => "test mail",
+        'mail_subject' => "upgrade offer template 2",
 		'bidnow_link' => base_url('home/index'),
         'airlineID' => 5418		
         );			       
@@ -234,7 +234,7 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
         ); 	
 
        
-	  $filename1 = base_url().'assets/home/images/emir.png';
+	  /* $filename1 = base_url().'assets/home/images/emir.png';
 	  $filename2 = base_url()."assets/home/images/temp1-bnr.jpg";
 	  $filename3 = base_url().'assets/home/images/temp1-hdr-bg.jpg';
 	  
@@ -243,12 +243,12 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 	  $this->email->attach($filename2);
       $cid2 = $this->email->attachment_cid($filename2);	  
       $this->email->attach($filename3);
-      $cid3 = $this->email->attachment_cid($filename3);
+      $cid3 = $this->email->attachment_cid($filename3); */
 	  
 	    
-		$data['logo_cid'] = $cid1;
+		/* $data['logo_cid'] = $cid1;
         $data['temp_cid'] = $cid2;
-        $data['bgr_file']  = $cid3;
+        $data['bgr_file']  = $cid3; */
 		
           //$this->sendMailTemplateParser('home/upgrade_offer_temp',$data);
        		
@@ -503,7 +503,7 @@ $sWhere $sOrder $sLimit";
 	$partial_offerlist = array();	
 	foreach($rResult as $data ) {
 		$q = "  SELECT distinct bid_id, bid.rank, bid_value as bid_val,pf.dep_date,pf.dept_time,pf.arrival_time,bid.upgrade_type,pf.flight_number,
-             pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,  cdef.desc as upgrade_cabin
+             pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,car.aln_data_value as car_name ,cdef.desc as upgrade_cabin
              from VX_aln_bid bid
              LEFT JOIN VX_aln_offer_ref oref on (oref.offer_id = bid.offer_id )
              LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  pf.is_processed = 1 and pf.active = 1 )
@@ -840,10 +840,11 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'flight_no' => $feed->carrier_name.$feed->flight_number,
 							'dep_date' => date('d-m-Y',$feed->dep_date),
 							'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
-							'origin' => $feed->src_point_name,
-							'destination' => $feed->dest_point_name, 
+							'origin' => $feed->src_point,
+							'destination' => $feed->dest_point, 
 							'upgrade_to' => $feed->upgrade_cabin,
 							'airlineID' => $feed->carrier_code,
+							'carrier_name' => $feed->car_name,
                             'feedback_link' => base_url('home/feedback?pnr_ref='.$passenger_data->pnr_ref) 							
 						 ); 			 
 					  //$this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);
@@ -1024,8 +1025,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 				$info['dep_time'] = date('H:i:s',$result->dept_time);
 				$info['carrier_code'] = $result->carrier_code;
 				$info['flight_number'] = $result->flight_number;
-				$info['from_city'] = $result->air_from_city;
-				$info['to_city'] = $result->air_to_city;
+				$info['from_city'] = $result->from_city_code;
+				$info['to_city'] = $result->to_city_code;
 				$info['seat_no'] = $result->seat_no;
 				$info['current_cabin'] = $result->current_cabin;
 				$info['cabins'] = $result->tocabins;

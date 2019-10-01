@@ -9,7 +9,7 @@
          </div>
    </div>
  </div>
-	 <div class="col-sm-12">
+	 <div class="col-sm-12" style="background:#fff;color:#333;">
                 <div id="hide-table">
 		<h3>Offer Information</h3>
 
@@ -27,10 +27,10 @@
 
 
 		<div class="off-status">
-			<span style="color:orange;">Offer ID: </span><?=$offer_id?><br>
-			<span style="color:orange;">PNR Reference: </span><?=$pnr_ref[0]?><br>
-			<span style="color:orange;">Passenger Count: </span><?=$p_cnt?><br>
-			<span style="color:orange;">Passenger Details: </span><?php echo $ofr[0]->p_list;?><br>
+			<span style="color:orange;"><b>Offer ID: </b></span> <?=$offer_id?><br>
+			<span style="color:orange;"><b>PNR Reference:</b> </span> <?=$pnr_ref[0]?><br>
+			<span style="color:orange;"><b>Passenger Count: </b></span> <?=$p_cnt?><br>
+			<span style="color:orange;"><b>Passenger Details: </b></span> <?php echo $ofr[0]->p_list;?><br>
 
                 </div>
 

@@ -242,7 +242,7 @@ $('#cabin').val('<?=$cabin?>').trigger('change');
            		               
             ],
      "autoWidth":false,
-	 "columnDefs": [ {"targets": 0,"width":"30px"}],
+	 "columnDefs": [ {"targets": 0,"width":"1%"}],
     });
 	
 	

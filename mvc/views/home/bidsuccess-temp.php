@@ -60,7 +60,7 @@
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{cabin} Class</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{upgrade_type} Class</td>
 						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">{seat_no}</td>
-						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">${cash} USD</td>
+						<td style="padding: 6px 3px;text-align:center;font-size:14px;color: #333;background: #f5f5f5;">${bid_value} USD</td>
 					</tr>
 				</tbody>
 			</table>
@@ -70,7 +70,7 @@
 				<span>(Note : Prices Shown are in united Sates Dollars.)</span><br>
 				<span>Welcome Onboard!</span>
 			</p>
-			<p style="font-size: 14px;"><b>Valuex Travels,</b> Emirates Airlines</p>
+			<p style="font-size: 14px;"><b>Valuex Travels,</b> {carrier_name}</p>
 			<p style="font-size: 14px;">
 				<span style="font-weight: bold;color: #ff6633;">----</span><br>
 				<span style="font-weight: bold;color: #ff6633;">www.valuex.com</span>

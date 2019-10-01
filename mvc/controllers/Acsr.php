@@ -383,7 +383,7 @@ if($end < $start ) {
          if($this->input->post('scarrier')){
                    $this->data['scarrier'] = $this->input->post('scarrier');
              } else {
-                   if($userTypeID == 2){
+                   if($userTypeID != 1){
              $this->data['scarrier'] = $this->session->userdata('default_airline');
                    } else {
                          $this->data['scarrier'] = 0;

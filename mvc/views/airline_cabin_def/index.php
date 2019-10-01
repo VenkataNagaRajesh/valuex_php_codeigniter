@@ -200,7 +200,7 @@
 						} else {
 						  return data;	
 						}                      
-                   }} ]
+                   }},{"targets": 0,"width": "1%"}]
 	 
     });
   });
