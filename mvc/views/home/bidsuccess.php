@@ -34,7 +34,7 @@
 								 <th scope="col">Time</th>
 								<th scope="col">Origin</th>
 								<th scope="col">Destination</th>
-								<th scope="col">Cabin no</th>
+								<th scope="col">Cabin</th>
 								<th scope="col">Seat No</th>
 								<th scope="col">Offer</th>
 							</tr>

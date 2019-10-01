@@ -33,7 +33,7 @@
 					}
                            }
 
-			if($userTypeID == 2){
+			if($userTypeID != 1){
                           $default_airlineID =  key($airlinelist);
                         } else {
                           $default_airlineID = 0;
