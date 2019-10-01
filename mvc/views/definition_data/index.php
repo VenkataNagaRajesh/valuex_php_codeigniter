@@ -153,7 +153,7 @@
                  }					              
               ],
 	 "autoWidth": false,
-	"columnDefs": [ {"targets": 0,"width": "30px"}] 
+	"columnDefs": [ {"targets": 0,"width": "1%"}] 
     });
 	
 	//$(".dt-buttons").append('<a href="<?=base_url("definition_data/exportall")?>" class="dt-button" tabindex="0" aria-controls="defdata"><span>ExportAll</span></a>');
