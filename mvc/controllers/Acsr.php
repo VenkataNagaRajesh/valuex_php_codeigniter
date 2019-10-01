@@ -380,15 +380,16 @@ if($end < $start ) {
                 $this->data['seasons'] = $this->season_m->getSeasonsList();
         	$this->data['action_types'] = $this->airports_m->getDefns('19');
 
-         if($this->input->post('scarrier')){
-                   $this->data['scarrier'] = $this->input->post('scarrier');
+         if($this->input->post('carrier')){
+                   $this->data['carrier'] = $this->input->post('carrier');
              } else {
                    if($userTypeID != 1){
-             $this->data['scarrier'] = $this->session->userdata('default_airline');
+             $this->data['carrier'] = $this->session->userdata('default_airline');
                    } else {
-                         $this->data['scarrier'] = 0;
+                         $this->data['carrier'] = 0;
                    }
          }
+
 
 		$this->data["subview"] = "acsr/index";
 		$this->load->view('_layout_main', $this->data);		
