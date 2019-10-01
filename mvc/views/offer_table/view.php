@@ -71,13 +71,19 @@
                                         $next_offer = $offer_list[$cur_key + 1 ];
                                         $prev_offer = $offer_list[$cur_key - 1 ];
                                 ?>
+
+				<?php if($prev_offer) {?>
                                  <a href="<?php echo base_url('offer_table/view/'.$prev_offer) ?>">
                                  Prev
                                 </a>
+				<?php }?>
                                 &nbsp;&nbsp;
-                           <a href="<?php echo base_url('offer_table/view/'.$next_offer) ?>">
-                                 Next
-                        </a>
+				<?php if($next_offer) { ?>
+                           		<a href="<?php echo base_url('offer_table/view/'.$next_offer) ?>">
+                                 	Next
+                        		</a>
+				<?php } ?>
+				
                         </div>
 
 
