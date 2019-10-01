@@ -33,13 +33,18 @@ body {
   min-height: 100%;
   background: #f1f2f7;
   font-size:12px;
-  text-transform:capitalize;
+}
+p,table tr td{
+	text-transform:capitalize;
 }
 .content input{
 	text-transform:capitalize;
 }
 a {
-  color: #707478;
+  color: #333;
+}
+table tr td[data-title="Email"]{
+	text-transform:lowercase;
 }
 .top-bar-title{
 	text-align: center;
@@ -2880,7 +2885,6 @@ Component: timeline
 	background-image: url(../../../../assets/inilabs/themes/default/admin-sidebar-bg.jpg);
 	background-size: cover;
 	background-repeat: no-repeat;
-	position:fixed;
 }
 .skin-blue .sidebar a {
   color: #555555;

@@ -181,7 +181,7 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
                  }                
             ] ,
      "autoWidth": false,
-     "columnDefs": [ { "width": "30px", "targets": 0 } ]			
+    "columnDefs": [ {"targets": 0,"width": "1%"},{"targets": 1,"width": "1%"},{"targets": 2,"width": "1%"},{"targets": 3,"width": "1%"},{"targets": 4,"width": "1%"},{"targets": 5,"width": "1%"},{"targets": 6,"width": "1%"},{"targets": 7,"width": "1%"}]		
     }); 
   
     

@@ -227,7 +227,7 @@ $('#airline_cabin').val('<?=$classID;?>').trigger('change');
                  }	                
             ] ,
 	 "autoWidth": false,
-     "columnDefs":  [ {"targets": 0,"width": "30px" },{"targets":5,
+     "columnDefs":  [ {"targets": 0,"width": "1%" },{"targets":5,
 	                 render: function ( data, type, row, meta ) {
                        console.log(type);						 
 						if(type == 'export'){
