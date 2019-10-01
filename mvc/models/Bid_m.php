@@ -84,7 +84,7 @@ class bid_m extends MY_Model {
   }
   
    public function get_offer_data($offer_id){
-	   $this->db->select("def.desc cabin,udef.desc upgrade_type,tpf.seat_no,tpf.pnr_ref,tpf.carrier_code  carrier,tpf.dep_date,tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,tpf.flight_number,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.cash,oref.miles,bid.bid_value")->from(' VX_aln_dtpf_ext pfe');	
+	   $this->db->select("def.desc cabin,udef.desc upgrade_type,tpf.seat_no,tpf.pnr_ref,tpf.carrier_code  carrier,tpf.dep_date,tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,car.aln_data_value carrier_name,tpf.flight_number,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.cash,oref.miles,bid.bid_value")->from(' VX_aln_dtpf_ext pfe');	
 	  $this->db->join('vx_aln_data_defns dd','(dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20)','LEFT');
 	  $this->db->join('VX_aln_daily_tkt_pax_feed tpf','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');
 	  $this->db->join('VX_aln_fare_control_range fclr','(fclr.fclr_id = pfe.fclr_id AND fclr.from_cabin=tpf.cabin)','LEFT');	

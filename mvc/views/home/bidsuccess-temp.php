@@ -70,7 +70,7 @@
 				<span>(Note : Prices Shown are in united Sates Dollars.)</span><br>
 				<span>Welcome Onboard!</span>
 			</p>
-			<p style="font-size: 14px;"><b>Valuex Travels,</b> Emirates Airlines</p>
+			<p style="font-size: 14px;"><b>Valuex Travels,</b> {carrier_name}</p>
 			<p style="font-size: 14px;">
 				<span style="font-weight: bold;color: #ff6633;">----</span><br>
 				<span style="font-weight: bold;color: #ff6633;">www.valuex.com</span>

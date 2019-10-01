@@ -24,7 +24,7 @@
 					 <p><span><?=$this->lang->line("dest_level")?> </span>: <?=$season->dest_level?></p>
 					 <p><span><?=$this->lang->line("dest_level_value")?> </span>: <?=$season->dest_level_values?></p>
 					 <p><span><?=$this->lang->line("is_return_inclusive")?> </span>: <?=$season->is_return_inclusive?></p>
-					 <p><span><?=$this->lang->line("season_color")?> </span>: <p class="season-view-color" style="background:<?=$season->season_color?>"></p></p>
+					 <p><span><?=$this->lang->line("season_color")?> </span>: <span class="season-view-color" style="background:<?=$season->season_color?>;width:80px;"></span></p>
 					
 					<!-- <input type="text" id="season_calender" /> -->
 					 
