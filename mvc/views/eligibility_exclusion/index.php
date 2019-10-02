@@ -40,9 +40,18 @@
                         $airlinelist['0'] = ' Carrier';
                         ksort($airlinelist);
 
+		$userTypeID = $this->session->userdata('usertypeID');
+                           if($userTypeID != 1){
+                                   $default_airlineID =  $this->session->userdata('default_airline');
+                            } else {
+                               $default_airlineID = 0;
+                            }
 
 
-							echo form_dropdown("carrier", $airlinelist,set_value("carrier"), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
+
+
+
+							echo form_dropdown("carrier", $airlinelist,set_value("carrier",$default_airlineID), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
 
 					</div>
 				</div>

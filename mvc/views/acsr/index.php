@@ -149,7 +149,7 @@
 
 
 
-                                                        echo form_dropdown("carrier", $airlinelist,set_value("carrier"), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
+                                                        echo form_dropdown("carrier", $airlinelist,set_value("carrier",$carrier), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
 </div>
 
           <div class="col-sm-2">
@@ -295,7 +295,7 @@ $('#to_cabin').val('<?=$tocabin?>').trigger('change');
             },
             "stateLoadCallback": function (settings) {
                 var data = JSON.parse(window.localStorage.getItem("acsrdatatable"));
-                if (data) data.start = 0;
+                //if (data) data.start = 0;
                 return data;
             },
 

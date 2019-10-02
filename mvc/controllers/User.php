@@ -146,6 +146,19 @@ class User extends Admin_Controller {
 		if($this->session->userdata('usertypeID') == 1){
 		 $this->data['users'] = $this->user_m->getUsers();	
 		}
+		foreach($this->data['users'] as $user){
+			if($user->usertypeID == 1){
+		       $user->airlinelist = '';
+			} else if($user->usertypeID == 2){
+			   $airlinelist = $this->airline_m->getClientAirline($user->userID);
+			} else {
+			    $airlinelist = $this->user_m->getUserAirlines($user->userID);	
+			}
+			foreach($airlinelist as $car){
+				$user->airlinelist[] = $car->code;
+			}
+		}
+		//print_r($this->data['users']); exit;
 		$this->data["subview"] = "user/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -173,7 +186,7 @@ class User extends Admin_Controller {
 		} else if($this->session->userdata('usertypeID') == 2){
 		   $this->data['airlinelist'] = $this->airline_m->getClientAirline($userID);
 		} else {
-		   $this->data['airlinelist'] = $this->airline_m->getUserAirlines($userID);	
+		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	
 		}		
 		
 		if($_POST) {
@@ -263,7 +276,7 @@ class User extends Admin_Controller {
 		} else if($this->session->userdata('usertypeID') == 2){
 		   $this->data['airlinelist'] = $this->airline_m->getClientAirline($userID);
 		} else {
-		   $this->data['airlinelist'] = $this->airline_m->getUserAirlines($userID);	
+		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	
 		}
 		if((int)$id) {
 			$this->data['user'] = $this->user_m->get_user($id);

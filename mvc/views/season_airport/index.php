@@ -107,8 +107,8 @@
       "columns": [{"data": "temp_id" },
 		          {"data": "carrier_code"},
 		          {"data": "season_name"},
-                  {"data": "airport" },
-		          {"data": "country" },		          
+                  {"data": "airport_code" },
+		          {"data": "country_code" },		          
 		          {"data": "region" },
 		          {"data": "area" }
 				 ],			   

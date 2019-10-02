@@ -466,6 +466,8 @@ $sOrder $sLimit";
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
           );
+
+		$this->session->set_userdata('offers_list_view', array_unique(array_column($rResult,'offer_id')));
 		       $i = 1;
 		 $rownum = 1 + $_GET['iDisplayStart'];
                 foreach ($rResult as $feed ) {
