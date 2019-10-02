@@ -63,6 +63,31 @@
 	</div>
 	<div class="col-md-4">
 		<div class="off-status">
+
+			<div class="auto-gen">
+                                <?php
+                                        $offer_list = $this->session->userdata('offers_list_view');
+                                        $cur_key = array_search($offer_id,$offer_list);
+                                        $next_offer = $offer_list[$cur_key + 1 ];
+                                        $prev_offer = $offer_list[$cur_key - 1 ];
+                                ?>
+
+				<?php if($prev_offer) {?>
+                                 <a href="<?php echo base_url('offer_table/view/'.$prev_offer) ?>">
+                                 Prev
+                                </a>
+				<?php }?>
+                                &nbsp;&nbsp;
+				<?php if($next_offer) { ?>
+                           		<a href="<?php echo base_url('offer_table/view/'.$next_offer) ?>">
+                                 	Next
+                        		</a>
+				<?php } ?>
+				
+                        </div>
+
+
+
 			<p><b>Offer Price</b><br>
 				<span>Total Price:</span><?php echo array_sum(array_column($ofr,'bid_value'));?><br>
 				<span>Mode:</span> <?php echo $cash_percentage;?>%  Cash, <?php echo $miles_percentage?>% Miles<br>

@@ -245,7 +245,7 @@
             },
             "stateLoadCallback": function (settings) {
                 var data = JSON.parse(window.localStorage.getItem("paxdatatable"));
-                if (data) data.start = 0;
+                //if (data) data.start = 0;
                 return data;
             },
 
