@@ -30,6 +30,7 @@
                                 <th class="col-lg-2"><?=$this->lang->line('user_email')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('user_usertype')?></th>
 								<th class="col-lg-2"><?=$this->lang->line('user_phone')?></th>
+								<th class="col-lg-2">Carriers</th>
                                 <?php if(permissionChecker('user_edit')) { ?>
                                 <th class="col-lg-1 noExport"><?=$this->lang->line('user_status')?></th>
                                 <?php } ?>
@@ -66,6 +67,9 @@
                                     </td>
 									<td data-title="<?=$this->lang->line('user_phone')?>">
                                         <?=$user->phone;?>
+                                    </td>
+									<td data-title="<?='Carriers'?>">
+                                        <?=implode(',',$user->airlinelist)?>
                                     </td>
                                     <?php if(permissionChecker('user_edit')) { ?>
                                     <td data-title="<?=$this->lang->line('user_status')?>">
