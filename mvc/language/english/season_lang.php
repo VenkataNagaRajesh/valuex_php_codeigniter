@@ -30,5 +30,5 @@ $lang['season_orig_level_select'] = "Select Origin Level";
 $lang['season_orig_level_value_select'] = "Select Origin Level Value";
 $lang['season_dest_level_select'] = "Select Destination Level";
 $lang['season_dest_level_value_select'] = "Select Destination Level Value";
-$lang['season_select_airline'] = "Select Airline";
+$lang['season_select_airline'] = "Carrier";
 $lang['generate_map_table'] = 'ReConfigure';

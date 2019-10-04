@@ -139,7 +139,7 @@
 				</div>
 				<div class="col-sm-3 col-md-2">			   
 				 <!-- <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>-->
-				  <?php $alist = array("0" => "Select Airline");               
+				  <?php $alist = array("0" => "Carrier");               
 				    foreach($airlines as $air){
 					  $alist[$air->vx_aln_data_defnsID] = $air->code;
 					}				

@@ -64,7 +64,9 @@ class Airline_cabin_class extends Admin_Controller {
 
 	        if(!empty($this->input->post('carrier'))){
                   $this->data['carrier'] = $this->input->post('carrier');
-                } else {
+                }else if($this->session->userdata('usertypeID') != 1){
+					$this->data['carrier'] = $this->session->userdata('default_airline');
+				} else {
                   $this->data['carrier'] = 0;
                 }
 

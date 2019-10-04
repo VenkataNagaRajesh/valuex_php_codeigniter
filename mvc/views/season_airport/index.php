@@ -36,7 +36,7 @@
 			<div class="col-sm-3 col-md-2">
 			 <?php  $list['0'] = " Airport";
 			     foreach($airports_list as $alist ) {
-				    $list[$alist->vx_aln_data_defnsID] = $alist->aln_data_value;
+				    $list[$alist->vx_aln_data_defnsID] = $alist->code;
 			     }
 				 echo form_dropdown("airportID", $list,set_value("airportID",$airportID), "id='airportID' class='form-control hide-dropdown-icon select2'");    ?>
             </div>
