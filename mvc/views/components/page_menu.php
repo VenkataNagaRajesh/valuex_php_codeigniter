@@ -5,7 +5,7 @@
                 <section class="sidebar">
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
-                        <div class="pull-left image">
+                        <div class="image" style="text-align:center;">
                            <?php if($this->session->userdata('photo') == 'defualt.png' || empty($this->session->userdata('photo'))){ ?>                               
                                <span class="user-icon"><i class="fa fa-user"></i></span>
 							  <?php }else{ ?>
@@ -14,7 +14,7 @@
 							  <?php } ?>
                         </div>
 
-                        <div class="pull-left info">
+                        <div class="info" style="text-align:center;">
                             <?php
                                 $name = $this->session->userdata("name");
                                 if(strlen($name) > 11) {

@@ -75,8 +75,9 @@ figure {
 .pnr-form{
 	border: solid 1px #b9b4b4;
 	border-radius: 9px;
-	padding: 20px;
-	margin: 18px 0px;
+	padding: 38px;
+	margin: 22px 0px 12px;
+	height: 168px;
 }
 .pnr-form input{
 	border: solid 1px #b9b4b4;
@@ -411,6 +412,7 @@ figure {
     margin-top: -50px;
     left: 100%;
     z-index: 2;
+	
 }
 
 .sw-theme-arrows > ul.step-anchor > li > a:before {
