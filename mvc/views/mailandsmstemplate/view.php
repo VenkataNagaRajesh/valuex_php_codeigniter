@@ -12,7 +12,7 @@
     <div id="printablediv" class="box-body">
         <div class="row">
             <div class="col-sm-12">
-                <?php echo $mailandsmstemplate->template; ?><br><br>
+                <?php echo $mailandsmstemplate->parse_template; ?><br><br>
             </div>
         </div>
     </div>
