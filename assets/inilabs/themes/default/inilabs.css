@@ -145,7 +145,7 @@ label {
 .table-bordered > thead > tr > th,
 .table-bordered > tbody > tr > td {
   border-color: #E2E7EB;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .pagination > .disabled > span,
