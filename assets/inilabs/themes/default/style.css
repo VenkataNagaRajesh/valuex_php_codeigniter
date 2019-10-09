@@ -28,11 +28,11 @@
 html,
 body {
   overflow-x: hidden!important;
-  font-family: century gothic;
+  font-family: calibri;
   -webkit-font-smoothing: antialiased;
   min-height: 100%;
   background: #f1f2f7;
-  font-size:12px;
+  font-size:14px;
 }
 p,table tr td{
 	text-transform:capitalize;
@@ -173,7 +173,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-  font-family: century gothic;
+  font-family: calibri;
 }
 /* Page Header */
 /*.page-header {
@@ -705,7 +705,7 @@ body > .header .logo .icon {
   padding: 0;
 }
 .sidebar .sidebar-menu > li > a {
-  font-size: 13px;
+  font-size: 14px;
   color: #f5f5f5;
   padding: 10px 5px 10px 15px;
   display: block;
@@ -729,7 +729,7 @@ body > .header .logo .icon {
 .sidebar .sidebar-menu .treeview-menu > li > a {
   display: block;
   margin: 0px 0px;
-  font-size: 13px;
+  font-size: 14px;
   padding:  10px 5px 10px 42px;
 }
 .sidebar .sidebar-menu .treeview-menu > li > a > .fa,
