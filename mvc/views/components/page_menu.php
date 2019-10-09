@@ -35,7 +35,7 @@
 								        $carray[$airline->vx_aln_data_defnsID] = $airline->code;
 									  }
 							   echo '<div class="col-sm-12 airline-type">';
-							   echo form_dropdown("login_airline", $carray,set_value("login_airline",$carrier), "id='login_airline' class='form-control' "); 
+							   echo form_dropdown("login_airline", $carray,set_value("login_airline",$this->session->userdata('default_airline')), "id='login_airline' class='form-control' "); 
 								echo '</div>';  
 							 } ?>
 						

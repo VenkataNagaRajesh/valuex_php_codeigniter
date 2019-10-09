@@ -139,7 +139,7 @@
 				</div>
 				<div class="col-sm-3 col-md-2">			   
 				 <!-- <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>-->
-				  <?php $alist = array("0" => "Select Airline");               
+				  <?php $alist = array("0" => "Carrier");               
 				    foreach($airlines as $air){
 					  $alist[$air->vx_aln_data_defnsID] = $air->code;
 					}				
@@ -222,7 +222,8 @@
 
 			<div>
 			<?php
-			 echo form_dropdown("color_airline_season", $airlinelist,set_value("color_airline_season",$default_airlineID), "id='color_airline_season' class='form-control hide-dropdown-icon select2'"); ?>
+		
+			 echo form_dropdown("color_airline_season", $airlinelist,set_value("color_airline_season",$filter_airline), "id='color_airline_season' class='form-control hide-dropdown-icon select2'"); ?>
 
 			</div>
 			<br>
@@ -264,7 +265,7 @@ function loadSeasonList(seasonlist = '[]'){
 function seasoncalender (seasonlist = '[]') {
 	
 	var season_data = jQuery.parseJSON(seasonlist);
-   // console.log(seasonlist);
+   console.log(seasonlist);
         // An array of dates
      var eventDates = {}; var season = {}; var name = {};
 	 var datecal = new Date().getFullYear();
@@ -275,9 +276,9 @@ function seasoncalender (seasonlist = '[]') {
 	       eventDates[ new Date( season_data[i]['dates'][k] )] = new Date( season_data[i]['dates'][k] ).toString();
 		    season[ new Date( season_data[i]['dates'][k] )] = season_data[i]['VX_aln_seasonID'];
 			if(name[ new Date( season_data[i]['dates'][k] )]){
-				name[ new Date( season_data[i]['dates'][k] )] = name[ new Date( season_data[i]['dates'][k] )]+' \n '+season_data[i]['season_name']+'(Airline:'+season_data[i]['airline_code']+',Origin:'+season_data[i]['orig_level']+',Destination:'+season_data[i]['dest_level']+')' ;
+				name[ new Date( season_data[i]['dates'][k] )] = name[ new Date( season_data[i]['dates'][k] )]+' \n '+season_data[i]['season_name']+'(Airline:'+season_data[i]['airline_code']+',Origin:'+season_data[i]['origin_values']+',Destination:'+season_data[i]['dest_values']+')' ;
 			} else {
-			name[ new Date( season_data[i]['dates'][k] )] = season_data[i]['season_name']+'(Airline:'+season_data[i]['airline_code']+',Origin:'+season_data[i]['orig_level']+',Destination:'+season_data[i]['dest_level']+')' ;
+			name[ new Date( season_data[i]['dates'][k] )] = season_data[i]['season_name']+'(Airline:'+season_data[i]['airline_code']+',Origin:'+season_data[i]['origin_values']+',Destination:'+season_data[i]['dest_values']+')' ;
 			}
                  			
 	   } 

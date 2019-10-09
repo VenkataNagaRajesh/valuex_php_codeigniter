@@ -80,9 +80,7 @@ class Airline_cabin_def extends Admin_Controller {
                 } else {
                     $this->data['active'] = '1';
                 }
-
-
-
+			
             $this->data['airlinecabins'] = $this->airports_m->getDefnsCodesListByType('13');
 
 
@@ -95,6 +93,11 @@ class Airline_cabin_def extends Admin_Controller {
 						   }else {
                    $this->data['airlinesdata'] = $this->airline_m->getAirlinesData();
                 }
+				
+				if(empty($this->input->post('carrier')) && $userTypeID != 1){
+			     $this->data['airlineID'] = $this->session->userdata('default_airline');
+			    }
+
 
 		$this->data["subview"] = "airline_cabin_def/index";
 		$this->load->view('_layout_main', $this->data);

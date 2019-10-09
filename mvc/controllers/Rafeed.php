@@ -59,7 +59,7 @@ class Rafeed extends Admin_Controller {
 		if(!empty($this->input->post('airline_code'))){
                    $this->data['airline_code'] = $this->input->post('airline_code');
                 } else {
-				  if($this->session->userdata('usertypeID') == 2){
+				  if($this->session->userdata('usertypeID') != 1){
 					 $this->data['airline_code'] = $this->session->userdata('default_airline');
 				   } else {					
                      $this->data['airline_code'] = 0;
@@ -230,7 +230,7 @@ class Rafeed extends Admin_Controller {
    				      $rafeed['carrier'] = 
 					    $this->airports_m->getDefIdByTypeAndCode($carrier,'12');
 
-					if(strlen($carrier) != 2 || !ctype_alpha($carrier)){
+					if(strlen($carrier) != 2){
                                                 $this->mydebug->rafeed_log("Carrier should  be 2 alpha code in row " . $column, 1);
                                                 continue;
                                         }
@@ -325,7 +325,7 @@ class Rafeed extends Admin_Controller {
 				      $rafeed['marketing_airline_code'] = 
 					    $this->airports_m->getDefIdByTypeAndCode($marketing_airline_code,'12');
 
-				 if(strlen($marketing_airline_code) != 2 || !ctype_alpha($marketing_airline_code)){
+				 if(strlen($marketing_airline_code) != 2){
                                                 $this->mydebug->rafeed_log("MKT airine should be 2 alpha code in row " . $column, 1);
                                                 continue;
                                         }
@@ -335,7 +335,7 @@ class Rafeed extends Admin_Controller {
 					    $this->airports_m->getDefIdByTypeAndCode($operating_airline_code,'12');
 
 
-					 if(strlen($operating_airline_code) != 2 || !ctype_alpha($operating_airline_code)){
+					 if(strlen($operating_airline_code) != 2 ){
                                                 $this->mydebug->rafeed_log("Operating airline should be 2 alpha code in row " . $column, 1);
                                                 continue;
                                         }

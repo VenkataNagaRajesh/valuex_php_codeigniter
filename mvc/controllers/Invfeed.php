@@ -46,7 +46,7 @@ class Invfeed extends Admin_Controller {
 		if(!empty($this->input->post('airline_code'))){
                    $this->data['airline_code'] = $this->input->post('airline_code');
                 } else {
-                  if($this->session->userdata('usertypeID') == 2){
+                  if($this->session->userdata('usertypeID') != 1){
 					 $this->data['airline_code'] = $this->session->userdata('default_airline');
 				   } else {					
                      $this->data['airline_code'] = 0;
