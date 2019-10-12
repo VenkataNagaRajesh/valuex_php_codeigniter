@@ -146,7 +146,8 @@ class Invfeed extends Admin_Controller {
 							$this->mydebug->invfeed_log("coulmns count matched , uploading data for row " . $column , 0);
 							$invfeedraw = array();
 							$invfeedraw['airline'] = $Row[array_search('airline code',$import_header)];
-							if(strlen($invfeedraw['airline']) != '2' || !ctype_alpha($invfeedraw['airline'])){
+							//if(strlen($invfeedraw['airline']) != '2' || !ctype_alpha($invfeedraw['airline'])){
+								if(strlen($invfeedraw['airline']) != '2'){
 								 $this->mydebug->invfeed_log("Carrier code should be 2 charcters " . $column , 1);
 								 continue;
 							}

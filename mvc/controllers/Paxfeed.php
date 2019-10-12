@@ -242,7 +242,8 @@ class Paxfeed extends Admin_Controller {
 
                                       $paxfeedraw['carrier_code'] =  $Row[array_search('carrier code',$import_header)];
 
-					if ( strlen($paxfeedraw['carrier_code']) != 2 || !ctype_alpha($paxfeedraw['carrier_code'])) {
+				//if ( strlen($paxfeedraw['carrier_code']) != 2 || !ctype_alpha($paxfeedraw['carrier_code'])) {
+					if ( strlen($paxfeedraw['carrier_code']) != 2){
                                               $this->mydebug->paxfeed_log("Carrier code should be 2 alphabets in row " . $column , 1);
                                                 continue;
                                         }
