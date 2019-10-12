@@ -254,10 +254,10 @@ class Airports_master extends Admin_Controller {
 							  $areaID = 0;
 							  $cityID = 0;
 							   foreach($defnData as $aln_data){ //Total Execution Time: 0.45060066779455 Mins
-								 if($aln_data->aln_data_typeID == 2 && $aln_data->aln_data_value == $country){
+								 if($aln_data->aln_data_typeID == 2 && $aln_data->code == $countrycode_key){
 								 	$countryID = $aln_data->vx_aln_data_defnsID;
 								 }
-								 if($aln_data->aln_data_typeID == 3 && $aln_data->aln_data_value == $city){
+								 if($aln_data->aln_data_typeID == 3 && $aln_data->code == $citycode_key){
 								 	$cityID = $aln_data->vx_aln_data_defnsID;
 								 }
 								 if($aln_data->aln_data_typeID == 4 && $aln_data->aln_data_value == $region){
