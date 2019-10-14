@@ -872,7 +872,7 @@ if(!empty($data_id_array)) {
 
 public function process_fclr_matching_report() {
 
-                $sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf where is_fclr_processed = 0 order by dtpf_id";
+                $sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf where fclr_data = 0 order by dtpf_id";
                 $rResult = $this->install_m->run_query($sQuery);
 
 		foreach ($rResult as $feed ) {
