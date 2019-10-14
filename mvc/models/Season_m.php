@@ -203,5 +203,23 @@ class season_m extends MY_Model {
 		$query = $this->db->get();
 		return $query->row('count');
 	}
+	
+	public function getSeasonValues($type,$wherein){
+		if($type == 4 || $type == 5){
+		  $this->db->select('group_concat(aln_data_value)');
+		} else {
+		  $this->db->select('group_concat(code)');
+		}
+		$this->db->from('vx_aln_data_defns');
+		$this->db->where('aln_data_typeID',$type);
+		$this->db->where_in('vx_aln_data_defnsID',$wherein);
+		$query = $this->db->get();
+		
+        if($type == 4 || $type == 5){
+		  return $query->row('group_concat(aln_data_value)');
+		} else {
+		  return $query->row('group_concat(code)');
+		}		
+	}
 }
 

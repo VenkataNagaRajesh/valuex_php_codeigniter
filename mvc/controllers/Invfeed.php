@@ -46,7 +46,7 @@ class Invfeed extends Admin_Controller {
 		if(!empty($this->input->post('airline_code'))){
                    $this->data['airline_code'] = $this->input->post('airline_code');
                 } else {
-                  if($this->session->userdata('usertypeID') == 2){
+                  if($this->session->userdata('usertypeID') != 1){
 					 $this->data['airline_code'] = $this->session->userdata('default_airline');
 				   } else {					
                      $this->data['airline_code'] = 0;
@@ -146,7 +146,8 @@ class Invfeed extends Admin_Controller {
 							$this->mydebug->invfeed_log("coulmns count matched , uploading data for row " . $column , 0);
 							$invfeedraw = array();
 							$invfeedraw['airline'] = $Row[array_search('airline code',$import_header)];
-							if(strlen($invfeedraw['airline']) != '2' || !ctype_alpha($invfeedraw['airline'])){
+							//if(strlen($invfeedraw['airline']) != '2' || !ctype_alpha($invfeedraw['airline'])){
+								if(strlen($invfeedraw['airline']) != '2'){
 								 $this->mydebug->invfeed_log("Carrier code should be 2 charcters " . $column , 1);
 								 continue;
 							}

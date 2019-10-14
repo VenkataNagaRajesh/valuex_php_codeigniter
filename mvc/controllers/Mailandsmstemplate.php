@@ -208,8 +208,26 @@ class Mailandsmstemplate extends Admin_Controller {
 	public function view() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
-			$this->data['mailandsmstemplate'] = $this->mailandsmstemplate_m->get_mailandsmstemplate($id);
+			$this->data['mailandsmstemplate'] = $this->mailandsmstemplate_m->get_mailandsmstemplate($id);			
 			if($this->data['mailandsmstemplate']) {
+				 $this->load->library('parser');
+				$template_images = $this->airline_m->getImagesByType($this->data['mailandsmstemplate']->airlineID);
+			   foreach($template_images as $img){
+				   $data[$img->type] = base_url('uploads/images/'.$img->image);
+			   } 
+			   $airline_info = $this->airline_m->getAirlineLogo($this->data['mailandsmstemplate']->airlineID);
+			   $data['logo'] = $airline_info->logo;
+			   if(!empty($data['logo'])){
+				 $data['logo'] = base_url('uploads/images/'.$data['logo']);  
+			   }else{
+				 $data['logo'] = base_url('assets/home/images/emir.png');  
+			   }
+			   $data['mail_header_color'] = $airline_info->mail_header_color;
+			   if(empty($data['mail_header_color'])){
+				 $data['mail_header_color'] = '#333';  
+			   }
+			     $data['base_url'] = base_url(); 
+			    $this->data['mailandsmstemplate']->parse_template = $this->parser->parse_string($this->data['mailandsmstemplate']->template, $data,true);
 				$this->data["subview"] = "mailandsmstemplate/view";
 				$this->load->view('_layout_main', $this->data);
 			} else {
@@ -342,8 +360,10 @@ class Mailandsmstemplate extends Admin_Controller {
 	  $i=1;
 	  foreach($rResult as $template){		 	
 		  if(permissionChecker('mailandsmstemplate_edit')){ 			
-			$template->action .= btn_edit('mailandsmstemplate/edit/'.$template->mailandsmstemplateID, $this->lang->line('edit'));
-			
+			$template->action .= btn_edit('mailandsmstemplate/edit/'.$template->mailandsmstemplateID, $this->lang->line('edit'));			
+		  }
+		  if(permissionChecker('mailandsmstemplate_view')){ 			
+			$template->action .= btn_view('mailandsmstemplate/view/'.$template->mailandsmstemplateID, $this->lang->line('view'));			
 		  }
 		  if(permissionChecker('mailandsmstemplate_delete')){
 		   $template->action .= btn_delete('mailandsmstemplate/delete/'.$template->mailandsmstemplateID, $this->lang->line('delete'));	

@@ -179,6 +179,9 @@ class Admin_Controller extends MY_Controller {
 			} else {
 				$this->data['carrier'] = 0;
 			}
+			
+			//print_r($this->data['carrier']);
+			//exit;
 		}
 	}
 

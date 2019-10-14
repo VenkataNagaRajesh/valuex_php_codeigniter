@@ -5,7 +5,7 @@
                 <section class="sidebar">
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
-                        <div class="pull-left image">
+                        <div class="image" style="text-align:center;">
                            <?php if($this->session->userdata('photo') == 'defualt.png' || empty($this->session->userdata('photo'))){ ?>                               
                                <span class="user-icon"><i class="fa fa-user"></i></span>
 							  <?php }else{ ?>
@@ -14,7 +14,7 @@
 							  <?php } ?>
                         </div>
 
-                        <div class="pull-left info">
+                        <div class="info" style="text-align:center;">
                             <?php
                                 $name = $this->session->userdata("name");
                                 if(strlen($name) > 11) {
@@ -35,7 +35,7 @@
 								        $carray[$airline->vx_aln_data_defnsID] = $airline->code;
 									  }
 							   echo '<div class="col-sm-12 airline-type">';
-							   echo form_dropdown("login_airline", $carray,set_value("login_airline",$carrier), "id='login_airline' class='form-control' "); 
+							   echo form_dropdown("login_airline", $carray,set_value("login_airline",$this->session->userdata('default_airline')), "id='login_airline' class='form-control' "); 
 								echo '</div>';  
 							 } ?>
 						

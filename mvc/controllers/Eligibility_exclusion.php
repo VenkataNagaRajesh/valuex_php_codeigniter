@@ -367,6 +367,10 @@ function valFrequency($num)
 		   }
          }
 		 
+		 if(empty($this->input->post('carrier')) && $userTypeID != 1){
+			     $this->data['scarrier'] = $this->session->userdata('default_airline');
+			    }
+		 //echo  $this->data['default_airlineID']; exit;
 		$this->data["subview"] = "eligibility_exclusion/index";
 		$this->load->view('_layout_main', $this->data);		
 	}

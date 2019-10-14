@@ -40,13 +40,7 @@
                         $airlinelist['0'] = ' Carrier';
                         ksort($airlinelist);
 
-		$userTypeID = $this->session->userdata('usertypeID');
-                           if($userTypeID != 1){
-                                   $default_airlineID =  $this->session->userdata('default_airline');
-                            } else {
-                               $default_airlineID = 0;
-                            }
-
+		
 
 
 

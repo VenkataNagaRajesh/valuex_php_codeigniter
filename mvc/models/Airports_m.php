@@ -4,7 +4,12 @@ class Airports_m extends MY_Model {
 
   public function checkData($data,$type,$parent = null,$code=null){
 	$this->db->select('*')->from('vx_aln_data_defns');
-	  $this->db->where(array('aln_data_value'=>$data,'aln_data_typeID'=> $type));
+     if(!empty($code)){	
+	   $this->db->where(array('code'=>$code,'aln_data_typeID'=> $type));
+	 } else {
+	   $this->db->where(array('aln_data_value'=>$data,'aln_data_typeID'=> $type));
+	 }
+	  
 	  if($parent != null){
 		  $this->db->where('parentID',$parent);
 	  }

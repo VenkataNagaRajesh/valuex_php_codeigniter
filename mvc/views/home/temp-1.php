@@ -70,7 +70,7 @@
 			<p style="text-align:center;"><a type="button" href="{bidnow_link}" style="background: #ff6633;font-weight:bold;padding:8px 26px;font-size: 23px;border-radius: 33px;border:none;color:#fff;font-family:calibri;text-decoration:none;">&nbsp;&nbsp; BID NOW &nbsp;&nbsp;</a></p>
 			<div class="info">
 				<p style="margin-bottom: 10px;font-weight:500;font-size: 14px;color: #333;font-family: calibri;text-align:center;">
-					<span><b>Help Center | I'm Not Intrested</b></span><br>
+					<span><b><a href="#">Help Center | I'm Not Intrested</a></b></span><br>
 					<span>Value X S.r.l. via Paleocapa, 7 - 20121 Milan - Italy - Tax code and VAT number: IT11876271005</span><br>
 					You are receiving this email because you subscribed to the Travel Alert service, accepting Value X-  Terms of Service and Privacy Policy .
 				</p>

@@ -69,7 +69,7 @@ class Paxfeed extends Admin_Controller {
 		if(!empty($this->input->post('carrier_code'))){
                 $this->data['carrier_code'] = $this->input->post('carrier_code');
                 } else {
-                    if($this->session->userdata('usertypeID') == 2){
+                    if($this->session->userdata('usertypeID') != 1){
 					 $this->data['carrier_code'] = $this->session->userdata('default_airline');
 				   } else {					
                      $this->data['carrier_code'] = 0;
@@ -242,7 +242,8 @@ class Paxfeed extends Admin_Controller {
 
                                       $paxfeedraw['carrier_code'] =  $Row[array_search('carrier code',$import_header)];
 
-					if ( strlen($paxfeedraw['carrier_code']) != 2 || !ctype_alpha($paxfeedraw['carrier_code'])) {
+				//if ( strlen($paxfeedraw['carrier_code']) != 2 || !ctype_alpha($paxfeedraw['carrier_code'])) {
+					if ( strlen($paxfeedraw['carrier_code']) != 2){
                                               $this->mydebug->paxfeed_log("Carrier code should be 2 alphabets in row " . $column , 1);
                                                 continue;
                                         }

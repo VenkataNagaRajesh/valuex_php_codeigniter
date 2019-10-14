@@ -32,7 +32,7 @@
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
                            <div class="col-sm-3 col-md-2">
-               <?php $airlinelist['0'] = " Airlines";
+               <?php $airlinelist['0'] = " Carriers";
 			  foreach($airlinesdata as $airline){
                                      $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
                            }

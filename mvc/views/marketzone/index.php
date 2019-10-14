@@ -47,7 +47,7 @@
 							}
 
 
-							$airlinelist[0]= 'Airline';
+							$airlinelist[0]= 'Carrier';
 							ksort($airlinelist);
 							
                                                    echo form_dropdown("airline_id", $airlinelist,set_value("airline_id",$default_airlineID), "id='airline_id' class='form-control hide-dropdown-icon select2'");
