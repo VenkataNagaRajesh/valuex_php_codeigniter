@@ -653,7 +653,7 @@ function validateSeasonOrFreq(){
                        if(!empty($this->input->get('frequency'))){
                                $frstr = $this->input->get('frequency');
                                 $freq = $this->airports_m->getDefnsCodesListByType('14');
-				if($frstr == '*'){
+				if($frstr === '*'){
 					$frstr = '1234567';
 				}
                                  if ( $frstr != '0') {

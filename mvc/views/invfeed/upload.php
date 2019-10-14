@@ -71,7 +71,7 @@
 
 $(function() {
     // Create the close button
-    var closebtn = $('<button/>', {
+/*    var closebtn = $('<button/>', {
         type:"button",
         text: 'x',
         id: 'close-preview',
@@ -85,7 +85,7 @@ $(function() {
         title: "<strong>Preview</strong>"+$(closebtn)[0].outerHTML,
         content: "There's no image",
         placement:'bottom'
-    });
+    });*/
     // Clear event
     $('.image-preview-clear').click(function(){
         $('.image-preview').attr("data-content","").popover('hide');
@@ -110,7 +110,7 @@ $(function() {
             $(".image-preview-clear").show();
             $(".image-preview-filename").val(file.name);
             img.attr('src', e.target.result);
-            $(".image-preview").attr("data-content",$(img)[0].outerHTML).popover("show");
+            //$(".image-preview").attr("data-content",$(img)[0].outerHTML).popover("show");
             $('.content').css('padding-bottom', '100px');
         }
         reader.readAsDataURL(file);

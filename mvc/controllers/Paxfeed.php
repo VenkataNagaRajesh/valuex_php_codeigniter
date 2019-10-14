@@ -163,7 +163,10 @@ class Paxfeed extends Admin_Controller {
                         if(count(array_diff($header,$import_header)) == 0){
                              $flag = 1;
 				$this->mydebug->paxfeed_log("Header Matched for file  " . $_FILES['file']['name'] , 0);
-                         }
+                         } else {
+					$this->mydebug->paxfeed_log("Header mismatch" , 1);
+					break;
+			 }
                         } else {
                              if($flag == 1){                                                                                      
 			   	 if(count($Row) == 24){ //print_r($Row); exit;						
@@ -545,9 +548,11 @@ class Paxfeed extends Admin_Controller {
 
 					   } else {
 						   print_r("mismatch");
-						$this->mydebug->paxfeed_log("Mismatch of header skipping ..", 1);
+						$this->mydebug->paxfeed_log("Columns count didn't match for row ". $column . " skipping ..", 1);
 					   }
-					 }
+
+					}
+
 				   $i++;					   
 				  }
                   /* $time_end = microtime(true);
@@ -720,6 +725,10 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 
 		         if(!empty($this->input->get('frequency'))){
                                 $frstr = $this->input->get('frequency');
+				if($frstr === '*'){
+                                        $frstr = '1234567';
+                                }
+
                                 $freq = $this->airports_m->getDefnsCodesListByType('14');
                                  if ( $frstr != '0') {
                                         $arr = str_split($frstr);

@@ -578,6 +578,10 @@ class Rafeed extends Admin_Controller {
 			if(!empty($this->input->get('frequency'))){
 				$frstr = $this->input->get('frequency');
 				$freq = $this->airports_m->getDefnsCodesListByType('14');
+				 if($frstr === '*'){
+                                        $frstr = '1234567';
+                                }
+
 				 if ( $frstr != '0') {
                                         $arr = str_split($frstr);
 					$freq_str = implode(',',array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr));
