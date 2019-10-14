@@ -139,7 +139,10 @@ class Invfeed extends Admin_Controller {
                                          if(count(array_diff($header,$import_header)) == 0 ){
 						$this->mydebug->invfeed_log("Header Matched for " . $_FILES['file']['name'] , 0);
                                                  $flag = 1;
-                                         }
+                                         } else {
+							$this->mydebug->invfeed_log("Header mismatch" , 1);
+							break;
+					}
                                         } else {
                                            if($flag == 1){                                                                                      						
 					   	 if(count($Row) == 7){ //print_r($Row); exit;						
@@ -250,6 +253,8 @@ class Invfeed extends Admin_Controller {
 					   	 } 						
 					   } else {
 						   print_r("mismatch");
+						   $this->mydebug->invfeed_log("Columns count didn't match for row " . $column, 0);
+						
 					   }
 					 }
 				   $i++;					   

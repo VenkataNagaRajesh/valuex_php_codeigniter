@@ -558,7 +558,7 @@ public function save() {
 
 					$freq = $this->airports_m->getDefnsCodesListByType('14');
 					$frstr = $this->input->post("frequency") ? $this->input->post("frequency") : 0; 
-					if($frstr == '*'){
+					if($frstr === '*'){
 						$frstr = '1234567';
 					}
 					if ( $frstr != '0') {
@@ -911,7 +911,7 @@ function time_dropdown($val) {
 		 if(!empty($this->input->get('sfrequency'))){
                                $frstr = $this->input->get('sfrequency');
                                 $freq = $this->airports_m->getDefnsCodesListByType('14');
-				if($frstr == '*'){
+				if($frstr === '*'){
 					$frstr = '1234567';
 				}
                                  if ( $frstr != '0') {

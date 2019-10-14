@@ -141,7 +141,7 @@ function valFrequency($num)
 {
 
 
-   if($num == '*' ) {
+   if($num === '*' ) {
 
 	return true;
     } else {
@@ -484,7 +484,7 @@ if($end < $start ) {
 
 				$freq = $this->airports_m->getDefnsCodesListByType('14');
                                         $frstr = $this->input->post("frequency") ? $this->input->post("frequency") : 0;
-					if($frstr == '*') {
+					if($frstr === '*') {
 						$frstr = '1234567';
 					}
                                         if ( $frstr != '0') {
@@ -618,7 +618,7 @@ if($end < $start ) {
 
                                $freq = $this->airports_m->getDefnsCodesListByType('14');
                                         $frstr = $this->input->post("frequency") ? $this->input->post("frequency") : 0;
-					if($frstr == '*'){
+					if($frstr === '*'){
 						$frstr = '1234567';
 					}
                                         if ( $frstr != '0') {
@@ -862,7 +862,7 @@ function time_dropdown($val) {
 
                  if(!empty($this->input->get('day'))){
                                $frstr = $this->input->get('day');
-				if($frstr == '*') {
+				if($frstr === '*') {
 					$frstr = '1234567';
 				}
                                 $freq = $this->airports_m->getDefnsCodesListByType('14');
