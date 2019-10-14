@@ -420,6 +420,7 @@ class Rafeed extends Admin_Controller {
 					   } else {
 						$this->mydebug->rafeed_log("Header mismatch", 1);
 						   print_r("mismatch");
+							break;
 					   }
 					 }
 				   $i++;					   
