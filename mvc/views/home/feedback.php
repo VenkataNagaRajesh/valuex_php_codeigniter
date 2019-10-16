@@ -1,7 +1,7 @@
 <link href='<?= base_url() ?>assets/bootstrap-star-rating/css/star-rating.css' type='text/css' rel='stylesheet'>
 <!-- Bootstrap Star Rating JS -->
 	<script src='<?= base_url() ?>assets/bootstrap-star-rating/js/star-rating.min.js' type='text/javascript'></script>
-<div class="container top-bar">
+<div class="container top-bar" style="background:<?=$carrier_color?>;">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="col-md-2">
@@ -15,11 +15,11 @@
 		<div class="col-md-8 col-md-offset-2">
 			<div class="feedback-widget">
 				<div class="feedback-title">
-					<h2>Feedback Widget</h2>
+					<h2 style="color:<?=$carrier_color?>">Feedback Widget</h2>
 					<p><b>Give us your Valuable feedback - we are listening!</b></p>
 				</div>
 				<div class="feedback-bar">
-					<h3>
+					<h3 style="background:<?=$carrier_color?>">
 						Hi <?=$name?> !!
 						<span class="pull-right">Connect with us 
 							<a href="#"><i class="fa fa-facebook"></i></a>
@@ -92,7 +92,7 @@
            
 						<p>Is there anything you would like to tell us?</p>
 						<textarea col="30" rows="2" class="form-control" placeholder="Type Here" name="message"  id="message" ></textarea>
-						<button type="button" class="btn btn-danger col-md-offset-3" onclick="submitAction()">Submit</button>
+						<button type="button" class="btn btn-danger col-md-offset-3" onclick="submitAction()" style="background:<?=$carrier_color?>">Submit</button>
 					</form>
 				</div>
 			</div>
@@ -117,7 +117,7 @@
 	    	var postid = splitid[1];
 	    	
 		   	$.ajax({
-		   		url: '<?= base_url() ?>index.php/posts/updateRating',
+		   		url: '<?= base_url() ?>posts/updateRating',
 		   		type: 'post',
 		   		data: {postid: postid, rating: value},
 		   		success: function(response){
@@ -145,5 +145,7 @@
 		   	});
 				
 	}
+	
+	$('.filled-stras').css('color','<?=$carrier_color?>');
 	
 	</script>

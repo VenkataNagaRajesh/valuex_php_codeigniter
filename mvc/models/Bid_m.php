@@ -70,6 +70,7 @@ class bid_m extends MY_Model {
       }
 	   $this->db->where("tpf.pnr_ref",$pnr_ref);	 
 	    $this->db->group_by('tpf.flight_number');
+		$this->db->order_by('fclr.to_cabin','ASC');
 	    $query = $this->db->get();  
 		//print_r($this->db->last_query()); exit;
 	  return $query->result();

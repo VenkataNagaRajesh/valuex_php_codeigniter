@@ -35,17 +35,17 @@
 			</div>
 		</div>
 		<div style="width:100%;">
-			<p style="font-size: 14px;color: #ff6633;font-weight: bold;margin-right: 8px;">Congratulations {first_name} {last_name}</p>
+			<p style="font-size: 14px;color: {mail_header_color};font-weight: bold;margin-right: 8px;">Congratulations {first_name} {last_name}</p>
 			<p style="font-size: 14px;">{carrier_name} has accepted your Upgrade Offer!</p>
 			<ul>
 				<li style="font-size: 14px;line-height:20px;margin: 0 0 12px;">Your Flight has been Upgraded to {upgrade_to} at the Time of your Check-in, You will Receive a {upgrade_to} boarding pass</li>
 				<li style="font-size: 14px;line-height:20px;margin: 0 0 12px;">You will also Shortly Receive a new E-ticket via Email reflecting this Upgrade!</li>
 			</ul>
-			<p style="font-size: 14px;color:#ff6633;"><b>Summary of your Upgrade</b></p>
+			<p style="font-size: 14px;color:{mail_header_color};"><b>Summary of your Upgrade</b></p>
 		</div>
 		<div style="font-weight:500;position: relative;min-height: 1px;margin-top:10px;margin-bottom:10px;overflow: auto;width:100%;">
 			<table style="border-collapse: collapse;border-spacing: 0;width:100%;">
-				<thead style="background: #ff6633;color: #fff;text-transform: capitalize;">
+				<thead style="background: {mail_header_color};color: #fff;text-transform: capitalize;">
 					<tr style="white-space:nowrap;">
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Date</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Flight</th>
@@ -80,8 +80,8 @@
 							</p>
 							<p style="font-size: 14px;"><b>Valuex Travels,</b> {carrier_name}</p>
 							<p style="font-size: 14px;">
-								<span style="font-weight: bold;color: #ff6633;">----</span><br>
-								<span style="font-weight: bold;color: #ff6633;">www.valuex.com</span>
+								<span style="font-weight: bold;color: {mail_header_color};">----</span><br>
+								<span style="font-weight: bold;color: {mail_header_color};">www.valuex.com</span>
 							</p>
 						</div>
 					</td>
@@ -126,7 +126,7 @@
 				<tr>
 					<td>
 						<div style="margin-top:3em;margin-bottom:2em;">
-							<a href="{feedback_link}" type="button" style="color:#fff;background:#ff6633;border:none;padding: 5px;border-radius:2px;margin-right:3px;font-weight:bold;font-size:14px;text-decoration:none;"><i class="fa fa-comments-o"></i> &nbsp;&nbsp;Give Feedback&nbsp;&nbsp;</a>
+							<a href="{feedback_link}" type="button" style="color:#fff;background:{mail_header_color};border:none;padding: 5px;border-radius:2px;margin-right:3px;font-weight:bold;font-size:14px;text-decoration:none;"><i class="fa fa-comments-o"></i> &nbsp;&nbsp;Give Feedback&nbsp;&nbsp;</a>
 						</div>
 					</td>
 				</tr>

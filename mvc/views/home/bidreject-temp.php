@@ -28,7 +28,7 @@
 				</div>
 			</div>
 			<div style="width:100%;">
-				<p style="font-size: 14px;color: #ff6633;font-weight: bold;margin-right: 8px;">Oops..!  {first_name} {last_name}</p>
+				<p style="font-size: 14px;color: {mail_header_color};font-weight: bold;margin-right: 8px;">Oops..!  {first_name} {last_name}</p>
 				<p style="font-size: 14px;">Booking Reference : {pnr_ref}</p>			  	
 				<ul>
 					<li style="font-size: 14px;line-height:20px;margin: 0 0 12px;">We Regret to inform you that your request for upgradation would not be processed.</li>

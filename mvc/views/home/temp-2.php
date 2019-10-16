@@ -26,11 +26,11 @@
 				<tr>
 					<td>
 						<div style="padding-right:15px;">
-							<h1 style="margin-bottom: 10px;color: #ff6633;font-weight: bold;text-align: center;font-size: 30px;margin-top: 1em;">Hi {first_name}</h1>
+							<h1 style="margin-bottom: 10px;color: {mail_header_color};font-weight: bold;text-align: center;font-size: 30px;margin-top: 1em;">Hi {first_name}</h1>
 							<p style="text-align: center;margin-bottom:10px;font-size: 14px;">
 								With AC Bid Upgrade you can enhance your travel experince by enjoying priority. One or more of yourupcoming flight (s) are eligible for bids
 							</p>
-							<p style="text-align: center"><a style="background: #ff6633;font-weight: bold;padding: 8px 26px;font-size: 23px;border-radius: 33px;border: none;color: #fff;text-decoration: none;" href="{bidnow_link}" class="btn btn-danger" type="button">&nbsp;&nbsp; BID NOW &nbsp;&nbsp;</a></p>
+							<p style="text-align: center"><a style="background: {mail_header_color};font-weight: bold;padding: 8px 26px;font-size: 23px;border-radius: 33px;border: none;color: #fff;text-decoration: none;" href="{bidnow_link}" class="btn btn-danger" type="button">&nbsp;&nbsp; BID NOW &nbsp;&nbsp;</a></p>
 							<p style="text-align: center;font-size:14px">
 								<span>Value X S.r.l. via Paleocapa, 7 - 20121 Milan - Italy - Tax code and VAT number: IT11876271005</span><br><br>
 								You are receiving this email because you subscribed to the Travel Alert service, accepting Value X-  Terms of Service and Privacy Policy .
@@ -38,7 +38,7 @@
 						</div>
 						<div style="font-family:calibri;font-weight:500;position: relative;min-height: 1px;margin-top:10px;margin-bottom:10px;overflow: auto;width:98%;padding-right:8px;">
 							<table style="border-collapse: collapse;border-spacing: 0;width:100%;">
-								<thead style="background: #ff6633;color: #fff;text-transform: capitalize;">
+								<thead style="background: {mail_header_color};color: #fff;text-transform: capitalize;">
 									<tr style="white-space:nowrap;">
 										<th style="padding: 6px 3px;text-align:center;font-size:14px;">Date</th>
 										<th style="padding: 6px 3px;text-align:center;font-size:14px;">Flight</th>
@@ -77,7 +77,7 @@
 				<tr>
 					<td>
 						<img style="display: block;height: auto;width:100%;" src="{upgrade_offer_mail_template2}" alt="temp2 bnr" width="402">
-						<p style="text-align: center;float: right !important;border: dotted 1px #333;margin: 10px 0px;padding: 3px 15px;"><b>BOOKING REFERENECE: <span style="color:#ff6633;">{pnr_ref}</span></b></p>
+						<p style="text-align: center;float: right !important;border: dotted 1px #333;margin: 10px 0px;padding: 3px 15px;"><b>BOOKING REFERENECE: <span style="color:{mail_header_color};">{pnr_ref}</span></b></p>
 					</td>
 				</tr>
 			</table>

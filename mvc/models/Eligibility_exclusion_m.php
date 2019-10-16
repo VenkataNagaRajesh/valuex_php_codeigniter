@@ -249,7 +249,10 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, ex.or
 	}
 	
 	function EErulesTotalCount(){
-		$this->db->select('count(*) count')->from('VX_aln_eligibility_excl_rules');		
+		$this->db->select('count(*) count')->from('VX_aln_eligibility_excl_rules');	        	
+		if($this->session->userdata('usertypeID') != 1 ){		
+			$this->db->where_in('carrier',$this->session->userdata('login_user_airlineID'));
+		}
 		$query = $this->db->get();		
 		return $query->row('count');
 	}

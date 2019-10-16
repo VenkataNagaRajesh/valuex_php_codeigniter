@@ -1,4 +1,4 @@
-<div class="container top-bar">
+<div class="container top-bar" style="background:<?=$mail_header_color?>;">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="col-md-2">
@@ -11,13 +11,13 @@
 	<div class="row">
 		<div class="bid-tab">
 			<ul class="nav nav-tabs">
-				<li class="col-md-6"><a href="#offer"><span class="badge badge-secondary">1</span> Make Us an Offer</a></li>
-				<li class="col-md-6"><a href="#payment"><span class="badge badge-secondary">2</span> Review & Payment</a></li>
+				<li class="col-md-6"><a href="#offer"><span class="badge badge-secondary" style="color:<?=$mail_header_color?>;">1</span> Make Us an Offer</a></li>
+				<li class="col-md-6"><a href="#payment"><span class="badge badge-secondary" style="color:<?=$mail_header_color?>;">2</span> Review & Payment</a></li>
 			</ul>
             <div class="tab-content">
                 <div id="offer" class="">
 					<div class="col-md-12">
-						<h3>your chance for a Emirates business upgrade</h3>
+						<h3 style="color:<?=$mail_header_color?>;">your chance for a Emirates business upgrade</h3>
 						<p>Treat yourself to the amenities and comfort of business upgrade to business class by submitting your bid here is how to proceed</p>
 						<ol>
 							<li>Submit your bid per flight leg and click on next</li>
@@ -28,11 +28,11 @@
 					</div>
 					<div class="col-md-10">
 						<div class="pass-info">
-							<p>Passenger(s):<span><?php echo ucfirst($results[0]->pax_names); ?></span>
+							<p>Passenger(s):<span style="color:<?=$mail_header_color?>;"><?php echo ucfirst($results[0]->pax_names); ?></span>
 							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$results[0]->pnr_ref?></span></p>
 							<div class="table">
 								<table class="table">
-									<thead>
+									<thead style="background:<?=$mail_header_color?>">
 										<tr>
 											<th>Flight Information</th>
 											<th style="text-align:left;">Upgrade To Cabin</th>
@@ -50,21 +50,21 @@
 												
 												<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
 													<div class="col-md-5">
-														<p><?php echo $result->from_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time)?></span></p>
-														<small>Singapore</small>
+														<p style="color:<?=$mail_header_color?>"><?php echo $result->from_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time)?></span></p>
+														<small><?php echo $result->from_city; ?></small>
 														<ul>
 															<li><?php echo date('d M',$result->dep_date); ?></li>
-															<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
+															<li style="color:<?=$mail_header_color?>;">Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
 															<!--<li><?=$result->time_diff?></li>-->
 														</ul>
 													</div>
 													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
 													<div class="col-md-5">
-														<p><?php echo $result->to_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time)?></span></p>
-														<small>Bengaluru</small>
+														<p style="color:<?=$mail_header_color?>;"><?php echo $result->to_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time)?></span></p>
+														<small><?php echo $result->to_city; ?></small>
 														<ul>
 															<li><?php echo date('d M',$result->arrival_date); ?></li>
-															<li>Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
+															<li style="color:<?=$mail_header_color?>">Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
 															<!--<li><?=$result->time_diff?></li>-->
 														</ul>
 													</div>
@@ -122,7 +122,7 @@
 							<div class="col-md-12" style="padding-right:0;">
 								<p class="pull-right">Total Bid Amount  <strong style="margin-left:12px;"> <i class="fa fa-dollar"></i> <b id="tot"></b></strong> </p>
 							</div>
-							<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button">Continue</a>
+							<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button" style="background:<?=$mail_header_color?>">Continue</a>
 						</div>
 					</div>
 					<div class="col-md-2">
@@ -151,7 +151,7 @@
                 <div id="payment" class="">
 					<div class="col-md-9">
 						<div class="col-md-2 back-btn">
-							<a type="button" class="btn btn-danger btn btn-secondary sw-btn-prev"><i class="fa fa-arrow-left"></i> Back</a>
+							<a type="button" class="btn btn-danger btn btn-secondary sw-btn-prev" style="background:<?=$mail_header_color?>;"><i class="fa fa-arrow-left" ></i> Back</a>
 						</div>
 						<div class="col-md-10 booking-ref">
 							<h2 class="pull-right"><b>Booking Ref No: <?php echo $results[0]->pnr_ref; ?></b></h2>
@@ -193,15 +193,15 @@
 									</div>
 									<div class="col-md-12">
 										<div class="pay-info">
-											<p>Your card will save for future usage upon BID Confirmation</p>
-											<p>Bid Participation Charges  <b>(1$ Non Refundable)</b></p>
+											<p style="color:<?=$mail_header_color?>;">Your card will save for future usage upon BID Confirmation</p>
+											<p style="color:<?=$mail_header_color?>;">Bid Participation Charges  <b>(1$ Non Refundable)</b></p>
 										</div>
 									</div>
 								</div>
 								<div class="col-md-4 actual-cash">
 									<p>Total Cash to be Paid <strong><i class="fa fa-dollar"></i> <b id="paid_cash"></b></strong></p>
 									<p>Total Miles to be Paid : <b id="paid_miles"></b> </p>
-									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$result->offer_id?>)">Submit</a>	
+									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$result->offer_id?>)" style="background:<?=$mail_header_color?>;">Submit</a>	
                                   					
 								</div>
 							</form>
