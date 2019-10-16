@@ -24,7 +24,7 @@
 	</div>
 	<div style="width:100%;margin-right: auto;margin-left: auto;">
 		<div style="width:100%;display:table;"><br>
-			<h1 class="head-title" style="margin:0;color: #ff6633;font-weight: bold;font-size: 16px;">Hi ! <a style="float: right;" href="#" align="right">Help Center | I'm Not Intrested</a></h1>
+			<h1 class="head-title" style="margin:0;color: {mail_header_color};font-weight: bold;font-size: 16px;">Hi ! <a style="float: right;" href="#" align="right">Help Center | I'm Not Intrested</a></h1>
 			<p style="font-size:14px;margin: 10px 0;">
 				With AC Bid Upgrade you can enhance your travel experince by enjoying priority. One or more of your upcoming flight (s) are eligible for bids	
 			</p>
@@ -35,7 +35,7 @@
 		</div>
 		<div style="font-weight:500;position: relative;min-height: 1px;margin-top: -25px;overflow: auto;width:100%;margin-bottom: 20px;">
 			<table style="border-collapse: collapse;border-spacing: 0;width:100%;">
-				<thead style="background: #ff6633;color: #fff;text-transform: capitalize;">
+				<thead style="background: {mail_header_color};color: #fff;text-transform: capitalize;">
 					<tr style="white-space:nowrap;">
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Date</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Flight</th>
@@ -73,7 +73,7 @@
 					<span>Value X S.r.l. via Paleocapa, 7 - 20121 Milan - Italy - Tax code and VAT number: IT11876271005</span><br>
 					You are receiving this email because you subscribed to the Travel Alert service, accepting Value X-  Terms of Service and Privacy Policy .
 				</p>
-				<p style="text-align:center;margin-top:12px;"><a type="button" href="{bidnow_link}" style="background: #ff6633;font-weight:bold;padding:8px 26px;font-size: 23px;border-radius: 33px;border:none;color:#fff;font-family:century gothic;text-decoration:none;">&nbsp;&nbsp; &nbsp;&nbsp; BID NOW&nbsp;&nbsp; &nbsp;&nbsp; </a></p>
+				<p style="text-align:center;margin-top:12px;"><a type="button" href="{bidnow_link}" style="background: {mail_header_color};font-weight:bold;padding:8px 26px;font-size: 23px;border-radius: 33px;border:none;color:#fff;font-family:century gothic;text-decoration:none;">&nbsp;&nbsp; &nbsp;&nbsp; BID NOW&nbsp;&nbsp; &nbsp;&nbsp; </a></p>
 			</div>
 		</div>
 		<table style="width:10%;">

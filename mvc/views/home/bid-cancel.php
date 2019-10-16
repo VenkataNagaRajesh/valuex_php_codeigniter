@@ -28,7 +28,7 @@
 				</div>
 			</div>
 			<div style="width:100%;">
-				<p style="font-size: 14px;color: #ff6633;font-weight: bold;margin-right: 8px;">{first_name} {last_name}</p>
+				<p style="font-size: 14px;color: {mail_header_color};font-weight: bold;margin-right: 8px;">{first_name} {last_name}</p>
 				<p style="font-size: 14px;">Booking Reference : {pnr_ref}</p>			  	
 				<ul>
 					<li style="font-size: 14px;line-height:20px;margin: 0 0 12px;">we hope to serve you better next time and your cancellation is not due to our service delimitations.</li>
@@ -37,7 +37,7 @@
 			</div>
 			<div style="font-weight:500;position: relative;min-height: 1px;margin-top:10px;margin-bottom:10px;overflow: auto;width:100%;">
 			<table style="border-collapse: collapse;border-spacing: 0;width:100%;">
-				<thead style="background: #ff6633;color: #fff;text-transform: capitalize;">
+				<thead style="background: {mail_header_color};color: #fff;text-transform: capitalize;">
 					<tr style="white-space:nowrap;">
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Date</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Flight</th>

@@ -28,16 +28,16 @@
 			</div>
 		</div>
 		<div style="width:100%;">
-			<p style="font-size: 14px;"><span style="color: #ff6633;font-weight: bold;margin-right: 8px;">Congratulations,</span> your bid has been Successfully Re-Submitted</p>
+			<p style="font-size: 14px;"><span style="color: {mail_header_color};font-weight: bold;margin-right: 8px;">Congratulations,</span> your bid has been Successfully Re-Submitted</p>
 			<p style="font-size: 14px;">
-				<span style="font-weight: bold;color: #ff6633;">What to do Now:</span><br>
+				<span style="font-weight: bold;color: {mail_header_color};">What to do Now:</span><br>
 				Lorem Ipsum is simply dummy text of the Printing and typecasting Industry. Lorem Ipsum has been the Industry's Standard Dummy Text ever since the 1500s,
 			</p>
-			<p style="font-size: 14px;"><b><span style="color:#ff6633;">Bid Summary : </span> Bid Reference No : {pnr_ref}</b></p>
+			<p style="font-size: 14px;"><b><span style="color:{mail_header_color};">Bid Summary : </span> Bid Reference No : {pnr_ref}</b></p>
 		</div>
 		<div style="font-weight:500;position: relative;min-height: 1px;margin-top:10px;margin-bottom:10px;overflow: auto;width:100%;">
 			<table style="border-collapse: collapse;border-spacing: 0;width:100%;">
-				<thead style="background: #ff6633;color: #fff;text-transform: capitalize;">
+				<thead style="background: {mail_header_color};color: #fff;text-transform: capitalize;">
 					<tr style="white-space:nowrap;">
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Date</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Flight</th>
@@ -72,8 +72,8 @@
 			</p>
 			<p style="font-size: 14px;"><b>Valuex Travels,</b> Emirates Airlines</p>
 			<p style="font-size: 14px;">
-				<span style="font-weight: bold;color: #ff6633;">----</span><br>
-				<span style="font-weight: bold;color: #ff6633;">www.valuex.com</span>
+				<span style="font-weight: bold;color: {mail_header_color};">----</span><br>
+				<span style="font-weight: bold;color: {mail_header_color};">www.valuex.com</span>
 			</p>
 		</div>
 		

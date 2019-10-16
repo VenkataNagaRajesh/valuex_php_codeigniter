@@ -30,7 +30,7 @@
 		<br>
 		<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;margin-bottom: 20px;font-family:calibri;">
 			<table style="border-collapse: collapse;border-spacing: 0;width:100%;">
-				<thead style="background: #ff6633;color: #fff;text-transform: capitalize;">
+				<thead style="background: {mail_header_color};color: #fff;text-transform: capitalize;">
 					<tr style="white-space:nowrap;">
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Date</th>
 						<th style="padding: 6px 3px;text-align:center;font-size:14px;">Flight</th>
@@ -67,7 +67,7 @@
 			<p style="margin-bottom: 10px;font-size: 14px;color: #333;font-family:calibri;font-weight:500;text-align:center;">
 				With AC Bid Upgrade you can enhance your travel experince by enjoying priority. One or more of yourupcoming flight (s) are eligible for bids
 			</p>
-			<p style="text-align:center;"><a type="button" href="{bidnow_link}" style="background: #ff6633;font-weight:bold;padding:8px 26px;font-size: 23px;border-radius: 33px;border:none;color:#fff;font-family:calibri;text-decoration:none;">&nbsp;&nbsp; BID NOW &nbsp;&nbsp;</a></p>
+			<p style="text-align:center;"><a type="button" href="{bidnow_link}" style="background: {mail_header_color};font-weight:bold;padding:8px 26px;font-size: 23px;border-radius: 33px;border:none;color:#fff;font-family:calibri;text-decoration:none;">&nbsp;&nbsp; BID NOW &nbsp;&nbsp;</a></p>
 			<div class="info">
 				<p style="margin-bottom: 10px;font-weight:500;font-size: 14px;color: #333;font-family: calibri;text-align:center;">
 					<span><b><a href="#">Help Center | I'm Not Intrested</a></b></span><br>

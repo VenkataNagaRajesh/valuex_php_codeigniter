@@ -1,4 +1,4 @@
-<div class="container top-bar">
+<div class="container top-bar" style="background:<?=$carrier_color?>">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="col-md-2">

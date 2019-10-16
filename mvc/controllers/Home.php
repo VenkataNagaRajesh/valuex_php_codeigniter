@@ -149,7 +149,7 @@ class Home extends MY_Controller {
 	
 	public function bidcancel() {		
 		$this->data["subview"] = "home/bid-cancel";
-		$this->data["subview"] = "home/outlook4";
+		//$this->data["subview"] = "home/outlook4";
 		$this->load->view('_layout_home', $this->data);
 	}
 	
@@ -158,9 +158,14 @@ class Home extends MY_Controller {
         $this->data['offer_data'] = $this->offer_reference_m->get_single_offer_ref(array("offer_id" => $offer_id));
          $airline = $this->bid_m->getAirlineLogoByPNR($this->data['offer_data']->pnr_ref);
 		  if(!empty($airline->logo)){
+			$this->data['carrier_color'] = $airline->mail_header_color;
+		   if(empty($this->data['carrier_color'])){
+			 $this->data['carrier_color'] = '#333';  
+		   }
 		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
 		  } else {
 			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+			$this->data['carrier_color'] = '#333'; 
 		  }			
 		$this->data["subview"] = "home/paysuccess";
 		$this->load->view('_layout_home', $this->data);
@@ -195,8 +200,13 @@ class Home extends MY_Controller {
         $airline = $this->bid_m->getAirlineLogoByPNR($this->input->get('pnr_ref'));
 		  if(!empty($airline->logo)){
 		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
+			$this->data['carrier_color'] = $airline->mail_header_color;
+			   if(empty($this->data['carrier_color'])){
+				 $this->data['carrier_color'] = '#333';  
+			   }
 		  } else {
 			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+			 $this->data['carrier_color'] = '#333';  
 		  }		
 		$this->data['pnr_ref'] = $this->input->get('pnr_ref');
 		$names = $this->bid_m->getPaxNames($this->input->get('pnr_ref'));

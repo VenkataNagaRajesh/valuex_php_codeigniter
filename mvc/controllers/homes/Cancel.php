@@ -85,10 +85,15 @@ class Cancel extends MY_Controller {
 		  } else {
 			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
 		  }
-
+          $this->data['mail_header_color'] = $airline->mail_header_color;
+		   if(empty($this->data['mail_header_color'])){
+			 $this->data['mail_header_color'] = '#333';  
+		   }
+		   
          $this->data['images'] = $this->airline_m->getImagesByType($airline->airlineID,'gallery');
          $this->data['airline_video_link'] = str_replace('watch?v=','embed/',$airline->video_links);		 
 		} else {
+			$this->data['mail_header_color'] = '#333'; 
 			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');			
 		}
 		

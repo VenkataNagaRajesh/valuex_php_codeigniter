@@ -265,7 +265,7 @@ function loadSeasonList(seasonlist = '[]'){
 function seasoncalender (seasonlist = '[]') {
 	
 	var season_data = jQuery.parseJSON(seasonlist);
-   console.log(seasonlist);
+  // console.log(seasonlist);
         // An array of dates
      var eventDates = {}; var season = {}; var name = {};
 	 var datecal = new Date().getFullYear();
@@ -473,8 +473,16 @@ function getCalenderBySeason(season){
 </script>
 <!-- form script -->
 <script>
-$("#ams_season_start_date").datepicker();
+$("#ams_season_start_date").datepicker({
+    onSelect: function(dateText) {
+       	var dateinfo = this.value.split('/');
+		console.log(dateinfo[2]+','+dateinfo[0]+','+dateinfo[1]);
+		$("#ams_season_end_date").datepicker("setDate", new Date(dateinfo[2],dateinfo[0],dateinfo[1]) );
+    }
+});
 $("#ams_season_end_date").datepicker();
+
+
 
 $('#season_color').colorpicker({});
 
@@ -721,7 +729,7 @@ $("#dest_all").click(function(){
 				$("#ams_season_end_date").datepicker("setDate", new Date(edate[1]+"-"+edate[0]+"-"+edate[2]));
 							
 				$("input[name=is_return_inclusive][value=" + seasoninfo['is_return_inclusive'] + "]").attr('checked', 'checked');				
-				console.log($('input[type=radio][name=is_return_inclusive]:checked').val());
+				//console.log($('input[type=radio][name=is_return_inclusive]:checked').val());
 				$('#season_id').val(seasoninfo['VX_aln_seasonID']);
          }
 	 });
