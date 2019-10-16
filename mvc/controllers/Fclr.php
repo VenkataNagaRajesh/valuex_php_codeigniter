@@ -48,12 +48,12 @@ class Fclr extends Admin_Controller {
                         array(
                                'field' => 'season_id',
                                 'label' => $this->lang->line("season"),
-                                'rules' => 'trim|integer|max_length[200]|xss_clean'
+                                'rules' => 'trim|integer|max_length[200]|xss_clean|callback_validateSeasonOrFreq'
                         ),
                         array(
                                 'field' => 'frequency',
                                'label' => $this->lang->line("frequency"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                                'rules' => 'trim|max_length[200]|xss_clean'
                         ),
                          array(
                                 'field' => 'upgrade_from_cabin_type',
@@ -115,6 +115,23 @@ class Fclr extends Admin_Controller {
                   return TRUE;
            }
         }
+
+
+function validateSeasonOrFreq(){
+	 $freq = $this->input->post("frequency");
+         $season = $this->input->post("season_id");	
+
+	if(($freq == 0 && $season == 0) || ($freq != 0 && $season != 0 ) ) {
+			$this->form_validation->set_message("validateSeasonOrFreq", "Either frequency or season should be selected");
+	                return false;
+
+	}
+
+	return true;
+
+
+}
+
 
 
 
@@ -636,7 +653,7 @@ class Fclr extends Admin_Controller {
                        if(!empty($this->input->get('frequency'))){
                                $frstr = $this->input->get('frequency');
                                 $freq = $this->airports_m->getDefnsCodesListByType('14');
-				if($frstr == '*'){
+				if($frstr === '*'){
 					$frstr = '1234567';
 				}
                                  if ( $frstr != '0') {

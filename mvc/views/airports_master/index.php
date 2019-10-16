@@ -19,8 +19,7 @@
                   </a>
 				  &nbsp;&nbsp;
 				  <a href="<?php echo base_url('airports_master/downloadFormat') ?>" class="btn btn-danger">
-                      <i class="fa fa-upload"></i>
-                      <?=$this->lang->line('download_airport_format')?>
+                     <?=$this->lang->line('download_airport_format')?>
                   </a>&nbsp;&nbsp;
 			    <?php } ?>
               </h5>

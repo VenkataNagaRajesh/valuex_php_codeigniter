@@ -139,14 +139,18 @@ class Invfeed extends Admin_Controller {
                                          if(count(array_diff($header,$import_header)) == 0 ){
 						$this->mydebug->invfeed_log("Header Matched for " . $_FILES['file']['name'] , 0);
                                                  $flag = 1;
-                                         }
+                                         } else {
+							$this->mydebug->invfeed_log("Header mismatch" , 1);
+							break;
+					}
                                         } else {
                                            if($flag == 1){                                                                                      						
 					   	 if(count($Row) == 7){ //print_r($Row); exit;						
 							$this->mydebug->invfeed_log("coulmns count matched , uploading data for row " . $column , 0);
 							$invfeedraw = array();
 							$invfeedraw['airline'] = $Row[array_search('airline code',$import_header)];
-							if(strlen($invfeedraw['airline']) != '2' || !ctype_alpha($invfeedraw['airline'])){
+							//if(strlen($invfeedraw['airline']) != '2' || !ctype_alpha($invfeedraw['airline'])){
+								if(strlen($invfeedraw['airline']) != '2'){
 								 $this->mydebug->invfeed_log("Carrier code should be 2 charcters " . $column , 1);
 								 continue;
 							}
@@ -249,6 +253,8 @@ class Invfeed extends Admin_Controller {
 					   	 } 						
 					   } else {
 						   print_r("mismatch");
+						   $this->mydebug->invfeed_log("Columns count didn't match for row " . $column, 0);
+						
 					   }
 					 }
 				   $i++;					   

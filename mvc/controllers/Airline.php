@@ -738,7 +738,7 @@ class Airline extends Admin_Controller {
 			 $airline = $this->airline_m->getAirlineData($this->input->post('airlineID'));
 			 $imgcount = $this->airline_m->getImagesCount($this->input->post('airlineID'),$this->input->post('img_type'));
 			
-			if($this->input->post('img_type') == "gallery" && $imgcount > 4){
+			/* if($this->input->post('img_type') == "gallery" && $imgcount > 4){
 			  //echo "Gallery Images count(5) Exceeded";			 
                $this->session->set_flashdata('error', 'Gallery Images count(5) Exceeded');	
                $this->data['subview'] = 'airline/airline_gallery';
@@ -748,7 +748,12 @@ class Airline extends Admin_Controller {
 			  $this->session->set_flashdata('error', 'Mail template Image count(1) Exceeded');
               $this->data['subview'] = 'airline/airline_gallery';
 		      $this->load->view('_layout_main',$this->data);			  
-			} else {
+			} else { */
+			 if($imgcount >= 1){
+			    $this->session->set_flashdata('error', 'Mail template Image count(1) Exceeded');
+                $this->data['subview'] = 'airline/airline_gallery';
+		        $this->load->view('_layout_main',$this->data);
+			 } else {				
 				$cpt = count($_FILES['images']['name']);			
 			   for($i=0; $i<$cpt; $i++)	{
 				   $imgcount = $this->airline_m->getImagesCount($this->input->post('airlineID'),$this->input->post('img_type'));

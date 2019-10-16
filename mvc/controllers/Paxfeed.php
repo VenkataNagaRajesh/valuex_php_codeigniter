@@ -163,7 +163,10 @@ class Paxfeed extends Admin_Controller {
                         if(count(array_diff($header,$import_header)) == 0){
                              $flag = 1;
 				$this->mydebug->paxfeed_log("Header Matched for file  " . $_FILES['file']['name'] , 0);
-                         }
+                         } else {
+					$this->mydebug->paxfeed_log("Header mismatch" , 1);
+					break;
+			 }
                         } else {
                              if($flag == 1){                                                                                      
 			   	 if(count($Row) == 24){ //print_r($Row); exit;						
@@ -242,7 +245,8 @@ class Paxfeed extends Admin_Controller {
 
                                       $paxfeedraw['carrier_code'] =  $Row[array_search('carrier code',$import_header)];
 
-					if ( strlen($paxfeedraw['carrier_code']) != 2 || !ctype_alpha($paxfeedraw['carrier_code'])) {
+				//if ( strlen($paxfeedraw['carrier_code']) != 2 || !ctype_alpha($paxfeedraw['carrier_code'])) {
+					if ( strlen($paxfeedraw['carrier_code']) != 2){
                                               $this->mydebug->paxfeed_log("Carrier code should be 2 alphabets in row " . $column , 1);
                                                 continue;
                                         }
@@ -502,7 +506,7 @@ class Paxfeed extends Admin_Controller {
 				$is_null_flag = 0;
 
 				foreach ($paxfeed as $k=>$v) {
-                                       if($k != 'day_of_week' && $k != 'season_id') {
+                                       if($k != 'day_of_week' && $k != 'season_id' && $k != 'rbd_markup') {
                                             if($v == '' ){
                                                  $this->mydebug->paxfeed_log("There is null value column ".$k. " in row " . $column, 1);
                                                  $this->paxfeedraw_m->delete_paxfeedraw($raw_pax_id);
@@ -544,9 +548,11 @@ class Paxfeed extends Admin_Controller {
 
 					   } else {
 						   print_r("mismatch");
-						$this->mydebug->paxfeed_log("Mismatch of header skipping ..", 1);
+						$this->mydebug->paxfeed_log("Columns count didn't match for row ". $column . " skipping ..", 1);
 					   }
-					 }
+
+					}
+
 				   $i++;					   
 				  }
                   /* $time_end = microtime(true);
@@ -719,6 +725,10 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 
 		         if(!empty($this->input->get('frequency'))){
                                 $frstr = $this->input->get('frequency');
+				if($frstr === '*'){
+                                        $frstr = '1234567';
+                                }
+
                                 $freq = $this->airports_m->getDefnsCodesListByType('14');
                                  if ( $frstr != '0') {
                                         $arr = str_split($frstr);
@@ -872,7 +882,7 @@ if(!empty($data_id_array)) {
 
 public function process_fclr_matching_report() {
 
-                $sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf where is_fclr_processed = 0 order by dtpf_id";
+                $sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf where fclr_data = 0 order by dtpf_id";
                 $rResult = $this->install_m->run_query($sQuery);
 
 		foreach ($rResult as $feed ) {
