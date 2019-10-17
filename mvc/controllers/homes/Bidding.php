@@ -58,11 +58,17 @@ class Bidding extends MY_Controller {
 			$result->pax_names = $this->bid_m->getPaxNames($this->session->userdata('pnr_ref'));
 			$tocabins = array();
 			$result->to_cabins = explode(',',$result->to_cabins);
-			  foreach($result->to_cabins as $value){
+			   foreach($result->to_cabins as $value){
                 $data = explode('-',$value);
-                $tocabins[$data[1].'-'.$data[2]] = $data[0];
-               // unset($result->to_cabins[$key]);
-              }
+                 $tocabins1[$data[3]][$data[1].'-'.$data[2]] = $data[0];
+               }			  
+			     // asort($tocabins1);
+				  ksort($tocabins1);
+				  foreach($tocabins1 as $cabins){
+					  foreach($cabins as $key => $value){
+					    $tocabins[$key] = $value;
+					  }					  
+				  } 
               $result->to_cabins = $tocabins;
 			   
 			$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
@@ -73,7 +79,7 @@ class Bidding extends MY_Controller {
 			$result->time_diff = $dteDiff->format('%d days %H hours %i min');
             $this->data['passengers_count'] = count(explode(',',$result->pax_names)); 			
      	}
-       
+       exit;
         //$this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
 		$this->data['cabins']  = $this->bid_m->get_cabins($this->data['results'][0]->carrier);
        // $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;

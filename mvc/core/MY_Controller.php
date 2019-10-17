@@ -48,21 +48,14 @@ class MY_Controller extends CI_Controller {
 		$offer_data = $this->offer_reference_m->getOfferDataByRef($pnr_ref);
 		
 		 $bid_confirmation = $this->preference_m->get_preference_value_bycode('BID_CONFIRMATION','24',$offer_data->carrier_code);	
-         $bid_expire = $this->preference_m->get_preference_value_bycode('BID_EXPIRE','24',$offer_data->carrier_code);
+         $bid_expire = $this->preference_m->get_preference_value_bycode('BID_EXPIRE','24',$offer_data->carrier_code);		
 		
-		//print_r($offer_data); exit;
-		//$this->mydebug->debug($status);
-		//$this->mydebug->debug($offer_data->offer_status);
-		//$offer_data->dep_date = 1561805915;
 		if(empty($offer_data->offer_status)){
 			return "Invalid PNR Reference";
 		} else {
 			if($status == $offer_data->offer_status){
 				$added_timestamp = strtotime('+'.$bid_expire+$bid_confirmation.' day', time());
-				//$this->mydebug->debug("cal date : ".date('d.m.Y', $added_timestamp));
-				//$this->mydebug->debug("dep date : ".date('d.m.Y', $offer_data->dep_date));
-				//echo $result;
-				  if($added_timestamp > $offer_data->dep_date){
+				if($added_timestamp > $offer_data->dep_date){
 					$error ="Offer Expired";
 				} else {
 					$error = '';

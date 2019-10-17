@@ -49,11 +49,17 @@ class Cancel extends MY_Controller {
 			$result->pax_names = $this->bid_m->getPaxNames($this->input->get('pnr_ref'));
 			$tocabins = array();
 			$result->to_cabins = explode(',',$result->to_cabins);
-			  foreach($result->to_cabins as $value){
+			   foreach($result->to_cabins as $value){
                 $data = explode('-',$value);
-                $tocabins[$data[1].'-'.$data[2]] = $data[0];
-               // unset($result->to_cabins[$key]);
-              }
+                 $tocabins1[$data[3]][$data[1].'-'.$data[2]] = $data[0];
+               }			  
+			     // asort($tocabins1);
+				  ksort($tocabins1);
+				  foreach($tocabins1 as $cabins){
+					  foreach($cabins as $key => $value){
+					    $tocabins[$key] = $value;
+					  }					  
+				  } 
               $result->to_cabins = $tocabins;
 			   
 			$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
