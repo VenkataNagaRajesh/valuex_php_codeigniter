@@ -201,13 +201,13 @@ class Bidding extends MY_Controller {
 			   $maildata = (array)$offer_data;
 			   $maildata['dep_date'] = date('d/m/Y',$maildata['dep_date']);
 			   $maildata['dep_time'] = gmdate('H:i A',$maildata['dept_time']);
-			   $maildata['cash'] = $this->input->post("bid_value");
+			   $maildata['cash'] = number_format($this->input->post("bid_value"));
 			   $maildata['base_url'] = base_url();			    		
 			   $maildata['tomail'] = explode(',',$maildata['email_list'])[0]; 
                $maildata['type'] = $this->input->post('type');
                $maildata['resubmit_link'] = base_url('homes/resubmit?pnr_ref='.$maildata['pnr_ref']);
 			   $maildata['cancel_link'] = base_url('homes/cancel?pnr_ref='.$maildata['pnr_ref']);
-			   
+			   $maildata['bid_value'] = number_format($maildata['bid_value']);
 			   if($maildata['type'] == 'resubmit'){
 					$maildata['template'] = 'bid_resubmit';
 					$maildata['subject'] = 'Your bid has been Successfully Re-Submitted';

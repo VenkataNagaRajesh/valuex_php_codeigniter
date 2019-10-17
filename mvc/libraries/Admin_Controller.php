@@ -631,6 +631,10 @@ class Admin_Controller extends MY_Controller {
 		   if(empty($data['mail_header_color'])){
 			 $data['mail_header_color'] = '#333';  
 		   }
+		   
+		   if(isset($data['bid_value'])){
+			   $data['bid_value'] = number_format($data['bid_value']);
+		   }
 		   /* $data['upgrade_offer_mail_template1'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
 		   $data['upgrade_offer_mail_template3'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
 		    $data['upgrade_offer_mail_template2'] = $data['base_url'] .'assets/home/images/temp2-bnr.jpg';
