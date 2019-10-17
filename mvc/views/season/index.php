@@ -17,7 +17,7 @@
 
 
 								$userTypeID = $this->session->userdata('usertypeID');
-                                                        if($userTypeID == 2){
+                                                        if($userTypeID != 1){
                                                                 $default_airlineID =  key($airlinelist);
                                                         } else {
                                                                 $default_airlineID = 0;
@@ -228,15 +228,14 @@
 			</div>
 			<br>
 			<div class="season-highlight">
-					<span>Season</span><span>Highlights</span><br>
+					<!--<span>Season</span><span>Highlights</span><br>-->
 					<!--<span class="default">Default</span><span class="default-high">&nbsp;</span><br>
 					<span class="default">Summer Peak</span><span class="summer-high">&nbsp;</span><br>
 					<span class="default">Christmas Peak</span><span class="christ-high">&nbsp;</span>-->
-					<div class="load_seasons">
-					</div>
-					<?php foreach($seasonslist as $season) { ?>
-					<span class="default" onclick="getCalenderBySeason(<?=$season->VX_aln_seasonID?>)"><?=$season->season_name?></span><span style="background: <?=$season->season_color?>;" onclick="getCalenderBySeason(<?=$season->VX_aln_seasonID?>)">&nbsp;</span>
-					<?php } ?>
+					
+					<?php //foreach($seasonslist as $season) { ?>
+					<!--<span class="default" onclick="getCalenderBySeason(<?=$season->VX_aln_seasonID?>)"><?=$season->season_name?></span><span style="background: <?=$season->season_color?>;" onclick="getCalenderBySeason(<?=$season->VX_aln_seasonID?>)">&nbsp;</span>-->
+					<?php //} ?>
 					
 				</p>
 			</div>
@@ -250,17 +249,6 @@
 	loaddatatable();
 	//loadSeasonList(<?php echo json_encode($seasonslist)?>);
 });
-
-function loadSeasonList(seasonlist = '[]'){
-	var shtml = '';	
-	var season_data = jQuery.parseJSON(seasonlist);
-	
-	for(var i=0; i<season_data.length; i++){
-	  shtml += '<span class="default" >sssss</span><span style="background: black;" >&nbsp;</span>';
-	}
-	
-	$('.load_seasons').html(shtml);
-}
 
 function seasoncalender (seasonlist = '[]') {
 	
@@ -285,8 +273,7 @@ function seasoncalender (seasonlist = '[]') {
 	    $("<style> .season"+season_data[i]['VX_aln_seasonID'] + " { color:#fffff !important;  background:"+season_data[i]['season_color'] + " !important;} </style>").appendTo("head");		
 		
      }   
-        //$('.load_seasons').append(html);
-		if(season_data.length == 1) {
+        if(season_data.length == 1) {
 		 datecal = new Date(season_data[0]['ams_season_start_date']).getFullYear();
 		}
 		
@@ -321,8 +308,15 @@ $('#color_airline_season').change(function(event) {
              data: "id=" + airline_id,            
              dataType: "html",                                  
              success: function(data) {               
-		$("#calendar1").datepicker("destroy");
-		  seasoncalender(data);
+		        $("#calendar1").datepicker("destroy");
+		        seasoncalender(data);
+				var seasons = jQuery.parseJSON(data);
+				 $('.season-highlight').empty();
+				 var html='<span>Season</span><span>Highlights</span>';
+				  for(var i=0; i<seasons.length; i++){
+				     html += '<span class="default" onclick="getCalenderBySeason('+seasons[i]['VX_aln_seasonID']+')">'+seasons[i]['season_name']+'</span><span style="background:'+seasons[i]['season_color']+';" onclick="getCalenderBySeason('+seasons[i]['VX_aln_seasonID']+')">&nbsp;</span>';
+				 }
+				 $('.season-highlight').html(html);				 
               }        
       });       
 });
