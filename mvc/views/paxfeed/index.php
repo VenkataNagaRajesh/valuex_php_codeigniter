@@ -20,14 +20,14 @@
 
 		    &nbsp;&nbsp;
                                   <a href="<?php echo base_url('paxfeed/downloadFormat') ?>" class="btn btn-danger">
-                      <i class="fa fa-upload"></i>
+                      <!--<i class="fa fa-upload"></i>-->
                       <?=$this->lang->line('download_paxfeed_format')?>
                   </a>
                                  <?php } ?>
 
 			 &nbsp;&nbsp;
                         <a href="<?php echo base_url('paxfeed/process_fclr_matching_report') ?>"  class="btn btn-danger">
-                                 <i class="fa fa-upload"></i>
+                                 <!--<i class="fa fa-compare"></i>-->
                                  FCLR Matching Report
                         </a>
 
