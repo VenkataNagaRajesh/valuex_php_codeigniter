@@ -52,6 +52,7 @@ class user_m extends MY_Model {
 		$this->db->from('user u');
 		$this->db->join('usertype ut', 'ut.usertypeID = u.usertypeID', 'LEFT');
 		$this->db->where('u.usertypeID !=',2);
+		$this->db->where('u.usertypeID !=',5);
 		$query = $this->db->get();
 		return $query->result();		
 	}
