@@ -78,8 +78,7 @@ class Bidding extends MY_Controller {
 			$dteDiff  = $dteStart->diff($dteEnd);
 			$result->time_diff = $dteDiff->format('%d days %H hours %i min');
             $this->data['passengers_count'] = count(explode(',',$result->pax_names)); 			
-     	}
-       exit;
+     	}      
         //$this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
 		$this->data['cabins']  = $this->bid_m->get_cabins($this->data['results'][0]->carrier);
        // $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
