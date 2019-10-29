@@ -845,6 +845,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'upgrade_to' => $feed->upgrade_cabin,
 							'airlineID' => $feed->carrier_code,
 							'carrier_name' => $feed->car_name,
+							'bid_value' => $feed->bid_val,
                             'feedback_link' => base_url('home/feedback?pnr_ref='.$passenger_data->pnr_ref) 							
 						 ); 			 
 					  //$this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);

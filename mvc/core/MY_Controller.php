@@ -79,7 +79,7 @@ class MY_Controller extends CI_Controller {
 		   }
 		   $airline_info = $this->bid_m->getAirlineLogoByPNR($data['pnr_ref']);
 		   $data['logo'] = $airline_info->logo;
-		   if(!empty($data['airline_logo'])){
+		   if(!empty($data['logo'])){
 			 $data['logo'] = base_url('uploads/images/'.$data['logo']);  
 		   }else{
 			 $data['logo'] = base_url('assets/home/images/emir.png');  
