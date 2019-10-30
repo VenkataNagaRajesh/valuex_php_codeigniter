@@ -144,7 +144,8 @@
 						<div class="side-image">
 							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb3.jpg'); ?>" alt="img1">
 						</div>-->
-						
+						 <div class="side-image">
+                         </div>
 					</div>
 				</div>
 				

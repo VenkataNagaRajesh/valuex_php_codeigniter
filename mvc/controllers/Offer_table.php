@@ -188,7 +188,9 @@ $namelist = explode(',',$passenger_data->passengers);
         'origin' => $passenger_data->from_city_name,
         'destination' => $passenger_data->to_city_name,
         'upgrade_to' => $offer_data->upgrade_cabin_name,
-		'airlineID' => $passenger_data->carrier_code
+		'airlineID' => $passenger_data->carrier_code,
+		'carrier_name' => $passenger_data->carrier_name,
+		'bid_value' => $offer_data->bid_value
    );
 //var_dump($maildata);exit;
                                                                                                  $message = '
