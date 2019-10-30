@@ -12,6 +12,31 @@
 		.img-block{
 			width:100% !important;
 		}
+		.mob-table ul li{
+			list-style-type:none;
+		}
+		.mob-table ul li span{
+			font-weight: bold;
+			float: left;
+			width: 38%;
+			display: inline-block;
+		}
+		.mob-table ul{
+			padding-left:0;
+		}
+		.mob-table ul li p{
+			display:table;
+		}
+		.mob-table ul li:nth-child(even){
+			background: #ddd;
+			padding: 2px 8px 1px;
+			border-bottom: solid 1px #ddd;
+		}
+		.mob-table ul li:nth-child(odd){
+			background: #f5f5f5;
+			padding: 2px 8px 1px;
+			border-bottom: solid 1px #ddd;
+		}
 	}
 </style>
 </head>
@@ -36,7 +61,7 @@
 								You are receiving this email because you subscribed to the Travel Alert service, accepting Value X-  Terms of Service and Privacy Policy .
 							</p>
 						</div>
-						<div style="font-family:calibri;font-weight:500;position: relative;min-height: 1px;margin-top:10px;margin-bottom:10px;overflow: auto;width:98%;padding-right:8px;">
+						<div style="font-family:calibri;font-weight:500;position: relative;min-height: 1px;margin-top:10px;margin-bottom:10px;overflow: auto;width:98%;padding-right:8px;" class="hidden-xs">
 							<table style="border-collapse: collapse;border-spacing: 0;width:100%;">
 								<thead style="background: {mail_header_color};color: #fff;text-transform: capitalize;">
 									<tr style="white-space:nowrap;">
@@ -69,10 +94,24 @@
 								<!--{/offer_data}-->
 								</tbody>
 							</table>
-						</div>
+						</div>	
 					</td>
 				</tr>
 			</table>
+			<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;margin-bottom: 20px;font-family:calibri;" class="hidden-lg hidden-sm hidden-md">
+				<div style="width:100%;" class="mob-table">
+					<ul>
+						<li><span>Date</span><p>{dep_date}</p></li>
+						<li><span>Flight</span><p>{carrier_code}{flight_number}</p></li>
+						<li><span>Time</span><p>{dep_time}</p></li>
+						<li><span>Origin</span><p>{from_city_code}</p></li>
+						<li><span>Destination</span><p>{to_city_code}</p></li>
+						<li><span>Current Cabin</span><p>{current_cabin}</p></li>
+						<li><span>Seat No</span><p>{seat_no}</p></li>
+						<li><span>Upgrade To</span><p>{cabins} <br>{cabin_name}<br>{/cabins}</p></li>
+					</ul>
+				</div>
+			</div>
 			<table style="width:30%;" align="right">
 				<tr>
 					<td>
