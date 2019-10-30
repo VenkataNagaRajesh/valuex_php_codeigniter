@@ -11,12 +11,12 @@
 	<div class="row">
 		<div class="bid-tab">
 			<ul class="nav nav-tabs">
-				<li class="col-md-6"><a href="#offer"><span class="badge badge-secondary" style="color:<?=$mail_header_color?>;">1</span> Make Us an Offer</a></li>
-				<li class="col-md-6"><a href="#payment"><span class="badge badge-secondary" style="color:<?=$mail_header_color?>;">2</span> Review & Payment</a></li>
+				<li class="col-md-6 col-sm-6"><a href="#offer"><span class="badge badge-secondary" style="color:<?=$mail_header_color?>;">1</span> Make Us an Offer</a></li>
+				<li class="col-md-6 col-sm-6"><a href="#payment"><span class="badge badge-secondary" style="color:<?=$mail_header_color?>;">2</span> Review & Payment</a></li>
 			</ul>
             <div class="tab-content">
                 <div id="offer" class="">
-					<div class="col-md-12">
+					<div class="col-md-12 col-sm-12">
 						<h3 style="color:<?=$mail_header_color?>;">your chance for a Emirates business upgrade</h3>
 						<p>Treat yourself to the amenities and comfort of business upgrade to business class by submitting your bid here is how to proceed</p>
 						<ol>
@@ -26,7 +26,7 @@
 						</ol>
 						<p>The submission of your bid will be confirmed in a sepate email. you will receive a message from us between 120 and 48 hours before departure informing you whether or not you bid has been accepted, Bids are per flight segment and donot including the original ticket price</p>
 					</div>
-					<div class="col-md-10">
+					<div class="col-md-10 col-sm-12">
 						<div class="pass-info">
 							<p>Passenger(s):<span style="color:<?=$mail_header_color?>;"><?php echo ucfirst($results[0]->pax_names); ?></span>
 							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$results[0]->pnr_ref?></span></p>
@@ -125,7 +125,7 @@
 							<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button" style="background:<?=$mail_header_color?>">Continue</a>
 						</div>
 					</div>
-					<div class="col-md-2">
+					<div class="col-md-2 col-sm-4">
 						<!--<div class="side-image">
 							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb1.jpg'); ?>" alt="img1">
 						</div>
@@ -149,7 +149,7 @@
 				</div>
 				
                 <div id="payment" class="">
-					<div class="col-md-9">
+					<div class="col-md-9 col-sm-9">
 						<div class="col-md-2 back-btn">
 							<a type="button" class="btn btn-danger btn btn-secondary sw-btn-prev" style="background:<?=$mail_header_color?>;"><i class="fa fa-arrow-left" ></i> Back</a>
 						</div>
@@ -207,7 +207,7 @@
 							</form>
 						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-3 col-sm-3">
 						<div class="side-video">
 							<!--<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="180"></iframe>-->							
 						</div>

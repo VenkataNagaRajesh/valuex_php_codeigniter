@@ -156,9 +156,12 @@ figure {
 /*topbar css*/
 .top-bar{
 	background: #333;
+	height: 40px;
+	border: solid 1px #928787;
 }
 .top-bar img{
-	width:120px;
+	width: 130px;
+	height: 38px;
 }
 .bid-tab{
 	margin: 20px 0;
