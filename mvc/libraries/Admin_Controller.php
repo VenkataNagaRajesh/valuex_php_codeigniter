@@ -95,29 +95,7 @@ class Admin_Controller extends MY_Controller {
 		$permissionset = array();
 		$userdata = $this->session->userdata;
 
-		if($this->session->userdata('usertypeID') == 1 && $this->session->userdata('loginuserID') == 1) {
-			if(isset($userdata['loginuserID']) && !isset($userdata['get_permission'])) {
-
-				$allmodules = $this->permission_m->get_permission();
-
-				if(count($allmodules)) {
-					foreach ($allmodules as $key => $allmodule) {
-						$permissionset['master_permission_set'][trim($allmodule->name)] = $allmodule->active;
-						 if($allmodule->name == 'report') {
-							$permissionset['master_permission_set'][trim($allmodule->name)] = $allmodule->active;
-							$permissionset['master_permission_set']['report/studentreport'] = $allmodule->active;
-							$permissionset['master_permission_set']['report/classreport'] = $allmodule->active;
-							$permissionset['master_permission_set']['report/attendancereport'] = $allmodule->active;
-							$permissionset['master_permission_set']['report/certificate'] = $allmodule->active;
-						} 
-					}
-					$permissionset['master_permission_set']['take_exam'] = 'yes';
-					$data = ['get_permission' => TRUE];
-					$this->session->set_userdata($data);
-					$this->session->set_userdata($permissionset);
-				}
-			}
-		} else {
+		
 			if(isset($userdata['loginuserID']) && !isset($userdata['get_permission'])) {
 				if(!$this->session->userdata($permission)) {
 					$user_permission = $this->permission_m->get_modules_with_permission($userdata['usertypeID']);
@@ -133,16 +111,14 @@ class Admin_Controller extends MY_Controller {
 						}
 					}
 
-					if($userdata['usertypeID'] == 3) {
-						$permissionset['master_permission_set']['take_exam'] = 'yes';
-					}
+					
 					
 					$data = ['get_permission' => TRUE];
 					$this->session->set_userdata($data);
 					$this->session->set_userdata($permissionset);
 				}
 			}
-		}
+		
 
 
 		$sessionPermission = $this->session->userdata('master_permission_set');
@@ -630,6 +606,10 @@ class Admin_Controller extends MY_Controller {
 		   $data['mail_header_color'] = $airline_info->mail_header_color;
 		   if(empty($data['mail_header_color'])){
 			 $data['mail_header_color'] = '#333';  
+		   }
+		   
+		   if(isset($data['bid_value'])){
+			   $data['bid_value'] = number_format($data['bid_value']);
 		   }
 		   /* $data['upgrade_offer_mail_template1'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
 		   $data['upgrade_offer_mail_template3'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';

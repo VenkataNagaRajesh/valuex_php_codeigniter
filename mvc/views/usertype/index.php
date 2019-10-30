@@ -33,7 +33,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if(count($usertypes)) {$i = 1; foreach($usertypes as $usertype) { ?>
+                            <?php if(count($usertypes)) {$i = 1; foreach($usertypes as $usertype) {
+                                   if($usertype->usertypeID != 5){
+								?>
                                 <tr>
                                     <td data-title="<?=$this->lang->line('slno')?>">
                                         <?php echo $i; ?>
@@ -53,7 +55,7 @@
                                     </td>
                                     <?php } ?>
                                 </tr>
-                            <?php $i++; }} ?>
+								   <?php $i++; } }} ?>
                         </tbody>
                     </table>
                 </div>

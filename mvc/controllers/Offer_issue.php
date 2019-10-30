@@ -8,7 +8,7 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("airline_cabin_m");
 		$this->load->model("airline_cabin_class_m");
 		$this->load->model("offer_issue_m");
-	        $this->load->model("offer_eligibility_m");
+	   $this->load->model("offer_eligibility_m");
 		$this->load->model('offer_reference_m');
 		$this->load->model('airline_m');
 		$this->load->model("eligibility_exclusion_m");
@@ -34,7 +34,7 @@ class Offer_issue extends Admin_Controller {
         'first_name'   => 'Lakshmi',
         'last_name' => 'Amujuru',
         'tomail' => 'lakshmi.amujuru@sweken.com',
-        'pnr_ref' => 'BA1257',
+        'pnr_ref' => 'BA1258',
         'coupon_code' => 'sssssssss',
         'mail_subject' => "upgrade offer template 2",
 		'bidnow_link' => base_url('home/index'),
@@ -835,8 +835,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'pnr_ref' => $passenger_data->pnr_ref,						
 							'mail_subject' => "Bid is accepted From " .$feed->src_point." To " . $feed->dest_point,
 							'card_number' => $card_number,
-							'cash_paid' => $feed->cash,
-							'miles_used' => $feed->miles,
+							'cash_paid' => number_format($feed->cash),
+							'miles_used' => number_format($feed->miles),
 							'flight_no' => $feed->carrier_name.$feed->flight_number,
 							'dep_date' => date('d-m-Y',$feed->dep_date),
 							'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
@@ -845,6 +845,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 							'upgrade_to' => $feed->upgrade_cabin,
 							'airlineID' => $feed->carrier_code,
 							'carrier_name' => $feed->car_name,
+							'bid_value' => $feed->bid_val,
                             'feedback_link' => base_url('home/feedback?pnr_ref='.$passenger_data->pnr_ref) 							
 						 ); 			 
 					  //$this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);
@@ -1015,11 +1016,16 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 		  $result->to_cabins = explode(',',$result->to_cabins);
 		  $cdata = array();
 		   foreach($result->to_cabins as $value){
-            $cdata = explode('-',$value);              		
-			if($cdata[2] != $exclude){
-			    $result->tocabins[] = array('cabin_name' => $cabins[$cdata[0]]); 
-		    }              
+				$cdata = explode('-',$value);              		
+				if($cdata[2] != $exclude){
+					$tocabins[$cdata[3]] = $cabins[$cdata[0]];
+					//$result->tocabins[] = array('cabin_name' => $cabins[$cdata[0]]); 
+				}              
            }
+		        ksort($tocabins);
+				foreach($tocabins as $c){
+					$result->tocabins[] = array('cabin_name' => $c);
+				}
 			if($result->fclr != null && !empty($result->tocabins)){			
 				$info['dep_date'] = date('d-m-Y',$result->dep_date);
 				$info['dep_time'] = date('H:i:s',$result->dept_time);
@@ -1037,7 +1043,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 		$pax_names = $this->bid_m->getPaxNames($pnr_ref);
 		 $maildata['offer_data'] = $offerdata;		
       
-//print_r($maildata); exit;		
+       // print_r($maildata); exit;		
 		$this->sendMailTemplateParser('upgrade_offer',$maildata);
 	}		
 		

@@ -57,12 +57,19 @@ class Bidding extends MY_Controller {
 			//reducing duplicate names for multi cabins case
 			$result->pax_names = $this->bid_m->getPaxNames($this->session->userdata('pnr_ref'));
 			$tocabins = array();
+			$tocabins1 = array();
 			$result->to_cabins = explode(',',$result->to_cabins);
-			  foreach($result->to_cabins as $value){
+			   foreach($result->to_cabins as $value){
                 $data = explode('-',$value);
-                $tocabins[$data[1].'-'.$data[2]] = $data[0];
-               // unset($result->to_cabins[$key]);
-              }
+                 $tocabins1[$data[3]][$data[1].'-'.$data[2]] = $data[0];
+               }			  
+			     // asort($tocabins1);
+				  ksort($tocabins1);
+				  foreach($tocabins1 as $cabins){
+					  foreach($cabins as $key => $value){
+					    $tocabins[$key] = $value;
+					  }					  
+				  } 
               $result->to_cabins = $tocabins;
 			   
 			$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
@@ -72,8 +79,7 @@ class Bidding extends MY_Controller {
 			$dteDiff  = $dteStart->diff($dteEnd);
 			$result->time_diff = $dteDiff->format('%d days %H hours %i min');
             $this->data['passengers_count'] = count(explode(',',$result->pax_names)); 			
-     	}
-       
+     	}      
         //$this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
 		$this->data['cabins']  = $this->bid_m->get_cabins($this->data['results'][0]->carrier);
        // $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
@@ -201,13 +207,13 @@ class Bidding extends MY_Controller {
 			   $maildata = (array)$offer_data;
 			   $maildata['dep_date'] = date('d/m/Y',$maildata['dep_date']);
 			   $maildata['dep_time'] = gmdate('H:i A',$maildata['dept_time']);
-			   $maildata['cash'] = $this->input->post("bid_value");
+			   $maildata['cash'] = number_format($this->input->post("bid_value"));
 			   $maildata['base_url'] = base_url();			    		
 			   $maildata['tomail'] = explode(',',$maildata['email_list'])[0]; 
                $maildata['type'] = $this->input->post('type');
                $maildata['resubmit_link'] = base_url('homes/resubmit?pnr_ref='.$maildata['pnr_ref']);
 			   $maildata['cancel_link'] = base_url('homes/cancel?pnr_ref='.$maildata['pnr_ref']);
-			   
+			   $maildata['bid_value'] = number_format($maildata['bid_value']);
 			   if($maildata['type'] == 'resubmit'){
 					$maildata['template'] = 'bid_resubmit';
 					$maildata['subject'] = 'Your bid has been Successfully Re-Submitted';

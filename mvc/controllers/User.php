@@ -286,7 +286,6 @@ class User extends Admin_Controller {
 				unset($rules[11]);								
 				$this->form_validation->set_rules($rules);
 				if ($this->form_validation->run() == FALSE) {
-					echo validation_errors();
 					$this->data["subview"] = "user/edit";
 					$this->load->view('_layout_main', $this->data);
 				} else {

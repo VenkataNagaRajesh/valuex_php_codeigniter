@@ -48,12 +48,19 @@ class Cancel extends MY_Controller {
         foreach($this->data['results'] as $result ){			
 			$result->pax_names = $this->bid_m->getPaxNames($this->input->get('pnr_ref'));
 			$tocabins = array();
+			$tocabins1 = array();
 			$result->to_cabins = explode(',',$result->to_cabins);
-			  foreach($result->to_cabins as $value){
+			   foreach($result->to_cabins as $value){
                 $data = explode('-',$value);
-                $tocabins[$data[1].'-'.$data[2]] = $data[0];
-               // unset($result->to_cabins[$key]);
-              }
+                 $tocabins1[$data[3]][$data[1].'-'.$data[2]] = $data[0];
+               }			  
+			     // asort($tocabins1);
+				  ksort($tocabins1);
+				  foreach($tocabins1 as $cabins){
+					  foreach($cabins as $key => $value){
+					    $tocabins[$key] = $value;
+					  }					  
+				  } 
               $result->to_cabins = $tocabins;
 			   
 			$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
@@ -163,6 +170,11 @@ class Cancel extends MY_Controller {
 		  } else {
 			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
 		  }
+		  
+		  $this->data['mail_header_color'] = $airline->mail_header_color;
+		   if(empty($this->data['mail_header_color'])){
+			 $this->data['mail_header_color'] = '#333';  
+		   }
       		
 		$this->data['pnr_ref'] = $this->session->userdata('ref');
 		$this->data['subview'] = 'home/cancel-page';
