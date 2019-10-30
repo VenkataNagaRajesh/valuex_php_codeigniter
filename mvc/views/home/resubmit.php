@@ -125,7 +125,7 @@
 							<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button" style="background:<?=$mail_header_color?>">Continue</a>
 						</div>
 					</div>
-					<div class="col-md-2 col-sm-4">
+					<div class="col-md-2 hidden-sm">
 						<!--<div class="side-image">
 							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb1.jpg'); ?>" alt="img1">
 						</div>
@@ -146,6 +146,12 @@
 						</div>-->
 						 <div class="side-image">
                          </div>
+					</div>
+					<div class="col-sm-12 hidden-xs hidden-md hidden-lg">
+						<marquee>
+						 <div class="side-image">
+                         </div>
+						 </marquee>
 					</div>
 				</div>
 				
