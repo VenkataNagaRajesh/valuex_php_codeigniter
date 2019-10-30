@@ -261,11 +261,14 @@ figure {
 		opacity:0.5;
 }
 .bid-tab .side-image img{
-	height:100px;
+	height:110px;
+	margin-bottom:10px;
+	width:100%;
 }
 .bid-tab  #payment .side-image img{
 	width:100%;
 	height:150px;
+	margin-bottom:10px;
 }
 .bid-tab  #payment h2{
 	margin: 12px 0;
