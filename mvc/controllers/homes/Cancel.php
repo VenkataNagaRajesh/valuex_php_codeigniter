@@ -48,6 +48,7 @@ class Cancel extends MY_Controller {
         foreach($this->data['results'] as $result ){			
 			$result->pax_names = $this->bid_m->getPaxNames($this->input->get('pnr_ref'));
 			$tocabins = array();
+			$tocabins1 = array();
 			$result->to_cabins = explode(',',$result->to_cabins);
 			   foreach($result->to_cabins as $value){
                 $data = explode('-',$value);

@@ -57,6 +57,7 @@ class Bidding extends MY_Controller {
 			//reducing duplicate names for multi cabins case
 			$result->pax_names = $this->bid_m->getPaxNames($this->session->userdata('pnr_ref'));
 			$tocabins = array();
+			$tocabins1 = array();
 			$result->to_cabins = explode(',',$result->to_cabins);
 			   foreach($result->to_cabins as $value){
                 $data = explode('-',$value);
