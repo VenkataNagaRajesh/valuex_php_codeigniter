@@ -453,7 +453,7 @@ class Airports_master extends Admin_Controller {
 		$userID = $this->session->userdata('loginuserID');
 		$usertypeID = $this->session->userdata('usertypeID');	  
 		
-	    $aColumns = array('m.vx_amdID','ma.aln_data_value','mct.aln_data_value','mc.aln_data_value','mr.aln_data_value','mar.aln_data_value','ma.code','ma.active');
+	    $aColumns = array('m.vx_amdID','ma.code','mct.code','mc.code','mr.aln_data_value','mar.aln_data_value','ma.code','ma.active');
 	
 		$sLimit = "";
 		
