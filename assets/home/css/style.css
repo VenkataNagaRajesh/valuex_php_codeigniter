@@ -14,12 +14,11 @@
 body {
   font-family: calibri;
   line-height: 1.6;
-  font-size: 14px;
+  font-size: 15px;
   background: #fff;
   color: #848484;
-  font-weight: 300;
+  font-weight: 400;
   overflow-x: hidden;
-  text-transform:capitalize;
 }
 body.fh5co-offcanvas {
   overflow: hidden;
@@ -38,7 +37,8 @@ a:hover {
 
 p, ul, ol {
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight:400;
   color: #333;
   font-family: calibri;
 }
@@ -47,6 +47,7 @@ h1, h2, h3, h4, h5, h6 {
   color: #5a5a5a;
   font-family: calibri;
   font-weight: 400;
+  font-size:15px;
   margin: 0 0 30px 0;
 }
 
@@ -105,7 +106,7 @@ figure {
 .pnr-form .has-error span p{
 	margin-bottom: 0;
 	color: #cf0606;
-	font-size: 12px;
+	font-size: 13px;
 }
 .tabulation h2{
 	margin: 10px 0;
@@ -191,12 +192,14 @@ figure {
 	margin: 7px 0 2px;
 	color: #333;
 	font-family: calibri;
-	font-size: 14px;
+	font-size: 15px;
+	font-weight: 400;
 }
 .bid-tab .tab-content .tab-pane ol li{
 	font-family:calibri;
 	color:#333;
-	font-size:14px;
+	font-size: 15px;
+	font-weight: 400;
 }
 .bid-tab .tab-content .tab-pane ol {
 	margin-bottom: 6px;
@@ -224,10 +227,11 @@ figure {
 .bid-tab .tab-content .pass-info .bid-info ul{
 	padding-left: 0;
 	list-style: none;
-	font-size: 12px;
+	font-size: 14px;
 	color: #333;
 	font-family: calibri;
 	margin-bottom: 0;
+	font-weight:bold;
 }
 .bid-tab .tab-content .pass-info .bid-info ul li:last-child{
 	color:#ff6633;
