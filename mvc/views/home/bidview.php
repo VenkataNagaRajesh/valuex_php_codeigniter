@@ -17,21 +17,21 @@
             <div class="tab-content">
                 <div id="offer" class="">
 					<div class="col-md-12 col-sm-12">
-						<h3 style="color:<?=$mail_header_color?>;">your chance for a Emirates business upgrade</h3>
+						<h3 style="color:<?=$mail_header_color?>;">Your chance for a <?=$airline_name?> Business upgrade</h3>
 						<p>Treat yourself to the amenities and comfort of business upgrade to business class by submitting your bid here is how to proceed</p>
 						<ol>
 							<li>Submit your bid per flight leg and click on next</li>
 							<li>Indicate your method of payment you will be charged only if your upgrade bid has been approved</li>
 							<li>Check and confirm your data</li>
 						</ol>
-						<p>The submission of your bid will be confirmed in a sepate email. you will receive a message from us between 120 and 48 hours before departure informing you whether or not you bid has been accepted, Bids are per flight segment and donot including the original ticket price</p>
+						<p>The submission of your bid will be confirmed in a separate email. you will receive a message from us between 120 and 48 hours before departure informing you whether or not you bid has been accepted, Bids are per flight segment and do not including the original ticket price</p>
 					</div>
 					<div class="col-md-10 col-sm-10">
 						<div class="pass-info">
 							<p>Passenger(s):<span style="color:<?=$mail_header_color?>"><?php echo ucfirst($results[0]->pax_names); ?></span>
 							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$results[0]->pnr_ref?></span></p>
 							<div class="table">
-								<table class="table">
+								<table class="table hidden-xs">
 									<thead style="background:<?=$mail_header_color?>">
 										<tr>
 											<th>Flight Information</th>
@@ -46,8 +46,7 @@
 										<td><div class="col-md-12"><p><?=$n?> . <?php echo $result->air_from_city; ?> To <?php echo $result->air_to_city; ?> </p></div></td>
 										</tr>
 										<tr>
-											<td>
-												
+											<td>								
 												<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
 													<div class="col-md-5">
 														<p style="color:<?=$mail_header_color?>"><?php echo $result->from_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time)?></span></p>
@@ -118,14 +117,107 @@
 										<?php $n++; } ?>
 									</tbody>
 								</table>
+								<!--========Mobile Data Bidding=======--> 
+								<div class="hidden-lg hidden-md hidden-sm mob-slide">
+									<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">		<div class="panel panel-success">
+											<div class="panel-heading" role="tab" id="headingOne">
+												<h4 class="panel-title">
+													<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+														<i class="short-full glyphicon glyphicon-plus"></i>
+														<p><?=$n?> . <?php echo $result->air_from_city; ?> To <?php echo $result->air_to_city; ?> </p>
+													</a>
+												</h4>
+											</div>
+											<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="height: 0px;">
+												<div class="panel-body">
+													<div class="col-xs-12">
+														<div class="col-xs-12">
+															<div style="background:<?=$mail_header_color?>" class="col-xs-12">
+																<h4>Flight Information</h4>
+															</div>
+															<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
+																<div class="col-md-5">
+																	<p style="color:<?=$mail_header_color?>"><?php echo $result->from_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time)?></span></p>
+																	<small data-toggle="tooltip" data-placement="top" title="<?php echo $result->from_city; ?>" class="badge">Airport Info</small>
+																	<ul>
+																		<li><?php echo date('d M',$result->dep_date); ?></li>
+																		<li style="color:<?=$mail_header_color?>">Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
+																		<!--<li><?=$result->time_diff?></li>-->
+																	</ul>
+																</div>
+																<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
+																<div class="col-md-5">
+																	<p style="color:<?=$mail_header_color?>"><?php echo $result->to_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time)?></span></p>
+																	<small data-toggle="tooltip" data-placement="top" title="<?php echo $result->to_city; ?>" class="badge">Airport Info</small>
+																	<ul>
+																		<li><?php echo date('d M',$result->arrival_date); ?></li>
+																		<li style="color:<?=$mail_header_color?>">Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
+																		<!--<li><?=$result->time_diff?></li>-->
+																	</ul>
+																</div>
+															</div>
+														</div><br>
+														<div class="col-xs-12">
+															<div style="background:<?=$mail_header_color?>" class="col-xs-12">
+																<h4>Upgrade To Cabin</h4>
+															</div>
+															<div class="radio-mob">
+															   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
+															   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>								      
+																<label class="cabins-<?=$result->flight_number?> radio-inline <?=($status == $excluded_status)?"bid-visible":""?>" >
+																	<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" <?php echo ($i==0 )?"checked":''; ?> ><?php echo $cabins[$value]; ?>
+																</label><br>
+															   <?php if($status != $excluded_status) { $i++; } } } ?>
+															   <?php if($i != 0){?>
+																			<label class="checkbox-inline<?=($result->fclr == null)?"bid-visible":""?>">
+																	<input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid 
+																</label>	
+															   <?php } ?>
+															</div>
+													  <!-- <div class="<?=($result->fclr == null)?"bid-visible":""?>">
+														   <b><input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid <br></b>								
+														</div>	-->												   
+														</div><br><br>
+														<div class="col-xs-12">
+															<div style="background:<?=$mail_header_color?>" class="col-xs-12">
+																<h4>Bid Amount</h4>
+															</div>
+															<div class="col-xs-12">
+																<?php if($result->fclr != null){
+																	  $i=0;
+																	 foreach($result->to_cabins as $key => $value) {		 
+																	  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
+																	   if($status == $sent_mail_status){
+																		 break;  
+																	   } else {
+																		   $i++;
+																	   }
+																	 }	?>       
+																	
+																	<div class="price-range col-md-12">		
+																	<b>Min</b> <i class="fa fa-dollar"></i> <b id="mb_bid_min_<?=$result->flight_number?>"></b>
+																			<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
+																	<b>Max</b> <i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b>
+																	</div>
+																<?php }  ?>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div class="col-md-12" style="padding-right:0;">
 								<p class="pull-right">Total Bid Amount  <strong style="margin-left:12px;"> <i class="fa fa-dollar"></i> <b id="tot"></b></strong> </p>
 							</div>
-							<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button" style="background:<?=$mail_header_color?>">Continue</a>
+							<div class="col-sm-12">
+								<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button" style="background:<?=$mail_header_color?>">Continue</a>
+							</div>
 						</div>
 					</div>
-					<div class="col-md-2 col-sm-2">
+					<div class="col-md-2 hidden-sm">
 						<!--<div class="side-image">
 							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb1.jpg'); ?>" alt="img1">
 						</div>
@@ -151,6 +243,12 @@
 						<?php //} ?>
 						<div class="side-image">
 						</div>
+					</div>
+					<div class="col-sm-12 hidden-xs hidden-md hidden-lg">
+						<marquee>
+						 <div class="side-image">
+                         </div>
+						 </marquee>
 					</div>
 				</div>
                 <div id="payment" class="">
@@ -198,7 +296,7 @@
 									</div>
 									<div class="col-md-12">
 										<div class="pay-info">
-											<p style="color:<?=$mail_header_color?>">Your card will save for future usage upon BID Confirmation</p>
+											<p style="color:<?=$mail_header_color?>">Your card will be saved for future usage upon BID Confirmation</p>
 											<p style="color:<?=$mail_header_color?>">Bid Participation Charges  <b>(1$ Non Refundable)</b></p>
 										</div>
 									</div>
@@ -512,6 +610,16 @@ $('#loading').html("<img src='"+image+"' />"); */
      }); 
  } 
  
+ 
+ 
+ function toggleIcon(e) {
+        $(e.target)
+            .prev('.panel-heading')
+            .find(".short-full")
+            .toggleClass('glyphicon-plus glyphicon-minus');
+    }
+    $('.panel-group').on('hidden.bs.collapse', toggleIcon);
+    $('.panel-group').on('shown.bs.collapse', toggleIcon);
 </script>
 
 

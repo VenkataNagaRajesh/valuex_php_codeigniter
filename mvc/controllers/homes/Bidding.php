@@ -98,6 +98,7 @@ class Bidding extends MY_Controller {
 		  } else {
 			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
 		  }
+		   $this->data['airline_name'] = $airline->aln_data_value;
 		  
 		   $this->data['mail_header_color'] = $airline->mail_header_color;
 		   if(empty($this->data['mail_header_color'])){
