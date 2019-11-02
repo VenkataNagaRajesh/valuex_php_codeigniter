@@ -105,6 +105,7 @@ class Paxfeed extends Admin_Controller {
                         $this->data['paxfeed'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$id));
                         if($this->data['paxfeed']) {
                                 $this->paxfeed_m->delete_paxfeed($id);
+				$this->paxfeedraw_m->delete_paxfeedraw($this->data['paxfeed']->dtpfraw_id);
                                 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
                                 redirect(base_url("paxfeed/index"));
                         } else {
@@ -874,6 +875,7 @@ if(!empty($data_id_array)) {
 	$this->data['paxfeed'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$id));
                         if($this->data['paxfeed']) {
                                 $this->paxfeed_m->delete_paxfeed($id);
+				$this->paxfeedraw_m->delete_paxfeedraw($this->data['paxfeed']->dtpfraw_id);
 
                         }
     }
