@@ -379,8 +379,8 @@ class Client extends Admin_Controller {
 					}
 				}
 				$this->user_m->delete_user($id);
-				$this->client_m->delete_client($id);
-				$this->client_m->delete_client_airline($id);
+				$this->client_m->delete_client($clientid);
+				$this->client_m->delete_client_airline($clientid);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("client/index"));
 			} else {

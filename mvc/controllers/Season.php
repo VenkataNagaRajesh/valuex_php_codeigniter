@@ -10,6 +10,7 @@ class Season extends Admin_Controller {
 		$this->load->model("trigger_m");
 		$this->load->model("marketzone_m");
 		$this->load->model("user_m");
+		$this->load->model("season_airport_map_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('season', $language);	
 	}
@@ -493,6 +494,8 @@ class Season extends Admin_Controller {
 			$this->data['season'] = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
 			if($this->data['season']) {
 				$this->season_m->delete_season($id);
+				$this->season_airport_map_m->delete_old_orig_entries($id);
+				$this->season_airport_map_m->delete_old_dest_entries($id);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("season/index"));
 			} else {
