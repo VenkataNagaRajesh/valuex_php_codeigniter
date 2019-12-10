@@ -50,8 +50,8 @@
                             <!-- <option value="gallery">Gallery</option>-->
                              <option value="upgrade_offer_mail_template1">Upgrade Offer Mail Template 1(732*184)</option>
                              <option value="upgrade_offer_mail_template2">Upgrade Offer Mail Template 2(344*438)</option>
-                             <option value="upgrade_offer_mail_template3">Upgrade Offer Mail Template 3(732*184)</option>							 
-                            <!-- <option value="airline_logo">Airline Logo Mail template(84*60)</option>-->					 
+                             <option value="upgrade_offer_mail_template3">Upgrade Offer Mail Template 3(732*184)</option>				 
+                             <option value="airline_logo">Airline Logo Mail template(84*60)</option>				 
                              </select>
                             </div>
                         </div>  
