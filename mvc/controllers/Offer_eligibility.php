@@ -356,7 +356,14 @@ $sWhere $sOrder $sLimit";
 
    function generatedata() {
 
-		$sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed  WHERE is_processed = 0 order by dtpf_id";
+
+		 $days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
+
+                 $current_time = time();
+                $tstamp = $current_time + ($days * 86400);
+
+
+		$sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed  WHERE is_processed = 0  AND dep_date >= ".$tstamp." order by dtpf_id";
 		$rResult = $this->install_m->run_query($sQuery);
 
 		/*$exclQuery = "SELECT * from VX_aln_eligibility_excl_rules ";
