@@ -26,8 +26,8 @@
             <div class="col-md-4">
                 <div>
                     <?php 
-                        if(($this->session->userdata('usertypeID') == 1) && ($this->data["siteinfos"]->show_performance == 1)){         
-                            echo "<b> Time : </b>".$this->benchmark->elapsed_time('code_start', 'code_end').'sec';
+                        if(($this->session->userdata('usertypeID') == 1 || $this->session->userdata('usertypeID') == 5) && ($this->data["siteinfos"]->show_performance == 1)){         
+                            echo "<b> Time : </b>".$this->benchmark->elapsed_time('code_start', 'code_end').' sec';
                             echo "<b> | Memory Usage : </b>".$this->benchmark->memory_usage();  
                                 $queries = $this->db->queries;
                                 if($this->session->userdata('usertypeID') == 5){      

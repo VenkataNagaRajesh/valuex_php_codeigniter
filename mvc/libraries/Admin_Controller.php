@@ -19,7 +19,10 @@ class Admin_Controller extends MY_Controller {
 		if($this->data['siteinfos']->show_performance_detail == 1 && $this->session->userdata('usertypeID') == 5){
 			$this->output->enable_profiler(TRUE);
 		}
-
+		$setting['show_performance'] = $this->data['siteinfos']->show_performance;
+		$setting['show_performance_detail'] = $this->data['siteinfos']->show_performance_detail;
+		$this->session->set_userdata($setting);
+   
 		$this->data['backendTheme'] = strtolower($this->data["siteinfos"]->backend_theme);
 		$this->data['backendThemePath'] = 'assets/inilabs/themes/'.strtolower($this->data["siteinfos"]->backend_theme);
 		$this->_backendTheme = $this->data['backendTheme'];

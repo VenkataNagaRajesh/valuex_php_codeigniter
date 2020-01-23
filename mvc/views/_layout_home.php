@@ -33,8 +33,26 @@
     <script type="text/javascript" src="<?php echo base_url('assets/home/js/main.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/jquery.smartWizard.min.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/simple-rating.js');?>"></script>
-
-<?php $this->load->view($subview); ?>
+<?php if(($this->session->userdata('usertypeID') == 1 || $this->session->userdata('usertypeID') == 5)){         
+  $this->benchmark->mark('code_start');
+  $this->load->view($subview);
+  $this->benchmark->mark('code_end'); ?>
+    <div class="container">
+        <?php 
+             if(($this->session->userdata('usertypeID') == 1 || $this->session->userdata('usertypeID') == 5)){         
+                echo "<b> Time : </b>".$this->benchmark->elapsed_time('code_start', 'code_end').' sec';
+                echo "<b> | Memory Usage : </b>".$this->benchmark->memory_usage();  
+                $queries = $this->db->queries;
+                if($this->session->userdata('usertypeID') == 5){      
+                 echo "<b> | Queries : </b>".count($queries);
+                }
+			}
+        ?>  
+    </div>
+<?php } else {
+  $this->load->view($subview);
+  
+} ?>
 
 </body>
 </html>
