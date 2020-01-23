@@ -22,7 +22,7 @@ class Usertype extends Admin_Controller {
 	}
 
 	public function index() {
-		log_message('debug',"checking log message") ;
+
 		$usertype = $this->session->userdata("usertype");
 		$this->data['usertypes'] = $this->usertype_m->get_usertype();
 		$this->data["subview"] = "usertype/index";

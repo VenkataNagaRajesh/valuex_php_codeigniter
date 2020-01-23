@@ -196,6 +196,8 @@ Class setting extends Admin_Controller {
 					}
 
 					$array['google_analytics'] = $this->input->post('google_analytics');
+					$array['show_performance'] = $this->input->post('show_performance');
+					$array['show_performance_detail'] = $this->input->post('show_performance_detail');
 
 					if(!count($this->get_setting_mark_percentage($array))) {
 						$array['mark_1'] = 1;

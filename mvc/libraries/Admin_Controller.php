@@ -16,6 +16,9 @@ class Admin_Controller extends MY_Controller {
         $this->load->model('mailandsmstemplate_m');	        
 		//$this->load->model("schoolyear_m");
 		$this->data["siteinfos"] = $this->site_m->get_site(1);
+		if($this->data['siteinfos']->show_performance_detail == 1 && $this->session->userdata('usertypeID') == 5){
+			$this->output->enable_profiler(TRUE);
+		}
 
 		$this->data['backendTheme'] = strtolower($this->data["siteinfos"]->backend_theme);
 		$this->data['backendThemePath'] = 'assets/inilabs/themes/'.strtolower($this->data["siteinfos"]->backend_theme);

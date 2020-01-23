@@ -381,6 +381,32 @@
                         </span>
                     </div>
 
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                           Show Performance <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Check for show page performance(time,memory,no of queries)"></i>
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="checkbox" <?php if(!isset($setting->show_performance)){ $setting->show_performance = 1;} if($setting->show_performance == 1) { echo 'checked'; } else { echo ''; } ?>  
+                            id="show_performance" value="1" name="show_performance"> 
+
+                            <!-- form_checkbox( ); -->
+                        </div>                       
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">
+                           Show Performance Detailed<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Check for show total page performances in detail"></i>
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="checkbox" <?php if(!isset($setting->show_performance_detail)){ $setting->show_performance_detail = 1;} if($setting->show_performance_detail == 1) { echo 'checked'; } else { echo ''; } ?>  
+                            id="show_performance_detail" value="1" name="show_performance_detail"> 
+
+                            <!-- form_checkbox( ); -->
+                        </div>                       
+                    </div>
+
+                    
+
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
