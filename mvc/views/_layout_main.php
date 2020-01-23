@@ -6,7 +6,17 @@
             <section class="content">
                 <div class="row">
                     <div class="col-xs-12">
-                        <?php $this->load->view($subview); ?>
+                        <?php 
+                          $this->benchmark->mark('code_start');
+                            $this->load->view($subview);
+                          $this->benchmark->mark('code_end');
+                          echo "<b> Time : </b>".$this->benchmark->elapsed_time('code_start', 'code_end');
+                          echo "<b> | Memory Usage : </b>".$this->benchmark->memory_usage();  
+                          $queries = $this->db->queries;
+                         // print_r($queries);
+                          echo "<b> | Queries : </b>".count($queries);
+                          echo "<br>";                           
+                           ?>
                     </div>
                 </div>
             </section>
