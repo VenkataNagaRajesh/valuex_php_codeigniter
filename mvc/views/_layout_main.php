@@ -1,3 +1,6 @@
+<?php 
+ if(($this->session->userdata('usertypeID') == 1 || $this->session->userdata('usertypeID') == 5) && ($this->data["siteinfos"]->show_performance == 1)){
+    $this->benchmark->mark('code_start'); } ?>
 <?php $this->load->view("components/page_header"); ?>
 <?php $this->load->view("components/page_topbar"); ?>
 <?php $this->load->view("components/page_menu"); ?>
@@ -8,7 +11,7 @@
                     <div class="col-xs-12">
                         <?php 
                           if(($this->session->userdata('usertypeID') == 1 || $this->session->userdata('usertypeID') == 5) && ($this->data["siteinfos"]->show_performance == 1)){
-                            $this->benchmark->mark('code_start');
+                           // $this->benchmark->mark('code_start');
                             $this->load->view($subview);
                             $this->benchmark->mark('code_end');                                                 
                           } else {

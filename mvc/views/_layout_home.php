@@ -1,4 +1,6 @@
 <?php echo doctype("html5"); ?>
+<?php if(($this->session->userdata('usertypeID') == 1 || $this->session->userdata('usertypeID') == 5)){         
+  $this->benchmark->mark('code_start'); } ?>
 <html class="white-bg-login" lang="en">
 <head>
 	<meta charset="UTF-8">	
@@ -34,7 +36,7 @@
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/jquery.smartWizard.min.js');?>"></script>
 	<script type="text/javascript" src="<?php echo base_url('assets/home/js/simple-rating.js');?>"></script>
 <?php if(($this->session->userdata('usertypeID') == 1 || $this->session->userdata('usertypeID') == 5)){         
-  $this->benchmark->mark('code_start');
+  //$this->benchmark->mark('code_start');
   $this->load->view($subview);
   $this->benchmark->mark('code_end'); ?>
     <div class="container">
