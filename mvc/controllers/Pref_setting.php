@@ -6,7 +6,8 @@ class Pref_setting extends Admin_Controller {
 		parent::__construct();
 		$this->load->model("preference_m");
 		$this->load->model("airports_m");		
-		$this->load->model("airline_m");
+                $this->load->model("airline_m");
+                $this->load->model("user_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('preference', $language);
         $this->data['icon'] = $this->menu_m->getMenu(array("link"=>"pref_setting"))->icon;		
@@ -70,9 +71,7 @@ class Pref_setting extends Admin_Controller {
 
 	                $userID = $this->session->userdata('loginuserID');
                 $userTypeID = $this->session->userdata('usertypeID');
-                if($userTypeID == 2){
-                        $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                           } else if($userTypeID != 1){
+             if($userTypeID != 1){
                                                  $this->data['airlines'] = $this->user_m->getUserAirlines($userID);
                                                    } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -153,9 +152,7 @@ class Pref_setting extends Admin_Controller {
 
                         $userID = $this->session->userdata('loginuserID');
                 $userTypeID = $this->session->userdata('usertypeID');
-                if($userTypeID == 2){
-                        $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                           } else if($userTypeID != 1){
+                if($userTypeID != 1){
                                                  $this->data['airlines'] = $this->user_m->getUserAirlines($userID);
                                                    } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();

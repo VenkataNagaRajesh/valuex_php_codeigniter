@@ -8,7 +8,7 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("airline_cabin_m");
 		$this->load->model("airline_cabin_class_m");
 		$this->load->model("offer_issue_m");
-	   $this->load->model("offer_eligibility_m");
+	        $this->load->model("offer_eligibility_m");
 		$this->load->model('offer_reference_m');
 		$this->load->model('airline_m');
 		$this->load->model("eligibility_exclusion_m");
@@ -40,8 +40,8 @@ class Offer_issue extends Admin_Controller {
 		'bidnow_link' => base_url('home/index'),
         'airlineID' => 5418		
         );			       
-          //$this->sendMailTemplateParser('bid_accepted',$data);
-		 // exit;
+          $this->sendMailTemplateParser('bid_accepted',$data);
+		  exit;
          //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);
             $this->upgradeOfferMail($data);		 
 	}
@@ -84,9 +84,7 @@ $this->data['headerassets'] = array(
 
 	     $userID = $this->session->userdata('loginuserID');
                 $userTypeID = $this->session->userdata('usertypeID');
-                if($userTypeID == 2){
-                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           }else if($userTypeID != 1){
+                if($userTypeID != 1){
 						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
 						   } else {
                    $this->data['carriers'] = $this->airline_m->getAirlinesData();

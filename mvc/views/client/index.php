@@ -82,7 +82,7 @@
                     "data": aoData,
                     "success": fnCallback
 			 } ); },	  
-	  "columns": [{"data": "VX_aln_clientID" },
+	  "columns": [{"data": "userID" },
                   {"data": "image" },
 				  {"data": "name" },
 				  {"data": "email" },

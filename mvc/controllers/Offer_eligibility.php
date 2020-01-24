@@ -85,9 +85,7 @@ class Offer_eligibility extends Admin_Controller {
 
 		                $userID = $this->session->userdata('loginuserID');
                 $userTypeID = $this->session->userdata('usertypeID');
-                if($userTypeID == 2){
-                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           }  else if($userTypeID != 1){
+                if($userTypeID != 1){
 						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
 						   } else {
                    $this->data['carriers'] = $this->airline_m->getAirlinesData();

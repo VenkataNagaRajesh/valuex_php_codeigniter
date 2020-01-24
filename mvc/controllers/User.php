@@ -149,8 +149,6 @@ class User extends Admin_Controller {
 		foreach($this->data['users'] as $user){
 			if($user->usertypeID == 1){
 		       $user->airlinelist = '';
-			} else if($user->usertypeID == 2){
-			   $airlinelist = $this->airline_m->getClientAirline($user->userID);
 			} else {
 			    $airlinelist = $this->user_m->getUserAirlines($user->userID);	
 			}
@@ -183,8 +181,6 @@ class User extends Admin_Controller {
 		
 		if($this->session->userdata('usertypeID') == 1){
 		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
-		} else if($this->session->userdata('usertypeID') == 2){
-		   $this->data['airlinelist'] = $this->airline_m->getClientAirline($userID);
 		} else {
 		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	
 		}		
@@ -273,9 +269,7 @@ class User extends Admin_Controller {
 		}
 		if($this->session->userdata('usertypeID') == 1){
 		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
-		} else if($this->session->userdata('usertypeID') == 2){
-		   $this->data['airlinelist'] = $this->airline_m->getClientAirline($userID);
-		} else {
+		}else {
 		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	
 		}
 		if((int)$id) {

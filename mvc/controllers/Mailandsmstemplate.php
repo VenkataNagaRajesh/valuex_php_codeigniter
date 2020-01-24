@@ -44,9 +44,7 @@ class Mailandsmstemplate extends Admin_Controller {
 		//$this->data['mailandsmstemplates'] = $this->mailandsmstemplate_m->get_order_by_mailandsmstemplate_with_usertypeID();
 		$userID = $this->session->userdata('loginuserID');
 		$userTypeID = $this->session->userdata('usertypeID');
-		if($userTypeID == 2){
-          $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-        } else if($userTypeID != 1){
+		if($userTypeID != 1){
 		   $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -85,9 +83,7 @@ class Mailandsmstemplate extends Admin_Controller {
 		$this->data['usertypes'] = $usertypes;
 		$userID = $this->session->userdata('loginuserID');
 		$userTypeID = $this->session->userdata('usertypeID');
-		if($userTypeID == 2){
-          $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-        } else if($userTypeID != 1){
+		 if($userTypeID != 1){
 		   $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -154,9 +150,7 @@ class Mailandsmstemplate extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		$userID = $this->session->userdata('loginuserID');
 		$userTypeID = $this->session->userdata('usertypeID');
-		if($userTypeID == 2){
-          $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-        } else if($userTypeID != 1){
+		 if($userTypeID != 1){
 		   $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();

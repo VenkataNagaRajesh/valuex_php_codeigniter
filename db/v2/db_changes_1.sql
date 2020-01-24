@@ -1,0 +1,1 @@
+insert into VX_user_airline (userID,airlineID,create_date,modify_date,create_userID,modify_userID) select u.userID,ca.airlineID,ca.create_date,ca.modify_date,ca.create_userID,ca.modify_userID from VX_client_airline ca left join VX_aln_client u ON u.VX_aln_clientID = ca.clientID;

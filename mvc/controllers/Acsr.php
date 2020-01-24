@@ -363,13 +363,11 @@ if($end < $start ) {
 
 		 $userID = $this->session->userdata('loginuserID');
                 $userTypeID = $this->session->userdata('usertypeID');
-                if($userTypeID == 2){
-                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           } else if($userTypeID != 1){
-                                                 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);
-                                                   } else {
-                   $this->data['carriers'] = $this->airline_m->getAirlinesData();
-                }
+                 if($userTypeID != 1){
+                    $this->data['carriers'] = $this->user_m->getUserAirlines($userID);
+                 } else {
+                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
+                 }
 
 
 		 $this->data['marketzones'] = $this->marketzone_m->getMarketzones();
@@ -416,13 +414,11 @@ if($end < $start ) {
 
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
-                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           }  else if($userTypeID != 1 ){
-						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
-						   } else {
-                   $this->data['carriers'] = $this->airline_m->getAirlinesData();
-                }
+                 if($userTypeID != 1 ){
+					$this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
+				 } else {
+                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
+                 }
 
 	$this->data['action_types'] = $this->airports_m->getDefns('19');
 
@@ -547,13 +543,11 @@ if($end < $start ) {
 
 			   $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
-                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           } else if($userTypeID != 1 ){
-						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
-						   }  else {
-                   $this->data['carriers'] = $this->airline_m->getAirlinesData();
-                }
+                if($userTypeID != 1 ){
+					$this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
+				 }  else {
+                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
+                 }
 
 
 			 $types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));

@@ -114,13 +114,18 @@ class Season_airport extends Admin_Controller {
         		$sWhere .= $col.' = '.$this->input->get('airportID');
         	}
 			
-		   if($this->session->userdata('usertypeID') != 1){  
+	   if($this->session->userdata('usertypeID') != 1){  
                $seasonslist = $this->season_m->getSeasonsList($this->session->userdata('login_user_airlineID'));
+               if(empty($seasonslist)){
+                 $seasonslist = array('0');
+               }
 			 // $markets = array_column($marketzones, 'market_id'); 
 			   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
               $sWhere .= 'sap.seasonID IN ('.implode(', ', array_keys($seasonslist)).')';	
 			  
             }
+
+           
 
             $sQuery="SELECT SQL_CALC_FOUND_ROWS s.season_name,sap.*,ma.aln_data_value airport,ma.code airport_code,mc.aln_data_value country,mc.code country_code,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active,car.code as carrier_code FROM ".$table." sap 
             JOIN VX_aln_season s on (s.VX_aln_seasonID = sap.seasonID) 

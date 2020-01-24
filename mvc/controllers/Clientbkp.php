@@ -4,7 +4,7 @@ class Client extends Admin_Controller {
 
 	function __construct() {
 		parent::__construct();
-//$this->load->model("client_m");
+		$this->load->model("client_m");
 		$this->load->model("user_m");
 		$this->load->model('usertype_m');
 		$this->load->model('airline_m');
@@ -45,11 +45,11 @@ class Client extends Admin_Controller {
 				'label' => $this->lang->line("client_photo"),
 				'rules' => 'trim|max_length[200]|xss_clean|callback_photoupload'
 			),
-			/*array(
+			array(
 				'field' => 'mail_logo',
 				'label' => $this->lang->line("client_mail_logo"),
 				'rules' => 'trim|max_length[200]|xss_clean|callback_maillogoupload'
-			),*/
+			),
 			array(
 				'field' => 'username',
 				'label' => $this->lang->line("client_username"),
@@ -73,13 +73,30 @@ class Client extends Admin_Controller {
 		}
 	}
 	
-	
+	public function validate_airline() {
+		$id = htmlentities(escapeString($this->uri->segment(3)));
+		 if((int)$id) {
+		    $client = $this->client_m->get_single_client(array('VX_aln_clientID !=' => $id,'airlineID' => $this->input->post('airlineID')));	
+			if(count($client)) {
+				$this->form_validation->set_message("validate_airline", "%s already exists");
+				return FALSE;
+			}
+			return TRUE;
+		} else {
+			$client = $this->client_m->get_single_client(array('airlineID' => $this->input->post('airlineID')));	
+			if(count($client)) {
+				$this->form_validation->set_message("validate_airline", "%s already exists");
+				return FALSE;
+			}
+			return TRUE;
+		}
+	} 
 	
 	public function photoupload() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		$client = array();
 		if((int)$id) {
-			$client = $this->user_m->get_user($id);
+			$client = $this->client_m->get_client($id);
 		}
 		$new_file = "defualt.png";
 		if($_FILES["photo"]['name'] !="") {
@@ -117,12 +134,58 @@ class Client extends Admin_Controller {
 			return TRUE;
 			}
 		}
-	}	
+	}
+	
+	public function maillogoupload() {
+		$id = htmlentities(escapeString($this->uri->segment(3)));
+		$client = array();
+		if((int)$id) {
+			$client = $this->client_m->get_client($id);
+		}
+		$new_file = "defualt.png";
+		if($_FILES["mail_logo"]['name'] !="") {
+			$file_name = $_FILES["mail_logo"]['name'];
+			$random = rand(1, 10000000000000000);
+	    	$makeRandom = hash('sha512', $random.$this->input->post('username') . config_item("encryption_key"));
+			$file_name_rename = $makeRandom;
+            $explode = explode('.', $file_name);
+            if(count($explode) >= 2) {
+	            $new_file = $file_name_rename.'.'.end($explode);
+				$config['upload_path'] = "./uploads/images";
+				$config['allowed_types'] = "gif|jpg|png";
+				$config['file_name'] = $new_file;
+				$config['max_size'] = '1024';
+				$config['max_width'] = '3000';
+				$config['max_height'] = '3000';
+				$this->load->library('upload', $config);
+				if(!$this->upload->do_upload("mail_logo")) {
+					$this->form_validation->set_message("maillogoupload", $this->upload->display_errors());
+	     			return FALSE;
+				} else {
+					$this->upload_data['mail_logo'] =  $this->upload->data();
+					return TRUE;
+				}
+			} else {
+				$this->form_validation->set_message("maillogoupload", "Invalid file");
+	     		return FALSE;
+			}
+		} else {
+			if(count($client)) {
+				$this->upload_data['mail_logo'] = array('file_name' => $client->mail_logo);
+				return TRUE;
+			} else {
+				$this->upload_data['mail_logo'] = array('file_name' => $new_file);
+			return TRUE;
+			}
+		}
+	}
 
 	public function index() {
 		$userTypeID = $this->session->userdata('usertypeID');
 		$userID = $this->session->userdata('loginuserID');
-		 if($userTypeID != 1){
+		if($userTypeID == 2){
+			  $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
+		   } else if($userTypeID != 1){
 			 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 			}else {
 			 $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -183,18 +246,34 @@ class Client extends Admin_Controller {
 				// For Email
 				$this->user_m->insert_user($array);
 				$userID = $this->db->insert_id();
-			 
-				
-				 $link['userID'] = $userID;
+			 if($userID){
+				$client['userID'] = $userID;
+				$client["name"] = $this->input->post("name");				
+				$client["email"] = $this->input->post("email");
+				$client["phone"] = $this->input->post("phone");
+				$client["address"] = $this->input->post("address");				
+				$client["username"] = $this->input->post("username");
+				$client["password"] = $this->user_m->hash($this->input->post("password"));
+               // $client["airlineID"] = $this->input->post("airlineID");				
+				$client["create_date"] = time();
+				$client["modify_date"] = time();
+				$client["create_userID"] = $this->session->userdata('loginuserID');
+				$client["modify_userID"] = $this->session->userdata('loginuserID');
+				$client["active"] = $this->input->post("active");	
+				$client['photo'] = $this->upload_data['file']['file_name'];
+				$client['mail_logo'] = $this->upload_data['mail_logo']['file_name'];				
+				$this->client_m->insert_client($client);				 
+				 $clientID = $this->db->insert_id();
+				 $link['clientID'] = $clientID;
 				 $link["create_date"] = time();
 				 $link["modify_date"] = time();
 				 $link["create_userID"] = $this->session->userdata('loginuserID');
 				 $link["modify_userID"] = $this->session->userdata('loginuserID');
 				 foreach($this->input->post('airlineID') as $airlineID){
 				  $link['airlineID'] = $airlineID;
-				  $this->user_m->insert_user_airline($link);
+				  $this->client_m->insert_client_airline($link);
 				 }
-			
+			 }
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("client/index"));
 			}
@@ -209,7 +288,7 @@ class Client extends Admin_Controller {
 			'css' => array(
 				'assets/datepicker/datepicker.css',
 				'assets/select2/css/select2.css',
-                'assets/select2/css/select2-bootstrap.css'
+				'assets/select2/css/select2-bootstrap.css'
 			),
 			'js' => array(
 				'assets/datepicker/datepicker.js',
@@ -217,66 +296,60 @@ class Client extends Admin_Controller {
 			)
 		);
 
-		$id = htmlentities(escapeString($this->uri->segment(3)));
-		if($this->session->userdata('usertypeID') == 2){
-		  $this->data['usertypes'] = array();
-		} else {
-		  $this->data['usertypes'] = $this->usertype_m->get_usertype();
-		}
-		if($this->session->userdata('usertypeID') == 1){
-		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
-		} else {
-		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($this->session->userdata('loginuserID'));	
-		}
+		$id = htmlentities(escapeString($this->uri->segment(3))); 
 		if((int)$id) {
-			$this->data['client'] = $this->user_m->get_user($id);
-			//print_r($this->data['user']); exit;
+			$this->data['client'] = $this->client_m->getClientData($id); //print_r($this->data['client'] ); exit;	
 			if($this->data['client']) {
-				$rules = $this->rules();				
-				unset($rules[7]);								
+				$this->data['airlinelist'] = $this->airline_m->getAirlinesData();	
+				$rules = $this->rules();
+				unset($rules[8]);
 				$this->form_validation->set_rules($rules);
 				if ($this->form_validation->run() == FALSE) {
-					//echo validation_errors();
 					$this->data["subview"] = "client/edit";
 					$this->load->view('_layout_main', $this->data);
 				} else {
-					$array["name"] = $this->input->post("name");
-					$array["dob"] = date("Y-m-d", strtotime($this->input->post("dob")));
-					$array["sex"] = $this->input->post("sex");
-					$array["religion"] = $this->input->post("religion");
+					$array["name"] = $this->input->post("name");					
 					$array["email"] = $this->input->post("email");
 					$array["phone"] = $this->input->post("phone");
 					$array["address"] = $this->input->post("address");
-					$array["jod"] = date("Y-m-d", strtotime($this->input->post("jod")));					
 					$array["modify_date"] = date("Y-m-d h:i:s");
 					$array["username"] = $this->input->post('username');
-					$array['photo'] = $this->upload_data['file']['file_name'];				
+					$array['photo'] = $this->upload_data['file']['file_name'];
+					$this->user_m->update_user($array,$this->data['client']->userID);
 					
-					$this->user_m->update_user($array, $id);
-					
+					$client["name"] = $this->input->post("name");				
+					$client["email"] = $this->input->post("email");
+					$client["phone"] = $this->input->post("phone");
+					$client["address"] = $this->input->post("address");				
+					$client["username"] = $this->input->post("username");					
+					//$client["airlineID"] = $this->input->post("airlineID");					
+					$client["modify_date"] = time();
+					$client["create_userID"] = $this->session->userdata('loginuserID');					
+					$client["active"] = $this->input->post("active");	
+					$client['photo'] = $this->upload_data['file']['file_name'];
+					$client['mail_logo'] = $this->upload_data['mail_logo']['file_name'];
+					 $this->client_m->update_client($client,$id);
 					 $airlines = array();
-					 if(!empty($this->data['user']->airlineIDs)){
-					 $airlines = explode(',',$this->data['user']->airlineIDs);
+					 if(!empty($this->data['client']->airlineIDs)){
+					 $airlines = explode(',',$this->data['client']->airlineIDs);
 					 }
 					 $delete_list = array_diff($airlines,$this->input->post('airlineID'));
 					 if(!empty($delete_list)){
-					 $this->user_m->delete_user_airline($id,$delete_list);
+					 $this->client_m->delete_client_airline($id,$delete_list);
 					 }
 					 $insert_list = array_diff($this->input->post('airlineID'),$airlines);
 					// print_r( $insert_list); exit;
 					  if(!empty($insert_list)){
-					  $link['userID'] = $id;					
+					  $link['clientID'] = $id;					
 					  $link["modify_date"] = time();
                       $link["create_date"] = time();
                       $link["create_userID"] = $this->session->userdata('loginuserID');					  
 					  $link["modify_userID"] = $this->session->userdata('loginuserID');
 					  foreach($insert_list as $airlineID){
 					   $link['airlineID'] = $airlineID;
-					   $this->user_m->insert_user_airline($link);
+					   $this->client_m->insert_client_airline($link);
 					  }
 					 }
-
-					
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url("client/index"));
 				}
@@ -292,19 +365,22 @@ class Client extends Admin_Controller {
 	}
 
 	public function delete() {
-		$id = htmlentities(escapeString($this->uri->segment(3)));
-		if((int)$id) {
+		$clientid =  htmlentities(escapeString($this->uri->segment(3)));			
+		$client = $this->client_m->get_single_client(array('VX_aln_clientID' => $clientid));
+		$id = $client->userID;
+		if((int)$clientid) {
 			$this->data['user'] = $this->user_m->get_user($id);
 			if($this->data['user']) {
 				if(config_item('demo') == FALSE) {
 					if($this->data['user']->photo != 'defualt.png') {
-						if(file_exists(FCPATH.'uploads/images/'.$this->data['user']->photo)) {
-							unlink(FCPATH.'uploads/images/'.$this->data['user']->photo);
+						if(file_exists(FCPATH.'uploads/images/'.$client->photo)) {
+							unlink(FCPATH.'uploads/images/'.$client->photo);
 						}
 					}
 				}
 				$this->user_m->delete_user($id);
-				$this->user_m->delete_user_airline($id);
+				$this->client_m->delete_client($clientid);
+				$this->client_m->delete_client_airline($clientid);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("client/index"));
 			} else {
@@ -318,7 +394,7 @@ class Client extends Admin_Controller {
 	public function view() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if ((int)$id) {
-			$this->data["client"] = $this->user_m->get_user($id);
+			$this->data["client"] = $this->client_m->getClientData($id); 
 			if($this->data["client"]) {
 				$this->data["subview"] = "client/view";
 				$this->load->view('_layout_main', $this->data);
@@ -333,7 +409,9 @@ class Client extends Admin_Controller {
 	}
 
 	public function lol_username() {
-		$id = htmlentities(escapeString($this->uri->segment(3)));
+		$clientid = htmlentities(escapeString($this->uri->segment(3)));
+		$client = $this->client_m->get_single_client(array('VX_aln_clientID' => $clientid));
+		$id = $client->userID;
 		if((int)$id) {
 			$user_info = $this->user_m->get_single_user(array('userID' => $id));
 			$tables = array('user' => 'user');
@@ -378,7 +456,9 @@ class Client extends Admin_Controller {
 	}
 
 	public function unique_email() {
-		$id = htmlentities(escapeString($this->uri->segment(3)));
+		$clientid = htmlentities(escapeString($this->uri->segment(3)));
+		$client = $this->client_m->get_single_client(array('VX_aln_clientID' => $clientid));
+		$id = $client->userID;
 		if((int)$id) {
 			$user_info = $this->user_m->get_single_user(array('userID' => $id));
 			$tables = array('user' => 'user');
@@ -423,16 +503,20 @@ class Client extends Admin_Controller {
 	}
 
 	function active() {
-		if(permissionChecker('user_edit')) {
-			$id = $this->input->post('id');
+		if(permissionChecker('client_edit')) {
+			$clientid = $this->input->post('id');			
+		    $client = $this->client_m->get_single_client(array('VX_aln_clientID' => $clientid));
+		    $id = $client->userID;
 			$status = $this->input->post('status');
 			if($id != '' && $status != '') {
 				if((int)$id) {
 					if($status == 'chacked') {
 						$this->user_m->update_user(array('active' => 1), $id);
+						$this->client_m->update_client(array('active' => 1), $clientid);
 						echo 'Success';
 					} elseif($status == 'unchacked') {
 						$this->user_m->update_user(array('active' => 0), $id);
+						$this->client_m->update_client(array('active' => 0), $clientid);
 						echo 'Success';
 					} else {
 						echo "Error";
@@ -452,7 +536,7 @@ class Client extends Admin_Controller {
 		$userID = $this->session->userdata('loginuserID');
 		$usertypeID = $this->session->userdata('usertypeID');	  
 				
-	    $aColumns = array('c.userID','c.photo','c.name','c.email','c.photo','c.phone','dd.code','c.active');
+	    $aColumns = array('c.VX_aln_clientID','c.photo','c.name','c.email','c.photo','c.phone','dd.code','c.active');
 	
 		$sLimit = "";
 		
@@ -517,8 +601,7 @@ class Client extends Admin_Controller {
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                 $sWhere .= 'c.userID = '.$this->session->userdata('loginuserID');	
 			}
-			$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                $sWhere .= 'c.usertypeID = 2';
+			
 			if($usertypeID != 1){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 				$airlines = $this->user_m->getUserAirlines($userID);
@@ -538,8 +621,8 @@ class Client extends Admin_Controller {
               $sWhere .= 'c.active = '.$this->input->get('active');		 
 	        }
 			
-		    $sGroupby = " GROUP BY c.userID";
-		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM user c LEFT JOIN VX_user_airline ca ON ca.userID = c.userID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
+		    $sGroupby = " GROUP BY c.VX_aln_clientID";
+		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM VX_aln_client c LEFT JOIN VX_client_airline ca ON ca.clientID = VX_aln_clientID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
 			$sWhere	
             $sGroupby
             $sHaving			
@@ -558,25 +641,25 @@ class Client extends Admin_Controller {
 		  );
 	  foreach($rResult as $client){	
           if(permissionChecker('client_edit')){ 			
-			$client->action = btn_edit('client/edit/'.$client->userID, $this->lang->line('edit'));
+			$client->action = btn_edit('client/edit/'.$client->VX_aln_clientID, $this->lang->line('edit'));
 		  }
 		  if(permissionChecker('client_delete')){
-		   $client->action .= btn_delete('client/delete/'.$client->userID,$this->lang->line('delete'));			 
+		   $client->action .= btn_delete('client/delete/'.$client->VX_aln_clientID, $this->lang->line('delete'));			 
 		  }
 		  if(permissionChecker('client_view') ) {
-		   $client->action .= btn_view('client/view/'.$client->userID, $this->lang->line('view'));
+		   $client->action .= btn_view('client/view/'.$client->VX_aln_clientID, $this->lang->line('view'));
 		  }
 		  
 		 	$status = $client->active;
-			$client->active = "<div class='onoffswitch-small' id='".$client->userID."'>";
-            $client->active .= "<input type='checkbox' id='myonoffswitch".$client->userID."' class='onoffswitch-small-checkbox' name='paypal_demo'";
+			$client->active = "<div class='onoffswitch-small' id='".$client->VX_aln_clientID."'>";
+            $client->active .= "<input type='checkbox' id='myonoffswitch".$client->VX_aln_clientID."' class='onoffswitch-small-checkbox' name='paypal_demo'";
 			if($status){
 			   $client->active .= " checked >";
 			} else {
 			   $client->active .= ">";
 			}	
 			
-			$client->active .= "<label for='myonoffswitch".$client->userID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
+			$client->active .= "<label for='myonoffswitch".$client->VX_aln_clientID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
 						
 			 $array = array(
                "src" => base_url('uploads/images/'.$client->image),
@@ -589,7 +672,7 @@ class Client extends Admin_Controller {
 		}
 		if(isset($_REQUEST['export'])){
 		  $columns = array('#','Name','Email','Phone','Carrier Name',"Carrier Code");
-		  $rows = array("userID","name","email","phone","airline_name","airline_code");
+		  $rows = array("VX_aln_clientID","name","email","phone","airline_name","airline_code");
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );

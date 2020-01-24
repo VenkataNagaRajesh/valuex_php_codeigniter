@@ -725,9 +725,7 @@ class Airline extends Admin_Controller {
         $this->data['airlineID'] = htmlentities(escapeString($this->uri->segment(3)));
 		$userTypeID = $this->session->userdata('usertypeID');
 		$userID = $this->session->userdata('loginuserID');
-		if($userTypeID == 2){
-          $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-        } else if($userTypeID != 1){
+		if($userTypeID != 1){
 		  $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
            $this->data['airlines'] = $this->airline_m->getAirlinesData();
