@@ -2,7 +2,7 @@
 
 class Vendor_m extends MY_Model {
 
-    protected $_table_name = 'vendor';
+    protected $_table_name = 'VX_vendor';
     protected $_primary_key = 'vendorID';
     protected $_primary_filter = 'intval';
     protected $_order_by = "vendorID asc";

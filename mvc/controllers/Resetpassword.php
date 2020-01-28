@@ -68,13 +68,10 @@ class Resetpassword extends Admin_Controller {
 		$table = '';
 		$tableID = '';
 		if($userID != '0') {
-			if($userID == 1) {
-				$table = 'systemadmin';
-				$tableID = 'systemadminID';
-			}  else {
-				$table = 'user';
+			
+				$table = 'VX_user';
 				$tableID = 'userID';
-			}
+		
 
 			$this->data['usernames'] = $this->resetpassword_m->get_username($table, array('usertypeID' => $userID));
 		} else {
@@ -107,7 +104,7 @@ class Resetpassword extends Admin_Controller {
 	public function userscall() {
 		$userID = $this->input->post('users');
 		if($userID) {
-			$table = 'user';
+			$table = 'VX_user';
 			$tableID = 'userID';
 			
 

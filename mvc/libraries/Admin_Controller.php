@@ -10,7 +10,7 @@ class Admin_Controller extends MY_Controller {
         $this->load->model("install_m");
 		$this->load->model("signin_m");
 		$this->load->model("permission_m");
-		$this->load->model("message_m");
+		//$this->load->model("message_m");
 		$this->load->model("site_m");
 		$this->load->model('mailandsmstemplatetag_m');
         $this->load->model('mailandsmstemplate_m');	        
@@ -41,8 +41,8 @@ class Admin_Controller extends MY_Controller {
 
 		/* Alert System Start.........*/
 		//$this->data["menuclasss"] = $this->classes_m->get_order_by_classes();
-		$this->load->model("notice_m");
-		$this->load->model("alert_m");
+		//$this->load->model("notice_m");
+		//$this->load->model("alert_m");
 		$this->data['all'] = array();
 		$this->data['alert'] = array();
 		/* $notices = $this->notice_m->get_order_by_notice(array('schoolyearID' => $this->session->userdata('defaultschoolyearID')));

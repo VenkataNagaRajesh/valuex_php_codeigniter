@@ -2,7 +2,7 @@
 
 class Permissionlog_m extends MY_Model {
 
-    protected $_table_name = 'permissions';
+    protected $_table_name = 'VX_permissions';
     protected $_primary_key = 'permissionID';
     protected $_primary_filter = 'intval';
     protected $_order_by = "permissionID desc";

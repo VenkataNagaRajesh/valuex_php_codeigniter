@@ -401,10 +401,10 @@ class Airline_cabin_class extends Admin_Controller {
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS cm.map_id, airline_class,  ac.code as carrier_name, cm.carrier , 
         def.cabin as airline_cabin,  cm.active , cm.is_revenue, cm.order, cm.rbd_markup
-        from VX_aln_airline_cabin_class cm 
-        LEFT JOIN vx_aln_data_defns ac on (ac.vx_aln_data_defnsID = cm.carrier ) 
-       INNER JOIN VX_aln_airline_cabin_def def on (def.carrier = cm.carrier )  
-        INNER JOIN vx_aln_data_defns cab on (cab.alias = def.level and cab.aln_data_typeID = 13 and cm.airline_cabin = cab.vx_aln_data_defnsID)
+        from VX_airline_cabin_class cm 
+        LEFT JOIN VX_data_defns ac on (ac.vx_aln_data_defnsID = cm.carrier ) 
+       INNER JOIN VX_airline_cabin_def def on (def.carrier = cm.carrier )  
+        INNER JOIN VX_data_defns cab on (cab.alias = def.level and cab.aln_data_typeID = 13 and cm.airline_cabin = cab.vx_aln_data_defnsID)
  $sWhere $sOrder $sLimit";
                 $rResult = $this->install_m->run_query($sQuery);
                 $sQuery = "SELECT FOUND_ROWS() as total";
@@ -523,5 +523,3 @@ if(!empty($data_id_array)) {
 
 }
 
-/* End of file user.php */
-/* Location: .//D/xampp/htdocs/school/mvc/controllers/user.php */

@@ -947,15 +947,15 @@ FROM
               as flight_nbr,fdef.cabin as from_class , tdef.cabin as to_class,  ex.active , 
               ex.upgrade_from_cabin_type, ex.upgrade_to_cabin_type  ,ex.flight_nbr_start,
 	      ex.flight_nbr_end, car.code as carrier_code, ex.excl_grp,ex.carrier
-              from VX_aln_eligibility_excl_rules ex 
-	       LEFT JOIN vx_aln_data_types orig on (orig.vx_aln_data_typeID = ex.orig_level_id) 
-              LEFT JOIN vx_aln_data_types dest on (dest.vx_aln_data_typeID = ex.dest_level_id) 
-	      INNER JOIN VX_aln_airline_cabin_def fdef on (fdef.carrier = ex.carrier)
-	      INNER JOIN vx_aln_data_defns fc on (fc.alias = fdef.level and fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type AND fc.aln_data_typeID = 13) 
-	      INNER JOIN VX_aln_airline_cabin_def tdef on (tdef.carrier = ex.carrier)
-	      INNER JOIN vx_aln_data_defns tc on (tc.alias = tdef.level and tc.vx_aln_data_defnsID = ex.upgrade_to_cabin_type AND tc.aln_data_typeID = 13)
+              from UP_eligibility_excl_rules ex 
+	       LEFT JOIN VX_data_types orig on (orig.vx_aln_data_typeID = ex.orig_level_id) 
+              LEFT JOIN VX_data_types dest on (dest.vx_aln_data_typeID = ex.dest_level_id) 
+	      INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = ex.carrier)
+	      INNER JOIN vx_data_defns fc on (fc.alias = fdef.level and fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type AND fc.aln_data_typeID = 13) 
+	      INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = ex.carrier)
+	      INNER JOIN vx_data_defns tc on (tc.alias = tdef.level and tc.vx_aln_data_defnsID = ex.upgrade_to_cabin_type AND tc.aln_data_typeID = 13)
 		
-              LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID  = ex.carrier AND car.aln_data_typeID = 12)
+              LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID  = ex.carrier AND car.aln_data_typeID = 12)
 
 ) as MainSet
 
@@ -965,10 +965,10 @@ LEFT JOIN (
                         (         
 						SELECT       ex.eexcl_id as eexcl_id  , 
                                                 COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS orig_level, group_concat(c.aln_data_value) as orig_full_name
-                                                FROM VX_aln_eligibility_excl_rules ex 
-                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                FROM UP_eligibility_excl_rules ex 
+                                                LEFT OUTER JOIN  VX_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, ex.orig_level_value) AND ex.orig_level_id in (1,2,3,4,5)) 
-                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                LEFT OUTER JOIN  VX_market_zone mm  
                                                 ON (find_in_set(mm.market_id, ex.orig_level_value) AND ex.orig_level_id = 17) group by 							ex.eexcl_id
                         ) as FirstSet  
                 LEFT join 
@@ -976,10 +976,10 @@ LEFT JOIN (
                         (       
 						SELECT       ex.eexcl_id as eexcl_id  , 
                                                 COALESCE(group_concat(c.code), group_concat(c.aln_data_value), group_concat(mm.market_name) )  AS dest_level ,  group_concat(c.aln_data_value) as dest_full_name
-                                                FROM VX_aln_eligibility_excl_rules ex 
-                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                FROM UP_eligibility_excl_rules ex 
+                                                LEFT OUTER JOIN  VX_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, ex.dest_level_value) AND ex.dest_level_id in (1,2,3,4,5)) 
-                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                LEFT OUTER JOIN  VX_market_zone mm  
                                                 ON (find_in_set(mm.market_id, ex.dest_level_value) AND ex.dest_level_id = 17) group by 							ex.eexcl_id
                         ) as SecondSet
 
@@ -990,8 +990,8 @@ LEFT JOIN (
 			 LEFT JOIN 
                         (
  					select mf.eexcl_id ,group_concat(c.code) as frequency  , mf.frequency as dayslist
-	            		        from  VX_aln_eligibility_excl_rules mf 
-                                         LEFT join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, mf.frequency) group by mf.eexcl_id   
+	            		        from  UP_eligibility_excl_rules mf 
+                                         LEFT join VX_data_defns c on find_in_set(c.vx_aln_data_defnsID, mf.frequency) group by mf.eexcl_id   
                         ) as ThirdSet
 
                         on ThirdSet.eexcl_id = FirstSet.eexcl_id

@@ -2,7 +2,7 @@
 
 class Event_status_m extends MY_Model {
 
-	protected $_table_name = 'VX_aln_event_status';
+	protected $_table_name = 'UP_event_status';
 	protected $_primary_key = 'es_id';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "es_id";
@@ -20,7 +20,7 @@ class Event_status_m extends MY_Model {
 
 	function get_event_status_by_id($id){
 		$this->db->select('*');
-                $this->db->from('VX_aln_event_status');
+                $this->db->from('UP_event_status');
 		$this->db->where('es_id', $id);	
 		$query = $this->db->get();
                         return $query->result();
@@ -29,7 +29,7 @@ class Event_status_m extends MY_Model {
 
 	function checkEventStatus($array){
                 $this->db->select('es_id');
-                $this->db->from('VX_aln_event_status');
+                $this->db->from('UP_event_status');
                 $this->db->where($array);
                 $this->db->limit(1);
                 $query = $this->db->get();
@@ -46,7 +46,7 @@ class Event_status_m extends MY_Model {
 
          function get_single_event_status($array) {
 		$this->db->select('event_id, current_status, isInternalStatus, group_concat(next_status) as next_status' );
-		$this->db->from('VX_aln_event_status');
+		$this->db->from('UP_event_status');
 		$this->db->where($array);
 		$this->db->group_by(array("event_id", "current_status","isInternalStatus"));
 		 $this->db->limit(1);
@@ -66,13 +66,13 @@ class Event_status_m extends MY_Model {
 	function update_event_status($data, $event_id, $current_status) {
 		$this->db->where('event_id', $event_id);
 		$this->db->where('current_status', $current_status);
-		$this->db->update('VX_aln_event_status', $data);
+		$this->db->update('UP_event_status', $data);
 	}
 
 	function delete_event_status($id,$status){
 		 $this->db->where('event_id', $id);
                 $this->db->where('current_status', $status);
-                $this->db->delete('VX_aln_event_status');
+                $this->db->delete('UP_event_status');
                 return;
 	}
 
@@ -81,5 +81,3 @@ class Event_status_m extends MY_Model {
 	}	
 }
 
-/* End of file user_m.php */
-/* Location: .//D/xampp/htdocs/school/mvc/models/user_m.php */

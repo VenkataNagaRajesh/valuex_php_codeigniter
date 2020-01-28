@@ -2,7 +2,7 @@
 
 class visitorinfo_m extends MY_Model {
 
-	protected $_table_name = 'visitorinfo';
+	protected $_table_name = 'VX_visitorinfo';
 	protected $_primary_key = 'visitorID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "visitorID desc";

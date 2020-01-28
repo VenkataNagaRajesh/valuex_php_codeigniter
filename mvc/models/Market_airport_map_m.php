@@ -77,5 +77,3 @@ class Market_airport_map_m extends MY_Model {
 	}	
 }
 
-/* End of file user_m.php */
-/* Location: .//D/xampp/htdocs/school/mvc/models/user_m.php */

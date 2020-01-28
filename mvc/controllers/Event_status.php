@@ -346,10 +346,10 @@ class Event_status extends Admin_Controller {
 
 
 $sQuery = " 
-select  es.event_id , es.current_status, ev.aln_data_value as event_name, cs.aln_data_value as current_status_name, group_concat(ns.aln_data_value) as next_status_name,isInternalStatus, es.active from VX_aln_event_status es 
-LEFT JOIN vx_aln_data_defns ev on (ev.vx_aln_data_defnsID = es.event_id) 
-        LEFT JOIN  vx_aln_data_defns cs on (cs.vx_aln_data_defnsID = es.current_status)
-        LEFT JOIN  vx_aln_data_defns ns on (ns.vx_aln_data_defnsID = es.next_status)
+select  es.event_id , es.current_status, ev.aln_data_value as event_name, cs.aln_data_value as current_status_name, group_concat(ns.aln_data_value) as next_status_name,isInternalStatus, es.active from UP_event_status es 
+LEFT JOIN VX_data_defns ev on (ev.vx_aln_data_defnsID = es.event_id) 
+        LEFT JOIN  VX_data_defns cs on (cs.vx_aln_data_defnsID = es.current_status)
+        LEFT JOIN  VX_data_defns ns on (ns.vx_aln_data_defnsID = es.next_status)
 $sWhere  group by event_id, es.current_status, es.active , event_name, current_status_name,isInternalStatus
   $sOrder $sLimit";
 

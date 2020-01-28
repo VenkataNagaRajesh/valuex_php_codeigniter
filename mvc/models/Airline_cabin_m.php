@@ -2,7 +2,7 @@
 
 class Airline_cabin_m extends MY_Model {
 
-	protected $_table_name = 'VX_aln_airline_cabin_map';
+	protected $_table_name = 'VX_airline_cabin_map';
 	protected $_primary_key = 'cabin_map_id';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "cabin_map_id";
@@ -13,7 +13,7 @@ class Airline_cabin_m extends MY_Model {
 
 	function getAirlines(){
 		$this->db->select('vx_aln_data_defnsID, aln_data_value');	
-		$this->db->from('vx_aln_data_defns');
+		$this->db->from('VX_data_defns');
 		$this->db->where('aln_data_typeID','12');
 		$query = $this->db->get();
                  $result = $query->result();
@@ -26,7 +26,7 @@ class Airline_cabin_m extends MY_Model {
 	function getAirlineCabins(){
 
 		$this->db->select('vx_aln_data_defnsID, aln_data_value');
-                $this->db->from('vx_aln_data_defns');
+                $this->db->from('VX_data_defns');
                 $this->db->where('aln_data_typeID','13');
                 $query = $this->db->get();
                  $result = $query->result();
@@ -41,7 +41,7 @@ class Airline_cabin_m extends MY_Model {
 	function getAirlineClassByName($name) {
 
 		$this->db->select('vx_aln_data_defnsID');
-		$this->db->from('vx_aln_data_defns');
+		$this->db->from('VX_data_defns');
 		$this->db->where('aln_data_typeID','13');
 		$this->db->where('aln_data_value',$name);
 
@@ -58,21 +58,21 @@ class Airline_cabin_m extends MY_Model {
         }
 
         function get_airline_cabin_map_count() {
-		$this->db->select('count(*) as cnt')->from('VX_aln_airline_cabin_map');
+		$this->db->select('count(*) as cnt')->from('VX_airline_cabin_map');
                 $query = $this->db->get();
                 return $query->row('cnt');
 
 	}
 	 function get_AirlineCabinsMapList() {
                 $this->db->select('*');
-                $this->db->from('VX_aln_airline_cabin_map');
+                $this->db->from('VX_airline_cabin_map');
                         $query = $this->db->get();
                         return $query->result();
         }
 
 	function get_airline_cabin_map_by_id($id){
 		$this->db->select('*');
-                $this->db->from('VX_aln_airline_cabin_map');
+                $this->db->from('VX_airline_cabin_map');
 		$this->db->where('cabin_map_id', $id);	
 		$query = $this->db->get();
                         return $query->result();
@@ -85,7 +85,7 @@ class Airline_cabin_m extends MY_Model {
 
 	function checkAirlineCabin($array) {
 
-		$this->db->select('*')->from('VX_aln_airline_cabin_map');
+		$this->db->select('*')->from('VX_airline_cabin_map');
 		$this->db->where($array);
 		 $this->db->limit(1);
                 $query = $this->db->get();
@@ -110,7 +110,7 @@ class Airline_cabin_m extends MY_Model {
 	}
 
        function getAirlineCabin($id){
-          $this->db->select('*')->from('VX_aln_airline_cabin_map');
+          $this->db->select('*')->from('VX_airline_cabin_map');
           $this->db->where('cabin_map_id' , $id);
           $query = $this->db->get();
           return $query->row();
@@ -119,10 +119,10 @@ class Airline_cabin_m extends MY_Model {
 
 	function getAirLineCabinDataByID($id) {
 		$this->db->select('cm.*,dd.aln_data_value as airline, dc.aln_data_value as cabin, 
-				da.aln_data_value as aircraft_name')->from('VX_aln_airline_cabin_map cm');
-		 $this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = cm.airline_code','LEFT');
-		 $this->db->join('vx_aln_data_defns dc', 'dc.vx_aln_data_defnsID = cm.airline_cabin','LEFT');
-		 $this->db->join('vx_aln_data_defns da', 'da.vx_aln_data_defnsID = cm.aircraft_id','LEFT');
+				da.aln_data_value as aircraft_name')->from('VX_airline_cabin_map cm');
+		 $this->db->join('VX_data_defns dd','dd.vx_aln_data_defnsID = cm.airline_code','LEFT');
+		 $this->db->join('VX_data_defns dc', 'dc.vx_aln_data_defnsID = cm.airline_cabin','LEFT');
+		 $this->db->join('VX_data_defns da', 'da.vx_aln_data_defnsID = cm.aircraft_id','LEFT');
 		 $this->db->where('cabin_map_id', $id);
 		 $query = $this->db->get();
 	          return $query->row();
@@ -132,7 +132,7 @@ class Airline_cabin_m extends MY_Model {
 
 
         function add_airline_cabin_gallery($data){
-          $this->db->insert('VX_aln_airline_cabin_images',$data);
+          $this->db->insert('VX_airline_cabin_images',$data);
           //$this->mydebug->debug($this->db->last_query());
           return TRUE;
   }
@@ -140,14 +140,14 @@ class Airline_cabin_m extends MY_Model {
 
 
   function getAirlineCabinImages($id){	
-          $this->db->select('*')->from('VX_aln_airline_cabin_images');
+          $this->db->select('*')->from('VX_airline_cabin_images');
           $this->db->where('airline_cabin_map_id',$id);
           $query = $this->db->get();
           return $query->result();
   }
 
   function getAirlineCabinImage($airline_imagesID){
-          $this->db->select('*')->from('VX_aln_airline_cabin_images');
+          $this->db->select('*')->from('VX_airline_cabin_images');
           $this->db->where('cabin_images_id',$airline_imagesID);
           $query = $this->db->get();
           return $query->row();
@@ -155,12 +155,12 @@ class Airline_cabin_m extends MY_Model {
 
   function deleteAirlineCabinImage($airline_imagesID){
           $this->db->where('cabin_images_id',$airline_imagesID);
-          $this->db->delete('VX_aln_airline_cabin_images');
+          $this->db->delete('VX_airline_cabin_images');
           return TRUE;
   }
 
   function getImagesCount($airline_cabinID){
-          $this->db->select('count(*) as total')->from('VX_aln_airline_cabin_images');
+          $this->db->select('count(*) as total')->from('VX_airline_cabin_images');
           $this->db->where('airline_cabin_map_id',$airline_cabinID);
           $query = $this->db->get();
           $result =  $query->row();
@@ -183,5 +183,3 @@ class Airline_cabin_m extends MY_Model {
 	}	
 }
 
-/* End of file user_m.php */
-/* Location: .//D/xampp/htdocs/school/mvc/models/user_m.php */

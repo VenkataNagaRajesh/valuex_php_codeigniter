@@ -607,20 +607,20 @@ class Rafeed extends Admin_Controller {
 			    dai.code as operating_airline_code, dam.code as marketing_airline_code, flight_number, dbp.code as boarding_point, 
                            dop.code as off_point,  def.cabin as cabin ,  departure_date, prorated_price, class,
                            office_id, channel, dpax.code as pax_type ,rf.active  ,rf.airline_code, rf.fare_basis
-                           FROM VX_aln_ra_feed rf  
-                          LEFT JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = rf.booking_country) 
-                          LEFT JOIN vx_aln_data_defns dci on  (dci.vx_aln_data_defnsID = rf.booking_city) 
-			  LEFT JOIN vx_aln_data_defns dico on (dico.vx_aln_data_defnsID = rf.issuance_country) 
-                          LEFT JOIN vx_aln_data_defns dici on  (dici.vx_aln_data_defnsID = rf.issuance_city)
-                          LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.operating_airline_code)  
-			  LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code)
-			  LEFT JOIN vx_aln_data_defns dcar on (dcar.vx_aln_data_defnsID = rf.carrier)
-                          LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = rf.boarding_point)  
-                          LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = rf.off_point) 
-			 INNER JOIN VX_aln_airline_cabin_def def on (def.carrier = rf.carrier)
-                           INNER JOIN vx_aln_data_defns dcla on (dcla.alias = def.level and dcla.aln_data_typeID = 13 and rf.cabin = dcla.vx_aln_data_defnsID) 
-			   LEFT JOIN vx_aln_data_defns dpax on (dpax.vx_aln_data_defnsID = rf.pax_type) 
-			  LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = rf.day_of_week) 
+                           FROM UP_ra_feed rf  
+                          LEFT JOIN VX_data_defns dc on (dc.vx_aln_data_defnsID = rf.booking_country) 
+                          LEFT JOIN VX_data_defns dci on  (dci.vx_aln_data_defnsID = rf.booking_city) 
+			  LEFT JOIN VX_data_defns dico on (dico.vx_aln_data_defnsID = rf.issuance_country) 
+                          LEFT JOIN VX_data_defns dici on  (dici.vx_aln_data_defnsID = rf.issuance_city)
+                          LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = rf.operating_airline_code)  
+			  LEFT JOIN VX_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code)
+			  LEFT JOIN VX_data_defns dcar on (dcar.vx_aln_data_defnsID = rf.carrier)
+                          LEFT JOIN  VX_data_defns dbp on (dbp.vx_aln_data_defnsID = rf.boarding_point)  
+                          LEFT JOIN VX_data_defns dop on (dop.vx_aln_data_defnsID = rf.off_point) 
+			 INNER JOIN VX_airline_cabin_def def on (def.carrier = rf.carrier)
+                           INNER JOIN VX_data_defns dcla on (dcla.alias = def.level and dcla.aln_data_typeID = 13 and rf.cabin = dcla.vx_aln_data_defnsID) 
+			   LEFT JOIN VX_data_defns dpax on (dpax.vx_aln_data_defnsID = rf.pax_type) 
+			  LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = rf.day_of_week) 
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

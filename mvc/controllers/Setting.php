@@ -5,7 +5,7 @@ Class setting extends Admin_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model("setting_m");		
-		$this->load->model("idmanager_m");
+		
 		$this->load->model('themes_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('setting', $language);

@@ -15,7 +15,7 @@ class signin_m extends MY_Model {
 			'message' => ''
 		);
 		//$tables = array('user' => 'user');
-          
+		
 		$settings = $this->setting_m->get_setting(1);
 		$lang = $settings->language;
 		$defaultschoolyearID = $settings->school_year;
@@ -25,7 +25,8 @@ class signin_m extends MY_Model {
 		$password = $this->hash($this->input->post('password'));
 		$userdata = '';
 		//foreach ($tables as $table) {
-			$table = 'user';
+			$table = 'VX_user';
+			
 			$user = $this->db->get_where($table, array("username" => $username, "password" => $password));
 			$alluserdata = $user->row();
 			if(count($alluserdata)) {

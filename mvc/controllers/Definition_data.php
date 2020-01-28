@@ -361,7 +361,7 @@ class Definition_data extends Admin_Controller {
               $sWhere .= 'dd.aln_data_typeID = '.$this->input->get('aln_data_typeID');		 
 	        }	
 		
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from vx_aln_data_defns dd LEFT JOIN vx_aln_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN vx_aln_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS dd.*,t.alias datatype,dd1.aln_data_value parent from VX_data_defns dd LEFT JOIN VX_data_defns dd1 ON dd1.vx_aln_data_defnsID = dd.parentID LEFT JOIN VX_data_types t ON dd.aln_data_typeID = t.vx_aln_data_typeID
 		$sWhere			
 		$sOrder
         $sLimit		

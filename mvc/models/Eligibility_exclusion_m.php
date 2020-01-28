@@ -2,7 +2,7 @@
 
 class Eligibility_exclusion_m extends MY_Model {
 
-	protected $_table_name = 'VX_aln_eligibility_excl_rules';
+	protected $_table_name = 'UP_eligibility_excl_rules';
 	protected $_primary_key = 'eexcl_id';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "eexcl_id desc";
@@ -29,7 +29,7 @@ class Eligibility_exclusion_m extends MY_Model {
 
 
 	function get_max_grp(){
-		$this->db->select('max(excl_grp) as cnt')->from('VX_aln_eligibility_excl_rules');
+		$this->db->select('max(excl_grp) as cnt')->from('UP_eligibility_excl_rules');
 		$query = $this->db->get();
                 $r = $query->row();
 
@@ -101,13 +101,13 @@ class Eligibility_exclusion_m extends MY_Model {
 
 		}
 
-		$query .= "  from (SELECT        ex.*, IFNULL(group_concat(distinct cc.airportID) , group_concat(distinct mapo.airport_id))  as orig_level, IFNULL(group_concat(distinct c.airportID) ,group_concat(distinct map.airport_id)) as dest_level FROM VX_aln_eligibility_excl_rules ex LEFT OUTER JOIN  vx_aln_master_data c ON (
+		$query .= "  from (SELECT        ex.*, IFNULL(group_concat(distinct cc.airportID) , group_concat(distinct mapo.airport_id))  as orig_level, IFNULL(group_concat(distinct c.airportID) ,group_concat(distinct map.airport_id)) as dest_level FROM UP_eligibility_excl_rules ex LEFT OUTER JOIN  VX_master_data c ON (
 (find_in_set(c.countryID, ex.dest_level_value) AND ex.dest_level_id  = 2) OR
 (find_in_set(c.cityID, ex.dest_level_value) AND ex.dest_level_id  = 3) OR
 (find_in_set(c.airportID, ex.dest_level_value) AND ex.dest_level_id  = 1) OR
 (find_in_set(c.regionID, ex.dest_level_value) AND ex.dest_level_id  = 4) OR
 (find_in_set(c.areaID, ex.dest_level_value) AND ex.dest_level_id  = 5) 
-  ) LEFT OUTER JOIN VX_market_airport_map map on (find_in_set(map.market_id, ex.dest_level_value) AND ex.dest_level_id  = 17) LEFT OUTER JOIN  vx_aln_master_data cc ON ((find_in_set(cc.countryID, ex.orig_level_value) AND ex.orig_level_id  = 2) OR
+  ) LEFT OUTER JOIN VX_market_airport_map map on (find_in_set(map.market_id, ex.dest_level_value) AND ex.dest_level_id  = 17) LEFT OUTER JOIN  VX_master_data cc ON ((find_in_set(cc.countryID, ex.orig_level_value) AND ex.orig_level_id  = 2) OR
 (find_in_set(cc.cityID, ex.orig_level_value) AND ex.orig_level_id  = 3) OR
 (find_in_set(cc.airportID, ex.orig_level_value) AND ex.orig_level_id  = 1) OR
 (find_in_set(cc.regionID, ex.orig_level_value) AND ex.orig_level_id  = 4) OR
@@ -132,11 +132,11 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, ex.or
 		excl_reason_desc, orig_level_id, dest_level_id, orig_level_value, 
 		dest_level_value ,flight_efec_date, flight_disc_date, flight_dep_start, 
 		flight_dep_end, flight_nbr_start, flight_nbr_end, ex.carrier, frequency 
-		  from VX_aln_eligibility_excl_rules ex 
-		INNER JOIN VX_aln_airline_cabin_def fdef on (fdef.carrier = ex.carrier)
-		INNER JOIN  vx_aln_data_defns df on (df.alias = fdef.level and df.aln_data_typeID = 13 AND df.vx_aln_data_defnsID = ex.upgrade_from_cabin_type )  
-		INNER JOIN VX_aln_airline_cabin_def tdef on (tdef.carrier = ex.carrier)
-		INNER JOIN  vx_aln_data_defns dt on (dt.alias = tdef.level and dt.aln_data_typeID = 13 AND dt.vx_aln_data_defnsID = ex.upgrade_to_cabin_type ) 
+		  from UP_eligibility_excl_rules ex 
+		INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = ex.carrier)
+		INNER JOIN VX_data_defns df on (df.alias = fdef.level and df.aln_data_typeID = 13 AND df.vx_aln_data_defnsID = ex.upgrade_from_cabin_type )  
+		INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = ex.carrier)
+		INNER JOIN VX_data_defns dt on (dt.alias = tdef.level and dt.aln_data_typeID = 13 AND dt.vx_aln_data_defnsID = ex.upgrade_to_cabin_type ) 
 		where excl_grp = " . $grp_id. "  group by excl_reason_desc, 
 		 orig_level_id, dest_level_id, orig_level_value, dest_level_value ,flight_efec_date, flight_disc_date, flight_dep_start, 
 		flight_dep_end, flight_nbr_start, flight_nbr_end, carrier, frequency";
@@ -223,7 +223,7 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, ex.or
 
 	function getexclIdForGrpANDCabins($grp,$fc,$tc) {
 
-		$this->db->select('eexcl_id')->from('VX_aln_eligibility_excl_rules');
+		$this->db->select('eexcl_id')->from('UP_eligibility_excl_rules');
 		$this->db->where('excl_grp',$grp);
 		$this->db->where('upgrade_from_cabin_type',$fc);
 		$this->db->where('upgrade_to_cabin_type',$tc);
@@ -240,7 +240,7 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, ex.or
 
 	function delete_data_bygrp($grp_id){
 		$this->db->where('excl_grp',$grp_id);
-                $this->db->delete('VX_aln_eligibility_excl_rules');
+                $this->db->delete('UP_eligibility_excl_rules');
                 return;
 	}
 
@@ -249,7 +249,7 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, ex.or
 	}
 	
 	function EErulesTotalCount(){
-		$this->db->select('count(*) count')->from('VX_aln_eligibility_excl_rules');	        	
+		$this->db->select('count(*) count')->from('UP_eligibility_excl_rules');	        	
 		if($this->session->userdata('usertypeID') != 1 ){		
 			$this->db->where_in('carrier',$this->session->userdata('login_user_airlineID'));
 		}

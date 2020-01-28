@@ -2,7 +2,7 @@
 
 class Menu_m extends MY_Model {
 
-	protected $_table_name = 'menu';
+	protected $_table_name = 'VX_menu';
 	protected $_primary_key = 'menuID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "priority desc";
@@ -36,12 +36,10 @@ class Menu_m extends MY_Model {
 	}
 	
 	public function getMenu($where){
-	   $this->db->select("*")->from("menu");
+	   $this->db->select("*")->from("VX_menu");
 	   $this->db->where($where);
 	   $query = $this->db->get();
 	   return $query->row();
 	}
 }
 
-/* End of file menu_m.php */
-/* Location: .//D/xampp/htdocs/school/mvc/models/menu_m.php */

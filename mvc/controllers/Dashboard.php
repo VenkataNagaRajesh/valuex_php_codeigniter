@@ -7,7 +7,7 @@ class Dashboard extends Admin_Controller {
 		$this->load->model('systemadmin_m');
 		$this->load->model("dashboard_m");		
 		$this->load->model("setting_m");
-		$this->load->model("notice_m");
+		//$this->load->model("notice_m");
 		$this->load->model("user_m");		
 		$this->load->model("marketzone_m");
 		$this->load->model("season_m");		

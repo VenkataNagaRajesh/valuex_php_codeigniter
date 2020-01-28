@@ -2,7 +2,7 @@
 
 class Acsr_m extends MY_Model {
 
-	protected $_table_name = 'VX_aln_auto_confirm_setup_rules';
+	protected $_table_name = 'UP_auto_confirm_setup_rules';
 	protected $_primary_key = 'acsr_id';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "acsr_id desc";
@@ -45,18 +45,18 @@ class Acsr_m extends MY_Model {
 		
 			$query = " select acsr_id, min_bid_price,memp,  orig_level, dest_level,frequency, flight_dep_date_start, flight_dep_date_end, carrier_code, flight_dep_time_start, flight_dep_time_end , flight_nbr_start, flight_nbr_end, dd. alias as status, upgrade_from_cabin_type, upgrade_to_cabin_type, SubSet.active ";
 
-		$query .= " from (SELECT        acsr.*, IFNULL(group_concat(distinct cc.airportID) , group_concat(distinct mapo.airport_id))  as orig_level, IFNULL(group_concat(distinct c.airportID) ,group_concat(distinct map.airport_id)) as dest_level FROM VX_aln_auto_confirm_setup_rules acsr LEFT OUTER JOIN  vx_aln_master_data c ON (
+		$query .= " from (SELECT        acsr.*, IFNULL(group_concat(distinct cc.airportID) , group_concat(distinct mapo.airport_id))  as orig_level, IFNULL(group_concat(distinct c.airportID) ,group_concat(distinct map.airport_id)) as dest_level FROM UP_auto_confirm_setup_rules acsr LEFT OUTER JOIN  VX_master_data c ON (
 (find_in_set(c.countryID, acsr.dest_level_value) AND acsr.dest_level_id  = 2) OR
 (find_in_set(c.cityID, acsr.dest_level_value) AND acsr.dest_level_id  = 3) OR
 (find_in_set(c.airportID, acsr.dest_level_value) AND acsr.dest_level_id  = 1) OR
 (find_in_set(c.regionID, acsr.dest_level_value) AND acsr.dest_level_id  = 4) OR
 (find_in_set(c.areaID, acsr.dest_level_value) AND acsr.dest_level_id  = 5)
-  ) LEFT OUTER JOIN VX_market_airport_map map on (find_in_set(map.market_id, acsr.dest_level_value) AND acsr.dest_level_id  = 17) LEFT OUTER JOIN  vx_aln_master_data cc ON ((find_in_set(cc.countryID, acsr.orig_level_value) AND acsr.orig_level_id  = 2) OR
+  ) LEFT OUTER JOIN VX_market_airport_map map on (find_in_set(map.market_id, acsr.dest_level_value) AND acsr.dest_level_id  = 17) LEFT OUTER JOIN  VX_master_data cc ON ((find_in_set(cc.countryID, acsr.orig_level_value) AND acsr.orig_level_id  = 2) OR
 (find_in_set(cc.cityID, acsr.orig_level_value) AND acsr.orig_level_id  = 3) OR
 (find_in_set(cc.airportID, acsr.orig_level_value) AND acsr.orig_level_id  = 1) OR
 (find_in_set(cc.regionID, acsr.orig_level_value) AND acsr.orig_level_id  = 4) OR
 (find_in_set(cc.areaID, acsr.orig_level_value) AND acsr.orig_level_id  = 5) )
-LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, acsr.orig_level_value) AND acsr.orig_level_id  = 17) group by acsr.acsr_id) as SubSet  LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = SubSet.action_type and dd.aln_data_typeID = 19) WHERE SubSet.active = 1  ";
+LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, acsr.orig_level_value) AND acsr.orig_level_id  = 17) group by acsr.acsr_id) as SubSet  LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = SubSet.action_type and dd.aln_data_typeID = 19) WHERE SubSet.active = 1  ";
 
 		if(count($array) > 0) {
 		 $date_format =  date('d-m', $array['dep_date']);
@@ -150,7 +150,7 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, acsr.
 	}
 	
 	function acsrTotalCount(){
-		$this->db->select('count(*) count')->from('VX_aln_auto_confirm_setup_rules');
+		$this->db->select('count(*) count')->from('UP_auto_confirm_setup_rules');
         if($this->session->userdata('usertypeID') != 1 ){		
 			$this->db->where_in('carrier_code',$this->session->userdata('login_user_airlineID'));
 		}		

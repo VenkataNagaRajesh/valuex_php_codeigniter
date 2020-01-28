@@ -14,7 +14,7 @@ class Setting_m extends MY_Model {
 
 	function get_setting($id) {
 		$compress = array();
-		$query = $this->db->get('setting');
+		$query = $this->db->get('VX_setting');
 		foreach ($query->result() as $row) {
 		    $compress[$row->fieldoption] = $row->value;
 		}
@@ -23,7 +23,7 @@ class Setting_m extends MY_Model {
 
 	function get_setting_array() {
 		$compress = array();
-		$query = $this->db->get('setting');
+		$query = $this->db->get('VX_setting');
 		foreach ($query->result() as $row) {
 		    $compress[$row->fieldoption] = $row->value;
 		}
@@ -32,13 +32,13 @@ class Setting_m extends MY_Model {
 
 	function get_setting_where($data) {
 		$this->db->where('fieldoption', $data);
-		$query = $this->db->get('setting');
+		$query = $this->db->get('VX_setting');
 		return $query->row();
 	}
 
 	function insertorupdate($arrays) {
 		foreach ($arrays as $key => $array) {
-			$this->db->query("INSERT INTO setting (fieldoption, value) VALUES ('".$key."', '".$array."') ON DUPLICATE KEY UPDATE fieldoption='".$key."' , value='".$array."'");
+			$this->db->query("INSERT INTO VX_setting (fieldoption, value) VALUES ('".$key."', '".$array."') ON DUPLICATE KEY UPDATE fieldoption='".$key."' , value='".$array."'");
 		
 		}
 		
@@ -46,17 +46,17 @@ class Setting_m extends MY_Model {
 	}
 
 	public function delete_setting($optionname){
-		$this->db->delete('setting', array('fieldoption' => $optionname));
+		$this->db->delete('VX_setting', array('fieldoption' => $optionname));
 		return TRUE;
 	}
 
 	public function insert_setting($array) {
-		$this->db->insert('setting', $array);
+		$this->db->insert('VX_setting', $array);
 		return TRUE; 
 	}
 
 	public function get_markpercentage() {
-		$query = $this->db->query("SELECT * FROM setting WHERE fieldoption LIKE 'mark%' AND value=1");
+		$query = $this->db->query("SELECT * FROM VX_setting WHERE fieldoption LIKE 'mark%' AND value=1");
 		return $query->result();
 	}
 

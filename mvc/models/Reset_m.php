@@ -2,7 +2,7 @@
 
 class reset_m extends CI_Model {
 
-	protected $_table_name = 'reset';
+	protected $_table_name = 'VX_reset';
 	protected $_primary_key = 'resetID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "resetID desc";
@@ -109,6 +109,3 @@ class reset_m extends CI_Model {
 
 	/* infinite code starts here */
 }
-
-/* End of file student_m.php */
-/* Location: .//D/xampp/htdocs/school/mvc/models/student_m.php */

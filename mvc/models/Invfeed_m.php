@@ -2,7 +2,7 @@
 
 class Invfeed_m extends MY_Model {
 
-	protected $_table_name = 'VX_aln_daily_inv_feed';
+	protected $_table_name = 'VX_daily_inv_feed';
 	protected $_primary_key = 'invfeed_id';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "invfeed_id desc";
@@ -23,7 +23,7 @@ class Invfeed_m extends MY_Model {
 
 	function checkInvFeed($array){
 		$this->db->select('invfeed_id');
-		$this->db->from('VX_aln_daily_inv_feed');
+		$this->db->from('VX_daily_inv_feed');
 		$this->db->where($array);
 		$this->db->where('active','1');
 		$this->db->limit(1);
@@ -41,7 +41,7 @@ class Invfeed_m extends MY_Model {
 
 	 function getCabinSeatData($array){
                 $this->db->select('cabin,empty_seats');
-                $this->db->from('VX_aln_daily_inv_feed');
+                $this->db->from('VX_daily_inv_feed');
                 $this->db->where($array);
                 $query = $this->db->get();
                 $result = $query->result();
@@ -57,7 +57,7 @@ class Invfeed_m extends MY_Model {
 	function getEmptyCabinSeats($array) {
 
 		$this->db->select('empty_seats, sold_seats');
-		$this->db->from('VX_aln_daily_inv_feed');
+		$this->db->from('VX_daily_inv_feed');
                 $this->db->where($array);
 		$this->db->where('active','1');
 		$this->db->limit(1);
@@ -67,12 +67,12 @@ class Invfeed_m extends MY_Model {
 	}
 		
 	function update_entries($update,$where) {
-		$this->db->update('VX_aln_daily_inv_feed', $update,$where);
+		$this->db->update('VX_daily_inv_feed', $update,$where);
 //		var_dump($this->db->last_query());exit;
 	}
 
 	function insert_invfeed($array) {// echo "check"; exit;
-		 $this->db->insert('VX_aln_daily_inv_feed',$array);
+		 $this->db->insert('VX_daily_inv_feed',$array);
                 if ($this->db->affected_rows() > 0){
                              return $this->db->insert_id();
                 } else {

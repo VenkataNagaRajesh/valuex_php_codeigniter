@@ -336,7 +336,7 @@ class Mailandsmstemplate extends Admin_Controller {
             }		
 
 		   
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.*,cat.name category,a.aln_data_value airline_name,a.code airline_code FROM mailandsmstemplate m LEFT JOIN mailandsmscategory cat ON cat.catID = m.catID LEFT JOIN vx_aln_data_defns a ON a.vx_aln_data_defnsID = m.airlineID
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.*,cat.name category,a.aln_data_value airline_name,a.code airline_code FROM VX_mailandsmstemplate m LEFT JOIN VX_mailandsmscategory cat ON cat.catID = m.catID LEFT JOIN VX_data_defns a ON a.vx_aln_data_defnsID = m.airlineID
 		$sWhere       	
 		$sOrder		
 		$sLimit	"; 

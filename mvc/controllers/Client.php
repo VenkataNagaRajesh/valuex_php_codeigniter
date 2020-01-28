@@ -539,7 +539,7 @@ class Client extends Admin_Controller {
 	        }
 			
 		    $sGroupby = " GROUP BY c.userID";
-		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM user c LEFT JOIN VX_user_airline ca ON ca.userID = c.userID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
+		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM VX_user c LEFT JOIN VX_user_airline ca ON ca.userID = c.userID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
 			$sWhere	
             $sGroupby
             $sHaving			

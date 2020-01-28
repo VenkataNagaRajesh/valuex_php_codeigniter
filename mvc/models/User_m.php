@@ -2,7 +2,7 @@
 
 class user_m extends MY_Model {
 
-	protected $_table_name = 'user';
+	protected $_table_name = 'VX_user';
 	protected $_primary_key = 'userID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "usertypeID";
@@ -23,7 +23,7 @@ class user_m extends MY_Model {
 
 	function get_username_byid($id){
 		$this->db->select('name');
-		$this->db->from('user');
+		$this->db->from('VX_user');
 		$this->db->where(array('userID' => $id));
 		$query = $this->db->get();
 		$result = $query->row();
@@ -32,8 +32,8 @@ class user_m extends MY_Model {
 	
 	function get_user_by_usertype($userID = null,$where = array()) {
 		$this->db->select('*');
-		$this->db->from('user u');
-		$this->db->join('usertype ut', 'ut.usertypeID = u.usertypeID', 'LEFT');
+		$this->db->from('VX_user u');
+		$this->db->join('VX_usertype ut', 'ut.usertypeID = u.usertypeID', 'LEFT');
 		if(!empty($where)){
 		    $this->db->where($where);
 		}
@@ -49,8 +49,8 @@ class user_m extends MY_Model {
 	
 	function getUsers(){
 		$this->db->select('*');
-		$this->db->from('user u');
-		$this->db->join('usertype ut', 'ut.usertypeID = u.usertypeID', 'LEFT');
+		$this->db->from('VX_user u');
+		$this->db->join('VX_usertype ut', 'ut.usertypeID = u.usertypeID', 'LEFT');
 		$this->db->where('u.usertypeID !=',2);
 		$this->db->where('u.usertypeID !=',5);
 		$query = $this->db->get();
@@ -60,9 +60,9 @@ class user_m extends MY_Model {
 	function get_user($userID) {
 		/* $query = parent::get($array, $signal);
 		return $query; */
-		$this->db->select('u.*,group_concat(ua.airlineID) airlineIDs,group_concat(dd.code) airlines')->from('user u');
+		$this->db->select('u.*,group_concat(ua.airlineID) airlineIDs,group_concat(dd.code) airlines')->from('VX_user u');
 		$this->db->join('VX_user_airline ua','ua.userID=u.userID','LEFT');
-        $this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = ua.airlineID','LEFT');		
+        $this->db->join('VX_data_defns dd','dd.vx_aln_data_defnsID = ua.airlineID','LEFT');		
 		$this->db->where('u.userID',$userID);	
 		$query = $this->db->get();
 		//print_r($this->db->last_query()); exit;
@@ -98,7 +98,7 @@ class user_m extends MY_Model {
 	}
 
     function userTotalCount(){
-		$this->db->select('count(*) count')->from('user');
+		$this->db->select('count(*) count')->from('VX_user');
 		$this->db->where('usertypeID !=',2);
 		$query = $this->db->get();		
 		return $query->row('count');
@@ -106,7 +106,7 @@ class user_m extends MY_Model {
 
     function getUserAirlines($userID){
 		$this->db->select('dd.*')->from('VX_user_airline ua');
-		$this->db->join('vx_aln_data_defns dd','dd.vx_aln_data_defnsID = ua.airlineID','LEFT');
+		$this->db->join('VX_data_defns dd','dd.vx_aln_data_defnsID = ua.airlineID','LEFT');
 		$this->db->where('ua.userID',$userID);
 		$query = $this->db->get();		
 		return $query->result();		
