@@ -15,7 +15,7 @@
 			<h1><?=$this->lang->line("client_information")?></h1>
 			<div class="row">				
 				 <div class="profile-view-tab"> 
-					 <p><span><?=$this->lang->line("client_id")?> </span>: <?=$client->VX_aln_clientID?></p>
+					 <p><span><?=$this->lang->line("client_id")?> </span>: <?=$client->userID?></p>
 					 <p><span><?=$this->lang->line("client_name")?> </span>: <?=$client->name?></p>
 					 <p><span><?=$this->lang->line("client_email")?> </span>: <?=$client->email?></p>
 					 <p><span><?=$this->lang->line("client_phone")?> </span>: <?=$client->phone?></p>

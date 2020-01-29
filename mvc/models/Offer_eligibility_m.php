@@ -2,7 +2,7 @@
 
 class Offer_eligibility_m extends MY_Model {
 
-	protected $_table_name = 'VX_aln_dtpf_ext';
+	protected $_table_name = 'UP_dtpf_ext';
 	protected $_primary_key = 'dtpfext_id';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "dtpfext_id desc";
@@ -34,13 +34,13 @@ class Offer_eligibility_m extends MY_Model {
 
 	function update_dtpfext($data, $list1) {
 		$this->db->where_in('dtpfext_id', $list1);
-                $this->db->update('VX_aln_dtpf_ext', $data);
+                $this->db->update('UP_dtpf_ext', $data);
         $this->mydebug->debug($this->db->last_query());
         }
 
 	function checkDTPFExtEntry($array){
                 $this->db->select('dtpfext_id');
-                $this->db->from('VX_aln_dtpf_ext');
+                $this->db->from('UP_dtpf_ext');
                 $this->db->where($array);
                 $this->db->limit(1);
                 $query = $this->db->get();
@@ -57,7 +57,7 @@ class Offer_eligibility_m extends MY_Model {
 
 
 	function checkForUniqueCouponCode($code) {
-		$this->db->select('offer_id')->from('VX_aln_offer_ref');
+		$this->db->select('offer_id')->from('UP_offer_ref');
 		$this->db->where('coupon_code',$this->hash($code));
 		$this->db->limit(1);
 		$query = $this->db->get();

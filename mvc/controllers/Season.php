@@ -10,6 +10,7 @@ class Season extends Admin_Controller {
 		$this->load->model("trigger_m");
 		$this->load->model("marketzone_m");
 		$this->load->model("user_m");
+		$this->load->model("season_airport_map_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('season', $language);	
 	}
@@ -196,7 +197,7 @@ class Season extends Admin_Controller {
              $this->data['filter_airline'] = 0;
 		  }
         } 
-        $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_season');
+        $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_season');
 		
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
@@ -215,9 +216,7 @@ class Season extends Admin_Controller {
            }			
       // print_r($this->data['seasonslist']); exit;
 		$this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
-			if($userTypeID == 2){
-			  $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-		   } else if($userTypeID != 1){
+			if($userTypeID != 1){
 			 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		   } else {
 			   $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -277,9 +276,7 @@ class Season extends Admin_Controller {
 	    $usertypeID = $this->session->userdata('usertypeID');
 		$userID = $this->session->userdata('loginuserID');
 	   $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
-	   if($usertypeID == 2){
-	      $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-	   } else if($userTypeID != 1){
+	    if($userTypeID != 1){
 		  $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 	   } else {
 		   $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -311,7 +308,7 @@ class Season extends Admin_Controller {
 				
 			      // insert entry in trigger table for mapping table generation
 		
-				$tarray['table_name'] = 'VX_aln_season';
+				$tarray['table_name'] = 'VX_season';
 				$tarray['create_date'] = time();
 				$tarray['modify_date'] = time();
 				$tarray['create_userID'] = $this->session->userdata('loginuserID');
@@ -390,7 +387,7 @@ class Season extends Admin_Controller {
 					$json['season_list'] = $seasonslist;
 			      // insert entry in trigger table for mapping table generation
 		         
-				$tarray['table_name'] = 'VX_aln_season';
+				$tarray['table_name'] = 'VX_season';
 				$tarray['create_date'] = time();
 				$tarray['modify_date'] = time();
 				$tarray['create_userID'] = $this->session->userdata('loginuserID');
@@ -427,9 +424,7 @@ class Season extends Admin_Controller {
 		if((int)$id) {
 			$this->data['season'] = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
 			if($this->data['season']) {
-			   if($usertypeID == 2){
-				  $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-			   } else if($userTypeID != 1){
+			   if($userTypeID != 1){
 				 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 			   } else {
 				   $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -461,7 +456,7 @@ class Season extends Admin_Controller {
 						
 						  // insert entry in trigger table for mapping table generation
 				
-						$tarray['table_name'] = 'VX_aln_season';
+						$tarray['table_name'] = 'VX_season';
 						$tarray['create_date'] = time();
 						$tarray['modify_date'] = time();
 						$tarray['create_userID'] = $this->session->userdata('loginuserID');
@@ -493,6 +488,8 @@ class Season extends Admin_Controller {
 			$this->data['season'] = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
 			if($this->data['season']) {
 				$this->season_m->delete_season($id);
+				$this->season_airport_map_m->delete_old_orig_entries($id);
+				$this->season_airport_map_m->delete_old_dest_entries($id);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("season/index"));
 			} else {
@@ -731,7 +728,7 @@ class Season extends Admin_Controller {
            $sWhere .= "s.ams_dest_level_value like '%".$this->input->get('destValues')."%'";		 
 	     }		 
 		
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level from VX_aln_season s LEFT JOIN vx_aln_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN vx_aln_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_dest_levelID LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = s.airlineID  
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level from VX_season s LEFT JOIN VX_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN VX_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_dest_levelID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = s.airlineID  
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

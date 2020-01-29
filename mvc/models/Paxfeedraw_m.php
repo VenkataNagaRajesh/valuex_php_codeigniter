@@ -2,7 +2,7 @@
 
 class Paxfeedraw_m extends MY_Model {
 
-	protected $_table_name = 'VX_aln_daily_tkt_pax_feed_raw';
+	protected $_table_name = 'VX_daily_tkt_pax_feed_raw';
 	protected $_primary_key = 'dtpfraw_id';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "dtpfraw_id desc";
@@ -23,7 +23,7 @@ class Paxfeedraw_m extends MY_Model {
 
 	function checkPaxFeedRaw($array){
 		$this->db->select('dtpfraw_id');
-		$this->db->from('VX_aln_daily_tkt_pax_feed_raw');
+		$this->db->from('VX_daily_tkt_pax_feed_raw');
 		$this->db->where($array);
 		$this->db->limit(1);
 		$query = $this->db->get();
@@ -40,7 +40,7 @@ class Paxfeedraw_m extends MY_Model {
 
 	function insert_paxfeedraw($array) {// echo "check"; exit;
 
-		$this->db->insert('VX_aln_daily_tkt_pax_feed_raw',$array);
+		$this->db->insert('VX_daily_tkt_pax_feed_raw',$array);
           if ($this->db->affected_rows() > 0){
              return $this->db->insert_id();
           } else {

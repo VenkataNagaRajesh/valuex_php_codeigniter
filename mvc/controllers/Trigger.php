@@ -229,7 +229,7 @@ class Trigger extends Admin_Controller {
 	}
 
     public function season_trigger(){
-		$timestamp = $this->trigger_m->get_trigger_time('VX_aln_season');
+		$timestamp = $this->trigger_m->get_trigger_time('VX_season');
 		if (isset($timestamp)) { 
 		      $data = $this->season_m->getSeasons_for_triggerrun($timestamp);
 			foreach($data as $season){ 		  
@@ -322,7 +322,7 @@ class Trigger extends Admin_Controller {
 			}
 			$tarray['modify_date'] = time();
 			$tarray['isReconfigured'] = '0';
-			$this->trigger_m->update_trigger($tarray,'VX_aln_season');
+			$this->trigger_m->update_trigger($tarray,'VX_season');
 		} 
 		$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 		redirect(base_url("season/index"));

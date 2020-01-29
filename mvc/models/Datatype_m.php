@@ -2,7 +2,7 @@
 
 class Datatype_m extends MY_Model {
 
-	protected $_table_name = 'vx_aln_data_types';
+	protected $_table_name = 'VX_data_types';
 	protected $_primary_key = 'vx_aln_data_typeID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "vx_aln_data_typeID ASC";

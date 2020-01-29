@@ -15,7 +15,7 @@ class signin_m extends MY_Model {
 			'message' => ''
 		);
 		//$tables = array('user' => 'user');
-          
+		
 		$settings = $this->setting_m->get_setting(1);
 		$lang = $settings->language;
 		$defaultschoolyearID = $settings->school_year;
@@ -25,7 +25,8 @@ class signin_m extends MY_Model {
 		$password = $this->hash($this->input->post('password'));
 		$userdata = '';
 		//foreach ($tables as $table) {
-			$table = 'user';
+			$table = 'VX_user';
+			
 			$user = $this->db->get_where($table, array("username" => $username, "password" => $password));
 			$alluserdata = $user->row();
 			if(count($alluserdata)) {
@@ -60,13 +61,9 @@ class signin_m extends MY_Model {
 							"lang" => $lang,
 							"defaultschoolyearID" => $defaultschoolyearID,
 							"loggedin" => TRUE
-						);
-						if($userdata->usertypeID == 2){		
-                            $this->load->model('client_m');						
-							$data['login_user_airlineID'] = explode(',',$this->client_m->getClientData(null,$userdata->userID)->airlineIDs);
-						}
+						);						
 						
-						if($userdata->usertypeID != 2 && $userdata->usertypeID != 1){
+						if( $userdata->usertypeID != 1){
 							$this->load->model('user_m');
 							$data['login_user_airlineID'] = explode(',',$this->user_m->get_user($userdata->userID)->airlineIDs);
 						}

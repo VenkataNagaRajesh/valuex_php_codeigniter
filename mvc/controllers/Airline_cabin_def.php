@@ -86,9 +86,7 @@ class Airline_cabin_def extends Admin_Controller {
 
 		  $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
-                        $this->data['airlinesdata'] = $this->airline_m->getClientAirline($userID);
-                           } else if($userTypeID != 1){
+                if($userTypeID != 1){
 						 $this->data['airlinesdata'] = $this->user_m->getUserAirlines($userID);	   
 						   }else {
                    $this->data['airlinesdata'] = $this->airline_m->getAirlinesData();
@@ -126,9 +124,7 @@ class Airline_cabin_def extends Admin_Controller {
 
                  $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
-                        $this->data['airlinesdata'] = $this->airline_m->getClientAirline($userID);
-                           } else if($userTypeID != 1){
+                 if($userTypeID != 1){
 						 $this->data['airlinesdata'] = $this->user_m->getUserAirlines($userID);	   
 						   }else {
                         $this->data['airlinesdata'] = $this->airline_m->getAirlinesData();
@@ -187,9 +183,7 @@ class Airline_cabin_def extends Admin_Controller {
 
 		 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
-                        $this->data['airlinesdata'] = $this->airline_m->getClientAirline($userID);
-                           } else if($userTypeID != 1){
+                 if($userTypeID != 1){
 						 $this->data['airlinesdata'] = $this->user_m->getUserAirlines($userID);	   
 						   }else {
                    $this->data['airlinesdata'] = $this->airline_m->getAirlinesData();
@@ -382,9 +376,9 @@ class Airline_cabin_def extends Admin_Controller {
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS map_id, cabin,level , cm.desc , ac.code as carrier_name, cm.carrier , 
           cm.active 
-        from VX_aln_airline_cabin_def cm 
-        LEFT JOIN vx_aln_data_defns ac on (ac.vx_aln_data_defnsID = cm.carrier) 
-	INNER JOIN vx_aln_data_defns dd on (dd.alias = cm.level and dd.aln_data_typeID = 13)
+        from VX_airline_cabin_def cm 
+        LEFT JOIN VX_data_defns ac on (ac.vx_aln_data_defnsID = cm.carrier) 
+	INNER JOIN VX_data_defns dd on (dd.alias = cm.level and dd.aln_data_typeID = 13)
  $sWhere $sOrder $sLimit";
                 $rResult = $this->install_m->run_query($sQuery);
                 $sQuery = "SELECT FOUND_ROWS() as total";
@@ -453,6 +447,3 @@ if(!empty($data_id_array)) {
 
 
 }
-
-/* End of file user.php */
-/* Location: .//D/xampp/htdocs/school/mvc/controllers/user.php */

@@ -10,13 +10,19 @@ class Admin_Controller extends MY_Controller {
         $this->load->model("install_m");
 		$this->load->model("signin_m");
 		$this->load->model("permission_m");
-		$this->load->model("message_m");
+		//$this->load->model("message_m");
 		$this->load->model("site_m");
 		$this->load->model('mailandsmstemplatetag_m');
         $this->load->model('mailandsmstemplate_m');	        
 		//$this->load->model("schoolyear_m");
 		$this->data["siteinfos"] = $this->site_m->get_site(1);
-
+		if($this->data['siteinfos']->show_performance_detail == 1 && $this->session->userdata('usertypeID') == 5){
+			$this->output->enable_profiler(TRUE);
+		}
+		$setting['show_performance'] = $this->data['siteinfos']->show_performance;
+		$setting['show_performance_detail'] = $this->data['siteinfos']->show_performance_detail;
+		$this->session->set_userdata($setting);
+   
 		$this->data['backendTheme'] = strtolower($this->data["siteinfos"]->backend_theme);
 		$this->data['backendThemePath'] = 'assets/inilabs/themes/'.strtolower($this->data["siteinfos"]->backend_theme);
 		$this->_backendTheme = $this->data['backendTheme'];
@@ -35,8 +41,8 @@ class Admin_Controller extends MY_Controller {
 
 		/* Alert System Start.........*/
 		//$this->data["menuclasss"] = $this->classes_m->get_order_by_classes();
-		$this->load->model("notice_m");
-		$this->load->model("alert_m");
+		//$this->load->model("notice_m");
+		//$this->load->model("alert_m");
 		$this->data['all'] = array();
 		$this->data['alert'] = array();
 		/* $notices = $this->notice_m->get_order_by_notice(array('schoolyearID' => $this->session->userdata('defaultschoolyearID')));

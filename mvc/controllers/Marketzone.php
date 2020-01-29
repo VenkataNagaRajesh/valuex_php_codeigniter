@@ -165,9 +165,7 @@ class Marketzone extends Admin_Controller {
 
                 $userID = $this->session->userdata('loginuserID');
 		$userTypeID = $this->session->userdata('usertypeID');
-		if($userTypeID == 2){
-                        $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                           } else if($userTypeID != 1){
+		if($userTypeID != 1){
 						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 						   } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -198,7 +196,7 @@ class Marketzone extends Admin_Controller {
 			 $this->data['treedata'] = $this->marketzone_m->getAirportsMarketData();
 		}
 		$this->data["subview"] = "marketzone/index";
-		$this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_market_zone');
+		$this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_market_zone');
 		$this->load->view('_layout_main', $this->data);
 
 	}
@@ -239,7 +237,7 @@ class Marketzone extends Admin_Controller {
 				
 			      // insert entry in trigger table for mapping table generation
 	
-				$tarray['table_name'] = 'VX_aln_market_zone';
+				$tarray['table_name'] = 'VX_market_zone';
 				$tarray['create_date'] = $date_now;
 				$tarray['modify_date'] = $date_now;
 				$tarray['create_userID'] = $this->session->userdata('loginuserID');
@@ -248,7 +246,7 @@ class Marketzone extends Admin_Controller {
 			
 			        $this->trigger_m->insert_trigger($tarray);
 
-				$json['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_aln_market_zone');
+				$json['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_market_zone');
 				$json['has_reconf_perm'] = permissionChecker('marketzone_reconfigure');
 				$json['status'] = "success";
 			  }
@@ -298,9 +296,7 @@ class Marketzone extends Admin_Controller {
 		  foreach($types as $type){
 			$this->data['aln_datatypes'][$type->vx_aln_data_typeID] = $type->alias;
 		  }
-          if($userTypeID == 2){
-             $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-          } else if($userTypeID != 1 && $userTypeID != 2){
+          if($userTypeID != 1 && $userTypeID != 2){
 			 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		  } else {
              $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -334,7 +330,7 @@ class Marketzone extends Admin_Controller {
                             $this->marketzone_m->update_marketzone($array, $id);
 
 
-			        $tarray['table_name'] = 'VX_aln_market_zone';
+			        $tarray['table_name'] = 'VX_market_zone';
                                 $tarray['create_date'] = $date_now;
 				$tarray['modify_date'] = $date_now;
                                 $tarray['create_userID'] = $this->session->userdata('loginuserID');
@@ -726,11 +722,11 @@ FROM
               select  mz.market_id, mz.market_name ,dtl.alias as lname,dti.alias as iname, dte.alias as ename , mz.active as active, 
 			mz.amz_level_id as level_id, mz.amz_incl_id as incl_id, mz.amz_excl_id as excl_id , dd.code as airline_name, 
 			dd.aln_data_value as airline_full_name,mz.airline_id as airlineID
-	      from VX_aln_market_zone mz 
-	      LEFT JOIN vx_aln_data_types dtl on (dtl.vx_aln_data_typeID = mz.amz_level_id) 
-	      LEFT JOIN vx_aln_data_types dti on (dti.vx_aln_data_typeID = mz.amz_incl_id)  
-              LEFT JOIN vx_aln_data_types dte on (dte.vx_aln_data_typeID = mz.amz_excl_id)
-	      LEFT JOIN vx_aln_data_defns dd ON dd.vx_aln_data_defnsID = mz.airline_id
+	      from VX_market_zone mz 
+	      LEFT JOIN VX_data_types dtl on (dtl.vx_aln_data_typeID = mz.amz_level_id) 
+	      LEFT JOIN VX_data_types dti on (dti.vx_aln_data_typeID = mz.amz_incl_id)  
+              LEFT JOIN VX_data_types dte on (dte.vx_aln_data_typeID = mz.amz_excl_id)
+	      LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = mz.airline_id
 ) as MainSet
 
 LEFT JOIN (
@@ -741,10 +737,10 @@ LEFT JOIN (
 
 				 SELECT        m.market_id  as market_id  ,  m.amz_level_name as level_id_list,
 						COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS level , COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) ) as level_d_name
-						FROM VX_aln_market_zone m 
-						LEFT OUTER JOIN  vx_aln_data_defns c ON 
+						FROM VX_market_zone m 
+						LEFT OUTER JOIN  VX_data_defns c ON 
 						(find_in_set(c.vx_aln_data_defnsID, m.amz_level_name) AND m.amz_level_id in (1,2,3,4,5)) 
-						LEFT OUTER JOIN  VX_aln_market_zone mm  
+						LEFT OUTER JOIN  VX_market_zone mm  
 						ON (find_in_set(mm.market_id, m.amz_level_name) AND m.amz_level_id = 17) group by m.market_id
  	   
 			) as FirstSet  
@@ -753,10 +749,10 @@ LEFT JOIN (
 			(          
 				 SELECT        m.market_id  as market_id  , m.amz_incl_name as incl_id_list,
                                                 COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS incl, COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name) ) as incl_d_name
-                                                FROM VX_aln_market_zone m 
-                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                FROM VX_market_zone m 
+                                                LEFT OUTER JOIN  VX_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, m.amz_incl_name) AND m.amz_incl_id in (1,2,3,4,5)) 
-                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                LEFT OUTER JOIN  VX_market_zone mm  
                                                 ON (find_in_set(mm.market_id, m.amz_incl_name) AND m.amz_incl_id = 17) group by m.market_id
 
 			) as SecondSet
@@ -766,10 +762,10 @@ LEFT JOIN (
 
 				  SELECT        m.market_id  as market_id  ,  m.amz_excl_name as excl_id_list,
                                                 COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS excl , COALESCE(group_concat(c.aln_data_value),group_concat(mm.market_name)) as excl_d_name 
-                                                FROM VX_aln_market_zone m 
-                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                FROM VX_market_zone m 
+                                                LEFT OUTER JOIN  VX_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, m.amz_excl_name) AND m.amz_excl_id in (1,2,3,4,5)) 
-                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                LEFT OUTER JOIN  VX_market_zone mm  
                                                 ON (find_in_set(mm.market_id, m.amz_excl_name) AND m.amz_excl_id = 17) group by m.market_id
 
 

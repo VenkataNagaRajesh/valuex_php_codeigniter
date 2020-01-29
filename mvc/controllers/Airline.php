@@ -592,9 +592,9 @@ class Airline extends Admin_Controller {
             } 		   
 		  
 		  $sGroup = " GROUP BY d.vx_aln_data_defnsID ";  
-         $ss = "select d.*,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID where d.aln_data_typeID = 12 group by d.vx_aln_data_defnsID"  ;
+         $ss = "select d.*,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from VX_data_defns d left join VX_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID where d.aln_data_typeID = 12 group by d.vx_aln_data_defnsID"  ;
 		   
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS d.*,group_concat( distinct ac.aln_data_value,'/',sc.aln_data_value) as aircraft_seat_capacity,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from vx_aln_data_defns d left join vx_aln_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID LEFT JOIN VX_airline_aircraft aa ON aa.airlineID = d.vx_aln_data_defnsID LEFT JOIN vx_aln_data_defns ac ON (ac.vx_aln_data_defnsID = aa.aircraftID AND ac.aln_data_typeID = 21) LEFT JOIN vx_aln_data_defns sc ON (sc.parentID = aa.aircraftID AND sc.aln_data_typeID = 22) 
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS d.*,group_concat( distinct ac.aln_data_value,'/',sc.aln_data_value) as aircraft_seat_capacity,GROUP_CONCAT(dd.aln_data_value SEPARATOR ', ') flights from VX_data_defns d left join VX_data_defns dd ON dd.parentID = d.vx_aln_data_defnsID LEFT JOIN VX_airline_aircraft aa ON aa.airlineID = d.vx_aln_data_defnsID LEFT JOIN VX_data_defns ac ON (ac.vx_aln_data_defnsID = aa.aircraftID AND ac.aln_data_typeID = 21) LEFT JOIN VX_data_defns sc ON (sc.parentID = aa.aircraftID AND sc.aln_data_typeID = 22) 
 		$sWhere
         $sGroup		
 		$sOrder		
@@ -725,9 +725,7 @@ class Airline extends Admin_Controller {
         $this->data['airlineID'] = htmlentities(escapeString($this->uri->segment(3)));
 		$userTypeID = $this->session->userdata('usertypeID');
 		$userID = $this->session->userdata('loginuserID');
-		if($userTypeID == 2){
-          $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-        } else if($userTypeID != 1){
+		if($userTypeID != 1){
 		  $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
            $this->data['airlines'] = $this->airline_m->getAirlinesData();

@@ -79,9 +79,7 @@ class Paxfeed extends Admin_Controller {
 
 		$userID = $this->session->userdata('loginuserID');
                 $userTypeID = $this->session->userdata('usertypeID');
-                if($userTypeID == 2){
-                        $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                           } else if($userTypeID != 1){
+                if($userTypeID != 1){
 						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 						   }  else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -757,16 +755,16 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 			df.code as from_city, pax_contact_email, phone, cou.code as booking_country, cit.code as booking_city, office_id, 
 			pax.airline_code , channel, dca.code as carrier_code, cdef.cabin as cabin, pax.arrival_time,
 			pax.dept_time, pax.arrival_date,pax.frequency,pax.tier,dfre.code as frequency,cdef.desc,
-			pax.active  FROM VX_aln_daily_tkt_pax_feed pax 
-			LEFT JOIN vx_aln_data_defns df on (df.vx_aln_data_defnsID = pax.from_city) 
-			LEFT JOIN vx_aln_data_defns dt on  (dt.vx_aln_data_defnsID = pax.to_city) 
-		        LEFT JOIN vx_aln_data_defns dfre on  (dfre.vx_aln_data_defnsID = pax.frequency)
-			LEFT JOIN vx_aln_data_defns cou  on (cou.vx_aln_data_defnsID = pax.booking_country) 
-                        LEFT JOIN vx_aln_data_defns cit on  (cit.vx_aln_data_defnsID = pax.booking_city) 
-			LEFT JOIN  vx_aln_data_defns dca on (dca.vx_aln_data_defnsID = pax.carrier_code)	
-			INNER JOIN VX_aln_airline_cabin_def cdef on (cdef.carrier = pax.carrier_code)
-			INNER JOIN  vx_aln_data_defns dcab on (dcab.vx_aln_data_defnsID = pax.cabin and dcab.aln_data_typeID = 13 and dcab.alias = cdef.level)
-			LEFT JOIN  vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = pax.ptc)
+			pax.active  FROM VX_daily_tkt_pax_feed pax 
+			LEFT JOIN VX_data_defns df on (df.vx_aln_data_defnsID = pax.from_city) 
+			LEFT JOIN VX_data_defns dt on  (dt.vx_aln_data_defnsID = pax.to_city) 
+		        LEFT JOIN VX_data_defns dfre on  (dfre.vx_aln_data_defnsID = pax.frequency)
+			LEFT JOIN VX_data_defns cou  on (cou.vx_aln_data_defnsID = pax.booking_country) 
+                        LEFT JOIN VX_data_defns cit on  (cit.vx_aln_data_defnsID = pax.booking_city) 
+			LEFT JOIN  VX_data_defns dca on (dca.vx_aln_data_defnsID = pax.carrier_code)	
+			INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = pax.carrier_code)
+			INNER JOIN  VX_data_defns dcab on (dcab.vx_aln_data_defnsID = pax.cabin and dcab.aln_data_typeID = 13 and dcab.alias = cdef.level)
+			LEFT JOIN  VX_data_defns ptc on (ptc.vx_aln_data_defnsID = pax.ptc)
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
@@ -884,7 +882,7 @@ if(!empty($data_id_array)) {
 
 public function process_fclr_matching_report() {
 
-                $sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed pf where fclr_data = 0 order by dtpf_id";
+                $sQuery = " SELECT * FROM VX_daily_tkt_pax_feed pf where fclr_data = 0 order by dtpf_id";
                 $rResult = $this->install_m->run_query($sQuery);
 
 		foreach ($rResult as $feed ) {

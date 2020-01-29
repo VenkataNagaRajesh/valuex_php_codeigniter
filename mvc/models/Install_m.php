@@ -10,20 +10,20 @@ class Install_m extends CI_Model{
 	}
 
 	public function insert_setting($data) {
-		$this->db->insert('setting', $data);
+		$this->db->insert('VX_setting', $data);
 		return TRUE;
 	}
 
 	public function select_setting() {
 		$this->db->select('*');
-		$query = $this->db->get('setting');
+		$query = $this->db->get('VX_setting');
 		return $query->result();
 	}
 
 
 	function insertorupdate($arrays) {
 		foreach ($arrays as $key => $array) {
-			$this->db->query("INSERT INTO setting (fieldoption, value) VALUES ('".$key."', '".$array."') ON DUPLICATE KEY UPDATE fieldoption='".$key."' , value='".$array."'");
+			$this->db->query("INSERT INTO VX_setting (fieldoption, value) VALUES ('".$key."', '".$array."') ON DUPLICATE KEY UPDATE fieldoption='".$key."' , value='".$array."'");
 		}
 		return TRUE;
 	}

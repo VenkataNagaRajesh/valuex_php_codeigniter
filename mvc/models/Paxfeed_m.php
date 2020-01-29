@@ -2,7 +2,7 @@
 
 class Paxfeed_m extends MY_Model {
 
-	protected $_table_name = 'VX_aln_daily_tkt_pax_feed';
+	protected $_table_name = 'VX_daily_tkt_pax_feed';
 	protected $_primary_key = 'dtpf_id';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "dtpf_id desc";
@@ -25,7 +25,7 @@ class Paxfeed_m extends MY_Model {
 
 	function checkPaxFeed($array){
 		$this->db->select('dtpf_id');
-		$this->db->from('VX_aln_daily_tkt_pax_feed');
+		$this->db->from('VX_daily_tkt_pax_feed');
 		$this->db->where($array);
 		$this->db->limit(1);
 		$query = $this->db->get();
@@ -42,7 +42,7 @@ class Paxfeed_m extends MY_Model {
 
 	function insert_paxfeed($array) {// echo "check"; exit;
 
-		$this->db->insert('VX_aln_daily_tkt_pax_feed',$array);
+		$this->db->insert('VX_daily_tkt_pax_feed',$array);
                 if ($this->db->affected_rows() > 0){
                              return $this->db->insert_id();
                 } else {
@@ -54,7 +54,7 @@ class Paxfeed_m extends MY_Model {
 
 	function process_tiermarkup($pnr_list){
 		foreach($pnr_list as $pnr){
-			$this->db->select('max(tier_markup) as tier_markup,max(rbd_markup) as rbd_markup,flight_number,carrier_code,from_city,to_city')->from('VX_aln_daily_tkt_pax_feed');
+			$this->db->select('max(tier_markup) as tier_markup,max(rbd_markup) as rbd_markup,flight_number,carrier_code,from_city,to_city')->from('VX_daily_tkt_pax_feed');
 			$this->db->where('pnr_ref',$pnr);
 			$this->db->group_by(array('flight_number','carrier_code','from_city','to_city'));
 			$query = $this->db->get();
@@ -71,7 +71,7 @@ class Paxfeed_m extends MY_Model {
 				$where['from_city'] = $v->from_city;
 				$where['to_city'] = $v->to_city;
 				$this->db->where($where);
-				$this->db->update('VX_aln_daily_tkt_pax_feed',$arr);
+				$this->db->update('VX_daily_tkt_pax_feed',$arr);
 				}
 			}
 		}

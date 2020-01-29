@@ -2,7 +2,7 @@
 
 class Loginlog_m extends MY_Model {
 
-	protected $_table_name = 'loginlog';
+	protected $_table_name = 'VX_loginlog';
 	protected $_primary_key = 'loginlogID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "loginlogID asc";
@@ -41,5 +41,3 @@ class Loginlog_m extends MY_Model {
 	}
 }
 
-/* End of file holiday_m.php */
-/* Location: .//D/xampp/htdocs/school/mvc/models/holiday_m.php */

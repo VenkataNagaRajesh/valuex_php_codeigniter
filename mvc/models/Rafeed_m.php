@@ -2,7 +2,7 @@
 
 class Rafeed_m extends MY_Model {
 
-	protected $_table_name = 'VX_aln_ra_feed';
+	protected $_table_name = 'UP_ra_feed';
 	protected $_primary_key = 'rafeed_id';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "rafeed_id desc";
@@ -23,7 +23,7 @@ class Rafeed_m extends MY_Model {
 
 	function checkRaFeed($array){
 		$this->db->select('rafeed_id');
-		$this->db->from('VX_aln_ra_feed');
+		$this->db->from('UP_ra_feed');
 		$this->db->where($array);
 		$this->db->limit(1);
 		$query = $this->db->get();
@@ -40,7 +40,7 @@ class Rafeed_m extends MY_Model {
         function getDefIdByTypeAndCode($code,$type) {
 
                 $this->db->select('vx_aln_data_defnsID');
-                $this->db->from('vx_aln_data_defns');
+                $this->db->from('VX_data_defns');
                 $this->db->where('aln_data_typeID',$type);
                 $this->db->where('code',$code);
                 $this->db->limit(1);
@@ -53,7 +53,7 @@ class Rafeed_m extends MY_Model {
 	function getDefIdByTypeAndAlias($alias,$type) {
 
                 $this->db->select('vx_aln_data_defnsID');
-                $this->db->from('vx_aln_data_defns');
+                $this->db->from('VX_data_defns');
                 $this->db->where('aln_data_typeID',$type);
                 $this->db->where('alias',$alias);
                 $this->db->limit(1);
@@ -66,7 +66,7 @@ class Rafeed_m extends MY_Model {
 	function getDefIdByTypeAndName($name ,$type) {
 
 		$this->db->select('vx_aln_data_defnsID');
-                $this->db->from('vx_aln_data_defns');
+                $this->db->from('VX_data_defns');
                 $this->db->where('aln_data_typeID',$type);
                 $this->db->where('aln_data_value',$name);
                 $this->db->limit(1);
@@ -78,7 +78,7 @@ class Rafeed_m extends MY_Model {
 	}
 	function getCodesByType($type) {
 		$this->db->select('vx_aln_data_defnsID, code');
-                $this->db->from('vx_aln_data_defns');
+                $this->db->from('VX_data_defns');
                 $this->db->where('aln_data_typeID',$type);
 		$this->db->where('code !=',NULL);
 		$query = $this->db->get();
@@ -93,7 +93,7 @@ class Rafeed_m extends MY_Model {
 
 	function getNamesByType($type) {
                 $this->db->select('vx_aln_data_defnsID, aln_data_value');
-                $this->db->from('vx_aln_data_defns');
+                $this->db->from('VX_data_defns');
                 $this->db->where('aln_data_typeID',$type);
                 $this->db->where('aln_data_value !=',NULL);
                 $query = $this->db->get();
@@ -108,7 +108,7 @@ class Rafeed_m extends MY_Model {
 
 	function insert_rafeed($array) {// echo "check"; exit;
 
-		  $this->db->insert('VX_aln_ra_feed',$array);
+		  $this->db->insert('UP_ra_feed',$array);
                 if ($this->db->affected_rows() > 0){
                              return $this->db->insert_id();
                 } else {
@@ -126,7 +126,7 @@ class Rafeed_m extends MY_Model {
 	public function delete_rafeed($id){
 		parent::delete($id);
 		$this->db->where('sub_season_record',$id);
-                $this->db->delete('VX_aln_ra_feed');
+                $this->db->delete('UP_ra_feed');
               return TRUE;
 	
 	}

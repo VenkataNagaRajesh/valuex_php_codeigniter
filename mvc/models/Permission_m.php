@@ -3,7 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Permission_m extends MY_Model {
 
-	protected $_table_name = 'permissions';
+	protected $_table_name = 'VX_permissions';
 	protected $_primary_key = 'permissionID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "permissionID asc";
@@ -14,7 +14,7 @@ class Permission_m extends MY_Model {
 
 	public function get_all_usertype()
 	{
-		$this->db->select('*')->from('usertype')->order_by('usertypeID');
+		$this->db->select('*')->from('VX_usertype')->order_by('usertypeID');
 		$query = $this->db->get();
 		return $query->result();	
 	}
@@ -25,9 +25,9 @@ class Permission_m extends MY_Model {
 	}
 
 	public function get_modules_with_permission($id=null) {
-		$query = "Select p1.permissionID,p1.name,p1.description, (case when p2.usertype_id = $id then 'yes' else 'no' end) as active From permissions p1 left join permission_relationships p2 ON p1.permissionID = p2.permission_id and p2.usertype_id =$id";
+		$query = "Select p1.permissionID,p1.name,p1.description, (case when p2.usertype_id = $id then 'yes' else 'no' end) as active From VX_permissions p1 left join VX_permission_relationships p2 ON p1.permissionID = p2.permission_id and p2.usertype_id =$id";
 		if($this->session->userdata('usertypeID') != 5){
-			$query .= ' WHERE p1.name NOT IN("logdata","bulkimport","backup","update") ';
+			$query .= ' WHERE p1.name NOT IN("bulkimport","backup","update") ';
 		}
 		
 		return $this->db->query($query)->result();
@@ -50,12 +50,12 @@ class Permission_m extends MY_Model {
 	public function delete_all_permission($id)
 	{
 		$this->db->where(array('usertype_id' => $id));
-	  	$this->db->delete('permission_relationships'); 
+	  	$this->db->delete('VX_permission_relationships'); 
 	  	return true;
 	}
 	public function insert_relation($array)
 	{
-		$this->db->insert("permission_relationships", $array);
+		$this->db->insert("VX_permission_relationships", $array);
 		$id = $this->db->insert_id();
 		return $id;
 	}
@@ -66,6 +66,3 @@ class Permission_m extends MY_Model {
 
 
 }
-
-/* End of file permission_m.php */
-/* Location: .//Applications/MAMP/htdocs/asheef-tsm/mvc/models/permission_m.php */

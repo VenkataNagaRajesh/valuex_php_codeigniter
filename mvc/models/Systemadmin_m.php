@@ -2,7 +2,7 @@
 
 class systemadmin_m extends MY_Model {
 
-	protected $_table_name = 'systemadmin';
+	protected $_table_name = 'VX_systemadmin';
 	protected $_primary_key = 'systemadminID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "systemadminID";

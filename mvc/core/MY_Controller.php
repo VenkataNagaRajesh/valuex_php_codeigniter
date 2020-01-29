@@ -37,10 +37,13 @@ class MY_Controller extends CI_Controller {
 		$this->load->library('parser');
 		 $this->load->library('email');
 		 $this->load->library('session');
-		 $this->load->model('reset_m');
+		 $this->load->model('reset_m');		
+		 if($this->session->userdata('usertypeID') == 5 && $this->session->userdata('show_performance_detail') == 1){
+			$this->output->enable_profiler(TRUE);
+		 }
 	}
 	
-	public function allowValidation($pnr_ref){
+	public function allowValidation($pnr_ref){	
 		$status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 		//$bid_confirmation = $this->preference_m->get_preference(array("pref_code" => 'BID_CONFIRMATION'))->pref_value;
 		//$bid_expire = $this->preference_m->get_preference(array("pref_code" => 'BID_EXPIRE'))->pref_value;

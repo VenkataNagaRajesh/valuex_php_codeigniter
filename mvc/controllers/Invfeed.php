@@ -66,9 +66,7 @@ class Invfeed extends Admin_Controller {
 
                $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
-                        $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-                           } else if($userTypeID != 1){
+               if($userTypeID != 1){
 						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 						   } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -398,12 +396,12 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','cdef
 		        departure_date, sold_seats, empty_seats,
 			ds.code as dest_airport, cdef.cabin as cabin, 
 			da.code as airline_code ,
-			inv.active   FROM VX_aln_daily_inv_feed inv  
-			LEFT JOIN vx_aln_data_defns do on (do.vx_aln_data_defnsID = inv.origin_airport) 
-			LEFT JOIN vx_aln_data_defns ds on  (ds.vx_aln_data_defnsID = inv.dest_airport) 
-			LEFT JOIN  vx_aln_data_defns da on (da.vx_aln_data_defnsID = inv.airline_id)
-			INNER JOIN VX_aln_airline_cabin_def cdef on (cdef.carrier = inv.airline_id)
-			INNER JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = inv.cabin and dc.aln_data_typeID = 13 and cdef.level = dc.alias)  
+			inv.active   FROM VX_daily_inv_feed inv  
+			LEFT JOIN VX_data_defns do on (do.vx_aln_data_defnsID = inv.origin_airport) 
+			LEFT JOIN VX_data_defns ds on  (ds.vx_aln_data_defnsID = inv.dest_airport) 
+			LEFT JOIN  VX_data_defns da on (da.vx_aln_data_defnsID = inv.airline_id)
+			INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = inv.airline_id)
+			INNER JOIN vx_data_defns dc on (dc.vx_aln_data_defnsID = inv.cabin and dc.aln_data_typeID = 13 and cdef.level = dc.alias)  
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

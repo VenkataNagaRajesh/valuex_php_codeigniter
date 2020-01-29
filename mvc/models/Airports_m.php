@@ -3,7 +3,7 @@
 class Airports_m extends MY_Model {
 
   public function checkData($data,$type,$parent = null,$code=null){
-	$this->db->select('*')->from('vx_aln_data_defns');
+	$this->db->select('*')->from('VX_data_defns');
      if(!empty($code)){	
 	   $this->db->where(array('code'=>$code,'aln_data_typeID'=> $type));
 	 } else {
@@ -27,7 +27,7 @@ class Airports_m extends MY_Model {
 		'modify_userID' => $this->session->userdata('loginuserID'),
 		'parentID' => $parent
 		);
-      $this->db->insert('vx_aln_data_defns',$array);
+      $this->db->insert('VX_data_defns',$array);
 	 // $this->mydebug->debug($data);
 	 $this->mydebug->debug($this->db->last_query());
 	  if ($this->db->affected_rows() > 0){
@@ -39,7 +39,7 @@ class Airports_m extends MY_Model {
   }
   
   public function checkAirport($data){ 
-	  $this->db->select('count(*)')->from('vx_aln_data_defns');
+	  $this->db->select('count(*)')->from('VX_data_defns');
 	  $this->db->where(array('aln_data_value'=>$data,'aln_data_typeID'=> 1));
 	  $query = $this->db->get();
       // print_r($this->db->last_query()); exit;  	  
@@ -51,7 +51,7 @@ class Airports_m extends MY_Model {
   }
   
   public function checkAirportCode($code){ 
-	  $this->db->select('count(*) count')->from('vx_aln_data_defns');
+	  $this->db->select('count(*) count')->from('VX_data_defns');
 	  $this->db->where(array('code'=>$code,'aln_data_typeID'=> 1));
 	  $query = $this->db->get();     
      return $query->row('count');	  
@@ -69,7 +69,7 @@ class Airports_m extends MY_Model {
 		'parentID' => $parent
 		);
 		
-      $this->db->insert('vx_aln_data_defns',$array);
+      $this->db->insert('VX_data_defns',$array);
 	  if ($this->db->affected_rows() > 0){
 	     return $this->db->insert_id();
 	  } else {
@@ -78,7 +78,7 @@ class Airports_m extends MY_Model {
   }
   
   public function addMasterData($data){	 
-	  $this->db->insert('vx_aln_master_data',$data);	 
+	  $this->db->insert('VX_master_data',$data);	 
 	  if ($this->db->affected_rows() > 0){
 	     return $this->db->insert_id();
 	  } else {
@@ -87,7 +87,7 @@ class Airports_m extends MY_Model {
   }
   
   public function getDefns($type = null,$parent = null){
-	  $this->db->select('vx_aln_data_defnsID,aln_data_typeID,aln_data_value,code')->from('vx_aln_data_defns'); 	 
+	  $this->db->select('vx_aln_data_defnsID,aln_data_typeID,aln_data_value,code')->from('VX_data_defns'); 	 
 	  if($type != null){
 		$this->db->where('aln_data_typeID',$type);
 	  } else {
@@ -103,7 +103,7 @@ class Airports_m extends MY_Model {
 
  public function getDefnsListByType($type) {
 
-	$this->db->select('vx_aln_data_defnsID,aln_data_value')->from('vx_aln_data_defns');
+	$this->db->select('vx_aln_data_defnsID,aln_data_value')->from('VX_data_defns');
 	$this->db->where('aln_data_typeID',$type);
 	$query = $this->db->get();
 	$result = $query->result();
@@ -120,13 +120,13 @@ class Airports_m extends MY_Model {
 
 public function getDefnsCodesListByType($type) {
 
-        $this->db->select('vx_aln_data_defnsID,code')->from('vx_aln_data_defns');
+        $this->db->select('vx_aln_data_defnsID,code')->from('VX_data_defns');
         $this->db->where('aln_data_typeID',$type);
         $query = $this->db->get();
         $result = $query->result();
         $arr = array();
         foreach($result as $def ) {
-                $arr[$def->vx_aln_data_defnsID] = $def->code;
+                $arr[$def->VX_data_defnsID] = $def->code;
         }
 
 
@@ -137,7 +137,7 @@ public function getDefnsCodesListByType($type) {
 
   
   public function getDefinitionList($wherein){
-	  $this->db->select('aln_data_value,code,vx_aln_data_defnsID')->from('vx_aln_data_defns');
+	  $this->db->select('aln_data_value,code,vx_aln_data_defnsID')->from('VX_data_defns');
 	  $this->db->where_in('vx_aln_data_defnsID',$wherein);
 	  $query = $this->db->get();
 	  return $query->result();
@@ -145,42 +145,42 @@ public function getDefnsCodesListByType($type) {
   
   
   public function get_airportmaster($id){
-	  $query = $this->db->get_where('vx_aln_master_data',array('vx_amdID'=>$id))->row();
+	  $query = $this->db->get_where('VX_master_data',array('vx_amdID'=>$id))->row();
 	  return $query;
   }
   
   public function delete_airport($vx_amdID,$airportID){
 	  $this->db->where('vx_amdID', $vx_amdID);
-      $this->db->delete('vx_aln_master_data');
+      $this->db->delete('VX_master_data');
 	  
 	  $this->db->where('vx_aln_data_defnsID', $airportID);
-      $this->db->delete('vx_aln_data_defns');
+      $this->db->delete('VX_data_defns');
 	  
 	  return TRUE;
   }
    
   public function getAirportData($id){
-	  $this->db->select('m.*,ma.aln_data_value airport,mc.aln_data_value country,mr.aln_data_value region,mar.aln_data_value area,ma.code,u.name modify_by,m.modify_date')->from('vx_aln_master_data m');
-	  $this->db->join('vx_aln_data_defns ma','ma.vx_aln_data_defnsID = m.airportID','LEFT');
-	  $this->db->join('vx_aln_data_defns ms','ms.vx_aln_data_defnsID = m.cityID ','LEFT');
-	  $this->db->join('vx_aln_data_defns mc','mc.vx_aln_data_defnsID = m.countryID','LEFT');
-	  $this->db->join('vx_aln_data_defns mr','mr.vx_aln_data_defnsID = m.regionID','LEFT');
-	  $this->db->join('vx_aln_data_defns mar','mar.vx_aln_data_defnsID = m.areaID','LEFT');
-	  $this->db->join('user u','u.userID = m.modify_userID','LEFT');
+	  $this->db->select('m.*,ma.aln_data_value airport,mc.aln_data_value country,mr.aln_data_value region,mar.aln_data_value area,ma.code,u.name modify_by,m.modify_date')->from('VX_master_data m');
+	  $this->db->join('VX_data_defns ma','ma.vx_aln_data_defnsID = m.airportID','LEFT');
+	  $this->db->join('VX_data_defns ms','ms.vx_aln_data_defnsID = m.cityID ','LEFT');
+	  $this->db->join('VX_data_defns mc','mc.vx_aln_data_defnsID = m.countryID','LEFT');
+	  $this->db->join('VX_data_defns mr','mr.vx_aln_data_defnsID = m.regionID','LEFT');
+	  $this->db->join('VX_data_defns mar','mar.vx_aln_data_defnsID = m.areaID','LEFT');
+	  $this->db->join('VX_user u','u.userID = m.modify_userID','LEFT');
 	  $this->db->where('m.vx_amdID',$id);
 	  $query = $this->db->get();
 	  return $query->row();
   }
   
   public function TotalAirports(){
-	  $this->db->select('count(*) count')->from('vx_aln_master_data');
+	  $this->db->select('count(*) count')->from('VX_master_data');
 	  $query = $this->db->get();
 	  return $query->row('count');
   }
   
   public function update_master_data($data,$id){
 	    $this->db->where('vx_amdID',$id);
-	   $this->db->update('vx_aln_master_data',$data);	       	   
+	   $this->db->update('VX_master_data',$data);	       	   
 	  if ($this->db->affected_rows() > 0){
 	     return TRUE;
 	  } else {
@@ -189,7 +189,7 @@ public function getDefnsCodesListByType($type) {
   }
   
   public function add_definition_data($data){
-	  $this->db->insert('vx_aln_data_defns',$data);
+	  $this->db->insert('VX_data_defns',$data);
 	  if ($this->db->affected_rows() > 0){
 	     return $this->db->insert_id();
 	  } else {
@@ -198,10 +198,10 @@ public function getDefnsCodesListByType($type) {
   }
   
   public function get_definition_data($id){
-	  $this->db->select('dd.*,dd1.aln_data_value parent,u.name modify_by,t.name type,t.alias type_alias')->from('vx_aln_data_defns dd');
-	  $this->db->join('vx_aln_data_defns dd1','dd1.vx_aln_data_defnsID = dd.parentID','LEFT');
-	  $this->db->join('vx_aln_data_types t','t.vx_aln_data_typeID = dd.aln_data_typeID','LEFT');
-	  $this->db->join('user u','u.userID = dd.modify_userID','LEFT');
+	  $this->db->select('dd.*,dd1.aln_data_value parent,u.name modify_by,t.name type,t.alias type_alias')->from('VX_data_defns dd');
+	  $this->db->join('VX_data_defns dd1','dd1.vx_aln_data_defnsID = dd.parentID','LEFT');
+	  $this->db->join('VX_data_types t','t.vx_aln_data_typeID = dd.aln_data_typeID','LEFT');
+	  $this->db->join('VX_user u','u.userID = dd.modify_userID','LEFT');
 	  $this->db->where('dd.vx_aln_data_defnsID',$id);
 	  $query = $this->db->get();
 	  return $query->row();
@@ -209,7 +209,7 @@ public function getDefnsCodesListByType($type) {
   
   public function update_definition_data($data,$id){
 	    $this->db->where('vx_aln_data_defnsID',$id);
-	   $this->db->update('vx_aln_data_defns',$data);	       	   
+	   $this->db->update('VX_data_defns',$data);	       	   
 	  if ($this->db->affected_rows() > 0){
 	     return TRUE;
 	  } else {
@@ -218,7 +218,7 @@ public function getDefnsCodesListByType($type) {
   }
   
   public function validateDefdata($where){
-	  $this->db->select('count(*)')->from('vx_aln_data_defns');
+	  $this->db->select('count(*)')->from('VX_data_defns');
 	  $this->db->where($where);
 	  $query = $this->db->get();
 	 // $this->mydebug->debug($this->db->last_query());
@@ -227,7 +227,7 @@ public function getDefnsCodesListByType($type) {
   
   public function delete_definition_data($id){
 	  $this->db->where('vx_aln_data_defnsID', $id);
-      $this->db->delete('vx_aln_data_defns');
+      $this->db->delete('VX_data_defns');
 	  if ($this->db->affected_rows() > 0){
 	     return TRUE;
 	  } else {
@@ -236,7 +236,7 @@ public function getDefnsCodesListByType($type) {
   }
   
   public function getDefdataTypes($excludetype=array(),$includetype=array()){
-	 $this->db->select('*')->from('vx_aln_data_types');
+	 $this->db->select('*')->from('VX_data_types');
 	  if(!empty($excludetype)){
 		  $this->db->where_not_in('vx_aln_data_typeID',$excludetype);
 	  }
@@ -249,8 +249,8 @@ public function getDefnsCodesListByType($type) {
       
         function getDefIdByTypeAndValue($value,$type) {
 
-                $this->db->select('vx_aln_data_defnsID');
-                $this->db->from('vx_aln_data_defns');
+                $this->db->select('VX_data_defnsID');
+                $this->db->from('VX_data_defns');
                 $this->db->where('aln_data_typeID',$type);
                 $this->db->where('aln_data_value',$value);
                 $this->db->limit(1);
@@ -264,7 +264,7 @@ public function getDefnsCodesListByType($type) {
   function getDefIdByTypeAndCode($code,$type) {
 
                 $this->db->select('vx_aln_data_defnsID');
-                $this->db->from('vx_aln_data_defns');
+                $this->db->from('VX_data_defns');
                 $this->db->where('aln_data_typeID',$type);
                 $this->db->where('code',$code);
                 $this->db->limit(1);
@@ -278,7 +278,7 @@ public function getDefnsCodesListByType($type) {
 function getDefDataCodeByIDANDType($defId,$type) {
 
 	 	$this->db->select('code');
-                $this->db->from('vx_aln_data_defns');
+                $this->db->from('VX_data_defns');
                 $this->db->where('aln_data_typeID',$type);
                 $this->db->where('vx_aln_data_defnsID',$defId);
                 $this->db->limit(1);
@@ -291,8 +291,8 @@ function getDefDataCodeByIDANDType($defId,$type) {
 function getDefDataForAirlineCabin($defId,$type,$carrier) {
 
                 $this->db->select('cdef.level,cdef.cabin');
-                $this->db->from('VX_aln_airline_cabin_def cdef');
-                $this->db->join('vx_aln_data_defns aca', 'aca.vx_aln_data_defnsID = '.$defId.' and aca.alias = cdef.level and aca.aln_data_typeID = '.$type,'INNER');
+                $this->db->from('VX_airline_cabin_def cdef');
+                $this->db->join('VX_data_defns aca', 'aca.VX_data_defnsID = '.$defId.' and aca.alias = cdef.level and aca.aln_data_typeID = '.$type,'INNER');
 		$this->db->where('cdef.carrier', $carrier);
                 $this->db->limit(1);
                 $query = $this->db->get();

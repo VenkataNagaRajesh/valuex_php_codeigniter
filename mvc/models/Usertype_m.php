@@ -2,7 +2,7 @@
 
 class usertype_m extends MY_Model {
 
-	protected $_table_name = 'usertype';
+	protected $_table_name = 'VX_usertype';
 	protected $_primary_key = 'usertypeID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "usertypeID desc";
@@ -12,12 +12,12 @@ class usertype_m extends MY_Model {
 	}
 
 	function get_usertype($array=NULL, $signal=FALSE) {
-		//$query = parent::get($array, $signal);
-		//return $query;
-		$this->db->select('*')->from('usertype');
+		$query = parent::get($array, $signal);
+		return $query;
+   /*	$this->db->select('*')->from('usertype');
 		$this->db->where('usertypeID !=',5);
 		$query = $this->db->get();
-		return $query->result();
+		return $query->result(); */
 	}
 
 	function get_order_by_usertype($array=NULL) {

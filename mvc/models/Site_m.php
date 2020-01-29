@@ -2,7 +2,7 @@
 
 class Site_m extends MY_Model {
 
-	protected $_table_name = 'setting';
+	protected $_table_name = 'VX_setting';
 	protected $_primary_key = 'option';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "option asc";
@@ -13,13 +13,10 @@ class Site_m extends MY_Model {
 
 	function get_site($id) {
 		$compress = array();
-		$query = $this->db->get('setting');
+		$query = $this->db->get('VX_setting');
 		foreach ($query->result() as $row) {
 		    $compress[$row->fieldoption] = $row->value;
 		}
 		return (object) $compress;
 	}
 }
-
-/* End of file site_m.php */
-/* Location: .//D/xampp/htdocs/school/mvc/models/site_m.php */

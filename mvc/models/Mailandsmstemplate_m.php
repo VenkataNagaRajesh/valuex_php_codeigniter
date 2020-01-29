@@ -2,7 +2,7 @@
 
 class Mailandsmstemplate_m extends MY_Model {
 
-	protected $_table_name = 'mailandsmstemplate';
+	protected $_table_name = 'VX_mailandsmstemplate';
 	protected $_primary_key = 'mailandsmstemplateID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "mailandsmstemplateID asc";
@@ -42,10 +42,10 @@ class Mailandsmstemplate_m extends MY_Model {
 
 	function get_order_by_mailandsmstemplate_with_usertypeID() {
 		$this->db->select('mailandsmstemplate.*,cat.name category,a.aln_data_value airline_name,a.code airline_code');
-		$this->db->from('mailandsmstemplate');
+		$this->db->from('VX_mailandsmstemplate');
 		//$this->db->join('usertype', 'usertype.usertypeID = mailandsmstemplate.usertypeID', 'LEFT');
-		$this->db->join('mailandsmscategory cat','cat.catID = mailandsmstemplate.catID','LEFT');
-		$this->db->join('vx_aln_data_defns a','a.vx_aln_data_defnsID = mailandsmstemplate.airlineID','LEFT');
+		$this->db->join('VX_mailandsmscategory cat','cat.catID = VX_mailandsmstemplate.catID','LEFT');
+		$this->db->join('VX_data_defns a','a.vx_aln_data_defnsID = VX_mailandsmstemplate.airlineID','LEFT');
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -59,17 +59,17 @@ class Mailandsmstemplate_m extends MY_Model {
 		$this->db->set('default', 0);
 		$this->db->where('catID',$catID);
 		$this->db->where('airlineID',$airlineID);
-		$this->db->update('mailandsmstemplate');
+		$this->db->update('VX_mailandsmstemplate');
 		
 		$this->db->set('default', 1);
 		$this->db->where('mailandsmstemplateID',$mailandsmstemplateID);
-		$this->db->update('mailandsmstemplate');		
+		$this->db->update('VX_mailandsmstemplate');		
 		return true;
 	}
 	
 	function getDefaultMailTemplateByCat($cat,$airlineID){
-		$this->db->select('t.*')->from('mailandsmstemplate t');
-		$this->db->join('mailandsmscategory c','c.catID = t.catID','LEFT');
+		$this->db->select('t.*')->from('VX_mailandsmstemplate t');
+		$this->db->join('VX_mailandsmscategory c','c.catID = t.catID','LEFT');
 		$this->db->where('c.alias',$cat);
 		$this->db->where('airlineID',$airlineID);
 		$this->db->where('t.default',1);

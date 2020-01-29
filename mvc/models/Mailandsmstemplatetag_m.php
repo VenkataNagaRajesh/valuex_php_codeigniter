@@ -2,7 +2,7 @@
 
 class Mailandsmstemplatetag_m extends MY_Model {
 
-	protected $_table_name = 'mailandsmstemplatetag';
+	protected $_table_name = 'VX_mailandsmstemplatetag';
 	protected $_primary_key = 'mailandsmstemplatetagID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "mailandsmstemplatetagID asc";

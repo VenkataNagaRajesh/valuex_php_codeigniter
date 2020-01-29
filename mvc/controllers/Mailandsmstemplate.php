@@ -44,9 +44,7 @@ class Mailandsmstemplate extends Admin_Controller {
 		//$this->data['mailandsmstemplates'] = $this->mailandsmstemplate_m->get_order_by_mailandsmstemplate_with_usertypeID();
 		$userID = $this->session->userdata('loginuserID');
 		$userTypeID = $this->session->userdata('usertypeID');
-		if($userTypeID == 2){
-          $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-        } else if($userTypeID != 1){
+		if($userTypeID != 1){
 		   $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -85,9 +83,7 @@ class Mailandsmstemplate extends Admin_Controller {
 		$this->data['usertypes'] = $usertypes;
 		$userID = $this->session->userdata('loginuserID');
 		$userTypeID = $this->session->userdata('usertypeID');
-		if($userTypeID == 2){
-          $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-        } else if($userTypeID != 1){
+		 if($userTypeID != 1){
 		   $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -154,9 +150,7 @@ class Mailandsmstemplate extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		$userID = $this->session->userdata('loginuserID');
 		$userTypeID = $this->session->userdata('usertypeID');
-		if($userTypeID == 2){
-          $this->data['airlines'] = $this->airline_m->getClientAirline($userID);
-        } else if($userTypeID != 1){
+		 if($userTypeID != 1){
 		   $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -342,7 +336,7 @@ class Mailandsmstemplate extends Admin_Controller {
             }		
 
 		   
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.*,cat.name category,a.aln_data_value airline_name,a.code airline_code FROM mailandsmstemplate m LEFT JOIN mailandsmscategory cat ON cat.catID = m.catID LEFT JOIN vx_aln_data_defns a ON a.vx_aln_data_defnsID = m.airlineID
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.*,cat.name category,a.aln_data_value airline_name,a.code airline_code FROM VX_mailandsmstemplate m LEFT JOIN VX_mailandsmscategory cat ON cat.catID = m.catID LEFT JOIN VX_data_defns a ON a.vx_aln_data_defnsID = m.airlineID
 		$sWhere       	
 		$sOrder		
 		$sLimit	"; 

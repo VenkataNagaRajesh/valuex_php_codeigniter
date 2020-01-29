@@ -110,7 +110,7 @@ $(function() {
             $(".image-preview-clear").show();
             $(".image-preview-filename").val(file.name);
             img.attr('src', e.target.result);
-            $(".image-preview").attr("data-content",$(img)[0].outerHTML).popover("show");
+            //$(".image-preview").attr("data-content",$(img)[0].outerHTML).popover("show");
             $('.content').css('padding-bottom', '100px');
         }
         reader.readAsDataURL(file);

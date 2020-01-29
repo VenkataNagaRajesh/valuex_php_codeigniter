@@ -2,7 +2,7 @@
 
 class Mailandsms_m extends MY_Model {
 
-	protected $_table_name = 'mailandsms';
+	protected $_table_name = 'VX_mailandsms';
 	protected $_primary_key = 'mailandsmsID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "mailandsmsID desc";
@@ -18,8 +18,8 @@ class Mailandsms_m extends MY_Model {
 
 	function get_mailandsms_with_usertypeID() {
 		$this->db->select('*');
-		$this->db->from('mailandsms');
-		$this->db->join('usertype', 'usertype.usertypeID = mailandsms.usertypeID', 'LEFT');
+		$this->db->from('VX_mailandsms');
+		$this->db->join('VX_usertype', 'usertype.usertypeID = mailandsms.usertypeID', 'LEFT');
 		$this->db->order_by("mailandsmsID",'DESC');
 		$query = $this->db->get();
 		return $query->result();
@@ -50,6 +50,3 @@ class Mailandsms_m extends MY_Model {
 	}
 
 }
-
-/* End of file mailandsms_m.php */
-/* Location: .//D/xampp/htdocs/school/mvc/models/mailandsms_m.php */

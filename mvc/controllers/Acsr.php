@@ -363,13 +363,11 @@ if($end < $start ) {
 
 		 $userID = $this->session->userdata('loginuserID');
                 $userTypeID = $this->session->userdata('usertypeID');
-                if($userTypeID == 2){
-                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           } else if($userTypeID != 1){
-                                                 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);
-                                                   } else {
-                   $this->data['carriers'] = $this->airline_m->getAirlinesData();
-                }
+                 if($userTypeID != 1){
+                    $this->data['carriers'] = $this->user_m->getUserAirlines($userID);
+                 } else {
+                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
+                 }
 
 
 		 $this->data['marketzones'] = $this->marketzone_m->getMarketzones();
@@ -416,13 +414,11 @@ if($end < $start ) {
 
                 $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
-                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           }  else if($userTypeID != 1 ){
-						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
-						   } else {
-                   $this->data['carriers'] = $this->airline_m->getAirlinesData();
-                }
+                 if($userTypeID != 1 ){
+					$this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
+				 } else {
+                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
+                 }
 
 	$this->data['action_types'] = $this->airports_m->getDefns('19');
 
@@ -547,13 +543,11 @@ if($end < $start ) {
 
 			   $userTypeID = $this->session->userdata('usertypeID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
-                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           } else if($userTypeID != 1 ){
-						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
-						   }  else {
-                   $this->data['carriers'] = $this->airline_m->getAirlinesData();
-                }
+                if($userTypeID != 1 ){
+					$this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
+				 }  else {
+                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
+                 }
 
 
 			 $types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
@@ -894,15 +888,15 @@ FROM
               as flight_nbr, at.aln_data_value as action_typ, fdef.cabin as from_cabin , tdef.cabin as to_cabin,  acsr.active , 
               acsr.upgrade_from_cabin_type, acsr.upgrade_to_cabin_type  ,acsr.flight_nbr_start, acsr.memp, acsr.min_bid_price,
               acsr.flight_nbr_end, car.code as carrier
-              from VX_aln_auto_confirm_setup_rules acsr 
-               LEFT JOIN vx_aln_data_types orig on (orig.vx_aln_data_typeID = acsr.orig_level_id) 
-              LEFT JOIN vx_aln_data_types dest on (dest.vx_aln_data_typeID = acsr.dest_level_id) 
-		INNER JOIN VX_aln_airline_cabin_def fdef on (fdef.carrier = acsr.carrier_code)
-              INNER JOIN  vx_aln_data_defns fc on (fc.vx_aln_data_defnsID = acsr.upgrade_from_cabin_type AND fc.aln_data_typeID = 13 and fc.alias = fdef.level) 
-		INNER JOIN VX_aln_airline_cabin_def tdef on (tdef.carrier = acsr.carrier_code)
-              INNER JOIN vx_aln_data_defns tc on (tc.vx_aln_data_defnsID  = acsr.upgrade_to_cabin_type AND fc.aln_data_typeID = 13 AND tc.alias = tdef.level )
-              LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID  = acsr.carrier_code AND car.aln_data_typeID = 12)
-              LEFT JOIN  vx_aln_data_defns at on (at.vx_aln_data_defnsID = acsr.action_type ) 
+              from UP_auto_confirm_setup_rules acsr 
+               LEFT JOIN VX_data_types orig on (orig.vx_aln_data_typeID = acsr.orig_level_id) 
+              LEFT JOIN VX_data_types dest on (dest.vx_aln_data_typeID = acsr.dest_level_id) 
+		INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = acsr.carrier_code)
+              INNER JOIN  VX_data_defns fc on (fc.vx_aln_data_defnsID = acsr.upgrade_from_cabin_type AND fc.aln_data_typeID = 13 and fc.alias = fdef.level) 
+		INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = acsr.carrier_code)
+              INNER JOIN VX_data_defns tc on (tc.vx_aln_data_defnsID  = acsr.upgrade_to_cabin_type AND fc.aln_data_typeID = 13 AND tc.alias = tdef.level )
+              LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID  = acsr.carrier_code AND car.aln_data_typeID = 12)
+              LEFT JOIN  VX_data_defns at on (at.vx_aln_data_defnsID = acsr.action_type ) 
 
 
 ) as MainSet
@@ -913,20 +907,20 @@ LEFT JOIN (
                         (         
                                                 SELECT       acsr.acsr_id   , 
                                                 COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS orig_level 
-                                                FROM VX_aln_auto_confirm_setup_rules acsr 
-                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                FROM UP_auto_confirm_setup_rules acsr 
+                                                LEFT OUTER JOIN  VX_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, acsr.orig_level_value) AND acsr.orig_level_id in (1,2,3,4,5)) 
-                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                LEFT OUTER JOIN  VX_market_zone mm  
                                                 ON (find_in_set(mm.market_id, acsr.orig_level_value) AND acsr.orig_level_id = 17) group by                                                  acsr.acsr_id
                         ) as FirstSet  
                 LEFT join 
                         (       
                                                 SELECT       acsr.acsr_id , 
                                                 COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(mm.market_name) )  AS dest_level 
-                                                FROM VX_aln_auto_confirm_setup_rules acsr 
-                                                LEFT OUTER JOIN  vx_aln_data_defns c ON 
+                                                FROM UP_auto_confirm_setup_rules acsr 
+                                                LEFT OUTER JOIN  VX_data_defns c ON 
                                                 (find_in_set(c.vx_aln_data_defnsID, acsr.dest_level_value) AND acsr.dest_level_id in (1,2,3,4,5)) 
-                                                LEFT OUTER JOIN  VX_aln_market_zone mm  
+                                                LEFT OUTER JOIN  VX_market_zone mm  
                                                 ON (find_in_set(mm.market_id, acsr.dest_level_value) AND acsr.dest_level_id = 17) group by                                                  acsr.acsr_id
                         ) as SecondSet
 
@@ -937,8 +931,8 @@ LEFT JOIN (
                          LEFT JOIN 
                         (
                                         select mf.acsr_id ,group_concat(c.code) as frequency  , mf.frequency as dayslist
-                                        from  VX_aln_auto_confirm_setup_rules mf 
-                                         LEFT join vx_aln_data_defns c on find_in_set(c.vx_aln_data_defnsID, mf.frequency) group by mf.acsr_id 
+                                        from  UP_auto_confirm_setup_rules mf 
+                                         LEFT join VX_data_defns c on find_in_set(c.vx_aln_data_defnsID, mf.frequency) group by mf.acsr_id 
                         ) as ThirdSet
 
                         on ThirdSet.acsr_id = FirstSet.acsr_id

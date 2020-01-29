@@ -423,7 +423,7 @@ function getCalenderBySeason(season){
       }
   }); 
   
-  $("#airlinecode").autocomplete({
+  /*$("#airlinecode").autocomplete({
 	   source : function( request, response ) {
                 $.ajax({
                     url: "<?=base_url('season/searchAirlineCode')?>",
@@ -448,7 +448,7 @@ function getCalenderBySeason(season){
         return false; // Prevent the widget from inserting the value.
     }
 	
-   });
+   });*/
 </script>
 <script>
     $(document).ready(function(){

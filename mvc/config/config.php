@@ -226,7 +226,7 @@ $config['allow_get_array'] = TRUE;
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 1;
 
 /*
 |--------------------------------------------------------------------------
@@ -237,7 +237,7 @@ $config['log_threshold'] = 0;
 | application/logs/ directory. Use a full server path with trailing slash.
 |
 */
-$config['log_path'] = '';
+$config['log_path'] = 'mvc/logs/';
 
 /*
 |--------------------------------------------------------------------------
@@ -383,7 +383,7 @@ $config['encryption_key'] = '53babadf3b95073c43728e3ffd5043a6';
 $config['sess_driver'] = 'database';
 $config['sess_cookie_name'] = 'valuex';
 $config['sess_expiration'] = 7200;
-$config['sess_save_path'] = 'valuex_sessions';
+$config['sess_save_path'] = 'VX_sessions';
 $config['sess_match_ip'] = FALSE;
 $config['sess_time_to_update'] = 300;
 $config['sess_regenerate_destroy'] = FALSE;

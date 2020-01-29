@@ -9,7 +9,7 @@
     </div><!-- /.box-header -->
 	 <?php if(permissionChecker('client_add')) {   ?>
          <h5 class="page-header">
-             <a href="<?php echo base_url('client/add') ?>" data-toggle="tooltip" data-title="Add Airline Client" data-placement="left" class="btn btn-danger">
+             <a href="<?php echo base_url('client/adds') ?>" data-toggle="tooltip" data-title="Add Airline Client" data-placement="left" class="btn btn-danger">
                  <i class="fa fa-plus"></i> 
              </a>
          </h5>
@@ -82,7 +82,7 @@
                     "data": aoData,
                     "success": fnCallback
 			 } ); },	  
-	  "columns": [{"data": "VX_aln_clientID" },
+	  "columns": [{"data": "userID" },
                   {"data": "image" },
 				  {"data": "name" },
 				  {"data": "email" },

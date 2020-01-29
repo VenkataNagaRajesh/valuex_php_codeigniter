@@ -80,7 +80,7 @@ class Feedback extends Admin_Controller {
 				}
 			}						
 		   
-		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS * from VX_aln_feedback
+		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS * from UP_feedback
 			#sWhere		
 			$sOrder
 			$sLimit	"; 

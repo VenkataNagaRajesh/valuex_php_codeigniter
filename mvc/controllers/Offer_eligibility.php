@@ -85,9 +85,7 @@ class Offer_eligibility extends Admin_Controller {
 
 		                $userID = $this->session->userdata('loginuserID');
                 $userTypeID = $this->session->userdata('usertypeID');
-                if($userTypeID == 2){
-                        $this->data['carriers'] = $this->airline_m->getClientAirline($userID);
-                           }  else if($userTypeID != 1){
+                if($userTypeID != 1){
 						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
 						   } else {
                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
@@ -287,19 +285,19 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext
             	pf.dep_date as departure_date, min,max,average,slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, 
 		pf.pnr_ref
-		     from VX_aln_dtpf_ext pext 
-		     INNER JOIN VX_aln_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_processed = 1 and pf.active = 1)
-		     LEFT JOIN VX_aln_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)
-		     LEFT JOIN VX_aln_season sea on (sea.VX_aln_seasonID = fc.season_id )
-                     LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
-		     LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
-		     LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = pf.carrier_code AND dai.aln_data_typeID = 12)
-		     LEFT JOIN vx_aln_data_defns dfre on (dfre.vx_aln_data_defnsID = pf.frequency AND dfre.aln_data_typeID = 14)
-		     INNER JOIN VX_aln_airline_cabin_def fdef on (fdef.carrier = pf.carrier_code)
-		     INNER JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13 and fca.alias = fdef.level)
-		     INNER JOIN VX_aln_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code)
-                     INNER JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13 and tca.alias = tdef.level)
-		     INNER JOIN vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
+		     from UP_dtpf_ext pext 
+		     INNER JOIN VX_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_processed = 1 and pf.active = 1)
+		     LEFT JOIN UP_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)
+		     LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = fc.season_id )
+                     LEFT JOIN  VX_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
+		     LEFT JOIN VX_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
+		     LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = pf.carrier_code AND dai.aln_data_typeID = 12)
+		     LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = pf.frequency AND dfre.aln_data_typeID = 14)
+		     INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf.carrier_code)
+		     INNER JOIN vx_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13 and fca.alias = fdef.level)
+		     INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code)
+                     INNER JOIN VX_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13 and tca.alias = tdef.level)
+		     INNER JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
 
 $sWhere $sOrder $sLimit";
 
@@ -356,7 +354,14 @@ $sWhere $sOrder $sLimit";
 
    function generatedata() {
 
-		$sQuery = " SELECT * FROM VX_aln_daily_tkt_pax_feed  WHERE is_processed = 0 order by dtpf_id";
+
+		 $days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
+
+                 $current_time = time();
+                $tstamp = $current_time + ($days * 86400);
+
+
+		$sQuery = " SELECT * FROM VX_daily_tkt_pax_feed  WHERE is_processed = 0  AND dep_date >= ".$tstamp." order by dtpf_id";
 		$rResult = $this->install_m->run_query($sQuery);
 
 		/*$exclQuery = "SELECT * from VX_aln_eligibility_excl_rules ";

@@ -182,6 +182,10 @@ class Home extends MY_Controller {
 		$this->data["subview"] = "home/temp-2";
 		$this->load->view('_layout_home', $this->data);
 	}
+	public function checktemp() {        		
+		$this->data["subview"] = "home/check-temp1";
+		$this->load->view('_layout_home', $this->data);
+	}
 	public function temp3() {
         $dtpf_id = htmlentities(escapeString($this->uri->segment(3)));	
         $this->data['pax_data'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$dtpf_id));		
