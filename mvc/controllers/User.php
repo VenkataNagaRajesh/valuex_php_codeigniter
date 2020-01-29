@@ -423,7 +423,7 @@ class User extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$user_info = $this->user_m->get_single_user(array('userID' => $id));
-			$tables = array('user' => 'user');
+			$tables = array('VX_user');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $tablekey => $table) {
@@ -442,7 +442,7 @@ class User extends Admin_Controller {
 				return TRUE;
 			}
 		} else {
-			$tables = array('user' => 'user');
+			$tables = array('VX_user');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $table) {
@@ -486,7 +486,7 @@ class User extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$user_info = $this->user_m->get_single_user(array('userID' => $id));
-			$tables = array('user' => 'user');
+			$tables = array('VX_user');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $table) {
@@ -505,7 +505,7 @@ class User extends Admin_Controller {
 				return TRUE;
 			}
 		} else {
-			$tables = array('user' => 'user');
+			$tables = array('VX_user');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $table) {

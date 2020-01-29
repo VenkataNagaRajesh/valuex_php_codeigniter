@@ -26,3 +26,4 @@ $lang['client_select_airline'] = 'Select Airline';
 $lang['client_active'] = 'Active';
 $lang['client_mail_logo'] = 'Mail Logo';
 $lang['client_upload_mail_logo'] = 'Upload Mail Logo';
+$lang['client_domain'] = 'Domain';

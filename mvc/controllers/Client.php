@@ -63,6 +63,62 @@ class Client extends Admin_Controller {
 		);
 		return $rules;
 	}
+
+	protected function adds_rules() {
+		$rules = array(
+			array(
+				'field' => 'name',
+				'label' => $this->lang->line("client_name"),
+				'rules' => 'trim|required|xss_clean|max_length[60]'
+			),
+			array(
+				'field' => 'domain',
+				'label' => $this->lang->line("client_domain"),
+				'rules' => 'trim|required|xss_clean|max_length[60]'
+			),			
+			array(
+				'field' => 'email',
+				'label' => $this->lang->line("client_email"),
+				'rules' => 'trim|required|max_length[40]|valid_email|xss_clean|callback_unique_email'
+			),
+			array(
+				'field' => 'phone',
+				'label' => $this->lang->line("client_phone"),
+				'rules' => 'trim|required|min_length[5]|max_length[25]|xss_clean'
+			),
+			array(
+				'field' => 'address',
+				'label' => $this->lang->line("client_address"),
+				'rules' => 'trim|max_length[200]|xss_clean'
+			),
+			array(
+				'field' => 'airlineID',
+				'label' => $this->lang->line("client_airline"),
+				'rules' => 'trim|max_length[10]|xss_clean|callback_valAirlines'
+			),			
+			array(
+				'field' => 'photo',
+				'label' => $this->lang->line("client_photo"),
+				'rules' => 'trim|max_length[200]|xss_clean|callback_photoupload'
+			),
+			/*array(
+				'field' => 'mail_logo',
+				'label' => $this->lang->line("client_mail_logo"),
+				'rules' => 'trim|max_length[200]|xss_clean|callback_maillogoupload'
+			),*/
+			array(
+				'field' => 'username',
+				'label' => $this->lang->line("client_username"),
+				'rules' => 'trim|required|min_length[4]|max_length[40]|xss_clean|callback_lol_username'
+			),
+			array(
+				'field' => 'password',
+				'label' => $this->lang->line("client_password"),
+				'rules' => 'trim|required|min_length[4]|max_length[40]|xss_clean'
+			),
+		);
+		return $rules;
+	}
 	
 	public function valAirlines(){
 		if(count($this->input->post('airlineID')) > 0){
@@ -204,6 +260,63 @@ class Client extends Admin_Controller {
 		}
 	}
 
+	public function adds() {
+		$this->data['headerassets'] = array(
+			   'css' => array(
+					   'assets/select2/css/select2.css',
+					   'assets/select2/css/select2-bootstrap.css', 				
+			   ),
+			   'js' => array(
+					   'assets/select2/select2.js',  					
+			   )
+	   );
+	   $usertype = 2;
+	   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();		
+	   if($_POST) {
+		   $rules = $this->rules();
+		   $this->form_validation->set_rules($rules);
+		   if ($this->form_validation->run() == FALSE) {
+			   $this->data["subview"] = "client/adds";
+			   $this->load->view('_layout_main', $this->data);
+		   } else {		   
+			$array["name"] = $this->input->post("name");
+			$array["domain"] = $this->input->post("domain");				
+			$array["email"] = $this->input->post("email");
+			$array["phone"] = $this->input->post("phone");
+			$array["address"] = $this->input->post("address");				
+			$array["username"] = $this->input->post("username");
+			$array["password"] = $this->user_m->hash($this->input->post("password"));
+			$array["usertypeID"] = $usertype;
+			$array["create_date"] = date("Y-m-d h:i:s");
+			$array["modify_date"] = date("Y-m-d h:i:s");
+			$array["create_userID"] = $this->session->userdata('loginuserID');
+			$array["create_username"] = $this->session->userdata('username');
+			$array["create_usertype"] = $this->session->userdata('usertype');
+			$array["active"] = $this->input->post("active");	
+			$array['photo'] = $this->upload_data['file']['file_name'];
+			// For Email
+			$this->user_m->insert_user($array);
+			$userID = $this->db->insert_id();
+		 
+			
+			 $link['userID'] = $userID;
+			 $link["create_date"] = time();
+			 $link["modify_date"] = time();
+			 $link["create_userID"] = $this->session->userdata('loginuserID');
+			 $link["modify_userID"] = $this->session->userdata('loginuserID');
+			 foreach($this->input->post('airlineID') as $airlineID){
+			  $link['airlineID'] = $airlineID;
+			  $this->user_m->insert_user_airline($link);
+			 }
+		
+			$this->session->set_flashdata('success', $this->lang->line('menu_success'));
+			redirect(base_url("client/index"));
+		   }
+	   } else {
+		   $this->data["subview"] = "client/adds";
+		   $this->load->view('_layout_main', $this->data);
+	   }
+   }
 	public function edit() {
 		$this->data['headerassets'] = array(
 			'css' => array(
@@ -336,7 +449,7 @@ class Client extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$user_info = $this->user_m->get_single_user(array('userID' => $id));
-			$tables = array('user' => 'user');
+			$tables = array('VX_user');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $tablekey => $table) {
@@ -355,7 +468,7 @@ class Client extends Admin_Controller {
 				return TRUE;
 			}
 		} else {
-			$tables = array('user' => 'user');
+			$tables = array('VX_user');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $table) {
@@ -381,7 +494,7 @@ class Client extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$user_info = $this->user_m->get_single_user(array('userID' => $id));
-			$tables = array('user' => 'user');
+			$tables = array('VX_user');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $table) {
@@ -390,6 +503,13 @@ class Client extends Admin_Controller {
 					$this->form_validation->set_message("unique_email", "%s already exists");
 					$array['permition'][$i] = 'no';
 				} else {
+					$email_array = explode('@',$this->input->post('email'));
+					if($this->input->post('domain') == $email_array[1]){
+						$array['permition'][$i] = 'yes';
+					} else {
+						$this->form_validation->set_message("unique_email", "%s not match with domain");
+					    $array['permition'][$i] = 'no';	
+					}	
 					$array['permition'][$i] = 'yes';
 				}
 				$i++;
@@ -400,7 +520,7 @@ class Client extends Admin_Controller {
 				return TRUE;
 			}
 		} else {
-			$tables = array('user' => 'user');
+			$tables = array('VX_user');
 			$array = array();
 			$i = 0;
 			foreach ($tables as $table) {
@@ -409,7 +529,13 @@ class Client extends Admin_Controller {
 					$this->form_validation->set_message("unique_email", "%s already exists");
 					$array['permition'][$i] = 'no';
 				} else {
-					$array['permition'][$i] = 'yes';
+					$email_array = explode('@',$this->input->post('email'));
+					if($this->input->post('domain') == $email_array[1]){
+						$array['permition'][$i] = 'yes';
+					} else {
+						$this->form_validation->set_message("unique_email", "%s not match with domain");
+					    $array['permition'][$i] = 'no';	
+					}					
 				}
 				$i++;
 			}
