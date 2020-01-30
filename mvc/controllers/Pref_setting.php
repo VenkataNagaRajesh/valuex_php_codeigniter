@@ -70,8 +70,8 @@ class Pref_setting extends Admin_Controller {
 
 
 	                $userID = $this->session->userdata('loginuserID');
-                $userTypeID = $this->session->userdata('usertypeID');
-             if($userTypeID != 1){
+                $roleID = $this->session->userdata('roleID');
+             if($roleID != 1){
                                                  $this->data['airlines'] = $this->user_m->getUserAirlines($userID);
                                                    } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -151,8 +151,8 @@ class Pref_setting extends Admin_Controller {
 
 
                         $userID = $this->session->userdata('loginuserID');
-                $userTypeID = $this->session->userdata('usertypeID');
-                if($userTypeID != 1){
+                $roleID = $this->session->userdata('roleID');
+                if($roleID != 1){
                                                  $this->data['airlines'] = $this->user_m->getUserAirlines($userID);
                                                    } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();

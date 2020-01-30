@@ -42,11 +42,11 @@
                                         ?>
                                         <i class="fa fa-file fa-2x"></i>
                                         </a>
-                                        <?php if ($usertypeID == 1 || ($usertypeID == $file->usertypeID && $userID == $file->userID)): ?>
+                                        <?php if ($roleID == 1 || ($roleID == $file->roleID && $userID == $file->userID)): ?>
                                         <?php echo delete_file(base_url("media/delete/$file->mediaID"), "close_folder") ?>
                                         <a id="<?=$file->mediaID?>" data-toggle="modal" data-target="#share_modal" class="share_file pull-right" ><i class="fa fa-globe fa-2x"></i></a>
                                         <?php endif ?>
-                                        <b><?=$this->lang->line('media_uploadedby')?> <?=$allusertype[$file->usertypeID];?>: <?=$file->shared_by;?></b>
+                                        <b><?=$this->lang->line('media_uploadedby')?> <?=$allusertype[$file->roleID];?>: <?=$file->shared_by;?></b>
                                     </div>
                                 <?php endforeach ?>
                             <?php endif ?>

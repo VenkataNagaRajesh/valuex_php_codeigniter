@@ -60,7 +60,7 @@ class Market_airport extends Admin_Controller {
                   $this->data['cityID'] = 0;
                 }
 
-		 if($this->session->userdata('usertypeID') != 1){
+		 if($this->session->userdata('roleID') != 1){
                   $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,$this->session->userdata('login_user_airlineID'));
                 } else {
                   $this->data['marketzones'] = $this->marketzone_m->get_marketzones();
@@ -167,9 +167,9 @@ class Market_airport extends Admin_Controller {
                         }
 
 
-                $userTypeID = $this->session->userdata('usertypeID');
+                $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID != 1){
+                if($roleID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'mz.airline_id IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                
                 }

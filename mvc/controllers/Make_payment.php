@@ -76,7 +76,7 @@ class Make_payment extends Admin_Controller {
             )
         );
 
-        $this->data['roles'] = $this->usertype_m->get_usertype();
+        $this->data['roles'] = $this->role_m->get_role();
         $setrole = htmlentities(escapeString($this->uri->segment(3)));
         
         if(!isset($setrole)) {
@@ -88,13 +88,13 @@ class Make_payment extends Admin_Controller {
 
         if($setrole == 1) {
             $this->data['users'] = $this->systemadmin_m->get_systemadmin();
-            $this->data['managesalary'] = pluck($this->manage_salary_m->get_order_by_manage_salary(array('usertypeID' => 1)), 'userID');
+            $this->data['managesalary'] = pluck($this->manage_salary_m->get_order_by_manage_salary(array('roleID' => 1)), 'userID');
          } elseif($setrole == 2) {
             $this->data['users'] = $this->teacher_m->get_teacher();
-            $this->data['managesalary'] = pluck($this->manage_salary_m->get_order_by_manage_salary(array('usertypeID' => 2)), 'userID');
+            $this->data['managesalary'] = pluck($this->manage_salary_m->get_order_by_manage_salary(array('roleID' => 2)), 'userID');
         } else {
-            $this->data['users'] = $this->user_m->get_order_by_user(array('usertypeID' => $setrole));
-            $this->data['managesalary'] = pluck($this->manage_salary_m->get_order_by_manage_salary(array('usertypeID' => $setrole)), 'userID');
+            $this->data['users'] = $this->user_m->get_order_by_user(array('roleID' => $setrole));
+            $this->data['managesalary'] = pluck($this->manage_salary_m->get_order_by_manage_salary(array('roleID' => $setrole)), 'userID');
         }
 
         $this->data["subview"] = "make_payment/index";
@@ -118,25 +118,25 @@ class Make_payment extends Admin_Controller {
 
         if(permissionChecker('make_payment')) {
             $userID = htmlentities(escapeString($this->uri->segment(3)));
-            $usertypeID = htmlentities(escapeString($this->uri->segment(4)));
+            $roleID = htmlentities(escapeString($this->uri->segment(4)));
 
-            if((int)$userID && (int) $usertypeID) {
-                if($usertypeID == 1) {
-                    $user = $this->systemadmin_m->get_single_systemadmin(array('usertypeID' => $usertypeID, 'systemadminID' => $userID));
-                    $this->data['usertype'] = $this->usertype_m->get_usertype($user->usertypeID);
-                } elseif($usertypeID == 2) {
-                    $user = $this->teacher_m->get_single_teacher(array('usertypeID' => $usertypeID, 'teacherID' => $userID));
+            if((int)$userID && (int) $roleID) {
+                if($roleID == 1) {
+                    $user = $this->systemadmin_m->get_single_systemadmin(array('roleID' => $roleID, 'systemadminID' => $userID));
+                    $this->data['usertype'] = $this->role_m->get_role($user->roleID);
+                } elseif($roleID == 2) {
+                    $user = $this->teacher_m->get_single_teacher(array('roleID' => $roleID, 'teacherID' => $userID));
                 } else {
-                    $user = $this->user_m->get_single_user(array('usertypeID' => $usertypeID, 'userID' => $userID));
+                    $user = $this->user_m->get_single_user(array('roleID' => $roleID, 'userID' => $userID));
                 }
 
-                $this->data['make_payments'] = $this->make_payment_m->get_order_by_make_payment(array('usertypeID' => $usertypeID, 'userID' => $userID));
+                $this->data['make_payments'] = $this->make_payment_m->get_order_by_make_payment(array('roleID' => $roleID, 'userID' => $userID));
 
                 if(count($user)) {
-                    $this->data['usertype'] = $this->usertype_m->get_usertype($user->usertypeID);
+                    $this->data['usertype'] = $this->role_m->get_role($user->roleID);
                     $this->data['user'] = $user;
 
-                    $manageSalary = $this->manage_salary_m->get_single_manage_salary(array('usertypeID' => $usertypeID, 'userID' => $userID));
+                    $manageSalary = $this->manage_salary_m->get_single_manage_salary(array('roleID' => $roleID, 'userID' => $userID));
                     if(count($manageSalary)) {
                         $this->data['manage_salary'] = $manageSalary;
 
@@ -203,7 +203,7 @@ class Make_payment extends Admin_Controller {
                                         "comments" => $this->input->post("comments"),
                                         'templateID' => $manageSalary->template,
                                         'salaryID' => $manageSalary->salary,
-                                        'usertypeID' => $usertypeID,
+                                        'roleID' => $roleID,
                                         'userID' => $userID,
                                         'create_date'       => date("Y-m-d h:i:s"),
                                         'modify_date'       => date("Y-m-d h:i:s"),
@@ -219,7 +219,7 @@ class Make_payment extends Admin_Controller {
                                     $this->make_payment_m->insert_make_payment($array);
                                     $lastID = $this->db->insert_id();
                                     $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                                    redirect(base_url("make_payment/add/$userID/$usertypeID"));
+                                    redirect(base_url("make_payment/add/$userID/$roleID"));
                                 }
                             } else {
                                 $this->data["subview"] = "make_payment/add";
@@ -259,25 +259,25 @@ class Make_payment extends Admin_Controller {
 
                 if($this->data['make_payment']) {
                     $userID = $this->data['make_payment']->userID;
-                    $usertypeID = $this->data['make_payment']->usertypeID;
+                    $roleID = $this->data['make_payment']->roleID;
 
-                    if((int)$userID && (int) $usertypeID) {
+                    if((int)$userID && (int) $roleID) {
             
-                        $this->data['usertypeID'] = $usertypeID;
+                        $this->data['roleID'] = $roleID;
                         $this->data['userID'] = $userID;
 
-                        if($usertypeID == 1) {
-                            $user = $this->systemadmin_m->get_single_systemadmin(array('usertypeID' => $usertypeID, 'systemadminID' => $userID));
-                        } elseif($usertypeID == 2) {
-                            $user = $this->teacher_m->get_single_teacher(array('usertypeID' => $usertypeID, 'teacherID' => $userID));
+                        if($roleID == 1) {
+                            $user = $this->systemadmin_m->get_single_systemadmin(array('roleID' => $roleID, 'systemadminID' => $userID));
+                        } elseif($roleID == 2) {
+                            $user = $this->teacher_m->get_single_teacher(array('roleID' => $roleID, 'teacherID' => $userID));
                         } else {
-                            $user = $this->user_m->get_single_user(array('usertypeID' => $usertypeID, 'userID' => $userID));
+                            $user = $this->user_m->get_single_user(array('roleID' => $roleID, 'userID' => $userID));
                         }
 
                         if(count($user)) {
-                            $this->data['usertype'] = $this->usertype_m->get_usertype($user->usertypeID);
+                            $this->data['usertype'] = $this->role_m->get_role($user->roleID);
                             $this->data['user'] = $user;
-                            $manageSalary = $this->manage_salary_m->get_single_manage_salary(array('usertypeID' => $usertypeID, 'userID' => $userID));
+                            $manageSalary = $this->manage_salary_m->get_single_manage_salary(array('roleID' => $roleID, 'userID' => $userID));
                             if(count($manageSalary)) {
                                 $this->data['manage_salary'] = $manageSalary;
 
@@ -380,7 +380,7 @@ class Make_payment extends Admin_Controller {
                 if($this->data['make_payment']) {
                     $this->make_payment_m->delete_make_payment($id);
                     $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                    redirect(base_url("make_payment/add/".$this->data['make_payment']->userID.'/'.$this->data['make_payment']->usertypeID));
+                    redirect(base_url("make_payment/add/".$this->data['make_payment']->userID.'/'.$this->data['make_payment']->roleID));
                 } else {
                     redirect(base_url("make_payment/index"));
                 }

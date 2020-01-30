@@ -59,7 +59,7 @@ class Rafeed extends Admin_Controller {
 		if(!empty($this->input->post('airline_code'))){
                    $this->data['airline_code'] = $this->input->post('airline_code');
                 } else {
-				  if($this->session->userdata('usertypeID') != 1){
+				  if($this->session->userdata('roleID') != 1){
 					 $this->data['airline_code'] = $this->session->userdata('default_airline');
 				   } else {					
                      $this->data['airline_code'] = 0;
@@ -105,9 +105,9 @@ class Rafeed extends Admin_Controller {
 		$this->data['airport'] = $this->rafeed_m->getCodesByType('1');
 		$this->data['cabin'] = $this->rafeed_m->getCodesByType('13');
 
-               $userTypeID = $this->session->userdata('usertypeID');
+               $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID != 1){
+                if($roleID != 1){
 						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 						   } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -449,7 +449,7 @@ class Rafeed extends Admin_Controller {
 
     function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');	  
+		$roleID = $this->session->userdata('roleID');	  
 
 
 
@@ -589,9 +589,9 @@ class Rafeed extends Admin_Controller {
 					
                         }
 
-		  $userTypeID = $this->session->userdata('usertypeID');
+		  $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID != 1){
+                if($roleID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'rf.carrier IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                
                 }

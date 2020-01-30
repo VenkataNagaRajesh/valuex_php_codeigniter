@@ -15,8 +15,8 @@
         <div class="row">
             <div class="col-sm-10">
                 <?php 
-                    $usertypeID = $this->session->userdata("usertypeID"); 
-                    if($usertypeID == 1 || $usertypeID == 5) { 
+                    $roleID = $this->session->userdata("roleID"); 
+                    if($roleID == 1 || $roleID == 5) { 
                 ?>
                     <form class="form-horizontal" role="form" method="post">
                         <?php 

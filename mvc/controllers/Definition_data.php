@@ -295,7 +295,7 @@ class Definition_data extends Admin_Controller {
   
     function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');	  
+		$roleID = $this->session->userdata('roleID');	  
 		
 	    $aColumns = array('dd.vx_aln_data_defnsID','t.name','dd.aln_data_value','dd1.aln_data_value','dd.code','dd.active');
 	

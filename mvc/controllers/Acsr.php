@@ -362,8 +362,8 @@ if($end < $start ) {
 
 
 		 $userID = $this->session->userdata('loginuserID');
-                $userTypeID = $this->session->userdata('usertypeID');
-                 if($userTypeID != 1){
+                $roleID = $this->session->userdata('roleID');
+                 if($roleID != 1){
                     $this->data['carriers'] = $this->user_m->getUserAirlines($userID);
                  } else {
                     $this->data['carriers'] = $this->airline_m->getAirlinesData();
@@ -381,7 +381,7 @@ if($end < $start ) {
          if($this->input->post('carrier')){
                    $this->data['carrier'] = $this->input->post('carrier');
              } else {
-                   if($userTypeID != 1){
+                   if($roleID != 1){
              $this->data['carrier'] = $this->session->userdata('default_airline');
                    } else {
                          $this->data['carrier'] = 0;
@@ -412,9 +412,9 @@ if($end < $start ) {
 		 $this->data['hrs'] = $this->eligibility_exclusion_m->time_dropdown('24',1);
            $this->data['mins'] = $this->eligibility_exclusion_m->time_dropdown('60',5);
 
-                $userTypeID = $this->session->userdata('usertypeID');
+                $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
-                 if($userTypeID != 1 ){
+                 if($roleID != 1 ){
 					$this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
 				 } else {
                     $this->data['carriers'] = $this->airline_m->getAirlinesData();
@@ -541,9 +541,9 @@ if($end < $start ) {
                 	   $this->data['seasons'] = $this->season_m->getSeasonsList();
                            $this->data['action_types'] = $this->airports_m->getDefns('19');
 
-			   $userTypeID = $this->session->userdata('usertypeID');
+			   $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID != 1 ){
+                if($roleID != 1 ){
 					$this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
 				 }  else {
                     $this->data['carriers'] = $this->airline_m->getAirlinesData();
@@ -716,7 +716,7 @@ function time_dropdown($val) {
 
 	function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');	  
+		$roleID = $this->session->userdata('roleID');	  
 				
 	    $aColumns = array('MainSet.acsr_id' ,'MainSet.orig_mkt_name', 'MainSet.dest_mkt_name', 
         'MainSet.flight_dep_date_start', 'MainSet.flight_dep_date_end', 'MainSet.flight_dep_time_start', 'MainSet.flight_dep_time_end', 

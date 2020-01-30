@@ -40,9 +40,9 @@ $arrayColor = array(
     'bg-pink-light'
 );
 
-function allModuleArray($usertypeID='1', $dashboardWidget) {
+function allModuleArray($roleID='1', $dashboardWidget) {
   $userAllModuleArray = array(
-    $usertypeID => array(
+    $roleID => array(
        'service_provider' => $dashboardWidget['service_providers'],
         'bookings'   => $dashboardWidget['bookings'],
         'customers'   => $dashboardWidget['customers'],
@@ -107,7 +107,7 @@ $userArray = array(
 //print_r($userArray); exit;
 $generateBoxArray = array();
 $counter = 0;
-$getActiveUserID = $this->session->userdata('usertypeID');
+$getActiveUserID = $this->session->userdata('roleID');
 
 
 $getAllSessionDatas = $this->session->userdata('master_permission_set');

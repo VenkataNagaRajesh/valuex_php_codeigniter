@@ -1,8 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class usertype_m extends MY_Model {
+class role_m extends MY_Model {
 
-	protected $_table_name = 'VX_usertype';
+	protected $_table_name = 'VX_role';
 	protected $_primary_key = 'roleID';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "roleID desc";
@@ -11,36 +11,32 @@ class usertype_m extends MY_Model {
 		parent::__construct();
 	}
 
-	function get_usertype($array=NULL, $signal=FALSE) {
+	function get_role($array=NULL, $signal=FALSE) {
 		$query = parent::get($array, $signal);
-		return $query;
-   /*	$this->db->select('*')->from('usertype');
-		$this->db->where('roleID !=',5);
-		$query = $this->db->get();
-		return $query->result(); */
+		return $query;   
 	}
 
-	function get_order_by_usertype($array=NULL) {
+	function get_order_by_role($array=NULL) {
 		$query = parent::get_order_by($array);
 		return $query;
 	}
 
-	function get_single_usertype($array=NULL) {
+	function get_single_role($array=NULL) {
 		$query = parent::get_single($array);
 		return $query;
 	}
 
-	function insert_usertype($array) {
+	function insert_role($array) {
 		$error = parent::insert($array);
 		return TRUE;
 	}
 
-	function update_usertype($data, $id = NULL) {
+	function update_role($data, $id = NULL) {
 		parent::update($data, $id);
 		return $id;
 	}
 
-	public function delete_usertype($id){
+	public function delete_role($id){
 		parent::delete($id);
 	}
 }

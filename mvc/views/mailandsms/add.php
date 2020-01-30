@@ -34,12 +34,12 @@
                                         <?php echo form_hidden('type', 'email'); ?> 
 
                                         <?php 
-                                            if(form_error('email_usertypeID')) 
+                                            if(form_error('email_roleID')) 
                                                 echo "<div class='form-group has-error' >";
                                             else     
                                                 echo "<div class='form-group' >";
                                         ?>
-                                            <label for="email_usertypeID" class="col-sm-2 control-label">
+                                            <label for="email_roleID" class="col-sm-2 control-label">
                                                 <?=$this->lang->line("mailandsms_usertype")?>
                                             </label>
                                             <div class="col-sm-6">
@@ -50,15 +50,15 @@
 
                                                     if(count($usertypes)) {
                                                         foreach ($usertypes as $key => $usertype) {
-                                                            $array[$usertype->usertypeID] = $usertype->usertype;
+                                                            $array[$usertype->roleID] = $usertype->usertype;
                                                         }
                                                     }
 
-                                                    echo form_dropdown("email_usertypeID", $array, set_value("email_usertypeID"), "id='email_usertypeID' class='form-control select2'");
+                                                    echo form_dropdown("email_roleID", $array, set_value("email_roleID"), "id='email_roleID' class='form-control select2'");
                                                 ?>
                                             </div>
                                             <span class="col-sm-4 control-label">
-                                                <?php echo form_error('email_usertypeID'); ?>
+                                                <?php echo form_error('email_roleID'); ?>
                                             </span>
                                         </div>
 
@@ -236,12 +236,12 @@
                                     <form class="form-horizontal" role="form" method="post">
                                         <?php echo form_hidden('type', 'sms'); ?> 
                                         <?php 
-                                            if(form_error('sms_usertypeID')) 
+                                            if(form_error('sms_roleID')) 
                                                 echo "<div class='form-group has-error' >";
                                             else     
                                                 echo "<div class='form-group' >";
                                         ?>
-                                            <label for="sms_usertypeID" class="col-sm-2 control-label">
+                                            <label for="sms_roleID" class="col-sm-2 control-label">
                                                 <?=$this->lang->line("mailandsms_usertype")?>
                                             </label>
                                             <div class="col-sm-6">
@@ -252,14 +252,14 @@
 
                                                     if(count($usertypes)) {
                                                         foreach ($usertypes as $key => $usertype) {
-                                                            $array[$usertype->usertypeID] = $usertype->usertype;
+                                                            $array[$usertype->roleID] = $usertype->usertype;
                                                         }
                                                     }
-                                                    echo form_dropdown("sms_usertypeID", $array, set_value("sms_usertypeID"), "id='sms_usertypeID' class='form-control select2'");
+                                                    echo form_dropdown("sms_roleID", $array, set_value("sms_roleID"), "id='sms_roleID' class='form-control select2'");
                                                 ?>
                                             </div>
                                             <span class="col-sm-4 control-label">
-                                                <?php echo form_error('sms_usertypeID'); ?>
+                                                <?php echo form_error('sms_roleID'); ?>
                                             </span>
                                         </div>
 
@@ -459,8 +459,8 @@
     $classoption = '<option value="select">'.$this->lang->line('mailandsms_select_class').'</option>';
     $schoolyearoption = '<option value="select">'.$this->lang->line('mailandsms_select_schoolyear').'</option>';
 
-    $setEmailUserTypeID = $email_usertypeID;
-    $setSMSUserTypeID = $sms_usertypeID;
+    $setEmailUserTypeID = $email_roleID;
+    $setSMSUserTypeID = $sms_roleID;
 
     // dump($setEmailUserTypeID);
 
@@ -473,12 +473,12 @@
         $('#email_message').jqte();
 
 
-        var usertypeID = "<?=$setEmailUserTypeID?>";
-        if(usertypeID != 'select') {
+        var roleID = "<?=$setEmailUserTypeID?>";
+        if(roleID != 'select') {
             $.ajax({
                 type: 'POST',
                 url: "<?=base_url('mailandsms/alltemplate')?>",
-                data: "usertypeID=" + usertypeID + "&type=" + "email",
+                data: "roleID=" + roleID + "&type=" + "email",
                 dataType: "html",
                 success: function(data) {
                    $('#email_template').html(data);
@@ -488,10 +488,10 @@
             $.ajax({
                 type: 'POST',
                 url: "<?=base_url('mailandsms/allusers')?>",
-                data: "usertypeID=" + usertypeID,
+                data: "roleID=" + roleID,
                 dataType: "html",
                 success: function(data) {
-                    if(usertypeID == 3) {
+                    if(roleID == 3) {
                         $('#divemail_class').show();
                         $('#email_class').html(data);
 
@@ -509,13 +509,13 @@
             $('#email_users').html('<?=$useroption?>');
         }
 
-        $("#email_usertypeID").change(function() {
-            var usertypeID = $(this).val();
-            if(usertypeID != 'select') {
+        $("#email_roleID").change(function() {
+            var roleID = $(this).val();
+            if(roleID != 'select') {
                 $.ajax({
                     type: 'POST',
                     url: "<?=base_url('mailandsms/alltemplate')?>",
-                    data: "usertypeID=" + usertypeID + "&type=" + "email",
+                    data: "roleID=" + roleID + "&type=" + "email",
                     dataType: "html",
                     success: function(data) {
                        $('#email_template').html(data);
@@ -525,10 +525,10 @@
                 $.ajax({
                     type: 'POST',
                     url: "<?=base_url('mailandsms/allusers')?>",
-                    data: "usertypeID=" + usertypeID,
+                    data: "roleID=" + roleID,
                     dataType: "html",
                     success: function(data) {
-                        if(usertypeID == 3) {
+                        if(roleID == 3) {
                             $('#divemail_class').show();
                             $('#email_class').html(data);
 
@@ -553,7 +553,7 @@
                 $.ajax({
                     type: 'POST',
                     url: "<?=base_url('mailandsms/allusers')?>",
-                    data: "usertypeID=" + 3,
+                    data: "roleID=" + 3,
                     dataType: "html",
                     success: function(data) {
                        $('#email_class').html(data);
@@ -603,12 +603,12 @@
         $('#divsms_class').hide();
         $('#divsms_schoolyear').hide();
 
-        var usertypeID = "<?=$setSMSUserTypeID?>";
-        if(usertypeID != 'select') {
+        var roleID = "<?=$setSMSUserTypeID?>";
+        if(roleID != 'select') {
             $.ajax({
                 type: 'POST',
                 url: "<?=base_url('mailandsms/alltemplate')?>",
-                data: "usertypeID=" + usertypeID + "&type=" + "sms",
+                data: "roleID=" + roleID + "&type=" + "sms",
                 dataType: "html",
                 success: function(data) {
                    $('#sms_template').html(data);
@@ -618,10 +618,10 @@
             $.ajax({
                 type: 'POST',
                 url: "<?=base_url('mailandsms/allusers')?>",
-                data: "usertypeID=" + usertypeID,
+                data: "roleID=" + roleID,
                 dataType: "html",
                 success: function(data) {
-                    if(usertypeID == 3) {
+                    if(roleID == 3) {
                         $('#divsms_class').show();
                         $('#sms_class').html(data);
 
@@ -639,13 +639,13 @@
             $('#sms_users').html('<?=$useroption?>');
         }
 
-        $("#sms_usertypeID").change(function() {
-            var usertypeID = $(this).val();
-            if(usertypeID != 'select') {
+        $("#sms_roleID").change(function() {
+            var roleID = $(this).val();
+            if(roleID != 'select') {
                 $.ajax({
                     type: 'POST',
                     url: "<?=base_url('mailandsms/alltemplate')?>",
-                    data: "usertypeID=" + usertypeID + "&type=" + "sms",
+                    data: "roleID=" + roleID + "&type=" + "sms",
                     dataType: "html",
                     success: function(data) {
                        $('#sms_template').html(data);
@@ -655,10 +655,10 @@
                 $.ajax({
                     type: 'POST',
                     url: "<?=base_url('mailandsms/allusers')?>",
-                    data: "usertypeID=" + usertypeID,
+                    data: "roleID=" + roleID,
                     dataType: "html",
                     success: function(data) {
-                        if(usertypeID == 3) {
+                        if(roleID == 3) {
                             $('#divsms_class').show();
                             $('#sms_class').html(data);
 
@@ -683,7 +683,7 @@
                 $.ajax({
                     type: 'POST',
                     url: "<?=base_url('mailandsms/allusers')?>",
-                    data: "usertypeID=" + 3,
+                    data: "roleID=" + 3,
                     dataType: "html",
                     success: function(data) {
                        $('#sms_class').html(data);

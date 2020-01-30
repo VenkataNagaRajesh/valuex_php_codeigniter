@@ -69,7 +69,7 @@ class Paxfeed extends Admin_Controller {
 		if(!empty($this->input->post('carrier_code'))){
                 $this->data['carrier_code'] = $this->input->post('carrier_code');
                 } else {
-                    if($this->session->userdata('usertypeID') != 1){
+                    if($this->session->userdata('roleID') != 1){
 					 $this->data['carrier_code'] = $this->session->userdata('default_airline');
 				   } else {					
                      $this->data['carrier_code'] = 0;
@@ -78,8 +78,8 @@ class Paxfeed extends Admin_Controller {
 
 
 		$userID = $this->session->userdata('loginuserID');
-                $userTypeID = $this->session->userdata('usertypeID');
-                if($userTypeID != 1){
+                $roleID = $this->session->userdata('roleID');
+                if($roleID != 1){
 						 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 						   }  else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -582,7 +582,7 @@ class Paxfeed extends Admin_Controller {
 
     function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');	  
+		$roleID = $this->session->userdata('roleID');	  
 
 
 		
@@ -740,9 +740,9 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 
 
 
-    $userTypeID = $this->session->userdata('usertypeID');
+    $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
+                if($roleID == 2){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'pax.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';              
                 }

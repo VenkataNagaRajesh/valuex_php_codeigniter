@@ -16,8 +16,8 @@
 								  }							
 
 
-								$userTypeID = $this->session->userdata('usertypeID');
-                                                        if($userTypeID != 1){
+								$roleID = $this->session->userdata('roleID');
+                                                        if($roleID != 1){
                                                                 $default_airlineID =  key($airlinelist);
                                                         } else {
                                                                 $default_airlineID = 0;

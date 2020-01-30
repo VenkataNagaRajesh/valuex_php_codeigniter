@@ -213,14 +213,14 @@
                             <?php echo form_error('photo'); ?>
                         </span>
                     </div>
-                 <?php if($this->session->userdata('usertypeID') != 2){ ?>
+                 <?php if($this->session->userdata('roleID') != 2){ ?>
                     <?php
-                        if(form_error('usertypeID'))
+                        if(form_error('roleID'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="usertypeID" class="col-sm-2 control-label">
+                        <label for="roleID" class="col-sm-2 control-label">
                             <?=$this->lang->line("user_usertype")?>
                         </label>
                         <?php if(permissionChecker('usertype_add')) { ?>
@@ -232,13 +232,13 @@
 									   
                                         if(count($usertypes)) {
                                             foreach ($usertypes as $key => $usertype) {
-                                               // if(!in_array($usertype->usertypeID, $blockuser)) {
-                                                    $array[$usertype->usertypeID] = $usertype->usertype;
+                                               // if(!in_array($usertype->roleID, $blockuser)) {
+                                                    $array[$usertype->roleID] = $usertype->usertype;
                                               //  }
                                             }
                                         }
-                                        echo form_dropdown("usertypeID", $array, 
-                                            set_value("usertypeID", $user->usertypeID), "id='usertypeID' class='form-control hide-dropdown-icon'"
+                                        echo form_dropdown("roleID", $array, 
+                                            set_value("roleID", $user->roleID), "id='roleID' class='form-control hide-dropdown-icon'"
                                         );
                                     ?>
                                     <span class="input-group-addon btn btn-danger">
@@ -256,20 +256,20 @@
                                     $blockuser = array(1, 2, 3, 4);
                                     if(count($usertypes)) {
                                         foreach ($usertypes as $key => $usertype) {
-                                            if(!in_array($usertype->usertypeID, $blockuser)) {
-                                                $array[$usertype->usertypeID] = $usertype->usertype;
+                                            if(!in_array($usertype->roleID, $blockuser)) {
+                                                $array[$usertype->roleID] = $usertype->usertype;
                                             }
                                         }
                                     }
-                                    echo form_dropdown("usertypeID", $array, 
-                                        set_value("usertypeID", $user->usertypeID), "id='usertypeID' class='form-control hide-dropdown-icon'"
+                                    echo form_dropdown("roleID", $array, 
+                                        set_value("roleID", $user->roleID), "id='roleID' class='form-control hide-dropdown-icon'"
                                     );
                                 ?>
                             </div>
                         <?php } ?>
                         
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('usertypeID'); ?>
+                            <?php echo form_error('roleID'); ?>
                         </span>
                     </div>
                  <?php } ?>

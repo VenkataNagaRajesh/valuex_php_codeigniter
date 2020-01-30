@@ -39,7 +39,7 @@ class season_m extends MY_Model {
 			$this->db->join('VX_data_types dt2','dt2.vx_aln_data_typeID = s.ams_dest_levelID','LEFT');
 			$this->db->join('VX_data_defns dd','dd.vx_aln_data_defnsID = s.airlineID','LEFT');
 		if($id != 0){ $this->db->where('s.airlineID',$id); }
-		if($this->session->userdata('usertypeID') == 2){
+		if($this->session->userdata('roleID') == 2){
 		   $this->db->where_in('s.airlineID',$this->session->userdata('login_user_airlineID'));
 		}
 		$query = $this->db->get();
@@ -162,7 +162,7 @@ class season_m extends MY_Model {
                 $this->db->select('VX_aln_seasonID,season_name');
                 $this->db->from('VX_season');
                 $this->db->where('active','1');
-				if($this->session->userdata('usertypeID') != 1){
+				if($this->session->userdata('roleID') != 1){
 					$this->db->where_in('airlineID',$this->session->userdata('login_user_airlineID'));
 				}
                 $query = $this->db->get();
@@ -199,7 +199,7 @@ class season_m extends MY_Model {
 		$this->db->where('aln_data_typeID',12);
 		$this->db->like("CONCAT(aln_data_value, '_', code)",$string);
 		$query = $this->db->get(); */
-		if($this->session->userdata('usertypeID') == 2){
+		if($this->session->userdata('roleID') == 2){
 			$airlineIDs = implode(',',$this->session->userdata('login_user_airlineID'));
 			$query .= "vx_aln_data_defnsID IN (".$airlineIDs.") AND ";
 		}
@@ -212,7 +212,7 @@ class season_m extends MY_Model {
 	
 	public function seasonTotalCount(){
 		$this->db->select('count(*) count')->from('VX_season');
-		if($this->session->userdata('usertypeID') != 1 ){		
+		if($this->session->userdata('roleID') != 1 ){		
 			//$this->db->where('create_userID',$this->session->userdata('loginuserID'));
 			$this->db->where_in('airlineID',$this->session->userdata('login_user_airlineID'));
 		}

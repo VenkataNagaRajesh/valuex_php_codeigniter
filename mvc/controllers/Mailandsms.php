@@ -4,7 +4,7 @@ class Mailandsms extends Admin_Controller {
 
 	function __construct () {
 		parent::__construct();
-		$this->load->model('usertype_m');
+		$this->load->model('role_m');
 		$this->load->model("smssettings_m");		
 		$this->load->model('user_m');		
 		$this->load->model('mailandsms_m');
@@ -23,9 +23,9 @@ class Mailandsms extends Admin_Controller {
 	protected function rules_mail() {
 		$rules = array(
 			array(
-				'field' => 'email_usertypeID',
+				'field' => 'email_roleID',
 				'label' => $this->lang->line("mailandsms_usertype"),
-				'rules' => 'trim|required|xss_clean|max_length[15]|callback_check_email_usertypeID'
+				'rules' => 'trim|required|xss_clean|max_length[15]|callback_check_email_roleID'
 			),
 			array(
 				'field' => 'email_schoolyear',
@@ -64,9 +64,9 @@ class Mailandsms extends Admin_Controller {
 	protected function rules_sms() {
 		$rules = array(
 			array(
-				'field' => 'sms_usertypeID',
-				'label' => $this->lang->line("mailandsms_usertypeID"),
-				'rules' => 'trim|required|xss_clean|max_length[15]|callback_check_sms_usertypeID'
+				'field' => 'sms_roleID',
+				'label' => $this->lang->line("mailandsms_roleID"),
+				'rules' => 'trim|required|xss_clean|max_length[15]|callback_check_sms_roleID'
 			),
 			array(
 				'field' => 'sms_schoolyear',
@@ -103,7 +103,7 @@ class Mailandsms extends Admin_Controller {
 	}
 
 	public function index() {
-		$this->data['mailandsmss'] = $this->mailandsms_m->get_mailandsms_with_usertypeID();
+		$this->data['mailandsmss'] = $this->mailandsms_m->get_mailandsms_with_roleID();
 		$this->data["subview"] = "mailandsms/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -120,23 +120,23 @@ class Mailandsms extends Admin_Controller {
 				'assets/editor/jquery-te-1.4.0.min.js'
 			)
 		);
-		$this->data['usertypes'] = $this->usertype_m->get_usertype();
+		$this->data['roles'] = $this->role_m->get_role();
 	    /* Start For Email */
-		$email_usertypeID = $this->input->post("email_usertypeID");
-		if($email_usertypeID && $email_usertypeID != 'select') {
-			$this->data['email_usertypeID'] = $email_usertypeID;
+		$email_roleID = $this->input->post("email_roleID");
+		if($email_roleID && $email_roleID != 'select') {
+			$this->data['email_roleID'] = $email_roleID;
 
 		} else {
-			$this->data['email_usertypeID'] = 'select';
+			$this->data['email_roleID'] = 'select';
 		}
 		/* End For Email */
 
 		/* Start For SMS */
-		$sms_usertypeID = $this->input->post("sms_usertypeID");
-		if($sms_usertypeID && $sms_usertypeID != 'select') {
-			$this->data['sms_usertypeID'] = $sms_usertypeID;
+		$sms_roleID = $this->input->post("sms_roleID");
+		if($sms_roleID && $sms_roleID != 'select') {
+			$this->data['sms_roleID'] = $sms_roleID;
 		} else {
-			$this->data['sms_usertypeID'] = 'select';
+			$this->data['sms_roleID'] = 'select';
 		}
 		/* End For SMS */
 
@@ -151,25 +151,25 @@ class Mailandsms extends Admin_Controller {
 					$this->data["subview"] = "mailandsms/add";
 					$this->load->view('_layout_main', $this->data);
 				} else {
-					$usertypeID = $this->input->post('email_usertypeID');
+					$roleID = $this->input->post('email_roleID');
                       /* FOR ALL USERS */
 						$userID = $this->input->post('email_users');
 						if($userID == 'select') {
 							$message = $this->input->post('email_message');
-							$multiusers = $this->user_m->get_order_by_user(array('usertypeID' => $usertypeID));
+							$multiusers = $this->user_m->get_order_by_user(array('roleID' => $roleID));
 							if(count($multiusers)) {
 								$countusers = '';
 								foreach ($multiusers as $key => $multiuser) {
-									$this->userConfigEmail($message, $multiuser, $usertypeID);
+									$this->userConfigEmail($message, $multiuser, $roleID);
 									$countusers .= $multiuser->name .' ,';
 								}
 								$array = array(
-									'usertypeID' => $usertypeID,
+									'roleID' => $roleID,
 									'users' => $countusers,
 									'type' => ucfirst($this->input->post('type')),
 									'message' => $this->input->post('email_message'),
 									'year' => date('Y'),
-									'senderusertypeID' => $this->session->userdata('usertypeID'),
+									'senderroleID' => $this->session->userdata('roleID'),
 									'senderID' => $this->session->userdata('loginuserID')
 								);
 								$this->mailandsms_m->insert_mailandsms($array);
@@ -182,14 +182,14 @@ class Mailandsms extends Admin_Controller {
 							$message = $this->input->post('email_message');
 							$singleuser = $this->user_m->get_user($userID);
 							if(count($singleuser)) {
-								$this->userConfigEmail($message, $singleuser, $usertypeID);
+								$this->userConfigEmail($message, $singleuser, $roleID);
 								$array = array(
-									'usertypeID' => $usertypeID,
+									'roleID' => $roleID,
 									'users' => $singleuser->name,
 									'type' => ucfirst($this->input->post('type')),
 									'message' => $this->input->post('email_message'),
 									'year' => date('Y'),
-									'senderusertypeID' => $this->session->userdata('usertypeID'),
+									'senderroleID' => $this->session->userdata('roleID'),
 									'senderID' => $this->session->userdata('loginuserID'),
 									'userID' => $userID,
 									'status' => 1
@@ -214,7 +214,7 @@ class Mailandsms extends Admin_Controller {
 					$this->load->view('_layout_main', $this->data);
 				} else {
 					$getway = $this->input->post('sms_getway');
-					$usertypeID = $this->input->post('sms_usertypeID');
+					$roleID = $this->input->post('sms_roleID');
 
 					 /* FOR ALL USERS */
 						$userID = $this->input->post('sms_users');
@@ -223,10 +223,10 @@ class Mailandsms extends Admin_Controller {
 							$retval = 1;
 							$retmess = '';
 							$message = $this->input->post('sms_message');
-							$multiusers = $this->user_m->get_order_by_user(array('usertypeID' => $usertypeID));
+							$multiusers = $this->user_m->get_order_by_user(array('roleID' => $roleID));
 							if(count($multiusers)) {
 								foreach ($multiusers as $key => $multiuser) {
-									$status = $this->userConfigSMS($message, $multiuser, $usertypeID, $getway);
+									$status = $this->userConfigSMS($message, $multiuser, $roleID, $getway);
 									$countusers .= $multiuser->name .' ,';
 
 									if($status['check'] == FALSE) {
@@ -238,12 +238,12 @@ class Mailandsms extends Admin_Controller {
 
 								if($retval == 1) {
 									$array = array(
-										'usertypeID' => $usertypeID,
+										'roleID' => $roleID,
 										'users' => $countusers,
 										'type' => ucfirst($this->input->post('type')),
 										'message' => $this->input->post('sms_message'),
 										'year' => date('Y'),
-										'senderusertypeID' => $this->session->userdata('usertypeID'),
+										'senderroleID' => $this->session->userdata('roleID'),
 										'senderID' => $this->session->userdata('loginuserID')
 									);
 									$this->mailandsms_m->insert_mailandsms($array);
@@ -262,7 +262,7 @@ class Mailandsms extends Admin_Controller {
 							$message = $this->input->post('sms_message');
 							$singleuser = $this->user_m->get_user($userID);
 							if(count($singleuser)) {
-								$status = $this->userConfigSMS($message, $singleuser, $usertypeID, $getway);
+								$status = $this->userConfigSMS($message, $singleuser, $roleID, $getway);
 								if($status['check'] == FALSE) {
 									$retval = 0;
 									$retmess = $status['message'];
@@ -270,12 +270,12 @@ class Mailandsms extends Admin_Controller {
 
 								if($retval == 1) {
 									$array = array(
-										'usertypeID' => $usertypeID,
+										'roleID' => $roleID,
 										'users' => $singleuser->name,
 										'type' => ucfirst($this->input->post('type')),
 										'message' => $this->input->post('sms_message'),
 										'year' => date('Y'),
-										'senderusertypeID' => $this->session->userdata('usertypeID'),
+										'senderroleID' => $this->session->userdata('roleID'),
 										'senderID' => $this->session->userdata('loginuserID')
 									);
 									$this->mailandsms_m->insert_mailandsms($array);
@@ -300,7 +300,7 @@ class Mailandsms extends Admin_Controller {
 		}
 	}
 
-	function userConfigEmail($message, $user, $usertypeID) {		
+	function userConfigEmail($message, $user, $roleID) {		
 			$message = str_replace('[first_name]', 'Lakshmi', $message);
 			$message = str_replace('[last_name]', 'Amujuru', $message);
 			$message = str_replace('[pnr_ref]', 'WQ1235', $message);
@@ -322,18 +322,18 @@ class Mailandsms extends Admin_Controller {
 			}
 	}
 
-	function userConfigSMS($message, $user, $usertypeID, $getway) {
-		if($user && $usertypeID) {
-			$userTags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => $usertypeID));
+	function userConfigSMS($message, $user, $roleID, $getway) {
+		if($user && $roleID) {
+			$userTags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('roleID' => $roleID));
 
-			if($usertypeID == 2) {
-				$userTags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => 2));
-			} elseif($usertypeID == 3) {
-				$userTags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => 3));
-			} elseif($usertypeID == 4) {
-				$userTags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => 4));
+			if($roleID == 2) {
+				$userTags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('roleID' => 2));
+			} elseif($roleID == 3) {
+				$userTags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('roleID' => 3));
+			} elseif($roleID == 4) {
+				$userTags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('roleID' => 4));
 			} else {
-				$userTags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => 1));
+				$userTags = $this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('roleID' => 1));
 			}
 
 			if(count($userTags)) {
@@ -484,13 +484,13 @@ class Mailandsms extends Admin_Controller {
 	}
 
 	function alltemplate() {
-		if($this->input->post('usertypeID') == 'select') {
+		if($this->input->post('roleID') == 'select') {
 			echo '<option value="select">'.$this->lang->line('mailandsms_select_template').'</option>';
 		} else {
-			$usertypeID = $this->input->post('usertypeID');
+			$roleID = $this->input->post('roleID');
 			$type = $this->input->post('type');
 
-			$templates = $this->mailandsmstemplate_m->get_order_by_mailandsmstemplate(array('usertypeID' => $usertypeID, 'type' => $type));
+			$templates = $this->mailandsmstemplate_m->get_order_by_mailandsmstemplate(array('roleID' => $roleID, 'type' => $type));
 			echo '<option value="select">'.$this->lang->line('mailandsms_select_template').'</option>';
 			if(count($templates)) {
 				foreach ($templates as $key => $template) {
@@ -501,11 +501,11 @@ class Mailandsms extends Admin_Controller {
 	}
 
 	function allusers() {
-		if($this->input->post('usertypeID') == 'select') {
+		if($this->input->post('roleID') == 'select') {
 			echo '<option value="select">'.$this->lang->line('mailandsms_select_users').'</option>';
 		} else {
-			$usertypeID = $this->input->post('usertypeID');
- 			$users = $this->user_m->get_order_by_user(array('usertypeID' => $usertypeID));
+			$roleID = $this->input->post('roleID');
+ 			$users = $this->user_m->get_order_by_user(array('roleID' => $roleID));
 				if(count($users)) {
 					echo "<option value='select'>".$this->lang->line('mailandsms_select_users')."</option>";
 					foreach ($users as $key => $user) {
@@ -537,9 +537,9 @@ class Mailandsms extends Admin_Controller {
 		}
 	}
 
-	function check_email_usertypeID() {
-		if($this->input->post('email_usertypeID') == 'select') {
-			$this->form_validation->set_message("check_email_usertypeID", "The %s field is required");
+	function check_email_roleID() {
+		if($this->input->post('email_roleID') == 'select') {
+			$this->form_validation->set_message("check_email_roleID", "The %s field is required");
 	     	return FALSE;
 		} else {
 			return TRUE;
@@ -558,9 +558,9 @@ class Mailandsms extends Admin_Controller {
 		}
 	}
 
-	function check_sms_usertypeID() {
-		if($this->input->post('sms_usertypeID') == 'select') {
-			$this->form_validation->set_message("check_sms_usertypeID", "The %s field is required");
+	function check_sms_roleID() {
+		if($this->input->post('sms_roleID') == 'select') {
+			$this->form_validation->set_message("check_sms_roleID", "The %s field is required");
 	     	return FALSE;
 		} else {
 			return TRUE;

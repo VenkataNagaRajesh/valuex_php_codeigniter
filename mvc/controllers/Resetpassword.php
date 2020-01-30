@@ -5,7 +5,7 @@ class Resetpassword extends Admin_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model("resetpassword_m");
-		$this->load->model('usertype_m');		
+		$this->load->model('role_m');		
 		$this->load->model("user_m");		
 		$language = $this->session->userdata('lang');
 		$this->lang->load('resetpassword', $language);	
@@ -63,7 +63,7 @@ class Resetpassword extends Admin_Controller {
 				'assets/select2/select2.js'
 			)
 		);
-		$this->data['usertypes'] = $this->usertype_m->get_usertype();
+		$this->data['roles'] = $this->role_m->get_role();
 		$userID = $this->input->post("users");
 		$table = '';
 		$tableID = '';
@@ -73,7 +73,7 @@ class Resetpassword extends Admin_Controller {
 				$tableID = 'userID';
 		
 
-			$this->data['usernames'] = $this->resetpassword_m->get_username($table, array('usertypeID' => $userID));
+			$this->data['usernames'] = $this->resetpassword_m->get_username($table, array('roleID' => $userID));
 		} else {
 			$this->data['usernames'] = "empty";
 		}
@@ -108,7 +108,7 @@ class Resetpassword extends Admin_Controller {
 			$tableID = 'userID';
 			
 
-			$get_users = $this->resetpassword_m->get_username($table, array('usertypeID' => $userID));
+			$get_users = $this->resetpassword_m->get_username($table, array('roleID' => $userID));
 			
 			if(count($get_users)) {
 				echo "<option value='0'>". $this->lang->line("resetpassword_select_username") ."</option>";

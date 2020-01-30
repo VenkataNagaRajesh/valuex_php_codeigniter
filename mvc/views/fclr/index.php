@@ -32,8 +32,8 @@
 					foreach($airlines as $airline){
                                                                  $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
                                                         }
-                                                        $userTypeID = $this->session->userdata('usertypeID');
-                                                        if($userTypeID == 2){
+                                                        $roleID = $this->session->userdata('roleID');
+                                                        if($roleID == 2){
                                                                 $default_airlineID =  key($airlinelist);
                                                         } else {
                                                                 $default_airlineID = 0;

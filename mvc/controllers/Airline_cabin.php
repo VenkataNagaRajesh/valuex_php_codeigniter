@@ -75,7 +75,7 @@ class Airline_cabin extends Admin_Controller {
 
 	public function index() {
 
-          $userTypeID = $this->session->userdata('usertypeID');
+          $roleID = $this->session->userdata('roleID');
 		  $this->data['headerassets'] = array(
                         'css' => array(
                                 'assets/select2/css/select2.css',
@@ -91,7 +91,7 @@ class Airline_cabin extends Admin_Controller {
 	        if(!empty($this->input->post('airline_code'))){
                   $this->data['airlineID'] = $this->input->post('airline_code');
                 } else {
-                  if($userTypeID != 1){
+                  if($roleID != 1){
 					  $this->data['airlineID'] = $this->session->userdata('default_airline');
 				  } else {
 					  $this->data['airlineID'] = 0;	
@@ -121,8 +121,8 @@ class Airline_cabin extends Admin_Controller {
 		
 
 		   $userID = $this->session->userdata('loginuserID');
-                $userTypeID = $this->session->userdata('usertypeID');
-                 if($userTypeID != 1){
+                $roleID = $this->session->userdata('roleID');
+                 if($roleID != 1){
 				   $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 				} else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -155,8 +155,8 @@ class Airline_cabin extends Admin_Controller {
 
 
 		   $userID = $this->session->userdata('loginuserID');
-                $userTypeID = $this->session->userdata('usertypeID');
-                 if($userTypeID != 1){
+                $roleID = $this->session->userdata('roleID');
+                 if($roleID != 1){
 		   $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		 } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -230,8 +230,8 @@ class Airline_cabin extends Admin_Controller {
 
 		   
                    $userID = $this->session->userdata('loginuserID');
-                $userTypeID = $this->session->userdata('usertypeID');
-                 if($userTypeID != 1){
+                $roleID = $this->session->userdata('roleID');
+                 if($roleID != 1){
 		   $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		}  else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -528,9 +528,9 @@ class Airline_cabin extends Admin_Controller {
                         }
 
 
-                $userTypeID = $this->session->userdata('usertypeID');
+                $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID != 1){
+                if($roleID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'cm.airline_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                        
                 }

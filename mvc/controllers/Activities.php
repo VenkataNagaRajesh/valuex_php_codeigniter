@@ -29,13 +29,13 @@ class Activities extends Admin_Controller {
 	}
 
 	public function index() {
-        $allUserTypes = $this->usertype_m->get_usertype();
+        $allUserTypes = $this->role_m->get_role();
 		$this->data['activitiescategories'] = $this->activitiescategory_m->get_activitiescategory();
 		$this->data['activities'] = $this->activities_m->get_activities_data();
-        $this->data['allusertype'] = pluck($allUserTypes, 'usertype', 'usertypeID');
-        $this->data['usertypeID'] = $this->session->userdata('usertypeID');
+        $this->data['allusertype'] = pluck($allUserTypes, 'usertype', 'roleID');
+        $this->data['roleID'] = $this->session->userdata('roleID');
         $this->data['userID'] = $this->session->userdata('loginuserID');
-        $usertypeID = $this->session->userdata("usertypeID");
+        $roleID = $this->session->userdata("roleID");
         $userID = $this->session->userdata("loginuserID");
         if ($_POST) {
             $id = $this->uri->segment(3);
@@ -45,7 +45,7 @@ class Activities extends Admin_Controller {
                     $array['activitiesID'] = $id;
                     $array['comment'] = $this->input->post('comment');
                     $array['userID'] = $userID;
-                    $array['usertypeID'] = $usertypeID;
+                    $array['roleID'] = $roleID;
                     $array['create_date'] = date("Y-m-d h:i:s");
                     $this->activitiescomment_m->insert_activitiescomment($array);
                     $this->session->set_flashdata('success', $this->lang->line("menu_success"));
@@ -147,7 +147,7 @@ class Activities extends Admin_Controller {
                         "description" => $this->input->post("description"),
                         "activitiescategoryID" => $categoryID,
                         "schoolyearID" => $this->data['siteinfos']->school_year,
-                        "usertypeID" => $this->session->userdata('usertypeID'),
+                        "roleID" => $this->session->userdata('roleID'),
                         "userID" => $this->session->userdata('loginuserID'),
                     );
                     if ($this->input->post("time_to")!="0:00"){
@@ -220,12 +220,12 @@ class Activities extends Admin_Controller {
 
 	public function delete() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
-        $usertypeID = $this->session->userdata('usertypeID');
+        $roleID = $this->session->userdata('roleID');
         $userID = $this->session->userdata('loginuserID');
 
 		if((int)$id) {
             $activities = $this->activities_m->get_activities($id);
-            if(($usertypeID == $activities->usertypeID && $userID == $activities->userID) || ($usertypeID == 1)) {
+            if(($roleID == $activities->roleID && $userID == $activities->userID) || ($roleID == 1)) {
                 $this->activities_m->delete_activities($id);
                 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
             }
@@ -237,13 +237,13 @@ class Activities extends Admin_Controller {
 
 	public function delete_comment() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
-        $usertypeID = $this->session->userdata('usertypeID');
+        $roleID = $this->session->userdata('roleID');
         $userID = $this->session->userdata('loginuserID');
 
         if((int)$id) {
             $comment = $this->activitiescomment_m->get_activitiescomment($id);
             $activities = $this->activities_m->get_activities($comment->activitiesID);
-            if(($usertypeID == $activities->usertypeID && $userID == $activities->userID) || ($usertypeID == 1)) {
+            if(($roleID == $activities->roleID && $userID == $activities->userID) || ($roleID == 1)) {
                 $this->activitiescomment_m->delete_activitiescomment($id);
                 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
             }

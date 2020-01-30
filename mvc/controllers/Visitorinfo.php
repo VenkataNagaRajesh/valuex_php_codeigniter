@@ -6,7 +6,7 @@ class Visitorinfo extends Admin_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model("visitorinfo_m");
-		$this->load->model('usertype_m');
+		$this->load->model('role_m');
 		$this->load->model('systemadmin_m');
 		$this->load->model('student_m');
 		$this->load->model('parents_m');
@@ -39,8 +39,8 @@ class Visitorinfo extends Admin_Controller {
 				'rules' => 'trim|max_length[200]|xss_clean'
 			),
             array(
-				'field' => 'to_meet_usertypeID',
-				'label' => $this->lang->line("usertypeID"),
+				'field' => 'to_meet_roleID',
+				'label' => $this->lang->line("roleID"),
 				'rules' => 'trim|required|max_length[200]|xss_clean'
 			),
 			array(
@@ -63,19 +63,19 @@ class Visitorinfo extends Admin_Controller {
 	}
 
 	public function index() {
-		$this->data['usertypes'] = $this->usertype_m->get_usertype();
-		$usertypeID = $this->input->post("usertypeID");
-		if($usertypeID != 0) {
-			if($usertypeID == 1) {
+		$this->data['roles'] = $this->role_m->get_role();
+		$roleID = $this->input->post("roleID");
+		if($roleID != 0) {
+			if($roleID == 1) {
 				$this->data['users'] = $this->systemadmin_m->get_systemadmin();
-			} elseif($usertypeID == 2) {
+			} elseif($roleID == 2) {
 				$this->data['users'] = $this->teacher_m->get_teacher();
-			} elseif($usertypeID == 3) {
+			} elseif($roleID == 3) {
 				$this->data['users'] = $this->student_m->get_order_by_student(array('schoolyearID' => $this->data['siteinfos']->school_year));
-			} elseif($usertypeID == 4) {
+			} elseif($roleID == 4) {
 				$this->data['users'] = $this->parents_m->get_parents();
 			} else {
-				$this->data['users'] = $this->user_m->get_order_by_user(array('usertypeID' => $usertypeID));
+				$this->data['users'] = $this->user_m->get_order_by_user(array('roleID' => $roleID));
 			}
 		} else {
 			$this->data['users'] = "empty";
@@ -83,36 +83,36 @@ class Visitorinfo extends Admin_Controller {
 		$this->data['to_meet'] = 0;
         $this->data['passes'] = $this->visitorinfo_m->get_order_by_visitorinfo(array('schoolyearID' => $this->session->userdata('defaultschoolyearID')));
         $mapArray = array();
-        $mapUsertype = pluck($this->usertype_m->get_usertype(), 'usertype', 'usertypeID');
+        $mapUsertype = pluck($this->role_m->get_role(), 'usertype', 'roleID');
 
         $systemadmins = $this->systemadmin_m->get_systemadmin();
         if(count($systemadmins)) {
             foreach ($systemadmins as $systemadmin) {
-                $mapArray[$systemadmin->usertypeID][$systemadmin->systemadminID] = array($systemadmin->name, $mapUsertype[$systemadmin->usertypeID]);
+                $mapArray[$systemadmin->roleID][$systemadmin->systemadminID] = array($systemadmin->name, $mapUsertype[$systemadmin->roleID]);
             }
         }
         $teachers = $this->teacher_m->get_teacher();
         if(count($teachers)) {
             foreach ($teachers as $teacher) {
-                $mapArray[$teacher->usertypeID][$teacher->teacherID] = array($teacher->name, $mapUsertype[$teacher->usertypeID]);
+                $mapArray[$teacher->roleID][$teacher->teacherID] = array($teacher->name, $mapUsertype[$teacher->roleID]);
             }
         }
         $students = $this->student_m->get_order_by_student(array('schoolyearID' => $this->session->userdata('defaultschoolyearID')));
         if(count($students)) {
             foreach ($students as $student) {
-                $mapArray[$student->usertypeID][$student->studentID] = array($student->name, $mapUsertype[$student->usertypeID]);
+                $mapArray[$student->roleID][$student->studentID] = array($student->name, $mapUsertype[$student->roleID]);
             }
         }
         $parents = $this->parents_m->get_parents();
         if(count($parents)) {
             foreach ($parents as $parent) {
-                $mapArray[$parent->usertypeID][$parent->parentsID] = array($parent->name, $mapUsertype[$parent->usertypeID]);
+                $mapArray[$parent->roleID][$parent->parentsID] = array($parent->name, $mapUsertype[$parent->roleID]);
             }
         }
         $users = $this->user_m->get_order_by_user();
         if(count($users)) {
             foreach ($users as $user) {
-                $mapArray[$user->usertypeID][$user->userID] = array($user->name, $mapUsertype[$user->usertypeID]);
+                $mapArray[$user->roleID][$user->userID] = array($user->name, $mapUsertype[$user->roleID]);
             }
         }
 
@@ -127,7 +127,7 @@ class Visitorinfo extends Admin_Controller {
                 $response['email_id'] = form_error('email_id');
                 $response['phone'] = form_error('phone');
                 $response['company_name'] = form_error('company_name');
-                $response['to_meet_usertypeID'] = form_error('to_meet_usertypeID');
+                $response['to_meet_roleID'] = form_error('to_meet_roleID');
                 $response['coming_from'] = form_error('coming_from');
                 $response['to_meet_personID'] = form_error('to_meet_personID');
                 $response['representing'] = form_error('representing');
@@ -153,8 +153,8 @@ class Visitorinfo extends Admin_Controller {
 
                         $arr = array(
                               'id'=>$id,
-                              'to_meet'=> $mapArray[$array["to_meet_usertypeID"]][$array["to_meet_personID"]][0],
-                              'to_meet_type'=>$mapArray[$array["to_meet_usertypeID"]][$array["to_meet_personID"]][1],
+                              'to_meet'=> $mapArray[$array["to_meet_roleID"]][$array["to_meet_personID"]][0],
+                              'to_meet_type'=>$mapArray[$array["to_meet_roleID"]][$array["to_meet_personID"]][1],
                             );
                         echo json_encode($arr);
                     } else {
@@ -177,10 +177,10 @@ class Visitorinfo extends Admin_Controller {
 
 	function usercall() {
 		$schoolyearID = $this->session->userdata('defaultschoolyearID');
-		$usertypeID = $this->input->post('id');
-		if((int)$usertypeID) {
+		$roleID = $this->input->post('id');
+		if((int)$roleID) {
 			$this->data['users'] = array();
-			if($usertypeID == 1) {
+			if($roleID == 1) {
 				$this->data['users'] = $this->systemadmin_m->get_systemadmin();
 				echo "<option value='0'>", $this->lang->line("visitor_select_user"),"</option>";
 				if(count($this->data['users'])) {
@@ -188,7 +188,7 @@ class Visitorinfo extends Admin_Controller {
 						echo "<option value=\"$value->systemadminID\">",$value->name,"</option>";
 					}
 				}
-			} elseif($usertypeID == 2) {
+			} elseif($roleID == 2) {
 				$this->data['users'] = $this->teacher_m->get_teacher();
 				echo "<option value='0'>", $this->lang->line("visitor_select_user"),"</option>";
 				if(count($this->data['users'])) {
@@ -196,7 +196,7 @@ class Visitorinfo extends Admin_Controller {
 						echo "<option value=\"$value->teacherID\">",$value->name,"</option>";
 					}
 				}
-			} elseif($usertypeID == 3) {
+			} elseif($roleID == 3) {
 				$this->data['users'] = $this->student_m->get_order_by_student(array('schoolyearID' => $schoolyearID));
 				echo "<option value='0'>", $this->lang->line("visitor_select_user"),"</option>";
 				if(count($this->data['users'])) {
@@ -204,7 +204,7 @@ class Visitorinfo extends Admin_Controller {
 						echo "<option value=\"$value->studentID\">",$value->name,"</option>";
 					}
 				}
-			} elseif($usertypeID == 4) {
+			} elseif($roleID == 4) {
 				$this->data['users'] = $this->parents_m->get_parents();
 				echo "<option value='0'>", $this->lang->line("visitor_select_user"),"</option>";
 				if(count($this->data['users'])) {
@@ -213,7 +213,7 @@ class Visitorinfo extends Admin_Controller {
 					}
 				}
 			} else {
-				$this->data['users'] = $this->user_m->get_order_by_user(array('usertypeID' => $usertypeID));
+				$this->data['users'] = $this->user_m->get_order_by_user(array('roleID' => $roleID));
 				echo "<option value='0'>", $this->lang->line("visitor_select_user"),"</option>";
 				if(count($this->data['users'])) {
 					foreach ($this->data['users'] as $value) {
@@ -260,36 +260,36 @@ class Visitorinfo extends Admin_Controller {
 	public function view() {
         //get all users
         $mapArray = array();
-        $mapUsertype = pluck($this->usertype_m->get_usertype(), 'usertype', 'usertypeID');
+        $mapUsertype = pluck($this->role_m->get_role(), 'usertype', 'roleID');
 
         $systemadmins = $this->systemadmin_m->get_systemadmin();
         if(count($systemadmins)) {
             foreach ($systemadmins as $systemadmin) {
-                $mapArray[$systemadmin->usertypeID][$systemadmin->systemadminID] = array($systemadmin->name, $mapUsertype[$systemadmin->usertypeID]);
+                $mapArray[$systemadmin->roleID][$systemadmin->systemadminID] = array($systemadmin->name, $mapUsertype[$systemadmin->roleID]);
             }
         }
         $teachers = $this->teacher_m->get_teacher();
         if(count($teachers)) {
             foreach ($teachers as $teacher) {
-                $mapArray[$teacher->usertypeID][$teacher->teacherID] = array($teacher->name, $mapUsertype[$teacher->usertypeID]);
+                $mapArray[$teacher->roleID][$teacher->teacherID] = array($teacher->name, $mapUsertype[$teacher->roleID]);
             }
         }
         $students = $this->student_m->get_order_by_student(array('schoolyearID' => $this->session->userdata('defaultschoolyearID')));
         if(count($students)) {
             foreach ($students as $student) {
-                $mapArray[$student->usertypeID][$student->studentID] = array($student->name, $mapUsertype[$student->usertypeID]);
+                $mapArray[$student->roleID][$student->studentID] = array($student->name, $mapUsertype[$student->roleID]);
             }
         }
         $parents = $this->parents_m->get_parents();
         if(count($parents)) {
             foreach ($parents as $parent) {
-                $mapArray[$parent->usertypeID][$parent->parentsID] = array($parent->name, $mapUsertype[$parent->usertypeID]);
+                $mapArray[$parent->roleID][$parent->parentsID] = array($parent->name, $mapUsertype[$parent->roleID]);
             }
         }
         $users = $this->user_m->get_order_by_user();
         if(count($users)) {
             foreach ($users as $user) {
-                $mapArray[$user->usertypeID][$user->userID] = array($user->name, $mapUsertype[$user->usertypeID]);
+                $mapArray[$user->roleID][$user->userID] = array($user->name, $mapUsertype[$user->roleID]);
             }
         }
 
@@ -302,8 +302,8 @@ class Visitorinfo extends Admin_Controller {
 					  'phone'=>$data->phone,
 					  'email_id'=>$data->email_id,
 					  'name'=>$data->name,
-                      'to_meet'=> $mapArray[$data->to_meet_usertypeID][$data->to_meet_personID][0],
-                      'to_meet_type'=>$mapArray[$data->to_meet_usertypeID][$data->to_meet_personID][1],
+                      'to_meet'=> $mapArray[$data->to_meet_roleID][$data->to_meet_personID][0],
+                      'to_meet_type'=>$mapArray[$data->to_meet_roleID][$data->to_meet_personID][1],
 					  'company_name'=>$data->company_name,
 					  'coming_from'=>$data->coming_from,
 					  'representing'=>$data->representing,

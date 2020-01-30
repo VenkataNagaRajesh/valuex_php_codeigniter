@@ -520,7 +520,7 @@ class Airline extends Admin_Controller {
 	
 	function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');	  
+		$roleID = $this->session->userdata('roleID');	  
 		
 	   // $aColumns = array('d.vx_aln_data_defnsID','d.aln_data_value','d.code','GROUP_CONCAT(dd.aln_data_value SEPARATOR ", ")');
 	     $aColumns = array('d.vx_aln_data_defnsID','d.aln_data_value','d.code');
@@ -586,7 +586,7 @@ class Airline extends Admin_Controller {
             $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
            $sWhere .= ' d.aln_data_typeID = 12 ';
 
-           if($this->session->userdata('usertypeID') != 1){  
+           if($this->session->userdata('roleID') != 1){  
               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 			  $sWhere .= 'd.vx_aln_data_defnsID IN ('.implode(',',$this->session->userdata('login_user_airlineID')).')';		
             } 		   
@@ -723,9 +723,9 @@ class Airline extends Admin_Controller {
 			)
 		);
         $this->data['airlineID'] = htmlentities(escapeString($this->uri->segment(3)));
-		$userTypeID = $this->session->userdata('usertypeID');
+		$roleID = $this->session->userdata('roleID');
 		$userID = $this->session->userdata('loginuserID');
-		if($userTypeID != 1){
+		if($roleID != 1){
 		  $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
            $this->data['airlines'] = $this->airline_m->getAirlinesData();

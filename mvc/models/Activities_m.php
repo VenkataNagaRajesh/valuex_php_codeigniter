@@ -31,13 +31,13 @@ class Activities_m extends MY_Model {
             $row->students = $this->get_students_for_activities($row->activitiesID);
             $row->comments = $this->get_comments_for_activities($row->activitiesID);
 
-            if ($row->usertypeID == 1) {
+            if ($row->roleID == 1) {
                 $table = "systemadmin";
-            } elseif($row->usertypeID == 2) {
+            } elseif($row->roleID == 2) {
                 $table = "teacher";
-            } elseif($row->usertypeID == 3) {
+            } elseif($row->roleID == 3) {
                 $table = 'student';
-            } elseif($row->usertypeID == 4) {
+            } elseif($row->roleID == 4) {
                 $table = 'parents';
             } else {
                 $table = 'user';
@@ -64,13 +64,13 @@ class Activities_m extends MY_Model {
     function get_comments_for_activities($activities_id) {
         $comments = $this->db->get_where("activitiescomment", array("activitiesID" => $activities_id))->result();
         foreach ($comments as $key => $comment) {
-            if ($comment->usertypeID == 1) {
+            if ($comment->roleID == 1) {
                 $table = "systemadmin";
-            } elseif($comment->usertypeID == 2) {
+            } elseif($comment->roleID == 2) {
                 $table = "teacher";
-            } elseif($comment->usertypeID == 3) {
+            } elseif($comment->roleID == 3) {
                 $table = 'student';
-            } elseif($comment->usertypeID == 4) {
+            } elseif($comment->roleID == 4) {
                 $table = 'parents';
             } else {
                 $table = 'user';

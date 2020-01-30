@@ -22,7 +22,7 @@
                   </h5>
                 <?php } ?>
                 
-                <?php if($this->session->userdata('usertypeID') != 3 && $this->session->userdata('usertypeID') != 4) { ?>
+                <?php if($this->session->userdata('roleID') != 3 && $this->session->userdata('roleID') != 4) { ?>
                 <div class="col-lg-6 col-lg-offset-3 list-group">
                     <div class="list-group-item list-group-item-warning">
                         <form style="" class="form-horizontal" role="form" method="post" enctype="multipart/form-data">

@@ -6,7 +6,7 @@ class Client extends Admin_Controller {
 		parent::__construct();
 //$this->load->model("client_m");
 		$this->load->model("user_m");
-		$this->load->model('usertype_m');
+		$this->load->model('role_m');
 		$this->load->model('airline_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('client', $language);
@@ -176,9 +176,9 @@ class Client extends Admin_Controller {
 	}	
 
 	public function index() {
-		$userTypeID = $this->session->userdata('usertypeID');
+		$roleID = $this->session->userdata('roleID');
 		$userID = $this->session->userdata('loginuserID');
-		 if($userTypeID != 1){
+		 if($roleID != 1){
 			 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 			}else {
 			 $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -187,7 +187,7 @@ class Client extends Admin_Controller {
 		if(!empty($this->input->post('airlineID'))){	
 		   $this->data['airlineID'] = $this->input->post('airlineID');
 		} else {
-			if($userTypeID != 1){
+			if($roleID != 1){
 		      $this->data['airlineID'] = $this->session->userdata('default_airline');
 			} else {
 			  $this->data['airlineID'] = 0;	
@@ -228,7 +228,7 @@ class Client extends Admin_Controller {
 				$array["address"] = $this->input->post("address");				
 				$array["username"] = $this->input->post("username");
 				$array["password"] = $this->user_m->hash($this->input->post("password"));
-				$array["usertypeID"] = $usertype;
+				$array["roleID"] = $usertype;
 				$array["create_date"] = date("Y-m-d h:i:s");
 				$array["modify_date"] = date("Y-m-d h:i:s");
 				$array["create_userID"] = $this->session->userdata('loginuserID');
@@ -286,7 +286,7 @@ class Client extends Admin_Controller {
 			$array["address"] = $this->input->post("address");				
 			$array["username"] = $this->input->post("username");
 			$array["password"] = $this->user_m->hash($this->input->post("password"));
-			$array["usertypeID"] = $usertype;
+			$array["roleID"] = $usertype;
 			$array["create_date"] = date("Y-m-d h:i:s");
 			$array["modify_date"] = date("Y-m-d h:i:s");
 			$array["create_userID"] = $this->session->userdata('loginuserID');
@@ -331,12 +331,12 @@ class Client extends Admin_Controller {
 		);
 
 		$id = htmlentities(escapeString($this->uri->segment(3)));
-		if($this->session->userdata('usertypeID') == 2){
-		  $this->data['usertypes'] = array();
+		if($this->session->userdata('roleID') == 2){
+		  $this->data['roles'] = array();
 		} else {
-		  $this->data['usertypes'] = $this->usertype_m->get_usertype();
+		  $this->data['roles'] = $this->role_m->get_role();
 		}
-		if($this->session->userdata('usertypeID') == 1){
+		if($this->session->userdata('roleID') == 1){
 		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
 		} else {
 		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($this->session->userdata('loginuserID'));	
@@ -576,7 +576,7 @@ class Client extends Admin_Controller {
 	
 	function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');	  
+		$roleID = $this->session->userdata('roleID');	  
 				
 	    $aColumns = array('c.userID','c.photo','c.name','c.email','c.photo','c.phone','dd.code','c.active');
 	
@@ -639,13 +639,13 @@ class Client extends Admin_Controller {
 				}
 			}
 			
-			if($usertypeID == 2){
+			if($roleID == 2){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                 $sWhere .= 'c.userID = '.$this->session->userdata('loginuserID');	
 			}
 			$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                $sWhere .= 'c.usertypeID = 2';
-			if($usertypeID != 1){
+                $sWhere .= 'c.roleID = 2';
+			if($roleID != 1){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 				$airlines = $this->user_m->getUserAirlines($userID);
 				foreach($airlines as $airline){

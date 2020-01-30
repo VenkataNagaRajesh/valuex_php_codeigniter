@@ -84,8 +84,8 @@ class Offer_eligibility extends Admin_Controller {
 
 
 		                $userID = $this->session->userdata('loginuserID');
-                $userTypeID = $this->session->userdata('usertypeID');
-                if($userTypeID != 1){
+                $roleID = $this->session->userdata('roleID');
+                if($roleID != 1){
 						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
 						   } else {
                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
@@ -101,10 +101,10 @@ class Offer_eligibility extends Admin_Controller {
 		$this->data['status'] = $this->rafeed_m->getNamesByType('20');
 		
 
-	$userTypeID = $this->session->userdata('usertypeID');
+	$roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
 
-        if($this->session->userdata('usertypeID') != 1){
+        if($this->session->userdata('roleID') != 1){
                     $this->data['seasonslist'] = $this->season_m->get_seasons_where(null,$this->session->userdata('login_user_airlineID'));
                 }else{
                    $this->data['seasonslist'] = $this->season_m->get_seasons();
@@ -112,7 +112,7 @@ class Offer_eligibility extends Admin_Controller {
         if($this->input->post('carrier')){
 		   $this->data['carrier'] = $this->input->post('carrier');
 	     } else {
-		   if($userTypeID != 1){
+		   if($roleID != 1){
              $this->data['carrier'] = $this->session->userdata('default_airline');
 		   } else {
 			 $this->data['carrier'] = 0;
@@ -127,7 +127,7 @@ class Offer_eligibility extends Admin_Controller {
 
     function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');	  
+		$roleID = $this->session->userdata('roleID');	  
 
 
 		
@@ -270,9 +270,9 @@ class Offer_eligibility extends Admin_Controller {
 
 
 
-		                  $userTypeID = $this->session->userdata('usertypeID');
+		                  $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID != 1){
+                if($roleID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'pf.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
                 }

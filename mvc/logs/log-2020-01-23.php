@@ -2313,3 +2313,5 @@ ERROR - 2020-01-23 16:41:57 --> Severity: Warning --> count(): Parameter must be
 ERROR - 2020-01-23 16:41:57 --> Severity: Warning --> count(): Parameter must be an array or an object that implements Countable C:\xampp\htdocs\valuex\mvc\models\Preference_m.php 95
 ERROR - 2020-01-23 16:41:57 --> Severity: Warning --> count(): Parameter must be an array or an object that implements Countable C:\xampp\htdocs\valuex\mvc\models\Preference_m.php 85
 ERROR - 2020-01-23 16:41:57 --> Severity: Warning --> count(): Parameter must be an array or an object that implements Countable C:\xampp\htdocs\valuex\mvc\models\Preference_m.php 95
+ERROR - 2020-01-23 17:00:47 --> Severity: Warning --> Declaration of Home::sendMail() should be compatible with MY_Controller::sendMail($data) C:\xampp\htdocs\valuex\mvc\controllers\Home.php 230
+ERROR - 2020-01-23 17:00:50 --> Severity: Notice --> Undefined index: pnr_ref C:\xampp\htdocs\valuex\mvc\controllers\Home.php 100

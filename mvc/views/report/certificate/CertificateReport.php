@@ -53,7 +53,7 @@
                                     </td>
 
                                     <td data-title="<?=$this->lang->line('report_action')?>">
-                                        <a class="btn btn-success" target="_blank" href="<?=base_url('report/generate_certificate/'.$student->studentID .'/'.$student->usertypeID.'/'.$templateID.'/'.$student->srschoolyearID.'/'.$student->srclassesID)?>"><?=$this->lang->line('report_generate_certificate')?></a>
+                                        <a class="btn btn-success" target="_blank" href="<?=base_url('report/generate_certificate/'.$student->studentID .'/'.$student->roleID.'/'.$templateID.'/'.$student->srschoolyearID.'/'.$student->srclassesID)?>"><?=$this->lang->line('report_generate_certificate')?></a>
                                     </td>
                                </tr>
                             <?php $i++; } } else { ?>

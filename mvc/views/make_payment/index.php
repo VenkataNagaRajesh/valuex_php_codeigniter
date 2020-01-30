@@ -25,8 +25,8 @@
                                         <?php
                                             $array = array("0" => $this->lang->line('make_payment_select_role'));
                                             foreach ($roles as $role) {
-                                                if($role->usertypeID != 3 && $role->usertypeID != 4) {
-                                                    $array[$role->usertypeID] = $role->usertype;
+                                                if($role->roleID != 3 && $role->roleID != 4) {
+                                                    $array[$role->roleID] = $role->usertype;
                                                 }
                                             }
                                             echo form_dropdown("role", $array, set_value("role", $setrole), "id='role' class='form-control select2'");
@@ -54,7 +54,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $i = 1; foreach($users as $user) { if($user->usertypeID == 1) { $userID = $user->systemadminID; } elseif($user->usertypeID == 2) { $userID = $user->teacherID; } else { $userID = $user->userID; }  if(in_array($userID, $managesalary)) { ?>
+                            <?php $i = 1; foreach($users as $user) { if($user->roleID == 1) { $userID = $user->systemadminID; } elseif($user->roleID == 2) { $userID = $user->teacherID; } else { $userID = $user->userID; }  if(in_array($userID, $managesalary)) { ?>
                                 <tr>
                                     <td data-title="<?=$this->lang->line('slno')?>">
                                         <?php echo $i; ?>
@@ -84,7 +84,7 @@
 
                                     <?php if(permissionChecker('make_payment')) { ?>
                                         <td data-title="<?=$this->lang->line('action')?>">
-                                            <a href="<?=base_url("make_payment/add/$userID/$user->usertypeID")?>" class="btn btn-sm btn-success"><?=$this->lang->line('make_payment_make_payment')?></a>
+                                            <a href="<?=base_url("make_payment/add/$userID/$user->roleID")?>" class="btn btn-sm btn-success"><?=$this->lang->line('make_payment_make_payment')?></a>
                                         </td>
                                     <?php } ?>
                                     

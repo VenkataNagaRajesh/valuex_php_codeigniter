@@ -27,7 +27,7 @@
                 </a>
 
                 <h1><?=$user->name?></h1>
-                <p><?=isset($usertypes[$user->usertypeID]) ? $usertypes[$user->usertypeID] : '' ?></p>
+                <p><?=isset($usertypes[$user->roleID]) ? $usertypes[$user->roleID] : '' ?></p>
 
             </div>
             <div class="panel-body profile-view-dis">

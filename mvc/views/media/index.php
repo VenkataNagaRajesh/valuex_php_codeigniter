@@ -43,11 +43,11 @@
                                     ?>                                  
                                     <i class="fa fa-folder fa-2x"></i>
                                     </a>
-                                    <?php if (permissionChecker('media_delete') && ($usertypeID == 1 || ($usertypeID==$folder->usertypeID && $userID == $folder->userID))): ?>
+                                    <?php if (permissionChecker('media_delete') && ($roleID == 1 || ($roleID==$folder->roleID && $userID == $folder->userID))): ?>
                                     <?php echo delete_file(base_url("media/deletef/$folder->mcategoryID"), "close_folder") ?>
                                     <a id="<?='folder'.$folder->mcategoryID?>" data-toggle="modal" data-target="#share_modal" class="share_file pull-right" ><i class="fa fa-globe fa-2x"></i></a>
                                     <?php endif ?>
-                                    <b style="font-size:10px;"><?=$this->lang->line('media_uploadedby')?> <?=$allusertype[$folder->usertypeID];?>: <?=$folder->shared_by;?></b>                                                                                                                   
+                                    <b style="font-size:10px;"><?=$this->lang->line('media_uploadedby')?> <?=$allusertype[$folder->roleID];?>: <?=$folder->shared_by;?></b>                                                                                                                   
                                 </div>
                             <?php endforeach ?>
                         <?php endif ?>
@@ -65,11 +65,11 @@
                                     ?>
                                     <i class="fa fa-file fa-2x"></i>
                                     </a>
-                                    <?php if (permissionChecker('media_delete') && ($usertypeID == 1 || ($usertypeID == $file->usertypeID && $userID == $file->userID))): ?>
+                                    <?php if (permissionChecker('media_delete') && ($roleID == 1 || ($roleID == $file->roleID && $userID == $file->userID))): ?>
                                     <?php echo delete_file(base_url("media/delete/$file->mediaID"), "close_folder") ?>
                                     <a id="<?=$file->mediaID?>" data-toggle="modal" data-target="#share_modal" class="share_file pull-right" ><i class="fa fa-globe fa-2x"></i></a>
                                     <?php endif ?>
-                                    <b style="font-size:10px;"><?=$this->lang->line('media_uploadedby')?> <?=$allusertype[$file->usertypeID];?>: <?=$file->shared_by;?></b> 
+                                    <b style="font-size:10px;"><?=$this->lang->line('media_uploadedby')?> <?=$allusertype[$file->roleID];?>: <?=$file->shared_by;?></b> 
                                 </div>
                             <?php endforeach ?>                 
                         <?php endif ?>

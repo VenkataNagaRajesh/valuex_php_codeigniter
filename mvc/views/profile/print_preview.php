@@ -276,10 +276,10 @@
                     <h5 style="margin:0px;">
                       <strong>
                         <?php
-                          if($usertypeID == 3) {
+                          if($roleID == 3) {
                             echo $this->lang->line("profile_classes")." ".$classes[$user->classesID];
                           } else {
-                            echo $usertype[$user->usertypeID];
+                            echo $usertype[$user->roleID];
                           }
                         ?>
                       </strong>
@@ -291,7 +291,7 @@
                     <h5 style="margin:0px;">
                       <strong>
                         <?php
-                          if($usertypeID == 3) {
+                          if($roleID == 3) {
                             echo $this->lang->line("profile_roll")." : ".$user->roll;
                           } else {
                             echo $this->lang->line("profile_email")." : ".$user->email;
@@ -315,7 +315,7 @@
           <tr>
             <th colspan="2"><h4><?=$this->lang->line("personal_information")?></h4></th>
           </tr>
-          <?php if($usertypeID == 3) { ?>
+          <?php if($roleID == 3) { ?>
           <tr>
               <th width="40%"><?=$this->lang->line("profile_registerNO")?></th>
               <td width="60%"><?php echo $user->registerNO; ?></td>
@@ -364,7 +364,7 @@
               <th width="40%"><?=$this->lang->line("profile_country")?></th>
               <td width="60%"><?php if(isset($allcountry[$user->country])) { echo $allcountry[$user->country]; } ?></td>
           </tr>
-          <?php } elseif($usertypeID == 4) { ?>
+          <?php } elseif($roleID == 4) { ?>
           <tr>
               <th width="40%"><?=$this->lang->line("profile_father_name")?></th>
               <td width="60%"><?php echo $user->father_name; ?></td>
@@ -420,7 +420,7 @@
               <th width="40%"><?=$this->lang->line("profile_address")?></th>
               <td width="60%"><?php  echo $user->address; ?></td>
           </tr>
-          <?php if($usertypeID == 2) { ?>
+          <?php if($roleID == 2) { ?>
            <tr>
               <th width="40%"><?=$this->lang->line("profile_designation")?></th>
               <td width="60%"><?php  echo $user->designation; ?></td>

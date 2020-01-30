@@ -157,7 +157,7 @@ class Bulkimport extends Admin_Controller {
                                                         'jod'=>$jod,
                                                         'username'=>$row['Username'],
                                                         'password'=> $this->teacher_m->hash($row['Password']),
-                                                        'usertypeID' => 2,
+                                                        'roleID' => 2,
                                                         'photo' => 'default.png',
                                                         "create_date" => date("Y-m-d h:i:s"),
                                                         "modify_date" => date("Y-m-d h:i:s"),
@@ -422,7 +422,7 @@ class Bulkimport extends Admin_Controller {
                                     'address'=>$row['Address'],
                                     'username'=>$row['Username'],
                                     'password'=> $this->parents_m->hash($row['Password']),
-                                    'usertypeID' => 2,
+                                    'roleID' => 2,
                                     'photo' => 'default.png',
                                     "create_date" => date("Y-m-d h:i:s"),
                                     "modify_date" => date("Y-m-d h:i:s"),
@@ -650,7 +650,7 @@ class Bulkimport extends Admin_Controller {
                                         'roll' => $row['Roll'],
                                         'username'=>$row['Username'],
                                         'password'=> $this->student_m->hash($row['Password']),
-                                        'usertypeID'=> 3,
+                                        'roleID'=> 3,
                                         'parentID'=> 0,
                                         'library' => 0,
                                         'hostel' => 0,
@@ -812,10 +812,10 @@ class Bulkimport extends Admin_Controller {
             return FALSE;
         } else {
             $type = $this->input->post('usertype');
-            $query = $this->db->query("SELECT usertypeID FROM `usertype` WHERE `usertype` = '$type'");
-            $usertypeID = $query->row('usertypeID');
+            $query = $this->db->query("SELECT roleID FROM `usertype` WHERE `usertype` = '$type'");
+            $roleID = $query->row('roleID');
             $blockuser = array(1, 2, 3, 4);
-            if(in_array($usertypeID, $blockuser)) {
+            if(in_array($roleID, $blockuser)) {
                 $this->form_validation->set_message("unique_usertype", "The %s field is required.");
                 return FALSE;
             }
@@ -871,7 +871,7 @@ class Bulkimport extends Admin_Controller {
                                     'photo' => 'default.png',
                                     'username'=>$row['Username'],
                                     'password'=> $this->user_m->hash($row['Password']),
-                                    'usertypeID' => $usertype,
+                                    'roleID' => $usertype,
                                     "create_date" => date("Y-m-d h:i:s"),
                                     "modify_date" => date("Y-m-d h:i:s"),
                                     "create_userID" => $this->session->userdata('loginuserID'),
@@ -913,11 +913,11 @@ class Bulkimport extends Admin_Controller {
     public function getUsertype($type)
     {
         if ($type) {
-            $query = $this->db->query("SELECT usertypeID FROM `usertype` WHERE `usertype` = '$type'");
+            $query = $this->db->query("SELECT roleID FROM `usertype` WHERE `usertype` = '$type'");
             if (empty($query)) {
                 return 'error';
             } else {
-                return $query->row('usertypeID');
+                return $query->row('roleID');
             }
         } else {
             return 0;

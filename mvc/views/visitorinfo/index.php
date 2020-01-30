@@ -65,7 +65,7 @@
                         </div>
 
                         <div class='form-group'>
-                            <label for="usertypeID" class="col-sm-3 control-label">
+                            <label for="roleID" class="col-sm-3 control-label">
                                 <?=$this->lang->line("visitor_usrtype")?>
                             </label>
                             <div class="col-sm-8">
@@ -73,11 +73,11 @@
                                     $array[0] = $this->lang->line('visitor_select_usertype');
                                     if(count($usertypes)) {
                                         foreach ($usertypes as $key => $usertype) {
-                                            $array[$usertype->usertypeID] = $usertype->usertype;
+                                            $array[$usertype->roleID] = $usertype->usertype;
                                         }
                                     }
-                                    echo form_dropdown("usertypeID", $array,
-                                        set_value("usertypeID"), "id='usertypeID' class='form-control'"
+                                    echo form_dropdown("roleID", $array,
+                                        set_value("roleID"), "id='roleID' class='form-control'"
                                     );
                                 ?>
                                 <span class="text-danger" id="error_to_meet_personID"></span>
@@ -91,7 +91,7 @@
                             <div class="col-sm-8">
                                 <select class="form-control select3" name="to_meet" id="to_meet">
                                     <?php if(count($admins)) { foreach ($admins as $admin) {  ?>
-                                        <option value="<?php echo $admin->usertypeID.','.$admin->systemadminID.','.$admin->name ?>"><?php echo $admin->name ?></option>
+                                        <option value="<?php echo $admin->roleID.','.$admin->systemadminID.','.$admin->name ?>"><?php echo $admin->name ?></option>
                                     <?php } } ?>
                                 </select>
                                 <span class="text-danger" id="error_to_meet_personID"></span>
@@ -197,7 +197,7 @@
                                 <td data-title="<?=$this->lang->line('to_meet')?>">
                                     <?php
                                         if (count($allUsers)) {
-                                            echo $allUsers[$pass->to_meet_usertypeID][$pass->to_meet_personID][0];
+                                            echo $allUsers[$pass->to_meet_roleID][$pass->to_meet_personID][0];
                                         }
                                     ?>
                                 </td>
@@ -277,7 +277,7 @@
         var company_name = $('#company_name').val();
         var coming_from = $('#coming_from').val();
         var to_meet_personID = $('#to_meet').val();
-        var to_meet_usertypeID = $('#usertypeID').val();
+        var to_meet_roleID = $('#roleID').val();
         var representing = $('#representing').val();
 
         Webcam.snap( function(data_uri) {
@@ -287,7 +287,7 @@
         $.ajax({
             type: 'POST',
             url: "<?=base_url('visitorinfo/index')?>",
-            data: {image: image, name: name, email_id : email_id, phone : phone, company_name: company_name, coming_from: coming_from, to_meet_personID : to_meet_personID , representing: representing, to_meet_usertypeID:to_meet_usertypeID},
+            data: {image: image, name: name, email_id : email_id, phone : phone, company_name: company_name, coming_from: coming_from, to_meet_personID : to_meet_personID , representing: representing, to_meet_roleID:to_meet_roleID},
             dataType: 'json',
             success: function(data) {
                 console.log(data);
@@ -311,8 +311,8 @@
                     if (data.to_meet_personID) {
                         $("#error_to_meet_personID").html(data.to_meet_personID);
                     }
-                    if (data.to_meet_usertypeID) {
-                        $("#error_to_meet_person_usertypeID").html(data.to_meet_person_usertypeID);
+                    if (data.to_meet_roleID) {
+                        $("#error_to_meet_person_roleID").html(data.to_meet_person_roleID);
                     }
                 }
                 if (data.id) {
@@ -463,16 +463,16 @@
 
 
 <script type="text/javascript">
-$('#usertypeID').change(function(event) {
-    var usertypeID = $(this).val();
-    if(usertypeID === '0') {
+$('#roleID').change(function(event) {
+    var roleID = $(this).val();
+    if(roleID === '0') {
         $('#to').val(0);
         $('#to_meet').val(0);
     } else {
         $.ajax({
             type: 'POST',
             url: "<?=base_url('visitorinfo/usercall')?>",
-            data: "id=" + usertypeID,
+            data: "id=" + roleID,
             dataType: "html",
             success: function(data) {
                $('#to_meet').html(data);

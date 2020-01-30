@@ -481,8 +481,8 @@ function validateSeasonOrFreq(){
 		$this->data['city'] = $this->rafeed_m->getCodesByType('5');
 
 		 $userID = $this->session->userdata('loginuserID');
-                $userTypeID = $this->session->userdata('usertypeID');
-               if($userTypeID != 1){
+                $roleID = $this->session->userdata('roleID');
+               if($roleID != 1){
 						     $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 						   } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -498,7 +498,7 @@ function validateSeasonOrFreq(){
 		if($this->input->post('scarrier')){
 		   $this->data['scarrier_id'] = $this->input->post('scarrier');
 	     } else {
-		   if($userTypeID != 1){
+		   if($roleID != 1){
              $this->data['scarrier_id'] = $this->session->userdata('default_airline');
 		   } else {
 			 $this->data['scarrier_id'] = 0;
@@ -515,7 +515,7 @@ function validateSeasonOrFreq(){
 
     function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');	  
+		$roleID = $this->session->userdata('roleID');	  
 
 
 	 $aColumns = array('fclr_id','dbp.code','dop.code','dai.code','flight_number','season_name','sea.ams_season_start_date', 'sea.ams_season_end_date','dfre.code','fdef.cabin','tdef.cabin','average','min','max','slider_start','fc.active','dop.code','dbp.code','dai.code','dfre.aln_data_value', 'dop.aln_data_value', 'dbp.aln_data_value', 'dai.aln_data_value', 'fdef.desc', 'tdef.desc');
@@ -663,9 +663,9 @@ function validateSeasonOrFreq(){
 
                         }
 
-                  $userTypeID = $this->session->userdata('usertypeID');
+                  $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID != 1){
+                if($roleID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'fc.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
                 }

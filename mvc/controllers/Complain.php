@@ -29,7 +29,7 @@ class Complain extends Admin_Controller {
 
     public function index() {
         if(permissionChecker('complain_view')) {
-            $this->data['complains'] = $this->complain_m->get_complain_with_usertypeID();
+            $this->data['complains'] = $this->complain_m->get_complain_with_roleID();
             $this->data["subview"] = "/complain/index";
             $this->load->view('_layout_main', $this->data);
         } else {
@@ -49,8 +49,8 @@ class Complain extends Admin_Controller {
                 'rules' => 'trim|required|xss_clean|max_length[128]'
             ),
             array(
-                'field' => 'usertypeID',
-                'label' => $this->lang->line("complain_usertypeID"),
+                'field' => 'roleID',
+                'label' => $this->lang->line("complain_roleID"),
                 'rules' => 'trim|required|xss_clean'
             ),
             array(
@@ -129,15 +129,15 @@ class Complain extends Admin_Controller {
                 'assets/editor/jquery-te-1.4.0.min.js'
             )
         );
-        $this->data['usertypes'] = $this->usertype_m->get_usertype();
-        $this->data['usertypeID'] = 0;
+        $this->data['roles'] = $this->role_m->get_role();
+        $this->data['roleID'] = 0;
         
 
         if($_POST) {
-            if($this->input->post('usertypeID')) {
-                $this->data['usertypeID'] = $this->input->post('usertypeID');
+            if($this->input->post('roleID')) {
+                $this->data['roleID'] = $this->input->post('roleID');
             } else {
-                $this->data['usertypeID'] = 0;
+                $this->data['roleID'] = 0;
             }
 
             $rules = $this->rules();
@@ -149,7 +149,7 @@ class Complain extends Admin_Controller {
             } else {
                 $array = array(
                     "title" => $this->input->post("title"),
-                    "usertypeID" => $this->input->post("usertypeID"),
+                    "roleID" => $this->input->post("roleID"),
                     "userID" => $this->input->post("userID"),
                     "description" => $this->input->post("description"),
                 );
@@ -179,7 +179,7 @@ class Complain extends Admin_Controller {
             )
         );
         $id = htmlentities(escapeString($this->uri->segment(3)));
-        $this->data['usertypes'] = $this->usertype_m->get_usertype();
+        $this->data['roles'] = $this->role_m->get_role();
 
         if((int)$id) {
             $this->data['complain'] = $this->complain_m->get_single_complain(array('complainID' => $id));
@@ -187,25 +187,25 @@ class Complain extends Admin_Controller {
 
                 $this->data['userID'] = $this->data['complain']->userID;
 
-                if($this->input->post('usertypeID')) {
-                    $usertypeID = $this->input->post('usertypeID');
-                    $this->data['usertypeID'] = $this->input->post('usertypeID');
+                if($this->input->post('roleID')) {
+                    $roleID = $this->input->post('roleID');
+                    $this->data['roleID'] = $this->input->post('roleID');
                 } else {
-                    $usertypeID = $this->data['complain']->usertypeID;
-                    $this->data['usertypeID'] = $this->data['complain']->usertypeID;                
+                    $roleID = $this->data['complain']->roleID;
+                    $this->data['roleID'] = $this->data['complain']->roleID;                
                 }
 
-                if($usertypeID != 0) {
-                    if($usertypeID == 1) {
+                if($roleID != 0) {
+                    if($roleID == 1) {
                         $this->data['users'] = pluck($this->systemadmin_m->get_systemadmin(), 'name', 'systemadminID');
-                    } elseif($usertypeID == 2) {
+                    } elseif($roleID == 2) {
                         $this->data['users'] = pluck($this->teacher_m->get_teacher(), 'name', 'teacherID');
-                    } elseif($usertypeID == 3) {
+                    } elseif($roleID == 3) {
                         $this->data['users'] = pluck($this->student_m->get_order_by_student(array('schoolyearID' => $this->data['siteinfos']->school_year)), 'name', 'studentID');
-                    } elseif($usertypeID == 4) {
+                    } elseif($roleID == 4) {
                         $this->data['users'] = pluck($this->parents_m->get_parents(), 'name', 'parentsID');
                     } else {
-                        $this->data['users'] = pluck($this->user_m->get_order_by_user(array('usertypeID' => $usertypeID)), 'name', 'userID');
+                        $this->data['users'] = pluck($this->user_m->get_order_by_user(array('roleID' => $roleID)), 'name', 'userID');
                     }
                 } else {
                     $this->data['users'] = array();
@@ -216,14 +216,14 @@ class Complain extends Admin_Controller {
                     $rules = $this->rules();
                     $this->form_validation->set_rules($rules);
                     if ($this->form_validation->run() == FALSE) {
-                        $this->data['usertypeID'] = $this->input->post('usertypeID');
+                        $this->data['roleID'] = $this->input->post('roleID');
                         $this->data['userID'] = $this->input->post('userID');
                         $this->data["subview"] = "complain/edit";
                         $this->load->view('_layout_main', $this->data);
                     } else {
                         $array = array(
                             "title" => $this->input->post("title"),
-                            "usertypeID" => $this->input->post("usertypeID"),
+                            "roleID" => $this->input->post("roleID"),
                             "userID" => $this->input->post("userID"),
                             "description" => $this->input->post("description"),
                         );
@@ -252,21 +252,21 @@ class Complain extends Admin_Controller {
     public function view() {
         $id = htmlentities(escapeString($this->uri->segment(3)));
         if((int)$id) {
-            $this->data['complain'] = $this->complain_m->get_single_complain_with_usertypeID(array('complainID' => $id));
+            $this->data['complain'] = $this->complain_m->get_single_complain_with_roleID(array('complainID' => $id));
             if($this->data['complain']) {
-                $this->data['usertype'] = $this->usertype_m->get_usertype($this->data['complain']->usertypeID);
-                $usertypeID = $this->data['complain']->usertypeID;
-                if($usertypeID != 0) {
-                    if($usertypeID == 1) {
+                $this->data['usertype'] = $this->role_m->get_role($this->data['complain']->roleID);
+                $roleID = $this->data['complain']->roleID;
+                if($roleID != 0) {
+                    if($roleID == 1) {
                         $this->data['user'] = $this->systemadmin_m->get_single_systemadmin(array('systemadminID' => $this->data['complain']->userID));
-                    } elseif($usertypeID == 2) {
+                    } elseif($roleID == 2) {
                         $this->data['user'] = $this->teacher_m->get_single_teacher(array('teacherID' => $this->data['complain']->userID));
-                    } elseif($usertypeID == 3) {
+                    } elseif($roleID == 3) {
                         $this->data['user'] = $this->student_m->get_single_student(array('studentID' => $this->data['complain']->userID));
-                    } elseif($usertypeID == 4) {
+                    } elseif($roleID == 4) {
                         $this->data['user'] = $this->parents_m->get_single_parents(array('parentsID' => $this->data['complain']->userID));
                     } else {
-                        $this->data['user'] = $this->user_m->get_single_user(array('usertypeID' => $usertypeID, 'userID' => $this->data['complain']->userID));
+                        $this->data['user'] = $this->user_m->get_single_user(array('roleID' => $roleID, 'userID' => $this->data['complain']->userID));
                     }
                 } else {
                     $this->data['user'] = "empty";
@@ -362,12 +362,12 @@ class Complain extends Admin_Controller {
     }
 
     function allusers() {
-        if($this->input->post('usertypeID') == '0') {
+        if($this->input->post('roleID') == '0') {
             echo '<option value="0">'.$this->lang->line('complain_select_users').'</option>';
         } else {
-            $usertypeID = $this->input->post('usertypeID');
+            $roleID = $this->input->post('roleID');
 
-            if($usertypeID == 1) {
+            if($roleID == 1) {
                 $systemadmins = $this->systemadmin_m->get_systemadmin();
                 if(count($systemadmins)) {
                     echo "<option value='0'>".$this->lang->line('complain_select_users')."</option>";
@@ -377,7 +377,7 @@ class Complain extends Admin_Controller {
                 } else {
                     echo '<option value="0">'.$this->lang->line('complain_select_users').'</option>';
                 }
-            } elseif($usertypeID == 2) {
+            } elseif($roleID == 2) {
                 $teachers = $this->teacher_m->get_teacher();
                 if(count($teachers)) {
                     echo "<option value='0'>".$this->lang->line('complain_select_users')."</option>";
@@ -387,7 +387,7 @@ class Complain extends Admin_Controller {
                 } else {
                     echo '<option value="0">'.$this->lang->line('complain_select_users').'</option>';
                 }
-            } elseif($usertypeID == 3) {
+            } elseif($roleID == 3) {
                 $classes = $this->classes_m->get_classes();
                 if(count($classes)) {
                     echo "<option value='0'>".$this->lang->line('complain_select_class')."</option>";
@@ -397,7 +397,7 @@ class Complain extends Admin_Controller {
                 } else {
                     echo '<option value="0">'.$this->lang->line('complain_select_class').'</option>';
                 }
-            } elseif($usertypeID == 4) {
+            } elseif($roleID == 4) {
                 $parents = $this->parents_m->get_parents();
                 if(count($parents)) {
                     echo "<option value='0'>".$this->lang->line('complain_select_users')."</option>";
@@ -408,7 +408,7 @@ class Complain extends Admin_Controller {
                     echo '<option value="0">'.$this->lang->line('complain_select_users').'</option>';
                 }
             } else {
-                $users = $this->user_m->get_order_by_user(array('usertypeID' => $usertypeID));
+                $users = $this->user_m->get_order_by_user(array('roleID' => $roleID));
                 if(count($users)) {
                     echo "<option value='0'>".$this->lang->line('complain_select_users')."</option>";
                     foreach ($users as $key => $user) {

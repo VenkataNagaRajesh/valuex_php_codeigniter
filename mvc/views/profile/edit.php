@@ -24,7 +24,7 @@
                     ?>
                         <label for="name_id" class="col-sm-2 control-label">
                         	<?php 
-                        		if($usertypeID == 4) {
+                        		if($roleID == 4) {
                         			echo $this->lang->line("profile_guardian");
                         		} else {
                         			echo $this->lang->line("profile_name");
@@ -39,7 +39,7 @@
                         </span>
                     </div>
 
-                    <?php if($usertypeID == 4) { ?>
+                    <?php if($roleID == 4) { ?>
                     <?php 
                         if(form_error('father_name')) 
                             echo "<div class='form-group has-error' >";
@@ -109,7 +109,7 @@
                     </div>
                     <?php } ?>
  
-                    <?php if($usertypeID != 4) { ?>
+                    <?php if($roleID != 4) { ?>
                     <?php 
                         if(form_error('dob')) 
                             echo "<div class='form-group has-error' >";
@@ -129,7 +129,7 @@
                     </div>
                     <?php } ?>
 
-                    <?php if($usertypeID != 4) { ?>
+                    <?php if($roleID != 4) { ?>
                     <?php 
                         if(form_error('sex')) 
                             echo "<div class='form-group has-error' >";
@@ -151,7 +151,7 @@
                     </div>
                     <?php } ?>
 
-                    <?php if($usertypeID == 3) { ?>
+                    <?php if($roleID == 3) { ?>
                     <?php 
                         if(form_error('bloodgroup')) 
                             echo "<div class='form-group has-error' >";
@@ -183,7 +183,7 @@
                     </div>
                     <?php } ?>
 
-                   	<?php if($usertypeID != 4) { ?>
+                   	<?php if($roleID != 4) { ?>
                     <?php 
                         if(form_error('religion')) 
                             echo "<div class='form-group has-error' >";
@@ -253,7 +253,7 @@
                         </span>
                     </div>
 
-                    <?php if($usertypeID == 3) { ?>
+                    <?php if($roleID == 3) { ?>
                     <?php 
                         if(form_error('state')) 
                             echo "<div class='form-group has-error' >";

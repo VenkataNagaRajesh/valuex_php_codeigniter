@@ -29,9 +29,9 @@
             </a>
 
             <h1><?=$user->name?></h1>
-            <p><?=$usertype[$user->usertypeID]?></p>
+            <p><?=$usertype[$user->roleID]?></p>
             <?php 
-                if($usertypeID == 3) {
+                if($roleID == 3) {
                     echo '<p>'.$this->lang->line("profile_classes").' '.$classes[$user->classesID] .'</p>';
                 } else {
                     echo '<p>'.$user->email.'</p>';
@@ -52,7 +52,7 @@
                         <p><span><?=$this->lang->line("profile_username")?> </span>: <?=$user->username?></p>
                     </div>
                     <div class="profile-view-tab">
-                        <p><span><?=$this->lang->line("profile_usertype")?> </span>: <?=$usertype[$user->usertypeID]?></p>
+                        <p><span><?=$this->lang->line("profile_usertype")?> </span>: <?=$usertype[$user->roleID]?></p>
                     </div>
                     <div class="profile-view-tab">
                         <p><span><?=$this->lang->line("profile_phone")?> </span>: <?=$user->phone?></p>

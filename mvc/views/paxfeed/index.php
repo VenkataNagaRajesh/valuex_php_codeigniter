@@ -81,7 +81,7 @@
 	foreach($airlines as $airline){
                  $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
          }
-          $userTypeID = $this->session->userdata('usertypeID');
+          $roleID = $this->session->userdata('roleID');
 
                  $airlinelist[0]= 'Carrier';
                   ksort($airlinelist);

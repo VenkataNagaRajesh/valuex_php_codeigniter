@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-sm-12">
                 
-                <?php if($this->session->userdata('usertypeID') != 3) { ?>
+                <?php if($this->session->userdata('roleID') != 3) { ?>
                     <h5 class="page-header">
                         <div class="col-lg-2 col-sm-2 col-md-2 col-xs-12 pull-right drop-marg">
                             <?php

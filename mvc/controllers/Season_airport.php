@@ -114,7 +114,7 @@ class Season_airport extends Admin_Controller {
         		$sWhere .= $col.' = '.$this->input->get('airportID');
         	}
 			
-	   if($this->session->userdata('usertypeID') != 1){  
+	   if($this->session->userdata('roleID') != 1){  
                $seasonslist = $this->season_m->getSeasonsList($this->session->userdata('login_user_airlineID'));
                if(empty($seasonslist)){
                  $seasonslist = array('0');

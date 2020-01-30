@@ -21,7 +21,7 @@
                         </a>
                     <?php } ?>
 
-                    <?php if($this->session->userdata('usertypeID') != 3) { ?>
+                    <?php if($this->session->userdata('roleID') != 3) { ?>
                         <div class="col-lg-2 col-sm-2 col-md-2 col-xs-12 pull-right drop-marg">
                             <?php
                                 $array = array("0" => $this->lang->line("invoice_select_student"));

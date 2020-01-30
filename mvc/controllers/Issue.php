@@ -28,8 +28,8 @@ Class Issue extends Admin_Controller {
 	}
 
 	public function index() {
-		$usertypeID = $this->session->userdata("usertypeID");
-		if($usertypeID == 3) {
+		$roleID = $this->session->userdata("roleID");
+		if($roleID == 3) {
 			$username = $this->session->userdata("username");			
 			$student = $this->student_m->get_single_student(array("username" => $username));
 			if($student->library === '1') {
@@ -44,7 +44,7 @@ Class Issue extends Admin_Controller {
 				$this->data["subview"] = "issue/message";
 				$this->load->view('_layout_main', $this->data);
 			}
-		} elseif($usertypeID == 4) {
+		} elseif($roleID == 4) {
 			$this->data['headerassets'] = array(
 				'css' => array(
 					'assets/select2/css/select2.css',
@@ -227,7 +227,7 @@ Class Issue extends Admin_Controller {
 
 						$this->issue_m->update_issue($array, $id);
 						$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-						if($this->session->userdata('usertypeID') == 4) {
+						if($this->session->userdata('roleID') == 4) {
 							$lmember = $this->lmember_m->get_single_lmember(array('lID' => $this->data['issue']->lID));
 							redirect(base_url("issue/index/$lmember->studentID"));
 						} else {
@@ -280,7 +280,7 @@ Class Issue extends Admin_Controller {
 				$this->book_m->update_book(array("due_quantity" => $due_quantity), $dbGet_bookID);
 				$this->issue_m->update_issue(array("return_date" => $date), $id);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-				if($this->session->userdata('usertypeID') == 4) {
+				if($this->session->userdata('roleID') == 4) {
 					$lmember = $this->lmember_m->get_single_lmember(array('lID' => $issue->lID));
 					redirect(base_url("issue/index/$lmember->studentID"));
 				} else {
@@ -464,7 +464,7 @@ Class Issue extends Admin_Controller {
 				'discount' => 0,
 				'paidstatus' => 0,
 				'userID' => $this->session->userdata('loginuserID'),
-				'usertypeID' => $this->session->userdata('usertypeID'),
+				'roleID' => $this->session->userdata('roleID'),
 				'uname' => $this->session->userdata('name'),
 				'date' => date('Y-m-d'),
 				'create_date' => date('Y-m-d'),
@@ -475,7 +475,7 @@ Class Issue extends Admin_Controller {
 			);
 			$this->invoice_m->insert_invoice($array);
 			$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-			if($this->session->userdata('usertypeID') == 4) {
+			if($this->session->userdata('roleID') == 4) {
 				echo base_url("issue/index/".$librarymember->studentID);
 			} else {
 				echo base_url("issue/index/".$libraryID);

@@ -34,7 +34,7 @@
                         </thead>
                         <tbody>
                             <?php if(count($usertypes)) {$i = 1; foreach($usertypes as $usertype) {
-                                   if($usertype->usertypeID != 5){
+                                   if($usertype->roleID != 5){
 								?>
                                 <tr>
                                     <td data-title="<?=$this->lang->line('slno')?>">
@@ -47,9 +47,9 @@
                                     <td data-title="<?=$this->lang->line('action')?>">
                                         <?php
                                             $reletionarray = array(1,2,3,4,5,6,7);
-                                            echo btn_edit('usertype/edit/'.$usertype->usertypeID, $this->lang->line('edit'));
-                                            if(!in_array($usertype->usertypeID, $reletionarray)) {
-                                                echo btn_delete('usertype/delete/'.$usertype->usertypeID, $this->lang->line('delete'));
+                                            echo btn_edit('usertype/edit/'.$usertype->roleID, $this->lang->line('edit'));
+                                            if(!in_array($usertype->roleID, $reletionarray)) {
+                                                echo btn_delete('usertype/delete/'.$usertype->roleID, $this->lang->line('delete'));
                                             }
                                         ?>
                                     </td>

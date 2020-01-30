@@ -53,7 +53,7 @@ class client_m extends MY_Model {
 	}
 	
 	function clientTotalCount(){
-		$this->db->select('count(*) count')->from('VX_user')->where('usertypeID',2);
+		$this->db->select('count(*) count')->from('VX_user')->where('roleID',2);
 		$query = $this->db->get();		
 		return $query->row('count');
 	}

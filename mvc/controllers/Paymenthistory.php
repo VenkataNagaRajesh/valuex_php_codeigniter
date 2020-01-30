@@ -26,7 +26,7 @@ class Paymenthistory extends Admin_Controller {
 	}
 
 	protected function payment_rules() {
-		$usertypeID = $this->session->userdata('usertypeID');
+		$roleID = $this->session->userdata('roleID');
 		$rules = array(
 			array(
 				'field' => 'amount',
@@ -45,8 +45,8 @@ class Paymenthistory extends Admin_Controller {
 	}
 
 	public function index() {
-		$usertypeID = $this->session->userdata('usertypeID');
-		if($usertypeID == 3) {
+		$roleID = $this->session->userdata('roleID');
+		if($roleID == 3) {
 			$username = $this->session->userdata("username");
 			$student = $this->student_m->get_single_student(array("username" => $username));
 			if(count($student)) {
@@ -57,7 +57,7 @@ class Paymenthistory extends Admin_Controller {
 				$this->data["subview"] = "error";
 				$this->load->view('_layout_main', $this->data);
 			}
-		} elseif($usertypeID == 4) {
+		} elseif($roleID == 4) {
 			$this->data['headerassets'] = array(
 				'css' => array(
 					'assets/select2/css/select2.css',
@@ -143,7 +143,7 @@ class Paymenthistory extends Admin_Controller {
 									'paymentamount' => $this->input->post('amount'),
 									'paymentdate' => date('Y-m-d'),
 									'userID' => $this->session->userdata('loginuserID'),
-									'usertypeID' => $this->session->userdata('usertypeID'), 
+									'roleID' => $this->session->userdata('roleID'), 
 									'uname' => $this->session->userdata('name'),
 								);
 

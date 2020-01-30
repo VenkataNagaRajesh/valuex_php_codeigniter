@@ -5,7 +5,7 @@ class signin_m extends MY_Model {
 	function __construct() {
 		parent::__construct();
 		$this->load->model("setting_m");
-		$this->load->model('usertype_m');
+		$this->load->model('role_m');
 		$this->load->model('loginlog_m');
 	}
 
@@ -47,14 +47,14 @@ class signin_m extends MY_Model {
 
 		if($captchaResponse['success'] == TRUE) {
 			if(in_array('yes', $array['permition'])) {
-				$usertype = $this->usertype_m->get_usertype($userdata->usertypeID);
+				$usertype = $this->role_m->get_role($userdata->roleID);
 				if(count($usertype)) {
 					if($userdata->active == 1) {
 						$data = array(
 							"loginuserID" => isset($userdata->userID) && !is_null($userdata->userID) ? $userdata->userID : 0,
 							"name" => $userdata->name,
 							"email" => $userdata->email,
-							"usertypeID" => $userdata->usertypeID,
+							"roleID" => $userdata->roleID,
 							'usertype' => $usertype->usertype,
 							"username" => $userdata->username,
 							"photo" => $userdata->photo,
@@ -63,14 +63,14 @@ class signin_m extends MY_Model {
 							"loggedin" => TRUE
 						);						
 						
-						if( $userdata->usertypeID != 1){
+						if( $userdata->roleID != 1){
 							$this->load->model('user_m');
 							$data['login_user_airlineID'] = explode(',',$this->user_m->get_user($userdata->userID)->airlineIDs);
 						}
 						//print_r($data); exit;
 						$browser = $this->getBrowser();
 
-						$getPreviusData = $this->loginlog_m->get_single_loginlog(array('userID' => $userdata->$array['usercolname'], 'usertypeID' => $userdata->usertypeID, 'ip' => $this->getUserIP(), 'browser' => $browser['name'], 'logout' => NULL));
+						$getPreviusData = $this->loginlog_m->get_single_loginlog(array('userID' => $userdata->$array['usercolname'], 'roleID' => $userdata->roleID, 'ip' => $this->getUserIP(), 'browser' => $browser['name'], 'logout' => NULL));
 
 						if(count($getPreviusData)) {
 							$lgoinLogUpdateArray = array(
@@ -85,7 +85,7 @@ class signin_m extends MY_Model {
 							'browser' => $browser['name'],
 							'operatingsystem' => $browser['platform'],
 							'login' => strtotime(date('Ymdhis')),
-							'usertypeID' => $userdata->usertypeID,
+							'roleID' => $userdata->roleID,
 							'userID' => isset($userdata->$array['usercolname']) && !is_null($userdata->$array['usercolname']) ? $userdata->$array['usercolname'] : 0
 						);
 
@@ -248,7 +248,7 @@ class signin_m extends MY_Model {
 
 	public function signout() {
 		$browser = $this->getBrowser();
-		$getPreviusData = $this->loginlog_m->get_single_loginlog(array('userID' => $this->session->userdata('loginuserID'), 'usertypeID' => $this->session->userdata('usertypeID'), 'ip' => $this->getUserIP(), 'browser' => $browser['name'], 'logout' => NULL));
+		$getPreviusData = $this->loginlog_m->get_single_loginlog(array('userID' => $this->session->userdata('loginuserID'), 'roleID' => $this->session->userdata('roleID'), 'ip' => $this->getUserIP(), 'browser' => $browser['name'], 'logout' => NULL));
 
 		if(count($getPreviusData)) {
 			$lgoinLogUpdateArray = array(

@@ -151,7 +151,7 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, acsr.
 	
 	function acsrTotalCount(){
 		$this->db->select('count(*) count')->from('UP_auto_confirm_setup_rules');
-        if($this->session->userdata('usertypeID') != 1 ){		
+        if($this->session->userdata('roleID') != 1 ){		
 			$this->db->where_in('carrier_code',$this->session->userdata('login_user_airlineID'));
 		}		
 		$query = $this->db->get();		

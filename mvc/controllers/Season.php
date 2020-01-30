@@ -199,10 +199,10 @@ class Season extends Admin_Controller {
         } 
         $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_season');
 		
-                $userTypeID = $this->session->userdata('usertypeID');
+                $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
 
-        if($this->session->userdata('usertypeID') != 1){			
+        if($this->session->userdata('roleID') != 1){			
 		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(null,$this->session->userdata('login_user_airlineID'));
 		}else{
 		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(); 
@@ -216,7 +216,7 @@ class Season extends Admin_Controller {
            }			
       // print_r($this->data['seasonslist']); exit;
 		$this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
-			if($userTypeID != 1){
+			if($roleID != 1){
 			 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		   } else {
 			   $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -273,10 +273,10 @@ class Season extends Admin_Controller {
                 )
         );	
 	
-	    $usertypeID = $this->session->userdata('usertypeID');
+	    $roleID = $this->session->userdata('roleID');
 		$userID = $this->session->userdata('loginuserID');
 	   $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
-	    if($userTypeID != 1){
+	    if($roleID != 1){
 		  $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 	   } else {
 		   $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -371,7 +371,7 @@ class Season extends Admin_Controller {
 				 }			
 				
 
-				 if($this->session->userdata('usertypeID') != 1){
+				 if($this->session->userdata('roleID') != 1){
 			                   $seasonslist = $this->season_m->get_seasons_where(null,$this->session->userdata('login_user_airlineID'));
                 		}else{
                    				$seasonslist = $this->season_m->get_seasons_where();
@@ -418,13 +418,13 @@ class Season extends Admin_Controller {
                         'assets/datepicker/datepicker.css'
                 )
         );
-        $usertypeID = $this->session->userdata('usertypeID');
+        $roleID = $this->session->userdata('roleID');
 		$userID = $this->session->userdata('loginuserID');		
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$this->data['season'] = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$id));
 			if($this->data['season']) {
-			   if($userTypeID != 1){
+			   if($roleID != 1){
 				 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 			   } else {
 				   $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -625,7 +625,7 @@ class Season extends Admin_Controller {
 	
 	function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');	  
+		$roleID = $this->session->userdata('roleID');	  
 				
 	    $aColumns = array('s.VX_aln_seasonID','s.season_name','dd.aln_data_value','dd.code','dt1.name','s.ams_orig_level_value','dt2.name','s.ams_dest_level_value','s.ams_season_start_date','s.ams_season_end_date','s.is_return_inclusive','s.season_color','s.active');
 	
@@ -686,9 +686,9 @@ class Season extends Admin_Controller {
 				}
 			}
 			
-			$usertypeID = $this->session->userdata('usertypeID');
+			$roleID = $this->session->userdata('roleID');
 			$userID = $this->session->userdata('loginuserID');
-			if($usertypeID != 1){
+			if($roleID != 1){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                // $sWhere .= 'c.userID = '.$userID;	
 			   $sWhere .= ' s.airlineID  IN ('.implode(',',$this->session->userdata('login_user_airlineID')).')';
@@ -844,7 +844,7 @@ public function delete_season_bulk_records(){
 							}
 		}
 	}
-     if($this->session->userdata('usertypeID') != 1){
+     if($this->session->userdata('roleID') != 1){
 		   $json['seasonslist'] = $this->season_m->get_seasons_where(null,$this->session->userdata('login_user_airlineID'));
 		}else{
 		   $json['seasonslist'] = $this->season_m->get_seasons_where(); 

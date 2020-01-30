@@ -26,14 +26,14 @@
                         </label>
                         <div class="col-sm-4">
                         <?php
-			 $userTypeID = $this->session->userdata('usertypeID');
+			 $roleID = $this->session->userdata('roleID');
 			 foreach($airlinesdata as $airline){
 					if(!in_array($airline->vx_aln_data_defnsID,$mapped_airlines)){
                                      		$airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
 					}
                            }
 
-			if($userTypeID != 1){
+			if($roleID != 1){
                           $default_airlineID =  key($airlinelist);
                         } else {
                           $default_airlineID = 0;

@@ -5,7 +5,7 @@ class User extends Admin_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model("user_m");
-		$this->load->model('usertype_m');
+		$this->load->model('role_m');
 		$this->load->model('airline_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('user', $language);
@@ -54,9 +54,9 @@ class User extends Admin_Controller {
 				'rules' => 'trim|required|max_length[10]|callback_date_valid|xss_clean'
 			),			
 			array(
-				'field' => 'usertypeID',
+				'field' => 'roleID',
 				'label' => $this->lang->line("user_usertype"),
-				'rules' => 'trim|required|max_length[11]|xss_clean|numeric|callback_unique_usertypeID'
+				'rules' => 'trim|required|max_length[11]|xss_clean|numeric|callback_unique_roleID'
 			),		
 			array(
 				'field' => 'photo',
@@ -137,17 +137,17 @@ class User extends Admin_Controller {
 	}
 
 	public function index() {
-		/* if($this->session->userdata('usertypeID') == 2){
-		 $this->data['users'] = $this->user_m->get_user_by_usertype(null,array("u.usertypeID" => 5,"u.create_userID"=>$this->session->userdata('loginuserID')));
+		/* if($this->session->userdata('roleID') == 2){
+		 $this->data['users'] = $this->user_m->get_user_by_usertype(null,array("u.roleID" => 5,"u.create_userID"=>$this->session->userdata('loginuserID')));
 		} else {
 		$this->data['users'] = $this->user_m->getUsers();	
 		} */
 		$this->data['users'] = array();
-		if($this->session->userdata('usertypeID') == 1){
+		if($this->session->userdata('roleID') == 1){
 		 $this->data['users'] = $this->user_m->getUsers();	
 		}
 		foreach($this->data['users'] as $user){
-			if($user->usertypeID == 1){
+			if($user->roleID == 1){
 		       $user->airlinelist = '';
 			} else {
 			    $airlinelist = $this->user_m->getUserAirlines($user->userID);	
@@ -173,13 +173,13 @@ class User extends Admin_Controller {
 				'assets/select2/select2.js'
 			)
 		);
-		if($this->session->userdata('usertypeID') == 2){
-		  $this->data['usertypes'] = array();
+		if($this->session->userdata('roleID') == 2){
+		  $this->data['roles'] = array();
 		} else {
-		  $this->data['usertypes'] = $this->usertype_m->get_usertype();
+		  $this->data['roles'] = $this->role_m->get_role();
 		}
 		
-		if($this->session->userdata('usertypeID') == 1){
+		if($this->session->userdata('roleID') == 1){
 		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
 		} else {
 		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	
@@ -209,7 +209,7 @@ class User extends Admin_Controller {
 				$array["create_usertype"] = $this->session->userdata('usertype');
 				$array["active"] = 1;
 				$array['photo'] = $this->upload_data['file']['file_name'];
-				$array["usertypeID"] = $this->input->post("usertypeID");
+				$array["roleID"] = $this->input->post("roleID");
 				
 				// For Email
 				$this->usercreatemail($this->input->post('email'), $this->input->post('username'), $this->input->post('password'));
@@ -234,14 +234,14 @@ class User extends Admin_Controller {
 		}
 	}
 
-	function unique_usertypeID() {
-		if($this->input->post('usertypeID') == 0) {
-			$this->form_validation->set_message("unique_usertypeID", "The %s field is required ");
+	function unique_roleID() {
+		if($this->input->post('roleID') == 0) {
+			$this->form_validation->set_message("unique_roleID", "The %s field is required ");
 			return FALSE;
 		} else {
 			/* $blockuser = array(1, 2, 3, 4);
-			if(in_array($this->input->post('usertypeID'), $blockuser)) {
-				$this->form_validation->set_message("unique_usertypeID", "The %s field is required.");
+			if(in_array($this->input->post('roleID'), $blockuser)) {
+				$this->form_validation->set_message("unique_roleID", "The %s field is required.");
 				return FALSE;
 			} */
 			return TRUE;
@@ -262,12 +262,12 @@ class User extends Admin_Controller {
 		);
 
 		$id = htmlentities(escapeString($this->uri->segment(3)));
-		if($this->session->userdata('usertypeID') == 2){
-		  $this->data['usertypes'] = array();
+		if($this->session->userdata('roleID') == 2){
+		  $this->data['roles'] = array();
 		} else {
-		  $this->data['usertypes'] = $this->usertype_m->get_usertype();
+		  $this->data['roles'] = $this->role_m->get_role();
 		}
-		if($this->session->userdata('usertypeID') == 1){
+		if($this->session->userdata('roleID') == 1){
 		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
 		}else {
 		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	
@@ -294,7 +294,7 @@ class User extends Admin_Controller {
 					$array["modify_date"] = date("Y-m-d h:i:s");
 					$array["username"] = $this->input->post('username');
 					$array['photo'] = $this->upload_data['file']['file_name'];					
-					$array["usertypeID"] = $this->input->post("usertypeID");
+					$array["roleID"] = $this->input->post("roleID");
 					$this->user_m->update_user($array, $id);
 					
 					 $airlines = array();

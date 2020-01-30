@@ -16,7 +16,7 @@ class Uattendance extends Admin_Controller {
 */
 	function __construct() {
 		parent::__construct();
-		$this->load->model("usertype_m");
+		$this->load->model("role_m");
 		$this->load->model("user_m");
 		$this->load->model('uattendance_m');
 		
@@ -91,7 +91,7 @@ class Uattendance extends Admin_Controller {
 								$array = array(
 									'schoolyearID' => $schoolyearID,
 									"userID" => $userID,
-									"usertypeID" => $user->usertypeID,
+									"roleID" => $user->roleID,
 									"monthyear" => $monthyear
 								);
 								$this->uattendance_m->insert_uattendance($array);
@@ -179,7 +179,7 @@ class Uattendance extends Admin_Controller {
 			$schoolyearID = $this->session->userdata('defaultschoolyearID');
 			$this->data["user"] = $this->user_m->get_user($id);
 			if($this->data["user"]) {
-				$this->data['usertypes'] = pluck($this->usertype_m->get_usertype(), 'usertype', 'usertypeID' );
+				$this->data['roles'] = pluck($this->role_m->get_role(), 'usertype', 'roleID' );
 				$this->data['uattendances'] = $this->uattendance_m->get_order_by_uattendance(array("userID" => $id, 'schoolyearID' => $schoolyearID));
 				$this->data["subview"] = "uattendance/view";
 				$this->load->view('_layout_main', $this->data);
@@ -218,7 +218,7 @@ class Uattendance extends Admin_Controller {
 			if ((int)$id) {
 				$this->data["user"] = $this->user_m->get_single_user(array('userID' => $id));
 				if($this->data["user"]) {
-					$this->data['usertypes'] = pluck($this->usertype_m->get_usertype(), 'usertype', 'usertypeID' );
+					$this->data['roles'] = pluck($this->role_m->get_role(), 'usertype', 'roleID' );
 				    $this->data['panel_title'] = $this->lang->line('panel_title');
 					$this->data['uattendances'] = $this->uattendance_m->get_order_by_uattendance(array("userID" => $id));
 					$this->printView($this->data, 'uattendance/print_preview');
@@ -241,7 +241,7 @@ class Uattendance extends Admin_Controller {
 		if ((int)$id) {
 			$this->data["user"] = $this->user_m->get_user($id);
 			if($this->data["user"]) {
-				$this->data['usertypes'] = pluck($this->usertype_m->get_usertype(), 'usertype', 'usertypeID' );
+				$this->data['roles'] = pluck($this->role_m->get_role(), 'usertype', 'roleID' );
 				$this->data['uattendances'] = $this->uattendance_m->get_order_by_uattendance(array("userID" => $id));
 				$email = $this->input->post('to');
 				$subject = $this->input->post('subject');

@@ -269,7 +269,7 @@
                 </tr>
                 <tr>
                   <td>
-                    <h5 style="margin:0px;"> <strong><?=isset($usertypes[$user->usertypeID]) ? $usertypes[$user->usertypeID] : '' ?></strong>
+                    <h5 style="margin:0px;"> <strong><?=isset($usertypes[$user->roleID]) ? $usertypes[$user->roleID] : '' ?></strong>
                     </h5>
                   </td>
                 </tr>

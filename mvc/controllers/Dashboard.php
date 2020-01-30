@@ -104,11 +104,11 @@ class Dashboard extends Admin_Controller {
 		$previousSevenDate = strtotime(date('Y-m-d 00:00:00', strtotime('-7 days')));	
 
 
-		$userTypeID = $this->session->userdata('usertypeID');
+		$roleID = $this->session->userdata('roleID');
 		$userName = $this->session->userdata('username');
 		$this->data['usertype'] = $this->session->userdata('usertype');
 
-		if($userTypeID == 1) {
+		if($roleID == 1) {
 			$this->data['user'] = $this->user_m->get_single_user(array('username'  => $userName));
 		}
 

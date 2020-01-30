@@ -41,7 +41,7 @@
                 </div>
                 <div class="box-tools">
                     <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    <?php if (permissionChecker('activities_delete') && ($usertypeID == 1 || ($usertypeID == $activity->usertypeID && $userID == $activity->userID))): ?>
+                    <?php if (permissionChecker('activities_delete') && ($roleID == 1 || ($roleID == $activity->roleID && $userID == $activity->userID))): ?>
                         <a onclick="return confirm('you are about to delete a record. This cannot be undone. are you sure?')" class="btn btn-box-tool" href="<?=base_url('activities/delete/'.$activity->activitiesID)?>"><i class="fa fa-times"></i></a>
                     <?php endif ?>
                 </div>
@@ -90,7 +90,7 @@
                     <div class="comment-text">
                       <span class="username">
                           <?=$comment->sender?>
-                          <?php if (permissionChecker('activities_delete') && ($usertypeID == 1 || ($usertypeID == $activity->usertypeID && $userID == $activity->userID))): ?>
+                          <?php if (permissionChecker('activities_delete') && ($roleID == 1 || ($roleID == $activity->roleID && $userID == $activity->userID))): ?>
                             <a href="<?=base_url('activities/delete_comment/'.$comment->activitiescommentID)?>" onclick="return confirm('you are about to delete a record. This cannot be undone. are you sure?')" style="margin-left: 5px; margin-top: -4px; font-size: 15px;" class="text-muted pull-right text-danger"><i class="fa fa-trash"></i></a> &nbsp;&nbsp;&nbsp;
                           <?php endif ?>
                           <span class="text-muted pull-right">

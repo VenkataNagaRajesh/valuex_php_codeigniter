@@ -5,7 +5,7 @@ class user_m extends MY_Model {
 	protected $_table_name = 'VX_user';
 	protected $_primary_key = 'userID';
 	protected $_primary_filter = 'intval';
-	protected $_order_by = "usertypeID";
+	protected $_order_by = "roleID";
 
 	function __construct() {
 		parent::__construct();
@@ -30,10 +30,10 @@ class user_m extends MY_Model {
 		return $result->name;
 	}
 	
-	function get_user_by_usertype($userID = null,$where = array()) {
+	function get_user_by_role($userID = null,$where = array()) {
 		$this->db->select('*');
 		$this->db->from('VX_user u');
-		$this->db->join('VX_usertype ut', 'ut.usertypeID = u.usertypeID', 'LEFT');
+		$this->db->join('VX_role ur', 'ur.roleID = u.roleID', 'LEFT');
 		if(!empty($where)){
 		    $this->db->where($where);
 		}
@@ -50,9 +50,9 @@ class user_m extends MY_Model {
 	function getUsers(){
 		$this->db->select('*');
 		$this->db->from('VX_user u');
-		$this->db->join('VX_usertype ut', 'ut.usertypeID = u.usertypeID', 'LEFT');
-		$this->db->where('u.usertypeID !=',2);
-		$this->db->where('u.usertypeID !=',5);
+		$this->db->join('VX_role ur', 'ur.roleID = u.roleID', 'LEFT');
+		$this->db->where('u.roleID !=',2);
+		$this->db->where('u.roleID !=',5);
 		$query = $this->db->get();
 		return $query->result();		
 	}
@@ -99,7 +99,7 @@ class user_m extends MY_Model {
 
     function userTotalCount(){
 		$this->db->select('count(*) count')->from('VX_user');
-		$this->db->where('usertypeID !=',2);
+		$this->db->where('roleID !=',2);
 		$query = $this->db->get();		
 		return $query->row('count');
 	}
@@ -111,6 +111,7 @@ class user_m extends MY_Model {
 		$query = $this->db->get();		
 		return $query->result();		
 	}
+
 	function getAirlinesByUser($userID){
 		$this->db->select('airlineID')->from('VX_user_airline');
 		$this->db->where('userID',$userID);

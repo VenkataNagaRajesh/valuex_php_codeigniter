@@ -67,7 +67,7 @@ class Location extends Admin_Controller {
                 $array["create_date"] = date("Y-m-d");
                 $array["modify_date"] = date("Y-m-d");
                 $array["create_userID"] = $this->session->userdata('loginuserID');
-                $array["create_usertypeID"] = $this->session->userdata('usertypeID');
+                $array["create_roleID"] = $this->session->userdata('roleID');
                 $array["active"] = 1;
 
                 $this->location_m->insert_location($array);

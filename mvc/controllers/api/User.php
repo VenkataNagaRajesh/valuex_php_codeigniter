@@ -94,7 +94,7 @@ class User extends REST_Controller {
         }
 
         if(in_array('yes', $array['permition'])) {
-            $usertype = $this->usertype_m->get_usertype($userdata->usertypeID);
+            $usertype = $this->role_m->get_role($userdata->usertypeID);
             if(count($usertype)) {
                 return $userdata->$array['usercolname'];
             } else {

@@ -354,7 +354,7 @@ class Install extends CI_Controller {
 							'photo' => 'defualt.png',
 							'username' => $this->input->post("username"),
 							'password' => $this->install_m->hash($this->input->post("password")),
-							'usertypeID' => 1,
+							'roleID' => 1,
 							'create_date' => date("Y-m-d h:i:s"),
 							'modify_date' => date("Y-m-d h:i:s"),
 							'create_userID' => 0,

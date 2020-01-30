@@ -4,7 +4,7 @@ class Mailandsmstemplate extends Admin_Controller {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model('usertype_m');
+		$this->load->model('role_m');
 		$this->load->model('airline_m');
 		$this->load->model('user_m');
 		$this->load->model("mailandsmstemplate_m");
@@ -41,10 +41,10 @@ class Mailandsmstemplate extends Admin_Controller {
                 )
         );
 		
-		//$this->data['mailandsmstemplates'] = $this->mailandsmstemplate_m->get_order_by_mailandsmstemplate_with_usertypeID();
+		//$this->data['mailandsmstemplates'] = $this->mailandsmstemplate_m->get_order_by_mailandsmstemplate_with_roleID();
 		$userID = $this->session->userdata('loginuserID');
-		$userTypeID = $this->session->userdata('usertypeID');
-		if($userTypeID != 1){
+		$roleID = $this->session->userdata('roleID');
+		if($roleID != 1){
 		   $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -78,12 +78,12 @@ class Mailandsmstemplate extends Admin_Controller {
 	
 
 	public function add() {		
-		$usertypes = $this->usertype_m->get_usertype();
+		$roles = $this->role_m->get_role();
 		$this->data['categories'] = $this->mailandsmstemplate_m->get_categories();
-		$this->data['usertypes'] = $usertypes;
+		$this->data['roles'] = $roles;
 		$userID = $this->session->userdata('loginuserID');
-		$userTypeID = $this->session->userdata('usertypeID');
-		 if($userTypeID != 1){
+		$roleID = $this->session->userdata('roleID');
+		 if($roleID != 1){
 		   $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -149,8 +149,8 @@ class Mailandsmstemplate extends Admin_Controller {
          		  
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		$userID = $this->session->userdata('loginuserID');
-		$userTypeID = $this->session->userdata('usertypeID');
-		 if($userTypeID != 1){
+		$roleID = $this->session->userdata('roleID');
+		 if($roleID != 1){
 		   $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
@@ -261,7 +261,7 @@ class Mailandsmstemplate extends Admin_Controller {
 	
 	function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');  
+		$roleID = $this->session->userdata('roleID');  
 		
 	  
 	     $aColumns = array('m.mailandsmstemplateID','m.name','a.code','cat.name','m.default');
@@ -326,7 +326,7 @@ class Mailandsmstemplate extends Admin_Controller {
 
          
 
-           if($this->session->userdata('usertypeID') != 1){  
+           if($this->session->userdata('roleID') != 1){  
               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 			  $sWhere .= 'a.vx_aln_data_defnsID IN ('.implode(',',$this->session->userdata('login_user_airlineID')).')';		
             }

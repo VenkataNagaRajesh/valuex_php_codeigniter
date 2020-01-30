@@ -451,7 +451,7 @@ class Airports_master extends Admin_Controller {
 
     function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');	  
+		$roleID = $this->session->userdata('roleID');	  
 		
 	    $aColumns = array('m.vx_amdID','ma.code','mct.code','mc.code','mr.aln_data_value','mar.aln_data_value','ma.code','ma.active');
 	

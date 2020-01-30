@@ -7,7 +7,7 @@ class Trigger extends Admin_Controller {
 		$this->load->model("marketzone_m");
 		$this->load->model("trigger_m");
 		$this->load->model("market_airport_map_m");
-		$this->load->model('usertype_m');
+		$this->load->model('role_m');
 		$this->load->model('install_m');
 		$this->load->model('season_m');
 		$this->load->model("season_airport_map_m");

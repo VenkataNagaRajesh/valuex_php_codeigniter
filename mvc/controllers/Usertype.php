@@ -16,7 +16,7 @@ class Usertype extends Admin_Controller {
 */
 	function __construct() {
 		parent::__construct();
-		$this->load->model("usertype_m");
+		$this->load->model("role_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('usertype', $language);	
 	}
@@ -24,7 +24,7 @@ class Usertype extends Admin_Controller {
 	public function index() {
 
 		$usertype = $this->session->userdata("usertype");
-		$this->data['usertypes'] = $this->usertype_m->get_usertype();
+		$this->data['roles'] = $this->role_m->get_role();
 		$this->data["subview"] = "usertype/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
@@ -57,7 +57,7 @@ class Usertype extends Admin_Controller {
 					"create_username" => $this->session->userdata('username'),
 					"create_usertype" => $this->session->userdata('usertype')
 				);
-				$this->usertype_m->insert_usertype($array);
+				$this->role_m->insert_role($array);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("usertype/index"));
 			}
@@ -71,7 +71,7 @@ class Usertype extends Admin_Controller {
 		$usertype = $this->session->userdata("usertype");
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
-			$this->data['usertype'] = $this->usertype_m->get_usertype($id);
+			$this->data['usertype'] = $this->role_m->get_role($id);
 			if($this->data['usertype']) {
 				if($_POST) {
 					$rules = $this->rules();
@@ -85,7 +85,7 @@ class Usertype extends Admin_Controller {
 							"modify_date" => date("Y-m-d h:i:s")
 						);
 
-						$this->usertype_m->update_usertype($array, $id);
+						$this->role_m->update_role($array, $id);
 						$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 						redirect(base_url("usertype/index"));
 					}
@@ -107,11 +107,11 @@ class Usertype extends Admin_Controller {
 		$usertype = $this->session->userdata("usertype");
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
-			$this->data['usertype'] = $this->usertype_m->get_usertype($id);
+			$this->data['usertype'] = $this->role_m->get_role($id);
 			if($this->data['usertype']) {
 				$reletionarray = array(1,2,3,4,5,6,7);
-				if(!in_array($this->data['usertype']->usertypeID, $reletionarray)) {
-					$this->usertype_m->delete_usertype($id);
+				if(!in_array($this->data['usertype']->roleID, $reletionarray)) {
+					$this->role_m->delete_role($id);
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url("usertype/index"));
 				} else {
@@ -129,14 +129,14 @@ class Usertype extends Admin_Controller {
 	public function unique_usertype() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
-			$usertype = $this->usertype_m->get_order_by_usertype(array("usertype" => $this->input->post("usertype"), "usertypeID !=" => $id));
+			$usertype = $this->role_m->get_order_by_role(array("usertype" => $this->input->post("usertype"), "roleID !=" => $id));
 			if(count($usertype)) {
 				$this->form_validation->set_message("unique_usertype", "%s already exists");
 				return FALSE;
 			}
 			return TRUE;
 		} else {
-			$usertype = $this->usertype_m->get_order_by_usertype(array("usertype" => $this->input->post("usertype")));
+			$usertype = $this->role_m->get_order_by_role(array("usertype" => $this->input->post("usertype")));
 
 			if(count($usertype)) {
 				$this->form_validation->set_message("unique_usertype", "%s already exists");

@@ -14,8 +14,8 @@
         <div class="row">
             <div class="col-sm-12">
                 <form style="" action="#" class="form-horizontal" role="form" method="post" id="usertype">
-                    <div class="<?php if(form_error('usertypeID')) {echo 'form-group has-error';} else {echo 'form-group';} ?>" >
-                        <label for="usertypeID" class="col-sm-2 col-md-offset-2 control-label">
+                    <div class="<?php if(form_error('roleID')) {echo 'form-group has-error';} else {echo 'form-group';} ?>" >
+                        <label for="roleID" class="col-sm-2 col-md-offset-2 control-label">
                             <?=$this->lang->line("select_usertype")?>
                         </label>
 
@@ -28,9 +28,9 @@
                                     $set = null;
                                 }
                                 foreach ($usertypes as $usertype) {
-                                    $array[$usertype->usertypeID] = $usertype->usertype;
+                                    $array[$usertype->roleID] = $usertype->usertype;
                                 }
-                                echo form_dropdown("usertypeID", $array, set_value("usertypeID", $set), "id='usertypeID' class='form-control select2'");
+                                echo form_dropdown("roleID", $array, set_value("roleID", $set), "id='roleID' class='form-control select2'");
                             ?>
                         </div>
 
@@ -181,14 +181,14 @@
 
 <script type="text/javascript">
 
-var usertypeID = $("#usertypeID").val();
+var roleID = $("#roleID").val();
 
-$('#usertypeID').change(function(event) {
-    var usertypeID = $(this).val();
+$('#roleID').change(function(event) {
+    var roleID = $(this).val();
     $.ajax({
         type: 'POST',
         url: "<?=base_url('permission/permission_list')?>",
-        data: "usertypeID=" + usertypeID,
+        data: "roleID=" + roleID,
         dataType: "html",
         success: function(data) {
             console.log(data);

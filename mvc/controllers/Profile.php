@@ -4,7 +4,7 @@ class Profile extends Admin_Controller {
 
 	function __construct() {
 		parent::__construct();
-		$this->load->model('usertype_m');
+		$this->load->model('role_m');
 		//$this->load->model('section_m');
 		//$this->load->model("student_m");
 		//$this->load->model("parents_m");
@@ -17,14 +17,14 @@ class Profile extends Admin_Controller {
 	}
 
 	public function index() {
-		$usertypeID = $this->session->userdata("usertypeID");
+		$roleID = $this->session->userdata("roleID");
 		$username = $this->session->userdata('username');
 		
 			$this->data['user'] = $this->user_m->get_single_user(array("username" => $username));
 		
 	
-		$this->data['usertypeID'] =$usertypeID;
-		$this->data['usertype'] = pluck($this->usertype_m->get_usertype(), 'usertype', 'usertypeID');
+		$this->data['roleID'] =$roleID;
+		$this->data['usertype'] = pluck($this->role_m->get_role(), 'usertype', 'roleID');
 		//print_r($this->data['usertype']); exit;
 		if($this->data['user']) {
 			$this->data["subview"] = "profile/index";
@@ -200,14 +200,14 @@ class Profile extends Admin_Controller {
 		);
 
 		$tableArray = array('1' => 'systemadmin', '2' => 'teacher', '3' => 'student', '4' => 'parents');
-		if(!isset($tableArray[$this->session->userdata('usertypeID')])) {
-			$tableArray[$this->session->userdata('usertypeID')] = 'user';
+		if(!isset($tableArray[$this->session->userdata('roleID')])) {
+			$tableArray[$this->session->userdata('roleID')] = 'user';
 		}
 
 		$rules = array();
-		$usertypeID = $this->session->userdata('usertypeID');
+		$roleID = $this->session->userdata('roleID');
 		$username = $this->session->userdata('username');
-		$this->data['usertypeID'] = $usertypeID;
+		$this->data['roleID'] = $roleID;
 		
 			$rules = $this->rules();
 			unset($rules[7], $rules[8], $rules[9], $rules[10], $rules[12], $rules[13], $rules[14], $rules[15], $rules[16]);
@@ -232,7 +232,7 @@ class Profile extends Admin_Controller {
 				}
 
 
-				if($usertypeID == 3) {
+				if($roleID == 3) {
 					$getRelationTableStudent = $this->studentrelation_m->get_single_studentrelation(array('srstudentID' => $this->data['user']->studentID));
 					if(count($getRelationTableStudent)) {
 						$this->student_m->profileRelationUpdate('studentrelation', array('srname' => $this->input->post('name')), $this->data['user']->studentID);
@@ -243,7 +243,7 @@ class Profile extends Admin_Controller {
 				
 				$this->session->set_userdata(array('name' => $this->input->post('name'), 'email' => $this->input->post('email'), 'photo' => $array['photo']));
 
-				$this->student_m->profileUpdate($tableArray[$usertypeID], $array, $username);
+				$this->student_m->profileUpdate($tableArray[$roleID], $array, $username);
 				redirect(base_url('profile/index'));
 			}
 		} else {
@@ -301,24 +301,24 @@ class Profile extends Admin_Controller {
 	}
 
 	public function print_preview() {
-		$usertypeID = $this->session->userdata("usertypeID");
+		$roleID = $this->session->userdata("roleID");
 		$username = $this->session->userdata('username');
-		if($usertypeID == 1) {
+		if($roleID == 1) {
 			$this->data['user'] = $this->systemadmin_m->get_single_systemadmin(array('username' => $username));
-		} elseif($usertypeID == 2) {
+		} elseif($roleID == 2) {
 			$this->data['user'] = $this->teacher_m->get_single_teacher(array('username' => $username));
-		} elseif($usertypeID == 3) {
+		} elseif($roleID == 3) {
 			$this->data['user'] = $this->student_m->get_single_student(array('username' => $username));
 			$this->data['section'] = pluck($this->section_m->get_section(), 'section', 'sectionID'); 
 			$this->data['classes'] = pluck($this->classes_m->get_classes(), 'classes', 'classesID');
-		} elseif($usertypeID == 4) {
+		} elseif($roleID == 4) {
 			$this->data['user'] = $this->parents_m->get_single_parents(array("username" => $username));
 		} else {
 			$this->data['user'] = $this->user_m->get_single_user(array("username" => $username));
 		}
 		
-		$this->data['usertypeID'] =$usertypeID;
-		$this->data['usertype'] = pluck($this->usertype_m->get_usertype(), 'usertype', 'usertypeID');
+		$this->data['roleID'] =$roleID;
+		$this->data['usertype'] = pluck($this->role_m->get_role(), 'usertype', 'roleID');
 		if($this->data['user']) {
 			$this->printview($this->data, 'profile/print_preview');
 		} else {
@@ -328,24 +328,24 @@ class Profile extends Admin_Controller {
 	}
 
 	public function send_mail() {
-		$usertypeID = $this->session->userdata("usertypeID");
+		$roleID = $this->session->userdata("roleID");
 		$username = $this->session->userdata('username');
-		if($usertypeID == 1) {
+		if($roleID == 1) {
 			$this->data['user'] = $this->systemadmin_m->get_single_systemadmin(array('username' => $username));
-		} elseif($usertypeID == 2) {
+		} elseif($roleID == 2) {
 			$this->data['user'] = $this->teacher_m->get_single_teacher(array('username' => $username));
-		} elseif($usertypeID == 3) {
+		} elseif($roleID == 3) {
 			$this->data['user'] = $this->student_m->get_single_student(array('username' => $username));
 			$this->data['section'] = pluck($this->section_m->get_section(), 'section', 'sectionID'); 
 			$this->data['classes'] = pluck($this->classes_m->get_classes(), 'classes', 'classesID');
-		} elseif($usertypeID == 4) {
+		} elseif($roleID == 4) {
 			$this->data['user'] = $this->parents_m->get_single_parents(array("username" => $username));
 		} else {
 			$this->data['user'] = $this->user_m->get_single_user(array("username" => $username));
 		}
 		
-		$this->data['usertypeID'] =$usertypeID;
-		$this->data['usertype'] = pluck($this->usertype_m->get_usertype(), 'usertype', 'usertypeID');
+		$this->data['roleID'] =$roleID;
+		$this->data['usertype'] = pluck($this->role_m->get_role(), 'usertype', 'roleID');
 		if($this->data['user']) {
 			$email = $this->input->post('to');
 			$subject = $this->input->post('subject');

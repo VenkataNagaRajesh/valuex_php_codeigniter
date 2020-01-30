@@ -124,8 +124,8 @@
                                      		$airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
                                          }
 
-			$userTypeID = $this->session->userdata('usertypeID');
-                           if($userTypeID != 1){
+			$roleID = $this->session->userdata('roleID');
+                           if($roleID != 1){
                                    $default_airlineID =  $this->session->userdata('default_airline');
                             } else {
                                $default_airlineID = 0;

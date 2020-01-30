@@ -33,8 +33,8 @@ class Invoice extends Admin_Controller {
 	}
 
 	public function index() {
-		$usertypeID = $this->session->userdata("usertypeID");			
-		if($usertypeID == 3) {
+		$roleID = $this->session->userdata("roleID");			
+		if($roleID == 3) {
 			$username = $this->session->userdata("username");
 			$student = $this->student_m->get_single_student(array("username" => $username));
 			if(count($student)) {
@@ -85,7 +85,7 @@ class Invoice extends Admin_Controller {
 				$this->data["subview"] = "error";
 				$this->load->view('_layout_main', $this->data);
 			}
-		} elseif($usertypeID == 4) {
+		} elseif($roleID == 4) {
 			$this->data['headerassets'] = array(
 				'css' => array(
 					'assets/select2/css/select2.css',
@@ -368,7 +368,7 @@ class Invoice extends Admin_Controller {
 						'discount' => $discount,
 						'paidstatus' => 0,
 						'userID' => $this->session->userdata('loginuserID'),
-						'usertypeID' => $this->session->userdata('usertypeID'),
+						'roleID' => $this->session->userdata('roleID'),
 						'uname' => $this->session->userdata('name'), 
 						'date' => date("Y-m-d", strtotime($this->input->post("date"))),
 						'create_date' => date('Y-m-d'),
@@ -393,7 +393,7 @@ class Invoice extends Admin_Controller {
 							'discount' => $discount,
 							'paidstatus' => 0,
 							'userID' => $this->session->userdata('loginuserID'),
-							'usertypeID' => $this->session->userdata('usertypeID'),
+							'roleID' => $this->session->userdata('roleID'),
 							'uname' => $this->session->userdata('name'), 
 							'date' => date("Y-m-d", strtotime($this->input->post("date"))),
 							'create_date' => date('Y-m-d'),
@@ -481,7 +481,7 @@ class Invoice extends Admin_Controller {
 							'date' => $date,
 							'paidstatus' => $status,
 							'userID' => $this->session->userdata('loginuserID'),
-							'usertypeID' => $this->session->userdata('usertypeID'),
+							'roleID' => $this->session->userdata('roleID'),
 							'uname' => $this->session->userdata('name')
 						);
 
@@ -522,8 +522,8 @@ class Invoice extends Admin_Controller {
 	}
 
 	public function view() {
-		$usertypeID = $this->session->userdata("usertypeID");
-		if($usertypeID == 3) {
+		$roleID = $this->session->userdata("roleID");
+		if($roleID == 3) {
 			$id = htmlentities(escapeString($this->uri->segment(3)));
 			if((int)$id) {
 				$username = $this->session->userdata("username");
@@ -542,7 +542,7 @@ class Invoice extends Admin_Controller {
 				$this->data["subview"] = "error";
 				$this->load->view('_layout_main', $this->data);
 			}
-		} elseif($usertypeID == 4) {
+		} elseif($roleID == 4) {
 			$id = htmlentities(escapeString($this->uri->segment(3)));
 			if((int)$id) {
 				$username = $this->session->userdata("username");
@@ -604,8 +604,8 @@ class Invoice extends Admin_Controller {
 
 	public function print_preview() {
 		if(permissionChecker('invoice_view')) {
-			$usertypeID = $this->session->userdata("usertypeID");
-			if($usertypeID == 3) {
+			$roleID = $this->session->userdata("roleID");
+			if($roleID == 3) {
 				$id = htmlentities(escapeString($this->uri->segment(3)));
 				if((int)$id) {
 					$username = $this->session->userdata("username");
@@ -623,7 +623,7 @@ class Invoice extends Admin_Controller {
 					$this->data["subview"] = "error";
 					$this->load->view('_layout_main', $this->data);
 				}
-			} elseif($usertypeID == 4) {
+			} elseif($roleID == 4) {
 				$id = htmlentities(escapeString($this->uri->segment(3)));
 				if((int)$id) {
 					$username = $this->session->userdata("username");
@@ -725,8 +725,8 @@ class Invoice extends Admin_Controller {
 				$this->data['setPaymentMethod'] = '';
 			}
 
-			$usertypeID = $this->session->userdata('usertypeID');
-			if($usertypeID == 1 || $usertypeID == 5) {
+			$roleID = $this->session->userdata('roleID');
+			if($roleID == 1 || $roleID == 5) {
 				$id = htmlentities(escapeString($this->uri->segment(3)));
 				if((int)$id) {
 					$this->data['invoice'] = $this->invoice_m->get_single_invoice(array('invoiceID' => $id, 'deleted_at' => 1));
@@ -760,7 +760,7 @@ class Invoice extends Admin_Controller {
 											"paymentmonth" => date('m'),
 											"paymentyear" => date('Y'),
 											'userID' => $this->session->userdata('loginuserID'),
-											'usertypeID' => $this->session->userdata('usertypeID'),
+											'roleID' => $this->session->userdata('roleID'),
 											'uname' => $this->session->userdata('name'),
 											'transactionID' => 'CASHANDCHEQUE'.rand(1, 99999999999999999999999)
 
@@ -831,7 +831,7 @@ class Invoice extends Admin_Controller {
 					$this->load->view('_layout_main', $this->data);
 				}
 			} else {
-				if($usertypeID == 3) {
+				if($roleID == 3) {
 					$id = htmlentities(escapeString($this->uri->segment(3)));
 					if((int)$id) {
 						$api_config = array();
@@ -911,7 +911,7 @@ class Invoice extends Admin_Controller {
 						$this->data["subview"] = "error";
 						$this->load->view('_layout_main', $this->data);
 					}
-				} elseif($usertypeID == 4) {
+				} elseif($roleID == 4) {
 					$id = htmlentities(escapeString($this->uri->segment(3)));
                     $api_config = array();
                     $get_configs = $this->payment_settings_m->get_order_by_config();
@@ -1133,7 +1133,7 @@ class Invoice extends Admin_Controller {
                     "paymentmonth" => date('m'),
                     "paymentyear" => date('Y'),
                     'userID' => $this->session->userdata('loginuserID'),
-                    'usertypeID' => $this->session->userdata('usertypeID'),
+                    'roleID' => $this->session->userdata('roleID'),
                     'uname' => $this->session->userdata('name'),
                     'transactionID' => $txnid
                 );
@@ -1178,7 +1178,7 @@ class Invoice extends Admin_Controller {
                     "paymentmonth" => date('m'),
                     "paymentyear" => date('Y'),
                     'userID' => $this->session->userdata('loginuserID'),
-                    'usertypeID' => $this->session->userdata('usertypeID'),
+                    'roleID' => $this->session->userdata('roleID'),
                     'uname' => $this->session->userdata('name'),
                     'transactionID' => $txnid
                 );
@@ -1360,7 +1360,7 @@ class Invoice extends Admin_Controller {
                         "paymentmonth" => date('m'),
                         "paymentyear" => date('Y'),
                         'userID' => $this->session->userdata('loginuserID'),
-                        'usertypeID' => $this->session->userdata('usertypeID'),
+                        'roleID' => $this->session->userdata('roleID'),
                         'uname' => $this->session->userdata('name'),
                         'transactionID' => $txnid
                     );
@@ -1475,7 +1475,7 @@ class Invoice extends Admin_Controller {
 						"paymentmonth" => date('m'),
 						"paymentyear" => date('Y'),
 						'userID' => $this->session->userdata('loginuserID'),
-						'usertypeID' => $this->session->userdata('usertypeID'),
+						'roleID' => $this->session->userdata('roleID'),
 						'uname' => $this->session->userdata('name'),
 						'transactionID' => $paypalTransactionID
 					);
@@ -1544,7 +1544,7 @@ class Invoice extends Admin_Controller {
                                     "paymentmonth" => date('m'),
                                     "paymentyear" => date('Y'),
                                     'userID' => $this->session->userdata('loginuserID'),
-                                    'usertypeID' => $this->session->userdata('usertypeID'),
+                                    'roleID' => $this->session->userdata('roleID'),
                                     'uname' => $this->session->userdata('name'),
                                     'transactionID' => $response->getData()['id']
                                 );

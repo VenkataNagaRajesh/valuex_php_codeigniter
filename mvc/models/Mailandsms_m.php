@@ -16,10 +16,10 @@ class Mailandsms_m extends MY_Model {
 		return $query;
 	}
 
-	function get_mailandsms_with_usertypeID() {
+	function get_mailandsms_with_roleID() {
 		$this->db->select('*');
 		$this->db->from('VX_mailandsms');
-		$this->db->join('VX_usertype', 'usertype.usertypeID = mailandsms.usertypeID', 'LEFT');
+		$this->db->join('VX_role', 'VX_role.roleID = mailandsms.roleID', 'LEFT');
 		$this->db->order_by("mailandsmsID",'DESC');
 		$query = $this->db->get();
 		return $query->result();

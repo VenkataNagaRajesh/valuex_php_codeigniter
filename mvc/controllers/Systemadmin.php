@@ -160,7 +160,7 @@ class Systemadmin extends Admin_Controller {
 				$array["jod"] = date("Y-m-d", strtotime($this->input->post("jod")));
 				$array["username"] = $this->input->post("username");
 				$array['password'] = $this->systemadmin_m->hash($this->input->post("password"));
-				$array["usertypeID"] = 1;
+				$array["roleID"] = 1;
 				$array["create_date"] = date("Y-m-d h:i:s");
 				$array["modify_date"] = date("Y-m-d h:i:s");
 				$array["create_userID"] = $this->session->userdata('loginuserID');

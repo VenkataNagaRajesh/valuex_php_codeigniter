@@ -123,7 +123,7 @@
                 <h3 class="box-title"><i class="fa icon-payment"></i> <?=$this->lang->line('make_payment_payment_history')?></h3>
                 <ol class="breadcrumb">
                     <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-                    <li><a href="<?=base_url("make_payment/index/$usertype->usertypeID")?>"><?=$this->lang->line('menu_make_payment')?></a></li>
+                    <li><a href="<?=base_url("make_payment/index/$usertype->roleID")?>"><?=$this->lang->line('menu_make_payment')?></a></li>
                     <li class="active"><?=$this->lang->line('menu_add')?> <?=$this->lang->line('menu_make_payment')?></li>
                 </ol>
             </div><!-- /.box-header -->

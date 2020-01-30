@@ -18,7 +18,7 @@ class Feedback extends Admin_Controller {
 
 	function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');	  
+		$roleID = $this->session->userdata('roleID');	  
 				
 	    $aColumns = array('feedbackID','overall_experience','time_response','our_support','overall_satisfaction','customer_service','message');
 		$sLimit = "";

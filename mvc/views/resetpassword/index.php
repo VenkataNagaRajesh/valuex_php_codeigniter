@@ -30,7 +30,7 @@
                                     0 => $this->lang->line("resetpassword_select_users"));
                                 if(count($usertypes)) {
                                     foreach ($usertypes as $key => $usertype) {
-                                        $array[$usertype->usertypeID] = $usertype->usertype;
+                                        $array[$usertype->roleID] = $usertype->usertype;
                                     }
                                 }
                                 
@@ -60,13 +60,13 @@
                
                                     if($usernames != "empty") {
                                         foreach ($usernames as $usernamea) {
-                                            if($usernamea->usertypeID == 1) {
+                                            if($usernamea->roleID == 1) {
                                                 $array[$usernamea->systemadminID] = $usernamea->username;
-                                            } elseif($usernamea->usertypeID == 2) {
+                                            } elseif($usernamea->roleID == 2) {
                                                 $array[$usernamea->teacherID] = $usernamea->username;
-                                            } elseif($usernamea->usertypeID == 3) {
+                                            } elseif($usernamea->roleID == 3) {
                                                 $array[$usernamea->studentID] = $usernamea->username;
-                                            } elseif($usernamea->usertypeID == 4) {
+                                            } elseif($usernamea->roleID == 4) {
                                                 $array[$usernamea->parentsID] = $usernamea->username;
                                             } else {
                                                  $array[$usernamea->userID] = $usernamea->username;

@@ -338,9 +338,9 @@ function valFrequency($num)
 
 		//$this->data['carriers'] = $this->airports_m->getDefnsListByType('12');
 
-		 $userTypeID = $this->session->userdata('usertypeID');
+		 $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID != 1){
+                if($roleID != 1){
 						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
 						   }else {
                    $this->data['carriers'] = $this->airline_m->getAirlinesData();
@@ -358,14 +358,14 @@ function valFrequency($num)
          if($this->input->post('scarrier')){
 		   $this->data['scarrier'] = $this->input->post('scarrier');
 	     } else {
-		   if($userTypeID == 2){
+		   if($roleID == 2){
              $this->data['scarrier'] = $this->session->userdata('default_airline');
 		   } else {
 			 $this->data['scarrier'] = 0;
 		   }
          }
 		 
-		 if(empty($this->input->post('carrier')) && $userTypeID != 1){
+		 if(empty($this->input->post('carrier')) && $roleID != 1){
 			     $this->data['scarrier'] = $this->session->userdata('default_airline');
 			    }
 		 //echo  $this->data['default_airlineID']; exit;
@@ -767,7 +767,7 @@ function time_dropdown($val) {
 
 	function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$usertypeID = $this->session->userdata('usertypeID');	  
+		$roleID = $this->session->userdata('roleID');	  
 
 
 	$aColumns = array('MainSet.eexcl_id','MainSet.excl_grp','MainSet.excl_reason_desc','MainSet.orig_level', 'SubSet.orig_level_value','MainSet.dest_level', 'SubSet.dest_level_value' ,'MainSet.carrier_code','MainSet.flight_efec_date', 'MainSet.flight_disc_date','MainSet.flight_dep_start', 'MainSet.flight_dep_end','MainSet.flight_nbr','MainSet.from_class','MainSet.to_class','SubSet.frequency','SubSet.orig_full_name', 'SubSet.dest_full_name', 'MainSet.active');
@@ -923,9 +923,9 @@ function time_dropdown($val) {
 
                         }
 
-                  $userTypeID = $this->session->userdata('usertypeID');
+                  $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
-                if($userTypeID == 2){
+                if($roleID == 2){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'MainSet.carrier IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
                 }

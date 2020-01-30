@@ -14,7 +14,7 @@ class systemadmin_m extends MY_Model {
 	/* function get_systemadmin_by_usertype($systemadminID = null) {
 		$this->db->select('*');
 		$this->db->from('systemadmin');
-		$this->db->join('usertype', 'usertype.usertypeID = systemadmin.usertypeID', 'LEFT');
+		$this->db->join('usertype', 'usertype.roleID = systemadmin.roleID', 'LEFT');
 		if($systemadminID) {
 			$this->db->where(array('systemadminID' => $systemadminID));
 			$query = $this->db->get();

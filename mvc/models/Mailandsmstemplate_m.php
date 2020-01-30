@@ -40,10 +40,10 @@ class Mailandsmstemplate_m extends MY_Model {
 		parent::delete($id);
 	}
 
-	function get_order_by_mailandsmstemplate_with_usertypeID() {
+	function get_order_by_mailandsmstemplate_with_roleID() {
 		$this->db->select('mailandsmstemplate.*,cat.name category,a.aln_data_value airline_name,a.code airline_code');
 		$this->db->from('VX_mailandsmstemplate');
-		//$this->db->join('usertype', 'usertype.usertypeID = mailandsmstemplate.usertypeID', 'LEFT');
+		//$this->db->join('usertype', 'usertype.roleID = mailandsmstemplate.roleID', 'LEFT');
 		$this->db->join('VX_mailandsmscategory cat','cat.catID = VX_mailandsmstemplate.catID','LEFT');
 		$this->db->join('VX_data_defns a','a.vx_aln_data_defnsID = VX_mailandsmstemplate.airlineID','LEFT');
 		$query = $this->db->get();

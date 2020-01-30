@@ -55,7 +55,7 @@ class Activitiescategory extends Admin_Controller {
 					"title" => $this->input->post("title"),
                     "fa_icon" => $this->input->post("fa_icon"),
                     "schoolyearID" => $this->data['siteinfos']->school_year,
-                    "usertypeID" => $this->session->userdata('usertypeID'),
+                    "roleID" => $this->session->userdata('roleID'),
                     "userID" => $this->session->userdata('loginuserID'),
 				);
                 $array["create_date"] = date("Y-m-d h:i:s");

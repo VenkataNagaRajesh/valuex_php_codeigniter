@@ -21,14 +21,14 @@ class Media extends Admin_Controller {
 		$this->load->model("classes_m");
 		$this->load->model("student_m");
 		$this->load->model("media_share_m");
-		$this->load->model('usertype_m');
+		$this->load->model('role_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('media', $language);
 		$this->load->helper("file");
 	}
 
 
-	function userTableCall($usertypeID, $userID) {
+	function userTableCall($roleID, $userID) {
 	    $this->load->model('systemadmin_m');
 	    $this->load->model('teacher_m');
 	    $this->load->model('student_m');
@@ -36,36 +36,36 @@ class Media extends Admin_Controller {
 	    $this->load->model('user_m');
 
 	    $findUserName = ''; 
-	    if($usertypeID == 1) {
-	       $user = $this->db->get_where('systemadmin', array("usertypeID" => $usertypeID, 'systemadminID' => $userID));
+	    if($roleID == 1) {
+	       $user = $this->db->get_where('systemadmin', array("roleID" => $roleID, 'systemadminID' => $userID));
 	        $alluserdata = $user->row();
 	        if(count($alluserdata)) {
 	            $findUserName = $alluserdata->name;
 	        }
 	        return $findUserName;
-	    } elseif($usertypeID == 2) {
-	        $user = $this->db->get_where('teacher', array("usertypeID" => $usertypeID, 'teacherID' => $userID));
+	    } elseif($roleID == 2) {
+	        $user = $this->db->get_where('teacher', array("roleID" => $roleID, 'teacherID' => $userID));
 	        $alluserdata = $user->row();
 	        if(count($alluserdata)) {
 	            $findUserName = $alluserdata->name;
 	        }
 	        return $findUserName;
-	    } elseif($usertypeID == 3) {
-	        $user = $this->db->get_where('student', array("usertypeID" => $usertypeID, 'studentID' => $userID));
+	    } elseif($roleID == 3) {
+	        $user = $this->db->get_where('student', array("roleID" => $roleID, 'studentID' => $userID));
 	        $alluserdata = $user->row();
 	        if(count($alluserdata)) {
 	            $findUserName = $alluserdata->name;
 	        }
 	        return $findUserName;
-	    } elseif($usertypeID == 4) {
-	        $user = $this->db->get_where('parents', array("usertypeID" => $usertypeID, 'parentsID' => $userID));
+	    } elseif($roleID == 4) {
+	        $user = $this->db->get_where('parents', array("roleID" => $roleID, 'parentsID' => $userID));
 	        $alluserdata = $user->row();
 	        if(count($alluserdata)) {
 	            $findUserName = $alluserdata->name;
 	        }
 	        return $findUserName;
 	    } else {
-	        $user = $this->db->get_where('user', array("usertypeID" => $usertypeID, 'userID' => $userID));
+	        $user = $this->db->get_where('user', array("roleID" => $roleID, 'userID' => $userID));
 	        $alluserdata = $user->row();
 	        if(count($alluserdata)) {
 	            $findUserName = $alluserdata->name;
@@ -75,18 +75,18 @@ class Media extends Admin_Controller {
 	}
 
 	public function index() {
-		$allUserTypes = $this->usertype_m->get_usertype();
-		$this->data['allusertype'] = pluck($allUserTypes, 'usertype', 'usertypeID');
-		$this->data['usertypeID'] = $this->session->userdata('usertypeID');
+		$allUserTypes = $this->role_m->get_role();
+		$this->data['allusertype'] = pluck($allUserTypes, 'usertype', 'roleID');
+		$this->data['roleID'] = $this->session->userdata('roleID');
 		$this->data['userID'] = $this->session->userdata('loginuserID');
 		$share_table = $this->media_share_m->get_media_share();
 		
-		if($this->data['usertypeID'] == 1) {
+		if($this->data['roleID'] == 1) {
 			$this->data['folders'] = $this->media_category_m->get_media_category();
 			$this->data['files'] = $this->media_m->get_order_by_media(array('mcategoryID'=>0));
 		} else {
-			$this->data['folders'] = $this->media_category_m->get_order_by_mcategory(array('userID'=> $this->data['userID'], 'usertypeID'=>$this->data['usertypeID']));
-			$this->data['files'] = $this->media_m->get_order_by_media(array('userID'=> $this->data['userID'], 'usertypeID'=>$this->data['usertypeID'], 'mcategoryID'=>0));
+			$this->data['folders'] = $this->media_category_m->get_order_by_mcategory(array('userID'=> $this->data['userID'], 'roleID'=>$this->data['roleID']));
+			$this->data['files'] = $this->media_m->get_order_by_media(array('userID'=> $this->data['userID'], 'roleID'=>$this->data['roleID'], 'mcategoryID'=>0));
 		}
 		
 		foreach ($share_table as $key => $item) {
@@ -98,7 +98,7 @@ class Media extends Admin_Controller {
 				}
 			} else {
 				$classID = 0;
-				if ($this->data['usertypeID'] == 3) {
+				if ($this->data['roleID'] == 3) {
 					$student = $this->student_m->get_student($this->data['userID']);
 					$classID = $student->classesID;
 
@@ -114,12 +114,12 @@ class Media extends Admin_Controller {
 		}
 
 		foreach ($this->data['files'] as $key => $share) {
-			$query = $this->userTableCall($share->usertypeID, $share->userID);
+			$query = $this->userTableCall($share->roleID, $share->userID);
 			$this->data['files'][$key] = (object) array_merge( (array)$share, array( 'shared_by' => $query));
 		}
 
 		foreach ($this->data['folders'] as $key => $share_folder) {
-			$query = $this->userTableCall($share_folder->usertypeID, $share_folder->userID);
+			$query = $this->userTableCall($share_folder->roleID, $share_folder->userID);
 			$this->data['folders'][$key] = (object) array_merge( (array)$share_folder, array( 'shared_by' => $query));
 		}
 
@@ -134,7 +134,7 @@ class Media extends Admin_Controller {
 		if(permissionChecker('media_add')) {
 			$array = array();
 			$array['userID'] = $this->session->userdata('loginuserID');
-			$array['usertypeID'] = $this->session->userdata('usertypeID');
+			$array['roleID'] = $this->session->userdata('roleID');
 			$array['folder_name'] = $this->input->post('folder_name');
 			$this->form_validation->set_rules('folder_name', 'Folder name', 'required|trim|xss_clean|max_length[128]');
 			if ($this->form_validation->run() == FALSE) {
@@ -152,11 +152,11 @@ class Media extends Admin_Controller {
 	}
 
 	public function view() {
-		$usertypeID = $this->session->userdata('usertypeID');
+		$roleID = $this->session->userdata('roleID');
 		$userID = $this->session->userdata('loginuserID');
-		$allUserTypes = $this->usertype_m->get_usertype();
-		$this->data['allusertype'] = pluck($allUserTypes, 'usertype', 'usertypeID');
-		$this->data['usertypeID'] = $this->session->userdata('usertypeID');
+		$allUserTypes = $this->role_m->get_role();
+		$this->data['allusertype'] = pluck($allUserTypes, 'usertype', 'roleID');
+		$this->data['roleID'] = $this->session->userdata('roleID');
 		$this->data['userID'] = $userID;
 
 		$folderID = htmlentities(escapeString($this->uri->segment(3)));
@@ -165,14 +165,14 @@ class Media extends Admin_Controller {
 		if ((int)$folderID) {
 			$this->data['files'] = $this->media_m->get_order_by_media(array("mcategoryID"=>$folderID));
 			if(isset($_POST['upload_file'])) {
-				if (($folder_info->userID == $userID && $folder_info->usertypeID == $usertypeID) || $usertypeID == 1) {
+				if (($folder_info->userID == $userID && $folder_info->roleID == $roleID) || $roleID == 1) {
 					if(isset($_FILES['file']['name'])=="") {
 						$this->session->set_flashdata('error', 'File not found');
 						redirect(base_url('media/view/'.$folderID),'refresh');
 					} else {
 						$array = array();
 						$array['userID'] = $userID;
-						$array['usertypeID'] = $usertypeID;
+						$array['roleID'] = $roleID;
 						$array['mcategoryID'] = $folderID;
 						$file_name = $_FILES["file"]['name'];
 						$file_name_display = $_FILES["file"]['name'];
@@ -212,7 +212,7 @@ class Media extends Admin_Controller {
 			}
 			
 			foreach ($this->data['files'] as $key => $share) {
-				$query = $this->userTableCall($share->usertypeID, $share->userID);
+				$query = $this->userTableCall($share->roleID, $share->userID);
 				$this->data['files'][$key] = (object) array_merge( (array)$share, array( 'shared_by' => $query));
 			}
 			$this->data["subview"] = "media/view";
@@ -236,7 +236,7 @@ class Media extends Admin_Controller {
 
 	public function add() {
 		if(permissionChecker('media_add')) {
-			$usertypeID = $this->session->userdata('usertypeID');
+			$roleID = $this->session->userdata('roleID');
 			$userID = $this->session->userdata('loginuserID');
 			if($_FILES['file']['name']=="") {
 				$this->session->set_flashdata('error', 'Please select file!');
@@ -244,7 +244,7 @@ class Media extends Admin_Controller {
 			} else {
 				$array = array();
 				$array['userID'] = $userID;
-				$array['usertypeID'] = $usertypeID;
+				$array['roleID'] = $roleID;
 				$file_name = $_FILES["file"]['name'];
 				$file_name_display = $_FILES["file"]['name'];
 				$file_name_rename = rand(1, 100000000000);
@@ -333,14 +333,14 @@ class Media extends Admin_Controller {
 
 	public function deletef() {
 		if(permissionChecker('media_delete')) {
-			$usertypeID = $this->session->userdata('usertypeID');
+			$roleID = $this->session->userdata('roleID');
 			$userID = $this->session->userdata('loginuserID');
 			$id = htmlentities(escapeString($this->uri->segment(3)));
 			if($id) {
 				$all_files = $this->media_m->get_order_by_media(array("mcategoryID"=>$id));	
 				if (count($all_files)) {
 					foreach ($all_files as $file) {
-						if(($usertypeID == $file->usertypeID && $userID == $file->userID) || ($usertypeID == 1)) {
+						if(($roleID == $file->roleID && $userID == $file->userID) || ($roleID == 1)) {
 							$path = "uploads/media/".$file->file_name;
 							if(config_item('demo') == FALSE) {
 								if(unlink($path)) {
@@ -357,7 +357,7 @@ class Media extends Admin_Controller {
 			
 				$mediaCategory = $this->media_category_m->get_media_category($id);
 				if(count($mediaCategory)) {
-					if(($usertypeID == $mediaCategory->usertypeID && $userID == $mediaCategory->userID) || ($usertypeID == 1)) {
+					if(($roleID == $mediaCategory->roleID && $userID == $mediaCategory->userID) || ($roleID == 1)) {
 						$this->media_category_m->delete_mcategory($id);
 						$this->media_share_m->delete_share_folder($id);
 						$this->session->set_flashdata('success', $this->lang->line('menu_success'));
@@ -380,11 +380,11 @@ class Media extends Admin_Controller {
 
 	public function delete() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
-		$usertypeID = $this->session->userdata('usertypeID');
+		$roleID = $this->session->userdata('roleID');
 		$userID = $this->session->userdata('loginuserID');
 		if($id) {
 			$file = $this->media_m->get_media($id);
-			if(($usertypeID == $file->usertypeID && $userID == $file->userID) || ($usertypeID == 1)) {
+			if(($roleID == $file->roleID && $userID == $file->userID) || ($roleID == 1)) {
 				$path = "uploads/media/".$file->file_name;
 				if(config_item('demo') == FALSE) {
 					if (unlink($path)) {

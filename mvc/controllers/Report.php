@@ -416,15 +416,15 @@ class Report extends Admin_Controller {
         );
 
 		$userID 		= htmlentities(escapeString($this->uri->segment(3)));
-		$usertypeID 	= htmlentities(escapeString($this->uri->segment(4)));
+		$roleID 	= htmlentities(escapeString($this->uri->segment(4)));
 		$templateID 	= htmlentities(escapeString($this->uri->segment(5)));
 		$schoolyearID 	= htmlentities(escapeString($this->uri->segment(6)));
 		$classID 		= htmlentities(escapeString($this->uri->segment(7)));
 
-		if((int)$userID && (int)$usertypeID && (int)$templateID && (int)$schoolyearID && (int)$classID) {
+		if((int)$userID && (int)$roleID && (int)$templateID && (int)$schoolyearID && (int)$classID) {
 			$student = $this->studentrelation_m->get_studentrelation_join_student(array('srstudentID' => $userID), TRUE);
 
-			$usertype = $this->usertype_m->get_single_usertype(array('usertypeID' => $usertypeID));
+			$usertype = $this->role_m->get_single_role(array('roleID' => $roleID));
 
 			$template = $this->certificate_template_m->get_single_certificate_template(array('certificate_templateID' => $templateID));
 
@@ -492,10 +492,10 @@ class Report extends Admin_Controller {
 	}
 
 
-	function tagConvertForTemplate($message, $usertypeID=1, $convertArray, $design = TRUE) {
+	function tagConvertForTemplate($message, $roleID=1, $convertArray, $design = TRUE) {
         if($message) {
-        	if($usertypeID == 3) {
-	            $userTags = pluck($this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('usertypeID' => 3)), 'tagname');
+        	if($roleID == 3) {
+	            $userTags = pluck($this->mailandsmstemplatetag_m->get_order_by_mailandsmstemplatetag(array('roleID' => 3)), 'tagname');
 
 	            if(count($userTags)) {
 	                unset($userTags[10]);
