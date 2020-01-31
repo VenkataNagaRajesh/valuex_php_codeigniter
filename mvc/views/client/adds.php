@@ -154,6 +154,34 @@
                         <span class="col-sm-4">
                             <?php echo form_error('photo'); ?>
                         </span>
+                    </div>
+
+                    <?php
+                        if(form_error('roleID'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                       <label for="airlineID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("client_role")?><span class="text-red">*</span>
+                       </label>
+                        <div class="col-sm-6">
+                             <?php 
+                                    $rarray[0] = 'Select Role';
+
+                                    if(count($roles)) {
+                                        foreach ($roles as $key => $role) {                                           
+                                            $rarray[$role->roleID] = $role->role;                                          
+                                        }
+                                    }
+                                    echo form_dropdown("roleID", $rarray,
+                                        set_value("roleID"), "id='roleID' class='form-control hide-dropdown-icon'"
+                                    );
+                            ?>
+                        </div>
+                        <span class="col-sm-4">
+                            <?php echo form_error('roleID'); ?>
+                        </span>
                     </div>			
 
                     <?php

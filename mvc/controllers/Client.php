@@ -101,6 +101,11 @@ class Client extends Admin_Controller {
 				'label' => $this->lang->line("client_photo"),
 				'rules' => 'trim|max_length[200]|xss_clean|callback_photoupload'
 			),
+			array(
+				'field' => 'roleID',
+				'label' => $this->lang->line("client_role"),
+				'rules' => 'trim|max_length[10]|xss_clean|callback_valRole'
+			),
 			/*array(
 				'field' => 'mail_logo',
 				'label' => $this->lang->line("client_mail_logo"),
@@ -128,8 +133,15 @@ class Client extends Admin_Controller {
 			return FALSE;
 		}
 	}
-	
-	
+
+	public function valRole(){
+		if($this->input->post('roleID') != 0){
+			return TRUE;
+		} else {
+			$this->form_validation->set_message("valRole", "%s Required");
+			return FALSE;
+		}
+	}	
 	
 	public function photoupload() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
@@ -213,7 +225,8 @@ class Client extends Admin_Controller {
                         'assets/select2/select2.js',  					
                 )
         );
-        $usertype = 2;
+		$usertypeID = 2;
+		$this->data['roles'] = $this->role_m->get_role();
         $this->data['airlinelist'] = $this->airline_m->getAirlinesData();		
 		if($_POST) {
 			$rules = $this->rules();
@@ -228,7 +241,8 @@ class Client extends Admin_Controller {
 				$array["address"] = $this->input->post("address");				
 				$array["username"] = $this->input->post("username");
 				$array["password"] = $this->user_m->hash($this->input->post("password"));
-				$array["roleID"] = $usertype;
+				$array["usertypeID"] = $usertype;
+				$array["roleID"] = $this->input->post('roleID');
 				$array["create_date"] = date("Y-m-d h:i:s");
 				$array["modify_date"] = date("Y-m-d h:i:s");
 				$array["create_userID"] = $this->session->userdata('loginuserID');
@@ -271,11 +285,12 @@ class Client extends Admin_Controller {
 			   )
 	   );
 	   $usertype = 2;
+	   $this->data['roles'] = $this->role_m->get_role();
 	   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();		
 	   if($_POST) {
-		   $rules = $this->rules();
+		   $rules = $this->adds_rules();		  
 		   $this->form_validation->set_rules($rules);
-		   if ($this->form_validation->run() == FALSE) {
+		   if ($this->form_validation->run() == FALSE) {			   
 			   $this->data["subview"] = "client/adds";
 			   $this->load->view('_layout_main', $this->data);
 		   } else {		   
@@ -286,12 +301,13 @@ class Client extends Admin_Controller {
 			$array["address"] = $this->input->post("address");				
 			$array["username"] = $this->input->post("username");
 			$array["password"] = $this->user_m->hash($this->input->post("password"));
-			$array["roleID"] = $usertype;
+			$array["usertypeID"] = $usertype;
+			$array["roleID"] = $this->input->post('roleID');
 			$array["create_date"] = date("Y-m-d h:i:s");
 			$array["modify_date"] = date("Y-m-d h:i:s");
 			$array["create_userID"] = $this->session->userdata('loginuserID');
 			$array["create_username"] = $this->session->userdata('username');
-			$array["create_usertype"] = $this->session->userdata('usertype');
+			$array["create_usertype"] = $this->session->userdata('roleID');
 			$array["active"] = $this->input->post("active");	
 			$array['photo'] = $this->upload_data['file']['file_name'];
 			// For Email
@@ -345,15 +361,17 @@ class Client extends Admin_Controller {
 			$this->data['client'] = $this->user_m->get_user($id);
 			//print_r($this->data['user']); exit;
 			if($this->data['client']) {
-				$rules = $this->rules();				
-				unset($rules[7]);								
+				$rules = $this->adds_rules();				
+				unset($rules[9]);								
 				$this->form_validation->set_rules($rules);
 				if ($this->form_validation->run() == FALSE) {
-					//echo validation_errors();
+					echo validation_errors();
 					$this->data["subview"] = "client/edit";
 					$this->load->view('_layout_main', $this->data);
 				} else {
 					$array["name"] = $this->input->post("name");
+					$array["domain"] = $this->input->post("domain");
+					$array["roleID"] = $this->input->post("roleID");
 					$array["dob"] = date("Y-m-d", strtotime($this->input->post("dob")));
 					$array["sex"] = $this->input->post("sex");
 					$array["religion"] = $this->input->post("religion");
@@ -363,8 +381,7 @@ class Client extends Admin_Controller {
 					$array["jod"] = date("Y-m-d", strtotime($this->input->post("jod")));					
 					$array["modify_date"] = date("Y-m-d h:i:s");
 					$array["username"] = $this->input->post('username');
-					$array['photo'] = $this->upload_data['file']['file_name'];				
-					
+					$array['photo'] = $this->upload_data['file']['file_name'];						
 					$this->user_m->update_user($array, $id);
 					
 					 $airlines = array();
@@ -644,7 +661,7 @@ class Client extends Admin_Controller {
                 $sWhere .= 'c.userID = '.$this->session->userdata('loginuserID');	
 			}
 			$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                $sWhere .= 'c.roleID = 2';
+                $sWhere .= 'c.usertypeID = 2';
 			if($roleID != 1){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 				$airlines = $this->user_m->getUserAirlines($userID);

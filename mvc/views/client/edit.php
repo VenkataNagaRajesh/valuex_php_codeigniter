@@ -57,6 +57,22 @@
                         </span>
                     </div>
                     <?php
+                        if(form_error('domain'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="domain" class="col-sm-2 control-label">
+                            <?=$this->lang->line("client_domain")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="domain" name="domain" value="<?=set_value('domain',$client->domain)?>" >
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('domain'); ?>
+                        </span>
+                    </div>
+                    <?php
                         if(form_error('email'))
                             echo "<div class='form-group has-error' >";
                         else
@@ -140,36 +156,32 @@
                     </div>
 
                     <?php
-                        if(form_error('mail_logo'))
+                        if(form_error('roleID'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="mail_logo" class="col-sm-2 control-label">
-                            <?=$this->lang->line("client_mail_logo")?>
-                        </label>
+                       <label for="role" class="col-sm-2 control-label">
+                            <?=$this->lang->line("client_role")?><span class="text-red">*</span>
+                       </label>
                         <div class="col-sm-6">
-                           <div class="input-group mail-logo-preview">
-                                <input type="text" class="form-control mail-logo-preview-filename" disabled="disabled">
-                                <span class="input-group-btn">
-                                    <button type="button" class="btn btn-default mail-logo-preview-clear" style="display:none;">
-                                        <span class="fa fa-remove"></span>
-                                        <?=$this->lang->line('client_clear')?>
-                                    </button>
-                                    <div class="btn btn-success mail-logo-preview-input">
-                                        <span class="fa fa-repeat"></span>
-                                        <span class="mail-logo-preview-input-title">
-                                        <?=$this->lang->line('client_upload_mail_logo')?></span>
-                                        <input type="file" accept="image/png, image/jpeg, image/gif" name="mail_logo"/>
-                                    </div>
-                                </span>
-                            </div>
-                        </div>
+                             <?php 
+                                    $rarray[0] = 'Select Role';
 
+                                    if(count($roles)) {
+                                        foreach ($roles as $key => $role) {                                           
+                                            $rarray[$role->roleID] = $role->role;                                          
+                                        }
+                                    }
+                                    echo form_dropdown("roleID", $rarray,
+                                        set_value("roleID",$client->roleID), "id='roleID' class='form-control hide-dropdown-icon'"
+                                    );
+                            ?>
+                        </div>
                         <span class="col-sm-4">
-                            <?php echo form_error('mail_logo'); ?>
+                            <?php echo form_error('roleID'); ?>
                         </span>
-                    </div>					
+                    </div>		
 
                     <?php
                         if(form_error('username'))
