@@ -51,8 +51,7 @@ class user_m extends MY_Model {
 		$this->db->select('*');
 		$this->db->from('VX_user u');
 		$this->db->join('VX_role ur', 'ur.roleID = u.roleID', 'LEFT');
-		$this->db->where('u.roleID !=',2);
-		$this->db->where('u.roleID !=',5);
+		$this->db->where('u.usertypeID !=',2);		
 		$query = $this->db->get();
 		return $query->result();		
 	}
@@ -99,7 +98,7 @@ class user_m extends MY_Model {
 
     function userTotalCount(){
 		$this->db->select('count(*) count')->from('VX_user');
-		$this->db->where('roleID !=',2);
+		$this->db->where('usertypeID !=',2);
 		$query = $this->db->get();		
 		return $query->row('count');
 	}

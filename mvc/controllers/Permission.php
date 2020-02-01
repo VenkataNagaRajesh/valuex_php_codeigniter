@@ -67,7 +67,7 @@ class Permission extends Admin_Controller {
 					foreach ($_POST as $key => $value) {
 						$array = array();
 						$array['permission_id'] = $value;
-						$array['usertype_id'] = $roleID;
+						$array['roleID'] = $roleID;
 						$this->permission_m->insert_relation($array);
 					}
 					redirect(base_url('permission/index/'.$roleID),'refresh');

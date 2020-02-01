@@ -49,6 +49,7 @@
                                 <th class="col-lg-2"><?=$this->lang->line('client_email')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('client_phone')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_airline')?></th>
+                                <th class="col-lg-2"><?=$this->lang->line('client_role')?></th>
                                 <?php if(permissionChecker('client_edit')) { ?>
                                 <th class="col-lg-1 noExport"><?=$this->lang->line('client_status')?></th>
                                 <?php } ?>
@@ -88,6 +89,7 @@
 				  {"data": "email" },
 				  {"data": "phone" }, 
                   {"data": "airline_code"},
+                  {"data" : "role"},
 				  {"data": "active"},
                   {"data": "action"}
 				  ],			     

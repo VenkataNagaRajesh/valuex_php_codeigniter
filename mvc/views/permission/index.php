@@ -27,8 +27,8 @@
                                 } else {
                                     $set = null;
                                 }
-                                foreach ($usertypes as $usertype) {
-                                    $array[$usertype->roleID] = $usertype->usertype;
+                                foreach ($roles as $role) {
+                                    $array[$role->roleID] = $role->role;
                                 }
                                 echo form_dropdown("roleID", $array, set_value("roleID", $set), "id='roleID' class='form-control select2'");
                             ?>

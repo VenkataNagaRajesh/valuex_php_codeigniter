@@ -682,7 +682,7 @@ class Client extends Admin_Controller {
 	        }
 			
 		    $sGroupby = " GROUP BY c.userID";
-		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM VX_user c LEFT JOIN VX_user_airline ca ON ca.userID = c.userID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
+		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,r.role,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM VX_user c LEFT JOIN VX_role r ON r.roleID = c.roleID LEFT JOIN VX_user_airline ca ON ca.userID = c.userID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
 			$sWhere	
             $sGroupby
             $sHaving			
@@ -731,8 +731,8 @@ class Client extends Admin_Controller {
            	$output['aaData'][] = $client;				
 		}
 		if(isset($_REQUEST['export'])){
-		  $columns = array('#','Name','Email','Phone','Carrier Name',"Carrier Code");
-		  $rows = array("userID","name","email","phone","airline_name","airline_code");
+		  $columns = array('#','Name','Email','Phone',"Carrier Code","Role");
+		  $rows = array("userID","name","email","phone","airline_code","role");
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );
