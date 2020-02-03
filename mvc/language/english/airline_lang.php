@@ -39,3 +39,5 @@ $lang['airline_logo'] = 'Logo';
 $lang['airline_file_browse']='File Upload';
 $lang['airline_clear'] = 'Clear';
 $lang['airline_video_links'] = 'Video Links';
+$lang['airline_information'] = 'Airline Information';
+$lang['airline_add_product'] = 'Add Product';

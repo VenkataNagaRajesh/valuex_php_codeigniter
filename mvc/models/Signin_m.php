@@ -55,6 +55,7 @@ class signin_m extends MY_Model {
 							"name" => $userdata->name,
 							"email" => $userdata->email,
 							"roleID" => $userdata->roleID,
+							'usertypeID' => $userdata->usertypeID,
 							'usertype' => $usertype->usertype,
 							"username" => $userdata->username,
 							"photo" => $userdata->photo,

@@ -9,6 +9,7 @@ class Airline extends Admin_Controller {
 		$this->load->model("market_airport_map_m");
 		$this->load->model("airline_m");
 		$this->load->model("user_m");
+		$this->load->model('airline_product_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('airline', $language);
         $this->data['icon'] = $this->menu_m->getMenu(array("link"=>"airports_master"))->icon; 		
@@ -193,8 +194,7 @@ class Airline extends Admin_Controller {
       }
     }
 	
-	public function index() {
-		
+	public function index() {		
 		$this->data["subview"] = "airline/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -288,6 +288,7 @@ class Airline extends Admin_Controller {
 			$this->data['airline']->upgrade_offer_mail_template2 = $this->airline_m->getImagesByType($id,'upgrade_offer_mail_template2');
 			$this->data['airline']->upgrade_offer_mail_template3 = $this->airline_m->getImagesByType($id,'upgrade_offer_mail_template3');
 			$this->data['airline']->airline_logo = $this->airline_m->getImagesByType($id,'airline_logo');
+			$this->data['airline']->products = $this->airline_product_m->getAirlineProducts($id);
 			//print_r($this->data["airline"]); exit;
 			if($this->data["airline"]) {
 				$this->data["subview"] = "airline/view";
@@ -628,7 +629,11 @@ class Airline extends Admin_Controller {
 
            if(permissionChecker('airline_gallery')){ 	
 		      $airline->action .= '<a href="'.base_url('airline/gallery/'.$airline->vx_aln_data_defnsID).'" class="btn btn-warning btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Upload Images"><i class="fa fa-plus"></i></a>';
-		  } 		  
+		  } 
+		  
+		  if(permissionChecker('airline_product_add')){ 	
+			$airline->action .= '<a href="'.base_url('airline_product/add/'.$airline->vx_aln_data_defnsID).'" class="btn btn-primary btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Add Product"><i class="fa fa-plus"></i></a>';
+		} 
 			$status = $airline->active;
 			$airline->active = "<div class='onoffswitch-small' id='".$airline->vx_aln_data_defnsID."'>";
             $airline->active .= "<input type='checkbox' id='myonoffswitch".$airline->vx_aln_data_defnsID."' class='onoffswitch-small-checkbox' name='paypal_demo'";
@@ -855,6 +860,6 @@ class Airline extends Admin_Controller {
 		 }	 
 		redirect(base_url('airline/edit/'.$id));
 	}
-
+	
 }
 
