@@ -14,6 +14,11 @@
              </a>
          </h5>
      <?php } ?>
+     <h5 class="page-header">
+             <a href="<?php echo base_url('airline/addProduct') ?>" data-toggle="tooltip" data-title="Add Product" data-placement="left" class="btn btn-danger">
+                 <i class="fa fa-plus"></i> 
+             </a>
+         </h5>
 	 <form class="form-horizontal col-md-12" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>
 			    <div class="col-sm-4 col-md-3">			   

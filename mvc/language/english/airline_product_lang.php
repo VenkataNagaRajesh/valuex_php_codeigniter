@@ -16,3 +16,5 @@ $lang['select_airline'] = 'Select Airline';
 $lang['select_product'] = 'Select Product';
 $lang['start_date'] = 'Start Date';
 $lang['end_date'] = 'End Date';
+$lang['airline_code'] = 'Carrier Code';
+$lang['contract_active']='Active';

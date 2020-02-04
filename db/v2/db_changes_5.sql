@@ -1,5 +1,5 @@
 
-CREATE TABLE `vx_airline_product` (
+CREATE TABLE `VX_airline_product` (
   `airline_productID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `productID` int(11) NOT NULL,
   `airlineID` int(11) NOT NULL,
@@ -11,6 +11,8 @@ CREATE TABLE `vx_airline_product` (
   `modify_userID` int(11) NOT NULL,
   PRIMARY KEY (`airline_productID`)
 );
+alter table VX_airline_product add column active tinyint(1) NOT NULL DEFAULT 0 after end_date;
+
 insert into VX_permissions set description='Airline Product',name='airline_product';
 insert into VX_permissions set description='Airline Product Add',name='airline_product_add';
 insert into VX_permissions set description='Airline Product Edit',name='airline_product_edit';

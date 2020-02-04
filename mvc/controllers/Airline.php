@@ -632,7 +632,7 @@ class Airline extends Admin_Controller {
 		  } 
 		  
 		  if(permissionChecker('airline_product_add')){ 	
-			$airline->action .= '<a href="'.base_url('airline_product/add/'.$airline->vx_aln_data_defnsID).'" class="btn btn-primary btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Add Product"><i class="fa fa-plus"></i></a>';
+			$airline->action .= '<a href="'.base_url('airline_product/add/'.$airline->vx_aln_data_defnsID).'" class="btn btn-primary btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Add Contract"><i class="fa fa-plus"></i></a>';
 		} 
 			$status = $airline->active;
 			$airline->active = "<div class='onoffswitch-small' id='".$airline->vx_aln_data_defnsID."'>";

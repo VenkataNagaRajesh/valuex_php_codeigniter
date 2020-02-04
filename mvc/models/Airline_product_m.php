@@ -12,12 +12,16 @@ class Airline_product_m extends MY_Model {
 	}
 
 	function get_airline_products($array=NULL, $signal=FALSE) {
-		$query = parent::get($array, $signal);
-		print_r($this->db->last_query());
+		$query = parent::get($array, $signal);		
 		return $query;   
 	}
-
 	
+	function get_airline_product($id){
+		$this->db->select('*')->from('VX_airline_product');
+		$this->db->where('airline_productID',$id);
+		$query = $this->db->get();
+		return $query->row();
+	}
 
 	function insert_airline_product($array) {
 		//print_r($array); exit;
