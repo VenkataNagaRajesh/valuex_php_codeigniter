@@ -36,11 +36,12 @@
                <table id="contracttable" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>
                     <tr>
-                        <th class="col-lg-1"><?=$this->lang->line('slno')?></th>                       
+                        <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('contract_name')?></th>                       
 						<th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('product_name')?></th>
-						<th class="col-lg-2"><?=$this->lang->line('start_date')?></th>
-						<th class="col-lg-2"><?=$this->lang->line('end_date')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('start_date')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('end_date')?></th>
 						<th class="col-lg-1 noExport"><?=$this->lang->line('contract_active')?></th>
                         <?php if(permissionChecker('airline_product_edit') || permissionChecker('airline_product_delete')) { ?>
                          <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
@@ -81,6 +82,7 @@
                 return data;
             },
        "columns": [{"data": "airline_productID" },
+                  {"data": "name" },
                   {"data": "code" },
 				  {"data": "name" },
 				  {"data": "start_date"},

@@ -38,7 +38,7 @@ class MY_Controller extends CI_Controller {
 		 $this->load->library('email');
 		 $this->load->library('session');
 		 $this->load->model('reset_m');		
-		 if($this->session->userdata('usertypeID') == 5 && $this->session->userdata('show_performance_detail') == 1){
+		 if($this->session->userdata('roleID') == 5 && $this->session->userdata('show_performance_detail') == 1){
 			$this->output->enable_profiler(TRUE);
 		 }
 	}

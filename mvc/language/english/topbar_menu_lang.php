@@ -107,3 +107,5 @@ $lang['menu_airline_cabin_def'] = 'Carrier Cabin Definition';
 $lang['menu_product'] = 'Product';
 $lang['menu_airline_product'] = 'Airline Product';
 /* End Update Menu */
+
+

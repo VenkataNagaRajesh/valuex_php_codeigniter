@@ -20,6 +20,11 @@ class Airline_product extends Admin_Controller {
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_valAirline'
 			),
 			array(
+				'field' => 'name', 
+				'label' => $this->lang->line("contract_name"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]'
+			),
+			array(
 				'field' => 'productID', 
 				'label' => $this->lang->line("product_name"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_valProduct'
@@ -104,7 +109,7 @@ class Airline_product extends Admin_Controller {
 			)
 		);	
 		
-		if($this->session->userdata('usertypeID') == 1){ //echo "sss"; exit;
+		if($this->session->userdata('usertypeID') == 1){ 
 		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
 		} else {
 		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($this->session->userdata('loginuserID'));	
@@ -116,14 +121,16 @@ class Airline_product extends Admin_Controller {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
 			if ($this->form_validation->run() == FALSE) {
-                echo validation_errors();
+                //echo validation_errors();
 				$this->data["subview"] = "airline_product/add";
 				$this->load->view('_layout_main', $this->data);
 			} else {
-                $data['airlineID'] = $this->input->post('airlineID');
+				$data['airlineID'] = $this->input->post('airlineID');
+				$data['name'] = $this->input->post('name');
                 $data['productID'] = $this->input->post('productID');
                 $data['start_date'] = date_format(date_create($this->input->post('start_date')),'Y-m-d');
-                $data['end_date'] = date_format(date_create($this->input->post('end_date')),'Y-m-d');
+				$data['end_date'] = date_format(date_create($this->input->post('end_date')),'Y-m-d');
+				$data['active'] = $this->input->post('active');
                 $data['create_date'] = time();
                 $data['modify_date'] = time();
                 $data['create_userID'] = $this->session->userdata('loginuserID');
@@ -159,18 +166,21 @@ class Airline_product extends Admin_Controller {
         
          $this->data['products'] = $this->product_m->get_products();
 		 $this->data['airline_productID'] = htmlentities(escapeString($this->uri->segment(3)));
-		 $this->data['contract'] = $this->airline_product_m->get_airline_product($this->data['airline_productID']);
+		 $this->data['contract'] = $this->airline_product_m->get_airline_product($this->data['airline_productID']);		 
 		 if($this->data['airline_productID']){ 
 		   if($this->data['contract']){ 
+			   $this->data['contract']->start_date = date_format(date_create($this->data['contract']->start_date),'d-m-Y');
+			   $this->data['contract']->end_date = date_format(date_create($this->data['contract']->end_date),'d-m-Y');
 			if($_POST){  
 				$rules = $this->rules();
 				$this->form_validation->set_rules($rules);
 				if ($this->form_validation->run() == FALSE) {
-					echo validation_errors();
+					//echo validation_errors();
 					$this->data["subview"] = "airline_product/edit";
 					$this->load->view('_layout_main', $this->data);
 				} else {
 					$data['airlineID'] = $this->input->post('airlineID');
+					$data['name'] = $this->input->post('name');
 					$data['productID'] = $this->input->post('productID');
 					$data['start_date'] = date_format(date_create($this->input->post('start_date')),'Y-m-d');
 					$data['end_date'] = date_format(date_create($this->input->post('end_date')),'Y-m-d');               
@@ -339,7 +349,10 @@ class Airline_product extends Admin_Controller {
 			   $contract->active .= ">";
 			}				
 			$contract->active .= "<label for='myonoffswitch".$contract->airline_productID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>"; 
-           	$output['aaData'][] = $contract;				
+			   
+			$contract->start_date = date_format(date_create($contract->start_date),'d-m-Y');
+			$contract->end_date = date_format(date_create($contract->end_date),'d-m-Y');
+			$output['aaData'][] = $contract;				
 		}
 		if(isset($_REQUEST['export'])){
 		  $columns = array('#','Carrier','Product','Start Date','End Date');
@@ -348,7 +361,6 @@ class Airline_product extends Admin_Controller {
 		} else {	
 		  echo json_encode( $output );
 		}
-
 	}
     
 }
