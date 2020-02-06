@@ -104,7 +104,7 @@ class Admin_Controller extends MY_Controller {
 		
 			if(isset($userdata['loginuserID']) && !isset($userdata['get_permission'])) {
 				if(!$this->session->userdata($permission)) {
-					$user_permission = $this->permission_m->get_modules_with_permission($userdata['roleID']);
+					$user_permission = $this->permission_m->get_modules_with_permission($userdata['usertypeID'],$userdata['roleID']);
 
 					foreach ($user_permission as $value) {
 						$permissionset['master_permission_set'][$value->name] = $value->active;
