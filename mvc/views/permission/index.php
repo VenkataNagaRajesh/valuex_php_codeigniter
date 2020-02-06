@@ -35,7 +35,7 @@
                         </div>
                         <div class="col-sm-2">
                            <?php
-                               // $array = array("0" => $this->lang->line("permission_select_role"));
+                                $array = array("0" => $this->lang->line("permission_select_role"));
                                 if (isset($rset)) {
                                     $rset = $rset;
                                 } else {
@@ -216,6 +216,24 @@ $('#roleID').change(function(event) {
            window.location.href = data;
         }
     });
+});
+
+$('#usertypeID').change(function(event) {
+    var usertypeID = $(this).val();
+    var roleID = $('#roleID').val();
+    if(roleID != 0){
+        $.ajax({
+            type: 'POST',
+            url: "<?=base_url('permission/permission_list')?>",
+            //data: "roleID=" + roleID,
+            data:{"usertypeID":usertypeID,"roleID":roleID},
+            dataType: "html",
+            success: function(data) {
+                console.log(data);
+            window.location.href = data;
+            }
+        });
+    }
 });
 $.fn.processCheck = function() {
     var id = $(this).attr('id');

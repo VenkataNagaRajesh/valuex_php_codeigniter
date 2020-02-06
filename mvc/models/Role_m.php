@@ -5,7 +5,7 @@ class role_m extends MY_Model {
 	protected $_table_name = 'VX_role';
 	protected $_primary_key = 'roleID';
 	protected $_primary_filter = 'intval';
-	protected $_order_by = "roleID desc";
+	protected $_order_by = "roleID ASC";
 
 	function __construct() {
 		parent::__construct();
