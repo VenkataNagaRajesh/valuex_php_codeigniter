@@ -19,18 +19,32 @@
                             <?=$this->lang->line("select_usertype")?>
                         </label>
 
-                        <div class="col-sm-4">
+                        <div class="col-sm-2">
                            <?php
-                                $array = array("0" => $this->lang->line("permission_select_usertype"));
-                                if (isset($set)) {
-                                    $set = $set;
+                               // $uarray = array("0" => $this->lang->line("permission_select_usertype"));
+                                if (isset($uset)) {
+                                    $uset = $uset;
                                 } else {
-                                    $set = null;
+                                    $uset = null;
+                                }
+                                foreach ($usertypes as $usertype) {
+                                    $uarray[$usertype->usertypeID] = $usertype->usertype;
+                                }
+                                echo form_dropdown("usertypeID", $uarray, set_value("usertypeID", $uset), "id='usertypeID' class='form-control select2'");
+                            ?>
+                        </div>
+                        <div class="col-sm-2">
+                           <?php
+                               // $array = array("0" => $this->lang->line("permission_select_role"));
+                                if (isset($rset)) {
+                                    $rset = $rset;
+                                } else {
+                                    $rset = null;
                                 }
                                 foreach ($roles as $role) {
                                     $array[$role->roleID] = $role->role;
                                 }
-                                echo form_dropdown("roleID", $array, set_value("roleID", $set), "id='roleID' class='form-control select2'");
+                                echo form_dropdown("roleID", $array, set_value("roleID", $rset), "id='roleID' class='form-control select2'");
                             ?>
                         </div>
 
@@ -41,16 +55,17 @@
                 </form>
             </div>
         </div><!-- row -->
-        <?php if (isset($set)): ?>
+        <?php if (isset($uset) && isset($rset)): ?>
             <div class="row">
                 <div class="col-sm-12">
-                    <form action="<?=base_url('permission/save/'.$set)?>" class="form-horizontal" role="form" method="post" id="usertype">
+                    <form action="<?=base_url('permission/save/'.$uset.'/'.$rset)?>" class="form-horizontal" role="form" method="post" id="usertype">
                         <div id="hide-table">
                             <table id="" class="table table-striped table-bordered table-hover dataTable no-footer">
                                 <thead>
                                     <tr>
                                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-                                        <th class="col-lg-3"><?=$this->lang->line('module_name')?></th>
+                                        <th class="col-lg-1"><?=$this->lang->line('module_name')?></th>
+                                        <th class="col-lg-2"><?=$this->lang->line('permission_name')?></th>
                                         <th class="col-lg-1"><?=$this->lang->line('permission_add')?></th>
                                         <th class="col-lg-1"><?=$this->lang->line('permission_edit')?></th>
                                         <th class="col-lg-1"><?=$this->lang->line('permission_delete')?></th>
@@ -67,6 +82,7 @@
                                                 $push['name'] = $data->name;
                                                 $push['description'] = $data->description;
                                                 $push['status'] = $data->active;
+                                                $push['module_name'] = $data->module_name;
 
                                                 array_push($permissionTable, $push);
 
@@ -97,6 +113,9 @@
                                                         }
                                                     }
                                                 ?>
+                                            </td>
+                                            <td data-title="<?=$this->lang->line('permission_description')?>">
+                                                <?php echo $data['module_name']; ?>
                                             </td>
                                             <td data-title="<?=$this->lang->line('permission_description')?>">
                                                 <?php echo $data['description']; ?>
@@ -185,10 +204,12 @@ var roleID = $("#roleID").val();
 
 $('#roleID').change(function(event) {
     var roleID = $(this).val();
+    var usertypeID = $('#usertypeID').val();
     $.ajax({
         type: 'POST',
         url: "<?=base_url('permission/permission_list')?>",
-        data: "roleID=" + roleID,
+        //data: "roleID=" + roleID,
+        data:{"usertypeID":usertypeID,"roleID":roleID},
         dataType: "html",
         success: function(data) {
             console.log(data);

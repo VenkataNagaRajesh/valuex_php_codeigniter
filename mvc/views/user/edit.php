@@ -230,10 +230,10 @@
                                         $array[0] = $this->lang->line('user_select_usertype');
                                        // $blockuser = array(1, 2, 3, 4);
 									   
-                                        if(count($usertypes)) {
-                                            foreach ($usertypes as $key => $usertype) {
+                                        if(count($roles)) {
+                                            foreach ($roles as $key => $role) {
                                                // if(!in_array($usertype->roleID, $blockuser)) {
-                                                    $array[$usertype->roleID] = $usertype->usertype;
+                                                    $array[$role->roleID] = $role->role;
                                               //  }
                                             }
                                         }

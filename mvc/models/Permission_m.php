@@ -25,11 +25,12 @@ class Permission_m extends MY_Model {
 	}
 
 	public function get_modules_with_permission($id=null) {		
-		$query = "Select p1.permissionID,p1.name,p1.description, (case when p2.roleID = $id then 'yes' else 'no' end) as active From VX_permissions p1 left join VX_permission_relationships p2 ON p1.permissionID = p2.permission_id and p2.roleID =$id";
+		//$query = "Select p1.permissionID,p1.name,p1.description, (case when p2.roleID = $id then 'yes' else 'no' end) as active From VX_permissions p1 left join VX_permission_relationships p2 ON p1.permissionID = p2.permission_id and p2.roleID =$id";
+		$query = "Select m.module_name,p1.permissionID,p1.name,p1.description, (case when p2.roleID = $id then 'yes' else 'no' end) as active From VX_permissions p1 LEFT JOIN VX_module m ON m.moduleID = p1.moduleID left join VX_permission_relationships p2 ON p1.permissionID = p2.permission_id and p2.roleID =$id";
 		if($this->session->userdata('roleID') != 5){
 			$query .= ' WHERE p1.name NOT IN("bulkimport","backup","update") ';
 		}
-		
+		//$query .= ' ORDER BY p1.moduleID,p1.permissionID ';		
 		return $this->db->query($query)->result();
 	}
 
@@ -47,9 +48,9 @@ class Permission_m extends MY_Model {
 		parent::update($data, $id);
 		return $id;
 	}
-	public function delete_all_permission($id)
+	public function delete_all_permission($usertypeID,$roleID)
 	{
-		$this->db->where(array('roleID' => $id));
+		$this->db->where(array('usertypeID' =>$usertypeID,'roleID' => $id));
 	  	$this->db->delete('VX_permission_relationships'); 
 	  	return true;
 	}

@@ -3,9 +3,9 @@
 class usertype_m extends MY_Model {
 
 	protected $_table_name = 'VX_usertype';
-	protected $_primary_key = 'roleID';
+	protected $_primary_key = 'usertypeID';
 	protected $_primary_filter = 'intval';
-	protected $_order_by = "roleID desc";
+	protected $_order_by = "usertypeID desc";
 
 	function __construct() {
 		parent::__construct();
