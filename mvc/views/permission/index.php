@@ -21,7 +21,7 @@
 
                         <div class="col-sm-2">
                            <?php
-                               // $uarray = array("0" => $this->lang->line("permission_select_usertype"));
+                                //$uarray = array("0" => $this->lang->line("permission_select_usertype"));
                                 if (isset($uset)) {
                                     $uset = $uset;
                                 } else {
@@ -83,9 +83,7 @@
                                                 $push['description'] = $data->description;
                                                 $push['status'] = $data->active;
                                                 $push['module_name'] = $data->module_name;
-
                                                 array_push($permissionTable, $push);
-
                                             }
                                             $permissionCheckBox[ $data->name ] = $data->active;
                                             $permissionCheckBoxVal[ $data->name ] = $data->permissionID;
@@ -97,8 +95,7 @@
                                     foreach($permissionTable as $data) { ?>
                                         <tr>
                                             <td data-title="<?=$this->lang->line('slno')?>">
-                                                <?php
-                                                    //echo $i;
+                                                <?php                                                    
                                                     $status = "";
                                                     if(isset($permissionCheckBox[$data['name']])) {
                                                         if ($permissionCheckBox[$data['name']]=="yes") {
@@ -109,7 +106,7 @@
                                                             if ($permissionCheckBoxVal[$data['name']]) {
                                                                 $status = "disabled";
                                                                 echo "<input type='checkbox' name=".$data['name']." value=".$permissionCheckBoxVal[$data['name']]." id=".$data['name']."  onClick='$(this).processCheck();' >";
-                                                            }
+                                                            } 
                                                         }
                                                     }
                                                 ?>
@@ -200,24 +197,20 @@
 
 <script type="text/javascript">
 
-var roleID = $("#roleID").val();
-
 $('#roleID').change(function(event) {
     var roleID = $(this).val();
-    var usertypeID = $('#usertypeID').val();
+    var usertypeID = $("#usertypeID").val();
     $.ajax({
         type: 'POST',
         url: "<?=base_url('permission/permission_list')?>",
         //data: "roleID=" + roleID,
-        data:{"usertypeID":usertypeID,"roleID":roleID},
+        data:{'usertypeID':usertypeID,"roleID":roleID},
         dataType: "html",
-        success: function(data) {
-            console.log(data);
+        success: function(data) {            
            window.location.href = data;
         }
     });
 });
-
 $('#usertypeID').change(function(event) {
     var usertypeID = $(this).val();
     var roleID = $('#roleID').val();
