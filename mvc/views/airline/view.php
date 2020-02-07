@@ -23,19 +23,12 @@
 					 <p><span><?=$this->lang->line("airline_created_user")?> </span>: <?=$airline->modify_by?></p>
 					 <p><span><?=$this->lang->line("airline_created_date")?> </span>: <?=date('d/m/Y',$airline->modify_date)?></p>
 				  </div>
-				  <?php if(count($airline->products) != 0){ ?>
+				 
                 <div class="profile-view-tab">
 				   <!-- <p><span><?=$this->lang->line("airline_flights")?> </span>: <?=$airline->flights?></p>-->
-				   <h1><b><span><?="Products"?> </span></b></h1>
-				   <ul>
-				   <?php foreach($airline->products as $product){ ?>
-                     <li><?=$product->name?>&nbsp&nbsp&nbsp&nbsp&nbsp<a href="<?=base_url('airline_product/delete/'.$product->airline_productID)?>" class="btn btn-danger"><i class="fa fa fa-trash-o"></i></a></li>
-					      Start Date : <?=$product->start_date?>
-						 <br>End Date : <?=$product->end_date?>
-				<?php } ?>
-				   </ul>
+				   
                 </div>	
-				   <?php } ?>		
+				  	
 			</div>
 			<?php if(!empty($airline->logo) || !empty($airline->video_links)){ ?>
 			<div class="col-md-12 airline-cabin-img" style="padding:0">

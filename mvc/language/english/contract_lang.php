@@ -1,9 +1,9 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "Airline Product Contract";
+$lang['panel_title'] = "Airline Contracts";
 $lang['airline_product'] = "Airline";
-$lang['product_name'] = "Product";
+$lang['product_name'] = "Products";
 $lang['add_title'] = "Add Contract";
 $lang['slno'] = "#";
 $lang['action'] = "Action";

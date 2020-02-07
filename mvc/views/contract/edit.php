@@ -1,7 +1,9 @@
 
 <div class="box">
     <div class="box-header" style="width:100%;">
-        <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>       
+        <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
+
+       
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li><a href="<?=base_url("airline_product/index")?>"></i> <?php //echo$this->lang->line('menu_usertype'); ?>Back</a></li>
@@ -13,8 +15,7 @@
         <div class="row">
             <div class="col-sm-8">
                 <form class="form-horizontal" role="form" method="post">
-
-                <?php 
+                   <?php 
                         if(form_error('name')) 
                             echo "<div class='form-group has-error' >";
                         else     
@@ -24,13 +25,12 @@
                             <?=$this->lang->line("contract_name")?>
                         </label>
                         <div class="col-sm-6">                        				 
-                           <input type="text" class="form-control"  id="name" name="name" value="<?=set_value('name')?>" > 							 
+                           <input type="text" class="form-control"  id="name" name="name" value="<?=set_value('name',$contract->name)?>" > 							 
                         </div>
                         <span class="col-sm-4 control-label">
                             <?php echo form_error('name'); ?>
                         </span>
-                    </div>
-
+                    </div>                   
                     <?php 
                         if(form_error('airlineID')) 
                             echo "<div class='form-group has-error' >";
@@ -49,7 +49,7 @@
                                   } 
                                   
                                  echo form_dropdown("airlineID", $airlines,
-                                  set_value("airlineID",$airlineID), "id='airlineID' class='form-control hide-dropdown-icon'"
+                                  set_value("airlineID",$contract->airlineID), "id='airlineID' class='form-control hide-dropdown-icon'"
                                  ); 
 							  ?>                           
                         </div>
@@ -59,29 +59,28 @@
                     </div>
 
                     <?php 
-                        if(form_error('productID')) 
-                            echo "<div class='form-group has-error' >";
-                        else     
-                            echo "<div class='form-group' >";
+                    if(form_error('products')) 
+                        echo "<div class='form-group has-error' >";
+                    else     
+                        echo "<div class='form-group' >";
                     ?>
-                        <label for="productID" class="col-sm-2 control-label">
-                            <?=$this->lang->line("product_name")?>
-                        </label>
-                        <div class="col-sm-6">                        				 
-                              <?php 
-                                  $productslist[0]=$this->lang->line("select_product");				
-							      foreach($products as $product){								
-								    $productslist[$product->productID] = $product->name;
-                                  }                                  
-                                  echo form_dropdown("productID", $productslist,
-                                  set_value("productID"), "id='productID' class='form-control hide-dropdown-icon'"
-                                 );                                   							
-							  ?>							 
+                    <label for="products" class="col-sm-2 control-label">
+                            <?=$this->lang->line("product_name")?><span class="text-red">*</span>
+                    </label>
+                        <div class="col-sm-6">
+                            <select name="products[]" id="products" class="form-control select2" multiple="multiple">				 
+                            <?php 
+                            $airlines[0]=$this->lang->line("select_product");					
+                            foreach($products as $product){								
+                                echo '<option value="'.$product->productID.'">'.$product->name.'</option>';
+                            }                                  
+                            ?>
+                            </select>
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('productID'); ?>
-                        </span>
-                    </div>
+                            <?php echo form_error('products'); ?>
+                        </span>                           
+                   </div>
 
                     <?php
                         if(form_error('start_date'))
@@ -91,13 +90,13 @@
                     ?>
                         <label for="start_date" class="col-sm-2 control-label">
                             <?=$this->lang->line("start_date")?> <span class="text-red">*</span>
-                        </label>                        
+                        </label>
                         <div class="col-sm-6">
-                          <div class="input-group">
-							<input type="text" class="form-control hasDatepicker"  id="start_date" name="start_date" value="<?=set_value('start_date')?>" >
+                        <div class="input-group">
+							<input type="text" class="form-control hasDatepicker"  id="start_date" name="start_date" value="<?=set_value('start_date',$contract->start_date)?>" >
 							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                            </div>
-						</div>                        
+                        </div>
                         <span class="col-sm-4 control-label">
                             <?php echo form_error('start_date'); ?>
                         </span>
@@ -113,10 +112,10 @@
                             <?=$this->lang->line("end_date")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
-                            <div class="input-group">
-                                <input type="text" class="form-control hasDatepicker"  id="end_date" name="end_date" value="<?=set_value('end_date')?>" >
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                            </div>
+                           <div class="input-group">
+							<input type="text" class="form-control hasDatepicker"  id="end_date" name="end_date" value="<?=set_value('end_date',$contract->end_date)?>" >
+							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                           </div>
                         </div>
                         <span class="col-sm-4 control-label">
                             <?php echo form_error('end_date'); ?>
@@ -132,15 +131,17 @@
                              $array[1] = "Active";
                              $array[0] = "Inactive";
                              echo form_dropdown("active", $array,
-                                  set_value("active"), "id='active' class='form-control hide-dropdown-icon'"
+                                  set_value("active",$contract->active), "id='active' class='form-control hide-dropdown-icon'"
                                  ); 
                         ?>
                         </div>
                     </div>
 
+                    
+
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
-                            <input type="submit" class="btn btn-success" value="<?=$this->lang->line("add_contract")?>" >
+                            <input type="submit" class="btn btn-success" value="<?=$this->lang->line("update_contract")?>" >
                         </div>
                     </div>
 
@@ -152,15 +153,14 @@
     </div>
 </div>
 <script>
+$(document).ready(function(){
  $('#airlineID').select2();
- $('#productID').select2();
- 
- $("#start_date").datepicker({    
-    onSelect: function(dateText) {
-       	var dateinfo = this.value.split('/');
-		console.log(dateinfo[2]+','+dateinfo[0]+','+dateinfo[1]);
-		$("#end_date").datepicker("setDate", new Date(dateinfo[2],dateinfo[0],dateinfo[1]) );
-    }
-});
+ $('#active').select2();
+ $( ".select2" ).select2();
+ $('#start_date').datepicker();
  $('#end_date').datepicker();
+
+	var products = [<?=$contract->products?>];
+	$('#products').val(products).trigger('change');  				 
+});
 </script>

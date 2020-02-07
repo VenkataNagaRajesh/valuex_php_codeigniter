@@ -106,7 +106,7 @@ $lang['menu_offer_issue'] = 'Offers';
 $lang['menu_offer_table'] = 'Bids';
 $lang['menu_airline_cabin_def'] = 'Carrier Cabin Definition';
 $lang['menu_product'] = 'Product';
-$lang['menu_airline_product'] = 'Airline Product';
+$lang['menu_contract'] = 'Contract';
 /* End Update Menu */
 
 

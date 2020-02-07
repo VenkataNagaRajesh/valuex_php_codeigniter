@@ -4,12 +4,12 @@
         <h3 class="box-title"><i class="fa fa-users"></i> <?=$this->lang->line('panel_title')?></h3>       
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li class="active"><?=$this->lang->line('menu_airline_product')?></li>
+            <li class="active"><?=$this->lang->line('menu_contract')?></li>
         </ol>
     </div><!-- /.box-header -->
-	 <?php if(permissionChecker('airline_product_add')) {   ?>
+	 <?php if(permissionChecker('contract_add')) {   ?>
          <h5 class="page-header">
-             <a href="<?php echo base_url('airline_product/add') ?>" data-toggle="tooltip" data-title="Add Contract" data-placement="left" class="btn btn-danger">
+             <a href="<?php echo base_url('contract/add') ?>" data-toggle="tooltip" data-title="Add Contract" data-placement="left" class="btn btn-danger">
                  <i class="fa fa-plus"></i> 
              </a>
          </h5>
@@ -43,7 +43,7 @@
 						<th class="col-lg-1"><?=$this->lang->line('start_date')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('end_date')?></th>
 						<th class="col-lg-1 noExport"><?=$this->lang->line('contract_active')?></th>
-                        <?php if(permissionChecker('airline_product_edit') || permissionChecker('airline_product_delete')) { ?>
+                        <?php if(permissionChecker('contract_edit') || permissionChecker('contract_delete')) { ?>
                          <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
                         <?php } ?>
                     </tr>
@@ -62,7 +62,7 @@
     $('#contracttable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
-      "sAjaxSource": "<?php echo base_url('airline_product/server_processing'); ?>",
+      "sAjaxSource": "<?php echo base_url('contract/server_processing'); ?>",
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "airlineID","value": $("#airlineID").val()})
                 oSettings.jqXHR = $.ajax( {
@@ -81,10 +81,10 @@
                 if (data) data.start = 0;
                 return data;
             },
-       "columns": [{"data": "airline_productID" },
+       "columns": [{"data": "contractID" },
                   {"data": "name" },
                   {"data": "code" },
-				  {"data": "name" },
+				  {"data": "products" },
 				  {"data": "start_date"},
 				  {"data":"end_date"},				 
 				  {"data": "active"},
@@ -100,7 +100,7 @@
                 { text: 'ExportAll', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
-                                url: "<?php echo base_url('airline_product/server_processing'); ?>?page=all&&export=1",
+                                url: "<?php echo base_url('contract/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
                                 data: {sSearch: $("input[type=search]").val(),"airlineID": $("#airlineID").val()},
                                 dataType: 'json'
@@ -144,7 +144,7 @@
       if((status != '' || status != null) && (id !='')) {
           $.ajax({
               type: 'POST',
-              url: "<?=base_url('airline_product/active')?>",
+              url: "<?=base_url('contract/active')?>",
               data: "id=" + id + "&status=" + status,
               dataType: "html",
               success: function(data) {
