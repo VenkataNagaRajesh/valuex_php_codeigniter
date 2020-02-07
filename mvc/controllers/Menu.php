@@ -17,8 +17,8 @@ class Menu extends Admin_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model("menu_m");
-		//redirect('dashboard/index');
-
+		$language = $this->session->userdata('lang');
+		$this->lang->load('menu', $language);
 	}
 
 	public function index() {

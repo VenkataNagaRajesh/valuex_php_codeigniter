@@ -22,7 +22,7 @@ class Permission extends Admin_Controller {
 				$this->data['rset'] = $rid;
 				$this->data['roles'] = $this->role_m->get_role();
 				$this->data['usertypes'] = $this->usertype_m->get_usertype();
-				$this->data['permissions'] = $this->permission_m->get_modules_with_permission($rid);
+				$this->data['permissions'] = $this->permission_m->get_modules_with_permission($uid,$rid);
 				if(empty($this->data['permissions'])) {
 					$this->data['permissions'] = NULL;
 				}

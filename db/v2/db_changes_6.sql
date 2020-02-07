@@ -36,3 +36,8 @@ update VX_permissions set moduleID = 3 where permissionID = 861;
 update VX_permissions set moduleID = 3 where permissionID = 862;
 
 alter table VX_permission_relationships add column usertypeID int(11) NOT NULL DEFAULT 1 after permission_id;
+
+insert into VX_permissions set description='Role Add',name='role_add';
+insert into VX_permissions set description='Role Edit',name='role_edit';
+insert into VX_permissions set description='Role Delete',name='role_delete';
+insert into VX_permissions set description='Role View',name='role_view';

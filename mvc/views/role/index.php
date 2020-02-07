@@ -5,14 +5,14 @@
 
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li class="active"><?=$this->lang->line('menu_usertype')?></li>
+            <li class="active"><?=$this->lang->line('menu_role')?></li>
         </ol>
     </div><!-- /.box-header -->
 	<?php 
          $usertype = $this->session->userdata("usertype");
-         if(permissionChecker('usertype_add')) {?>
+         if(permissionChecker('role_add')) {?>
          <h5 class="page-header">
-             <a href="<?php echo base_url('usertype/add') ?>" data-toggle="tooltip" data-title="Add Usertype" data-placement="left" class="btn btn-danger">
+             <a href="<?php echo base_url('role/add') ?>" data-toggle="tooltip" data-title="Add Role" data-placement="left" class="btn btn-danger">
                  <i class="fa fa-plus"></i> 
              </a>
          </h5>
@@ -26,34 +26,36 @@
                         <thead>
                             <tr>
                                 <th class="col-lg-2"><?=$this->lang->line('slno')?></th>
-                                <th class="col-lg-8"><?=$this->lang->line('usertype_usertype')?></th>
-                                <?php if(permissionChecker('usertype_edit') || permissionChecker('usertype_delete')) { ?>
+                                <th class="col-lg-8"><?=$this->lang->line('role_role')?></th>
+                                <?php if(permissionChecker('role_edit') || permissionChecker('role_delete')) { ?>
                                 <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if(count($usertypes)) {$i = 1; foreach($usertypes as $usertype) { ?>
+                            <?php if(count($roles)) {$i = 1; foreach($roles as $role) {
+                                   if($role->roleID != 5){
+								?>
                                 <tr>
                                     <td data-title="<?=$this->lang->line('slno')?>">
                                         <?php echo $i; ?>
                                     </td>
-                                    <td data-title="<?=$this->lang->line('usertype_usertype')?>">
-                                        <?php echo $usertype->usertype; ?>
+                                    <td data-title="<?=$this->lang->line('role_role')?>">
+                                        <?php echo $role->role; ?>
                                     </td>
-                                    <?php if(permissionChecker('usertype_edit') || permissionChecker('usertype_delete')) { ?>
+                                    <?php if(permissionChecker('role_edit') || permissionChecker('role_delete')) { ?>
                                     <td data-title="<?=$this->lang->line('action')?>">
                                         <?php
-                                            $reletionarray = array(1,2);
-                                            echo btn_edit('usertype/edit/'.$usertype->usertypeID, $this->lang->line('edit'));
-                                            if(!in_array($usertype->usertypeID, $reletionarray)) {
-                                                echo btn_delete('usertype/delete/'.$usertype->usertypeID, $this->lang->line('delete'));
+                                            $reletionarray = array(1,2,3,4,5,6,7);
+                                            echo btn_edit('role/edit/'.$role->roleID, $this->lang->line('edit'));
+                                            if(!in_array($role->roleID, $reletionarray)) {
+                                                echo btn_delete('role/delete/'.$role->roleID, $this->lang->line('delete'));
                                             }
                                         ?>
                                     </td>
                                     <?php } ?>
                                 </tr>
-								   <?php $i++;  }} ?>
+								   <?php $i++; } }} ?>
                         </tbody>
                     </table>
                 </div>

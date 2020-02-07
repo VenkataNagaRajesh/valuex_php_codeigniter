@@ -26,7 +26,7 @@ class Permission_m extends MY_Model {
 
 	public function get_modules_with_permission($usertypeID,$roleID) {		
 		//$query = "Select p1.permissionID,p1.name,p1.description, (case when p2.roleID = $id then 'yes' else 'no' end) as active From VX_permissions p1 left join VX_permission_relationships p2 ON p1.permissionID = p2.permission_id and p2.roleID =$id";
-		$query = "Select m.module_name,p1.permissionID,p1.name,p1.description, (case when p2.roleID = $id then 'yes' else 'no' end) as active From VX_permissions p1 LEFT JOIN VX_module m ON m.moduleID = p1.moduleID left join VX_permission_relationships p2 ON p1.permissionID = p2.permission_id and and p2.usertypeID = $usertypeID and p2.roleID =$roleID";
+		$query = "Select m.module_name,p1.permissionID,p1.name,p1.description, (case when (p2.roleID = $roleID and p2.usertypeID = $usertypeID) then 'yes' else 'no' end) as active From VX_permissions p1 LEFT JOIN VX_module m ON m.moduleID = p1.moduleID left join VX_permission_relationships p2 ON p1.permissionID = p2.permission_id and p2.usertypeID = $usertypeID and p2.roleID =$roleID";
 		if($this->session->userdata('roleID') != 5){
 			$query .= ' WHERE p1.name NOT IN("bulkimport","backup","update") ';
 		}
