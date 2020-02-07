@@ -709,7 +709,9 @@ class Client extends Admin_Controller {
 		  if(permissionChecker('client_view') ) {
 		   $client->action .= btn_view('client/view/'.$client->userID, $this->lang->line('view'));
 		  }
-		  
+		  if(!permissionChecker('contract_toclient') ) {
+			$client->action .= '<a href="'.base_url('contract/toclient/'.$client->userID).'" class="btn btn-primary btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Add Contract"><i class="fa fa-plus"></i></a>';
+		  }		  
 		 	$status = $client->active;
 			$client->active = "<div class='onoffswitch-small' id='".$client->userID."'>";
             $client->active .= "<input type='checkbox' id='myonoffswitch".$client->userID."' class='onoffswitch-small-checkbox' name='paypal_demo'";

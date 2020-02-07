@@ -392,5 +392,10 @@ class Contract extends Admin_Controller {
 		  echo json_encode( $output );
 		}
 	}
+	
+	public function toclient(){
+		$clientID = htmlentities(escapeString($this->uri->segment(3)));
+		
+	}
     
 }
