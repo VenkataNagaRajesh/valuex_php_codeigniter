@@ -213,7 +213,7 @@
                             <?php echo form_error('photo'); ?>
                         </span>
                     </div>
-                 <?php if($this->session->userdata('roleID') != 2){ ?>
+                 <?php if($this->session->userdata('usertypeID') == 1){ ?>
                     <?php
                         if(form_error('roleID'))
                             echo "<div class='form-group has-error' >";
@@ -254,10 +254,10 @@
                                 <?php
                                     $array[0] = $this->lang->line('user_select_usertype');
                                     $blockuser = array(1, 2, 3, 4);
-                                    if(count($usertypes)) {
-                                        foreach ($usertypes as $key => $usertype) {
-                                            if(!in_array($usertype->roleID, $blockuser)) {
-                                                $array[$usertype->roleID] = $usertype->usertype;
+                                    if(count($roles)) {
+                                        foreach ($roles as $key => $role) {
+                                            if(!in_array($role->roleID, $blockuser)) {
+                                                $array[$role->roleID] = $role->role;
                                             }
                                         }
                                     }

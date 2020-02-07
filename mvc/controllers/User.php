@@ -173,12 +173,8 @@ class User extends Admin_Controller {
 				'assets/select2/select2.js'
 			)
 		);
-		if($this->session->userdata('roleID') == 2){
-		  $this->data['roles'] = array();
-		} else {
-		  $this->data['roles'] = $this->role_m->get_role();
-		}
 		
+		  $this->data['roles'] = $this->role_m->get_role();		
 		if($this->session->userdata('roleID') == 1){
 		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
 		} else {
