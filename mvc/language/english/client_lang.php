@@ -3,6 +3,7 @@
 $lang['panel_title'] = "Airline Client";
 $lang['add_title'] = "Add Airline Client";
 $lang['slno'] = "#";
+$lang['client_id'] = 'ID';
 $lang['client_photo'] = "Photo";
 $lang['client_name'] = "Name";
 $lang['client_email'] = "Email";
@@ -28,3 +29,9 @@ $lang['client_mail_logo'] = 'Mail Logo';
 $lang['client_upload_mail_logo'] = 'Upload Mail Logo';
 $lang['client_domain'] = 'Domain';
 $lang['client_role'] = 'Role';
+$lang['product_airline'] = 'Airline';
+$lang['product_contract'] = 'Contract';
+$lang['product_product'] = 'Product';
+$lang['product_active'] = 'Active';
+$lang['product_add'] = 'Add Product';
+$lang['select_airline'] = 'Select Airline';

@@ -59,22 +59,7 @@ class Contract extends Admin_Controller {
 			$this->form_validation->set_message("valProduct", "%s Required");
 			return FALSE;
 		}
-    }
-    
-    public function valProductbkp(){
-		if($this->input->post('airlineID') > 0) {
-            $contract = $this->contract_m->getAirlineByWhere(array('productID'=>$this->input->post('productID')));
-            if(count($contract) == 0){
-               return TRUE;
-            } else {
-               $this->form_validation->set_message("valProduct", "Already Exist this Product to this airline");
-               return FALSE;
-            }
-		} else {
-			$this->form_validation->set_message("valProduct", "%s Required");
-			return FALSE;
-		}
-	}
+    }   
 
 	public function index() {
 		$this->data['headerassets'] = array(
@@ -237,7 +222,7 @@ class Contract extends Admin_Controller {
 
     public function delete(){
         $id = htmlentities(escapeString($this->uri->segment(3))); 
-        $airlineID = $this->contract_m->getAirlineByWhere(array('contractID'=>$id))[0]->airlineID;
+        $airlineID = $this->contract_m->getContractsByWhere(array('contractID'=>$id))[0]->airlineID;
        
         $this->contract_m->delete_contract($id);
         $this->session->set_flashdata('success', $this->lang->line('menu_success'));
@@ -393,9 +378,21 @@ class Contract extends Admin_Controller {
 		}
 	}
 	
-	public function toclient(){
-		$clientID = htmlentities(escapeString($this->uri->segment(3)));
-		
+	public function getContractsByAirline(){
+		$airlineID = $this->input->post('airlineID');
+		$contracts = $this->contract_m->getContractsByWhere(array('airlineID'=>$airlineID));
+		echo '<option value="0">Select Contract</option>';
+		foreach($contracts as $contract){
+			echo '<option value="'.$contract->contractID.'">'.$contract->name.'</option>';
+		}		
 	}
-    
+	
+    public function getProductsByContract(){
+		$contractID = $this->input->post('contractID');
+		$products = $this->contract_m->getProductsByContract($contractID);
+		  echo '<option value="0">Select Product</option>';
+		foreach($products as $product){
+		  echo '<option value="'.$product->productID.'">'.$product->name.'</option>';
+		}		
+	}
 }

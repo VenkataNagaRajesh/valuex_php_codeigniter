@@ -1,44 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class client_m extends MY_Model {
-
-	protected $_table_name = 'VX_aln_client';
-	protected $_primary_key = 'VX_aln_clientID';
-	protected $_primary_filter = 'intval';
-	protected $_order_by = "VX_aln_clientID";
-
-	function __construct() {
-		parent::__construct();
-	}
-	function get_client($array=NULL, $signal=FALSE) {
-		$query = parent::get($array, $signal);		
-		return $query;
-	}
-
-	function get_single_client($array) {
-		$query = parent::get_single($array);
-		return $query;
-	}
-
-	function insert_client($array) {
-		$error = parent::insert($array);
-		return TRUE;
-	}
-
-	function update_client($data, $id = NULL) {
-		parent::update($data, $id);
-		
-		return $id;
-	}
-
-	function delete_client($id){
-		parent::delete($id);
-	}
+class client_m extends MY_Model {	
 	
     function getClientData($id=null,$userID = null){
 		$this->db->select('c.*,group_concat(d.aln_data_value) airlines,group_concat(ca.airlineID) airlineIDs')->from('VX_aln_client c');
 		$this->db->join('VX_client_airline ca','ca.clientID=c.VX_aln_clientID','LEFT');
-		$this->db->join('vx_aln_data_defns d','d.vx_aln_data_defnsID = ca.airlineID','LEFT');
+		$this->db->join('VX_data_defns d','d.vx_aln_data_defnsID = ca.airlineID','LEFT');
 		if($id != null){
 		  $this->db->where('c.VX_aln_clientID',$id);
 		}
@@ -69,6 +36,29 @@ class client_m extends MY_Model {
 		$this->db->where('clientID',$clientID);
 		$this->db->delete('VX_client_airline');		
 		return TRUE;
+	}
+
+	public function add_client_product($data){
+		$this->db->insert('VX_client_product',$data);
+		return ($this->db->affected_rows() == 1) ? true : false;
+	}
+
+	public function get_client_products($clientID){
+		$this->db->select('cp.*,d.code carrier,c.name contract_name,p.name product_name')->from('VX_client_product cp');
+		$this->db->join('VX_contract c','c.contractID = cp.contractID','LEFT');
+		$this->db->join('VX_data_defns d','d.vx_aln_data_defnsID = c.airlineID','LEFT');
+		$this->db->join('VX_products p','p.productID = cp.productID','LEFT');
+		$query = $this->db->get();		
+		return $query->result();
+	}
+
+	public function delete_client_product($id){
+		$this->db->select('clientID')->from('VX_client_product')->where('client_productID',$id);
+		$query = $this->db->get();
+		$clientID = $query->row('clientID');
+		$this->db->where('client_productID',$id);
+		$this->db->delete('VX_client_product');
+		return $clientID;
 	}
 		
 }

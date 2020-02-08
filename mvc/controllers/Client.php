@@ -4,7 +4,7 @@ class Client extends Admin_Controller {
 
 	function __construct() {
 		parent::__construct();
-//$this->load->model("client_m");
+        $this->load->model("client_m");
 		$this->load->model("user_m");
 		$this->load->model('role_m');
 		$this->load->model('airline_m');
@@ -450,6 +450,7 @@ class Client extends Admin_Controller {
 		if ((int)$id) {
 			$this->data["client"] = $this->user_m->get_user($id);
 			if($this->data["client"]) {
+				$this->data['products'] = $this->client_m->get_client_products($id);				
 				$this->data["subview"] = "client/view";
 				$this->load->view('_layout_main', $this->data);
 			} else {
@@ -710,7 +711,7 @@ class Client extends Admin_Controller {
 		   $client->action .= btn_view('client/view/'.$client->userID, $this->lang->line('view'));
 		  }
 		  if(!permissionChecker('contract_toclient') ) {
-			$client->action .= '<a href="'.base_url('contract/toclient/'.$client->userID).'" class="btn btn-primary btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Add Contract"><i class="fa fa-plus"></i></a>';
+			$client->action .= '<a href="'.base_url('client/add_product/'.$client->userID).'" class="btn btn-primary btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Add Contract"><i class="fa fa-plus"></i></a>';
 		  }		  
 		 	$status = $client->active;
 			$client->active = "<div class='onoffswitch-small' id='".$client->userID."'>";
@@ -739,6 +740,102 @@ class Client extends Admin_Controller {
 		} else {	
 		  echo json_encode( $output );
 		}
+	}
+
+	protected function product_rules() {
+		$rules = array(
+			array(
+				'field' => 'airlineID', 
+				'label' => $this->lang->line("product_airline"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_valAirline'
+			),
+			array(
+				'field' => 'contractID', 
+				'label' => $this->lang->line("product_airline"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_valContract'
+			),
+			array(
+				'field' => 'productID', 
+				'label' => $this->lang->line("product_product"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_valProduct'
+			)
+		);
+		return $rules;
+	}
+	
+	public function valAirline(){
+		if($this->input->post('airlineID') > 0){
+			return TRUE;
+		} else {
+			$this->form_validation->set_message("valAirline", "%s Required");
+			return FALSE;
+		}
+	}
+
+	public function valContract(){
+		if($this->input->post('contractID') > 0){
+			return TRUE;
+		} else {
+			$this->form_validation->set_message("valContract", "%s Required");
+			return FALSE;
+		}
+	}
+
+	public function valProduct(){
+		if($this->input->post('productID') > 0){
+			return TRUE;
+		} else {
+			$this->form_validation->set_message("valProduct", "%s Required");
+			return FALSE;
+		}
+	}
+
+	public function add_product(){
+		$this->data['headerassets'] = array(
+			'css' => array(
+				'assets/datepicker/datepicker.css',
+				'assets/select2/css/select2.css',
+                'assets/select2/css/select2-bootstrap.css'
+			),
+			'js' => array(
+				'assets/datepicker/datepicker.js',
+				'assets/select2/select2.js'
+			)
+		);		
+		$this->data['clientID'] = htmlentities(escapeString($this->uri->segment(3)));				
+		if($this->data['clientID']){
+			$this->data['airlines'] = $this->user_m->getUserAirlines($this->data['clientID']);
+			if($_POST) {
+				$rules = $this->product_rules();		  
+				$this->form_validation->set_rules($rules);
+				if ($this->form_validation->run() == FALSE) {			   
+					$this->data["subview"] = "client/product";
+					$this->load->view('_layout_main', $this->data);
+				} else {
+				  $link['clientID'] = $this->data['clientID'];
+				  $link['contractID'] = $this->input->post('contractID');
+				  $link['productID'] = $this->input->post('productID');
+				  $link["create_date"] = time();				 
+				  $link["create_userID"] = $this->session->userdata('loginuserID');	
+				  $this->client_m->add_client_product($link);
+				 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+				 redirect(base_url("client/index"));
+				}
+			} else {
+				$this->data['subview'] = 'client/product';
+			    $this->load->view('_layout_main', $this->data);
+			}			
+		} else {
+			$this->data["subview"] = "error";
+			$this->load->view('_layout_main', $this->data);
+		}
+	}
+
+	public function delete_product(){
+		$id = htmlentities(escapeString($this->uri->segment(3)));	
+		$clientID = $this->client_m->delete_client_product($id);
+        $this->session->set_flashdata('success', $this->lang->line('menu_success'));
+		redirect(base_url('client/view/'.$clientID)); 
 	}
 }
 

@@ -38,7 +38,7 @@ class Contract_m extends MY_Model {
 		parent::delete($id);
 	}
 
-	public function getAirlineByWhere($where){
+	public function getContractsByWhere($where){
 		$query=$this->db->get_where('VX_contract',$where);
 		return $query->result();
 	}
@@ -46,6 +46,7 @@ class Contract_m extends MY_Model {
 	public function getAirlineProducts($airlineID){
 		$this->db->select('p.*,c.*')->from('VX_contract c');
 		$this->db->join('VX_products p','p.productID=c.productID','LEFT');
+		$this->db->where('c.airlineID',$airlineID);
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -59,6 +60,13 @@ class Contract_m extends MY_Model {
 		$this->db->where_in('productID',explode($list));
 		$this->db->where('contractID',$contractID);
 		$this->db->delete('VX_contract_products');
+	}
+	public function getProductsByContract($contractID){
+		$this->db->select('p.*')->from('VX_contract_products cp');
+		$this->db->join('VX_products p','p.productID = cp.productID','LEFT');
+		$this->db->where('cp.contractID',$contractID);
+		$query = $this->db->get();
+		return $query->result();
 	}
 }
 
