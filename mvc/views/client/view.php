@@ -41,9 +41,9 @@
                                 <th class="col-lg-1"><?=$this->lang->line('client_airline')?></th>
 								<th class="col-lg-2"><?=$this->lang->line('product_contract')?></th>
 								<th class="col-lg-1"><?=$this->lang->line('product_product')?></th>
-                                <?php if(permissionChecker('client_product_delete')) { ?>
+                                <?php //if(permissionChecker('client_product_delete')) { ?>
                                 <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
-								<?php } ?>
+								<?php //} ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,11 +61,11 @@
 									<td data-title="<?=$this->lang->line('product_product')?>">
                                         <?php echo $product->product_name; ?>
                                     </td>
-                                    <?php if(permissionChecker('client_product_delete')) { ?>
+                                    <?php //if(permissionChecker('client_product_delete')) { ?>
                                     <td data-title="<?=$this->lang->line('action')?>">
 									<a href="<?=base_url('client/delete_product/'.$product->client_productID)?>" onclick="return confirm('you are about to delete a record. This cannot be undone. are you sure?')" class="btn btn-danger btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-trash-o"></i></a>
                                     </td>
-                                    <?php } ?>
+                                    <?php //} ?>
                                 </tr>
 								   <?php $i++; } ?>
                         </tbody>

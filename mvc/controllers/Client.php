@@ -710,7 +710,7 @@ class Client extends Admin_Controller {
 		  if(permissionChecker('client_view') ) {
 		   $client->action .= btn_view('client/view/'.$client->userID, $this->lang->line('view'));
 		  }
-		  if(!permissionChecker('contract_toclient') ) {
+		  if(!permissionChecker('client_add') ) {
 			$client->action .= '<a href="'.base_url('client/add_product/'.$client->userID).'" class="btn btn-primary btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Add Contract"><i class="fa fa-plus"></i></a>';
 		  }		  
 		 	$status = $client->active;
