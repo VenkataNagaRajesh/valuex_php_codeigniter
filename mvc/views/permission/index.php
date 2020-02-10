@@ -82,18 +82,32 @@
                                                 $push['name'] = $data->name;
                                                 $push['description'] = $data->description;
                                                 $push['status'] = $data->active;
-                                                $push['module_name'] = $data->module_name;
+                                                $push['module'] = $data->module;
+                                                $push['productID'] = $data->productID;
+                                               // print_r($push);
                                                 array_push($permissionTable, $push);
                                             }
                                             $permissionCheckBox[ $data->name ] = $data->active;
                                             $permissionCheckBoxVal[ $data->name ] = $data->permissionID;
-
                                         }
+                                      //  exit;
+                                       // array_multisort(array_column($permissionTable, 'status'), SORT_DESC, $permissionTable);                                                                           
                                     ?>
                                     <?php
-                                    $i = 1;
-                                    foreach($permissionTable as $data) { ?>
-                                        <tr>
+                                    $i = 1;$color = "#eccbcb";$upgrade=0;$baggage=0;
+                                    foreach($permissionTable as $data) { 
+                                         if($upgrade == 0 && $data['productID'] == 1){
+                                          echo "<tr><td colspan='6'> <h4>Upgrade Module Section</h4> </td> </tr>";
+                                          $upgrade = 1;
+                                          $color = "#cbecea";
+                                        } 
+                                        if($baggage == 0 && $data['productID'] == 2){
+                                            echo "<tr><td colspan='6'> <h4>Baggage Module Section</h4> </td> </tr>";
+                                            $baggage = 1;
+                                            $color = "#cfd9ea";
+                                          }                                        
+                                        ?>
+                                        <tr style="background:<?=$color?>">
                                             <td data-title="<?=$this->lang->line('slno')?>">
                                                 <?php                                                    
                                                     $status = "";
@@ -112,7 +126,7 @@
                                                 ?>
                                             </td>
                                             <td data-title="<?=$this->lang->line('permission_description')?>">
-                                                <?php echo $data['module_name']; ?>
+                                                <?php echo ($data['productID'] != 0)?$data['module']:'Common'; ?>
                                             </td>
                                             <td data-title="<?=$this->lang->line('permission_description')?>">
                                                 <?php echo $data['description']; ?>
@@ -181,7 +195,7 @@
                                         </tr>
                                     <?php $i++; } ?>
                                     <tr>
-                                        <td colspan="6" rowspan="2">
+                                        <td colspan="7" rowspan="2">
                                             <input class="btn btn-success" type="submit" name="" value="Save Permission">
                                         </td>
                                     </tr>
