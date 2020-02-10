@@ -126,7 +126,7 @@ class Client extends Admin_Controller {
 	}
 	
 	public function valAirlines(){
-		if(count($this->input->post('airlineID')) > 0){
+		if(count($this->input->post('airlineID')) > 0){			
 			return TRUE;
 		} else {
 			$this->form_validation->set_message("valAirlines", "%s Required");
@@ -320,10 +320,12 @@ class Client extends Admin_Controller {
 			 $link["modify_date"] = time();
 			 $link["create_userID"] = $this->session->userdata('loginuserID');
 			 $link["modify_userID"] = $this->session->userdata('loginuserID');
-			 foreach($this->input->post('airlineID') as $airlineID){
+			 $link['airlineID'] = $this->input->post('airlineID');
+			 $this->user_m->insert_user_airline($link);
+			/* foreach($this->input->post('airlineID') as $airlineID){
 			  $link['airlineID'] = $airlineID;
 			  $this->user_m->insert_user_airline($link);
-			 }
+			 } */
 		
 			$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 			redirect(base_url("client/index"));
@@ -365,7 +367,7 @@ class Client extends Admin_Controller {
 				unset($rules[9]);								
 				$this->form_validation->set_rules($rules);
 				if ($this->form_validation->run() == FALSE) {
-					echo validation_errors();
+					//echo validation_errors();
 					$this->data["subview"] = "client/edit";
 					$this->load->view('_layout_main', $this->data);
 				} else {
@@ -384,27 +386,30 @@ class Client extends Admin_Controller {
 					$array['photo'] = $this->upload_data['file']['file_name'];						
 					$this->user_m->update_user($array, $id);
 					
-					 $airlines = array();
-					 if(!empty($this->data['user']->airlineIDs)){
-					 $airlines = explode(',',$this->data['user']->airlineIDs);
+					 /* $airlines = array();
+					 if(!empty($this->data['client']->airlineIDs)){
+					 $airlines = explode(',',$this->data['client']->airlineIDs);
 					 }
 					 $delete_list = array_diff($airlines,$this->input->post('airlineID'));
 					 if(!empty($delete_list)){
 					 $this->user_m->delete_user_airline($id,$delete_list);
 					 }
-					 $insert_list = array_diff($this->input->post('airlineID'),$airlines);
+					 $insert_list = array_diff($this->input->post('airlineID'),$airlines); */
 					// print_r( $insert_list); exit;
-					  if(!empty($insert_list)){
+					 // if(!empty($insert_list)){
 					  $link['userID'] = $id;					
 					  $link["modify_date"] = time();
                       $link["create_date"] = time();
                       $link["create_userID"] = $this->session->userdata('loginuserID');					  
 					  $link["modify_userID"] = $this->session->userdata('loginuserID');
-					  foreach($insert_list as $airlineID){
+					  $link['airlineID'] = $this->input->post('airlineID');
+					 // print_r($link); exit;
+					  $this->user_m->insert_user_airline($link);
+					 /* foreach($insert_list as $airlineID){
 					   $link['airlineID'] = $airlineID;
 					   $this->user_m->insert_user_airline($link);
-					  }
-					 }
+					  } */
+					// }
 
 					
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
@@ -683,7 +688,7 @@ class Client extends Admin_Controller {
 	        }
 			
 		    $sGroupby = " GROUP BY c.userID";
-		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,r.role,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM VX_user c LEFT JOIN VX_role r ON r.roleID = c.roleID LEFT JOIN VX_user_airline ca ON ca.userID = c.userID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
+		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,r.role,ut.usertype,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM VX_user c LEFT JOIN VX_usertype ut ON ut.usertypeID = c.usertypeID LEFT JOIN VX_role r ON r.roleID = c.roleID LEFT JOIN VX_user_airline ca ON ca.userID = c.userID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
 			$sWhere	
             $sGroupby
             $sHaving			
@@ -710,9 +715,9 @@ class Client extends Admin_Controller {
 		  if(permissionChecker('client_view') ) {
 		   $client->action .= btn_view('client/view/'.$client->userID, $this->lang->line('view'));
 		  }
-		  if(!permissionChecker('client_add') ) {
+		  /* if(!permissionChecker('client_add') ) {
 			$client->action .= '<a href="'.base_url('client/add_product/'.$client->userID).'" class="btn btn-primary btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="Add Contract"><i class="fa fa-plus"></i></a>';
-		  }		  
+		  }	*/	  
 		 	$status = $client->active;
 			$client->active = "<div class='onoffswitch-small' id='".$client->userID."'>";
             $client->active .= "<input type='checkbox' id='myonoffswitch".$client->userID."' class='onoffswitch-small-checkbox' name='paypal_demo'";

@@ -3,11 +3,11 @@
 /* List Language  */
 $lang['panel_title'] = "Airline Contracts";
 $lang['airline_product'] = "Airline";
-$lang['product_name'] = "Products";
+$lang['product_name'] = "Product";
 $lang['add_title'] = "Add Contract";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
-
+$lang['no_users'] = 'Number Of Users';
 $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
 $lang['add_contract'] = 'Add Contract';

@@ -23,17 +23,16 @@
                             <?=$this->lang->line("client_airline")?><span class="text-red">*</span>
                        </label>
                         <div class="col-sm-6">
-						      <select name="airlineID[]" id="airlineID" class="form-control select2" multiple="multiple">
-						 
+						     <!-- <select name="airlineID[]" id="airlineID" class="form-control select2" multiple="multiple"> -->						 
                             <?php 
                               $airlines[0]=$this->lang->line("client_select_airline");					
 							   foreach($airlinelist as $airline){
-								 // $airlines[$airline->vx_aln_data_defnsID] = $airline->airline_name;
-								 echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->airline_name.'</option>';
+								  $airlines[$airline->vx_aln_data_defnsID] = $airline->code;
+								// echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->code.'</option>';
 							  } 
-							 // echo form_dropdown("airlineID", $airlines,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'");
+							  echo form_dropdown("airlineID", $airlines,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'");
 							?>
-							 </select>
+							<!-- </select> -->
                         </div>
 						<span class="col-sm-4 control-label">
                             <?php echo form_error('airlineID'); ?>

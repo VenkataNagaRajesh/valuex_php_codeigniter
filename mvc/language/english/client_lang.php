@@ -29,6 +29,7 @@ $lang['client_mail_logo'] = 'Mail Logo';
 $lang['client_upload_mail_logo'] = 'Upload Mail Logo';
 $lang['client_domain'] = 'Domain';
 $lang['client_role'] = 'Role';
+$lang['client_usertype'] = 'Usertype';
 $lang['product_airline'] = 'Airline';
 $lang['product_contract'] = 'Contract';
 $lang['product_product'] = 'Product';

@@ -12,7 +12,7 @@ class Contract extends Admin_Controller {
 		$this->lang->load('contract', $language);
     }
     
-    protected function rules() {
+    protected function rules() {	
 		$rules = array(
 			array(
 				'field' => 'airlineID', 
@@ -23,26 +23,73 @@ class Contract extends Admin_Controller {
 				'field' => 'name', 
 				'label' => $this->lang->line("contract_name"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]'
-			),
-			array(
-				'field' => 'products[]', 
-				'label' => $this->lang->line("product_name"), 
-				'rules' => 'trim|required|xss_clean|max_length[60]|callback_valProduct'
-            ),
-            array(
-				'field' => 'start_date', 
-				'label' => $this->lang->line("start_date"), 
-				'rules' => 'trim|required|xss_clean|max_length[60]'
-            ),
-            array(
-				'field' => 'end_date', 
-				'label' => $this->lang->line("end_date"), 
-				'rules' => 'trim|required|xss_clean|max_length[60]'
 			)
-		);
+			);
+
+			$i =1; 
+			$products = $this->product_m->get_products();
+			do{				
+			 $ruleslist = array(	
+				array(
+					'field' => 'pmod'.$i.'-productID', 
+					'label' => $this->lang->line("product_name"), 
+					'rules' =>'trim|required|xss_clean|max_length[60]|callback_valProduct'
+				),
+				array(
+					'field' => 'pmod'.$i.'-start-date', 
+					'label' => $this->lang->line("start_date"), 
+					'rules' => 'trim|required|xss_clean|max_length[60]|callback_valStartDate'
+				),
+				array(
+					'field' => 'pmod'.$i.'-end-date', 
+					'label' => $this->lang->line("end_date"), 
+					'rules' => 'trim|required|xss_clean|max_length[60]|callback_valEndDate'
+				),
+				array(
+					'field' => 'pmod'.$i.'-no-users', 
+					'label' => $this->lang->line("no_users"), 
+					'rules' => 'trim|required|xss_clean|max_length[60]'
+				)
+			);	
+			$rules = array_merge($rules,$ruleslist);
+			$i++;
+		} while($i <= count($products) && !empty($this->input->post('pmod'.$i.'-productID')));
+		//print_r($_POST);
+		//print_r($rules); exit;
 		return $rules;
     }
-    
+	
+	
+	public function valStartDate($date){
+		
+		$where['c.airlineID'] = $this->input->post('airlineID');
+		$where['cp.productID'] = $this->input->post('pmod1-productID');
+        $where ['cp.start_date >='] = date_format(date_create($this->input->post('pmod1-start-date')),'Y-m-d');
+        $where ['cp.end_date <='] = date_format(date_create($this->input->post('pmod1-start-date')),'Y-m-d');
+		$productinfo = $this->contract_m->getProductInfo($where);
+        if($productinfo){
+		 $this->form_validation->set_message("valStartDate", "already exist this product in this date");
+          return FALSE;
+		} else {
+		  return TRUE;
+		}
+	   
+	}
+
+	public function valEndDate($date){
+		$where['c.airlineID'] = $this->input->post('airlineID');
+		$where['cp.productID'] = $this->input->post('pmod1-productID');
+        $where ['cp.start_date >='] = date_format(date_create($this->input->post('pmod1-end-date')),'Y-m-d');
+        $where ['cp.end_date <='] = date_format(date_create($this->input->post('pmod1-end-date')),'Y-m-d');
+		$productinfo = $this->contract_m->getProductInfo($where);
+        if($productinfo){
+		 $this->form_validation->set_message("valEndDate", "already exist this product in this date");
+          return FALSE;
+		} else {
+		  return TRUE;
+		}
+	}
+
     public function valAirline(){
 		if($this->input->post('airlineID') > 0){
 			return TRUE;
@@ -52,15 +99,15 @@ class Contract extends Admin_Controller {
 		}
 	}
 	
-	public function valProduct(){
-		if(count($this->input->post('products')) > 0){
+	public function valProduct($value){		
+		if(!empty($value)){
 			return TRUE;
 		} else {
 			$this->form_validation->set_message("valProduct", "%s Required");
 			return FALSE;
 		}
-    }   
-
+	}  
+	
 	public function index() {
 		$this->data['headerassets'] = array(
 			'css' => array(				
@@ -76,7 +123,11 @@ class Contract extends Admin_Controller {
 			$this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		  } else {
 			  $this->data['airlines'] = $this->airline_m->getAirlinesData();
-		  }		
+		  }
+		  $this->data['contracts'] = $this->contract_m->get_contracts();
+		  foreach($this->data['contracts'] as $contract){
+			  $contract->products = $this->contract_m->getProductsByContract($contract->contractID);			  
+		  }				 
 		$this->data["subview"] = "contract/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -107,14 +158,13 @@ class Contract extends Admin_Controller {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
 			if ($this->form_validation->run() == FALSE) {
-                //echo validation_errors();
+				//echo validation_errors();
+				//echo form_error('pmod1-start-date'); exit;
 				$this->data["subview"] = "contract/add";
 				$this->load->view('_layout_main', $this->data);
 			} else {
 				$data['airlineID'] = $this->input->post('airlineID');
-				$data['name'] = $this->input->post('name');               
-                $data['start_date'] = date_format(date_create($this->input->post('start_date')),'Y-m-d');
-				$data['end_date'] = date_format(date_create($this->input->post('end_date')),'Y-m-d');
+				$data['name'] = $this->input->post('name');              
 				$data['active'] = $this->input->post('active');
                 $data['create_date'] = time();
                 $data['modify_date'] = time();
@@ -122,15 +172,23 @@ class Contract extends Admin_Controller {
                 $data['modify_userID'] = $this->session->userdata('loginuserID');               
 				$this->contract_m->insert_contract($data);
 				$contractID = $this->db->insert_id();
-
+			  
+				
 				// Adding product to contract
+				$i =1;
+				while($i <= count($this->data['products']) && !empty($this->input->post('pmod'.$i.'-productID'))){
 				 $link['contractID'] = $contractID;
 				 $link["create_date"] = time();				 
-				 $link["create_userID"] = $this->session->userdata('loginuserID');				
-				 foreach($this->input->post('products') as $productID){
-				  $link['productID'] = $productID;
+				 $link["create_userID"] = $this->session->userdata('loginuserID');			
+				 $link['productID'] = $this->input->post('pmod'.$i.'-productID');
+				 $link['start_date'] = date_format(date_create($this->input->post('pmod'.$i.'-start-date')),'Y-m-d');
+				 $link['end_date'] = date_format(date_create($this->input->post('pmod'.$i.'-end-date')),'Y-m-d');
+				 $link['no_users'] = $this->input->post('pmod'.$i.'-no-users');
+				 //print_r($link); exit;
 				  $this->contract_m->insert_contract_product($link);
-				 }
+				  $i++;
+			    } 
+				 
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("contract/index"));
 			}
@@ -164,9 +222,13 @@ class Contract extends Admin_Controller {
 		 $this->data['contract'] = $this->contract_m->get_contract($this->data['contractID']);	
 		// print_r($this->data['contract']); exit;	 
 		 if($this->data['contractID']){ 
-		   if($this->data['contract']){ 
-			   $this->data['contract']->start_date = date_format(date_create($this->data['contract']->start_date),'d-m-Y');
-			   $this->data['contract']->end_date = date_format(date_create($this->data['contract']->end_date),'d-m-Y');
+		   if($this->data['contract']){
+			   $this->data['contract']->products = $this->contract_m->getProductsByContract($this->data['contract']->contractID); 
+			   foreach($this->data['contract']->products as $product){
+			       	$product->start_date = date_format(date_create($product->start_date),'d-m-Y');
+					$product->end_date = date_format(date_create($product->end_date),'d-m-Y');
+			   }
+			  // print_r($this->data['contract']); exit;					   
 			if($_POST){  
 				$rules = $this->rules();
 				$this->form_validation->set_rules($rules);
@@ -176,33 +238,27 @@ class Contract extends Admin_Controller {
 					$this->load->view('_layout_main', $this->data);
 				} else {
 					$data['airlineID'] = $this->input->post('airlineID');
-					$data['name'] = $this->input->post('name');					
-					$data['start_date'] = date_format(date_create($this->input->post('start_date')),'Y-m-d');
-					$data['end_date'] = date_format(date_create($this->input->post('end_date')),'Y-m-d');               
+					$data['name'] = $this->input->post('name');					               
 					$data['modify_date'] = time();
 					$data['active'] = $this->input->post('active');                
 					$data['modify_userID'] = $this->session->userdata('loginuserID');					             
 					$this->contract_m->update_contract($data,$this->data['contractID']);
 
-					$products = array();
-					 if(!empty($this->data['contract']->products)){
-					 $products = explode(',',$this->data['contract']->airlineIDs);
-					 }
-					 $delete_list = array_diff($products,$this->input->post('products'));
-					 if(!empty($delete_list)){
-					 $this->contract_m->delete_contract_product($this->data['contractID'],$delete_list);
-					 }
-					 $insert_list = array_diff($this->input->post('products'),$products);
-					
-					  if(!empty($insert_list)){
-					  $link['contractID'] = $this->data['contractID'];				 
-                      $link["create_date"] = time();
-                      $link["create_userID"] = $this->session->userdata('loginuserID');				  
-					  foreach($insert_list as $productID){
-					   $link['productID'] = $productID;
-					   $this->contract_m->insert_contract_product($link);
-					  }
-					}
+					// Update product data of contract
+					$i =1;
+					while($i <= count($this->data['products']) && !empty($this->input->post('pmod'.$i.'-productID'))){
+					$link['contractID'] = $this->data['contractID'];
+					$link["modify_date"] = time();				 
+					$link["modify_userID"] = $this->session->userdata('loginuserID');			
+					$link['productID'] = $this->input->post('pmod'.$i.'-productID');
+					$link['start_date'] = date_format(date_create($this->input->post('pmod'.$i.'-start-date')),'Y-m-d');
+					$link['end_date'] = date_format(date_create($this->input->post('pmod'.$i.'-end-date')),'Y-m-d');
+					$link['no_users'] = $this->input->post('pmod'.$i.'-no-users');
+					//print_r($link); exit;
+					//print_r($_POST);
+					$this->contract_m->update_contract_product($this->input->post('pmod'.$i.'-contract_productID'),$link);
+					$i++;
+					} 
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url("contract/index"));
 				}
@@ -222,9 +278,9 @@ class Contract extends Admin_Controller {
 
     public function delete(){
         $id = htmlentities(escapeString($this->uri->segment(3))); 
-        $airlineID = $this->contract_m->getContractsByWhere(array('contractID'=>$id))[0]->airlineID;
-       
-        $this->contract_m->delete_contract($id);
+        $airlineID = $this->contract_m->getContractsByWhere(array('contractID'=>$id))[0]->airlineID;       
+		$this->contract_m->delete_contract($id);
+		$this->contract_m->delete_contract_product($id);
         $this->session->set_flashdata('success', $this->lang->line('menu_success'));
 		redirect(base_url('contract/index')); 
 	}

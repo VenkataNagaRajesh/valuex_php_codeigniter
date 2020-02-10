@@ -33,22 +33,56 @@
 			  </div>
 			 </form>			
             <div id="hide-table">
-               <table id="contracttable" class="table table-striped table-bordered table-hover dataTable no-footer">
+               <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>
                     <tr>
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('contract_name')?></th>                       
 						<th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('product_name')?></th>
+						<!--<th class="col-lg-1"><?=$this->lang->line('product_name')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('start_date')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('end_date')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('no_users')?></th> -->
 						<th class="col-lg-1 noExport"><?=$this->lang->line('contract_active')?></th>
                         <?php if(permissionChecker('contract_edit') || permissionChecker('contract_delete')) { ?>
                          <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
                         <?php } ?>
                     </tr>
                  </thead>
-                 <tbody>                          
+                 <tbody> 
+                 <?php $i = 1; foreach($contracts as $contract){ ?>
+                    <tr>
+                        <td data-title="<?=$this->lang->line('slno')?>">
+                            <?php echo $i; ?>
+                        </td>
+                        <td data-title="<?=$this->lang->line('contract_name')?>">
+                            <?php echo $contract->name; ?>
+                        </td>
+                        <td data-title="<?=$this->lang->line('airline_code')?>">
+                            <?php echo $contract->carrier_code; ?>
+                        </td>
+                        <?php if(permissionChecker('contract_edit')) { ?>
+                                    <td data-title="<?=$this->lang->line('contract_active')?>">
+                                      <div class="onoffswitch-small" id="<?=$contract->contractID?>">
+                                          <input type="checkbox" id="myonoffswitch<?=$contract->contractID?>" class="onoffswitch-small-checkbox" name="paypal_demo" <?php if($contract->active === '1') echo "checked='checked'"; ?>>
+                                          <label for="myonoffswitch<?=$contract->contractID?>" class="onoffswitch-small-label">
+                                              <span class="onoffswitch-small-inner"></span>
+                                              <span class="onoffswitch-small-switch"></span>
+                                          </label>
+                                      </div>           
+                                    </td>
+                        <?php } ?>
+                       
+                        <?php if(permissionChecker('contract_edit') || permissionChecker('contract_delete')) { ?>
+                        <td data-title="<?=$this->lang->line('action')?>">
+                            <?php
+                               echo btn_edit('contract/edit/'.$contract->contractID, $this->lang->line('edit'));
+                               echo btn_delete('contract/delete/'.$contract->contractID, $this->lang->line('delete'));
+                            ?>
+                        </td>
+                        <?php } ?>
+                    </tr>
+                 <?php $i++; } ?>                         
                  </tbody>
               </table>
             </div>
@@ -56,6 +90,70 @@
        </div>
    </div>
 </div>
+<script>
+  var status = '';
+  var id = 0;
+  $('.onoffswitch-small-checkbox').click(function() {
+      if($(this).prop('checked')) {
+          status = 'chacked';
+          id = $(this).parent().attr("id");
+      } else {
+          status = 'unchacked';
+          id = $(this).parent().attr("id");
+      }
+
+      if((status != '' || status != null) && (id !='')) {
+          $.ajax({
+              type: 'POST',
+              url: "<?=base_url('contract/active')?>",
+              data: "id=" + id + "&status=" + status,
+              dataType: "html",
+              success: function(data) {
+                  if(data == 'Success') {
+                      toastr["success"]("Success")
+                      toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "500",
+                        "hideDuration": "500",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                      }
+                  } else {
+                      toastr["error"]("Error")
+                      toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "500",
+                        "hideDuration": "500",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                      }
+                  }
+              }
+          });
+      }
+  }); 
+</script>
+
 <script>
  $('#airlineID').select2();
  $(document).ready(function() {	

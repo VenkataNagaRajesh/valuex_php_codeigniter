@@ -13,34 +13,36 @@
         <div class="row">
             <div class="col-sm-8">
                 <form class="form-horizontal" role="form" method="post">
-
+                <div class="form-group">
+                <div class="col-md-6">
                 <?php 
                         if(form_error('name')) 
                             echo "<div class='form-group has-error' >";
                         else     
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="contract_name" class="col-sm-2 control-label">
+                        <label for="contract_name" class="col-sm-4 control-label">
                             <?=$this->lang->line("contract_name")?><span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">                        				 
-                           <input type="text" class="form-control"  id="name" name="name" value="<?=set_value('name')?>" > 							 
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('name'); ?>
-                        </span>
+                        <div class="col-sm-8">                        				 
+                           <input type="text" class="form-control"  id="name" name="name" value="<?=set_value('name')?>" > 
+                           <span class="control-label">
+                                <?php echo form_error('name'); ?>
+                            </span>							 
+                        </div>                     
                     </div>
-
+                    </div>
+                    <div class="col-md-6">
                     <?php 
                         if(form_error('airlineID')) 
                             echo "<div class='form-group has-error' >";
                         else     
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="airlineID" class="col-sm-2 control-label">
+                        <label for="airlineID" class="col-sm-3 control-label">
                             <?=$this->lang->line("airline_product")?><span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">                          				 
+                        <div class="col-sm-9">                          				 
                               <?php 
                                   $airlines[0]=$this->lang->line("select_airline");					
 							      foreach($airlinelist as $airline){	
@@ -51,80 +53,107 @@
                                  echo form_dropdown("airlineID", $airlines,
                                   set_value("airlineID",$airlineID), "id='airlineID' class='form-control hide-dropdown-icon'"
                                  ); 
-							  ?>                           
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('airlineID'); ?>
-                        </span>
+							  ?>  
+                            <span class="control-label">
+                                <?php echo form_error('airlineID'); ?>
+                            </span>                         
+                        </div>                      
                     </div>
-                  
+                    </div>
+                </div>
+                <?php 
+                   $productslist[0]=$this->lang->line("select_product");					
+                   foreach($products as $product){	
+                       $productslist[$product->productID] = $product->name;	                  
+                   } 
+                   $i = 1;
+                   while(count($products) >= $i) {
+                ?>
+                  <div class="form-group" style="margin: 0 0 10px;border: solid 1px #ddd;padding: 19px 0 0;">
+                  <div class="col-md-6">
                     <?php 
-                    if(form_error('products')) 
+                    if(form_error('pmod'.$i.'-productID')) 
                         echo "<div class='form-group has-error' >";
                     else     
                         echo "<div class='form-group' >";
                     ?>
-                    <label for="products" class="col-sm-2 control-label">
+                    <label for="products" class="col-sm-4 control-label">
                             <?=$this->lang->line("product_name")?><span class="text-red">*</span>
                     </label>
-                        <div class="col-sm-6">
-                            <select name="products[]" id="products" class="form-control select2" multiple="multiple">				 
+                        <div class="col-sm-8">
+                           <!-- <select name="products[]" id="products" class="form-control select2" multiple="multiple"> -->				 
                             <?php 
-                            $airlines[0]=$this->lang->line("select_product");					
-                            foreach($products as $product){								
-                                echo '<option value="'.$product->productID.'">'.$product->name.'</option>';
-                            }                                  
+                             echo form_dropdown("pmod$i-productID", $productslist, set_value("pmod".$i."-productID"), "id='pmod$i-productID' class='form-control hide-dropdown-icon'");                               
                             ?>
-                            </select>
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('products'); ?>
-                        </span>                           
+                          <!--  </select> -->  
+                            <span class="control-label">
+                                <?php echo form_error('pmod'.$i.'-productID'); ?>
+                             </span>                         
+                        </div>                                              
                    </div>
                        
-
                     <?php
-                        if(form_error('start_date'))
+                        if(form_error('pmod'.$i.'-no-users'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="start_date" class="col-sm-2 control-label">
-                            <?=$this->lang->line("start_date")?> <span class="text-red">*</span>
+                        <label for="pmod<?=$i?>-no-users" class="col-sm-4 control-label">
+                            <?=$this->lang->line("no_users")?> <span class="text-red">*</span>
                         </label>                        
-                        <div class="col-sm-6">
-                          <div class="input-group">
-							<input type="text" class="form-control hasDatepicker"  id="start_date" name="start_date" value="<?=set_value('start_date')?>" >
-							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                           </div>
-						</div>                        
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('start_date'); ?>
-                        </span>
-                    </div>
-
+                        <div class="col-sm-8">                         
+							<input type="number" class="form-control"  id="pmod<?=$i?>-no-users" name="pmod<?=$i?>-no-users" value="<?=set_value('pmod'.$i.'-no-users')?>" >							
+                            
+                           <span class="control-label">
+                            <?php echo form_error('pmod'.$i.'-no-users'); ?>
+                           </span>
+                        </div>				                                          
+                      </div>
+                    </div>  
+                    <div class="col-md-6">          
                     <?php
-                        if(form_error('end_date'))
+                        if(form_error('pmod'.$i.'-start-date'))
                             echo "<div class='form-group has-error' >";
                         else
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="end_date" class="col-sm-2 control-label">
-                            <?=$this->lang->line("end_date")?> <span class="text-red">*</span>
+                        <label for="pmod<?=$i?>-start-date" class="col-sm-4 control-label">
+                            <?=$this->lang->line("start_date")?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-8">
                             <div class="input-group">
-                                <input type="text" class="form-control hasDatepicker"  id="end_date" name="end_date" value="<?=set_value('end_date')?>" >
+                                <input type="text" class="form-control hasDatepicker"  id="pmod<?=$i?>-start-date" name="pmod<?=$i?>-start-date" value="<?=set_value('pmod'.$i.'-start-date')?>" >
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             </div>
+                            <span class="control-label">
+                                <?php echo form_error('pmod'.$i.'-start-date'); ?>
+                             </span>
                         </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('end_date'); ?>
+                    </div>           
+                    <?php
+                        if(form_error('pmod'.$i.'-end-date'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="pmod<?=$i?>-end-date" class="col-sm-4 control-label">
+                            <?=$this->lang->line("end_date")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control hasDatepicker"  id="pmod<?=$i?>-end-date" name="pmod<?=$i?>-end-date" value="<?=set_value('pmod'.$i.'-end-date')?>" >
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            </div>
+                            <span class="control-label">
+                            <?php echo form_error('pmod'.$i.'-end-date'); ?>
                         </span>
-                    </div>
-
+                        </div>
+                    </div> 
+                    </div>  
+                    </div>  
+                   <?php $i++; } ?> 
                     <div class='form-group' > 
-                        <label for="end_date" class="col-sm-2 control-label">
+                        <label for="end-date" class="col-sm-2 control-label">
                             <?=$this->lang->line("contract_active")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
@@ -136,14 +165,12 @@
                                  ); 
                         ?>
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-8">
-                            <input type="submit" class="btn btn-success" value="<?=$this->lang->line("add_contract")?>" >
+                        <div class="col-md-4">
+                            <div class="pull-right">
+                                <input type="submit" class="btn btn-success" value="<?=$this->lang->line("add_contract")?>" >
+                            </div>
                         </div>
                     </div>
-
                 </form>
 
 
@@ -156,12 +183,10 @@
  $('#active').select2();
  $( ".select2" ).select2();
  
- $("#start_date").datepicker({    
-    onSelect: function(dateText) {
-       	var dateinfo = this.value.split('/');
-		console.log(dateinfo[2]+','+dateinfo[0]+','+dateinfo[1]);
-		$("#end_date").datepicker("setDate", new Date(dateinfo[2],dateinfo[0],dateinfo[1]) );
-    }
-});
- $('#end_date').datepicker();
+ <?php $i=1; while(count($products) >= $i){ ?>
+   $("#pmod<?=$i?>-productID").select2();
+    $("#pmod<?=$i?>-start-date").datepicker();
+    $("#pmod<?=$i?>-end-date").datepicker();
+ <?php $i++; } ?>
+ 
 </script>

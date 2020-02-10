@@ -12,8 +12,12 @@ class Contract_m extends MY_Model {
 	}
 
 	function get_contracts($array=NULL, $signal=FALSE) {
-		$query = parent::get($array, $signal);		
-		return $query;   
+		/* $query = parent::get($array, $signal);		
+		return $query; */   
+		$this->db->select('c.*,d.code as carrier_code')->from('VX_contract c');
+		$this->db->join('VX_data_defns d','d.vx_aln_data_defnsID = c.airlineID','LEFT');
+		$query = $this->db->get();
+		return $query->result();
 	}
 	
 	function get_contract($id){
@@ -53,19 +57,39 @@ class Contract_m extends MY_Model {
 
 	public function insert_contract_product($data){
 		$this->db->insert('VX_contract_products',$data);
+		//print_r($this->db->last_query()); exit;
 		return ($this->db->affected_rows() == 1) ? true : false;
 	}
 
-	public function delete_contract_product($contractID,$list){
-		$this->db->where_in('productID',explode($list));
+	public function update_contract_product($id,$data){
+		$this->db->where('contract_productID',$id);
+		$this->db->update('VX_contract_products',$data);
+		//print_r($this->db->last_query()); exit;
+		return true;
+	}
+
+	public function delete_contract_product($contractID){		
 		$this->db->where('contractID',$contractID);
 		$this->db->delete('VX_contract_products');
 	}
 	public function getProductsByContract($contractID){
-		$this->db->select('p.*')->from('VX_contract_products cp');
+		$this->db->select('cp.*')->from('VX_contract_products cp');
 		$this->db->join('VX_products p','p.productID = cp.productID','LEFT');
 		$this->db->where('cp.contractID',$contractID);
 		$query = $this->db->get();
+		return $query->result();
+	}
+
+	public function getProductInfo($where =array()){
+		$this->db->select('cp.start_date,cp.end_date')->from('VX_contract_products cp');
+		$this->db->join('VX_contract c','c.contractID = cp.contractID','LEFT');
+		if($where){
+			foreach($where as $key => $value){
+				$this->db->where($key,$value);
+			}
+		}
+		$query = $this->db->get();
+		//print_r($this->db->last_query()); exit;
 		return $query->result();
 	}
 }

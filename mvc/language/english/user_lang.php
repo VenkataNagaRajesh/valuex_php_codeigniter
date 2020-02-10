@@ -15,13 +15,14 @@ $lang['user_religion'] = "Religion";
 $lang['user_phone'] = "Phone";
 $lang['user_address'] = "Address";
 $lang['user_jod'] = "Joining Date";
-$lang['user_usertype'] = "Role";
+$lang['user_usertype'] = "Usertype";
 $lang['user_username'] = "Username";
 $lang['user_password'] = "Password";
 $lang['user_status'] = "Status";
 $lang['user_designation'] = "Designation";
 $lang['user_designation'] = "Designation";
 $lang['user_select_usertype'] = 'Select Role';
+$lang['user_role'] = 'Role';
 
 $lang['user_file_browse'] = 'File Browse';
 $lang['user_clear'] = 'Clear';

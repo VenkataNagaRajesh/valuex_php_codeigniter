@@ -48,9 +48,10 @@ class user_m extends MY_Model {
 	}
 	
 	function getUsers(){
-		$this->db->select('*');
+		$this->db->select('u.*,ur.role,ut.usertype');
 		$this->db->from('VX_user u');
 		$this->db->join('VX_role ur', 'ur.roleID = u.roleID', 'LEFT');
+		$this->db->join('VX_usertype ut','ut.usertypeID = u.usertypeID ','LEFT');
 		$this->db->where('u.usertypeID !=',2);		
 		$query = $this->db->get();
 		return $query->result();		

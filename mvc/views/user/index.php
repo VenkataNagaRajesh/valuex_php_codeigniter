@@ -28,6 +28,7 @@
                                 <th class="col-lg-2 noExport"><?=$this->lang->line('user_photo')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('user_name')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('user_email')?></th>
+                                <th class="col-lg-2"><?=$this->lang->line('user_role')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('user_usertype')?></th>
 								<th class="col-lg-2"><?=$this->lang->line('user_phone')?></th>
 								<th class="col-lg-2">Carriers</th>
@@ -61,6 +62,9 @@
                                     </td>
                                     <td data-title="<?=$this->lang->line('user_email')?>">
                                         <?php echo $user->email; ?>
+                                    </td>
+                                    <td data-title="<?=$this->lang->line('user_role')?>">
+                                        <?php echo $user->role; ?>
                                     </td>
                                     <td data-title="<?=$this->lang->line('user_usertype')?>">
                                         <?=$user->usertype;?>
