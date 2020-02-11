@@ -5,7 +5,7 @@ class product_m extends MY_Model {
 	protected $_table_name = 'VX_products';
 	protected $_primary_key = 'productID';
 	protected $_primary_filter = 'intval';
-	protected $_order_by = "productID desc";
+	protected $_order_by = "productID ASC";
 
 	function __construct() {
 		parent::__construct();

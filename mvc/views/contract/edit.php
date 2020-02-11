@@ -104,7 +104,9 @@
                         </label>                        
                         <div class="col-sm-8">                         
 							<input type="number" class="form-control"  id="pmod<?=$i?>-no-users" name="pmod<?=$i?>-no-users" value="<?=set_value('pmod'.$i.'-no-users',$contract->products[$i-1]->no_users)?>" >							
+                            <?php if($contract->products[$i-1]) { ?>
                             <input type="hidden" name="pmod<?=$i?>-contract_productID" value="<?=$contract->products[$i-1]->contract_productID?>" />
+                            <?php } ?>
                            <span class="control-label">
                             <?php echo form_error('pmod'.$i.'-no-users'); ?>
                            </span>
@@ -122,7 +124,7 @@
                             <?=$this->lang->line("start_date")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-8">
-                            <div class="input-group">
+                            <div class="input-group" style="margin-bottom:0;">
                                 <input type="text" class="form-control hasDatepicker"  id="pmod<?=$i?>-start-date" name="pmod<?=$i?>-start-date" value="<?=set_value('pmod'.$i.'-start-date',$contract->products[$i-1]->start_date)?>" >
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             </div>
@@ -141,7 +143,7 @@
                             <?=$this->lang->line("end_date")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-8">
-                            <div class="input-group">
+                            <div class="input-group" style="margin-bottom:0;">
                                 <input type="text" class="form-control hasDatepicker"  id="pmod<?=$i?>-end-date" name="pmod<?=$i?>-end-date" value="<?=set_value('pmod'.$i.'-end-date',$contract->products[$i-1]->end_date)?>" >
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             </div>

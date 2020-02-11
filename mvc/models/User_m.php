@@ -132,5 +132,14 @@ class user_m extends MY_Model {
 		$this->db->delete('VX_user_airline');		
 		return TRUE;
 	 }
+
+	 function getClientByAirline($airlineID){
+		 $this->db->select('u.*')->from('VX_user u');
+		 $this->db->join('VX_user_airline ua','ua.userID = u.userID','INNER');
+		 $this->db->where('ua.airlineID',$airlineID);
+		 $this->db->where('u.usertypeID',2);
+		 $query = $this->db->get();
+		 return $query->row();
+	 }
 }
 

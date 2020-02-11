@@ -38,12 +38,12 @@ class Contract extends Admin_Controller {
 				array(
 					'field' => 'pmod'.$i.'-start-date', 
 					'label' => $this->lang->line("start_date"), 
-					'rules' => 'trim|required|xss_clean|max_length[60]|callback_valStartDate'
+					'rules' => 'trim|required|xss_clean|max_length[60]|callback_valStartDate[pmod'.$i.']'
 				),
 				array(
 					'field' => 'pmod'.$i.'-end-date', 
 					'label' => $this->lang->line("end_date"), 
-					'rules' => 'trim|required|xss_clean|max_length[60]|callback_valEndDate'
+					'rules' => 'trim|required|xss_clean|max_length[60]|callback_valEndDate[pmod'.$i.']'
 				),
 				array(
 					'field' => 'pmod'.$i.'-no-users', 
@@ -57,37 +57,133 @@ class Contract extends Admin_Controller {
 		//print_r($_POST);
 		//print_r($rules); exit;
 		return $rules;
-    }
+	}
 	
-	
-	public function valStartDate($date){
-		
-		$where['c.airlineID'] = $this->input->post('airlineID');
-		$where['cp.productID'] = $this->input->post('pmod1-productID');
-        $where ['cp.start_date >='] = date_format(date_create($this->input->post('pmod1-start-date')),'Y-m-d');
-        $where ['cp.end_date <='] = date_format(date_create($this->input->post('pmod1-start-date')),'Y-m-d');
-		$productinfo = $this->contract_m->getProductInfo($where);
-        if($productinfo){
-		 $this->form_validation->set_message("valStartDate", "already exist this product in this date");
-          return FALSE;
-		} else {
-		  return TRUE;
-		}
-	   
+	protected function client_rules() {
+		$rules = array(
+			array(
+				'field' => 'client_name',
+				'label' => $this->lang->line("client_name"),
+				'rules' => 'trim|required|xss_clean|max_length[60]'
+			),
+			array(
+				'field' => 'client_domain',
+				'label' => $this->lang->line("client_domain"),
+				'rules' => 'trim|required|xss_clean|max_length[60]'
+			),			
+			array(
+				'field' => 'client_email',
+				'label' => $this->lang->line("client_email"),
+				'rules' => 'trim|required|max_length[40]|valid_email|xss_clean|callback_unique_email'
+			),
+			array(
+				'field' => 'client_phone',
+				'label' => $this->lang->line("client_phone"),
+				'rules' => 'trim|required|min_length[5]|max_length[25]|xss_clean'
+			),		
+			array(
+				'field' => 'client_username',
+				'label' => $this->lang->line("client_username"),
+				'rules' => 'trim|required|min_length[4]|max_length[40]|xss_clean|callback_lol_username'
+			),
+			array(
+				'field' => 'client_password',
+				'label' => $this->lang->line("client_password"),
+				'rules' => 'trim|required|min_length[4]|max_length[40]|xss_clean'
+			)
+		);
+		return $rules;
 	}
 
-	public function valEndDate($date){
-		$where['c.airlineID'] = $this->input->post('airlineID');
-		$where['cp.productID'] = $this->input->post('pmod1-productID');
-        $where ['cp.start_date >='] = date_format(date_create($this->input->post('pmod1-end-date')),'Y-m-d');
-        $where ['cp.end_date <='] = date_format(date_create($this->input->post('pmod1-end-date')),'Y-m-d');
-		$productinfo = $this->contract_m->getProductInfo($where);
-        if($productinfo){
-		 $this->form_validation->set_message("valEndDate", "already exist this product in this date");
-          return FALSE;
-		} else {
-		  return TRUE;
+	function lol_username(){
+			$tables = array('VX_user');
+			$array = array();
+			$i = 0;
+			foreach ($tables as $table) {
+				$user = $this->user_m->get_username($table, array("username" => $this->input->post('username')));
+				if(count($user)) {
+					$this->form_validation->set_message("lol_username", "%s already exists");
+					$array['permition'][$i] = 'no';
+				} else {
+					$array['permition'][$i] = 'yes';
+				}
+				$i++;
+			}
+
+			if(in_array('no', $array['permition'])) {
+				return FALSE;
+			} else {
+				return TRUE;
+			}
+	}
+
+	function unique_email(){
+		    $tables = array('VX_user');
+			$array = array();
+			$i = 0;
+			foreach ($tables as $table) {
+				$user = $this->user_m->get_username($table, array("email" => $this->input->post('client_email')));
+				if(count($user)) {
+					$this->form_validation->set_message("unique_email", "%s already exists");
+					$array['permition'][$i] = 'no';
+				} else {
+					$email_array = explode('@',$this->input->post('email'));
+					if($this->input->post('domain') == $email_array[1]){
+						$array['permition'][$i] = 'yes';
+					} else {
+						$this->form_validation->set_message("unique_email", "%s not match with domain");
+					    $array['permition'][$i] = 'no';	
+					}					
+				}
+				$i++;
+			}
+
+			if(in_array('no', $array['permition'])) {
+				return FALSE;
+			} else {
+				return TRUE;
+			}
+	}
+	
+	
+	public function valStartDate($date,$field){	
+		$id = htmlentities(escapeString($this->uri->segment(3)));
+		if($id){
+          $where['cp.contractID !='] = $id;
 		}
+		$where['c.airlineID'] = $this->input->post('airlineID');
+		if($this->input->post($field.'-productID')){
+			$where['cp.productID'] = $this->input->post($field.'-productID');
+			$where ['cp.start_date <='] = date_format(date_create($this->input->post($field.'-start-date')),'Y-m-d');
+			$where ['cp.end_date >='] = date_format(date_create($this->input->post($field.'-start-date')),'Y-m-d');			
+			$productinfo = $this->contract_m->getProductInfo($where);
+			if($productinfo){
+			$this->form_validation->set_message("valStartDate", "already exist this product in this date");
+			return FALSE;
+			} else {
+			return TRUE;
+			}
+	    }
+	}
+
+	public function valEndDate($date,$field){
+		$id = htmlentities(escapeString($this->uri->segment(3)));
+		if($id){
+          $where['cp.contractID !='] = $id;
+		}
+		$where['c.airlineID'] = $this->input->post('airlineID');
+		if($this->input->post($field.'-productID')){
+			$where['cp.productID'] = $this->input->post($field.'-productID');
+			$where ['cp.start_date <='] = date_format(date_create($this->input->post($field.'-end-date')),'Y-m-d');
+			$where ['cp.end_date >='] = date_format(date_create($this->input->post($field.'-end-date')),'Y-m-d');
+			$productinfo = $this->contract_m->getProductInfo($where);
+			if($productinfo){
+			$this->form_validation->set_message("valEndDate", "already exist this product in this date");
+			return FALSE;
+			} else {
+			return TRUE;
+			}
+	    }
 	}
 
     public function valAirline(){
@@ -156,13 +252,46 @@ class Contract extends Admin_Controller {
 		
 		if($_POST) { 
 			$rules = $this->rules();
+			if($this->input->post('client-registration') == 1){
+				$rules = array_merge($rules,$this->client_rules());
+			}
 			$this->form_validation->set_rules($rules);
 			if ($this->form_validation->run() == FALSE) {
-				//echo validation_errors();
+				//echo validation_errors(); exit;
 				//echo form_error('pmod1-start-date'); exit;
 				$this->data["subview"] = "contract/add";
 				$this->load->view('_layout_main', $this->data);
 			} else {
+				//Client Registration
+				if($this->input->post('client-registration') == 1){
+					$array["name"] = $this->input->post("client_name");
+					$array["domain"] = $this->input->post("client_domain");				
+					$array["email"] = $this->input->post("client_email");
+					$array["phone"] = $this->input->post("client_phone");									
+					$array["username"] = $this->input->post("client_username");
+					$array["password"] = $this->user_m->hash($this->input->post("password"));
+					$array["usertypeID"] = 2;
+					$array["roleID"] = 1;
+					$array["create_date"] = date("Y-m-d h:i:s");
+					$array["modify_date"] = date("Y-m-d h:i:s");
+					$array["create_userID"] = $this->session->userdata('loginuserID');
+					$array["create_username"] = $this->session->userdata('username');
+					$array["create_usertype"] = $this->session->userdata('roleID');
+					$array["active"] = 1;	
+					$this->user_m->insert_user($array);
+					$userID = $this->db->insert_id();
+					
+					//adding airline to user
+					$ulink['userID'] = $userID;
+					$ulink["create_date"] = time();
+					$ulink["modify_date"] = time();
+					$ulink["create_userID"] = $this->session->userdata('loginuserID');
+					$ulink["modify_userID"] = $this->session->userdata('loginuserID');
+					$ulink['airlineID'] = $this->input->post('airlineID');
+					$this->user_m->insert_user_airline($ulink);
+				}				
+
+				// Contract Adding
 				$data['airlineID'] = $this->input->post('airlineID');
 				$data['name'] = $this->input->post('name');              
 				$data['active'] = $this->input->post('active');
@@ -179,7 +308,9 @@ class Contract extends Admin_Controller {
 				while($i <= count($this->data['products']) && !empty($this->input->post('pmod'.$i.'-productID'))){
 				 $link['contractID'] = $contractID;
 				 $link["create_date"] = time();				 
+				 $link["modify_date"] = time();				 
 				 $link["create_userID"] = $this->session->userdata('loginuserID');			
+				 $link["modify_userID"] = $this->session->userdata('loginuserID');			
 				 $link['productID'] = $this->input->post('pmod'.$i.'-productID');
 				 $link['start_date'] = date_format(date_create($this->input->post('pmod'.$i.'-start-date')),'Y-m-d');
 				 $link['end_date'] = date_format(date_create($this->input->post('pmod'.$i.'-end-date')),'Y-m-d');
@@ -254,9 +385,14 @@ class Contract extends Admin_Controller {
 					$link['start_date'] = date_format(date_create($this->input->post('pmod'.$i.'-start-date')),'Y-m-d');
 					$link['end_date'] = date_format(date_create($this->input->post('pmod'.$i.'-end-date')),'Y-m-d');
 					$link['no_users'] = $this->input->post('pmod'.$i.'-no-users');
-					//print_r($link); exit;
-					//print_r($_POST);
-					$this->contract_m->update_contract_product($this->input->post('pmod'.$i.'-contract_productID'),$link);
+									
+					if($this->input->post('pmod'.$i.'-contract_productID')){
+					    $this->contract_m->update_contract_product($this->input->post('pmod'.$i.'-contract_productID'),$link);
+					} else {
+						$link['create_date'] = time();
+						$link["create_userID"] = $this->session->userdata('loginuserID');	
+					    $this->contract_m->insert_contract_product($link);	
+					}
 					$i++;
 					} 
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
@@ -450,5 +586,25 @@ class Contract extends Admin_Controller {
 		foreach($products as $product){
 		  echo '<option value="'.$product->productID.'">'.$product->name.'</option>';
 		}		
+	}
+
+	public function checkClientByAirline(){
+		$airlineID = $this->input->post('airlineID');
+		$user = $this->user_m->getClientByAirline($airlineID);
+        if($user){
+           $json['status'] = 1;
+		} else {
+           $json['status'] = 0;
+		}			
+		$this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($json));
+	}
+
+	public function activeProductsByAirline(){
+		$airlineID = $this->input->post('airlineID');
+		$products = $this->product_m->get_products();
+		foreach($products as $product){
+			echo "<option value='".$product->productID."'>".$product->name."</option>";
+		}
 	}
 }

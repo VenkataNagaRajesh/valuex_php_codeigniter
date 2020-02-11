@@ -61,6 +61,7 @@
                     </div>
                     </div>
                 </div>
+                
                 <?php 
                    $productslist[0]=$this->lang->line("select_product");					
                    foreach($products as $product){	
@@ -121,7 +122,7 @@
                             <?=$this->lang->line("start_date")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-8">
-                            <div class="input-group">
+                            <div class="input-group" style="margin-bottom: 0">
                                 <input type="text" class="form-control hasDatepicker"  id="pmod<?=$i?>-start-date" name="pmod<?=$i?>-start-date" value="<?=set_value('pmod'.$i.'-start-date')?>" >
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             </div>
@@ -140,7 +141,7 @@
                             <?=$this->lang->line("end_date")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-8">
-                            <div class="input-group">
+                            <div class="input-group" style="margin-bottom: 0">
                                 <input type="text" class="form-control hasDatepicker"  id="pmod<?=$i?>-end-date" name="pmod<?=$i?>-end-date" value="<?=set_value('pmod'.$i.'-end-date')?>" >
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             </div>
@@ -152,6 +153,118 @@
                     </div>  
                     </div>  
                    <?php $i++; } ?> 
+                   
+                   <!-- Client Registration Module -->
+                 <div id="client-reg" style="display:none;"> 
+                    <h4>Client Details</h4>
+                    <input type="hidden" id="client-registration" name="client-registration" value="<?=set_value('client-registration')?>" />
+                  <div class="form-group" style="margin: 0 0 10px;border: solid 1px #ddd;padding: 19px 0 0;">
+                  <div class="col-md-6">
+                   <?php
+                        if(form_error('client_name'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="name" class="col-sm-4 control-label">
+                            <?=$this->lang->line("client_name")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="client_name" name="client_name" value="<?=set_value('client_name')?>" >
+                            <span class="control-label">
+                              <?php echo form_error('client_name'); ?>
+                            </span>
+                        </div>                        
+                    </div>
+                    <?php
+                        if(form_error('client_phone'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="phone" class="col-sm-4 control-label">
+                            <?=$this->lang->line("client_phone")?><span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="client_phone" name="client_phone" value="<?=set_value('client_phone')?>" >
+                            <span class="control-label">
+                              <?php echo form_error('client_phone'); ?>
+                            </span>
+                        </div>                       
+                    </div>
+                </div>
+                <div class="col-md-6">                  
+                    <?php
+                        if(form_error('client_domain'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="client_domain" class="col-sm-4 control-label">
+                            <?=$this->lang->line("client_domain")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="client_domain" name="client_domain" value="<?=set_value('client_domain')?>" >
+                            <span class="control-label">
+                            <?php echo form_error('client_domain'); ?>
+                            </span>
+                        </div>                        
+                    </div>
+                    <?php
+                        if(form_error('client_email'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="client_email" class="col-sm-4 control-label">
+                            <?=$this->lang->line("client_email")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="client_email" name="client_email" value="<?=set_value('client_email')?>" >
+                            <span class="control-label">
+                            <?php echo form_error('client_email'); ?>
+                            </span>
+                        </div>                        
+                    </div>
+                   </div>
+                   <div class="col-md-6">                   
+                    <?php
+                        if(form_error('client_username'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="client_username" class="col-sm-4 control-label">
+                            <?=$this->lang->line("client_username")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="client_username" name="client_username" value="<?=set_value('client_username')?>" >
+                            <span class="control-label">
+                                <?php echo form_error('client_username'); ?>
+                            </span>
+                        </div>                         
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <?php
+                        if(form_error('client_password'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="client_password" class="col-sm-4 control-label">
+                            <?=$this->lang->line("client_password")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="client_password" name="client_password" value="<?=set_value('client_password')?>" >
+                            <span class="control-label">
+                            <?php echo form_error('client_password'); ?>
+                            </span>
+                        </div>                         
+                    </div>
+                 </div>
+                 </div>
+                </div>
                     <div class='form-group' > 
                         <label for="end-date" class="col-sm-2 control-label">
                             <?=$this->lang->line("contract_active")?> <span class="text-red">*</span>
@@ -179,14 +292,39 @@
     </div>
 </div>
 <script>
+$(document).ready(function(){
+    $('#airlineID').trigger('change');
+});
  $('#airlineID').select2();
  $('#active').select2();
  $( ".select2" ).select2();
  
  <?php $i=1; while(count($products) >= $i){ ?>
-   $("#pmod<?=$i?>-productID").select2();
+    $("#pmod<?=$i?>-productID").select2();
     $("#pmod<?=$i?>-start-date").datepicker();
     $("#pmod<?=$i?>-end-date").datepicker();
  <?php $i++; } ?>
+
+ $('#airlineID').change(function(){
+     if($(this).val() != 0){
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: "<?=base_url('contract/checkClientByAirline')?>",          
+            data: {"airlineID":$(this).val()},
+            dataType: "html",                     
+            success: function(data) {
+                var result = JSON.parse(data);	
+                if(result.status == 0){
+                    $('#client-registration').val(1);               
+                    $('#client-reg').css('display','block');
+                } else {
+                    $('#client-registration').val(0); 
+                    $('#client-reg').css('display','none');
+                }		
+            }
+        });
+     }
+ });
  
 </script>

@@ -73,7 +73,7 @@ class Contract_m extends MY_Model {
 		$this->db->delete('VX_contract_products');
 	}
 	public function getProductsByContract($contractID){
-		$this->db->select('cp.*')->from('VX_contract_products cp');
+		$this->db->select('cp.*,p.name as product_name')->from('VX_contract_products cp');
 		$this->db->join('VX_products p','p.productID = cp.productID','LEFT');
 		$this->db->where('cp.contractID',$contractID);
 		$query = $this->db->get();
@@ -89,7 +89,7 @@ class Contract_m extends MY_Model {
 			}
 		}
 		$query = $this->db->get();
-		//print_r($this->db->last_query()); exit;
+		$this->mydebug->debug($this->db->last_query()); 
 		return $query->result();
 	}
 }

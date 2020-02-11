@@ -28,7 +28,7 @@
 				   echo form_dropdown("airlineID", $airlinelist,set_value("airlineID",$airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>                 	    
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-primary" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                 </div>	             				
 			  </div>
 			 </form>			
@@ -39,10 +39,10 @@
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('contract_name')?></th>                       
 						<th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
-						<!--<th class="col-lg-1"><?=$this->lang->line('product_name')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('product_name')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('start_date')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('end_date')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('no_users')?></th> -->
+                        <th class="col-lg-1"><?=$this->lang->line('no_users')?></th>
 						<th class="col-lg-1 noExport"><?=$this->lang->line('contract_active')?></th>
                         <?php if(permissionChecker('contract_edit') || permissionChecker('contract_delete')) { ?>
                          <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
@@ -50,31 +50,28 @@
                     </tr>
                  </thead>
                  <tbody> 
-                 <?php $i = 1; foreach($contracts as $contract){ ?>
+                     <?php $i = 1; foreach($contracts as $contract){ 
+                         $j=1; foreach($contract->products as $product){ 
+                         if($j == 1){ ?>
                     <tr>
-                        <td data-title="<?=$this->lang->line('slno')?>">
-                            <?php echo $i; ?>
-                        </td>
-                        <td data-title="<?=$this->lang->line('contract_name')?>">
-                            <?php echo $contract->name; ?>
-                        </td>
-                        <td data-title="<?=$this->lang->line('airline_code')?>">
-                            <?php echo $contract->carrier_code; ?>
-                        </td>
-                        <?php if(permissionChecker('contract_edit')) { ?>
-                                    <td data-title="<?=$this->lang->line('contract_active')?>">
-                                      <div class="onoffswitch-small" id="<?=$contract->contractID?>">
-                                          <input type="checkbox" id="myonoffswitch<?=$contract->contractID?>" class="onoffswitch-small-checkbox" name="paypal_demo" <?php if($contract->active === '1') echo "checked='checked'"; ?>>
-                                          <label for="myonoffswitch<?=$contract->contractID?>" class="onoffswitch-small-label">
-                                              <span class="onoffswitch-small-inner"></span>
-                                              <span class="onoffswitch-small-switch"></span>
-                                          </label>
-                                      </div>           
-                                    </td>
-                        <?php } ?>
-                       
+                        <th rowspan="2"><?=$i?></th>
+                        <th rowspan="2"><?=$contract->name?></th>
+                        <th rowspan="2"><?=$contract->carrier_code?></th>                        
+                        <td><?=$product->product_name?></td>
+                        <td><?=date_format(date_create($product->start_date),'d-m-Y')?></td>
+                        <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
+                        <td><?=$product->no_users?></td>
+                        <td data-title="<?=$this->lang->line('contract_active')?>" rowspan="2">
+                            <div class="onoffswitch-small" id="<?=$contract->contractID?>">
+                                  <input type="checkbox" id="myonoffswitch<?=$contract->contractID?>" class="onoffswitch-small-checkbox" name="paypal_demo" <?php if($contract->active === '1') echo "checked='checked'"; ?>>
+                                  <label for="myonoffswitch<?=$contract->contractID?>" class="onoffswitch-small-label">
+                                      <span class="onoffswitch-small-inner"></span>
+                                      <span class="onoffswitch-small-switch"></span>
+                                  </label>
+                            </div>           
+                        </td>                      
                         <?php if(permissionChecker('contract_edit') || permissionChecker('contract_delete')) { ?>
-                        <td data-title="<?=$this->lang->line('action')?>">
+                        <td data-title="<?=$this->lang->line('action')?>" rowspan="2">
                             <?php
                                echo btn_edit('contract/edit/'.$contract->contractID, $this->lang->line('edit'));
                                echo btn_delete('contract/delete/'.$contract->contractID, $this->lang->line('delete'));
@@ -82,7 +79,16 @@
                         </td>
                         <?php } ?>
                     </tr>
-                 <?php $i++; } ?>                         
+                    <?php } else { ?>
+                    <tr>
+                        <td><?=$product->product_name?></td>
+                        <td><?=date_format(date_create($product->start_date),'d-m-Y')?></td>
+                        <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
+                        <td><?=$product->no_users?></td>
+                    </tr>
+                    <?php } ?>
+                     <?php $j++; } //products end
+                      $i++; } //contract end ?>                                      
                  </tbody>
               </table>
             </div>

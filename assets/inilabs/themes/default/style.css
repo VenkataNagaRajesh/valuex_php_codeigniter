@@ -2033,7 +2033,7 @@ Component: timeline
   background-color: #4AABC8;
   border-color: #4AABC8;
 }
-.btn.btn-danger {
+.form-group .btn.btn-danger , .page-header .btn-danger {
 	/*color: #fff;
 	background-color: #ff5b57;
 	border-color: #ff5b57;*/
