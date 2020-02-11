@@ -8,6 +8,7 @@ class Client extends Admin_Controller {
 		$this->load->model("user_m");
 		$this->load->model('role_m');
 		$this->load->model('airline_m');
+		$this->load->model('product_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('client', $language);
 		$usertype = 2; 
@@ -286,7 +287,8 @@ class Client extends Admin_Controller {
 	   );
 	   $usertype = 2;
 	   $this->data['roles'] = $this->role_m->get_role();
-	   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();		
+	   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
+	   //$this->data['products'] = $this->product_m->get_products();		
 	   if($_POST) {
 		   $rules = $this->adds_rules();		  
 		   $this->form_validation->set_rules($rules);
@@ -314,7 +316,7 @@ class Client extends Admin_Controller {
 			$this->user_m->insert_user($array);
 			$userID = $this->db->insert_id();
 		 
-			
+			// Add airline to user
 			 $link['userID'] = $userID;
 			 $link["create_date"] = time();
 			 $link["modify_date"] = time();
@@ -322,6 +324,19 @@ class Client extends Admin_Controller {
 			 $link["modify_userID"] = $this->session->userdata('loginuserID');
 			 $link['airlineID'] = $this->input->post('airlineID');
 			 $this->user_m->insert_user_airline($link);
+
+			//Add products to users
+			 $product['userID'] = $userID;
+			 $product["create_date"] = time();
+			 $product["modify_date"] = time();
+			 $product["create_userID"] = $this->session->userdata('loginuserID');
+			 $product["modify_userID"] = $this->session->userdata('loginuserID');
+			 foreach($this->input->post('products') as $productID){
+				$product['productID'] = $productID;
+				$this->user_m->insert_user_product($product);
+			 } 
+			
+
 			/* foreach($this->input->post('airlineID') as $airlineID){
 			  $link['airlineID'] = $airlineID;
 			  $this->user_m->insert_user_airline($link);
@@ -361,6 +376,7 @@ class Client extends Admin_Controller {
 		}
 		if((int)$id) {
 			$this->data['client'] = $this->user_m->get_user($id);
+			$this->data['client']->products = $this->user_m->getProductsByUser($id);
 			//print_r($this->data['user']); exit;
 			if($this->data['client']) {
 				$rules = $this->adds_rules();				
@@ -411,7 +427,27 @@ class Client extends Admin_Controller {
 					  } */
 					// }
 
-					
+					//Add product to User
+					$products = array();
+					 if(!empty($this->data['client']->products)){
+					 $products = explode(',',$this->data['client']->products);
+					 }
+					 $delete_list = array_diff($products,$this->input->post('products'));
+					 if(!empty($delete_list)){
+					 $this->user_m->delete_user_product($id,$delete_list);
+					 }
+					 $insert_list = array_diff($this->input->post('products'),$products);
+					 if(!empty($insert_list)){
+						$product['userID'] = $id;
+						$product["create_date"] = time();
+						$product["modify_date"] = time();
+						$product["create_userID"] = $this->session->userdata('loginuserID');
+						$product["modify_userID"] = $this->session->userdata('loginuserID');
+						foreach($insert_list as $productID){
+							$product['productID'] = $productID;
+							$this->user_m->insert_user_airline($product);
+						}
+					}
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url("client/index"));
 				}
@@ -527,7 +563,7 @@ class Client extends Admin_Controller {
 					$array['permition'][$i] = 'no';
 				} else {
 					$email_array = explode('@',$this->input->post('email'));
-					if($this->input->post('domain') == $email_array[1]){
+					if($this->input->post('domain') === $email_array[1]){
 						$array['permition'][$i] = 'yes';
 					} else {
 						$this->form_validation->set_message("unique_email", "%s not match with domain");
@@ -688,7 +724,7 @@ class Client extends Admin_Controller {
 	        }
 			
 		    $sGroupby = " GROUP BY c.userID";
-		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,r.role,ut.usertype,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM VX_user c LEFT JOIN VX_usertype ut ON ut.usertypeID = c.usertypeID LEFT JOIN VX_role r ON r.roleID = c.roleID LEFT JOIN VX_user_airline ca ON ca.userID = c.userID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
+		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,r.role,ut.usertype,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name,group_concat(p.name) products FROM VX_user c LEFT JOIN VX_usertype ut ON ut.usertypeID = c.usertypeID LEFT JOIN VX_role r ON r.roleID = c.roleID LEFT JOIN VX_user_airline ca ON ca.userID = c.userID  LEFT JOIN VX_user_product cp ON cp.userID = c.userID LEFT JOIN VX_products p ON p.productID = cp.productID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
 			$sWhere	
             $sGroupby
             $sHaving			

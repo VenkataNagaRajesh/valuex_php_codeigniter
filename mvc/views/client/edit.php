@@ -181,7 +181,24 @@
                         <span class="col-sm-4">
                             <?php echo form_error('roleID'); ?>
                         </span>
-                    </div>		
+                    </div>
+                    
+                    <div class='form-group' style="display:none;" id="product-div">
+                       <label for="airlineID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("client_products")?><span class="text-red">*</span>
+                       </label>
+                        <div class="col-sm-6">
+                             <?php 
+                                 $plist[0] = 'Select Product';                                   
+                                     foreach ($products as $product) {                                           
+                                         $plist[$product->productID] = $product->name;                                          
+                                     }                                   
+                                 echo form_multiselect("products[]", $plist,
+                                     set_value("products[]"), "id='products' class='form-control hide-dropdown-icon'"
+                                 );
+                            ?>                            
+                        </div>                      
+                    </div>
 
                     <?php
                         if(form_error('username'))
@@ -237,9 +254,10 @@ $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: "Select airline"});
 				 
 $(document).ready(function(){
-	//var airlines = [<?=$client->airlineIDs?>];
-	//$('#airlineID').val(airlines).trigger('change');  				 
+	var products = [<?=$client->products?>];
+	$('#products').val(products);  				 
 });
+
 $(document).on('click', '#close-preview', function(){
     $('.image-preview').popover('hide');
     // Hover befor close the preview

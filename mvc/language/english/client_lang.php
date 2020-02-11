@@ -36,3 +36,4 @@ $lang['product_product'] = 'Product';
 $lang['product_active'] = 'Active';
 $lang['product_add'] = 'Add Product';
 $lang['select_airline'] = 'Select Airline';
+$lang['client_products'] = 'Products';

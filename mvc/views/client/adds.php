@@ -181,7 +181,26 @@
                         <span class="col-sm-4">
                             <?php echo form_error('roleID'); ?>
                         </span>
-                    </div>			
+                    </div>                   
+                    <div class='form-group' style="display:none;" id="product-div">
+                       <label for="airlineID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("client_products")?><span class="text-red">*</span>
+                       </label>
+                        <div class="col-sm-6">
+                             <?php 
+                                /* $plist[0] = 'Select Product';                                   
+                                     foreach ($products as $product) {                                           
+                                         $plist[$product->productID] = $product->name;                                          
+                                     }                                   
+                                 echo form_multiselect("products[]", $plist,
+                                     set_value("products[]"), "id='products' class='form-control hide-dropdown-icon'"
+                                 ); */
+                            ?>
+                            <select name="products[]" class='form-control hide-dropdown-icon' id="products" multiple="multiple">
+
+                            </select>
+                        </div>                      
+                    </div>
 
                     <?php
                         if(form_error('username'))
@@ -252,10 +271,29 @@
 <script type="text/javascript">
 $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: "Select airline"});
+$("#products").select2();
+
+$("#airlineID").change(function(){
+   if($(this).val() != 0){
+    $.ajax({
+            async: false,
+            type: 'POST',
+            url: "<?=base_url('contract/activeProductsByAirline')?>",          
+            data: {"airlineID":$(this).val()},
+            dataType: "html",                     
+            success: function(data) {
+                console.log(data);
+                $("#products").html(data);
+                $("#product-div").css("display","block");
+            }
+        });
+   }
+   
+});
 				 
 $(document).ready(function(){	
-	var airlines = [<?php echo implode(',',$this->input->post("airlineID")); ?>];
-	$('#airlineID').val(airlines).trigger('change');  
+	//var airlines = [<?php echo implode(',',$this->input->post("airlineID")); ?>];
+	//$('#airlineID').val(airlines).trigger('change');  
 });
 				 
 $(document).on('click', '#close-preview', function(){

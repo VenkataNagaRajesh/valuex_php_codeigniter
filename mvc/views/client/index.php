@@ -48,10 +48,11 @@
                                 <th class="col-lg-1 noExport"><?=$this->lang->line('client_photo')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_name')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_email')?></th>
-								<th class="col-lg-1"><?=$this->lang->line('client_phone')?></th>
+                                <th class="col-lg-1"><?=$this->lang->line('client_phone')?></th>
+                                <th class="col-lg-1"><?=$this->lang->line('client_products')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_airline')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_role')?></th>
-                                <th class="col-lg-2"><?=$this->lang->line('client_usertype')?></th>
+                                <th class="col-lg-2"><?=$this->lang->line('client_usertype')?></th>                                
                                 <?php if(permissionChecker('client_edit')) { ?>
                                 <th class="col-lg-1 noExport"><?=$this->lang->line('client_status')?></th>
                                 <?php } ?>
@@ -89,7 +90,8 @@
                   {"data": "image" },
 				  {"data": "name" },
 				  {"data": "email" },
-				  {"data": "phone" }, 
+				  {"data": "phone" },
+				  {"data": "products" },
                   {"data": "airline_code"},
                   {"data" : "role"},
                   {"data" : "usertype"},

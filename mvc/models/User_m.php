@@ -118,6 +118,12 @@ class user_m extends MY_Model {
 		$query = $this->db->get();
 		return $query->result();
 	}
+	function getProductsByUser($userID){
+		$this->db->select('productID')->from('VX_user_product');
+		$this->db->where('userID',$userID);
+		$query = $this->db->get();
+		return $query->result();
+	}
 
     function insert_user_airline($data){
 		$this->db->insert('VX_user_airline',$data);
@@ -140,6 +146,20 @@ class user_m extends MY_Model {
 		 $this->db->where('u.usertypeID',2);
 		 $query = $this->db->get();
 		 return $query->row();
+	 }
+
+	 function insert_user_product($data){
+		 $this->db->insert("VX_user_product",$data);
+		 return TRUE;
+	 }
+
+	 function delete_user_product($userID,$products =array()){
+		if(!empty($products)){
+		  $this->db->where_in('productsID',$products);
+		}
+		$this->db->where('userID',$userID);
+		$this->db->delete('VX_user_product');		
+		return TRUE;
 	 }
 }
 
