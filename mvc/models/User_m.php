@@ -174,5 +174,18 @@ class user_m extends MY_Model {
 		$this->db->delete('VX_user_product');		
 		return TRUE;
 	 }
+
+	 function getUserActiveProducts($airlineID){		 
+		 $this->db->select('p.*')->from('VX_contract c');		 
+		 $this->db->join('VX_contract_products cp','cp.contractID = c.contractID','LEFT');
+		 $this->db->join('VX_products p','p.productID = cp.productID','LEFT');
+		 $this->db->where('c.airlineID',$airlineID);
+		 $this->db->where('c.active',1);
+		 $this->db->where('cp.start_date <=',date('Y-m-d'));
+		 $this->db->where('cp.end_date >=',date('Y-m-d'));
+		 $query = $this->db->get();
+		 //print_r($this->db->last_query());
+		 return $query->result();
+	 }
 }
 

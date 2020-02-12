@@ -11,7 +11,7 @@ class Client extends Admin_Controller {
 		$this->load->model('product_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('client', $language);
-		$usertype = 2; 
+		$usertype = 2;	
 	}
 
 	protected function rules() {

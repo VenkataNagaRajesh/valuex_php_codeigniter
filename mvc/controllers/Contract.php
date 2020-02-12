@@ -602,7 +602,8 @@ class Contract extends Admin_Controller {
 
 	public function activeProductsByAirline(){
 		$airlineID = $this->input->post('airlineID');
-		$products = $this->product_m->get_products();
+		//$products = $this->product_m->get_products();
+		$products = $products = $this->user_m->getUserActiveProducts($airlineID);
 		foreach($products as $product){
 			echo "<option value='".$product->productID."'>".$product->name."</option>";
 		}
