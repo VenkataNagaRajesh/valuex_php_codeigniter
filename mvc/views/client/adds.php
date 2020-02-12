@@ -282,7 +282,7 @@ $("#airlineID").change(function(){
             data: {"airlineID":$(this).val()},
             dataType: "html",                     
             success: function(data) {
-                console.log(data);
+                //console.log(data);
                 $("#products").html(data);
                 $("#product-div").css("display","block");
             }

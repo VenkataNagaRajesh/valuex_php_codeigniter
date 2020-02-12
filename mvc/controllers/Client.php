@@ -376,8 +376,10 @@ class Client extends Admin_Controller {
 		}
 		if((int)$id) {
 			$this->data['client'] = $this->user_m->get_user($id);
+			//$this->data['client']->airlineID = explode($this->data['client']->airlineIDs,',')[0];
 			$this->data['client']->products = $this->user_m->getProductsByUser($id);
-			//print_r($this->data['user']); exit;
+			//print_r($this->data['client']); exit;
+			$this->data['products'] = $this->product_m->get_products();			
 			if($this->data['client']) {
 				$rules = $this->adds_rules();				
 				unset($rules[9]);								
@@ -413,14 +415,14 @@ class Client extends Admin_Controller {
 					 $insert_list = array_diff($this->input->post('airlineID'),$airlines); */
 					// print_r( $insert_list); exit;
 					 // if(!empty($insert_list)){
-					  $link['userID'] = $id;					
+					 // $link['userID'] = $id;					
 					  $link["modify_date"] = time();
-                      $link["create_date"] = time();
-                      $link["create_userID"] = $this->session->userdata('loginuserID');					  
+                      //$link["create_date"] = time();
+                      //$link["create_userID"] = $this->session->userdata('loginuserID');					  
 					  $link["modify_userID"] = $this->session->userdata('loginuserID');
 					  $link['airlineID'] = $this->input->post('airlineID');
 					 // print_r($link); exit;
-					  $this->user_m->insert_user_airline($link);
+					  $this->user_m->update_user_airline($this->data['client']->user_airline,$link);
 					 /* foreach($insert_list as $airlineID){
 					   $link['airlineID'] = $airlineID;
 					   $this->user_m->insert_user_airline($link);
@@ -429,14 +431,15 @@ class Client extends Admin_Controller {
 
 					//Add product to User
 					$products = array();
-					 if(!empty($this->data['client']->products)){
-					 $products = explode(',',$this->data['client']->products);
-					 }
-					 $delete_list = array_diff($products,$this->input->post('products'));
-					 if(!empty($delete_list)){
-					 $this->user_m->delete_user_product($id,$delete_list);
-					 }
+					  if(!empty($this->data['client']->products)){
+					    $products = explode(',',$this->data['client']->products);					 
+						$delete_list = array_diff($products,$this->input->post('products'));
+						if(!empty($delete_list)){
+							$this->user_m->delete_user_product($id,$delete_list);
+						}
+					 } 
 					 $insert_list = array_diff($this->input->post('products'),$products);
+					
 					 if(!empty($insert_list)){
 						$product['userID'] = $id;
 						$product["create_date"] = time();
@@ -445,7 +448,7 @@ class Client extends Admin_Controller {
 						$product["modify_userID"] = $this->session->userdata('loginuserID');
 						foreach($insert_list as $productID){
 							$product['productID'] = $productID;
-							$this->user_m->insert_user_airline($product);
+							$this->user_m->insert_user_product($product);
 						}
 					}
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));

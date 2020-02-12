@@ -60,7 +60,7 @@ class user_m extends MY_Model {
 	function get_user($userID) {
 		/* $query = parent::get($array, $signal);
 		return $query; */
-		$this->db->select('u.*,group_concat(ua.airlineID) airlineIDs,group_concat(dd.code) airlines')->from('VX_user u');
+		$this->db->select('u.*,group_concat(ua.user_airlineID) user_airline,group_concat(ua.airlineID) airlineIDs,group_concat(dd.code) airlines')->from('VX_user u');
 		$this->db->join('VX_user_airline ua','ua.userID=u.userID','LEFT');
         $this->db->join('VX_data_defns dd','dd.vx_aln_data_defnsID = ua.airlineID','LEFT');		
 		$this->db->where('u.userID',$userID);	
@@ -119,14 +119,21 @@ class user_m extends MY_Model {
 		return $query->result();
 	}
 	function getProductsByUser($userID){
-		$this->db->select('productID')->from('VX_user_product');
+		$this->db->select('group_concat(productID) products')->from('VX_user_product');
 		$this->db->where('userID',$userID);
 		$query = $this->db->get();
-		return $query->result();
+		return $query->row('products');
 	}
 
     function insert_user_airline($data){
 		$this->db->insert('VX_user_airline',$data);
+		return $this->db->insert_id();
+	}
+
+	function update_user_airline($id,$data){
+		$this->db->where('user_airlineID',$id);
+		$this->db->update('VX_user_airline',$data);
+		print_r($this->db->last_query());
 		return $this->db->insert_id();
 	}
 
@@ -155,7 +162,7 @@ class user_m extends MY_Model {
 
 	 function delete_user_product($userID,$products =array()){
 		if(!empty($products)){
-		  $this->db->where_in('productsID',$products);
+		  $this->db->where_in('productID',$products);
 		}
 		$this->db->where('userID',$userID);
 		$this->db->delete('VX_user_product');		

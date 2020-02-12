@@ -30,7 +30,7 @@
 								  $airlines[$airline->vx_aln_data_defnsID] = $airline->code;
 								 // echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->code.'</option>';
 							  } 
-							      echo form_dropdown("airlineID", $airlines,set_value("airlineID",$client->airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'");
+							      echo form_dropdown("airlineID", $airlines,set_value("airlineID",$client->airlineIDs), "id='airlineID' class='form-control hide-dropdown-icon select2'");
 							?>
 							<!-- </select> -->
                         </div>
@@ -183,20 +183,21 @@
                         </span>
                     </div>
                     
-                    <div class='form-group' style="display:none;" id="product-div">
+                    <div class='form-group' id="product-div">
                        <label for="airlineID" class="col-sm-2 control-label">
                             <?=$this->lang->line("client_products")?><span class="text-red">*</span>
                        </label>
                         <div class="col-sm-6">
+                          <select name="products[]" id="products" class="form-control select2" multiple="multiple">
                              <?php 
-                                 $plist[0] = 'Select Product';                                   
+                                 //$plist[0] = 'Select Product';                                   
                                      foreach ($products as $product) {                                           
-                                         $plist[$product->productID] = $product->name;                                          
+                                         //$plist[$product->productID] = $product->name; 
+                                         echo "<option value='".$product->productID."'>".$product->name."</option>";                                         
                                      }                                   
-                                 echo form_multiselect("products[]", $plist,
-                                     set_value("products[]"), "id='products' class='form-control hide-dropdown-icon'"
-                                 );
-                            ?>                            
+                                // echo form_multiselect("products[]", $plist,set_value("products[]"), "id='products' class='form-control hide-dropdown-icon'");
+                            ?>
+                          </select>                            
                         </div>                      
                     </div>
 
@@ -252,10 +253,27 @@
 <script type="text/javascript">
 $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: "Select airline"});
-				 
+$('#products').select2();				 
 $(document).ready(function(){
-	var products = [<?=$client->products?>];
-	$('#products').val(products);  				 
+	var products = [<?=$client->products?>];   
+	$('#products').val(products).trigger('change');  				 
+});
+$("#airlineID").change(function(){
+   if($(this).val() != 0){
+    $.ajax({
+            async: false,
+            type: 'POST',
+            url: "<?=base_url('contract/activeProductsByAirline')?>",          
+            data: {"airlineID":$(this).val()},
+            dataType: "html",                     
+            success: function(data) {
+                //console.log(data);
+                $("#products").html(data);
+                $("#product-div").css("display","block");
+            }
+        });
+   }
+   
 });
 
 $(document).on('click', '#close-preview', function(){
