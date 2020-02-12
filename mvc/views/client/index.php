@@ -91,7 +91,7 @@
 				  {"data": "name" },
 				  {"data": "email" },
 				  {"data": "phone" },
-				  {"data": "products" },
+				  {"data": "product_name" },
                   {"data": "airline_code"},
                   {"data" : "role"},
                   {"data" : "usertype"},

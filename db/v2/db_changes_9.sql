@@ -1,4 +1,4 @@
- CREATE TABLE `vx_user_product` (
+ CREATE TABLE `VX_user_product` (
   `user_productID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `userID` int(11) NOT NULL,
   `productID` int(11) NOT NULL,

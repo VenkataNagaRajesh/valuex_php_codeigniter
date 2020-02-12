@@ -727,7 +727,7 @@ class Client extends Admin_Controller {
 	        }
 			
 		    $sGroupby = " GROUP BY c.userID";
-		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,r.role,ut.usertype,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name,group_concat(p.name) products FROM VX_user c LEFT JOIN VX_usertype ut ON ut.usertypeID = c.usertypeID LEFT JOIN VX_role r ON r.roleID = c.roleID LEFT JOIN VX_user_airline ca ON ca.userID = c.userID  LEFT JOIN VX_user_product cp ON cp.userID = c.userID LEFT JOIN VX_products p ON p.productID = cp.productID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
+		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,r.role,ut.usertype,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM VX_user c LEFT JOIN VX_usertype ut ON ut.usertypeID = c.usertypeID LEFT JOIN VX_role r ON r.roleID = c.roleID LEFT JOIN VX_user_airline ca ON ca.userID = c.userID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
 			$sWhere	
             $sGroupby
             $sHaving			
@@ -764,7 +764,9 @@ class Client extends Admin_Controller {
 			   $client->active .= " checked >";
 			} else {
 			   $client->active .= ">";
-			}	
+			}
+			
+			$client->product_name = $this->user_m->getProductsInfoByUser($client->userID);
 			
 			$client->active .= "<label for='myonoffswitch".$client->userID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
 						
