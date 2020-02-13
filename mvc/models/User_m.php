@@ -176,7 +176,7 @@ class user_m extends MY_Model {
 	 }
 
 	 function getUserActiveProducts($airlineID){		 
-		 $this->db->select('p.*')->from('VX_contract c');		 
+		 $this->db->select('p.*,cp.*')->from('VX_contract c');		 
 		 $this->db->join('VX_contract_products cp','cp.contractID = c.contractID','LEFT');
 		 $this->db->join('VX_products p','p.productID = cp.productID','LEFT');
 		 $this->db->where('c.airlineID',$airlineID);
@@ -186,6 +186,20 @@ class user_m extends MY_Model {
 		 $query = $this->db->get();
 		 //print_r($this->db->last_query());
 		 return $query->result();
+	 }
+
+	 function getUsersCountByAirline($airlineID,$usertypeID,$productID,$userID = null){
+		 $this->db->select("count(*) count")->from('VX_user_airline ua');
+		 $this->db->join("VX_user u","u.userID = ua.userID","LEFT");
+		 $this->db->join('VX_user_product up','up.userID = u.userID','LEFT');
+		 $this->db->where('u.usertypeID',$usertypeID);
+		 $this->db->where('ua.airlineID',$airlineID);
+		 $this->db->where('up.productID',$productID);
+		 if($userID){
+			 $this->db->where('u.userID !=',$userID);
+		 }
+		 $query = $this->db->get();		
+		 return $query->row('count');
 	 }
 }
 

@@ -62,8 +62,11 @@ class Client extends Admin_Controller {
 				'rules' => 'trim|required|min_length[4]|max_length[40]|xss_clean'
 			),
 		);
+		
 		return $rules;
 	}
+
+	
 
 	protected function adds_rules() {
 		$rules = array(
@@ -72,11 +75,11 @@ class Client extends Admin_Controller {
 				'label' => $this->lang->line("client_name"),
 				'rules' => 'trim|required|xss_clean|max_length[60]'
 			),
-			array(
+			/*array(
 				'field' => 'domain',
 				'label' => $this->lang->line("client_domain"),
 				'rules' => 'trim|required|xss_clean|max_length[60]'
-			),			
+			),*/			
 			array(
 				'field' => 'email',
 				'label' => $this->lang->line("client_email"),
@@ -123,7 +126,43 @@ class Client extends Admin_Controller {
 				'rules' => 'trim|required|min_length[4]|max_length[40]|xss_clean'
 			),
 		);
+		if(count($this->input->post('products')) > 0){
+			$product_rule = array(
+			 array(
+				'field' => 'products[]',
+				'label' => $this->lang->line("client_products"),
+				'rules' => 'trim|required|min_length[1]|max_length[40]|xss_clean|callback_product_validation'
+			 )
+			);
+			$rules = array_merge($rules,$product_rule);
+		}
+		//print_r($this->input->post('products')); exit;
+		//print_r($rules); exit;
 		return $rules;
+	}
+
+	function product_validation(){	
+		$userID = htmlentities(escapeString($this->uri->segment(3)));	
+		if(!userID){
+			$userID = NULL;
+		}	
+		if(count($this->input->post('products')) > 0){ 
+			$products = $this->user_m->getUserActiveProducts($this->input->post('airlineID'));
+			$id = htmlentities(escapeString($this->uri->segment(3)));			
+            foreach($products as $product){
+				foreach($this->input->post('products') as $productID){
+					if($productID == $product->productID){
+						$no_users = $product->no_users; 
+						$userscount = $this->user_m->getUsersCountByAirline($this->input->post('airlineID'),2,$productID,$userID);
+						if($no_users <= $userscount){                           
+							$this->form_validation->set_message("product_validation", "Number of users exceeded for this product ".$product->name);
+							return FALSE;							
+						}
+					}
+				}
+			}		   
+			return TRUE;
+		} 
 	}
 	
 	public function valAirlines(){
@@ -235,7 +274,7 @@ class Client extends Admin_Controller {
 			if ($this->form_validation->run() == FALSE) {
 				$this->data["subview"] = "client/add";
 				$this->load->view('_layout_main', $this->data);
-			} else {
+			} else {				
 				$array["name"] = $this->input->post("name");				
 				$array["email"] = $this->input->post("email");
 				$array["phone"] = $this->input->post("phone");
@@ -288,16 +327,17 @@ class Client extends Admin_Controller {
 	   $usertype = 2;
 	   $this->data['roles'] = $this->role_m->get_role();
 	   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
-	   //$this->data['products'] = $this->product_m->get_products();		
-	   if($_POST) {
+	   $primary_client = $this->user_m->getClientByAirline($this->input->post('airlineID'));	   
+	     if($_POST) { 
 		   $rules = $this->adds_rules();		  
 		   $this->form_validation->set_rules($rules);
-		   if ($this->form_validation->run() == FALSE) {			   
+		   if ($this->form_validation->run() == FALSE) {
+			 // echo validation_errors(); exit;			    
 			   $this->data["subview"] = "client/adds";
 			   $this->load->view('_layout_main', $this->data);
-		   } else {		   
+		   } else {					   
 			$array["name"] = $this->input->post("name");
-			$array["domain"] = $this->input->post("domain");				
+			$array["domain"] = $primary_client->domain;				
 			$array["email"] = $this->input->post("email");
 			$array["phone"] = $this->input->post("phone");
 			$array["address"] = $this->input->post("address");				
@@ -362,7 +402,6 @@ class Client extends Admin_Controller {
 				'assets/select2/select2.js'
 			)
 		);
-
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if($this->session->userdata('roleID') == 2){
 		  $this->data['roles'] = array();
@@ -379,18 +418,17 @@ class Client extends Admin_Controller {
 			//$this->data['client']->airlineID = explode($this->data['client']->airlineIDs,',')[0];
 			$this->data['client']->products = $this->user_m->getProductsByUser($id);
 			//print_r($this->data['client']); exit;
-			$this->data['products'] = $this->product_m->get_products();			
+			$this->data['products'] = $this->user_m->getUserActiveProducts($this->data['client']->airlineIDs);		
 			if($this->data['client']) {
 				$rules = $this->adds_rules();				
-				unset($rules[9]);								
+				unset($rules[8]);								
 				$this->form_validation->set_rules($rules);
 				if ($this->form_validation->run() == FALSE) {
-					//echo validation_errors();
+					//echo validation_errors();  exit;
 					$this->data["subview"] = "client/edit";
 					$this->load->view('_layout_main', $this->data);
 				} else {
-					$array["name"] = $this->input->post("name");
-					$array["domain"] = $this->input->post("domain");
+					$array["name"] = $this->input->post("name");					
 					$array["roleID"] = $this->input->post("roleID");
 					$array["dob"] = date("Y-m-d", strtotime($this->input->post("dob")));
 					$array["sex"] = $this->input->post("sex");
@@ -566,12 +604,14 @@ class Client extends Admin_Controller {
 					$array['permition'][$i] = 'no';
 				} else {
 					$email_array = explode('@',$this->input->post('email'));
-					if($this->input->post('domain') === $email_array[1]){
+					$primary_client = $this->user_m->getClientByAirline($this->input->post('airlineID'));
+					
+					if($primary_client->domain === $email_array[1]){
 						$array['permition'][$i] = 'yes';
 					} else {
 						$this->form_validation->set_message("unique_email", "%s not match with domain");
 					    $array['permition'][$i] = 'no';	
-					}	
+					}							
 					$array['permition'][$i] = 'yes';
 				}
 				$i++;
@@ -592,7 +632,8 @@ class Client extends Admin_Controller {
 					$array['permition'][$i] = 'no';
 				} else {
 					$email_array = explode('@',$this->input->post('email'));
-					if($this->input->post('domain') == $email_array[1]){
+					$primary_client = $this->user_m->getClientByAirline($this->input->post('airlineID'));
+					if($primary_client->domain == $email_array[1]){
 						$array['permition'][$i] = 'yes';
 					} else {
 						$this->form_validation->set_message("unique_email", "%s not match with domain");

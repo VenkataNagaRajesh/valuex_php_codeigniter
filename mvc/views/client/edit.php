@@ -57,21 +57,21 @@
                         </span>
                     </div>
                     <?php
-                        if(form_error('domain'))
+                       /* if(form_error('domain'))
                             echo "<div class='form-group has-error' >";
                         else
-                            echo "<div class='form-group' >";
+                            echo "<div class='form-group' >"; */
                     ?>
-                        <label for="domain" class="col-sm-2 control-label">
-                            <?=$this->lang->line("client_domain")?> <span class="text-red">*</span>
+                   <!--     <label for="domain" class="col-sm-2 control-label">
+                            <?//=$this->lang->line("client_domain")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
                             <input type="text" class="form-control" id="domain" name="domain" value="<?=set_value('domain',$client->domain)?>" >
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('domain'); ?>
+                            <?php //echo form_error('domain'); ?>
                         </span>
-                    </div>
+                    </div> -->
                     <?php
                         if(form_error('email'))
                             echo "<div class='form-group has-error' >";
@@ -182,8 +182,12 @@
                             <?php echo form_error('roleID'); ?>
                         </span>
                     </div>
-                    
-                    <div class='form-group' id="product-div">
+                    <?php
+                        if(form_error('products[]'))
+                            echo "<div class='form-group has-error' id='product-div'>";
+                        else
+                            echo "<div class='form-group' id='product-div'>";
+                    ?>                      
                        <label for="airlineID" class="col-sm-2 control-label">
                             <?=$this->lang->line("client_products")?><span class="text-red">*</span>
                        </label>
@@ -193,12 +197,15 @@
                                  //$plist[0] = 'Select Product';                                   
                                      foreach ($products as $product) {                                           
                                          //$plist[$product->productID] = $product->name; 
-                                         echo "<option value='".$product->productID."'>".$product->name."</option>";                                         
+                                       //  echo "<option value='".$product->productID."'>".$product->name."</option>";                                         
                                      }                                   
                                 // echo form_multiselect("products[]", $plist,set_value("products[]"), "id='products' class='form-control hide-dropdown-icon'");
                             ?>
                           </select>                            
-                        </div>                      
+                        </div>  
+                        <span class="col-sm-4">
+                            <?php echo form_error('products[]'); ?>
+                        </span>                    
                     </div>
 
                     <?php
@@ -254,9 +261,12 @@
 $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: "Select airline"});
 $('#products').select2();				 
-$(document).ready(function(){
-	var products = [<?=$client->products?>];   
-	$('#products').val(products).trigger('change');  				 
+$(document).ready(function(){	
+    $('#airlineID').trigger('change'); 	
+    var products = [<?=$client->products?>]; 
+      
+    console.log(products);
+	$('#products').val(products).trigger('change'); 			 
 });
 $("#airlineID").change(function(){
    if($(this).val() != 0){

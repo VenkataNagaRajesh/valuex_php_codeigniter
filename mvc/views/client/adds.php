@@ -57,21 +57,21 @@
                         </span>
                     </div>
                     <?php
-                        if(form_error('domain'))
+                       /* if(form_error('domain'))
                             echo "<div class='form-group has-error' >";
                         else
-                            echo "<div class='form-group' >";
+                            echo "<div class='form-group' >"; */
                     ?>
-                        <label for="domain" class="col-sm-2 control-label">
-                            <?=$this->lang->line("client_domain")?> <span class="text-red">*</span>
+                    <!--    <label for="domain" class="col-sm-2 control-label">
+                            <?//=$this->lang->line("client_domain")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
                             <input type="text" class="form-control" id="domain" name="domain" value="<?=set_value('domain')?>" >
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('domain'); ?>
+                            <?php //echo form_error('domain'); ?>
                         </span>
-                    </div>
+                    </div>-->
                     <?php
                         if(form_error('email'))
                             echo "<div class='form-group has-error' >";
@@ -181,8 +181,13 @@
                         <span class="col-sm-4">
                             <?php echo form_error('roleID'); ?>
                         </span>
-                    </div>                   
-                    <div class='form-group' style="display:none;" id="product-div">
+                    </div>  
+                    <?php
+                        if(form_error('products[]'))
+                            echo "<div class='form-group has-error' style='display:none;' id='product-div'>";
+                        else
+                            echo "<div class='form-group'  style='display:none;' id='product-div'>";
+                    ?>                    
                        <label for="airlineID" class="col-sm-2 control-label">
                             <?=$this->lang->line("client_products")?><span class="text-red">*</span>
                        </label>
@@ -196,10 +201,13 @@
                                      set_value("products[]"), "id='products' class='form-control hide-dropdown-icon'"
                                  ); */
                             ?>
-                            <select name="products[]" class='form-control hide-dropdown-icon' id="products" multiple="multiple">
+                            <select name="products[]" class='form-control hide-dropdown-icon' id="products" multiple="multiple" value="<?=set_value("products[]")?>" >
 
                             </select>
-                        </div>                      
+                        </div>
+                        <span class="col-sm-4">
+                            <?php echo form_error('products[]'); ?>
+                        </span>                      
                     </div>
 
                     <?php
@@ -273,6 +281,7 @@ $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: "Select airline"});
 $("#products").select2();
 
+
 $("#airlineID").change(function(){
    if($(this).val() != 0){
     $.ajax({
@@ -293,7 +302,11 @@ $("#airlineID").change(function(){
 				 
 $(document).ready(function(){	
 	//var airlines = [<?php echo implode(',',$this->input->post("airlineID")); ?>];
-	//$('#airlineID').val(airlines).trigger('change');  
+	$('#airlineID').trigger('change'); 
+    <?php if(count($this->input->post('products'))){ ?>
+    var products = [<?php echo implode(',',$this->input->post("products")); ?>]; 
+    $('#products').val(products).trigger('change');
+    <?php } ?>
 });
 				 
 $(document).on('click', '#close-preview', function(){
