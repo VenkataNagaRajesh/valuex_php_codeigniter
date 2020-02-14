@@ -13,12 +13,7 @@ class Resetpassword extends Admin_Controller {
 	}
 
 	protected function rules() {
-		$rules = array(
-			array(
-				'field' => 'usertype', 
-				'label' => $this->lang->line("resetpassword_usertype"), 
-				'rules' => 'trim|required|xss_clean'
-			),
+		$rules = array(			
 			array(
 				'field' => 'users', 
 				'label' => $this->lang->line("resetpassword_users"), 
@@ -70,7 +65,12 @@ class Resetpassword extends Admin_Controller {
 				'assets/select2/select2.js'
 			)
 		);
-		$this->data['roles'] = $this->role_m->get_role();
+		if($this->session->userdata('usertypeID') == 1 && $this->session->userdata('loginuserID') == 1){
+			$loginusertypeID = null;
+		} else {
+		    $loginusertypeID = $this->session->userdata('usertypeID');	
+		}
+		$this->data['roles'] = $this->role_m->get_roleinfo($loginusertypeID);
 		$this->data['usertypes'] = $this->usertype_m->get_usertype();
 		$userID = $this->input->post("users");
 		$table = '';
@@ -107,13 +107,13 @@ class Resetpassword extends Admin_Controller {
 	}
 
 	public function userscall() {
-		$userID = $this->input->post('users');
-		$usertypeID = $this->input->post('usertype');
-		if($userID) {
+		$roleID = $this->input->post('users');		
+		$role = $this->role_m->get_role($roleID);
+		if($roleID) {
 			$table = 'VX_user';
 			$tableID = 'userID';
 
-			$get_users = $this->resetpassword_m->get_username($table, array('roleID' => $userID,"usertypeID" => $usertypeID));
+			$get_users = $this->resetpassword_m->get_username($table, array('roleID' => $roleID,"usertypeID" => $role->usertypeID));
 			
 			if(count($get_users)) {
 				echo "<option value='0'>". $this->lang->line("resetpassword_select_username") ."</option>";

@@ -8,3 +8,5 @@
   `modify_userID` int(11) NOT NULL,
   PRIMARY KEY (`user_productID`)
 );
+
+alter table VX_role add column usertypeID tinyint(1) NOT NULL DEFAULT 1;

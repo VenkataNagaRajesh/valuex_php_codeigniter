@@ -16,17 +16,17 @@
                 <form class="form-horizontal" role="form" method="post">
                    
                 <?php 
-                        if(form_error('usertype')) 
+                      /*  if(form_error('usertype')) 
                             echo "<div class='form-group has-error' >";
                         else     
-                            echo "<div class='form-group' >";
+                            echo "<div class='form-group' >"; */
                     ?>
-                        <label for="usertype" class="col-sm-2 control-label">
-                            <?=$this->lang->line("resetpassword_usertype")?>
+                   <!--     <label for="usertype" class="col-sm-2 control-label">
+                            <?//=$this->lang->line("resetpassword_usertype")?>
                         </label>
                         <div class="col-sm-6">
                            <?php
-                                $utarray = array(
+                               /* $utarray = array(
                                     0 => $this->lang->line("resetpassword_select_usertype"));
                                 if(count($usertypes)) {
                                     foreach ($usertypes as $key => $usertype) {
@@ -35,12 +35,13 @@
                                 }
                                 
                                 echo form_dropdown("usertype", $utarray, set_value("usertype"), "id='usertype' class='form-control'");
-                            ?>
+                           */
+                           ?>
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('usertype'); ?>
+                            <?php //echo form_error('usertype'); ?>
                         </span>
-                    </div>
+                    </div>   -->
 
                     <?php 
                         if(form_error('users')) 
@@ -57,7 +58,7 @@
                                     0 => $this->lang->line("resetpassword_select_role"));
                                 if(count($roles)) {
                                     foreach ($roles as $key => $role) {
-                                        $array[$role->roleID] = $role->role;
+                                        $array[$role->roleID] = $role->usertype.'-'.$role->role;
                                     }
                                 }
                                 
@@ -80,27 +81,15 @@
                         </label>
                         <div class="col-sm-6">
                             <div class="select2-wrapper">
-
                                 <?php
                                     $array = array();
                                     $array[0] = $this->lang->line("resetpassword_select_username");
                
                                     if($usernames != "empty") {
-                                        foreach ($usernames as $usernamea) {
-                                            if($usernamea->roleID == 1) {
-                                                $array[$usernamea->systemadminID] = $usernamea->username;
-                                            } elseif($usernamea->roleID == 2) {
-                                                $array[$usernamea->teacherID] = $usernamea->username;
-                                            } elseif($usernamea->roleID == 3) {
-                                                $array[$usernamea->studentID] = $usernamea->username;
-                                            } elseif($usernamea->roleID == 4) {
-                                                $array[$usernamea->parentsID] = $usernamea->username;
-                                            } else {
-                                                 $array[$usernamea->userID] = $usernamea->username;
-                                            }
+                                        foreach ($usernames as $usernamea) {                                           
+                                            $array[$usernamea->userID] = $usernamea->username;                                          
                                         }
                                     }
-
                                     $usrID = 0;
                                     if($username == 0) {
                                         $usrID = 0;
@@ -177,7 +166,7 @@ $('#users').click(function(event) {
         $.ajax({
             type: 'POST',
             url: "<?=base_url('resetpassword/userscall')?>",
-            data: {"users":users,"usertype":$("#usertype").val()},
+            data: {"users":users},
             dataType: "html",
             success: function(data) {
                $('#username').html(data);

@@ -317,6 +317,18 @@ class Contract extends Admin_Controller {
 				 $link['no_users'] = $this->input->post('pmod'.$i.'-no-users');
 				 //print_r($link); exit;
 				  $this->contract_m->insert_contract_product($link);
+				  
+				  //add product to user
+                 if($userID){
+					$product['userID'] = $userID;
+					$product["create_date"] = time();
+					$product["modify_date"] = time();
+					$product["create_userID"] = $this->session->userdata('loginuserID');
+					$product["modify_userID"] = $this->session->userdata('loginuserID');					
+					$product['productID'] = $this->input->post('pmod'.$i.'-productID');
+					$this->user_m->insert_user_product($product);					
+				 }
+
 				  $i++;
 			    } 
 				 

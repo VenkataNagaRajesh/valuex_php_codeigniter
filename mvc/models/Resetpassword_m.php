@@ -7,7 +7,7 @@ class Resetpassword_m extends MY_Model {
 	}
 
 	function get_username($table, $data=NULL) {
-		$query = $this->db->get_where($table, $data);
+		$query = $this->db->get_where($table, $data);		
 		return $query->result();
 	}
 
