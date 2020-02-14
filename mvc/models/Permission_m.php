@@ -24,11 +24,14 @@ class Permission_m extends MY_Model {
 		return $query;
 	}
 
-	public function get_modules_with_permission($usertypeID,$roleID) {		
+	public function get_modules_with_permission($usertypeID,$roleID,$products = null) {		
 		//$query = "Select p1.permissionID,p1.name,p1.description, (case when p2.roleID = $id then 'yes' else 'no' end) as active From VX_permissions p1 left join VX_permission_relationships p2 ON p1.permissionID = p2.permission_id and p2.roleID =$id";
 		$query = "Select p.name module,p1.permissionID,p1.name,p1.description,p1.productID, (case when (p2.roleID = $roleID and p2.usertypeID = $usertypeID) then 'yes' else 'no' end) as active From VX_permissions p1 LEFT JOIN VX_products p ON p.productID = p1.productID left join VX_permission_relationships p2 ON p1.permissionID = p2.permission_id and p2.usertypeID = $usertypeID and p2.roleID =$roleID";
 		if($this->session->userdata('usertypeID') != 2){
 			$query .= ' WHERE p1.name NOT IN("bulkimport","backup","update") ';
+		}
+		if($products){
+			$query .= " AND p1.productID IN (0,".$products.")";
 		}
 		$query .= ' ORDER BY p1.productID ASC,active DESC ';
 		//print_r($query); exit;		

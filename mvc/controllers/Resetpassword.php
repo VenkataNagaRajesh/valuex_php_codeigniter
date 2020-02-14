@@ -7,12 +7,18 @@ class Resetpassword extends Admin_Controller {
 		$this->load->model("resetpassword_m");
 		$this->load->model('role_m');		
 		$this->load->model("user_m");		
+		$this->load->model("usertype_m");		
 		$language = $this->session->userdata('lang');
 		$this->lang->load('resetpassword', $language);	
 	}
 
 	protected function rules() {
 		$rules = array(
+			array(
+				'field' => 'usertype', 
+				'label' => $this->lang->line("resetpassword_usertype"), 
+				'rules' => 'trim|required|xss_clean'
+			),
 			array(
 				'field' => 'users', 
 				'label' => $this->lang->line("resetpassword_users"), 
@@ -36,6 +42,7 @@ class Resetpassword extends Admin_Controller {
 		);
 		return $rules;
 	}
+	
 
 	public function unique_users() {
 		if($this->input->post('users') == 0) {
@@ -64,16 +71,14 @@ class Resetpassword extends Admin_Controller {
 			)
 		);
 		$this->data['roles'] = $this->role_m->get_role();
+		$this->data['usertypes'] = $this->usertype_m->get_usertype();
 		$userID = $this->input->post("users");
 		$table = '';
 		$tableID = '';
-		if($userID != '0') {
-			
+		if($userID != '0') {			
 				$table = 'VX_user';
 				$tableID = 'userID';
-		
-
-			$this->data['usernames'] = $this->resetpassword_m->get_username($table, array('roleID' => $userID));
+			$this->data['usernames'] = $this->resetpassword_m->get_username($table);
 		} else {
 			$this->data['usernames'] = "empty";
 		}
@@ -103,12 +108,12 @@ class Resetpassword extends Admin_Controller {
 
 	public function userscall() {
 		$userID = $this->input->post('users');
+		$usertypeID = $this->input->post('usertype');
 		if($userID) {
 			$table = 'VX_user';
 			$tableID = 'userID';
-			
 
-			$get_users = $this->resetpassword_m->get_username($table, array('roleID' => $userID));
+			$get_users = $this->resetpassword_m->get_username($table, array('roleID' => $userID,"usertypeID" => $usertypeID));
 			
 			if(count($get_users)) {
 				echo "<option value='0'>". $this->lang->line("resetpassword_select_username") ."</option>";

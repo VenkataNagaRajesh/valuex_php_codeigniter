@@ -125,11 +125,11 @@ class user_m extends MY_Model {
 		return $query->row('products');
 	}
 	function getProductsInfoByUser($userID){
-		$this->db->select('group_concat(p.name) product_name')->from('VX_user_product up');
+		$this->db->select('group_concat(p.name) product_name,group_concat(up.productID) products')->from('VX_user_product up');
 		$this->db->join('VX_products p','p.productID = up.productID','LEFT');
 		$this->db->where('up.userID',$userID);
 		$query = $this->db->get();
-		return $query->row('product_name');
+		return $query->row();
 	}
 
     function insert_user_airline($data){

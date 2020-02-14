@@ -40,6 +40,7 @@
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
             ] ,
+            
               search: false
           } );	
 

@@ -213,7 +213,7 @@
                             <?php echo form_error('photo'); ?>
                         </span>
                     </div>
-                 <?php if($this->session->userdata('usertypeID') == 1){ ?>
+                 
                     <?php
                         if(form_error('roleID'))
                             echo "<div class='form-group has-error' >";
@@ -221,20 +221,16 @@
                             echo "<div class='form-group' >";
                     ?>
                         <label for="roleID" class="col-sm-2 control-label">
-                            <?=$this->lang->line("user_usertype")?>
+                            <?=$this->lang->line("user_role")?>
                         </label>
                         <?php if(permissionChecker('usertype_add')) { ?>
                             <div class="col-sm-6">
                                 <div class="input-group">
                                     <?php
-                                        $array[0] = $this->lang->line('user_select_usertype');
-                                       // $blockuser = array(1, 2, 3, 4);
-									   
+                                        $array[0] = $this->lang->line('user_select_role');								   
                                         if(count($roles)) {
-                                            foreach ($roles as $key => $role) {
-                                               // if(!in_array($usertype->roleID, $blockuser)) {
-                                                    $array[$role->roleID] = $role->role;
-                                              //  }
+                                            foreach ($roles as $key => $role) {                                              
+                                                    $array[$role->roleID] = $role->role;                                            
                                             }
                                         }
                                         echo form_dropdown("roleID", $array, 
@@ -242,7 +238,7 @@
                                         );
                                     ?>
                                     <span class="input-group-addon btn btn-danger">
-                                        <a  href="<?=base_url('usertype/add')?>">
+                                        <a  href="<?=base_url('role/add')?>">
                                             <i class="fa fa-plus"></i> 
                                             <?=$this->lang->line('user_quick_add')?>
                                         </a>
@@ -252,13 +248,10 @@
                         <?php } else { ?>
                             <div class="col-sm-6">
                                 <?php
-                                    $array[0] = $this->lang->line('user_select_usertype');
-                                    $blockuser = array(1, 2, 3, 4);
+                                    $array[0] = $this->lang->line('user_select_role');                                   
                                     if(count($roles)) {
-                                        foreach ($roles as $key => $role) {
-                                            if(!in_array($role->roleID, $blockuser)) {
-                                                $array[$role->roleID] = $role->role;
-                                            }
+                                        foreach ($roles as $key => $role) {                                           
+                                                $array[$role->roleID] = $role->role;                                           
                                         }
                                     }
                                     echo form_dropdown("roleID", $array, 
@@ -272,7 +265,7 @@
                             <?php echo form_error('roleID'); ?>
                         </span>
                     </div>
-                 <?php } ?>
+                
                     <?php
                         if(form_error('username'))
                             echo "<div class='form-group has-error' >";

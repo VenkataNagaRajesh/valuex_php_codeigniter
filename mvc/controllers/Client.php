@@ -807,7 +807,7 @@ class Client extends Admin_Controller {
 			   $client->active .= ">";
 			}
 			
-			$client->product_name = $this->user_m->getProductsInfoByUser($client->userID);
+			$client->product_name = $this->user_m->getProductsInfoByUser($client->userID)->product_name;
 			
 			$client->active .= "<label for='myonoffswitch".$client->userID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
 						

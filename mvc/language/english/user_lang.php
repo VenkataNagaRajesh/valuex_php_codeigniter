@@ -21,8 +21,9 @@ $lang['user_password'] = "Password";
 $lang['user_status'] = "Status";
 $lang['user_designation'] = "Designation";
 $lang['user_designation'] = "Designation";
-$lang['user_select_usertype'] = 'Select Role';
+$lang['user_select_usertype'] = 'Select Usertype';
 $lang['user_role'] = 'Role';
+$lang['user_select_role'] = "Select Role";
 
 $lang['user_file_browse'] = 'File Browse';
 $lang['user_clear'] = 'Clear';
