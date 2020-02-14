@@ -174,8 +174,9 @@ class User extends Admin_Controller {
 			)
 		);
 		
-		  $this->data['roles'] = $this->role_m->get_role();		
-		if($this->session->userdata('roleID') == 1){
+		$usertype = 1;        
+		$this->data['roles'] = $this->role_m->get_roleinfo($usertype);	
+		if($this->session->userdata('usertypeID') == 1 && $this->session->userdata('roleID') == 1){
 		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
 		} else {
 		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	
@@ -258,14 +259,12 @@ class User extends Admin_Controller {
 		);
 
 		$id = htmlentities(escapeString($this->uri->segment(3)));
-		if($this->session->userdata('roleID') == 2){
-		  $this->data['roles'] = array();
-		} else {
-		  $this->data['roles'] = $this->role_m->get_role();
-		}
-		if($this->session->userdata('roleID') == 1){
+		$usertype = 1;        
+		$this->data['roles'] = $this->role_m->get_roleinfo($usertype);
+		$userID = $this->session->userdata('loginuserID');
+		if($this->session->userdata('usertypeID') == 1 && $this->session->userdata('roleID') == 1){
 		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
-		}else {
+		} else {
 		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	
 		}
 		if((int)$id) {

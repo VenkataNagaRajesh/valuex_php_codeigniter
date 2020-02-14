@@ -17,19 +17,30 @@ class Role extends Admin_Controller {
 	function __construct() {
 		parent::__construct();
 		$this->load->model("role_m");
+		$this->load->model("usertype_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('role', $language);	
 	}
 
 	public function index() {
 		$usertype = $this->session->userdata("usertype");
-		$this->data['roles'] = $this->role_m->get_role();
+		$this->data['usertypes'] = $this->usertype_m->get_usertype();
+		$usertypeID = null;
+		if($this->session->userdata('usertypeID') != 1){
+			$usertypeID = $this->session->userdata('usertypeID');
+		}
+		$this->data['roles'] = $this->role_m->get_roleinfo($usertypeID);		
 		$this->data["subview"] = "role/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
 
 	protected function rules() {
 		$rules = array(
+			array(
+				'field' => 'usertypeID', 
+				'label' => $this->lang->line("role_usertype"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_unique_usertype'
+			),
 			array(
 				'field' => 'role', 
 				'label' => $this->lang->line("role_role"), 
@@ -39,8 +50,18 @@ class Role extends Admin_Controller {
 		return $rules;
 	}
 
+	function unique_usertype(){
+		if(empty($this->input->post('usertypeID'))){
+			$this->form_validation->set_message("unique_usertype", "%s id required");
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
+
 	public function add() {
 		$usertype = $this->session->userdata("usertype");
+		$this->data['usertypes'] = $this->usertype_m->get_usertype();
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -49,12 +70,13 @@ class Role extends Admin_Controller {
 				$this->load->view('_layout_main', $this->data);			
 			} else {
 				$array = array(
-					"usertype" => $this->input->post("role"),
+					"role" => $this->input->post("role"),
+					"usertypeID" => $this->input->post("usertypeID"),
 					"create_date" => date("Y-m-d h:i:s"),
 					"modify_date" => date("Y-m-d h:i:s"),
 					"create_userID" => $this->session->userdata('loginuserID'),
-					"create_username" => $this->session->userdata('username'),
-					"create_usertype" => $this->session->userdata('usertype')
+					//"create_username" => $this->session->userdata('username'),
+					//"create_usertype" => $this->session->userdata('usertype')
 				);
 				$this->role_m->insert_role($array);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
@@ -67,7 +89,7 @@ class Role extends Admin_Controller {
 	}
 
 	public function edit() {
-		
+		$this->data['usertypes'] = $this->usertype_m->get_usertype();
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
 			$this->data['role'] = $this->role_m->get_role($id);
@@ -81,9 +103,9 @@ class Role extends Admin_Controller {
 					} else {
 						$array = array(
 							"role" => $this->input->post("role"),
+							"usertypeID" => $this->input->post("usertypeID"),
 							"modify_date" => date("Y-m-d h:i:s")
 						);
-
 						$this->role_m->update_role($array, $id);
 						$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 						redirect(base_url("role/index"));

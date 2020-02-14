@@ -15,6 +15,29 @@
         <div class="row">
             <div class="col-sm-8">
                 <form class="form-horizontal" role="form" method="post">
+                    
+                     <?php 
+                        if(form_error('usertypeID')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="usertype" class="col-sm-2 control-label">
+                            <?=$this->lang->line("role_usertype")?>
+                        </label>
+                        <div class="col-sm-6">
+                              <?php $utarray[0] = "Select Usertype";
+                               foreach($usertypes as $usertype){
+                                   $utarray[$usertype->usertypeID] = $usertype->usertype;
+                               }
+                               echo form_dropdown("usertypeID", $utarray,
+                                        set_value("usertypeID",$role->usertypeID), "id='usertypeID' class='form-control hide-dropdown-icon'"
+                                ); ?>
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('usertypeID'); ?>
+                        </span>
+                    </div>
 
                     <?php 
                         if(form_error('role')) 

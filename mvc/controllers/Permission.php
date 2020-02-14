@@ -12,17 +12,14 @@ class Permission extends Admin_Controller {
 	}
 
 	public function index() {
-		 $uid = htmlentities(escapeString($this->uri->segment(3)));
-		 $rid = htmlentities(escapeString($this->uri->segment(4)));
-		if((int)$uid && (int)$rid) {
-			$role = $this->role_m->get_role($rid);
-			$usertype = $this->usertype_m->get_usertype($uid);
-				if(count($role) && count($usertype)) {
-				$this->data['uset'] = $uid;
-				$this->data['rset'] = $rid;
-				$this->data['roles'] = $this->role_m->get_role();
-				$this->data['usertypes'] = $this->usertype_m->get_usertype();
-				$this->data['permissions'] = $this->permission_m->get_modules_with_permission($uid,$rid);
+		 $id = htmlentities(escapeString($this->uri->segment(3)));		 
+		if((int)$id) {
+			$role = $this->role_m->get_role($id);			
+				if(count($role)) {				
+				$this->data['set'] = $id;
+				$this->data['roles'] = $this->role_m->get_roleinfo();
+				$role = $this->role_m->get_role(array('roleID'=>$id));				
+				$this->data['permissions'] = $this->permission_m->get_modules_with_permission($role->usertypeID,$id);
 				if(empty($this->data['permissions'])) {
 					$this->data['permissions'] = NULL;
 				}
@@ -33,18 +30,16 @@ class Permission extends Admin_Controller {
 				$this->load->view('_layout_main', $this->data);
 			}
 		} else {
-			$this->data['roles'] = $this->role_m->get_role();
-			$this->data['usertypes'] = $this->usertype_m->get_usertype();
+			$this->data['roles'] = $this->role_m->get_roleinfo();			
 			$this->data["subview"] = "permission/index";
 			$this->load->view('_layout_main', $this->data);
 		}
 	}
 
 	public function permission_list() {
-		$roleID = $this->input->post('roleID');
-		$usertypeID = $this->input->post('usertypeID');
-		if((int)$roleID && (int)$usertypeID) {
-			$string = base_url("permission/index/$usertypeID/$roleID");
+		$roleID = $this->input->post('roleID');		
+		if((int)$roleID) {
+			$string = base_url("permission/index/$roleID");
 			echo $string;
 		} else {
 			redirect(base_url("permission/index"));
@@ -53,30 +48,28 @@ class Permission extends Admin_Controller {
 
 	public function save() {
 		$this->session->userdata('usertype');
-		$roleID = $this->uri->segment(4);
-		$usertypeID = $this->uri->segment(3);
-		if ((int)$roleID && (int)$usertypeID) {
-			$usertype = $this->usertype_m->get_usertype($usertypeID);
+		$roleID = $this->uri->segment(4);		
+		if ((int)$roleID) {			
 			$role = $this->role_m->get_role($roleID);
-			if(count($usertype) && count($role)) {
-				if ($this->permission_m->delete_all_permission($usertypeID,$roleID)) {
+			if(count($role)) {
+				if ($this->permission_m->delete_all_permission($role->usertypeID,$roleID)) {
 					$array = array();
 					$array['roleID'] = $roleID;
-					$array['usertypeID'] = $usertypeID;
+					$array['usertypeID'] = $role->usertypeID;
 					foreach ($_POST as $key => $value) {						
 						$array['permission_id'] = $value;						
 						$this->permission_m->insert_relation($array);
 					}
-					redirect(base_url('permission/index/'.$usertypeID.'/'.$roleID),'refresh');
+					redirect(base_url('permission/index/'.$roleID),'refresh');
 				} else {
-					redirect(base_url('permission/index/'.$usertypeID.'/'.$roleID),'refresh');
+					redirect(base_url('permission/index/'.$roleID),'refresh');
 				}
 			} else {
 				$this->data["subview"] = "error";
 				$this->load->view('_layout_main', $this->data);
 			}
 		} else {
-			redirect(base_url('permission/index/'.$usertypeID.'/'.$roleID),'refresh');
+			redirect(base_url('permission/index/'.$roleID),'refresh');
 		}
 	}
 }

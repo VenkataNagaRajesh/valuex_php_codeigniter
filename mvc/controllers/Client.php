@@ -324,9 +324,15 @@ class Client extends Admin_Controller {
 					   'assets/select2/select2.js',  					
 			   )
 	   );
-	   $usertype = 2;
-	   $this->data['roles'] = $this->role_m->get_role();
-	   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
+	   $usertype = 2;        
+	   $this->data['roles'] = $this->role_m->get_roleinfo($usertype);
+	  
+	   if($this->session->userdata('usertypeID') == 1 && $this->session->userdata('roleID') == 1){
+		$this->data['airlinelist'] = $this->airline_m->getAirlinesData();
+		} else {
+			$this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	
+		}
+
 	   $primary_client = $this->user_m->getClientByAirline($this->input->post('airlineID'));	   
 	     if($_POST) { 
 		   $rules = $this->adds_rules();		  
@@ -403,15 +409,12 @@ class Client extends Admin_Controller {
 			)
 		);
 		$id = htmlentities(escapeString($this->uri->segment(3)));
-		if($this->session->userdata('roleID') == 2){
-		  $this->data['roles'] = array();
+		$usertype = 2;
+		$this->data['roles'] = $this->role_m->get_roleinfo($usertype);
+		if($this->session->userdata('usertypeID') == 1 && $this->session->userdata('roleID') == 1){
+			$this->data['airlinelist'] = $this->airline_m->getAirlinesData();
 		} else {
-		  $this->data['roles'] = $this->role_m->get_role();
-		}
-		if($this->session->userdata('roleID') == 1){
-		   $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
-		} else {
-		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($this->session->userdata('loginuserID'));	
+			$this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	
 		}
 		if((int)$id) {
 			$this->data['client'] = $this->user_m->get_user($id);
@@ -679,7 +682,7 @@ class Client extends Admin_Controller {
 	
 	function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');
-		$roleID = $this->session->userdata('roleID');	  
+		$usertypeID = $this->session->userdata('usertypeID');	  
 				
 	    $aColumns = array('c.userID','c.photo','c.name','c.email','c.photo','c.phone','dd.code','c.active');
 	
@@ -742,7 +745,7 @@ class Client extends Admin_Controller {
 				}
 			}
 			
-			if($roleID == 2){
+			if($usertypeID == 2){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                 $sWhere .= 'c.userID = '.$this->session->userdata('loginuserID');	
 			}

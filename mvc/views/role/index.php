@@ -26,19 +26,23 @@
                         <thead>
                             <tr>
                                 <th class="col-lg-2"><?=$this->lang->line('slno')?></th>
-                                <th class="col-lg-8"><?=$this->lang->line('role_role')?></th>
+                                <th class="col-lg-4"><?=$this->lang->line('role_role')?></th>
+                                <th class="col-lg-4"><?=$this->lang->line('role_usertype')?></th>
                                 <?php if(permissionChecker('role_edit') || permissionChecker('role_delete')) { ?>
                                 <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if(count($roles)) {$i = 1; foreach($roles as $role) {
-                                   if($role->roleID != 5){
+                            <?php if(count($roles)) {$i = 1; foreach($roles as $role) {                                 
 								?>
                                 <tr>
                                     <td data-title="<?=$this->lang->line('slno')?>">
                                         <?php echo $i; ?>
+                      
+                                    </td>
+                                    <td data-title="<?=$this->lang->line('slno')?>">
+                                        <?php echo $role->usertype; ?>
                                     </td>
                                     <td data-title="<?=$this->lang->line('role_role')?>">
                                         <?php echo $role->role; ?>
@@ -46,14 +50,13 @@
                                     <?php if(permissionChecker('role_edit') || permissionChecker('role_delete')) { ?>
                                     <td data-title="<?=$this->lang->line('action')?>">
                                         <?php
-                                            $reletionarray = array(1,2,3,4,5,6,7);
+                                            $reletionarray = array(1,2,3,4);
                                             echo btn_edit('role/edit/'.$role->roleID, $this->lang->line('edit'));
                                             if(!in_array($role->roleID, $reletionarray)) {
                                                 echo btn_delete('role/delete/'.$role->roleID, $this->lang->line('delete'));
                                             }
                                         ?>
-                                    </td>
-                                    <?php } ?>
+                                    </td>                                    
                                 </tr>
 								   <?php $i++; } }} ?>
                         </tbody>

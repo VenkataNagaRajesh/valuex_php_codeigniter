@@ -18,33 +18,18 @@
                         <label for="roleID" class="col-sm-2 col-md-offset-2 control-label">
                             <?=$this->lang->line("select_usertype")?>
                         </label>
-
-                        <div class="col-sm-2">
-                           <?php
-                                //$uarray = array("0" => $this->lang->line("permission_select_usertype"));
-                                if (isset($uset)) {
-                                    $uset = $uset;
-                                } else {
-                                    $uset = null;
-                                }
-                                foreach ($usertypes as $usertype) {
-                                    $uarray[$usertype->usertypeID] = $usertype->usertype;
-                                }
-                                echo form_dropdown("usertypeID", $uarray, set_value("usertypeID", $uset), "id='usertypeID' class='form-control select2'");
-                            ?>
-                        </div>
-                        <div class="col-sm-2">
+                        <div class="col-sm-4">
                            <?php
                                 $array = array("0" => $this->lang->line("permission_select_role"));
-                                if (isset($rset)) {
-                                    $rset = $rset;
+                                if (isset($set)) {
+                                    $set = $set;
                                 } else {
-                                    $rset = null;
+                                    $set = null;
                                 }
                                 foreach ($roles as $role) {
-                                    $array[$role->roleID] = $role->role;
+                                    $array[$role->roleID] = $role->usertype.'-'.$role->role;
                                 }
-                                echo form_dropdown("roleID", $array, set_value("roleID", $rset), "id='roleID' class='form-control select2'");
+                                echo form_dropdown("roleID", $array, set_value("roleID", $set), "id='roleID' class='form-control select2'");
                             ?>
                         </div>
 
@@ -55,10 +40,10 @@
                 </form>
             </div>
         </div><!-- row -->
-        <?php if (isset($uset) && isset($rset)): ?>
+        <?php if (isset($set)): ?>
             <div class="row">
                 <div class="col-sm-12">
-                    <form action="<?=base_url('permission/save/'.$uset.'/'.$rset)?>" class="form-horizontal" role="form" method="post" id="usertype">
+                    <form action="<?=base_url('permission/save/'.$set)?>" class="form-horizontal" role="form" method="post" id="usertype">
                         <div id="hide-table">
                             <table id="" class="table table-striped table-bordered table-hover dataTable no-footer">
                                 <thead>
@@ -213,19 +198,19 @@
 
 $('#roleID').change(function(event) {
     var roleID = $(this).val();
-    var usertypeID = $("#usertypeID").val();
+   
     $.ajax({
         type: 'POST',
         url: "<?=base_url('permission/permission_list')?>",
-        //data: "roleID=" + roleID,
-        data:{'usertypeID':usertypeID,"roleID":roleID},
+        data: "roleID=" + roleID,
+       // data:{'usertypeID':usertypeID,"roleID":roleID},
         dataType: "html",
         success: function(data) {            
            window.location.href = data;
         }
     });
 });
-$('#usertypeID').change(function(event) {
+/*$('#usertypeID').change(function(event) {
     var usertypeID = $(this).val();
     var roleID = $('#roleID').val();
     if(roleID != 0){
@@ -241,7 +226,7 @@ $('#usertypeID').change(function(event) {
             }
         });
     }
-});
+});*/
 $.fn.processCheck = function() {
     var id = $(this).attr('id');
     if ($('input#'+id).is(':checked')) {

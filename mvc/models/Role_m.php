@@ -39,5 +39,15 @@ class role_m extends MY_Model {
 	public function delete_role($id){
 		parent::delete($id);
 	}
+	
+	public function get_roleinfo($usertypeID =null){
+		$this->db->select('r.*,ut.usertype')->from('VX_role r');
+		$this->db->join('VX_usertype ut','ut.usertypeID = r.usertypeID','LEFT');
+		if($usertypeID){
+			$this->db->where('r.usertypeID',$usertypeID);
+		}
+		$query = $this->db->get();
+		return $query->result();
+	}
 }
 
