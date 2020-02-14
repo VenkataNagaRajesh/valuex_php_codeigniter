@@ -150,14 +150,14 @@ class Role extends Admin_Controller {
 	public function unique_role() {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
-			$role = $this->role_m->get_order_by_role(array("role" => $this->input->post("role"), "roleID !=" => $id));
+			$role = $this->role_m->get_order_by_role(array("role" => $this->input->post("role"), "roleID !=" => $id,"usertypeID ="=>$this->input->post('usertypeID')));
 			if(count($role)) {
 				$this->form_validation->set_message("unique_role", "%s already exists");
 				return FALSE;
 			}
 			return TRUE;
 		} else {
-			$role = $this->role_m->get_order_by_role(array("role" => $this->input->post("role")));
+			$role = $this->role_m->get_order_by_role(array("role" => $this->input->post("role"),"usertypeID ="=>$this->input->post('usertypeID')));
 			if(count($role)) {
 				$this->form_validation->set_message("unique_role", "%s already exists");
 				return FALSE;
