@@ -61,6 +61,7 @@ class Permission_m extends MY_Model {
 	public function insert_relation($array)
 	{
 		$this->db->insert("VX_permission_relationships", $array);
+		//print_r($this->db->last_query()); exit;
 		$id = $this->db->insert_id();
 		return $id;
 	}
