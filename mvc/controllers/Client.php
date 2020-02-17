@@ -751,7 +751,7 @@ class Client extends Admin_Controller {
 			}
 			$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                 $sWhere .= 'c.usertypeID = 2';
-			if($roleID != 1){
+			if($usertypeID == 2){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 				$airlines = $this->user_m->getUserAirlines($userID);
 				foreach($airlines as $airline){

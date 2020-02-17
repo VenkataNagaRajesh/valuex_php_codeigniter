@@ -202,8 +202,8 @@ class User extends Admin_Controller {
 				$array["create_date"] = date("Y-m-d h:i:s");
 				$array["modify_date"] = date("Y-m-d h:i:s");
 				$array["create_userID"] = $this->session->userdata('loginuserID');
-				//$array["create_username"] = $this->session->userdata('username');
-				//$array["create_usertype"] = $this->session->userdata('usertype');
+				$array["create_username"] = $this->session->userdata('username');
+				$array["create_usertype"] = $this->session->userdata('usertype');
 				$array["active"] = 1;
 				$array['photo'] = $this->upload_data['file']['file_name'];
 				$array["roleID"] = $this->input->post("roleID");
