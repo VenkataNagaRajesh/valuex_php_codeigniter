@@ -326,7 +326,7 @@ class Client extends Admin_Controller {
 	   );
 	   $usertype = 2;        
 	   $this->data['roles'] = $this->role_m->get_roleinfo($usertype);
-	  
+	   $userID = $this->session->userdata('loginuserID');
 	   if($this->session->userdata('usertypeID') == 1 && $this->session->userdata('roleID') == 1){
 		$this->data['airlinelist'] = $this->airline_m->getAirlinesData();
 		} else {
@@ -745,10 +745,10 @@ class Client extends Admin_Controller {
 				}
 			}
 			
-			if($usertypeID == 2){
+			/* if($usertypeID == 2){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                 $sWhere .= 'c.userID = '.$this->session->userdata('loginuserID');	
-			}
+			} */
 			$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                 $sWhere .= 'c.usertypeID = 2';
 			if($usertypeID == 2){

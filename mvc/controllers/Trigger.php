@@ -19,7 +19,7 @@ class Trigger extends Admin_Controller {
         public function marketzone_trigger() {
 	
 
-		$timestamp = $this->trigger_m->get_trigger_time('VX_aln_market_zone');
+		$timestamp = $this->trigger_m->get_trigger_time('VX_market_zone');
                 if (isset($timestamp)) {
 			//get list of markets that are modified
 			$list = $this->marketzone_m->getMarketzones_for_triggerrun($timestamp);
@@ -40,7 +40,7 @@ class Trigger extends Admin_Controller {
                         $tarray['modify_date'] = time();
                         $tarray['isReconfigured'] = '0';
                         $tarray['modify_userID'] = $this->session->userdata('loginuserID');
-                        $this->trigger_m->update_trigger($tarray,'VX_aln_market_zone');
+                        $this->trigger_m->update_trigger($tarray,'VX_market_zone');
 
 		}
 
@@ -329,7 +329,7 @@ class Trigger extends Admin_Controller {
 	}
 	
 	public function update_market_seasons(){
-		$timestamp = $this->trigger_m->get_trigger_time('VX_aln_market_zone');
+		$timestamp = $this->trigger_m->get_trigger_time('VX_market_zone');
 		if (isset($timestamp)) {
 		   $marketzones = $this->marketzone_m->getMarkets_for_triggerrun($timestamp);
 		   //print_r($marketzones);

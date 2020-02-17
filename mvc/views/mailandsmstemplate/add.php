@@ -81,9 +81,9 @@
                            <div class="col-sm-4">
                                <?php                                                                   
                                   foreach ($airlines as $airline) {
-                                    $carrier[$airline->vx_aln_data_defnsID] = $airline->code;
+                                    $carriers[$airline->vx_aln_data_defnsID] = $airline->code;
                                   }                                                  
-                                echo form_dropdown("airlineID", $carrier, set_value("airlineID",$airlineID), "id='airlineID' class='form-control'");
+                                echo form_dropdown("airlineID", $carriers, set_value("airlineID",$airlineID), "id='airlineID' class='form-control'");
                                ?>
                            </div>
                            <span class="col-sm-4 control-label">

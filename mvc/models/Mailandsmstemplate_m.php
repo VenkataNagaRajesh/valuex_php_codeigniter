@@ -51,7 +51,7 @@ class Mailandsmstemplate_m extends MY_Model {
 	}
 	
 	function get_categories(){
-		$query = $this->db->get('mailandsmscategory');
+		$query = $this->db->get('VX_mailandsmscategory');
 		return $query->result();
 	}
 	
