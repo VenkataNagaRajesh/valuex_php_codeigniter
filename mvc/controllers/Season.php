@@ -194,7 +194,11 @@ class Season extends Admin_Controller {
 		  if($this->session->userdata('default_airline')){
 		     $this->data['filter_airline'] = $this->session->userdata('default_airline'); 
 		  } else {
-             $this->data['filter_airline'] = 0;
+			  if($this->session->userdata('login_user_airlineID')){
+				$this->data['filter_airline'] = $this->session->userdata('login_user_airlineID');
+			  } else {
+				$this->data['filter_airline'] = 0;
+			  }
 		  }
         } 
         $this->data['reconfigure'] =  $this->trigger_m->get_trigger_time('VX_season');
