@@ -271,7 +271,7 @@ class Contract extends Admin_Controller {
 					$array["username"] = $this->input->post("client_username");
 					$array["password"] = $this->user_m->hash($this->input->post("password"));
 					$array["usertypeID"] = 2;
-					$array["roleID"] = 1;
+					$array["roleID"] = 6;
 					$array["create_date"] = date("Y-m-d h:i:s");
 					$array["modify_date"] = date("Y-m-d h:i:s");
 					$array["create_userID"] = $this->session->userdata('loginuserID');

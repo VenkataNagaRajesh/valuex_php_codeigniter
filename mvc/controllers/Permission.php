@@ -14,11 +14,10 @@ class Permission extends Admin_Controller {
 	public function index() {
 		 $id = htmlentities(escapeString($this->uri->segment(3)));		 
 		if((int)$id) {
-			$role = $this->role_m->get_role($id);			
+			$role = $this->role_m->get_role($id);				
 				if(count($role)) {				
 				$this->data['set'] = $id;
-				$this->data['roles'] = $this->role_m->get_roleinfo();
-				$role = $this->role_m->get_role(array('roleID'=>$id));				
+				$this->data['roles'] = $this->role_m->get_roleinfo();								
 				$this->data['permissions'] = $this->permission_m->get_modules_with_permission($role->usertypeID,$id);
 				if(empty($this->data['permissions'])) {
 					$this->data['permissions'] = NULL;
@@ -48,7 +47,7 @@ class Permission extends Admin_Controller {
 
 	public function save() {
 		$this->session->userdata('usertype');
-		$roleID = $this->uri->segment(4);		
+		$roleID = $this->uri->segment(3);		
 		if ((int)$roleID) {			
 			$role = $this->role_m->get_role($roleID);
 			if(count($role)) {
