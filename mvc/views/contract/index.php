@@ -60,7 +60,7 @@
                             if($product->expire <= 15){
                                 $product->color = "red";
                             } else if($product->expire <= 30){
-                                $product->color = "yellow";
+                                $product->color = "#e0a90c";
                             } else {
                                 $product->color = "green";
                             }
