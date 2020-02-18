@@ -107,7 +107,9 @@ class Admin_Controller extends MY_Controller {
 					if($userdata['usertypeID'] == 1){
 					  $user_permission = $this->permission_m->get_modules_with_permission($userdata['usertypeID'],$userdata['roleID']);
 					} else { 
-						$user_products = $this->user_m->getProductsInfoByUser($userdata['loginuserID'])->products;						
+					//	$user_products = $this->user_m->getProductsInfoByUser($userdata['loginuserID'])->products;
+						$user_products = array_column('productID',$this->user_m->loginUserProducts());						
+						$user_products = implode(',',$user_products);
 						$user_permission = $this->permission_m->get_modules_with_permission($userdata['usertypeID'],$userdata['roleID'],$user_products);
 					}
 					foreach ($user_permission as $value) {

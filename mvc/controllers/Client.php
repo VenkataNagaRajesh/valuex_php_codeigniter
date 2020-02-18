@@ -520,6 +520,7 @@ class Client extends Admin_Controller {
 				}
 				$this->user_m->delete_user($id);
 				$this->user_m->delete_user_airline($id);
+				$this->user_m->delete_user_product($id);
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("client/index"));
 			} else {

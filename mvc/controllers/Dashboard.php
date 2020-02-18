@@ -7,7 +7,7 @@ class Dashboard extends Admin_Controller {
 		$this->load->model('systemadmin_m');
 		$this->load->model("dashboard_m");		
 		$this->load->model("setting_m");
-		//$this->load->model("notice_m");
+		//$this->load->model("contract_m");
 		$this->load->model("user_m");		
 		$this->load->model("marketzone_m");
 		$this->load->model("season_m");		
@@ -35,8 +35,21 @@ class Dashboard extends Admin_Controller {
 		);
 		
 		$schoolyearID = $this->session->userdata('defaultschoolyearID');
+		$settings = $this->setting_m->get_setting();
 		
-		//$feetypes	= $this->feetypes_m->get_feetypes();	
+		if($this->session->userdata('usertypeID') == 2){
+			$this->data['products'] = $this->user_m->loginUserProducts();
+			$this->data['show_notice'] = '';
+			foreach($this->data['products'] as $product){
+				$OldDate = strtotime($product->end_date);
+                $NewDate = date('M j, Y', $OldDate);
+                $diff = date_diff(date_create($NewDate),date_create(date("M j, Y")));
+				$product->expire = $diff->format('%a');				
+				if($product->expire <= $settings->notice_period){
+					$this->data['show_notice'] .= "<li>Your Product ".$product->product_name." is Expired in ".$product->expire."Days</li>";					
+				}
+			}		
+		}
 		
 		$allmenu 	= pluck($this->menu_m->get_order_by_menu(), 'icon', 'link');
 		$allmenulang = pluck($this->menu_m->get_order_by_menu(), 'menuName', 'link');		

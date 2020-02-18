@@ -186,7 +186,7 @@
                             <?=$this->lang->line("client_phone")?><span class="text-red">*</span>
                         </label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="client_phone" name="client_phone" value="<?=set_value('client_phone')?>" >
+                            <input type="number" class="form-control" id="client_phone" name="client_phone" value="<?=set_value('client_phone')?>" maxlength="10" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" >
                             <span class="control-label">
                               <?php echo form_error('client_phone'); ?>
                             </span>
@@ -292,6 +292,7 @@
     </div>
 </div>
 <script>
+
 $(document).ready(function(){
     $('#airlineID').trigger('change');
 });

@@ -263,7 +263,7 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, ex.or
 				INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = ex.carrier)
 				INNER JOIN VX_data_defns tc on (tc.alias = tdef.level and tc.vx_aln_data_defnsID = ex.upgrade_to_cabin_type AND tc.aln_data_typeID = 13)";
 				if($this->session->userdata('roleID') != 1 ){		
-					$query .= 'ex.carrier IN ('.$this->session->userdata('login_user_airlineID').')';
+					$query .= 'WHERE ex.carrier IN ('.implode(',',$this->session->userdata('login_user_airlineID')).')';
 				}
 				$q = $this->db->query($query);       	
 		     return $q->row('count');

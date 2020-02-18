@@ -12,7 +12,7 @@ class Setting_m extends MY_Model {
 	}
 
 
-	function get_setting($id) {
+	function get_setting() {
 		$compress = array();
 		$query = $this->db->get('VX_setting');
 		foreach ($query->result() as $row) {

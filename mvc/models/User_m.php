@@ -201,5 +201,17 @@ class user_m extends MY_Model {
 		 $query = $this->db->get();		
 		 return $query->row('count');
 	 }
+
+	 function loginUserProducts(){
+		 $this->db->select('cp.*,p.name product_name')->from('VX_contract_products cp');
+		 $this->db->join('VX_user_product up','up.productID = cp.productID',"LEFT");
+		 $this->db->join('VX_contract c','c.contractID = cp.contractID','INNER');
+		 $this->db->join('VX_products p','p.productID = cp.productID','INNER');		 
+		 $this->db->where('up.userID',$this->session->userdata('loginuserID'));
+		 $this->db->where('cp.end_date >=',date('Y-m-d'));
+		 $this->db->where('c.active',1);
+		 $query = $this->db->get();
+		 return $query->result();
+	 }
 }
 

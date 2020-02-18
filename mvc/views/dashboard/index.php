@@ -122,7 +122,7 @@ $userArray = array(
         'airports_master'   => $dashboardWidget['airports'],
         'client'            => $dashboardWidget['clients'],
         'user'              => $dashboardWidget['users'],
-         'acsr'              => $dashboardWidget['acsr'],
+        'acsr'              => $dashboardWidget['acsr'],
         'eligibility_exclusion'=> $dashboardWidget['eerule'],
         'sent_offer_mails'  => $dashboardWidget['sent_offer_mails']->count,
         'bid_complete'      => $dashboardWidget['bid_complete']->count,
@@ -134,7 +134,7 @@ $userArray = array(
         'airports_master'   => $dashboardWidget['airports'],
         'client'            => $dashboardWidget['clients'],
         'user'              => $dashboardWidget['users'],
-         'acsr'              => $dashboardWidget['acsr'],
+        'acsr'              => $dashboardWidget['acsr'],
         'eligibility_exclusion'=> $dashboardWidget['eerule'],
         'sent_offer_mails'  => $dashboardWidget['sent_offer_mails']->count,
         'bid_complete'      => $dashboardWidget['bid_complete']->count,
@@ -146,7 +146,7 @@ $userArray = array(
         'airports_master'   => $dashboardWidget['airports'],
         'client'            => $dashboardWidget['clients'],
         'user'              => $dashboardWidget['users'],
-         'acsr'              => $dashboardWidget['acsr'],
+        'acsr'              => $dashboardWidget['acsr'],
         'eligibility_exclusion'=> $dashboardWidget['eerule'],
         'sent_offer_mails'  => $dashboardWidget['sent_offer_mails']->count,
         'bid_complete'      => $dashboardWidget['bid_complete']->count,
@@ -185,6 +185,17 @@ foreach ($getAllSessionDatas as $getAllSessionDataKey => $getAllSessionData) {
 }
 
 //print_r($generateBoxArray); exit;
+?>
+<div id="notice-warning" style="display:none;" class="col-md-12">
+    <div class="alert alert-warning" style="margin-top:20px;">
+        <i class="fa fa-check-circle"></i>
+        <ul id="notice-list">
+        </ul>
+        <button type="button" class="close" data-dismiss="alert">×</button>
+    </div>
+</div>
+<?php
+
 if(count($generateBoxArray)) {  
     foreach ($generateBoxArray as $generateBoxArrayKey => $generateBoxValue) { ?>
 	  <div class="col-lg-3 col-xs-6">
@@ -208,7 +219,12 @@ if(count($generateBoxArray)) {
     } ?>
 </div>
 
-
+<script>
+<?php if($show_notice){ ?>
+   $('#notice-list').html('<?=$show_notice?>');
+   $('#notice-warning').css('display','block');
+<?php } ?>
+</script>
 
 
 

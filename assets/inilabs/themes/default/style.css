@@ -4742,3 +4742,24 @@ table{
 	position: absolute;
 	right: 0;
 }
+#notice-warning button.close{
+  padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    -webkit-appearance: none;
+    position: relative;
+    top: -64px;
+    left: 23px;
+    background: #babbb6;
+    opacity: 1;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    color: #fff;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+}
