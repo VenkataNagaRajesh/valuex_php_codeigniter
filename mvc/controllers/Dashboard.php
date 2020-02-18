@@ -33,8 +33,7 @@ class Dashboard extends Admin_Controller {
 				'assets/highcharts/exporting.js'
 			)
 		);
-
-
+		
 		$schoolyearID = $this->session->userdata('defaultschoolyearID');
 		
 		//$feetypes	= $this->feetypes_m->get_feetypes();	

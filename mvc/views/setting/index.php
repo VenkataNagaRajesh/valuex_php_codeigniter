@@ -405,7 +405,18 @@
                         </div>                       
                     </div>
 
-                    
+                    <div class="form-group <?php if(form_error('notice_period')) { echo 'has-error'; } ?>" id="notice_period" >
+                        <label for="notice_period" class="col-sm-2 control-label">
+                            <?=$this->lang->line("setting_notice_period")?>
+                            &nbsp;<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Set Notice period in days to show product expire notification"></i>
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="number" class="form-control" id="notice_period" name="notice_period" value="<?=set_value('notice_period', $setting->notice_period)?>" >
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('notice_period'); ?>
+                        </span>
+                    </div>
 
 
                     <div class="form-group">

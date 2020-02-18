@@ -88,6 +88,11 @@ Class setting extends Admin_Controller {
 				'label' => $this->lang->line("setting_school_disable_language"),
 				'rules' => 'trim|xss_clean'
 			),
+			array(
+				'field' => 'notice_period',
+				'label' => $this->lang->line("setting_notice_period"),
+				'rules' => 'trim|required|max_length[3]|xss_clean'
+			),
 		);
 		
 

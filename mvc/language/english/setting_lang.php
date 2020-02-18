@@ -16,7 +16,7 @@ $lang['setting_school_default_attendance'] = "Default Attendance";
 $lang['setting_school_select_attendance'] = "Select Attendance System";
 $lang['setting_school_select_day_attendance'] = "Per Daywise Attendance";
 $lang['setting_school_select_subject_attendance'] = "Subjectwise Attendance";
-
+$lang['setting_notice_period'] = "Notice Period (days)";
 $lang['setting_school_default_school_type'] = "Default School Type";
 $lang['setting_school_default_student_ID_format'] = "Default Student ID Format";
 $lang['setting_school_select_school_type'] = 'Select School Type';

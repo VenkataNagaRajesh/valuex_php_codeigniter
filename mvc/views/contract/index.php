@@ -43,6 +43,7 @@
 						<th class="col-lg-1"><?=$this->lang->line('start_date')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('end_date')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('no_users')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('expire_message')?></th>
 						<th class="col-lg-1 noExport"><?=$this->lang->line('contract_active')?></th>
                         <?php if(permissionChecker('contract_edit') || permissionChecker('contract_delete')) { ?>
                          <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
@@ -51,7 +52,18 @@
                  </thead>
                  <tbody> 
                      <?php $i = 1; foreach($contracts as $contract){ 
-                         $j=1; foreach($contract->products as $product){ 
+                         $j=1; foreach($contract->products as $product){                            
+                            $OldDate = strtotime($product->end_date);
+                            $NewDate = date('M j, Y', $OldDate);
+                            $diff = date_diff(date_create($NewDate),date_create(date("M j, Y")));
+                            $product->expire = $diff->format('%a');
+                            if($product->expire <= 15){
+                                $product->color = "red";
+                            } else if($product->expire <= 30){
+                                $product->color = "yellow";
+                            } else {
+                                $product->color = "green";
+                            }
                          if($j == 1){ ?>
                     <tr>
                         <th rowspan="2"><?=$i?></th>
@@ -61,6 +73,7 @@
                         <td><?=date_format(date_create($product->start_date),'d-m-Y')?></td>
                         <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
                         <td><?=$product->no_users?></td>
+                        <td style="color:<?=$product->color?>;"><?="Expire in ". $product->expire?></td>
                         <td data-title="<?=$this->lang->line('contract_active')?>" rowspan="2">
                             <div class="onoffswitch-small" id="<?=$contract->contractID?>">
                                   <input type="checkbox" id="myonoffswitch<?=$contract->contractID?>" class="onoffswitch-small-checkbox" name="paypal_demo" <?php if($contract->active === '1') echo "checked='checked'"; ?>>
@@ -85,6 +98,7 @@
                         <td><?=date_format(date_create($product->start_date),'d-m-Y')?></td>
                         <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
                         <td><?=$product->no_users?></td>
+                        <td style="color:<?=$product->color?>;"><?="Expire in ". $product->expire?></td>
                     </tr>
                     <?php } ?>
                      <?php $j++; } //products end

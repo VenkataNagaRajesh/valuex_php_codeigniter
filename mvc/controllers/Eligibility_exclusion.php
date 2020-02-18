@@ -951,9 +951,9 @@ FROM
 	       LEFT JOIN VX_data_types orig on (orig.vx_aln_data_typeID = ex.orig_level_id) 
               LEFT JOIN VX_data_types dest on (dest.vx_aln_data_typeID = ex.dest_level_id) 
 	      INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = ex.carrier)
-	      INNER JOIN vx_data_defns fc on (fc.alias = fdef.level and fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type AND fc.aln_data_typeID = 13) 
+	      INNER JOIN VX_data_defns fc on (fc.alias = fdef.level and fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type AND fc.aln_data_typeID = 13) 
 	      INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = ex.carrier)
-	      INNER JOIN vx_data_defns tc on (tc.alias = tdef.level and tc.vx_aln_data_defnsID = ex.upgrade_to_cabin_type AND tc.aln_data_typeID = 13)
+	      INNER JOIN VX_data_defns tc on (tc.alias = tdef.level and tc.vx_aln_data_defnsID = ex.upgrade_to_cabin_type AND tc.aln_data_typeID = 13)
 		
               LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID  = ex.carrier AND car.aln_data_typeID = 12)
 

@@ -249,12 +249,24 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, ex.or
 	}
 	
 	function EErulesTotalCount(){
-		$this->db->select('count(*) count')->from('UP_eligibility_excl_rules');	        	
+		/*$this->db->select('count(*) count')->from('UP_eligibility_excl_rules');	        	
 		if($this->session->userdata('roleID') != 1 ){		
 			$this->db->where_in('carrier',$this->session->userdata('login_user_airlineID'));
 		}
-		$query = $this->db->get();		
-		return $query->row('count');
+		$query = $this->db->get(); */
+		$query = "select count(*) count from UP_eligibility_excl_rules ex 
+				LEFT JOIN VX_data_types orig on (orig.vx_aln_data_typeID = ex.orig_level_id) 
+				LEFT JOIN VX_data_types dest on (dest.vx_aln_data_typeID = ex.dest_level_id) 	      		
+				LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID  = ex.carrier AND car.aln_data_typeID = 12)
+				INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = ex.carrier)
+				INNER JOIN VX_data_defns fc on (fc.alias = fdef.level and fc.vx_aln_data_defnsID = ex.upgrade_from_cabin_type AND fc.aln_data_typeID = 13) 
+				INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = ex.carrier)
+				INNER JOIN VX_data_defns tc on (tc.alias = tdef.level and tc.vx_aln_data_defnsID = ex.upgrade_to_cabin_type AND tc.aln_data_typeID = 13)";
+				if($this->session->userdata('roleID') != 1 ){		
+					$query .= 'ex.carrier IN ('.$this->session->userdata('login_user_airlineID').')';
+				}
+				$q = $this->db->query($query);       	
+		     return $q->row('count');
 	}
 }
 
