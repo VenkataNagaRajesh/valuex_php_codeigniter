@@ -69,7 +69,7 @@ class Contract extends Admin_Controller {
 			array(
 				'field' => 'client_domain',
 				'label' => $this->lang->line("client_domain"),
-				'rules' => 'trim|required|xss_clean|max_length[60]'
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_valid_url_format'
 			),			
 			array(
 				'field' => 'client_email',
@@ -89,11 +89,50 @@ class Contract extends Admin_Controller {
 			array(
 				'field' => 'client_password',
 				'label' => $this->lang->line("client_password"),
-				'rules' => 'trim|required|min_length[4]|max_length[40]|xss_clean'
+				'rules' => 'trim|required|min_length[4]|max_length[40]|xss_clean|callback_valid_password'
 			)
 		);
 		return $rules;
 	}
+
+	public function valid_password($password = ''){
+        $password = trim($password);
+        $regex_lowercase = '/[a-z]/';
+        $regex_uppercase = '/[A-Z]/';
+        $regex_number = '/[0-9]/';
+        $regex_special = '/[!@#$%^&*()\-_=+{};:,<.>§~]/';
+        if (empty($password))
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field is required.');
+            return FALSE;
+        }
+        if (preg_match_all($regex_lowercase, $password) < 1 || preg_match_all($regex_uppercase, $password) < 1 ||  preg_match_all($regex_number, $password) < 1 ||preg_match_all($regex_special, $password) < 1)
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field must have  uppercase & lowercase letter & numeric & special character.');
+            return FALSE;
+        }        
+        if (strlen($password) < 5)
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field must be at least 5 characters in length.');
+            return FALSE;
+        }
+        if (strlen($password) > 32)
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field cannot exceed 32 characters in length.');
+            return FALSE;
+        }
+        return TRUE;
+	}
+	
+    function valid_url_format($str){
+        $pattern = "|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i";
+        if (!preg_match($pattern, $str)){
+            $this->form_validation->set_message('valid_url_format', 'Domain you entered is not in correct format.');
+            return FALSE;
+        }
+ 
+        return TRUE;
+    }   
 
 	function lol_username(){
 			$tables = array('VX_user');
@@ -128,7 +167,12 @@ class Contract extends Admin_Controller {
 					$array['permition'][$i] = 'no';
 				} else {
 					$email_array = explode('@',$this->input->post('email'));
-					if($this->input->post('domain') == $email_array[1]){
+					$url = $this->input->post('domain');
+					$pieces = parse_url($url);
+					$domain = isset($pieces['host']) ? $pieces['host'] : '';
+					preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs);
+			
+					if($regs['domain'] == $email_array[1]){
 						$array['permition'][$i] = 'yes';
 					} else {
 						$this->form_validation->set_message("unique_email", "%s not match with domain");
@@ -143,8 +187,7 @@ class Contract extends Admin_Controller {
 			} else {
 				return TRUE;
 			}
-	}
-	
+	}	
 	
 	public function valStartDate($date,$field){	
 		$id = htmlentities(escapeString($this->uri->segment(3)));
@@ -220,7 +263,11 @@ class Contract extends Admin_Controller {
 		  } else {
 			  $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		  }
-		  $this->data['contracts'] = $this->contract_m->get_contracts();
+		  if($roleID == 1){
+			  $this->data['contracts'] = $this->contract_m->get_contracts();
+		  } else {
+			$this->data['contracts'] = $this->contract_m->getLoginUserContracts();
+		  }
 		  foreach($this->data['contracts'] as $contract){
 			  $contract->products = $this->contract_m->getProductsByContract($contract->contractID);			  
 		  }				 
@@ -289,7 +336,9 @@ class Contract extends Admin_Controller {
 					$ulink["modify_userID"] = $this->session->userdata('loginuserID');
 					$ulink['airlineID'] = $this->input->post('airlineID');
 					$this->user_m->insert_user_airline($ulink);
-				}				
+				}	 else {
+					$userID = $this->input->post('create_client');
+				}			
 
 				// Contract Adding
 				$data['airlineID'] = $this->input->post('airlineID');
@@ -298,7 +347,8 @@ class Contract extends Admin_Controller {
                 $data['create_date'] = time();
                 $data['modify_date'] = time();
                 $data['create_userID'] = $this->session->userdata('loginuserID');
-                $data['modify_userID'] = $this->session->userdata('loginuserID');               
+				$data['modify_userID'] = $this->session->userdata('loginuserID');
+				$data['create_client'] = $userID;               
 				$this->contract_m->insert_contract($data);
 				$contractID = $this->db->insert_id();
 			  
@@ -602,9 +652,13 @@ class Contract extends Admin_Controller {
 
 	public function checkClientByAirline(){
 		$airlineID = $this->input->post('airlineID');
-		$user = $this->user_m->getClientByAirline($airlineID);
-        if($user){
-           $json['status'] = 1;
+		$users = $this->user_m->getClientByAirline($airlineID,6);
+		
+        if($users){
+			$json['status'] = '';
+			foreach($users as $user){
+		   	  $json['status'] .= '<option value="'.$user->userID.'">'.$user->name.'</option>';
+			}
 		} else {
            $json['status'] = 0;
 		}			

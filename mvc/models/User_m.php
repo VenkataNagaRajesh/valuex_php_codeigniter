@@ -152,13 +152,16 @@ class user_m extends MY_Model {
 		return TRUE;
 	 }
 
-	 function getClientByAirline($airlineID){
+	 function getClientByAirline($airlineID,$role=null){
 		 $this->db->select('u.*')->from('VX_user u');
 		 $this->db->join('VX_user_airline ua','ua.userID = u.userID','INNER');
 		 $this->db->where('ua.airlineID',$airlineID);
 		 $this->db->where('u.usertypeID',2);
+		 if($role){
+			$this->db->where('u.roleID',$role);
+		 }
 		 $query = $this->db->get();
-		 return $query->row();
+		 return $query->result();
 	 }
 
 	 function insert_user_product($data){

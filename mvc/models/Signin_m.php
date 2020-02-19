@@ -68,6 +68,10 @@ class signin_m extends MY_Model {
 							$this->load->model('user_m');
 							$data['login_user_airlineID'] = explode(',',$this->user_m->get_user($userdata->userID)->airlineIDs);
 						}
+
+						if($userdata->usertypeID == 2){
+							$this->session->set_userdata('default_airline',$data['login_user_airlineID'][0]);
+						}
 						//print_r($data); exit;
 						$browser = $this->getBrowser();
 

@@ -11,7 +11,7 @@ class Client extends Admin_Controller {
 		$this->load->model('product_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('client', $language);
-		$usertype = 2;	
+		$usertype = 2;				
 	}
 
 	protected function rules() {
@@ -123,7 +123,7 @@ class Client extends Admin_Controller {
 			array(
 				'field' => 'password',
 				'label' => $this->lang->line("client_password"),
-				'rules' => 'trim|required|min_length[4]|max_length[40]|xss_clean'
+				'rules' => 'trim|required|min_length[4]|max_length[40]|xss_clean|callback_valid_password'
 			),
 		);
 		if(count($this->input->post('products')) > 0){
@@ -140,6 +140,38 @@ class Client extends Admin_Controller {
 		//print_r($rules); exit;
 		return $rules;
 	}
+
+	public function valid_password($password = '')
+    {
+        $password = trim($password);
+        $regex_lowercase = '/[a-z]/';
+        $regex_uppercase = '/[A-Z]/';
+        $regex_number = '/[0-9]/';
+        $regex_special = '/[!@#$%^&*()\-_=+{};:,<.>§~]/';
+        if (empty($password))
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field is required.');
+            return FALSE;
+        }
+        if (preg_match_all($regex_lowercase, $password) < 1 || preg_match_all($regex_uppercase, $password) < 1 ||  preg_match_all($regex_number, $password) < 1 ||preg_match_all($regex_special, $password) < 1)
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field must have  uppercase & lowercase letter & numeric & special character.');
+            return FALSE;
+        }        
+        if (strlen($password) < 5)
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field must be at least 5 characters in length.');
+            return FALSE;
+        }
+        if (strlen($password) > 32)
+        {
+            $this->form_validation->set_message('valid_password', 'The {field} field cannot exceed 32 characters in length.');
+            return FALSE;
+        }
+        return TRUE;
+    }
+  
+
 
 	function product_validation(){	
 		$userID = htmlentities(escapeString($this->uri->segment(3)));	
@@ -608,9 +640,12 @@ class Client extends Admin_Controller {
 					$array['permition'][$i] = 'no';
 				} else {
 					$email_array = explode('@',$this->input->post('email'));
-					$primary_client = $this->user_m->getClientByAirline($this->input->post('airlineID'));
-					
-					if($primary_client->domain === $email_array[1]){
+					$primary_client = $this->user_m->getClientByAirline($this->input->post('airlineID'),6)[0];
+					$url = $primary_client->domain;
+					$pieces = parse_url($url);
+					$domain = isset($pieces['host']) ? $pieces['host'] : '';
+					preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs);				
+					if( $regs['domain'] === $email_array[1]){
 						$array['permition'][$i] = 'yes';
 					} else {
 						$this->form_validation->set_message("unique_email", "%s not match with domain");
@@ -636,8 +671,12 @@ class Client extends Admin_Controller {
 					$array['permition'][$i] = 'no';
 				} else {
 					$email_array = explode('@',$this->input->post('email'));
-					$primary_client = $this->user_m->getClientByAirline($this->input->post('airlineID'));
-					if($primary_client->domain == $email_array[1]){
+					$primary_client = $this->user_m->getClientByAirline($this->input->post('airlineID'),6)[0];
+					$url = $primary_client->domain;
+					$pieces = parse_url($url);
+					$domain = isset($pieces['host']) ? $pieces['host'] : '';
+					preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs);				
+					if( $regs['domain'] === $email_array[1]){
 						$array['permition'][$i] = 'yes';
 					} else {
 						$this->form_validation->set_message("unique_email", "%s not match with domain");

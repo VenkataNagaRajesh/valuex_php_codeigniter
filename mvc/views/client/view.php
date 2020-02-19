@@ -13,23 +13,33 @@
    <section class="panel">
         <div class="panel-body profile-view-dis">
 			<h1><?=$this->lang->line("client_information")?></h1>
-			<a href="<?=base_url('client/add_product/'.$client->userID)?>" class="btn btn-danger">Add Product</a>
-
+			<!--<a href="<?=base_url('client/add_product/'.$client->userID)?>" class="btn btn-danger">Add Product</a> -->
 			<div class="row">				
-				 <div class="profile-view-tab"> 
+				<div class="profile-view-tab"> 
 					 <p><span><?=$this->lang->line("client_id")?> </span>: <?=$client->userID?></p>
 					 <p><span><?=$this->lang->line("client_name")?> </span>: <?=$client->name?></p>
+                     <p><span><?=$this->lang->line("client_domain")?> </span>: <?=$client->domain?></p>
 					 <p><span><?=$this->lang->line("client_email")?> </span>: <?=$client->email?></p>
 					 <p><span><?=$this->lang->line("client_phone")?> </span>: <?=$client->phone?></p>
 					 <p><span><?=$this->lang->line("client_airline")?> </span>: <?=$client->airlines?></p>
-					 <p><span><?=$this->lang->line("client_status")?> </span>: <?=($client->active)?'Anable':'Disable'?></p>
+					 <p><span><?=$this->lang->line("client_status")?> </span>: <?=($client->active)?'Enable':'Disable'?></p>
 					 <p><span><?=$this->lang->line("client_username")?> </span>: <?=$client->username?></p>					
-				</div>				
+				</div>
+                <?php if($products) { ?>
+                <div class="profile-view-tab"> 
+					 <p><span><?="Products List"?> </span>
+                      <ul>
+                       <?php foreach($products as $product) { 
+                           echo "<li>".$product->product_name."</li>";
+                        } ?>
+                      </ul>
+                </div>	
+                    <?php } ?>			
 			</div>			
 		</div>
   </section>
- <?php  if(count($products) > 0){ ?>
-  <section class="panel">
+ <?php  //if(count($products) > 0){ ?>
+ <!-- <section class="panel">
         <div class="panel-body profile-view-dis">
 			<h1>Client Products List</h1>
 			<div class="row">				
@@ -47,7 +57,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $i = 1; foreach($products as $product) { ?>                                   
+                            <?php// $i = 1; foreach($products as $product) { ?>                                   
                                 <tr>
                                     <td data-title="<?=$this->lang->line('slno')?>">
                                         <?php echo $i; ?>
@@ -67,14 +77,14 @@
                                     </td>
                                     <?php //} ?>
                                 </tr>
-								   <?php $i++; } ?>
+								   <?php //$i++; } ?>
                         </tbody>
                     </table>				
 				</div>				
 			</div>			
 		</div>
-  </section>
-									<?php } ?>
+  </section> -->
+									<?php //} ?>
 </div>
   
  

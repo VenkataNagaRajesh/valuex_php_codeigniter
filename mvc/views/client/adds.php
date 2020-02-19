@@ -30,7 +30,7 @@
 								  $airlines[$airline->vx_aln_data_defnsID] = $airline->code;
 								// echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->code.'</option>';
 							  } 
-							  echo form_dropdown("airlineID", $airlines,set_value("airlineID"), "id='airlineID' class='form-control hide-dropdown-icon select2'");
+							  echo form_dropdown("airlineID", $airlines,set_value("airlineID",$this->session->userdata('default_airline')), "id='airlineID' class='form-control hide-dropdown-icon select2'");
 							?>
 							<!-- </select> -->
                         </div>
@@ -99,7 +99,7 @@
                             <?=$this->lang->line("client_phone")?><span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="phone" name="phone" value="<?=set_value('phone')?>" >
+                            <input type="number" class="form-control" id="phone" name="phone" value="<?=set_value('phone')?>" maxlength="10" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" >
                         </div>
                         <span class="col-sm-4 control-label">
                             <?php echo form_error('phone'); ?>

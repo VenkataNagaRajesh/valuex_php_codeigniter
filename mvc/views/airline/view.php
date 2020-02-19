@@ -25,8 +25,7 @@
 				  </div>
 				 
                 <div class="profile-view-tab">
-				   <!-- <p><span><?=$this->lang->line("airline_flights")?> </span>: <?=$airline->flights?></p>-->
-				   
+				   <!-- <p><span><?=$this->lang->line("airline_flights")?> </span>: <?=$airline->flights?></p>-->				   
                 </div>	
 				  	
 			</div>

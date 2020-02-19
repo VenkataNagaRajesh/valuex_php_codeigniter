@@ -153,6 +153,16 @@
                     </div>  
                     </div>  
                    <?php $i++; } ?> 
+
+                   <div class='form-group' id="select-client" style="display:none;">                   
+                        <label for="phone" class="col-sm-2 control-label">
+                            <?="Create Client"?><span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-4">
+                          <select name="create_client"  class='form-control'" id="create_client" >
+                          </select>                          
+                        </div>                       
+                  </div>
                    
                    <!-- Client Registration Module -->
                  <div id="client-reg" style="display:none;"> 
@@ -317,11 +327,16 @@ $(document).ready(function(){
             success: function(data) {
                 var result = JSON.parse(data);	
                 if(result.status == 0){
+                    $('#create_client').html('');
+                    $('#select-client').css('display','none');
                     $('#client-registration').val(1);               
                     $('#client-reg').css('display','block');
                 } else {
                     $('#client-registration').val(0); 
                     $('#client-reg').css('display','none');
+                    $('#create_client').html(result.status);
+                    $('#select-client').css('display','block');
+                    console.log(result);
                 }		
             }
         });

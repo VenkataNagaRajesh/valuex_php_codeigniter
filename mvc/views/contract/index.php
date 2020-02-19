@@ -39,6 +39,7 @@
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('contract_name')?></th>                       
 						<th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('create_client')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('product_name')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('start_date')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('end_date')?></th>
@@ -66,15 +67,16 @@
                             }
                          if($j == 1){ ?>
                     <tr>
-                        <th rowspan="2"><?=$i?></th>
-                        <th rowspan="2"><?=$contract->name?></th>
-                        <th rowspan="2"><?=$contract->carrier_code?></th>                        
+                        <th rowspan="<?=count($contract->products)?>"><?=$i?></th>
+                        <th rowspan="<?=count($contract->products)?>"><?=$contract->name?></th>
+                        <th rowspan="<?=count($contract->products)?>"><?=$contract->carrier_code?></th>                        
+                        <th rowspan="<?=count($contract->products)?>"><?=$contract->client_name?></th>                        
                         <td><?=$product->product_name?></td>
                         <td><?=date_format(date_create($product->start_date),'d-m-Y')?></td>
                         <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
                         <td><?=$product->no_users?></td>
                         <td style="color:<?=$product->color?>;"><?="Expire in ". $product->expire?></td>
-                        <td data-title="<?=$this->lang->line('contract_active')?>" rowspan="2">
+                        <td data-title="<?=$this->lang->line('contract_active')?>" rowspan="<?=count($contract->products)?>">
                             <div class="onoffswitch-small" id="<?=$contract->contractID?>">
                                   <input type="checkbox" id="myonoffswitch<?=$contract->contractID?>" class="onoffswitch-small-checkbox" name="paypal_demo" <?php if($contract->active === '1') echo "checked='checked'"; ?>>
                                   <label for="myonoffswitch<?=$contract->contractID?>" class="onoffswitch-small-label">
@@ -84,7 +86,7 @@
                             </div>           
                         </td>                      
                         <?php if(permissionChecker('contract_edit') || permissionChecker('contract_delete')) { ?>
-                        <td data-title="<?=$this->lang->line('action')?>" rowspan="2">
+                        <td data-title="<?=$this->lang->line('action')?>" rowspan="<?=count($contract->products)?>">
                             <?php
                                echo btn_edit('contract/edit/'.$contract->contractID, $this->lang->line('edit'));
                                echo btn_delete('contract/delete/'.$contract->contractID, $this->lang->line('delete'));
@@ -93,6 +95,7 @@
                         <?php } ?>
                     </tr>
                     <?php } else { ?>
+                    
                     <tr>
                         <td><?=$product->product_name?></td>
                         <td><?=date_format(date_create($product->start_date),'d-m-Y')?></td>

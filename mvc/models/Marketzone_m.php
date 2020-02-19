@@ -388,12 +388,12 @@ function getParentsofAirportByType($airportID,$id) {
 
     function marketzoneTotalCount(){
 		$this->db->select('count(*) count')->from('VX_market_zone');
-		if($this->session->userdata('roleID') != 1){		
-			//$this->db->where('create_userID',$this->session->userdata('loginuserID'));
-			$this->db->where_in('airline_id',$this->session->userdata('login_user_airlineID'));
-		}
+		
 		if(!empty($this->session->userdata('default_airline'))){
 			$this->db->where('airline_id',$this->session->userdata('default_airline'));
+		}elseif($this->session->userdata('roleID') != 1){		
+			//$this->db->where('create_userID',$this->session->userdata('loginuserID'));
+			$this->db->where_in('airline_id',$this->session->userdata('login_user_airlineID'));
 		}
 		$query = $this->db->get();
 		return $query->row('count');

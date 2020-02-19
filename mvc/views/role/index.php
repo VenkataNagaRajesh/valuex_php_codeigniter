@@ -50,9 +50,9 @@
                                     <?php if(permissionChecker('role_edit') || permissionChecker('role_delete')) { ?>
                                     <td data-title="<?=$this->lang->line('action')?>">
                                         <?php
-                                            $reletionarray = array(1,2,3,4);
-                                            echo btn_edit('role/edit/'.$role->roleID, $this->lang->line('edit'));
+                                            $reletionarray = array(1,2,3,4,5,6);                                           
                                             if(!in_array($role->roleID, $reletionarray)) {
+                                                echo btn_edit('role/edit/'.$role->roleID, $this->lang->line('edit'));
                                                 echo btn_delete('role/delete/'.$role->roleID, $this->lang->line('delete'));
                                             }
                                         ?>

@@ -122,7 +122,7 @@
                             <?=$this->lang->line("user_phone")?>
                         </label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="phone" name="phone" value="<?=set_value('phone')?>" >
+                            <input type="number" class="form-control" id="phone" name="phone" value="<?=set_value('phone')?>" maxlength="10" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" >
                         </div>
                         <span class="col-sm-4 control-label">
                             <?php echo form_error('phone'); ?>

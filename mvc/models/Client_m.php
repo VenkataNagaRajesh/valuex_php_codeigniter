@@ -20,7 +20,12 @@ class client_m extends MY_Model {
 	}
 	
 	function clientTotalCount(){
-		$this->db->select('count(*) count')->from('VX_user')->where('usertypeID',2);
+		$this->db->select('count(*) count')->from('VX_user u');
+		$this->db->join('VX_user_airline ua','ua.userID = u.userID','LEFT');
+		$this->db->where('u.usertypeID',2);
+		if($this->session->userdata('roleID') != 1){
+			$this->db->where_in('ua.airlineID',$this->session->userdata('login_user_airlineID'));
+		}
 		$query = $this->db->get();		
 		return $query->row('count');
 	}
@@ -44,10 +49,9 @@ class client_m extends MY_Model {
 	}
 
 	public function get_client_products($clientID){
-		$this->db->select('cp.*,d.code carrier,c.name contract_name,p.name product_name')->from('VX_client_product cp');
-		$this->db->join('VX_contract c','c.contractID = cp.contractID','LEFT');
-		$this->db->join('VX_data_defns d','d.vx_aln_data_defnsID = c.airlineID','LEFT');
-		$this->db->join('VX_products p','p.productID = cp.productID','LEFT');
+		$this->db->select('up.*,p.name product_name')->from('VX_user_product up');		
+		$this->db->join('VX_products p','p.productID = up.productID','LEFT');
+		$this->db->where('up.userID',$clientID);
 		$query = $this->db->get();		
 		return $query->result();
 	}

@@ -10,3 +10,5 @@
 );
 
 alter table VX_role add column usertypeID tinyint(1) NOT NULL DEFAULT 1;
+
+alter table vx_contract add column create_client int(11) NOT NULL;
