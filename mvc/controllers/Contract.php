@@ -125,13 +125,18 @@ class Contract extends Admin_Controller {
 	}
 	
     function valid_url_format($str){
-        $pattern = "|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i";
-        if (!preg_match($pattern, $str)){
-            $this->form_validation->set_message('valid_url_format', 'Domain you entered is not in correct format.');
-            return FALSE;
-        }
- 
-        return TRUE;
+		if(empty($str)){
+			$this->form_validation->set_message('valid_url_format', 'Domain field is required');
+            return FALSE;	
+		} else {
+			$pattern = "|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i";
+			if (!preg_match($pattern, $str)){
+				$this->form_validation->set_message('valid_url_format', 'Domain you entered is not in correct format.');
+				return FALSE;
+			} else {
+				return TRUE;
+			}
+		}       
     }   
 
 	function lol_username(){
@@ -166,8 +171,8 @@ class Contract extends Admin_Controller {
 					$this->form_validation->set_message("unique_email", "%s already exists");
 					$array['permition'][$i] = 'no';
 				} else {
-					$email_array = explode('@',$this->input->post('email'));
-					$url = $this->input->post('domain');
+					$email_array = explode('@',$this->input->post('client_email'));
+					$url = $this->input->post('client_domain');
 					$pieces = parse_url($url);
 					$domain = isset($pieces['host']) ? $pieces['host'] : '';
 					preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs);
@@ -175,7 +180,7 @@ class Contract extends Admin_Controller {
 					if($regs['domain'] == $email_array[1]){
 						$array['permition'][$i] = 'yes';
 					} else {
-						$this->form_validation->set_message("unique_email", "%s not match with domain");
+						$this->form_validation->set_message("unique_email", "%s not match with domain $domain");
 					    $array['permition'][$i] = 'no';	
 					}					
 				}
@@ -316,7 +321,7 @@ class Contract extends Admin_Controller {
 					$array["email"] = $this->input->post("client_email");
 					$array["phone"] = $this->input->post("client_phone");									
 					$array["username"] = $this->input->post("client_username");
-					$array["password"] = $this->user_m->hash($this->input->post("password"));
+					$array["password"] = $this->user_m->hash($this->input->post("client_password"));
 					$array["usertypeID"] = 2;
 					$array["roleID"] = 6;
 					$array["create_date"] = date("Y-m-d h:i:s");

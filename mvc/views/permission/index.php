@@ -80,14 +80,14 @@
                                     ?>
                                     <?php
                                     $i = 1;$color = "#eccbcb";$upgrade=0;$baggage=0;
-                                    foreach($permissionTable as $data) { 
+                                    foreach($permissionTable as $data) {                                       
                                          if($upgrade == 0 && $data['productID'] == 1){
-                                          echo "<tr><td colspan='6'> <h4>Upgrade Module Section</h4> </td> </tr>";
+                                          echo "<br><tr><th colspan='7' style='background: #ddd;'> <b><h4 style='font-weight:bold;text-transform:uppercase;'>Upgrade Module Section</h4></b> </th> </tr>";
                                           $upgrade = 1;
                                           $color = "#cbecea";
                                         } 
                                         if($baggage == 0 && $data['productID'] == 2){
-                                            echo "<tr><td colspan='6'> <h4>Baggage Module Section</h4> </td> </tr>";
+                                            echo "<br><tr><th colspan='7' style='background: #ddd;'> <b><h4 style='font-weight:bold;text-transform:uppercase;'>Baggage Module Section</h4> </th> </tr>";
                                             $baggage = 1;
                                             $color = "#cfd9ea";
                                           }                                        
@@ -113,7 +113,7 @@
                                             <td data-title="<?=$this->lang->line('permission_description')?>">
                                                 <?php echo ($data['productID'] != 0)?$data['module']:'Common'; ?>
                                             </td>
-                                            <td data-title="<?=$this->lang->line('permission_description')?>">
+                                            <td data-title="<?=$this->lang->line('permission_description')?>" style="text-align: left;">
                                                 <?php echo $data['description']; ?>
                                             </td>
                                             <td data-title="<?=$this->lang->line('permission_add')?>">
