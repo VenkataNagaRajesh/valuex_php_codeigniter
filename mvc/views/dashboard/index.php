@@ -51,119 +51,20 @@ function allModuleArray($roleID='1', $dashboardWidget) {
   );
   return $userAllModuleArray;
 }
-
-$userArray = array(
- '1' => array(
-        'marketzone'        => $dashboardWidget['marketzone'],
-        'season'            => $dashboardWidget['season'],
-        'airports_master'   => $dashboardWidget['airports'],
-        'client'            => $dashboardWidget['clients'],
-		'user'              => $dashboardWidget['users'],
- 		'acsr'              => $dashboardWidget['acsr'],
-		'eligibility_exclusion'=> $dashboardWidget['eerule'],
-		'sent_offer_mails'  => $dashboardWidget['sent_offer_mails']->count,
-		'bid_complete'      => $dashboardWidget['bid_complete']->count,
-		'feedback'          => $dashboardWidget['feedback']->count
-  ),
-  
-  '5' => array(
-        'marketzone'        => $dashboardWidget['marketzone'],
-        'season'            => $dashboardWidget['season'],
-        'airports_master'   => $dashboardWidget['airports'],
-        'client'            => $dashboardWidget['clients'],
-		'user'              => $dashboardWidget['users'],
- 		'acsr'              => $dashboardWidget['acsr'],
-		'eligibility_exclusion'=> $dashboardWidget['eerule'],
-		'sent_offer_mails'  => $dashboardWidget['sent_offer_mails']->count,
-		'bid_complete'      => $dashboardWidget['bid_complete']->count,
-		'feedback'          => $dashboardWidget['feedback']->count
-  ),
-  '2' => array(
-        'marketzone'        => $dashboardWidget['marketzone'],
-        'season'            => $dashboardWidget['season']
-  ),
-  '3' => array(
-        'marketzone'        => $dashboardWidget['marketzone'],
-        'season'            => $dashboardWidget['season'],
-        'airports_master'   => $dashboardWidget['airports'],
-        'client'            => $dashboardWidget['clients'],
-		'user'              => $dashboardWidget['users'],
- 		'acsr'              => $dashboardWidget['acsr'],
-		'eligibility_exclusion'=> $dashboardWidget['eerule'],
-		'sent_offer_mails'  => $dashboardWidget['sent_offer_mails']->count,
-		'bid_complete'      => $dashboardWidget['bid_complete']->count
-  ),
- '4' => array(
-        'marketzone'        => $dashboardWidget['marketzone'],
-        'season'            => $dashboardWidget['season'],
-        'airports_master'   => $dashboardWidget['airports'],
-        'client'            => $dashboardWidget['clients'],
-		'user'              => $dashboardWidget['users'],
- 		'acsr'              => $dashboardWidget['acsr'],
-		'eligibility_exclusion'=> $dashboardWidget['eerule'],
-		'sent_offer_mails'  => $dashboardWidget['sent_offer_mails']->count,
-		'bid_complete'      => $dashboardWidget['bid_complete']->count
- ),
- '6' => array(
-    'marketzone'        => $dashboardWidget['marketzone'],
-    'season'            => $dashboardWidget['season'],
-    'airports_master'   => $dashboardWidget['airports'],
-    'client'            => $dashboardWidget['clients'],
-    'user'              => $dashboardWidget['users'],
-     'acsr'              => $dashboardWidget['acsr'],
-    'eligibility_exclusion'=> $dashboardWidget['eerule'],
-    'sent_offer_mails'  => $dashboardWidget['sent_offer_mails']->count,
-    'bid_complete'      => $dashboardWidget['bid_complete']->count,
-    'feedback'          => $dashboardWidget['feedback']->count
-    ),
-    '7' => array(
-        'marketzone'        => $dashboardWidget['marketzone'],
-        'season'            => $dashboardWidget['season'],
-        'airports_master'   => $dashboardWidget['airports'],
-        'client'            => $dashboardWidget['clients'],
-        'user'              => $dashboardWidget['users'],
-        'acsr'              => $dashboardWidget['acsr'],
-        'eligibility_exclusion'=> $dashboardWidget['eerule'],
-        'sent_offer_mails'  => $dashboardWidget['sent_offer_mails']->count,
-        'bid_complete'      => $dashboardWidget['bid_complete']->count,
-        'feedback'          => $dashboardWidget['feedback']->count
-    ),
-    '8' => array(
-        'marketzone'        => $dashboardWidget['marketzone'],
-        'season'            => $dashboardWidget['season'],
-        'airports_master'   => $dashboardWidget['airports'],
-        'client'            => $dashboardWidget['clients'],
-        'user'              => $dashboardWidget['users'],
-        'acsr'              => $dashboardWidget['acsr'],
-        'eligibility_exclusion'=> $dashboardWidget['eerule'],
-        'sent_offer_mails'  => $dashboardWidget['sent_offer_mails']->count,
-        'bid_complete'      => $dashboardWidget['bid_complete']->count,
-        'feedback'          => $dashboardWidget['feedback']->count
-    ), 
-    '9' => array(
-        'marketzone'        => $dashboardWidget['marketzone'],
-        'season'            => $dashboardWidget['season'],
-        'airports_master'   => $dashboardWidget['airports'],
-        'client'            => $dashboardWidget['clients'],
-        'user'              => $dashboardWidget['users'],
-        'acsr'              => $dashboardWidget['acsr'],
-        'eligibility_exclusion'=> $dashboardWidget['eerule'],
-        'sent_offer_mails'  => $dashboardWidget['sent_offer_mails']->count,
-        'bid_complete'      => $dashboardWidget['bid_complete']->count,
-        'feedback'          => $dashboardWidget['feedback']->count
-    ), 
-);
-//print_r($userArray); exit;
+$wdgets = array();
+foreach($dashboardWidget as $key => $value){
+    if($key != 'allmenu' && $key != 'allmenulang'){
+        $widget[$key] = !is_object($value)?$value:$value->count;
+    }
+} 
+$userArray[$this->session->userdata('roleID')] = $widget;
 $generateBoxArray = array();
 $counter = 0;
 $getActiveUserID = $this->session->userdata('roleID');
-
-
 $getAllSessionDatas = $this->session->userdata('master_permission_set');
 
 foreach ($getAllSessionDatas as $getAllSessionDataKey => $getAllSessionData) {
-    if($getAllSessionData == 'yes') {
-     
+    if($getAllSessionData == 'yes') {     
         if(isset($userArray[$getActiveUserID][$getAllSessionDataKey])) {
 				
            /*  if($counter == 4) {
@@ -178,9 +79,7 @@ foreach ($getAllSessionDatas as $getAllSessionDataKey => $getAllSessionData) {
                 'menu' => $dashboardWidget['allmenulang'][$getAllSessionDataKey]?$dashboardWidget['allmenulang'][$getAllSessionDataKey]:$dashboardWidget[$getAllSessionDataKey]->menu,
             );
             $counter++;
-        }
-
-		
+        }		
     }
 }
 

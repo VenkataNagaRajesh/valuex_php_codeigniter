@@ -61,41 +61,56 @@ class Dashboard extends Admin_Controller {
 		$eerule = $this->eligibility_exclusion_m->EErulesTotalCount();		
 		$offers = $this->offer_reference_m->offersTotalCount();
 		$bid_complete = $this->bid_m->bidsTotalCount();
-		
+
+		  if(permissionChecker('dashboardwidget_sent_offer_mails')){		
 			$this->data['dashboardWidget']['sent_offer_mails']->count = $offers;
 			$this->data['dashboardWidget']['sent_offer_mails']->link = "offer_issue";
 			$this->data['dashboardWidget']['sent_offer_mails']->icon = "fa-list-alt";
 			$this->data['dashboardWidget']['sent_offer_mails']->menu = 'Offers';
-			
+		  }
+		  if(permissionChecker('dashboardwidget_bid_complete')){
 			$this->data['dashboardWidget']['bid_complete']->count = $bid_complete;
 			$this->data['dashboardWidget']['bid_complete']->link = "offer_table";
 			$this->data['dashboardWidget']['bid_complete']->icon = "fa-list-alt";
 			$this->data['dashboardWidget']['bid_complete']->menu = 'Total Bids';
-			
+		  }
+		  if(permissionChecker('dashboardwidget_feedback')){	
 			$this->data['dashboardWidget']['feedback']->count = round($this->bid_m->avgFeedback());
 			$this->data['dashboardWidget']['feedback']->link = "feedback";
 			$this->data['dashboardWidget']['feedback']->icon = "fa-star";
 			$this->data['dashboardWidget']['feedback']->menu = 'Average Rating';
+		  }	
 			
-			//print_r($this->data['dashboardWidget']['bid_complete_offers']); exit;
-		
-			$marketzones = $this->marketzone_m->marketzoneTotalCount();
-			
+			$marketzones = $this->marketzone_m->marketzoneTotalCount();			
 			$seasons = $this->season_m->seasonTotalCount();
 			
-		$deshboardTopWidgetUserTypeOrder = $this->session->userdata('master_permission_set');
+			$deshboardTopWidgetUserTypeOrder = $this->session->userdata('master_permission_set');
 		
-		//$this->data['dashboardWidget']['feetypes'] 	= count($feetypes);		
-		//$this->data['dashboardWidget']['invoices'] 	= count($invoices);	
-		$this->data['dashboardWidget']['airports'] 	= $airports;
-        $this->data['dashboardWidget']['marketzone']= $marketzones;	
-        $this->data['dashboardWidget']['season'] 	= $seasons;	
-        $this->data['dashboardWidget']['clients'] 	= $clients;
-        $this->data['dashboardWidget']['users']     = $users;
-        $this->data['dashboardWidget']['acsr']      = $acsr;
-        $this->data['dashboardWidget']['eerule']    = $eerule;		
-		$this->data['dashboardWidget']['allmenu'] 	= $allmenu;
-		$this->data['dashboardWidget']['allmenulang'] 	= $allmenulang;
+		if(permissionChecker('dashboardwidget_airports')){	
+		   $this->data['dashboardWidget']['airports_master'] 	= $airports;
+		}
+		if(permissionChecker('dashboardwidget_marketzone')){
+			$this->data['dashboardWidget']['marketzone']= $marketzones;
+		}	
+		if(permissionChecker('dashboardwidget_season')){
+			$this->data['dashboardWidget']['season'] = $seasons;	
+		}
+		if(permissionChecker('dashboardwidget_clients')){
+			$this->data['dashboardWidget']['client'] = $clients;
+		}
+		if(permissionChecker('dashboardwidget_users')){
+			$this->data['dashboardWidget']['user'] = $users;
+		}
+		if(permissionChecker('dashboardwidget_acsr')){
+			$this->data['dashboardWidget']['acsr']  = $acsr;
+		}
+		if(permissionChecker('dashboardwidget_eerule')){	
+			$this->data['dashboardWidget']['eligibility_exclusion'] = $eerule;
+        }							
+			$this->data['dashboardWidget']['allmenu'] = $allmenu;	
+			$this->data['dashboardWidget']['allmenulang'] = $allmenulang;
+		
+		//print_r($this->data['dashboardWidget']); exit;
 		$months = array(
 		    1 => 'January',
 		    'February',

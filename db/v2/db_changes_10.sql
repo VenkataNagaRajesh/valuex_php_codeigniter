@@ -1,0 +1,10 @@
+insert into VX_permissions set description = "Dashboard Widget Bid Complete",name='dashboardwidget_bid_complete';
+insert into VX_permissions set description = "Dashboard Widget Feedback",name='dashboardwidget_feedback';
+insert into VX_permissions set description = "Dashboard Widget Sent Offer Mails",name='dashboardwidget_sent_offer_mails';
+insert into VX_permissions set description = "Dashboard Widget Airports",name='dashboardwidget_airports';
+insert into VX_permissions set description = "Dashboard Widget Marketzone",name='dashboardwidget_marketzone';
+insert into VX_permissions set description = "Dashboard Widget Season",name='dashboardwidget_season';
+insert into VX_permissions set description = "Dashboard Widget Clients",name='dashboardwidget_clients';
+insert into VX_permissions set description = "Dashboard Widget Staff",name='dashboardwidget_users';
+insert into VX_permissions set description = "Dashboard Widget ACSR",name='dashboardwidget_acsr';
+insert into VX_permissions set description = "Dashboard Widget Eligibility Exclusion Rule",name='dashboardwidget_eerule';

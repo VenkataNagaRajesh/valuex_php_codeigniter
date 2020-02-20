@@ -105,12 +105,12 @@ class Admin_Controller extends MY_Controller {
 			if(isset($userdata['loginuserID']) && !isset($userdata['get_permission'])) {
 				if(!$this->session->userdata($permission)) {
 					if($userdata['usertypeID'] == 1){
-					  $user_permission = $this->permission_m->get_modules_with_permission($userdata['usertypeID'],$userdata['roleID']);
+					  $user_permission = $this->permission_m->get_modules_with_permission($userdata['roleID']);
 					} else { 
 					//	$user_products = $this->user_m->getProductsInfoByUser($userdata['loginuserID'])->products;
 						$user_products = array_column('productID',$this->user_m->loginUserProducts());						
 						$user_products = implode(',',$user_products);
-						$user_permission = $this->permission_m->get_modules_with_permission($userdata['usertypeID'],$userdata['roleID'],$user_products);
+						$user_permission = $this->permission_m->get_modules_with_permission($userdata['roleID'],$user_products);
 					}
 					foreach ($user_permission as $value) {
 						$permissionset['master_permission_set'][$value->name] = $value->active;
@@ -121,9 +121,7 @@ class Admin_Controller extends MY_Controller {
 							$permissionset['master_permission_set']['report/attendancereport'] = $value->active;
 							$permissionset['master_permission_set']['report/certificate'] = $value->active;
 						}
-					}
-
-					
+					}					
 					
 					$data = ['get_permission' => TRUE];
 					$this->session->set_userdata($data);

@@ -18,7 +18,8 @@ class Permission extends Admin_Controller {
 				if(count($role)) {				
 				$this->data['set'] = $id;
 				$this->data['roles'] = $this->role_m->get_roleinfo();								
-				$this->data['permissions'] = $this->permission_m->get_modules_with_permission($role->usertypeID,$id);
+				$this->data['permissions'] = $this->permission_m->get_modules_with_permission($id);
+				//print_r($this->data['permissions']); exit;
 				if(empty($this->data['permissions'])) {
 					$this->data['permissions'] = NULL;
 				}
@@ -51,12 +52,12 @@ class Permission extends Admin_Controller {
 		if ((int)$roleID) {			
 			$role = $this->role_m->get_role($roleID);
 			if(count($role)) {
-				if ($this->permission_m->delete_all_permission($role->usertypeID,$roleID)) {
+				if ($this->permission_m->delete_all_permission($roleID)) {
 					$array = array();
 					$array['roleID'] = $roleID;
-					$array['usertypeID'] = $role->usertypeID;
+				//	$array['usertypeID'] = $role->usertypeID;
 					foreach ($_POST as $key => $value) {						
-						$array['permission_id'] = $value;						
+						$array['permission_id'] = $value;							
 						$this->permission_m->insert_relation($array);
 					}
 					redirect(base_url('permission/index/'.$roleID),'refresh');

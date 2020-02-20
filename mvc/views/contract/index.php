@@ -75,7 +75,7 @@
                         <td><?=date_format(date_create($product->start_date),'d-m-Y')?></td>
                         <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
                         <td><?=$product->no_users?></td>
-                        <td style="color:<?=$product->color?>;"><?="Expire in ". $product->expire?></td>
+                        <td style="color:<?=$product->color?>;"><?="Expires in ". $product->expire."D"?></td>
                         <td data-title="<?=$this->lang->line('contract_active')?>" rowspan="<?=count($contract->products)?>">
                             <div class="onoffswitch-small" id="<?=$contract->contractID?>">
                                   <input type="checkbox" id="myonoffswitch<?=$contract->contractID?>" class="onoffswitch-small-checkbox" name="paypal_demo" <?php if($contract->active === '1') echo "checked='checked'"; ?>>
