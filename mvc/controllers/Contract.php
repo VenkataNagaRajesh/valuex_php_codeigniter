@@ -437,7 +437,7 @@ class Contract extends Admin_Controller {
 			       	$product->start_date = date_format(date_create($product->start_date),'d-m-Y');
 					$product->end_date = date_format(date_create($product->end_date),'d-m-Y');
 			   }
-			  // print_r($this->data['contract']); exit;					   
+			   $this->data['users'] = $this->user_m->getClientByAirline($this->data['contract']->airlineID,6);					   
 			if($_POST){  
 				$rules = $this->rules();
 				$this->form_validation->set_rules($rules);

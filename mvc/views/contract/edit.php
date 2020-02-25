@@ -154,26 +154,47 @@
                     </div> 
                     </div>  
                     </div>  
-                   <?php $i++; } ?> 
-                    <div class='form-group' > 
-                        <label for="end-date" class="col-sm-2 control-label">
-                            <?=$this->lang->line("contract_active")?> <span class="text-red">*</span>
+                   <?php $i++; } ?>
+                   <div class="form-group">
+                <div class="col-md-6">
+                <div class='form-group'>
+                        <label for="contract_name" class="col-sm-4 control-label">
+                        <?="Create Client"?><span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
-                          <?php 
+                        <div class="col-sm-8">                        				 
+                        <?php 
+                             foreach($users as $user){
+                                 $list[$user->userID]= $user->name;
+                             }
+                             echo form_dropdown("create_client", $list,
+                                  set_value("create_client",$contract->create_client), "id='create_client' class='form-control hide-dropdown-icon'"
+                                 ); 
+                        ?>  						 
+                        </div>                     
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                    <div class='form-group' >
+                        <label for="airlineID" class="col-sm-3 control-label">
+                            <?=$this->lang->line("contract_active")?><span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-9">                          				 
+                        <?php 
                              $array[1] = "Active";
                              $array[0] = "Inactive";
                              echo form_dropdown("active", $array,
                                   set_value("active"), "id='active' class='form-control hide-dropdown-icon'"
                                  ); 
-                        ?>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="pull-right">
-                                <input type="submit" class="btn btn-success" value="<?=$this->lang->line("update_contract")?>" >
-                            </div>
-                        </div>
+                        ?>                       
+                        </div>                      
                     </div>
+                    </div>
+                </div> 
+                <div class='form-group'>   
+                    <div class="col-md-12" align="center" >                        
+                        <input type="submit" class="btn btn-success" value="<?=$this->lang->line("update_contract")?>" >                        
+                    </div>
+                </div>
                 </form>
 
 
@@ -185,7 +206,9 @@
  $('#airlineID').select2();
  $('#active').select2();
  $( ".select2" ).select2();
- 
+
+ $('#airlineID').attr("disabled", true); 
+ $('#create_client').attr("disabled", true); 
  <?php $i=1; while(count($products) >= $i){ ?>
    $("#pmod<?=$i?>-productID").select2();
     $("#pmod<?=$i?>-start-date").datepicker({    

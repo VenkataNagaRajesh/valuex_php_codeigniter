@@ -49,6 +49,7 @@
                                 <th class="col-lg-2"><?=$this->lang->line('client_name')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_email')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('client_phone')?></th>
+                                <th class="col-lg-1"><?=$this->lang->line('client_domain')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('client_products')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_airline')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_role')?></th>
@@ -86,11 +87,12 @@
                     "data": aoData,
                     "success": fnCallback
 			 } ); },	  
-	  "columns": [{"data": "userID" },
+	  "columns": [{"data": "sno" },
                   {"data": "image" },
 				  {"data": "name" },
 				  {"data": "email" },
 				  {"data": "phone" },
+				  {"data": "domain" },
 				  {"data": "product_name" },
                   {"data": "airline_code"},
                   {"data" : "role"},

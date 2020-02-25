@@ -442,6 +442,7 @@ class Client extends Admin_Controller {
 		);
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		$usertype = 2;
+		$userID = $this->session->userdata('loginuserID');
 		$this->data['roles'] = $this->role_m->get_roleinfo($usertype);
 		if($this->session->userdata('usertypeID') == 1 && $this->session->userdata('roleID') == 1){
 			$this->data['airlinelist'] = $this->airline_m->getAirlinesData();
@@ -828,7 +829,9 @@ class Client extends Admin_Controller {
 			"iTotalDisplayRecords" => $rResultFilterTotal,
 			"aaData" => array()
 		  );
+		  $i = 1;
 	  foreach($rResult as $client){	
+		  $client->sno = $i;
           if(permissionChecker('client_edit')){ 			
 			$client->action = btn_edit('client/edit/'.$client->userID, $this->lang->line('edit'));
 		  }
@@ -861,7 +864,8 @@ class Client extends Admin_Controller {
                'class' => 'img-rounded'
               );
 			 $client->image = img($array);
-           	$output['aaData'][] = $client;				
+			   $output['aaData'][] = $client;
+			   $i++;				
 		}
 		if(isset($_REQUEST['export'])){
 		  $columns = array('#','Name','Email','Phone',"Carrier Code","Role");
