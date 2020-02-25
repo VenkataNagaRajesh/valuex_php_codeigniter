@@ -10,6 +10,11 @@ class Contract extends Admin_Controller {
         $this->load->model('contract_m');
         $language = $this->session->userdata('lang');
 		$this->lang->load('contract', $language);
+		/*$url = "qbaki.com";
+			if (!filter_var($url, FILTER_VALIDATE_URL)){
+				echo "invalid";
+			} else{ echo "valid"; }
+			exit;*/
     }
     
     protected function rules() {	
@@ -124,13 +129,16 @@ class Contract extends Admin_Controller {
         return TRUE;
 	}
 	
-    function valid_url_format($str){
-		if(empty($str)){
+    function valid_url_format($url){
+		if(empty($url)){
 			$this->form_validation->set_message('valid_url_format', 'Domain field is required');
             return FALSE;	
 		} else {
-			$pattern = "|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i";
-			if (!preg_match($pattern, $str)){
+			$pattern = "|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i";	
+			if(substr( $url, 0, 4 ) != "http"){
+                  $url = 'http://'.$url;
+			}		
+			if (!filter_var($url, FILTER_VALIDATE_URL)){
 				$this->form_validation->set_message('valid_url_format', 'Domain you entered is not in correct format.');
 				return FALSE;
 			} else {
@@ -173,6 +181,9 @@ class Contract extends Admin_Controller {
 				} else {
 					$email_array = explode('@',$this->input->post('client_email'));
 					$url = $this->input->post('client_domain');
+					if(substr( $url, 0, 4 ) != "http"){
+						$url = 'http://'.$url;
+				  	}
 					$pieces = parse_url($url);
 					$domain = isset($pieces['host']) ? $pieces['host'] : '';
 					preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs);

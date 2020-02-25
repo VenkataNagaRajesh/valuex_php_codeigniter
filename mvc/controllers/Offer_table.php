@@ -451,8 +451,6 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
 $sOrder $sLimit";
 
 
-
-
 /*$sQuery = "   select ofr.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name SEPARATOR '<br>')  as list from VX_aln_offer_ref ofr  LEFT JOIN  VX_daily_tkt_pax_feed pf on (pf.pnr_ref = ofr.pnr_ref)  group by ofr.pnr_ref";
 */
 //print_r($sQuery);exit;
@@ -482,8 +480,8 @@ $sOrder $sLimit";
 			$feed->p_list = '<a href="#" style="color:blue;"  data-placement="top" data-toggle="tooltip" data-original-title="'.$feed->p_list.'">'.$feed->p_count.'</a>';
 
 			$feed->action = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
-                                $output['aaData'][] = $feed;
-            $feed->id = $i;
+                        $output['aaData'][] = $feed;
+                        $feed->id = $i;
 			 $i++;
                 }
 
