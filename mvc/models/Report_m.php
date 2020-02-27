@@ -6,7 +6,7 @@ class Report_m extends MY_Model {
 		parent::__construct();
 	}
 
-    public function get_report($airlineID = 3958){
+    public function get_report($airlineID){
           
       $query = "  select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
@@ -56,7 +56,7 @@ class Report_m extends MY_Model {
             return $result->result();
     }
 
-    public function getAirlineCabins($airlineID = 3958){
+    public function getAirlineCabins($airlineID){
         $this->db->select('cm.*')->from('VX_airline_cabin_def cm');
         $this->db->join(' VX_data_defns dd','(dd.alias = cm.level and dd.aln_data_typeID = 13)','INNER');
         $this->db->where('carrier',$airlineID);

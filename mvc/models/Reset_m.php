@@ -98,7 +98,7 @@ class reset_m extends CI_Model {
 
 	function get_site() {
 		$compress = array();
-		$query = $this->db->get('setting');
+		$query = $this->db->get('VX_setting');
 		foreach ($query->result() as $row) {
 		    $compress[$row->fieldoption] = $row->value;
 		}

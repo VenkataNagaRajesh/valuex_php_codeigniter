@@ -5,14 +5,55 @@ class Report extends Admin_Controller {
 	function __construct() {
 		parent::__construct();	
 		$this->load->model('report_m');
+		$this->load->model('user_m');
+		$this->load->model('airline_m');
 		$language = $this->session->userdata('lang');
-		$this->lang->load('report', $language);			
-
-
+		$this->lang->load('report', $language);	
 	}
 
-	public function index() {		
-		$cabins = $this->report_m->getAirlineCabins();	
+	public function index() {
+		$this->data['headerassets'] = array(
+			'css' => array(
+					'assets/select2/css/select2.css',
+					'assets/select2/css/select2-bootstrap.css'                      
+					//'assets/datepicker/datepicker.css'
+			),
+			'js' => array(
+					'assets/select2/select2.js'                       
+					//'assets/datepicker/datepicker.js'
+			)
+		); 
+		if($this->input->post('airlineID')){
+			$this->data['airlineID'] = $this->input->post('airlineID');
+		} else {
+			$this->data['airlineID'] = 3958;
+		}
+		if($this->input->post('year')){
+			$this->data['year'] = $this->input->post('year');
+		} else {
+			$this->data['year'] = date('Y');
+		}
+		if($this->input->post('from_month')){
+			$this->data['from_month'] = $this->input->post('from_month');
+		} else {
+			$this->data['from_month'] = 1;
+		}
+		if($this->input->post('to_month')){
+			$this->data['to_month'] = $this->input->post('to_month');
+		} else {
+			$this->data['to_month'] = date('m');
+		}
+		$from_date = $this->data['year'].'-'.$this->data['from_month'].'-01';
+		$to_date = $this->data['year'].'-'.$this->data['to_month'].'-30';
+
+		$roleID = $this->session->userdata('loginuserID');
+		  if($roleID != 1){
+			$this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+		  } else {
+			  $this->data['airlines'] = $this->airline_m->getAirlinesData();
+		  }
+		
+		$cabins = $this->report_m->getAirlineCabins($this->data['airlineID']);	
 		$i = 0;
 		foreach($cabins as $cabin){
 			for($j=$i+1;$j<count($cabins);$j++){
@@ -25,8 +66,8 @@ class Report extends Admin_Controller {
 		  $i++;			
 		}
 
-		$start    = (new DateTime('2019-10-01'))->modify('first day of this month');
-		$end      = (new DateTime('2019-12-30'))->modify('first day of next month');
+		$start    = (new DateTime($from_date))->modify('first day of this month');
+		$end      = (new DateTime($to_date))->modify('first day of next month');
 		$interval = DateInterval::createFromDateString('1 month');
 		$period   = new DatePeriod($start, $interval, $end);
 
@@ -36,7 +77,7 @@ class Report extends Admin_Controller {
 		$this->data['current'] = array_fill_keys($this->data['current'],0);
 		 
 
-		$this->data['report'] = $this->report_m->get_report();
+		$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$from_date,$to_date);
 		$bid_accepted =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
 		$bid_rejected =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
 

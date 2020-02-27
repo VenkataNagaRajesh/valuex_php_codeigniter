@@ -155,8 +155,9 @@ function getAirlinesToMap($array) {
 		
 
 	function getCabinsDataForCarrier($carrier, $ret = 0){
-		$this->db->select('dd.vx_aln_data_defnsID ,cd.level, cd.cabin')->from('VX_airline_cabin_class cd');
-		$this->db->join('VX_data_defns dd', 'dd.alias = cd.level and dd.aln_data_typeID = 13','LEFT');
+		$this->db->select('dd.vx_aln_data_defnsID ,def.level, def.cabin')->from('VX_airline_cabin_class cd');
+		$this->db->join('VX_airline_cabin_def def','(def.carrier = cd.carrier )','INNER'); 
+		$this->db->join('VX_data_defns dd', 'dd.alias = def.level and dd.aln_data_typeID = 13','LEFT');
 		$this->db->where('cd.carrier',$carrier);
 		$query = $this->db->get();
                 $data = $query->result();

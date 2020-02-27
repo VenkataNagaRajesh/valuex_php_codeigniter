@@ -357,8 +357,9 @@ $(document).ready(function () {
 	   } else {
 		   $i++;
 	   }
-	 }	if($flag == 1 && explode(',',$result->min)[$i]){  ?>
-       	
+	 }	if($flag == 1 && explode(',',$result->min)[$i]){  ?>   
+	  
+
     $('#bid_min_<?=$result->flight_number?>').text(numformat(<?php echo explode(',',$result->min)[$i]; ?>));
     $('#bid_max_<?=$result->flight_number?>').text(numformat(<?php echo explode(',',$result->max)[$i]; ?>));
 	//var tot_avg = tot_avg + <?=explode(',',$result->avg)[$i]?>;

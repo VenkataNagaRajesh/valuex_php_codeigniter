@@ -56,8 +56,8 @@ class bid_m extends MY_Model {
 	  $this->db->join('UP_offer_ref oref','oref.pnr_ref = tpf.pnr_ref','LEFT');
 	  $this->db->join('VX_data_defns dd','(dd.vx_aln_data_defnsID = oref.offer_status AND dd.aln_data_typeID = 20)','LEFT');	 
 	  $this->db->join('VX_data_defns c1','(c1.vx_aln_data_defnsID = tpf.from_city AND c1.aln_data_typeID = 1)','LEFT');
-	  $this->db->join('VX_data_defns c2','(c2.VX_data_defnsID = tpf.to_city AND c2.aln_data_typeID = 1)','LEFT');
-	  $this->db->join('VX_data_defns car','(car.VX_data_defnsID = tpf.carrier_code AND car.aln_data_typeID = 12)','LEFT'); 
+	  $this->db->join('VX_data_defns c2','(c2.vx_aln_data_defnsID = tpf.to_city AND c2.aln_data_typeID = 1)','LEFT');
+	  $this->db->join('VX_data_defns car','(car.vx_aln_data_defnsID = tpf.carrier_code AND car.aln_data_typeID = 12)','LEFT'); 
 	  $this->db->join('VX_master_data m1','m1.airportID = c1.vx_aln_data_defnsID','LEFT');
 	  $this->db->join('VX_master_data m2','m2.airportID = c2.vx_aln_data_defnsID','LEFT');
 	  $this->db->join('VX_data_defns air_city1','(air_city1.vx_aln_data_defnsID = m1.cityID AND air_city1.aln_data_typeID = 3)','LEFT');
@@ -100,7 +100,7 @@ class bid_m extends MY_Model {
 	  $this->db->join('VX_airline_cabin_def def','(def.carrier = tpf.carrier_code) AND (dcla.alias = def.level)','INNER');	  
 	  $this->db->join('VX_data_defns udcla','(udcla.aln_data_typeID = 13 and bid.upgrade_type = udcla.vx_aln_data_defnsID)','INNER');
 	  $this->db->join('VX_airline_cabin_def udef','(udef.carrier = tpf.carrier_code) AND (udcla.alias = udef.level)','INNER');	  
-	  $this->db->join('VX_data_defns c1','(c1.VX_data_defnsID = tpf.from_city AND c1.aln_data_typeID = 1)','LEFT');
+	  $this->db->join('VX_data_defns c1','(c1.vx_aln_data_defnsID = tpf.from_city AND c1.aln_data_typeID = 1)','LEFT');
 	  $this->db->join('VX_data_defns c2','(c2.vx_aln_data_defnsID = tpf.to_city AND c2.aln_data_typeID = 1)','LEFT');
 	  $this->db->join('VX_data_defns car','(car.vx_aln_data_defnsID = tpf.carrier_code AND car.aln_data_typeID = 12)','LEFT');
       $this->db->where('oref.offer_id',$offer_id);	  

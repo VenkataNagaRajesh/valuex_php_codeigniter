@@ -2,7 +2,7 @@
 
 class Setting_m extends MY_Model {
 
-	protected $_table_name = 'setting';
+	protected $_table_name = 'VX_setting';
 	protected $_primary_key = 'option';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "option asc";
