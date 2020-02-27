@@ -117,6 +117,22 @@ revenuechart.render();
 var d = new Date(2020,1).toLocaleString('default', { month: 'long' });
 //var month = d.getMonth();
 console.log(d);
+
+var currentdata = [];
+	<?php  foreach($current as $key => $value){ ?>
+		  cobj = {y: <?=$value?>, label:"<?=$key?>"};
+		  currentdata.push(cobj);
+	<?php  } ?>
+
+	var previousdata = [];
+	<?php  foreach($current as $key => $value){ ?>
+		  pobj = {y: <?=$value?>, label:"<?=$key?>"};
+		  console.log(<?=$value?>);
+		  previousdata.push(pobj);
+	<?php  } ?>
+	
+  console.log(previousdata);
+
 var revenueMonthlyChartOptions = {
 	animationEnabled: true,
 		title:{
@@ -141,9 +157,9 @@ var revenueMonthlyChartOptions = {
 		data: [{
 		type: "stackedColumn",
 		showInLegend: true,
-		color: "#696661",
+		color: "#71c58f",
 		name: "Current Year", //new Date(2020,4).toLocaleString('default', { month: 'long' })
-		dataPoints: [
+		/*dataPoints: [
 			{ y: 6.75, label: new Date(2020,0).toLocaleString("default", { month: "long" }) },
 			{ y: 6.75, label: new Date(2020,1).toLocaleString("default", { month: "long" }) },
 			{ y: 8.57, label: new Date(2020,2).toLocaleString("default", { month: "long" }) },
@@ -156,27 +172,31 @@ var revenueMonthlyChartOptions = {
 			{ y: 13.97, label: new Date(2020,9).toLocaleString("default", { month: "long" }) },
 			{ y: 15.42, label: new Date(2020,10).toLocaleString("default", { month: "long" }) },
 			{ y: 17.26, label: new Date(2020,11).toLocaleString("default", { month: "long" }) }
-		]
+		]*/
+		dataPoints : currentdata	
 		},
 		{        
 			type: "stackedColumn",
 			showInLegend: true,
 			name: "Previous Year",
-			color: "#EDCA93",
-			dataPoints: [
+			color: "#e2a22d",			
+			dataPoints:previousdata
+			/*dataPoints: [
 				{ y: 6.82, label: new Date(2020,0).toLocaleString("default", { month: "long" }) },
 				{ y: 6.82, label: new Date(2020,1).toLocaleString("default", { month: "long" }) },
 				{ y: 9.02, label: new Date(2020,2).toLocaleString("default", { month: "long" }) },
 				{ y: 11.80, label: new Date(2020,3).toLocaleString("default", { month: "long" }) },
-				{ y: 14.11, label: new Date(2020,4).toLocaleString("default", { month: "long" }) },
+				{ y: 10, label: new Date(2020,4).toLocaleString("default", { month: "long" }) },
 				{ y: 15.96, label: new Date(2020,5).toLocaleString("default", { month: "long" }) },
 				{ y: 17.73, label: new Date(2020,6).toLocaleString("default", { month: "long" }) },
 				{ y: 21.5, label: new Date(2020,7).toLocaleString("default", { month: "long" }) },
 				{ y: 11.80, label: new Date(2020,8).toLocaleString("default", { month: "long" }) },
 				{ y: 14.11, label: new Date(2020,9).toLocaleString("default", { month: "long" }) },
 				{ y: 15.96, label: new Date(2020,10).toLocaleString("default", { month: "long" }) },
-				{ y: 17.73, label: new Date(2020,11).toLocaleString("default", { month: "long" }) }			]
-		}]
+				{ y: 17.73, label: new Date(2020,11).toLocaleString("default", { month: "long" }) }			
+			   ] */
+		}
+	  ]
    };
 
 var visitorsDrilldownedChartOptions = {

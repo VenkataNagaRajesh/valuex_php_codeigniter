@@ -191,7 +191,7 @@
                     </div>
                 </div> 
                 <div class='form-group'>   
-                    <div class="col-md-12" align="center" >                        
+                    <div class="col-md-12" align="center">                        
                         <input type="submit" class="btn btn-success" value="<?=$this->lang->line("update_contract")?>" >                        
                     </div>
                 </div>

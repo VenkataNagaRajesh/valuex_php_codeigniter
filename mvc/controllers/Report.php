@@ -6,11 +6,12 @@ class Report extends Admin_Controller {
 		parent::__construct();	
 		$this->load->model('report_m');
 		$language = $this->session->userdata('lang');
-		$this->lang->load('report', $language);	
+		$this->lang->load('report', $language);			
+
+
 	}
 
-	public function index() {
-		
+	public function index() {		
 		$cabins = $this->report_m->getAirlineCabins();	
 		$i = 0;
 		foreach($cabins as $cabin){
@@ -23,14 +24,30 @@ class Report extends Admin_Controller {
 			}
 		  $i++;			
 		}
-		     
+
+		$start    = (new DateTime('2019-10-01'))->modify('first day of this month');
+		$end      = (new DateTime('2019-12-30'))->modify('first day of next month');
+		$interval = DateInterval::createFromDateString('1 month');
+		$period   = new DatePeriod($start, $interval, $end);
+
+		foreach ($period as $dt) {
+		  $this->data['current'][]=$dt->format("M");
+		}
+		$this->data['current'] = array_fill_keys($this->data['current'],0);
+		 
+
 		$this->data['report'] = $this->report_m->get_report();
 		$bid_accepted =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
 		$bid_rejected =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
+
 		foreach($this->data['report'] as $feed){
 			$feed->p_count = count(explode('<br>',$feed->p_list));
-		}
-		// print_r($this->data['report']); exit;
+			$feed->dep_date = date('Y-m-d',$feed->flight_date);
+			if ($feed->booking_status == $bid_accepted) {
+			 $this->data['current'][date('M',$feed->flight_date)] +=  $feed->bid_value;
+			} 
+		}		
+		 //print_r($this->data['current']); exit;
 		//bid_value,
 		$this->data['total_accept_revenue'] = 0;
 		foreach($this->data['upgrade_cabins'] as $cab){			

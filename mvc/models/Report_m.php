@@ -7,6 +7,7 @@ class Report_m extends MY_Model {
 	}
 
     public function get_report($airlineID = 3958){
+          
       $query = "  select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
@@ -46,10 +47,11 @@ class Report_m extends MY_Model {
 					INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf1.carrier_code)
                                         INNER JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 and cab.alias = fdef.level)
                                         LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
-					where pf1.is_processed = 1   
+					where pf1.is_processed = 1  AND pf1.dep_date >= ".strtotime('2019-10-01')." AND pf1.dep_date <= ".strtotime('2019-12-30')." 
                                         group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
                    ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number ) ";
                    $query .= " WHERE SubSet.carrier_code = ".$airlineID;
+            // print_r($query)     ; exit;
             $result =   $this->db->query($query);
             return $result->result();
     }

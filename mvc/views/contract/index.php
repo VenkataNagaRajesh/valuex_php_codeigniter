@@ -101,7 +101,7 @@
                         <td><?=date_format(date_create($product->start_date),'d-m-Y')?></td>
                         <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
                         <td><?=$product->no_users?></td>
-                        <td style="color:<?=$product->color?>;"><?="Expire in ". $product->expire?></td>
+                        <td style="color:<?=$product->color?>;"><?="Expires in ". $product->expire."D"?></td>
                     </tr>
                     <?php } ?>
                      <?php $j++; } //products end
