@@ -19,25 +19,27 @@
 			   echo form_dropdown("year", $ylist,set_value("year",$year), "id='year' class='form-control hide-dropdown-icon select2'"); ?>	 
 			</div>
 			<div class="col-md-2">
-				<select name="from_month" id="from_month" class="form-control hide-dropdown-icon select2"   >
-				<option value="0">From Month</option>
+				<select name="from_month" id="from_month" class="form-control hide-dropdown-icon select2">				
 				</select>
 			</div>
 			<div class="col-md-2">
-				<select name="to_month" id="to_month" class="form-control hide-dropdown-icon select2"   >
-  				<option value="0">To Month</option>
+				<select name="to_month" id="to_month" class="form-control hide-dropdown-icon select2" >  				
 				</select>
+			</div>
+			<div class="col-md-2">
+			<?php $types = array("1" => "Departure Report","2" =>"Sales Report"); 			   				
+			   echo form_dropdown("type", $types,set_value("type",$type), "id='type' class='form-control hide-dropdown-icon select2'"); ?>	 
 			</div>	
 			<div class="col-md-2">
-				<button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Report</button>				
+				<button type="submit" class="form-control btn btn-danger">Report</button>				
 			</div>
 		  </div>
 	   </form>
 	</div>
 	<div class="col-md-12 off-elg-table">
-<?php $colors = array('#E7823A','#546BC1','#6dad92','#e65b82','#65d8d8','#babd0b'); ?>
-<div class="row">
-	<div class="col-md-2" style="margin-top:20px;margin-left:0px;">
+	<?php $colors = array('#E7823A','#546BC1','#6dad92','#e65b82','#65d8d8','#babd0b'); ?>
+	<div class="col-md-3" style="margin-top:20px;margin-left:0px;">
+	<h4> Total Revenue : $<?=$total_accept_revenue?></h4>
 	<?php $i = 1;foreach($upgrade_cabins as $cab){
 	  $cabs = explode('-',$cab['name']);
 	  $cab_name = strtolower($cabs[0].$cabs[1]); 
@@ -52,8 +54,8 @@
       </div>
 	  <?php  } $i++; } ?>
 	</div>
-	<div class="col-md-6">
-		<div id="revenuechart" style="height: 250px; width: 100%;margin-top:20px"></div>
+	<div class="col-md-5">
+		<div id="revenuechart" style="height: 250px; width: 100%;margin-top:20px" ></div>		
 		<div id="revenuemonthlychart" style="height: 250px; width: 100%;margin-top:20px"></div>
 	</div>
 	<div class="col-md-4">
@@ -63,28 +65,25 @@
 	  
          if(!empty($$cab_name['report']) && !empty($$cab_name['accept_revenue'])){ ?>		 
 			<div class="col-md-6">
-				<div id="progress-<?=$cab_name?>"  class="pie-title-center" data-percent="<?=round(($$cab_name['accept_revenue']/$total_accept_revenue)*100)?>" style="height: 250px; width: 100%;margin-top:20px">
+				<div id="progress-<?=$cab_name?>"  class="pie-title-center" data-percent="<?=round(($$cab_name['accept_revenue']/$total_accept_revenue)*100)?>" style="height: 180px; width: 100%;margin-top:20px">
 					<span class="pie-value"></span>
 					<p><?=$$cab_name['title']?></p>
 				</div>	
-			</div>
-        			
-		 <?php $i++; } } ?>	
+			</div>       			
+		 <?php $i++; } } ?>			
 		</div>
-	</div>
-  </div>
+	</div>  
 </div>
 <!--<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>-->
 <script src="<?=base_url('assets/chartjs/canvasjs.min.js')?>"></script>
 <script src="<?=base_url('assets/chartjs/pie-chart.js')?>"></script>
 <script>
 $(document).ready(function(){
-	$('#year').val(<?=$year?>).trigger('change');
-	console.log(<?=$from_month?>);
-	console.log(<?=$to_month?>);
-	$('#from_month').val(<?=$from_month?>);
-	$('#to_month').val(<?=$to_month?>);
-})
+	$('#year').val(<?=$year?>).trigger('change');	
+	$('#from_month').val(<?=$from_month?>).trigger('change');	
+	$('#to_month').val(<?=$to_month?>).trigger('change');	
+	$('#type').val(<?=$type?>).trigger('change');	
+});
 $('.select2').select2();
 $('#year').change(function(){
 	var year = <?=date('Y')?>;
@@ -94,12 +93,19 @@ $('#year').change(function(){
     	end_month = 11;
 	}
 	var html = '',value=0;
+	var from_selected = '';
+	var to_selected = '';
+	var from_html = "<option value='0'>From Month</option>";
+	var to_html = "<option value='0'>To Month</option>";
 	for(var i=0;i<=end_month;i++){
 		value = i+1;
-		html += '<option value="'+value+'">'+new Date($(this).val(),i).toLocaleString("default", { month: "long" })+'</option>';
+		from_selected = (<?=$from_month?>==value)?'selected':'';
+		to_selected = (<?=$to_month?>==value)?'selected':'';		
+		from_html += '<option value="'+value+'" '+from_selected+' >'+new Date($(this).val(),i).toLocaleString("default", { month: "long" })+'</option>';
+		to_html += '<option value="'+value+'" '+to_selected+'>'+new Date($(this).val(),i).toLocaleString("default", { month: "long" })+'</option>';
 	}	
-	var from_html = "<option value='0'>From Month</option>"+html;
-	var to_html = "<option value='0'>To Month</option>"+html;
+	
+	
 	$('#from_month').html(from_html);
 	$('#to_month').html(to_html);	
 });
@@ -192,7 +198,7 @@ var currentdata = [];
 	<?php  } ?>
 
 	var previousdata = [];
-	<?php  foreach($current as $key => $value){ ?>
+	<?php  foreach($previous as $key => $value){ ?>
 		  pobj = {y: <?=$value?>, label:"<?=$key?>"};
 		  console.log(<?=$value?>);
 		  previousdata.push(pobj);

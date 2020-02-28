@@ -43,8 +43,14 @@ class Report extends Admin_Controller {
 		} else {
 			$this->data['to_month'] = date('m');
 		}
+		if($this->input->post('type')){
+			$this->data['type'] = $this->input->post('type');
+		} else {
+			$this->data['type'] = 1;
+		}
 		$from_date = $this->data['year'].'-'.$this->data['from_month'].'-01';
 		$to_date = $this->data['year'].'-'.$this->data['to_month'].'-30';
+
 
 		$roleID = $this->session->userdata('loginuserID');
 		  if($roleID != 1){
@@ -75,21 +81,32 @@ class Report extends Admin_Controller {
 		  $this->data['current'][]=$dt->format("M");
 		}
 		$this->data['current'] = array_fill_keys($this->data['current'],0);
-		 
+		$this->data['previous'] = $this->data['current'];
 
-		$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$from_date,$to_date);
+		$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$from_date,$to_date,$this->data['type']);
+		$this->data['previous_report'] = $this->report_m->get_report($this->data['airlineID'],date('Y-m-d', strtotime('-1 year', strtotime($from_date))),date('Y-m-d', strtotime('-1 year', strtotime($to_date))),$this->data['type']);
+
 		$bid_accepted =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
 		$bid_rejected =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
-
+		//print_r($this->data['report']); exit;
 		foreach($this->data['report'] as $feed){
 			$feed->p_count = count(explode('<br>',$feed->p_list));
 			$feed->dep_date = date('Y-m-d',$feed->flight_date);
 			if ($feed->booking_status == $bid_accepted) {
 			 $this->data['current'][date('M',$feed->flight_date)] +=  $feed->bid_value;
 			} 
-		}		
-		 //print_r($this->data['current']); exit;
-		//bid_value,
+		}
+		
+		foreach($this->data['previous_report'] as $feed){
+			$feed->p_count = count(explode('<br>',$feed->p_list));
+			$feed->dep_date = date('Y-m-d',$feed->flight_date);
+			if ($feed->booking_status == $bid_accepted) {
+			 $this->data['previous'][date('M',$feed->flight_date)] +=  $feed->bid_value;
+			} 
+		}
+		
+		 //print_r($this->data['previous']); exit;
+		
 		$this->data['total_accept_revenue'] = 0;
 		foreach($this->data['upgrade_cabins'] as $cab){			
 			$cabs = explode('-',$cab['name']);
