@@ -2,7 +2,7 @@
 
 class Airline_cabin_def_m extends MY_Model {
 
-	protected $_table_name = 'VX_airline_cabin_class';
+	protected $_table_name = 'VX_airline_cabin_def';
 	protected $_primary_key = 'map_id';
 	protected $_primary_filter = 'intval';
 	protected $_order_by = "map_id";
@@ -13,7 +13,7 @@ class Airline_cabin_def_m extends MY_Model {
 
 
 	function get_airline_cabin_defbyid($id) {
-                $query = $this->db->get_where('VX_airline_cabin_class',array('map_id'=>$id));
+                $query = $this->db->get_where('VX_airline_cabin_def',array('map_id'=>$id));
                 return $query->row();
         }
 
@@ -22,7 +22,7 @@ class Airline_cabin_def_m extends MY_Model {
 	 function get_mapped_airlines() {
 
 		$this->db->distinct();
-		$this->db->select('carrier')->from('VX_airline_cabin_class');
+		$this->db->select('carrier')->from('VX_airline_cabin_def');
 		$query = $this->db->get();
                 $result = $query->result();
 
@@ -31,7 +31,7 @@ class Airline_cabin_def_m extends MY_Model {
 
 	function checkCarrierDataByID($id){
 		$this->db->select('*');
-		$this->db->from('VX_airline_cabin_class');
+		$this->db->from('VX_airline_cabin_def');
 		$this->db->where('carrier',$id);
 	        $query = $this->db->get();
 		$result = $query->result();
@@ -50,7 +50,7 @@ class Airline_cabin_def_m extends MY_Model {
 	function checkClassDataForCarrierID($id){
 
 		$this->db->select('count(*) as cnt');
-                $this->db->from('VX_airline_cabin_class');
+                $this->db->from('VX_airline_cabin_def');
 		$this->db->where('map_id',$id);
                 $query = $this->db->get();
                 return $query->row('cnt');
@@ -72,14 +72,14 @@ class Airline_cabin_def_m extends MY_Model {
 
 	function getListOfMappedCarriers(){
 		$this->db->distinct();
-		$this->db->select('carrier')->from('VX_airline_cabin_class');
+		$this->db->select('carrier')->from('VX_airline_cabin_def');
 		$query = $this->db->get();
 		$result = $query->result();
 		return array_column($result,'carrier');
 	}
 
   public function getAirlineCabinsByName(){
-                $this->db->select('cabin_map_id, name')->from('VX_airline_cabin_map');
+                $this->db->select('cabin_map_id, name')->from('VX_aln_airline_cabin_map');
                 $query = $this->db->get();
 		$result = $query->result();
 		$list = array();
@@ -108,7 +108,7 @@ function getAirlinesToMap($array) {
 }
 	function delete_airline_cabin_def($array){
 		 $this->db->where($array);
-          	$this->db->delete('VX_airline_cabin_class');
+          	$this->db->delete('VX_airline_cabin_def');
               return TRUE;
 
 	}
@@ -119,8 +119,8 @@ function getAirlinesToMap($array) {
 
 
 	function getCabinFromClassForCarrier($carrier_id , $class ) {
-		$this->db->select('airline_cabin as cabin_id , acc.rbd_markup,  aca.code as cabin_code, aca.aln_data_value as cabin_name')->from('VX_airline_cabin_class acc');	
-		$this->db->join('VX_data_defns aca', 'aca.vx_aln_data_defnsID = acc.airline_cabin','LEFT');
+		$this->db->select('airline_cabin as cabin_id , acc.rbd_markup,  aca.code as cabin_code, aca.aln_data_value as cabin_name')->from('VX_airline_cabin_def acc');	
+		$this->db->join('VX_data_defns  aca', 'aca.vx_aln_data_defnsID = acc.airline_cabin','LEFT');
 		$this->db->where('carrier', $carrier_id);
 		$this->db->where('airline_class',$class);
 		 $this->db->limit(1);
@@ -132,9 +132,9 @@ function getAirlinesToMap($array) {
 
 
 	function validateCabinMapData($carrier_code,$class) {
-		$this->db->select('airline_cabin as cabin_id , acc.rbd_markup,  aca.code as cabin_code, aca.aln_data_value as cabin_name')->from('VX_airline_cabin_class acc');
-                $this->db->join('VX_data_defns aca', 'aca.vx_aln_data_defnsID = acc.airline_cabin and aca.aln_data_typeID = 13','LEFT');
-		$this->db->join('VX_data_defns car', 'car.vx_aln_data_defnsID = acc.carrier and car.aln_data_typeID = 12','LEFT');
+		$this->db->select('airline_cabin as cabin_id , acc.rbd_markup,  aca.code as cabin_code, aca.aln_data_value as cabin_name')->from('VX_airline_cabin_def acc');
+                $this->db->join('VX_data_defns  aca', 'aca.vx_aln_data_defnsID = acc.airline_cabin and aca.aln_data_typeID = 13','LEFT');
+		$this->db->join('VX_data_defns  car', 'car.vx_aln_data_defnsID = acc.carrier and car.aln_data_typeID = 12','LEFT');
                 $this->db->where('car.code', $carrier_code);
                 $this->db->where('airline_class',$class);
                  $this->db->limit(1);
@@ -146,7 +146,7 @@ function getAirlinesToMap($array) {
 	}
 
 	function getDummyCabinsList(){
-		$this->db->select('alias, code')->from('VX_data_defns');
+		$this->db->select('alias, code')->from('VX_data_defns ');
 		$this->db->where('aln_data_typeID','13');
 		$query = $this->db->get();
                 $data = $query->result();
@@ -155,9 +155,8 @@ function getAirlinesToMap($array) {
 		
 
 	function getCabinsDataForCarrier($carrier, $ret = 0){
-		$this->db->select('dd.vx_aln_data_defnsID ,def.level, def.cabin')->from('VX_airline_cabin_class cd');
-		$this->db->join('VX_airline_cabin_def def','(def.carrier = cd.carrier )','INNER'); 
-		$this->db->join('VX_data_defns dd', 'dd.alias = def.level and dd.aln_data_typeID = 13','LEFT');
+		$this->db->select('dd.vx_aln_data_defnsID ,cd.level, cd.cabin')->from('VX_airline_cabin_def cd');
+		$this->db->join('VX_data_defns  dd', 'dd.alias = cd.level and dd.aln_data_typeID = 13','LEFT');
 		$this->db->where('cd.carrier',$carrier);
 		$query = $this->db->get();
                 $data = $query->result();
@@ -175,7 +174,7 @@ function getAirlinesToMap($array) {
 	//	} 
 			/*else {
 
-				$this->db->select('dd.vx_aln_data_defnsID , cd.cabin')->from('VX_airline_cabin_class cd');
+				$this->db->select('dd.vx_aln_data_defnsID , cd.cabin')->from('VX_aln_airline_cabin_def cd');
 		                $this->db->join('vx_aln_data_defns dd', 'dd.alias = cd.level and dd.aln_data_typeID = 13','LEFT');
                 		$this->db->where('cd.carrier',0);
                 		$query = $this->db->get();
@@ -195,8 +194,8 @@ function getAirlinesToMap($array) {
 	}
 
 	function getCabinIDForCarrierANDCabin($carrier,$cabin){
-                $this->db->select('dd.vx_aln_data_defnsID , cd.cabin')->from('VX_airline_cabin_class cd');
-                $this->db->join('VX_data_defns dd', 'dd.alias = cd.level and dd.aln_data_typeID = 13','LEFT');
+                $this->db->select('dd.vx_aln_data_defnsID , cd.cabin')->from('VX_airline_cabin_def cd');
+                $this->db->join('VX_data_defns  dd', 'dd.alias = cd.level and dd.aln_data_typeID = 13','LEFT');
                 $this->db->where('cd.carrier',$carrier);
 		$this->db->where('cd.cabin',$cabin);
 		$this->db->limit(1);
@@ -212,7 +211,7 @@ function getAirlinesToMap($array) {
 
 
 		/*else {
-			$this->db->select('dd.vx_aln_data_defnsID , cd.cabin')->from('VX_airline_cabin_class cd');
+			$this->db->select('dd.vx_aln_data_defnsID , cd.cabin')->from('VX_aln_airline_cabin_def cd');
 	                $this->db->join('vx_aln_data_defns dd', 'dd.alias = cd.level and dd.aln_data_typeID = 13','LEFT');
         	        $this->db->where('cd.carrier',0);
                 	$this->db->where('cd.cabin',$cabin);
@@ -227,3 +226,5 @@ function getAirlinesToMap($array) {
 
 }
 
+/* End of file user_m.php */
+/* Location: .//D/xampp/htdocs/school/mvc/models/user_m.php */
