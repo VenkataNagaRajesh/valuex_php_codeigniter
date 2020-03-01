@@ -29,7 +29,7 @@
                                 <?=$this->session->userdata("usertype")?>
                             </a>
 							
-							<?php if($this->session->userdata('roleID') != 1){ 
+							<?php if($this->session->userdata('usertypeID') == 1 && $this->session->userdata('roleID') != 1 && $this->session->userdata('roleID') != 5){ 
 								$carray[0] = 'Select Carrier';
 								      foreach($loginairlines as $airline){ 
 								        $carray[$airline->vx_aln_data_defnsID] = $airline->code;

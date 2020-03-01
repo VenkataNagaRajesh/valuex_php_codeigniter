@@ -40,7 +40,8 @@
                                                                  $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
 							}
 							$roleID = $this->session->userdata('roleID');
-                                                        if($roleID == 2){
+							$usertypeID = $this->session->userdata('usertypeID');
+                                                        if($usertypeID == 2){
                                                                 $default_airlineID =  key($airlinelist);
 														} else {
 								$default_airlineID = 0;

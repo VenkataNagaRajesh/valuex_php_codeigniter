@@ -294,8 +294,8 @@ class Trigger extends Admin_Controller {
 					$this->season_airport_map_m->delete_old_orig_entries($season->VX_aln_seasonID);
 				} 
 					$origfinallist = $orig_list;
-				
-				
+				//print_r($isNewOrigEntry);
+				//print_r($origfinallist); exit;
 				if (!$isNewDestEntry) {
 					/* $DestOldlist = $this->season_airport_map_m->get_dest_season_airport_mapdata($season->VX_aln_seasonID);
 					$Destremovelist = array_diff($DestOldlist,$dest_list); 
