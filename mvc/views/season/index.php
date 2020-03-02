@@ -7,7 +7,7 @@
 				<div class="row">
 					<div class="col-md-3 col-sm-3 select-form">
 						<div class="col-md-12">
-							<input type="text" class="form-control"  placeholder="Enter Name" id="season_name" name="season_name" value="<?=set_value('season_name')?>">
+							<input type="text" class="form-control"  placeholder="Season Name" id="season_name" name="season_name" value="<?=set_value('season_name')?>">
 						</div>
 						<div class="col-md-12">
 							<?php

@@ -294,7 +294,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id, pext.dtpf_id , pext.dtpfext
 		     LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = pf.carrier_code AND dai.aln_data_typeID = 12)
 		     LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = pf.frequency AND dfre.aln_data_typeID = 14)
 		     INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf.carrier_code)
-		     INNER JOIN vx_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13 and fca.alias = fdef.level)
+		     INNER JOIN VX_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13 and fca.alias = fdef.level)
 		     INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code)
                      INNER JOIN VX_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13 and tca.alias = tdef.level)
 		     INNER JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
