@@ -90,22 +90,29 @@ class Report extends Admin_Controller {
 
 		$bid_accepted =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
 		$bid_rejected =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
+		
+		if($this->data['type'] == 1){
+			$filter_date = 'flight_date';
+		} else {
+			$filter_date = 'bid_submit_date';
+		}
 		//print_r($this->data['report']); exit;
 		foreach($this->data['report'] as $feed){
-			$feed->p_count = count(explode('<br>',$feed->p_list));
-			$feed->dep_date = date('Y-m-d',$feed->flight_date);
-			if ($feed->booking_status == $bid_accepted) {
-			 $this->data['current'][date('M',$feed->flight_date)] +=  $feed->bid_value;
-			} 
+				$feed->p_count = count(explode('<br>',$feed->p_list));
+				$feed->dep_date = date('Y-m-d',$feed->flight_date);
+				if ($feed->booking_status == $bid_accepted) {
+				 $this->data['current'][date('M',$feed->$filter_date)] +=  $feed->bid_value;
+				}
 		}
-		
 		foreach($this->data['previous_report'] as $feed){
-			$feed->p_count = count(explode('<br>',$feed->p_list));
-			$feed->dep_date = date('Y-m-d',$feed->flight_date);
-			if ($feed->booking_status == $bid_accepted) {
-			 $this->data['previous'][date('M',$feed->flight_date)] +=  $feed->bid_value;
-			} 
+				$feed->p_count = count(explode('<br>',$feed->p_list));
+				$feed->dep_date = date('Y-m-d',$feed->flight_date);
+				if ($feed->booking_status == $bid_accepted) {
+				 $this->data['previous'][date('M',$feed->$filter_date)] +=  $feed->bid_value;
+				}
+
 		}
+
 		
 		 //print_r($this->data['previous']); exit;
 		

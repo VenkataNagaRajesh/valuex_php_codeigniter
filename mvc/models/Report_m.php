@@ -8,9 +8,9 @@ class Report_m extends MY_Model {
 
     public function get_report($airlineID,$from_date,$to_date,$type = 1){ 
         if($type == 2){
-          $where = " WHERE bid.bid_submit_date >= ".strtotime($from_date)." AND bid.bid_submit_date <= ".strtotime($to_date);         
+          $swhere = " WHERE bid.bid_submit_date >= ".strtotime($from_date)." AND bid.bid_submit_date <= ".strtotime($to_date);         
         } else {
-          $where = " AND pf1.dep_date >= ".strtotime($from_date)." AND pf1.dep_date <= ".strtotime($to_date);
+          $dwhere = " AND pf1.dep_date >= ".strtotime($from_date)." AND pf1.dep_date <= ".strtotime($to_date);
         }
           
       $query = "  select  SQL_CALC_FOUND_ROWS  
@@ -33,7 +33,7 @@ class Report_m extends MY_Model {
                                         INNER JOIN UP_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) 
                                          INNER JOIN UP_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type)
                                           LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20)
-                                          ".$where."                                        
+                                          ".$swhere."                                        
                                          ) as MainSet"; 
                        
                         $query .= " INNER  JOIN (
@@ -52,7 +52,7 @@ class Report_m extends MY_Model {
 					INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf1.carrier_code)
                                         INNER JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 and cab.alias = fdef.level)
                                         LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
-                                        where pf1.is_processed = 1 ".$where." group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
+                                        where pf1.is_processed = 1 ".$dwhere." group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
                    ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number ) ";
                    $query .= " WHERE SubSet.carrier_code = ".$airlineID;
                   
