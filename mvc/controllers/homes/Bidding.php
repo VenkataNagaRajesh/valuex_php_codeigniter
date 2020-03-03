@@ -26,7 +26,13 @@ class Bidding extends MY_Controller {
 
 		}
   
-    public function index() {  
+    public function index() { 
+		$this->load->library('user_agent');
+		if ($this->agent->is_mobile()){
+           $this->data['mobile_view'] ="mb_";
+        } else {
+		   $this->data['mobile_view'] = "";
+		}
       //$this->session->set_userdata('pnr_ref','AS0414');
       //$this->session->set_userdata('validation_check',1);	 
        if(!empty($this->input->get('pnr_ref'))){
@@ -114,7 +120,7 @@ class Bidding extends MY_Controller {
 		
 		
        	
-	  //  print_r($this->data['airline_video_link']); exit;
+	  //  print_r($this->data['results']); exit;
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);
 	}
