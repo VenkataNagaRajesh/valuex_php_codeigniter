@@ -23,10 +23,14 @@ class Report extends Admin_Controller {
 					//'assets/datepicker/datepicker.js'
 			)
 		); 
+		$roleID = $this->session->userdata('roleID');
+		$userID = $this->session->userdata('loginuserID');
 		if($this->input->post('airlineID')){
 			$this->data['airlineID'] = $this->input->post('airlineID');
-		} else {
-			$this->data['airlineID'] = 3958;
+		} else if($roleID != 1 && $roleID != 5){
+		    $this->data['airlineID'] = $this->session->userdata('default_airline');
+	    } else {
+			$this->data['airlineID'] = 0;
 		}
 		if($this->input->post('year')){
 			$this->data['year'] = $this->input->post('year');
@@ -50,9 +54,7 @@ class Report extends Admin_Controller {
 		}
 		$this->data['from_date'] = $this->data['year'].'-'.$this->data['from_month'].'-01';
 		$this->data['to_date'] = $this->data['year'].'-'.$this->data['to_month'].'-30';
-
-
-		$roleID = $this->session->userdata('loginuserID');
+		
 		  if($roleID != 1){
 			$this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		  } else {

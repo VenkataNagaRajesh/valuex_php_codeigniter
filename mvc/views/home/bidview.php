@@ -355,7 +355,7 @@ $(document).ready(function () {
 	 $i = array_search($key, explode(',',$result->fclr)); 
 	 if($flag == 1 && explode(',',$result->min)[$i]){  ?>  
 	$('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>]').filter('[value="<?=$value.'|'.$key?>"]').attr('checked', true);
-     
+    $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>]:checked').trigger('change'); 
 	$('#<?=$mobile_view?>bid_min_<?=$result->flight_number?>').text(numformat(<?php echo explode(',',$result->min)[$i]; ?>));
     $('#<?=$mobile_view?>bid_max_<?=$result->flight_number?>').text(numformat(<?php echo explode(',',$result->max)[$i]; ?>));
 
@@ -363,7 +363,7 @@ $(document).ready(function () {
     changeColors(<?=$result->flight_number?>);
 	updateCabinMedia(<?=$result->flight_number?>);
 
-	//$('input[type=radio][name=bid_cabin_<?=$result->flight_number?>]:checked').trigger('change');
+	
   <?php } } } ?>    
  // $("#tot").text(tot_avg*<?=$passengers_count?>);
   //$("#bidtot").text(tot_avg*<?=$passengers_count?>);  
