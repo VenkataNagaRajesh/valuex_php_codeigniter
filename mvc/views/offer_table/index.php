@@ -240,7 +240,8 @@ $("#dep_from_date").datepicker({
 		           {"name": "pnr_ref","value": $("#pnr_ref").val()},
 				 {"name": "carrier","value": $("#carrier").val()},
 		           {"name": "offer_status","value": $("#offer_status").val()},
-                  
+                   {"name":"bid_from_date","value":"<?=$bid_from_date?>"},
+                   {"name":"bid_to_date","value":"<?=$bid_to_date?>"},
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',

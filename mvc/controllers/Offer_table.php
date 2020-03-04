@@ -82,9 +82,22 @@ class Offer_table extends Admin_Controller {
                 } else {
                   $this->data['to_cabin'] = 0;
                 }
+              
+          if(!empty($this->input->post('type'))){
+             if($this->input->post('month') && $this->input->post('year')){
+                $month = date_parse($this->input->post('month'))['month'];
+                $_POST['from_date'] = "01-".$month."-".$this->input->post('year');
+                $_POST['to_date'] = date("t-m-Y", strtotime($_POST['from_date']));
+             }
 
-
-
+            if($this->input->post('type') == 1){
+               $this->data['dep_from_date'] =$this->input->post('from_date');
+               $this->data['dep_to_date'] =$this->input->post('to_date');
+            } else {
+               $this->data['bid_from_date'] =$this->input->post('from_date');
+               $this->data['bid_to_date'] =$this->input->post('to_date');     
+            }
+         }
 
 	$userID = $this->session->userdata('loginuserID');
                 $roleID = $this->session->userdata('roleID');
@@ -117,11 +130,12 @@ function processbid() {
 $offer_id = htmlentities(escapeString($this->uri->segment(3)));
 $flight_number = htmlentities(escapeString($this->uri->segment(4)));
 $status = htmlentities(escapeString($this->uri->segment(5)));
- 
+
 $this->data['siteinfos'] = $this->reset_m->get_site();
   $passenger_data = $this->offer_issue_m->getPassengerData($offer_id,$flight_number);
+ 
  // get cabin from BID tablee
- $offer_data = $this->offer_issue_m->getBidInfoFromOfferID($offer_id,$flight_number,$passenger_data->carrier_code);
+ $offer_data = $this->offer_issue_m->getBidInfoFromOfferID($offer_id,$flight_number,$passenger_data->carrier_code); 
   $upgrade_cabin =  $offer_data->upgrade_type;
 
 $namelist = explode(',',$passenger_data->passengers);
@@ -401,8 +415,12 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                         $sWhere .= 'SubSet.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                
                 }
 
-
-		
+               if(!empty($this->input->get('bid_from_date')) && !empty($this->input->get("bid_to_date"))){
+                   $mainsetWhere =" WHERE bid.bid_submit_date >= ".strtotime($this->input->get('bid_from_date'))." AND bid.bid_submit_date <= ".strtotime($this->input->get('bid_to_date')); 
+               }else{
+                   $mainsetWhere = "";
+               }
+              // $mainsetWhere = "";
 
 
 $sQuery = " select  SQL_CALC_FOUND_ROWS  
@@ -424,7 +442,8 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
 					INNER JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13 and tcab.alias = tdef.level)
                                         INNER JOIN UP_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) 
                                          INNER JOIN UP_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type)
-					  LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
+                                          LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
+                                          ".$mainsetWhere."
                      ) as MainSet 
 
                         

@@ -62,7 +62,7 @@ class Report_m extends MY_Model {
     }
 
     public function getAirlineCabins($airlineID){
-        $this->db->select('cm.*')->from('VX_airline_cabin_def cm');
+        $this->db->select('cm.*,dd.vx_aln_data_defnsID')->from('VX_airline_cabin_def cm');
         $this->db->join(' VX_data_defns dd','(dd.alias = cm.level and dd.aln_data_typeID = 13)','INNER');
         $this->db->where('carrier',$airlineID);
         $this->db->order_by('cm.level','DESC');

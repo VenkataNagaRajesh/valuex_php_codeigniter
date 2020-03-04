@@ -72,11 +72,12 @@
 			</div>       			
 		 <?php $i++; } } ?>			
 		</div>
-	</div>  
+	</div> 	
 </div>
 <!--<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>-->
 <script src="<?=base_url('assets/chartjs/canvasjs.min.js')?>"></script>
 <script src="<?=base_url('assets/chartjs/pie-chart.js')?>"></script>
+<script type="text/javascript" src="<?php echo base_url('assets/inilabs/jquery.redirect.js'); ?>"></script>
 <script>
 $(document).ready(function(){
 	$('#year').val(<?=$year?>).trigger('change');	
@@ -119,7 +120,7 @@ var totalRevenue = <?=$total_accept_revenue?>;
 	  $cabs = explode('-',$cab['name']);
 	  $cab_name = strtolower($cabs[0].$cabs[1]);	 
          if(!empty($$cab_name['report']) && !empty($$cab_name['accept_revenue'])){ ?>
-		obj = {x: <?=$i*10?>, y: <?=$$cab_name['accept_revenue']?>, name: "<?=$$cab_name['title']?>", color: "<?=$colors[$i-1]?>"};			
+		obj = {x: <?=$i*10?>, y: <?=$$cab_name['accept_revenue']?>, name: "<?=$$cab_name['title']?>",from_cabin:"<?=$$cab_name['from_cabin_id']?>",to_cabin:"<?=$$cab_name['to_cabin_id']?>", color: "<?=$colors[$i-1]?>"};			
 		points.push(obj);  			
 	<?php	}
 	$i++; } ?>
@@ -174,10 +175,20 @@ var revenueChartOptions = {
 };
 
 
-function visitorsChartDrilldownHandler(e) {
-	console.log(e);
-	//alert("sss");
-//	window.location.href= "<?=base_url('airline')?>";	
+function visitorsChartDrilldownHandler(e) {	
+	getReport(e.dataPoint.from_cabin,e.dataPoint.to_cabin,<?=$bid_accepted?>);
+}
+
+function getReport(from_cabin,to_cabin,status){
+	$.redirect('<?=base_url('offer_table')?>', {
+		'carrier':'<?=$airlineID?>',
+		'from_cabin': from_cabin,
+		'to_cabin': to_cabin,
+		'from_date':'<?=$from_date?>',
+		'to_date':'<?=$to_date?>',
+		'type': '<?=$type?>',
+		'offer_status':status
+	});
 }
 
 
@@ -204,7 +215,7 @@ var currentdata = [];
 		  previousdata.push(pobj);
 	<?php  } ?>
 	
-  console.log(previousdata);
+  //console.log(previousdata);
 
 var revenueMonthlyChartOptions = {
 	animationEnabled: true,
@@ -229,6 +240,7 @@ var revenueMonthlyChartOptions = {
 		},
 		data: [{
 		type: "stackedColumn",
+		click: monthlyReport,
 		showInLegend: true,
 		color: "#71c58f",
 		name: "Current Year", //new Date(2020,4).toLocaleString('default', { month: 'long' })
@@ -250,6 +262,7 @@ var revenueMonthlyChartOptions = {
 		},
 		{        
 			type: "stackedColumn",
+			click: monthlyReport,
 			showInLegend: true,
 			name: "Previous Year",
 			color: "#e2a22d",			
@@ -271,6 +284,18 @@ var revenueMonthlyChartOptions = {
 		}
 	  ]
    };
+
+   function monthlyReport(e){	   
+	   console.log(e);
+
+	   $.redirect('<?=base_url('offer_table')?>', {
+		'carrier':'<?=$airlineID?>',		
+		'month':e.dataPoint.label,
+		'year':$("#year").val(),
+		'type': '<?=$type?>',
+		'offer_status':<?=$bid_accepted?>
+		});
+   }
 
 var visitorsDrilldownedChartOptions = {
 	animationEnabled: true,
