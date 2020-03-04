@@ -192,9 +192,9 @@
 																	 ?>       
 																	
 																	<div class="price-range col-md-12">		
-																	<b>Min</b> <i class="fa fa-dollar"></i> <b id="mb_bid_min_<?=$result->flight_number?>"></b>
+																		<span><b>Min</b> <i class="fa fa-dollar"></i> <b id="mb_bid_min_<?=$result->flight_number?>"></b></span>
 																			<input id="mb_bid_slider_<?=$result->flight_number?>" data-slider-id='mb_bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
-																	<b>Max</b> <i class="fa fa-dollar"></i> <b id="mb_bid_max_<?=$result->flight_number?>"></b>
+																		<span class="max-range"><b>Max</b> <i class="fa fa-dollar"></i> <b id="mb_bid_max_<?=$result->flight_number?>"></b></span>
 																	</div>
 																<?php }  ?>
 															</div>

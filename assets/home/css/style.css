@@ -1011,7 +1011,7 @@ input[type=number]::-webkit-outer-spin-button {
 	.radio-mob{
 		padding-left:20px;
 	}
-	.mob-slide i{
+	.mob-slide .panel-title i{
 		float:right;
 		color:#333;
 		font-size: 12px;
@@ -1023,5 +1023,15 @@ input[type=number]::-webkit-outer-spin-button {
 	.mob-slide .panel-group{
 		margin-bottom:0;
 		margin-top:10px;
+	}
+	.mob-slide .price-range .slider-horizontal {
+		width: 100% !important;
+		margin: 0;
+	}
+	.mob-slide .max-range{
+		float:right;
+	}
+	#offer .price-range {
+		height: 100px;
 	}
 }
