@@ -29,7 +29,12 @@ class Resubmit extends MY_Controller {
         if(empty($this->input->get('pnr_ref'))){
 			redirect(base_url('home/index'));
 		}		 
-       
+        $this->load->library('user_agent');
+		if ($this->agent->is_mobile()){
+           $this->data['mobile_view'] ="mb_";
+        } else {
+		   $this->data['mobile_view'] = "";
+		}
         $this->data['bid_received'] =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
 		$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 				

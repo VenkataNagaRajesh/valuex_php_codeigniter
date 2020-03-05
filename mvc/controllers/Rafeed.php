@@ -235,7 +235,12 @@ class Rafeed extends Admin_Controller {
 
 					$booking_country = $Row[array_search('booking country',$import_header)];
 				      $rafeed['booking_country'] = 
-					    $this->airports_m->getDefIdByTypeAndCode($booking_country,'2');
+						$this->airports_m->getDefIdByTypeAndCode($booking_country,'2');
+						
+						if(!$this->rafeed_m->checkRaFeed(array('carrier'=>$rafeed['carrier'],"ticket_number"=>$rafeed['ticket_number']))) {
+							$this->mydebug->rafeed_log("Duplicate Ticket Number  in row " . $column, 1);
+							continue;
+						}
 
 					  if(strlen($booking_country) != 2 || !ctype_alpha($booking_country)){
                                                 $this->mydebug->rafeed_log("Boking country should be 2 alpha code in row " . $column, 1);
