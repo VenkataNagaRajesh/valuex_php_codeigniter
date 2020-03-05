@@ -8,7 +8,7 @@
                foreach($airlines as $airline){
 				 $list[$airline->vx_aln_data_defnsID] = $airline->code;	
 			   }				
-			   echo form_dropdown("airlineID", $list,set_value("airlineID",$airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'"); ?>	
+			   echo form_dropdown("filter_airlineID", $list,set_value("filter_airlineID",$airlineID), "id='filter_airlineID' class='form-control hide-dropdown-icon select2'"); ?>	
 			</div>
 		    <div class="col-md-2">
 			<?php $ylist = array("0" => "Select Year"); 
@@ -16,19 +16,19 @@
                for($i=0;$i<10;$i++){
 				 $ylist[$current_year-$i] = $current_year-$i;	
 			   }				
-			   echo form_dropdown("year", $ylist,set_value("year",$year), "id='year' class='form-control hide-dropdown-icon select2'"); ?>	 
+			   echo form_dropdown("filter_year", $ylist,set_value("filter_year",$year), "id='filter_year' class='form-control hide-dropdown-icon select2'"); ?>	 
 			</div>
 			<div class="col-md-2">
-				<select name="from_month" id="from_month" class="form-control hide-dropdown-icon select2">				
+				<select name="filter_from_month" id="filter_from_month" class="form-control hide-dropdown-icon select2">				
 				</select>
 			</div>
 			<div class="col-md-2">
-				<select name="to_month" id="to_month" class="form-control hide-dropdown-icon select2" >  				
+				<select name="filter_to_month" id="filter_to_month" class="form-control hide-dropdown-icon select2" >  				
 				</select>
 			</div>
 			<div class="col-md-2">
 			<?php $types = array("1" => "Departure Report","2" =>"Sales Report"); 			   				
-			   echo form_dropdown("type", $types,set_value("type",$type), "id='type' class='form-control hide-dropdown-icon select2'"); ?>	 
+			   echo form_dropdown("filter_type", $types,set_value("filter_type",$type), "id='filter_type' class='form-control hide-dropdown-icon select2'"); ?>	 
 			</div>	
 			<div class="col-md-2">
 				<button type="submit" class="form-control btn btn-danger">Report</button>				
@@ -55,8 +55,13 @@
 	  <?php  } $i++; } ?>
 	</div>
 	<div class="col-md-5">
-		<div id="revenuechart" style="height: 250px; width: 100%;margin-top:20px" ></div>		
+		<div id="revenuechart" style="height: 250px; width: 100%;margin-top:20px" ></div>
+		<div id="report" style="margin-top:20px">
+			<button class="btn-btn btn-danger" onclick="yearlyReport(1)" >Current year</button>
+			<button class="btn-btn btn-danger" style="margin-left: 268px;" onclick="yearlyReport(2)">Previous Year</button>
+		</div>		
 		<div id="revenuemonthlychart" style="height: 250px; width: 100%;margin-top:20px"></div>
+		
 	</div>
 	<div class="col-md-4">
 	<?php $i = 1; foreach($upgrade_cabins as $cab){
@@ -66,13 +71,28 @@
          if(!empty($$cab_name['report']) && !empty($$cab_name['accept_revenue'])){ ?>		 
 			<div class="col-md-6">
 				<div id="progress-<?=$cab_name?>"  class="pie-title-center" data-percent="<?=round(($$cab_name['accept_revenue']/$total_accept_revenue)*100)?>" style="height: 180px; width: 100%;margin-top:20px">
-					<span class="pie-value"></span>
+					<a onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)">
+						<span title="<?=number_format($$cab_name['accept_revenue'])?>" class="pie-value"></span>
+					</a>
 					<p><?=$$cab_name['title']?></p>
 				</div>	
 			</div>       			
 		 <?php $i++; } } ?>			
 		</div>
-	</div> 	
+	</div>
+	<form id="reportform" action="<?=base_url('offer_table')?>" style="display:none;" method="post" target='_blank'>
+		<input type="hidden" name="from_date" id="from_date" value="">
+		<input type="hidden" name="to_date" id="to_date" value="">
+		<input type="hidden" name="from_cabin" id="from_cabin" value="">
+		<input type="hidden" name="to_cabin" id="to_cabin" value="">
+		<input type="hidden" name="carrier" id="carrier" value="">
+		<input type="hidden" name="type" id="type" value="">
+		<input type="hidden" name="offer_status" id="offer_status" value="">
+		<input type="hidden" name="month" id="month" value="">
+		<input type="hidden" name="year" id="year" value="">
+		<input type="submit" value="Submit">
+	</form>
+	
 </div>
 <!--<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>-->
 <script src="<?=base_url('assets/chartjs/canvasjs.min.js')?>"></script>
@@ -80,13 +100,49 @@
 <script type="text/javascript" src="<?php echo base_url('assets/inilabs/jquery.redirect.js'); ?>"></script>
 <script>
 $(document).ready(function(){
-	$('#year').val(<?=$year?>).trigger('change');	
-	$('#from_month').val(<?=$from_month?>).trigger('change');	
-	$('#to_month').val(<?=$to_month?>).trigger('change');	
-	$('#type').val(<?=$type?>).trigger('change');	
+	$('#filter_year').val(<?=$year?>).trigger('change');	
+	$('#filter_from_month').val(<?=$from_month?>).trigger('change');	
+	$('#filter_to_month').val(<?=$to_month?>).trigger('change');	
+	$('#filter_type').val(<?=$type?>).trigger('change');	
 });
+
+function yearlyReport(type){	
+	  if(type == 1){
+		 var from_date = "<?=$from_date?>";
+		 var to_date = "<?=$to_date?>";
+	  } else {
+		var from_date = "<?=date('Y-m-d', strtotime('-1 year', strtotime($from_date)))?>";
+		var to_date = "<?=date('Y-m-d', strtotime('-1 year', strtotime($to_date)))?>";
+	  }
+	 
+	   $('#carrier').val(<?=$airlineID?>);
+	   $('#month').val();
+	   $('#year').val();
+	   $('#type').val('<?=$type?>');
+	   $('#offer_status').val(<?=$bid_accepted?>);
+	   $('#from_cabin').val('');
+	   $('#to_cabin').val('');
+	   $('#from_date').val(from_date);
+	   $('#to_date').val(to_date);
+	   $('#reportform').submit();
+}
+
+function progressReport(from_cabin,to_cabin) {	
+		$('#carrier').val('<?=$airlineID?>');
+		$('#from_cabin').val(from_cabin);
+		$('#to_cabin').val(to_cabin);
+		$('#from_date').val('<?=$from_date?>');
+		$('#to_date').val('<?=$to_date?>');
+		$('#type').val( '<?=$type?>');
+		$('#offer_status').val(<?=$bid_accepted?>);
+		$('#month').val('');
+		$('#year').val('');
+	 $("#reportform").submit();	
+}
+
 $('.select2').select2();
-$('#year').change(function(){
+
+$('#filter_year').change(function(){
 	var year = <?=date('Y')?>;
 	if(year == $(this).val()){		
 		end_month = new Date().getMonth();
@@ -107,9 +163,10 @@ $('#year').change(function(){
 	}	
 	
 	
-	$('#from_month').html(from_html);
-	$('#to_month').html(to_html);	
+	$('#filter_from_month').html(from_html);
+	$('#filter_to_month').html(to_html);	
 });
+
 window.onload = function () {
 
 /*----------------------------Revenue Chart By Cabin Combinations ------------------------*/
@@ -132,7 +189,7 @@ var revenueData = {
 		explodeOnClick: false,
 		innerRadius: "75%",
 		legendMarkerType: "square",
-		name: "New vs Returning Visitors",
+		name: "Revenue",
 		radius: "100%",
 		showInLegend: true,
 		startAngle: 90,
@@ -176,7 +233,17 @@ var revenueChartOptions = {
 
 
 function visitorsChartDrilldownHandler(e) {	
-	getReport(e.dataPoint.from_cabin,e.dataPoint.to_cabin,<?=$bid_accepted?>);
+		$('#carrier').val('<?=$airlineID?>');
+		$('#from_cabin').val(e.dataPoint.from_cabin);
+		$('#to_cabin').val(e.dataPoint.to_cabin);
+		$('#from_date').val('<?=$from_date?>');
+		$('#to_date').val('<?=$to_date?>');
+		$('#type').val( '<?=$type?>');
+		$('#offer_status').val(<?=$bid_accepted?>);
+		$('#month').val('');
+		$('#year').val('');
+	 $("#reportform").submit();
+	//getReport(e.dataPoint.from_cabin,e.dataPoint.to_cabin,<?=$bid_accepted?>);
 }
 
 function getReport(from_cabin,to_cabin,status){
@@ -190,7 +257,6 @@ function getReport(from_cabin,to_cabin,status){
 		'offer_status':status
 	});
 }
-
 
 var revenuechart = new CanvasJS.Chart("revenuechart", revenueChartOptions);
 revenuechart.options.data = revenueData["revenue_cabins"];
@@ -285,16 +351,24 @@ var revenueMonthlyChartOptions = {
 	  ]
    };
 
-   function monthlyReport(e){	   
-	   console.log(e);
-
-	   $.redirect('<?=base_url('offer_table')?>', {
+   function monthlyReport(e){
+	   $('#carrier').val(<?=$airlineID?>);
+	   $('#month').val(e.dataPoint.label);
+	   $('#year').val($("#filter_year").val());
+	   $('#type').val( '<?=$type?>');
+	   $('#offer_status').val(<?=$bid_accepted?>);
+	   $('#from_cabin').val('');
+	   $('#to_cabin').val('');
+	   $('#from_date').val('');
+	   $('#to_date').val('');
+	   $('#reportform').submit();
+	  /* $.redirect('<?=base_url('offer_table')?>', {
 		'carrier':'<?=$airlineID?>',		
 		'month':e.dataPoint.label,
 		'year':$("#year").val(),
 		'type': '<?=$type?>',
 		'offer_status':<?=$bid_accepted?>
-		});
+		});*/
    }
 
 var visitorsDrilldownedChartOptions = {
@@ -328,7 +402,7 @@ function toolTipContent(e) {
 	var total = 0;
 	var str2, str3;
 	for (var i = 0; i < e.entries.length; i++){
-		var  str1 = "<span style= \"color:"+e.entries[i].dataSeries.color + "\"> "+e.entries[i].dataSeries.name+"</span>: $<strong>"+e.entries[i].dataPoint.y+"</strong><br/>";
+		var  str1 = "<span style= \"color:"+e.entries[i].dataSeries.color + "\"> "+e.entries[i].dataSeries.name+"</span>: $<strong>"+numformat(e.entries[i].dataPoint.y)+"</strong><br/>";
 		total = e.entries[i].dataPoint.y + total;
 		str = str.concat(str1);
 	}
@@ -337,6 +411,10 @@ function toolTipContent(e) {
 	str3 = "<span style = \"color:Tomato\">Total:</span><strong> $"+total+"</strong><br/>";
 	str3 = ""; 
 	return (str2.concat(str)).concat(str3);
+}
+
+function numformat(n){
+	return n.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 }
 }
 

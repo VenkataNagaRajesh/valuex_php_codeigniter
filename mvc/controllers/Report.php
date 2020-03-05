@@ -25,30 +25,30 @@ class Report extends Admin_Controller {
 		); 
 		$roleID = $this->session->userdata('roleID');
 		$userID = $this->session->userdata('loginuserID');
-		if($this->input->post('airlineID')){
-			$this->data['airlineID'] = $this->input->post('airlineID');
+		if($this->input->post('filter_airlineID')){
+			$this->data['airlineID'] = $this->input->post('filter_airlineID');
 		} else if($roleID != 1 && $roleID != 5){
 		    $this->data['airlineID'] = $this->session->userdata('default_airline');
 	    } else {
 			$this->data['airlineID'] = 0;
 		}
-		if($this->input->post('year')){
-			$this->data['year'] = $this->input->post('year');
+		if($this->input->post('filter_year')){
+			$this->data['year'] = $this->input->post('filter_year');
 		} else {
 			$this->data['year'] = date('Y');
 		}
-		if($this->input->post('from_month')){
-			$this->data['from_month'] = $this->input->post('from_month');
+		if($this->input->post('filter_from_month')){
+			$this->data['from_month'] = $this->input->post('filter_from_month');
 		} else {
 			$this->data['from_month'] = 1;
 		}
-		if($this->input->post('to_month')){
-			$this->data['to_month'] = $this->input->post('to_month');
+		if($this->input->post('filter_to_month')){
+			$this->data['to_month'] = $this->input->post('filter_to_month');
 		} else {
 			$this->data['to_month'] = date('m');
 		}
-		if($this->input->post('type')){
-			$this->data['type'] = $this->input->post('type');
+		if($this->input->post('filter_type')){
+			$this->data['type'] = $this->input->post('filter_type');
 		} else {
 			$this->data['type'] = 1;
 		}
@@ -115,8 +115,7 @@ class Report extends Admin_Controller {
 				 $this->data['previous'][date('M',$feed->$filter_date)] +=  $feed->bid_value;
 				}
 
-		}
-         
+		}        
 		
 		$this->data['total_accept_revenue'] = 0;
 		foreach($this->data['upgrade_cabins'] as $cab){			

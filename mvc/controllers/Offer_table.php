@@ -68,6 +68,8 @@ class Offer_table extends Admin_Controller {
                 )
         );
 
+      
+
 
 	if(!empty($this->input->post('from_cabin'))){
                    $this->data['from_cabin'] = $this->input->post('from_cabin');
@@ -82,9 +84,10 @@ class Offer_table extends Admin_Controller {
                 } else {
                   $this->data['to_cabin'] = 0;
                 }
-              
+            
+           // To apply dashboard reports filters     
           if(!empty($this->input->post('type'))){
-             if($this->input->post('month') && $this->input->post('year')){
+             if(!empty($this->input->post('month')) && !empty($this->input->post('year'))){
                 $month = date_parse($this->input->post('month'))['month'];
                 $_POST['from_date'] = "01-".$month."-".$this->input->post('year');
                 $_POST['to_date'] = date("t-m-Y", strtotime($_POST['from_date']));
@@ -97,7 +100,10 @@ class Offer_table extends Admin_Controller {
                $this->data['bid_from_date'] =$this->input->post('from_date');
                $this->data['bid_to_date'] =$this->input->post('to_date');     
             }
+            $this->data['boarding_point'] = 0;
+            $this->data['off_point'] = 0;
          }
+
 
 	$userID = $this->session->userdata('loginuserID');
                 $roleID = $this->session->userdata('roleID');
