@@ -3,10 +3,11 @@
 class Report_m extends MY_Model {
 
     function __construct() {
-		parent::__construct();
+           parent::__construct();               
 	}
 
-    public function get_report($airlineID,$from_date,$to_date,$type = 1){ 
+    public function get_report($airlineID,$from_date,$to_date,$type = 1,$bid_accepted,$bid_rejected){ 
+       
         if($type == 2){
           $swhere = " WHERE bid.bid_submit_date >= ".strtotime($from_date)." AND bid.bid_submit_date <= ".strtotime($to_date);         
         } else {
@@ -33,7 +34,7 @@ class Report_m extends MY_Model {
                                         INNER JOIN UP_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) 
                                          INNER JOIN UP_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type)
                                           LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20)
-                                          ".$swhere."                                        
+                                          ".$swhere." AND (pe.booking_status =".$bid_accepted." OR pe.booking_status =".$bid_rejected." )                                       
                                          ) as MainSet"; 
                        
                         $query .= " INNER  JOIN (
@@ -66,6 +67,14 @@ class Report_m extends MY_Model {
         $this->db->join(' VX_data_defns dd','(dd.alias = cm.level and dd.aln_data_typeID = 13)','INNER');
         $this->db->where('carrier',$airlineID);
         $this->db->order_by('cm.level','DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getPaxCarriers(){
+        $this->db->select("car.*")->from('VX_daily_tkt_pax_feed pax');
+        $this->db->join("VX_data_defns car","(car.vx_aln_data_defnsID = pax.carrier_code AND car.aln_data_typeID = 12)","INNER");
+        $this->db->group_by('car.vx_aln_data_defnsID');
         $query = $this->db->get();
         return $query->result();
     }

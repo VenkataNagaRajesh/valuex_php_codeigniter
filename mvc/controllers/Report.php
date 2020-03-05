@@ -8,7 +8,7 @@ class Report extends Admin_Controller {
 		$this->load->model('user_m');
 		$this->load->model('airline_m');
 		$language = $this->session->userdata('lang');
-		$this->lang->load('report', $language);	
+		$this->lang->load('report', $language);			
 	}
 
 	public function index() {
@@ -87,12 +87,12 @@ class Report extends Admin_Controller {
 		}
 		$this->data['current'] = array_fill_keys($this->data['current'],0);
 		$this->data['previous'] = $this->data['current'];
-
-		$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$this->data['from_date'],$this->data['to_date'],$this->data['type']);
-		$this->data['previous_report'] = $this->report_m->get_report($this->data['airlineID'],date('Y-m-d', strtotime('-1 year', strtotime($this->data['from_date']))),date('Y-m-d', strtotime('-1 year', strtotime($this->data['to_date']))),$this->data['type']);
-
 		$bid_accepted =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
 		$bid_rejected =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
+
+		$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$this->data['from_date'],$this->data['to_date'],$this->data['type'],$bid_accepted,$bid_rejected);
+		$this->data['previous_report'] = $this->report_m->get_report($this->data['airlineID'],date('Y-m-d', strtotime('-1 year', strtotime($this->data['from_date']))),date('Y-m-d', strtotime('-1 year', strtotime($this->data['to_date']))),$this->data['type'],$bid_accepted,$bid_rejected);
+		
 		$this->data['bid_accepted'] = $bid_accepted;
 		$this->data['bid_rejected'] = $bid_rejected;
 		if($this->data['type'] == 1){
@@ -114,7 +114,6 @@ class Report extends Admin_Controller {
 				if ($feed->booking_status == $bid_accepted) {
 				 $this->data['previous'][date('M',$feed->$filter_date)] +=  $feed->bid_value;
 				}
-
 		}        
 		
 		$this->data['total_accept_revenue'] = 0;

@@ -56,12 +56,12 @@
 	</div>
 	<div class="col-md-5">
 		<div id="revenuechart" style="height: 250px; width: 100%;margin-top:20px" ></div>
+				
+		<div id="revenuemonthlychart" style="height: 250px; width: 100%;margin-top:20px"></div>
 		<div id="report" style="margin-top:20px">
 			<button class="btn-btn btn-danger" onclick="yearlyReport(1)" >Current year</button>
 			<button class="btn-btn btn-danger" style="margin-left: 268px;" onclick="yearlyReport(2)">Previous Year</button>
-		</div>		
-		<div id="revenuemonthlychart" style="height: 250px; width: 100%;margin-top:20px"></div>
-		
+		</div>
 	</div>
 	<div class="col-md-4">
 	<?php $i = 1; foreach($upgrade_cabins as $cab){
