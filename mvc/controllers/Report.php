@@ -101,12 +101,38 @@ class Report extends Admin_Controller {
 		/*  To get previous year report by monthly */
 		$pre_where = array('carrier'=>$this->data['airlineID'],'type'=>$this->data['type'],'year'=>$this->data['year']-1,'month >='.$this->data['from_month'],'month <='=>$this->data['to_month']);
 		$this->data['previous_report'] = $this->reportdata_m->getReportdata($pre_where);
-		foreach($this->data['previous_report'] as $feed){
-			if ($rep->accept_revenue > 0) {
-				$monthname = date("M", mktime(0, 0, 0, $rep->month, 01)); 
-				$this->data['previous'][$monthname] +=  $rep->accept_revenue;
+		if(count($this->data['previous_report'])){
+			foreach($this->data['previous_report'] as $feed){
+				if ($rep->accept_revenue > 0) {
+					$monthname = date("M", mktime(0, 0, 0, $rep->month, 01)); 
+					$this->data['previous'][$monthname] +=  $rep->accept_revenue;
+				}
+			}
+			/* Getting previous data from Report data Backup */ 
+			foreach($this->data['upgrade_cabins'] as $cab){
+				$cabs = explode('-',$cab['name']);
+					$cab_name = strtolower($cabs[0].$cabs[1]);
+					$this->data[$cab_name]['pre_report'] = array_filter($this->data['previous_report'],function ($item) use ($cab) {
+						if ($item->from_cabin == $cab['from_cabin_id'] and $item->to_cabin == $cab['to_cabin_id']) {
+							return true;
+						}
+						return false;
+					});
+				if(count($this->data[$cab_name]['pre_report']) > 0){				
+					$this->data[$cab_name]['pre_accept_revenue'] = array_sum(array_column($this->data[$cab_name]['pre_report'],'accept_revenue'));
+					$this->data[$cab_name]['pre_passengers'] = array_sum(array_column($this->data[$cab_name]['pre_report'],'passenger_count'));
+					$this->data[$cab_name]['pre_avg_bid'] = $this->data[$cab_name]['accept_revenue'] / $this->data[$cab_name]['passengers'];
+					$this->data[$cab_name]['pre_reject_revenue'] = array_sum(array_column($this->data[$cab_name]['pre_report'],'reject_revenue'));
+					$this->data[$cab_name]['pre_title'] = $cab['from_cabin'].' To '.$cab['to_cabin'];
+					$this->data[$cab_name]['pre_from_cabin_id'] = $cab['from_cabin_id'];
+					$this->data[$cab_name]['pre_to_cabin_id'] = $cab['to_cabin_id'];				
+				} else {
+					// unset($this->data[$cab_name]);
+					continue;
+				}				
 			}
 		}
+
 		/* To get current year Report By monthly */
 		$where_filter = array('carrier'=>$this->data['airlineID'],'type'=>$this->data['type'],'year'=>$this->data['year'],'month >='.$this->data['from_month'],'month <='=>$this->data['to_month']);
 		$report = $this->reportdata_m->getReportdata($where_filter);
@@ -136,9 +162,11 @@ class Report extends Admin_Controller {
 				$this->data[$cab_name]['to_cabin_id'] = $cab['to_cabin_id'];
 				$this->data['total_accept_revenue'] +=  $this->data[$cab_name]['accept_revenue'];
 			 } else {
-				 unset($this->data[$cab_name]);
+				 //unset($this->data[$cab_name]);
+				 continue;
 			 }				
 		}
+
 		/* To get Current Month Report data */
 		if($this->data['to_month'] == date('m') && $this->data['year'] == date('Y')){
 			$this->data['current_from_date'] = date('Y-m-d', strtotime('first day of this month'));
@@ -185,7 +213,7 @@ class Report extends Admin_Controller {
 					$this->data[$cab_name]['to_cabin_id'] = $cab['to_cabin_id'];
 					$this->data['total_accept_revenue'] +=  $this->data[$cab_name]['accept_revenue'];
 				} else {
-					unset($this->data[$cab_name]);
+					//unset($this->data[$cab_name]);
 					continue;
 				}
 			}

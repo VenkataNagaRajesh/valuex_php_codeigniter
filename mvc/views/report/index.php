@@ -43,13 +43,17 @@
 	<?php $i = 1;foreach($upgrade_cabins as $cab){
 	  $cabs = explode('-',$cab['name']);
 	  $cab_name = strtolower($cabs[0].$cabs[1]); 
-	  if(!empty($$cab_name['report']) && !empty($$cab_name['accept_revenue'])){ ?>
+	  if(!empty($$cab_name['report']) && !empty($$cab_name['accept_revenue'])){
+		  if(round($$cab_name['accept_revenue']) >= round($$cab_name['pre_accept_revenue'])){
+			 $icon = 'up'; $color = "#0c9e0c";
+		  } else {
+		  $icon = 'down'; $color = "#ea2708"; } ?>
 	  <div>
 	  	<h4 class="report-cabin-header"><?=$$cab_name['title']?></h4>
-		<p style="margin-left: 15px;">Revenue : <?=round($$cab_name['accept_revenue'])?> <i class="fa fa-caret-down pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:#0c9e0c" aria-hidden="true"></i></p>
-		<p style="margin-left: 15px;">Passengers : <?=$$cab_name['passengers']?><i class="fa fa-caret-down pull-right"  onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:#0c9e0c" aria-hidden="true"></i></p>
-		<p style="margin-left: 15px;">AVG Bid : <?=round($$cab_name['avg_bid'])?><i class="fa fa-caret-down pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:#0c9e0c" aria-hidden="true"></i></p>
-		<p style="margin-left: 15px;">Rejected Revenue : <?=$$cab_name['reject_revenue']?><i class="fa fa-caret-down pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:#0c9e0c" aria-hidden="true"></i></p>
+		<p style="margin-left: 15px;">Revenue : <?=round($$cab_name['accept_revenue'])?><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:<?=$color?>" aria-hidden="true"></i>		</p>
+		<p style="margin-left: 15px;">Passengers : <?=$$cab_name['passengers']?><i class="fa fa-caret-<?=$icon?> pull-right"  onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:<?=$color?>" aria-hidden="true"></i></p>
+		<p style="margin-left: 15px;">AVG Bid : <?=round($$cab_name['avg_bid'])?><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:<?=$color?>" aria-hidden="true"></i></p>
+		<p style="margin-left: 15px;">Rejected Revenue : <?=$$cab_name['reject_revenue']?><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:<?=$color?>" aria-hidden="true"></i></p>
 		<p style="margin-left: 15px;">LDF where Bid Rejected : 80%</p>
       </div><?php  } $i++; } ?>
 	</div>
