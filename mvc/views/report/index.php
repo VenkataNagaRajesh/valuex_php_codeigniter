@@ -45,22 +45,21 @@
 	  $cab_name = strtolower($cabs[0].$cabs[1]); 
 	  if(!empty($$cab_name['report']) && !empty($$cab_name['accept_revenue'])){ ?>
 	  <div>
-	  	<h4 style="background:#ff6633;color:#ddd;"><?=$$cab_name['title']?></h4>
-		<span>Revenue : <?=round($$cab_name['accept_revenue'])?></span><br>
-		<span>Passengers : <?=$$cab_name['passengers']?></span><br>
-		<span>AVG Bid : <?=round($$cab_name['avg_bid'])?></span><br>
-		<span>Rejected Revenue : <?=$$cab_name['reject_revenue']?></span><br>
-		<span>LDF where Bid Rejected : 80%</span><br>
-      </div>
-	  <?php  } $i++; } ?>
+	  	<h4 class="report-cabin-header"><?=$$cab_name['title']?></h4>
+		<p style="margin-left: 15px;">Revenue : <?=round($$cab_name['accept_revenue'])?> <i class="fa fa-caret-down pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:#0c9e0c" aria-hidden="true"></i></p>
+		<p style="margin-left: 15px;">Passengers : <?=$$cab_name['passengers']?><i class="fa fa-caret-down pull-right"  onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:#0c9e0c" aria-hidden="true"></i></p>
+		<p style="margin-left: 15px;">AVG Bid : <?=round($$cab_name['avg_bid'])?><i class="fa fa-caret-down pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:#0c9e0c" aria-hidden="true"></i></p>
+		<p style="margin-left: 15px;">Rejected Revenue : <?=$$cab_name['reject_revenue']?><i class="fa fa-caret-down pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:#0c9e0c" aria-hidden="true"></i></p>
+		<p style="margin-left: 15px;">LDF where Bid Rejected : 80%</p>
+      </div><?php  } $i++; } ?>
 	</div>
 	<div class="col-md-5">
 		<div id="revenuechart" style="height: 250px; width: 100%;margin-top:20px" ></div>
 				
 		<div id="revenuemonthlychart" style="height: 250px; width: 100%;margin-top:20px"></div>
 		<div id="report" style="margin-top:20px">
-			<button class="btn-btn btn-danger" onclick="yearlyReport(1)" >Current year</button>
-			<button class="btn-btn btn-danger" style="margin-left: 268px;" onclick="yearlyReport(2)">Previous Year</button>
+			<button class="btn btn-danger" onclick="yearlyReport(1)" >Current year</button>
+			<button class="btn btn-danger" style="float: right;" onclick="yearlyReport(2)">Previous Year</button>
 		</div>
 	</div>
 	<div class="col-md-4">
@@ -72,7 +71,7 @@
 			<div class="col-md-6">
 				<div id="progress-<?=$cab_name?>"  class="pie-title-center" data-percent="<?=round(($$cab_name['accept_revenue']/$total_accept_revenue)*100)?>" style="height: 180px; width: 100%;margin-top:20px">
 					<a onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)">
-						<span title="<?=number_format($$cab_name['accept_revenue'])?>" class="pie-value"></span>
+						<span style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="<?=number_format($$cab_name['accept_revenue'])?>" class="pie-value"></span>
 					</a>
 					<p><?=$$cab_name['title']?></p>
 				</div>	
