@@ -34,8 +34,7 @@ class Report_m extends MY_Model {
                                         INNER JOIN UP_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) 
                                          INNER JOIN UP_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type)
                                           LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20)
-                                          ".$swhere." AND (pe.booking_status =".$bid_accepted." OR pe.booking_status =".$bid_rejected." )                                       
-                                         ) as MainSet"; 
+                                          ".$swhere.") as MainSet"; 
                        
                         $query .= " INNER  JOIN (
                                         select  flight_number,group_concat(distinct first_name, ' ' , last_name , ' fqtv: ' , fqtv SEPARATOR '<br>'  ) as p_list ,group_concat(distinct fqtv) as fqtv,
@@ -56,7 +55,7 @@ class Report_m extends MY_Model {
                                         where pf1.is_processed = 1 ".$dwhere." group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
                    ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number ) ";
                    $query .= " WHERE SubSet.carrier_code = ".$airlineID;
-                  
+                   $query .= " AND (MainSet.booking_status =".$bid_accepted." OR MainSet.booking_status =".$bid_rejected.")";
              //print_r($query)     ; exit;
             $result =   $this->db->query($query);
             return $result->result();
