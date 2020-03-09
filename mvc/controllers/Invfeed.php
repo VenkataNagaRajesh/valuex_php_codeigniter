@@ -401,7 +401,7 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','cdef
 			LEFT JOIN VX_data_defns ds on  (ds.vx_aln_data_defnsID = inv.dest_airport) 
 			LEFT JOIN  VX_data_defns da on (da.vx_aln_data_defnsID = inv.airline_id)
 			INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = inv.airline_id)
-			INNER JOIN vx_data_defns dc on (dc.vx_aln_data_defnsID = inv.cabin and dc.aln_data_typeID = 13 and cdef.level = dc.alias)  
+			INNER JOIN VX_data_defns dc on (dc.vx_aln_data_defnsID = inv.cabin and dc.aln_data_typeID = 13 and cdef.level = dc.alias)  
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
