@@ -183,11 +183,20 @@ $(document).ready(function(){
 });
 $('#origin_level').change(function(event) {    
 	$('#origin_content').val(null).trigger('change')
-    var level_id = $(this).val();                 
+    var level_id = $(this).val();                   
+    var airline_id = $('#partner_carrierID').val();  
+	if( level_id == '17' ) {
+		if($('#partner_carrierID').val() == '0') {
+			alert('select Airline');
+			$("#origin_level").val(0);
+            $('#origin_level').trigger('change');
+			return false;
+		}
+	}               
     $.ajax({     async: false,            
 	    type: 'POST',            
         url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-        data: "id=" + level_id,            
+        data: {"id":level_id,"airline_id":airline_id},           
         dataType: "html",                                  
         success: function(data) {               
         $('#origin_content').html(data); }        
@@ -195,11 +204,20 @@ $('#origin_level').change(function(event) {
 });
 $('#dest_level').change(function(event) {    
 	$('#dest_content').val(null).trigger('change')
-    var level_id = $(this).val();                 
+    var level_id = $(this).val(); 
+    var airline_id = $('#partner_carrierID').val();  
+	if( level_id == '17' ) {
+		if($('#partner_carrierID').val() == '0') {
+			alert('select Airline');
+			$("#dest_level").val(0);
+            $('#dest_level').trigger('change');
+			return false;
+		}
+	}                               
     $.ajax({     async: false,            
 	    type: 'POST',            
         url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-        data: "id=" + level_id,            
+        data: {"id":level_id,"airline_id":airline_id},           
         dataType: "html",                                  
         success: function(data) {               
         $('#dest_content').html(data); }        
@@ -222,5 +240,13 @@ $("#dest_checkbox_level").click(function(){
         $("#dest_content > option").removeAttr("selected");
         $("#dest_content").trigger("change");
     }
+});
+$('#partner_carrierID').change(function(event) {
+	if ($('#origin_level').val() == 17 ) {
+		$('#origin_level').trigger('change');
+	}
+	if ($('#dest_level').val() == 17 ) {
+		$('#dest_level').trigger('change');
+	}
 });
 </script>
