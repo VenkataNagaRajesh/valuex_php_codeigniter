@@ -109,8 +109,7 @@ class Partner extends Admin_Controller {
                 $this->data["subview"] = "partner/add";
                 $this->load->view('_layout_main', $this->data);
             } else { 
-                $array['carrierID'] = $this->session->userdata('login_user_airlineID');
-                $array['carrierID'] = 1;
+                $array['carrierID'] = $this->session->userdata('login_user_airlineID');               
                 $array["partner_carrierID"] = $this->input->post("partner_carrierID");
                 $array["origin_level"] = $this->input->post("origin_level");
 			    $array["origin_content"] =  implode(',',$this->input->post("origin_content"));
