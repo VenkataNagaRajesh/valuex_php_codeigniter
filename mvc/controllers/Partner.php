@@ -196,7 +196,7 @@ class Partner extends Admin_Controller {
 		$userID = $this->session->userdata('loginuserID');
 		$roleID = $this->session->userdata('roleID');
 	   
-	    $aColumns = array('p.partnerID','pa.code','ptc.code','p.origin_level','p.origin_content','p.dest_level','p.dest_content','p.start_date','p.end_date');
+	    $aColumns = array('MainSet.partnerID','MainSet.carrier_code','MainSet.partner_carrier_code','MainSet.origin_level_value','SubSet.origin_content_data','MainSet.dest_level_value','SubSet.dest_content_data','MainSet.start_date','MainSet.end_date');
 		$sLimit = "";
 		
 			if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -210,12 +210,10 @@ class Partner extends Admin_Controller {
 				{
 					if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
 					{
-						if($_GET['iSortCol_0'] == 8){
-							$sOrder .= " (s.order_no*-1) DESC ,";
-						} else {
+						
 						 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
 							".$_GET['sSortDir_'.$i] .", ";
-						}
+						
 					}
 				}				
 				  $sOrder = substr_replace( $sOrder, "", -2 );
@@ -262,7 +260,37 @@ class Partner extends Admin_Controller {
             } */		   
 		  
 		 // $sGroup = " GROUP BY d.vx_aln_data_defnsID ";  
-         $sQuery = "SELECT SQL_CALC_FOUND_ROWS p.* from VX_partner p
+         $sQuery = "SELECT SQL_CALC_FOUND_ROWS MainSet.partnerID,MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.start_date,MainSet.end_date,
+                    MainSet.origin_level_value,MainSet.dest_level_value,SubSet.origin_content_data,SubSet.dest_content_data
+                    FROM
+                    (
+                        SELECT p.partnerID,p.start_date,p.end_date,ddc.code as carrier_code,ddpc.code as partner_carrier_code,dto.alias as origin_level_value,dtd.alias as dest_level_value   
+                        from VX_partner p 
+                        LEFT JOIN VX_data_types dto on (dto.vx_aln_data_typeID = p.origin_level) 
+                        LEFT JOIN VX_data_types dtd on (dtd.vx_aln_data_typeID = p.dest_level)         
+                        LEFT JOIN VX_data_defns ddc ON ddc.vx_aln_data_defnsID = p.carrierID
+                        LEFT JOIN VX_data_defns ddpc ON ddpc.vx_aln_data_defnsID = p.partner_carrierID
+                    ) as MainSet
+                    LEFT JOIN (
+                        SELECT 	origin_set.partnerID,origin_set.origin_content_data,dest_set.dest_content_data 
+                        FROM (  
+                        SELECT p.partnerID,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name) ) AS origin_content_data FROM VX_partner p 
+                        LEFT OUTER JOIN  VX_data_defns c ON 
+                        (find_in_set(c.vx_aln_data_defnsID, p.origin_content) AND p.origin_level in (1,2,3,4,5)) 
+                        LEFT OUTER JOIN  VX_market_zone m  
+                        ON (find_in_set(m.market_id, p.origin_content) AND p.origin_level = 17)
+                        ) as origin_set
+                    
+                        LEFT JOIN (
+                            SELECT p.partnerID,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name)) AS dest_content_data FROM VX_partner p 
+                            LEFT OUTER JOIN  VX_data_defns c ON 
+                            (find_in_set(c.vx_aln_data_defnsID, p.dest_content) AND p.dest_level in (1,2,3,4,5)) 
+                            LEFT OUTER JOIN  VX_market_zone m  
+                            ON (find_in_set(m.market_id, p.dest_content) AND p.dest_level = 17)
+                        ) as dest_set
+                        ON origin_set.partnerID = dest_set.partnerID    
+                    ) as SubSet
+                    on MainSet.partnerID = SubSet.partnerID
 		           $sWhere				  
 				   $sOrder		
 				   $sLimit";					

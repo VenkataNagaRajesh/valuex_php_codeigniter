@@ -33,7 +33,7 @@
                                 <th class="col-lg-1"><?=$this->lang->line('partner_destination_level')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('partner_destination_content')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('partner_start_date')?></th>
-                                <th class="col-lg-2"><?=$this->lang->line('partner_start_date')?></th>                                
+                                <th class="col-lg-2"><?=$this->lang->line('partner_end_date')?></th>                                
                                 <?php if(permissionChecker('partner_edit') || permissionChecker('partner_delete') || permissionChecker('partner_view')) { ?>
                                 <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
@@ -54,12 +54,12 @@ $(document).ready(function() {
       "bServerSide": true,
       "sAjaxSource": "<?php echo base_url('partner/server_processing'); ?>",                 
        "columns": [{"data": "sno" },
-                  {"data": "carrierID" },
-				  {"data": "partner_carrierID" },
-				  {"data": "origin_level" },
-				  {"data": "origin_content" },
-				  {"data": "dest_level" },
-				  {"data": "dest_content" },
+                  {"data": "carrier_code" },
+				  {"data": "partner_carrier_code" },
+				  {"data": "origin_level_value" },
+				  {"data": "origin_content_data" },
+				  {"data": "dest_level_value" },
+				  {"data": "dest_content_data" },
                   {"data": "start_date"},
                   {"data" : "end_date"},
                   {"data": "action"}
