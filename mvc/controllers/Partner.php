@@ -86,8 +86,13 @@ class Partner extends Admin_Controller {
                     'assets/datepicker/datepicker.js',
             )
         ); 
+        $userID = $this->session->userdata('loginuserID');
+        $roleID = $this->session->userdata('roleID');
+        
         if($this->input->post('carrierID')){
           $this->data['carrierID'] = $this->input->post('carrierID');
+        } elseif($roleID != 1){
+          $this->data['carrierID'] = $this->session->userdata('default_airline'); 
         } else {
           $this->data['carrierID'] = 0;
         }
@@ -138,10 +143,7 @@ class Partner extends Admin_Controller {
             $this->data['dest_content'] = $this->input->post('dest_content');
         } else {
             $this->data['dest_content'] = 0;
-        }
-
-        $userID = $this->session->userdata('loginuserID');
-		$roleID = $this->session->userdata('roleID');
+        }        
 	
         $this->data['airlines'] = $this->airline_m->getAirlinesData();
         $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
@@ -327,7 +329,14 @@ class Partner extends Admin_Controller {
 					}
 					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
 				}
-			}           
+            } 
+
+            $userID = $this->session->userdata('loginuserID');
+		    $roleID = $this->session->userdata('roleID');
+            if($roleID != 1){
+                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                $sWhere .= 'MainSet.carrierID IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
+            }         
 
            if(!empty($this->input->get('carrierID'))){  
               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
