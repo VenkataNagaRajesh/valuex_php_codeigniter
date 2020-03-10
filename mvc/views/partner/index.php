@@ -79,7 +79,7 @@
                                 <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
                             </div>
                             <div class="col-sm-2">
-                                <button type="button" class="form-control btn btn-danger" name="download" onclick="downloadData()"  id="download">Download</button>
+                            <a href="#" type="button"  class="btn btn-danger" onclick="downloadPartners()" data-title="Download" data-toggle="tooltip" data-placement="top" style="padding: 6px 12px;"><i class="fa fa-download"></i></a>
                             </div>                                                     
                         </div>				
                 </form>
@@ -219,7 +219,7 @@ $(document).ready(function() {
                            $.ajax({
                                 url: "<?php echo base_url('partner/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val()},
+                                data: {sSearch: $("input[type=search]").val(),"carrierID": $("#carrierID").val(),"partner_carrierID":$("#partner_carrierID").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"origin_content":$("#origin_content").val(),"origin_level":$("#origin_level").val(),"dest_level":$("#dest_level"),"dest_content":$("#dest_content")},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -234,5 +234,21 @@ $(document).ready(function() {
             ] ,
     });
   }); 
+
+  function downloadPartners(){        
+	  $.ajax({
+             url: "<?php echo base_url('partner/server_processing'); ?>?page=all&&export=1",
+             type: 'get',
+             data: {"carrierID": $("#carrierID").val(),"partner_carrierID":$("#partner_carrierID").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"origin_content":$("#origin_content").val(),"origin_level":$("#origin_level").val(),"dest_level":$("#dest_level"),"dest_content":$("#dest_content")},
+             dataType: 'json'
+         }).done(function(data){
+			var $a = $("<a>");
+			$a.attr("href",data.file);
+			$("body").append($a);
+			$a.attr("download","partners.xls");
+			$a[0].click();
+			$a.remove();
+		 });
+  }
 
 </script>

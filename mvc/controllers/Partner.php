@@ -376,8 +376,6 @@ class Partner extends Admin_Controller {
                     $sWhere .= ' FIND_IN_SET('.$val.',SubSet.dest_content)';
 				}
             }
-
-		//  echo $sWhere; exit;
 		 // $sGroup = " GROUP BY d.vx_aln_data_defnsID ";  
          $sQuery = "SELECT SQL_CALC_FOUND_ROWS MainSet.partnerID,MainSet.carrierID,MainSet.partner_carrierID,MainSet.origin_level,MainSet.dest_level,MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.start_date,MainSet.end_date,
                     MainSet.origin_level_value,MainSet.dest_level_value,SubSet.origin_content,SubSet.origin_content_data,SubSet.dest_content,SubSet.dest_content_data
@@ -440,12 +438,12 @@ class Partner extends Admin_Controller {
             $i++;			
 		}
 		if(isset($_REQUEST['export'])){
-		  $columns = array('#','Carrier','Product','Start Date','End Date');
-		  $rows = array('contractID','code','name','start_date','end_date');
+		  $columns = array('#','Carrier','Partner Carrier','Origin Level','Origin Content','Destination Level','Destination Content','Start Date','End Date');
+		  $rows = array('partnerID','carrier_code','partner_carrier_code','origin_level_value','origin_content_data','dest_level_value','dest_content_data','start_date','end_date');
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );
-		}
+        }        
     }
     
     public function delete() {
