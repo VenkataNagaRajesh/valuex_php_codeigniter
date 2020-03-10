@@ -19,8 +19,72 @@
      <?php } ?>
     <!-- form start -->
     <div class="box-body">
-        <div class="row">
-            <div class="col-sm-12">
+        <div class="row">        
+            <div class="col-md-12">
+                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
+                        <div class='form-group'>
+                            <div class="col-sm-2 col-xs-6">			   
+                            <?php $list1 = array("0" => "Carrier");               
+                                    foreach($myairlines as $airline){
+                                    $list1[$airline->vx_aln_data_defnsID] = $airline->code;	
+                                    }				
+                            echo form_dropdown("carrierID", $list1,set_value("carrierID",$carrierID), "id='carrierID' class='form-control hide-dropdown-icon select2'");    ?>
+                            </div>
+                            <div class="col-sm-2 col-xs-6">			   
+                            <?php  $list2 = array("0" => "Partner Carrier");               
+                                    foreach($airlines as $airline){
+                                    $list2[$airline->vx_aln_data_defnsID] = $airline->code;	
+                                    }				
+                                    echo form_dropdown("partner_carrierID", $list2,set_value("partner_carrierID",$partner_carrierID), "id='partner_carrierID' class='form-control hide-dropdown-icon select2'");    ?>
+                            </div>
+                            <div class="col-sm-2 col-xs-6">	
+                                <?php $origin_level_list[0]="Origin Level";
+                                 foreach($types as $type){
+                                  $origin_level_list[$type->vx_aln_data_typeID] = $type->alias;
+                                 }
+                                echo form_dropdown("origin_level", $origin_level_list, set_value("origin_level"), "id='origin_level' class='form-control select2'");
+                                ?>
+                            </div>
+                            <div class="col-sm-2 col-xs-6">
+				                <select  name="origin_content[]"  placeholder="Origin Content" id="origin_content" class="form-control select2" multiple="multiple">
+				                </select> 
+                            </div>
+                            <div class="col-sm-2 col-xs-6">	
+                            <?php $dest_level_list[0]="Destination Level";
+                                 foreach($types as $type){
+                                  $dest_level_list[$type->vx_aln_data_typeID] = $type->alias;
+                                 }
+                                echo form_dropdown("dest_level", $dest_level_list, set_value("dest_level"), "id='dest_level' class='form-control select2'");
+                            ?>
+                            </div> 
+                            <div class="col-sm-2 col-xs-6">
+				                <select  name="dest_content[]"  placeholder="Destination Content" id="dest_content" class="form-control select2" multiple="multiple">
+				                </select> 
+                            </div> 
+                        </div>
+                        <div class='form-group'>
+                            <div class="col-sm-2 col-xs-6">
+                                <div class="input-group" style="margin-bottom: 0">
+                                    <input type="text" class="form-control hasDatepicker" placeholder="Start Date"  id="start_date" name="start_date" value="<?=set_value('start_date',$start_date)?>" >
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-xs-6">
+                                <div class="input-group" style="margin-bottom: 0">
+                                    <input type="text" class="form-control hasDatepicker" placeholder="End Date" id="end_date" name="end_date" value="<?=set_value('end_date',$end_date)?>" >
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 col-xs-6">
+                                <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="button" class="form-control btn btn-danger" name="download" onclick="downloadData()"  id="download">Download</button>
+                            </div>                                                     
+                        </div>				
+                </form>
+            </div>
+            <div class="col-sm-12 off-elg-table">
                 <div id="hide-table">
                      <table id="partnertable" class="table table-striped table-bordered table-hover dataTable no-footer">
                         <thead>
@@ -48,11 +112,90 @@
     </div>
 </div>
 <script>
+$(".select2").select2();
+$('#start_date').datepicker();
+$('#end_date').datepicker();
+$(document).ready(function(){
+    $('#origin_level').val(<?=$origin_level?>).trigger('change');
+    var origin_content = [<?=implode(',',$origin_content)?>];
+    $('#origin_content').val(origin_content).trigger('change');
+    $('#dest_level').val(<?=$dest_level?>).trigger('change');
+    var dest_content = [<?=implode(',',$dest_content)?>];
+    $('#dest_content').val(dest_content).trigger('change');        
+});
+$('#origin_level').change(function(event) {    
+	$('#origin_content').val(null).trigger('change')
+    var level_id = $(this).val();                   
+    var airline_id = $('#partner_carrierID').val();  
+	if( level_id == '17' ) {
+		if($('#partner_carrierID').val() == '0') {
+			alert('select Airline');
+			$("#origin_level").val(0);
+            $('#origin_level').trigger('change');
+			return false;
+		}
+	}               
+    $.ajax({     async: false,            
+	    type: 'POST',            
+        url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+        data: {"id":level_id,"airline_id":airline_id},           
+        dataType: "html",                                  
+        success: function(data) {               
+        $('#origin_content').html(data); }        
+    });       
+});
+$('#dest_level').change(function(event) {    
+	$('#dest_content').val(null).trigger('change')
+    var level_id = $(this).val(); 
+    var airline_id = $('#partner_carrierID').val();  
+	if( level_id == '17' ) {
+		if($('#partner_carrierID').val() == '0') {
+			alert('select Airline');
+			$("#dest_level").val(0);
+            $('#dest_level').trigger('change');
+			return false;
+		}
+	}                               
+    $.ajax({     async: false,            
+	    type: 'POST',            
+        url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+        data: {"id":level_id,"airline_id":airline_id},           
+        dataType: "html",                                  
+        success: function(data) {               
+        $('#dest_content').html(data); }        
+    });       
+});
+$('#partner_carrierID').change(function(event) {
+	if ($('#origin_level').val() == 17 ) {
+		$('#origin_level').trigger('change');
+	}
+	if ($('#dest_level').val() == 17 ) {
+		$('#dest_level').trigger('change');
+	}
+});
+
 $(document).ready(function() {	 
     $('#partnertable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
-      "sAjaxSource": "<?php echo base_url('partner/server_processing'); ?>",                 
+      "sAjaxSource": "<?php echo base_url('partner/server_processing'); ?>",  
+      "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
+       aoData.push({"name": "carrierID","value": $("#carrierID").val()},
+                   {"name": "partner_carrierID","value": $("#partner_carrierID").val()},
+                   {"name": "start_date","value": $("#start_date").val()},
+                   {"name": "end_date","value": $("#end_date").val()},
+                   {"name": "origin_level","value": $("#origin_level").val()},
+                   {"name": "origin_content","value": $("#origin_content").val()},
+                   {"name": "dest_level","value": $("#dest_level").val()},
+                   {"name": "dest_content","value": $("#dest_content").val()},
+                    ) //pushing custom parameters
+                oSettings.jqXHR = $.ajax( {
+                    "dataType": 'json',
+                    "type": "GET",
+                    "url": sSource,
+                    "data": aoData,
+                    "success": fnCallback
+			 } ); },               
        "columns": [{"data": "sno" },
                   {"data": "carrier_code" },
 				  {"data": "partner_carrier_code" },

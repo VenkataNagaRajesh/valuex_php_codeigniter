@@ -71,11 +71,87 @@ class Partner extends Admin_Controller {
          }
     }         
 
-	public function index() {        
+	public function index() {
+        $this->data['headerassets'] = array(
+            'css' => array(
+                    'assets/select2/css/select2.css',
+                    'assets/select2/css/select2-bootstrap.css',
+                    'assets/dist/themes/default/style.min.css',
+                    'assets/datepicker/datepicker.css',
+            ),
+            'js' => array(
+                    'assets/treeview/simpleTree.js',
+                    'assets/select2/select2.js',
+                    'assets/dist/jstree.min.js',
+                    'assets/datepicker/datepicker.js',
+            )
+        ); 
+        if($this->input->post('carrierID')){
+          $this->data['carrierID'] = $this->input->post('carrierID');
+        } else {
+          $this->data['carrierID'] = 0;
+        }
+        
+        if($this->input->post('partner_carrierID')){
+            $this->data['partner_carrierID'] = $this->input->post('partner_carrierID');
+        } else {
+            $this->data['partner_carrierID'] = 0;
+        }
+
+        if($this->input->post('start_date')){
+            $this->data['start_date'] = $this->input->post('start_date');
+        } else {
+            $this->data['start_date'] = '';
+        }
+
+        if($this->input->post('end_date')){
+            $this->data['end_date'] = $this->input->post('end_date');
+        } else {
+            $this->data['end_date'] = '';
+        }
+
+        if($this->input->post('origin_content')){
+            $this->data['origin_content'] = $this->input->post('origin_content');
+        } else {
+            $this->data['origin_content'] = 0;
+        }
+
+        if($this->input->post('origin_level')){
+            $this->data['origin_level'] = $this->input->post('origin_level');
+        } else {
+            $this->data['origin_level'] = 0;
+        }
+
+        if($this->input->post('origin_content')){
+            $this->data['origin_content'] = $this->input->post('origin_content');
+        } else {
+            $this->data['origin_content'] = 0;
+        }
+
+        if($this->input->post('dest_level')){
+            $this->data['dest_level'] = $this->input->post('dest_level');
+        } else {
+            $this->data['dest_level'] = 0;
+        }
+
+        if($this->input->post('dest_content')){
+            $this->data['dest_content'] = $this->input->post('dest_content');
+        } else {
+            $this->data['dest_content'] = 0;
+        }
+
         $userID = $this->session->userdata('loginuserID');
 		$roleID = $this->session->userdata('roleID');
 	
         $this->data['airlines'] = $this->airline_m->getAirlinesData();
+        $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
+        
+        if($roleID != 1){
+            $this->data['myairlines'] = $this->user_m->getUserAirlines($userID);	   
+        } else {
+            $this->data['myairlines'] = $this->airline_m->getAirlinesData();
+        }
+
         $this->data["subview"] = "partner/index";
 		$this->load->view('_layout_main', $this->data);
     }
@@ -253,17 +329,52 @@ class Partner extends Admin_Controller {
 				}
 			}           
 
-          /* if($this->input->get('airlineID')){  
+           if(!empty($this->input->get('carrierID'))){  
               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-			  $sWhere .= 'c.airlineID = '.$this->input->get('airlineID');		
-            } */		   
-		  
+			  $sWhere .= 'MainSet.carrierID = '.$this->input->get('carrierID');		
+            } 
+            if(!empty($this->input->get('partner_carrierID'))){  
+                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                $sWhere .= 'MainSet.partner_carrierID = '.$this->input->get('partner_carrierID');		
+            } 
+            if(!empty($this->input->get('start_date'))){  
+                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                $sWhere .= 'MainSet.start_date >= '.strtotime($this->input->get('start_date'));		
+            }            
+            if(!empty($this->input->get('end_date'))){  
+                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                $sWhere .= 'MainSet.end_date <= '.strtotime($this->input->get('end_date'));		
+            }
+            if(!empty($this->input->get('origin_level'))){  
+                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                $sWhere .= 'MainSet.origin_level = '.$this->input->get('origin_level');		
+            }
+            if(!empty($this->input->get('dest_level'))){  
+                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                $sWhere .= 'MainSet.dest_level = '.$this->input->get('dest_level');		
+            }
+            if(!empty($this->input->get('origin_content'))){
+				$lval = explode(',',$this->input->get('origin_content'));
+				foreach($lval as $val ) {
+					$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                    $sWhere .= ' FIND_IN_SET('.$val.',SubSet.origin_content)';
+				}
+            }
+            if(!empty($this->input->get('dest_content'))){
+				$lval = explode(',',$this->input->get('dest_content'));
+				foreach($lval as $val ) {
+					$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                    $sWhere .= ' FIND_IN_SET('.$val.',SubSet.dest_content)';
+				}
+            }
+
+		//  echo $sWhere; exit;
 		 // $sGroup = " GROUP BY d.vx_aln_data_defnsID ";  
-         $sQuery = "SELECT SQL_CALC_FOUND_ROWS MainSet.partnerID,MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.start_date,MainSet.end_date,
-                    MainSet.origin_level_value,MainSet.dest_level_value,SubSet.origin_content_data,SubSet.dest_content_data
+         $sQuery = "SELECT SQL_CALC_FOUND_ROWS MainSet.partnerID,MainSet.carrierID,MainSet.partner_carrierID,MainSet.origin_level,MainSet.dest_level,MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.start_date,MainSet.end_date,
+                    MainSet.origin_level_value,MainSet.dest_level_value,SubSet.origin_content,SubSet.origin_content_data,SubSet.dest_content,SubSet.dest_content_data
                     FROM
                     (
-                        SELECT p.partnerID,p.start_date,p.end_date,ddc.code as carrier_code,ddpc.code as partner_carrier_code,dto.alias as origin_level_value,dtd.alias as dest_level_value   
+                        SELECT p.*,ddc.code as carrier_code,ddpc.code as partner_carrier_code,dto.alias as origin_level_value,dtd.alias as dest_level_value   
                         from VX_partner p 
                         LEFT JOIN VX_data_types dto on (dto.vx_aln_data_typeID = p.origin_level) 
                         LEFT JOIN VX_data_types dtd on (dtd.vx_aln_data_typeID = p.dest_level)         
@@ -271,9 +382,9 @@ class Partner extends Admin_Controller {
                         LEFT JOIN VX_data_defns ddpc ON ddpc.vx_aln_data_defnsID = p.partner_carrierID
                     ) as MainSet
                     LEFT JOIN (
-                        SELECT 	origin_set.partnerID,origin_set.origin_content_data,dest_set.dest_content_data 
+                        SELECT 	origin_set.partnerID,origin_set.origin_content,origin_set.origin_content_data,dest_set.dest_content,dest_set.dest_content_data 
                         FROM (  
-                        SELECT p.partnerID,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name) ) AS origin_content_data FROM VX_partner p 
+                        SELECT p.partnerID,p.origin_content,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name) ) AS origin_content_data FROM VX_partner p 
                         LEFT OUTER JOIN  VX_data_defns c ON 
                         (find_in_set(c.vx_aln_data_defnsID, p.origin_content) AND p.origin_level in (1,2,3,4,5)) 
                         LEFT OUTER JOIN  VX_market_zone m  
@@ -281,7 +392,7 @@ class Partner extends Admin_Controller {
                         ) as origin_set
                     
                         LEFT JOIN (
-                            SELECT p.partnerID,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name)) AS dest_content_data FROM VX_partner p 
+                            SELECT p.partnerID,p.dest_content,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name)) AS dest_content_data FROM VX_partner p 
                             LEFT OUTER JOIN  VX_data_defns c ON 
                             (find_in_set(c.vx_aln_data_defnsID, p.dest_content) AND p.dest_level in (1,2,3,4,5)) 
                             LEFT OUTER JOIN  VX_market_zone m  
