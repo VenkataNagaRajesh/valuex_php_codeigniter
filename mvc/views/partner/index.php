@@ -216,10 +216,11 @@ $(document).ready(function() {
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
                 { text: 'ExportAll', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
+                            var submitData = {sSearch: $("input[type=search]").val(),"carrierID": $("#carrierID").val(),"partner_carrierID":$("#partner_carrierID").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"origin_content":$("#origin_content").val(),"origin_level":$("#origin_level").val(),"dest_level":$("#dest_level"),"dest_content":$("#dest_content")};
                            $.ajax({
                                 url: "<?php echo base_url('partner/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"carrierID": $("#carrierID").val(),"partner_carrierID":$("#partner_carrierID").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"origin_content":$("#origin_content").val(),"origin_level":$("#origin_level").val(),"dest_level":$("#dest_level"),"dest_content":$("#dest_content")},
+                                data: JSON.stringify(submitData) ,
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -235,11 +236,13 @@ $(document).ready(function() {
     });
   }); 
 
-  function downloadPartners(){        
+  function downloadPartners(){ 
+      var submitData = {"carrierID": $("#carrierID").val(),"partner_carrierID":$("#partner_carrierID").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"origin_content":$("#origin_content").val(),"origin_level":$("#origin_level").val(),"dest_level":$("#dest_level"),"dest_content":$("#dest_content")};
+          
 	  $.ajax({
              url: "<?php echo base_url('partner/server_processing'); ?>?page=all&&export=1",
              type: 'get',
-             data: {"carrierID": $("#carrierID").val(),"partner_carrierID":$("#partner_carrierID").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"origin_content":$("#origin_content").val(),"origin_level":$("#origin_level").val(),"dest_level":$("#dest_level"),"dest_content":$("#dest_content")},
+             data: JSON.stringify(submitData) ,
              dataType: 'json'
          }).done(function(data){
 			var $a = $("<a>");
