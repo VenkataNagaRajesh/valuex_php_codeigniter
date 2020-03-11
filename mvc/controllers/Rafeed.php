@@ -332,7 +332,7 @@ class Rafeed extends Admin_Controller
 					unlink($file);
 				}
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-				//redirect(base_url("rafeed/index"));
+				redirect(base_url("rafeed/index"));
 			}
 		} else {
 			$this->data["subview"] = "rafeed/upload";
