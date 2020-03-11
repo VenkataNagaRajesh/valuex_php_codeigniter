@@ -4787,3 +4787,24 @@ input[type=number]::-webkit-outer-spin-button {
   padding: 6px;
   font-weight: bold;
 }
+.upgrade-revenue-price-box{
+  width: 49%;
+  height: 62px;
+  background-color: #ff6633;
+  text-align: center;
+  font-size: 30px;
+  color: white;
+  font-weight: bold;
+  padding: 9px;
+  margin-top: 20px;
+  margin-left: 86px;
+}
+.upgrade-revenue-box{
+  height: 28px;
+  width: 49%;
+  background-color: #e2d8d5;
+  text-align: center;
+  margin-left: 86px;
+  font-weight: bold;
+  font-size: 17px;
+}
