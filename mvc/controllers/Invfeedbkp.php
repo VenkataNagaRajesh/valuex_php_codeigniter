@@ -111,7 +111,7 @@ class Invfeed extends Admin_Controller {
 
 				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
 				$Reader = new SpreadsheetReader($file); 
-				 $header = array_map('strtolower',array("Airlline code", "Flight nbr","Dept date","Origin Airport","Destination Airport","Cabin","Empty seats","Aircraft Type","Seat Capacity","Sold Weight"));	
+				 $header = array_map('strtolower',array("Airlline code", "Flight nbr","Dept date","Origin Airport","Destination Airport","Cabin","Empty seats"));	
 				$header = array_map('strtolower', $header);
 				$Sheets = $Reader -> Sheets();
 					
@@ -143,7 +143,7 @@ class Invfeed extends Admin_Controller {
 					}
                                         } else {
                                            if($flag == 1){                                                                                      						
-					   	 if(count($Row) == 10){ //print_r($Row); exit;						
+					   	 if(count($Row) == 7){ //print_r($Row); exit;						
 							$this->mydebug->invfeed_log("coulmns count matched , uploading data for row " . $column , 0);
 							$invfeedraw = array();
 							$invfeedraw['airline'] = $Row[array_search('airline code',$import_header)];
@@ -188,9 +188,6 @@ class Invfeed extends Admin_Controller {
 
 							}
 							$invfeedraw['empty_seats'] = $Row[array_search('empty seats',$import_header)];
-							$invfeedraw['aircraft_typeID'] = $this->airports_m->checkData($Row[array_search('aircraft type',$import_header)],21);
-							$invfeedraw['seat_capacity'] = $Row[array_search('seat capacity',$import_header)];
-							$invfeedraw['sold_weight'] = $Row[array_search('sold weight',$import_header)];
 							//$invfeedraw['sold_seats'] = $Row[array_search('sold seats',$import_header)];
                                                            $invfeedraw['create_date'] = time();
                                                           $invfeedraw['modify_date'] = time();
@@ -208,9 +205,6 @@ class Invfeed extends Admin_Controller {
 							 $invfeed['dest_airport'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['dest_airport'],'1');
                                                          $invfeed['cabin'] = $this->airline_cabin_def_m->getCabinIDForCarrierANDCabin($invfeed['airline_id'],$invfeedraw['cabin']);
                                                          $invfeed['empty_seats'] = $invfeedraw['empty_seats'] ;
-                                                         $invfeed['aircraft_typeID'] = $invfeedraw['aircraft_typeID'] ;
-                                                         $invfeed['seat_capacity'] = $invfeedraw['seat_capacity'] ;
-                                                         $invfeed['sold_weight'] = $invfeedraw['sold_weight'] ;
 
                                                         $insert_flag = 1;
                                                         foreach ($invfeed as $k=>$v) {
@@ -399,15 +393,14 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','cdef
 			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
 			invfeed_id, flight_nbr, departure_date, do.code as origin_airport, 
-		        departure_date, sold_seats, empty_seats,seat_capacity,sold_weight,
+		        departure_date, sold_seats, empty_seats,
 			ds.code as dest_airport, cdef.cabin as cabin, 
-			da.code as airline_code ,act.aln_data_value as aircraft_type,
+			da.code as airline_code ,
 			inv.active   FROM VX_daily_inv_feed inv  
 			LEFT JOIN VX_data_defns do on (do.vx_aln_data_defnsID = inv.origin_airport) 
 			LEFT JOIN VX_data_defns ds on  (ds.vx_aln_data_defnsID = inv.dest_airport) 
 			LEFT JOIN  VX_data_defns da on (da.vx_aln_data_defnsID = inv.airline_id)
 			INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = inv.airline_id)
-			INNER JOIN VX_data_defns act on (act.vx_aln_data_defnsID = inv.aircraft_typeID AND act.aln_data_typeID = 21)
 			INNER JOIN VX_data_defns dc on (dc.vx_aln_data_defnsID = inv.cabin and dc.aln_data_typeID = 13 and cdef.level = dc.alias)  
 		$sWhere			
 		$sOrder
@@ -452,8 +445,8 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','cdef
 			$output['aaData'][] = $feed;				
 		}
 		if(isset($_REQUEST['export'])){
-		  $columns = array('#','Carrier Code','Flight Number','origin Airport','Destination Airport','Cabin','Departure Date','Empty Seats','Sold Seats',"Aircraft Type","Seat Capacity","Sold Weight");
-		  $rows = array("id","airline_code","flight_nbr","origin_airport","dest_airport","cabin","departure_date","empty_seats","sold_seats","aircraft_type","seat_capacity","sold_weight");
+		  $columns = array('#','Carrier Code','Flight Number','origin Airport','Destination Airport','Cabin','Departure Date','Empty Seats','Sold Seats');
+		  $rows = array("id","airline_code","flight_nbr","origin_airport","dest_airport","cabin","departure_date","empty_seats","sold_seats");
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );
@@ -462,8 +455,7 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','cdef
 	
  function downloadFormat(){
                 $this->load->helper('download');
-       // $filename = APPPATH.'downloads/invfeed.xlsx';
-        $filename = APPPATH.'downloads/invfeed_with_capacity.xlsx';
+        $filename = APPPATH.'downloads/invfeed.xlsx';
                 force_download($filename, null);
       }
 

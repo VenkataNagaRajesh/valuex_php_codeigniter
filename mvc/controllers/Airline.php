@@ -399,6 +399,9 @@ class Airline extends Admin_Controller {
                      $import_header = array_map('strtolower', $Row);
                      if(count(array_diff($header,$import_header)) == 0){
 						 $flag = 1;
+					 }else {
+						$this->mydebug->airlines_log("Header mismatch" , 1);
+						break;
 					 }       	  
 					} else { 
 					   if($flag == 1){

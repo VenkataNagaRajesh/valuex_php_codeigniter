@@ -109,7 +109,10 @@
 						<th class="col-lg-1"><?=$this->lang->line('cabin')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
 						 <th class="col-lg-1"><?=$this->lang->line('empty_seats')?></th>
-                                                <th class="col-lg-1"><?=$this->lang->line('sold_seats')?></th>
+                         <th class="col-lg-1"><?=$this->lang->line('sold_seats')?></th>
+                         <th class="col-lg-1"><?=$this->lang->line('aircraft_type')?></th>
+                         <th class="col-lg-1"><?=$this->lang->line('seat_capacity')?></th>
+                         <th class="col-lg-1"><?=$this->lang->line('sold_weight')?></th>
 						
 						 <th class="col-lg-1 noExport"><?=$this->lang->line('active')?></th>
 
@@ -190,6 +193,9 @@ $('#cabin').val('<?=$cabin?>').trigger('change');
 				  {"data": "departure_date" },
                   {"data": "empty_seats" },
                   {"data": "sold_seats"},
+                  {"data": "aircraft_type"},
+                  {"data": "seat_capacity"},
+                  {"data": "sold_weight"},
 				  {"data": "active"},
 				  {"data": "action"}
 				  ],			     

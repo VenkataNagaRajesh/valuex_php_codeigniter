@@ -25,3 +25,6 @@ $lang['empty_seats'] = 'Empty Seats';
 $lang['departure_date'] = 'Departure Date';
 $lang['dep_time'] = 'Departure Time';
 $lang['arrival_time'] = 'Arrival Time';
+$lang['aircraft_type'] = 'Aircraft Type';
+$lang['seat_capacity'] = 'Seat Capacity';
+$lang['sold_weight'] = 'Sold Weight';
