@@ -130,7 +130,7 @@
                         </label>
                         <div class="col-sm-6">
                             <div class="input-group" style="margin-bottom: 0">
-                                <input type="text" class="form-control hasDatepicker"  id="start_date" name="start_date" value="<?=set_value('start_date',date('d-m-y',$partner->start_date))?>" >
+                                <input type="text" class="form-control hasDatepicker"  id="start_date" name="start_date" value="<?=set_value('start_date',date('d-m-Y',$partner->start_date))?>" >
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             </div>
                         </div>

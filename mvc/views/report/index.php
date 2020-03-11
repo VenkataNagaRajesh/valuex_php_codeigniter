@@ -1,5 +1,5 @@
 <div class="off-elg">
-	<h2 class="title-tool-bar">Bid Details</h2>
+	<h2 class="title-tool-bar">Report</h2>
 	<div class="col-md-12 off-elg-filter-box">
 	   <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
 	     <div class="form-group"><br>	   		
@@ -36,53 +36,73 @@
 		  </div>
 	   </form>
 	</div>
-	<div class="col-md-12 off-elg-table">
-	<?php $colors = array('#E7823A','#546BC1','#6dad92','#e65b82','#65d8d8','#babd0b'); ?>
-	<div class="col-md-3" style="margin-top:20px;margin-left:0px;">
-	<h4> Total Revenue : $<?=$total_accept_revenue?></h4>
-	<?php $i = 1;foreach($upgrade_cabins as $cab){
-	  $cabs = explode('-',$cab['name']);
-	  $cab_name = strtolower($cabs[0].$cabs[1]); 
-	  if(!empty($$cab_name['report']) && !empty($$cab_name['accept_revenue'])){
-		  if(round($$cab_name['accept_revenue']) >= round($$cab_name['pre_accept_revenue'])){
-			 $icon = 'up'; $color = "#0c9e0c";
-		  } else {
-		  $icon = 'down'; $color = "#ea2708"; } ?>
-	  <div>
-	  	<h4 class="report-cabin-header"><?=$$cab_name['title']?></h4>
-		<p style="margin-left: 15px;">Revenue : <?=round($$cab_name['accept_revenue'])?><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:<?=$color?>;cursor:pointer;" aria-hidden="true"></i>		</p>
-		<p style="margin-left: 15px;">Passengers : <?=$$cab_name['passengers']?><i class="fa fa-caret-<?=$icon?> pull-right"  onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:<?=$color?>;cursor:pointer;" aria-hidden="true"></i></p>
-		<p style="margin-left: 15px;">AVG Bid : <?=round($$cab_name['avg_bid'])?><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:<?=$color?>;cursor:pointer;" aria-hidden="true"></i></p>
-		<p style="margin-left: 15px;">Rejected Revenue : <?=$$cab_name['reject_revenue']?><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:25px;color:<?=$color?>;cursor:pointer;" aria-hidden="true"></i></p>
-		<p style="margin-left: 15px;">LDF where Bid Rejected : 80%</p>
-      </div><?php  } $i++; } ?>
-	</div>
-	<div class="col-md-5">
-		<div id="revenuechart" style="height: 250px; width: 100%;margin-top:20px" ></div>
-				
-		<div id="revenuemonthlychart" style="height: 250px; width: 100%;margin-top:20px"></div>
-		<div id="report" style="margin-top:20px">
-			<button class="btn btn-danger" onclick="yearlyReport(1)" >Current year</button>
-			<button class="btn btn-danger" style="float: right;" onclick="yearlyReport(2)">Previous Year</button>
+	<div class="col-md-12" style="background: #fff;margin: 20px 0;margin-top: 15px;border: solid 1px #999">
+	  <div class="row" style="background-color: #e2d8d5;">		
+		<div class="col-md-3" style="text-align:center;">
+		  <b><h3>Upgrades</h3></b>
 		</div>
-	</div>
-	<div class="col-md-4">
-	<?php $i = 1; foreach($upgrade_cabins as $cab){
-	  $cabs = explode('-',$cab['name']);
-	  $cab_name = strtolower($cabs[0].$cabs[1]);
-	  
-         if(!empty($$cab_name['report']) && !empty($$cab_name['accept_revenue'])){ ?>		 
-			<div class="col-md-6">
-				<div id="progress-<?=$cab_name?>"  class="pie-title-center" data-percent="<?=round(($$cab_name['accept_revenue']/$total_accept_revenue)*100)?>" style="height: 180px; width: 100%;margin-top:20px">
-					<a onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)">
-						<span style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="<?=number_format($$cab_name['accept_revenue'])?>" class="pie-value"></span>
-					</a>
-					<p><?=$$cab_name['title']?></p>
-				</div>	
-			</div>       			
-		 <?php $i++; } } ?>			
+		<div class="col-md-5" style="text-align:center;">
+		  <b><h3>Revenue</h3></b>
 		</div>
-	</div>
+		<div class="col-md-4" style="text-align:center;">
+		  <b><h3>Acceptance Rate</h3></b>
+		</div>
+	  </div>
+	 <div class="row">
+	<?php if(count($current_report) > 0 || count($report) > 0){
+		 $colors = array('#E7823A','#546BC1','#6dad92','#e65b82','#65d8d8','#babd0b'); ?>		
+		<div class="col-md-3">
+			<!--<h4> Total Revenue : $<?=$total_accept_revenue?></h4> -->				
+			<?php $i = 1;foreach($upgrade_cabins as $cab){
+			$cabs = explode('-',$cab['name']);
+			$cab_name = strtolower($cabs[0].$cabs[1]); 
+			if(!empty($$cab_name['report']) && !empty($$cab_name['accept_revenue'])){
+				if(round($$cab_name['accept_revenue']) >= round($$cab_name['pre_accept_revenue'])){
+					$icon = 'up'; $color = "#0c9e0c";
+				} else {
+				$icon = 'down'; $color = "#ea2708"; } ?>
+			<div>
+				<h4 class="report-cabin-header"><?=$$cab_name['title']?></h4>
+				<p>Revenue : <b style="margin-left: 120px;"><?="$".round($$cab_name['accept_revenue'])?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i>		</p>
+				<p>Passengers :  <b style="margin-left: 120px;"><?=$$cab_name['passengers']?></b><i class="fa fa-caret-<?=$icon?> pull-right"  onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
+				<p>AVG Bid : <b style="margin-left: 120px;"><?="$".round($$cab_name['avg_bid'])?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
+				<p>Rejected Revenue : <b style="margin-left: 75px;"><?="$".$$cab_name['reject_revenue']?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
+				<p>LDF where Bid Rejected :<b style="float:right;"> 80%</b></p>
+			</div><?php  } $i++; } ?>
+		</div>
+		<div class="col-md-5"  style="background-color: #e2d8d5;">
+			<div id="revenuechart" style="height: 250px; width: 100%;" ></div>					
+			<div id="revenuemonthlychart" style="height: 250px; width: 100%;margin-top: 9px"></div>
+			<div id="report" style="margin: 10px;">
+				<button class="btn btn-danger" onclick="yearlyReport(1)" >Current year</button>
+				<button class="btn btn-danger" style="float: right;" onclick="yearlyReport(2)">Previous Year</button>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="upgrade-revenue-price-box">$<?=$total_accept_revenue?> </div>
+			<div class="upgrade-revenue-box">Upgrade Revenue</div>
+			<div style="margin-top: 45px">
+			<?php $i = 1; foreach($upgrade_cabins as $cab){
+			$cabs = explode('-',$cab['name']);
+			$cab_name = strtolower($cabs[0].$cabs[1]);
+			if(!empty($$cab_name['report']) && !empty($$cab_name['accept_revenue'])){ ?>		 
+				<div class="col-md-6">
+					<div id="progress-<?=$cab_name?>"  class="pie-title-center" data-percent="<?=round(($$cab_name['accept_revenue']/$total_accept_revenue)*100)?>" style="height: 180px; width: 100%;<?=($i>2)?"margin-top: -50px;":""?>>
+						<a onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)">
+							<span style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="<?=number_format($$cab_name['accept_revenue'])?>" class="pie-value"></span>
+						</a>
+						<p><?=$$cab_name['title']?></p>
+					</div>	
+				</div>       			
+			<?php $i++; } } ?>
+			</div>
+						
+		</div>
+		</div>
+	  <?php } else { ?>
+		  <div style="height:500px;"> <h3 style="text-align: center;">No Report Data</h3></div>
+	 <?php } ?>	
+	 </div>
 	<form id="reportform" action="<?=base_url('offer_table')?>" style="display:none;" method="post" target='_blank'>
 		<input type="hidden" name="from_date" id="from_date" value="">
 		<input type="hidden" name="to_date" id="to_date" value="">
@@ -94,8 +114,7 @@
 		<input type="hidden" name="month" id="month" value="">
 		<input type="hidden" name="year" id="year" value="">
 		<input type="submit" value="Submit">
-	</form>
-	
+	</form>	
 </div>
 <!--<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>-->
 <script src="<?=base_url('assets/chartjs/canvasjs.min.js')?>"></script>
@@ -152,6 +171,7 @@ $('#filter_year').change(function(){
 	} else {
     	end_month = 11;
 	}
+	end_month = 11;
 	var html = '',value=0;
 	var from_selected = '';
 	var to_selected = '';
@@ -214,7 +234,7 @@ var revenueChartOptions = {
 	animationEnabled: true,
 	theme: "light2",
 	title: {
-		text: "Revenue chart"
+		text: ""
 	},
 	/*subtitles: [{
 		text: "Click on Any Segment to Drilldown",

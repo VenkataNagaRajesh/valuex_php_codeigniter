@@ -136,6 +136,7 @@ class Report extends Admin_Controller {
 		/* To get current year Report By monthly */
 		$where_filter = array('carrier'=>$this->data['airlineID'],'type'=>$this->data['type'],'year'=>$this->data['year'],'month >='.$this->data['from_month'],'month <='=>$this->data['to_month']);
 		$report = $this->reportdata_m->getReportdata($where_filter);
+		$this->data['current_report'] = $report;
 		foreach($report as $rep){
 			if ($rep->accept_revenue > 0) {
 				$monthname = date("M", mktime(0, 0, 0, $rep->month, 01)); 
@@ -168,11 +169,16 @@ class Report extends Admin_Controller {
 		}
 
 		/* To get Current Month Report data */
-		if($this->data['to_month'] == date('m') && $this->data['year'] == date('Y')){
+		if($this->data['to_month'] >= date('m') && $this->data['year'] == date('Y')){
 			$this->data['current_from_date'] = date('Y-m-d', strtotime('first day of this month'));
-			$this->data['current_to_date'] = date('Y-m-d', strtotime('last day of this month'));			
+			$this->data['current_to_date'] = date('Y-m-d', strtotime('last day of this month'));
+			$from_query_date = '01-'.date('m').'-'.$this->data['year'];
+			$to_query_date = '01-'.$this->data['to_month'].'-'.$this->data['year'];
+			$this->data['current_from_date'] = date('Y-m-01', strtotime($from_query_date));			
+			$this->data['current_to_date'] = date('Y-m-t', strtotime($to_query_date));	
+			//print_r($this->data['current_from_date']); 		
+			//print_r($this->data['current_to_date']); exit; 		
 			$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$this->data['current_from_date'],$this->data['current_to_date'],$this->data['type'],$bid_accepted,$bid_rejected);					
-			
 			foreach($this->data['report'] as $feed){
 					$feed->p_count = count(explode('<br>',$feed->p_list));
 					$feed->dep_date = date('Y-m-d',$feed->flight_date);
