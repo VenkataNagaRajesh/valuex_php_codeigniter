@@ -308,7 +308,7 @@ class Rafeed extends Admin_Controller
 												break;
 
 											case 't': // ticketing rafeed
-												//$this->ticketUpgradeUpload($Row, $import_header, $column);
+												$this->ticketUpgradeUpload($Row, $import_header, $column);
 												break;
 
 											default:
