@@ -29,21 +29,21 @@ class Offer_issue extends Admin_Controller {
 	}	
 	
 	function testmail(){
-//lakshmi.amujuru@sweken.com,sirisha.majji@sweken.com,swekenit@gmail.com,anitha.jeereddi@sweken.com	    
-	  $data = array(
-        'first_name'   => 'Lakshmi',
-        'last_name' => 'Amujuru',
-        'tomail' => 'lakshmi.amujuru@sweken.com',
-        'pnr_ref' => 'BA1258',
-        'coupon_code' => 'sssssssss',
-        'mail_subject' => "upgrade offer template 2",
-		'bidnow_link' => base_url('home/index'),
-        'airlineID' => 5418		
-        );			       
-          $this->sendMailTemplateParser('bid_accepted',$data);
-		  exit;
-         //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);
-            $this->upgradeOfferMail($data);		 
+                //lakshmi.amujuru@sweken.com,sirisha.majji@sweken.com,swekenit@gmail.com,anitha.jeereddi@sweken.com	    
+                $data = array(
+                'first_name'   => 'Lakshmi',
+                'last_name' => 'Amujuru',
+                'tomail' => 'lakshmi.amujuru@sweken.com',
+                'pnr_ref' => 'BA1258',
+                'coupon_code' => 'sssssssss',
+                'mail_subject' => "upgrade offer template 2",
+                        'bidnow_link' => base_url('home/index'),
+                'airlineID' => 5418		
+                );			       
+                $this->sendMailTemplateParser('bid_accepted',$data);
+                        exit;
+                //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);
+                $this->upgradeOfferMail($data);		 
 	}
 	
 
