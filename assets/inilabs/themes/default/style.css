@@ -4808,3 +4808,24 @@ input[type=number]::-webkit-outer-spin-button {
   font-weight: bold;
   font-size: 17px;
 }
+.bar_chart_tooltips_css {
+  background-color: white ! important;
+  border: 2px solid black ! important;
+  padding: 3px;
+}
+span#png_links {
+  position: absolute;
+  left: 535px;
+  top: 30px;
+  border: 1px black solid;
+  background-color: white;
+  cursor: pointer;
+  color: blue;
+  font-size: 10pt;
+  border: 2px solid gray;
+  border-radius: 5px;
+  font-weight: bold;
+  font-family: Arial;
+  padding: 3px;
+  line-height: 15px;
+}
