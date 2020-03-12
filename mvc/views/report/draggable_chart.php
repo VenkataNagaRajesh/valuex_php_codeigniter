@@ -13,7 +13,7 @@
         line = new RGraph.Line({
             id: 'cvs',
             data: [
-                //[4,5,8,7,6,4,3,5],
+                [4,5,8,7,6,4,3,5],
                 [7,1,6,9,4,6,5,2]
             ],
             options: {
@@ -49,6 +49,9 @@
     document.getElementById("cvs").onclick = function (e, shape)   {
         var canvas = e.target;      
         var bar = canvas.__object__;
-        console.log(bar.original_data);               
+        console.log("Red Line");
+        console.log(bar.original_data[0]); 
+        console.log("Green Line");
+        console.log(bar.original_data[1]);               
     }
     </script>
