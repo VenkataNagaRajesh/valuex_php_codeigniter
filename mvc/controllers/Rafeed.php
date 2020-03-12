@@ -224,8 +224,12 @@ class Rafeed extends Admin_Controller
 				$this->data["subview"] = "rafeed/upload";
 				$this->load->view('_layout_main', $this->data);
 			} else {
+
 				require(APPPATH . 'libraries/spreadsheet/php-excel-reader/Spreadsheet_Excel_Reader.php');
 				require(APPPATH . 'libraries/spreadsheet/SpreadsheetReader.php');
+
+				$status = "success";
+				$message = $this->lang->line('menu_success');
 
 				try {
 					$file = $_FILES['file']['tmp_name'];
@@ -331,7 +335,7 @@ class Rafeed extends Admin_Controller
 				if (file_exists($file)) {
 					unlink($file);
 				}
-				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
+				$this->session->set_flashdata($status, $message);
 				redirect(base_url("rafeed/index"));
 			}
 		} else {
@@ -388,6 +392,7 @@ class Rafeed extends Admin_Controller
 			return;
 		}
 
+		// boarding point
 		$boarding_point = $Row[array_search('boarding point', $import_header)];
 		$arrBaggageRaFeed['boarding_point'] =
 			$this->airports_m->getDefIdByTypeAndCode($boarding_point, '1');
@@ -397,6 +402,7 @@ class Rafeed extends Admin_Controller
 			return;
 		}
 
+		// off point
 		$off_point = $Row[array_search('off point', $import_header)];
 
 		$arrBaggageRaFeed['off_point'] =
@@ -406,12 +412,14 @@ class Rafeed extends Admin_Controller
 			return;
 		}
 
+		// cpn value
 		$arrBaggageRaFeed['prorated_price'] = round($Row[array_search('cpn value', $import_header)], 2);
 		if (!is_numeric($arrBaggageRaFeed['prorated_price'])) {
 			$this->mydebug->rafeed_log("PRice should be numeric in row " . $column, 1);
 			return;
 		}
 
+		// class
 		$arrBaggageRaFeed['class'] = $Row[array_search('class', $import_header)];
 		$class_arr = range('A', 'Z');
 		if (!in_array($arrBaggageRaFeed['class'], $class_arr)) {
@@ -419,19 +427,24 @@ class Rafeed extends Admin_Controller
 			return;
 		}
 
-		$arrBaggageRaFeed['departure_date'] = '04-03-2021'; //strtotime(str_replace('-', '/', $Row[array_search('flight date', $import_header)]));
+		//depature date
+		$arrBaggageRaFeed['departure_date'] = date('Y-m-d', strtotime(str_replace('-', '/', $Row[array_search('flight date', $import_header)])));
 
-		if (!preg_match("/^(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])-([0-9]{4})$/", $arrBaggageRaFeed['departure_date'])) {
+		if (!preg_match("/^([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $arrBaggageRaFeed['departure_date'])) {
 			$this->mydebug->rafeed_log("flight date formate missing " . $column, 1);
 			return;
 		}
 
+		$arrBaggageRaFeed['departure_date'] = strtotime($arrBaggageRaFeed['departure_date']);
+
+		//fare basis	
 		$day_of_week = date('w', $arrBaggageRaFeed['departure_date']);
 		$day = ($day_of_week) ? $day_of_week : 7;
 		$arrBaggageRaFeed['day_of_week'] = $this->airports_m->getDefIdByTypeAndCode($day, '14');
 
 		$arrBaggageRaFeed['fare_basis'] = $Row[array_search('fare basis', $import_header)];
 
+		// cabin
 		$cabin = $Row[array_search('cabin', $import_header)];
 
 		$arrBaggageRaFeed['cabin'] = $this->airline_cabin_def_m->getCabinIDForCarrierANDCabin($arrBaggageRaFeed['carrier'], $cabin);
@@ -442,6 +455,7 @@ class Rafeed extends Admin_Controller
 			return;
 		}
 
+		//marketing airline code
 		$marketing_airline_code = $Row[array_search('marketing airline code', $import_header)];
 		$arrBaggageRaFeed['marketing_airline_code'] =
 			$this->airports_m->getDefIdByTypeAndCode($marketing_airline_code, '12');
@@ -451,6 +465,7 @@ class Rafeed extends Admin_Controller
 			return;
 		}
 
+		//operating airline code
 		$operating_airline_code = $Row[array_search('operating airline code', $import_header)];
 		$arrBaggageRaFeed['operating_airline_code'] =
 			$this->airports_m->getDefIdByTypeAndCode($operating_airline_code, '12');
@@ -460,10 +475,13 @@ class Rafeed extends Admin_Controller
 			return;
 		}
 
+		// officeid
 		$arrBaggageRaFeed['office_id'] = $Row[array_search('officeid', $import_header)];
 
+		//channel
 		$arrBaggageRaFeed['channel'] = $Row[array_search('channel', $import_header)];
 
+		//pax type
 		$pax_type = $Row[array_search('pax type', $import_header)];
 		$arrBaggageRaFeed['pax_type'] =  $this->airports_m->getDefIdByTypeAndCode($pax_type, '18');
 
@@ -472,6 +490,7 @@ class Rafeed extends Admin_Controller
 			return;
 		}
 
+		//coupon routing
 		$coupon_routing = $Row[array_search('coupon routing', $import_header)];
 		$arrRouting = explode(" ", $coupon_routing);
 
@@ -494,40 +513,43 @@ class Rafeed extends Admin_Controller
 		$arrBaggageRaFeed['origin'] = $arrLocations[0];
 		$arrBaggageRaFeed['destinition'] = $arrLocations[1];
 
+		// rate per unit
 		$arrBaggageRaFeed['rate_per_unit'] = $Row[array_search('rate per unit', $import_header)];
 		if (!ctype_digit($arrBaggageRaFeed['rate_per_unit']) || !(in_array($arrBaggageRaFeed['rate_per_unit'], range(1, 9999)))) {
 			$this->mydebug->rafeed_log("Rate Per Unit should be numeric or between 1 to 9999 in row " . $column, 1);
 			return;
 		}
 
+		//weight
 		$arrBaggageRaFeed['weight'] = $Row[array_search('wt', $import_header)];
 		//if()
 
+		//currency
 		$arrBaggageRaFeed['currency'] = $Row[array_search('currency', $import_header)];
 
+		//RFIC
 		$arrBaggageRaFeed['rfic'] = $Row[array_search('rfic',  $import_header)];
 		if (!ctype_alpha($arrBaggageRaFeed['rfic']) || strlen($arrBaggageRaFeed['rfic']) > 1) {
 			$this->mydebug->rafeed_log("RFIC unit should be a character and length only one in row" . $column, 1);
 			return;
 		}
 
+		//RFISC
 		$arrBaggageRaFeed['rfisc'] = $Row[array_search('rfisc',  $import_header)];
 		if (strlen($arrBaggageRaFeed['rfisc']) != 3) {
 			$this->mydebug->rafeed_log("RFISC unit should be a character and length only 3 in row" . $column, 1);
 			return;
 		}
 
+		//SSR CODE
 		$arrBaggageRaFeed['ssr_code'] = $Row[array_search('ssr code',  $import_header)];
 		if (!(ctype_alpha($arrBaggageRaFeed['ssr_code'])) || strlen($arrBaggageRaFeed['ssr_code']) != 4) {
 			$this->mydebug->rafeed_log("SSR CODE unit should be a character and length only 4 in row" . $column, 1);
 			return;
 		}
 
-		print_r($arrBaggageRaFeed);
-		die;
+		if ($this->rafeed_m->checkRaFeedBaggage($arrBaggageRaFeed)) {
 
-		//var_dump($rafeed);exit;
-		if ($this->rafeed_m->checkRaFeed($arrBaggageRaFeed)) {
 			$arrBaggageRaFeed['create_date'] = time();
 			$arrBaggageRaFeed['modify_date'] = time();
 			$arrBaggageRaFeed['create_userID'] = $this->session->userdata('loginuserID');
@@ -542,17 +564,17 @@ class Rafeed extends Admin_Controller
 					$arrBaggageRaFeed['season_id'] = $season_id;
 
 					if ($first_flag == 0) {
-						$insert_id = $this->rafeed_m->insert_rafeed($arrBaggageRaFeed);
+						$insert_id = $this->rafeed_m->insert_ra_baggage($arrBaggageRaFeed);
 						$main_season_record_id = $insert_id;
 					} else {
 						$arrBaggageRaFeed['sub_season_record'] = $main_season_record_id;
-						$insert_id = $this->rafeed_m->insert_rafeed($arrBaggageRaFeed);
+						$insert_id = $this->rafeed_m->insert_ra_baggage($arrBaggageRaFeed);
 					}
 					$first_flag++;
 				}
 			} else {
 				$arrBaggageRaFeed['season_id'] = 0;
-				$insert_id = $this->rafeed_m->insert_rafeed($arrBaggageRaFeed);
+				$insert_id = $this->rafeed_m->insert_ra_baggage($arrBaggageRaFeed);
 			}
 			if ($insert_id) {
 				$this->mydebug->rafeed_log("uploaded row " . $column, 0);
