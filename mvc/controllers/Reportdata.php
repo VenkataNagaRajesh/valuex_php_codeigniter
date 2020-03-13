@@ -8,7 +8,8 @@
         $this->load->model('reportdata_m');
 		$this->load->model('user_m');
 		$this->load->model('airline_m');  
-        $this->load->model('rafeed_m');        
+        $this->load->model('rafeed_m'); 
+        $this->load->model('invfeed_m'); 
     }
 
     public function index() {
@@ -121,9 +122,32 @@
               }
               return false;
           });
+          //calculating Load Factor
+          $tot_cap = array();
+          $ldf_value = 0;
+          foreach($accepted_list as $accept){						
+              $unique_key = $accept->flight_number.'-'.$accept->flight_date.'-'.$accept->from_city_code.'-'.$accept->to_city_code; 
+              if(!isset($tot_cap[$unique_key])){
+                  $inv = array();
+                  $inv['flight_nbr'] = $accept->flight_number;
+                  $inv['airline_id'] = $accept->carrier_code;
+                  $inv['departure_date'] = $accept->flight_date;
+                  $inv['origin_airport'] = $accept->from_city_code;
+                  $inv['dest_airport'] = $accept->to_city_code;
+                  $inv['cabin'] = $accept->upgrade_type;
+                  $seats_data = $this->invfeed_m->getEmptyCabinSeats($inv);
+                  $tot_cap[$unique_key] = $seats_data->seat_capacity;
+              }
+          }
+          if(count($accepted_list) > 0){
+            $ldf_value = (array_sum(array_column($accepted_list,'p_count'))/array_sum($tot_cap))*100;
+          }
              $data['accept_revenue'] = array_sum(array_column($accepted_list,'bid_value'));
              $data['reject_revenue'] = array_sum(array_column($rejected_list,'bid_value'));
-             $data['passenger_count'] = array_sum(array_column($cablist,'p_count'));                 
+             $data['passenger_count'] = array_sum(array_column($cablist,'p_count')); 
+             $data['tot_seat_capacity'] = array_sum($tot_cap);
+			 $data['tot_passengers_boarded'] = array_sum(array_column($accepted_list,'p_count'));
+			 $data['ldf'] = round($ldf_value);                
              $data['modify_date'] = time();
             // $this->mydebug->debug("report data inserted for carrier".$carrier.", Month :".$data['month'].", Year :".$data['year']);
              if($dataID){

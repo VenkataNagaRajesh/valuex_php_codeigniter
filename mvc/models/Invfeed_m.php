@@ -56,12 +56,12 @@ class Invfeed_m extends MY_Model {
 
 	function getEmptyCabinSeats($array) {
 
-		$this->db->select('empty_seats, sold_seats');
+		$this->db->select('empty_seats, sold_seats,seat_capacity');
 		$this->db->from('VX_daily_inv_feed');
                 $this->db->where($array);
 		$this->db->where('active','1');
 		$this->db->limit(1);
-                $query = $this->db->get();
+				$query = $this->db->get();
                 $data = $query->row();
 		return  $data;
 	}
