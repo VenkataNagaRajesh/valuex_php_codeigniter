@@ -37,7 +37,7 @@
 	   </form>
 	</div>
 	<div class="col-md-12" style="background: #fff;margin: 20px 0;margin-top: 15px;border: solid 1px #999">
-	  <div class="row" style="background-color: #e2d8d5;">		
+	  <div class="row" style="background-color: #7f7575;color:#ffff">		
 		<div class="col-md-3" style="text-align:center;">
 		  <h3><b>Upgrades</b></h3>
 		</div>
@@ -70,7 +70,7 @@
 				<p>LDF where Bid Rejected :<b style="float:right;"> <?=$$cab_name['ldf']?>%</b></p>
 			</div><?php  } $i++; } ?>
 		</div>
-		<div class="col-md-5"  style="background-color: #e2d8d5;">
+		<div class="col-md-5"  style="background-color: #7f7575;">
 		    <div class="revenue-box">
 				<div class="upgrade-revenue-price-box">$<?=$total_accept_revenue?> </div>
 				<div class="upgrade-revenue-box">Upgrade Revenue</div>
