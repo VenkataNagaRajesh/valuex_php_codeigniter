@@ -164,7 +164,7 @@ class Report extends Admin_Controller {
 				$this->data[$cab_name]['to_cabin_id'] = $cab['to_cabin_id'];
 				$this->data[$cab_name]['tot_seat_capacity'] = array_sum(array_column($this->data[$cab_name]['report'],'tot_seat_capacity'));
 				$this->data[$cab_name]['tot_passengers_boarded'] = array_sum(array_column($this->data[$cab_name]['report'],'tot_passengers_boarded'));
-				$this->data[$cab_name]['ldf'] = array_sum(array_column($this->data[$cab_name]['report'],'ldf'));
+				$this->data[$cab_name]['ldf'] = ($this->data[$cab_name]['tot_passengers_boarded']/$this->data[$cab_name]['tot_seat_capacity'])*100;
 				$this->data['total_accept_revenue'] +=  $this->data[$cab_name]['accept_revenue'];
 			 } else {
 				 //unset($this->data[$cab_name]);
