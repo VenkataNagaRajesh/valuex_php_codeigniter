@@ -66,8 +66,8 @@
 				<p>Revenue : <b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="margin-left: 120px;cursor:pointer;"><?="$".round($$cab_name['accept_revenue'])?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i>		</p>
 				<p>Passengers :  <b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="margin-left: 120px;cursor:pointer;"><?=$$cab_name['passengers']?></b><i class="fa fa-caret-<?=$icon?> pull-right"  onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
 				<p>AVG Bid : <b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="margin-left: 120px;cursor:pointer;"><?="$".round($$cab_name['avg_bid'])?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
-				<p>Rejected Revenue : <b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="margin-left: 75px;cursor:pointer;"><?="$".$$cab_name['reject_revenue']?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
-				<p>LDF where Bid Rejected :<b style="float:right;"> <?=$$cab_name['ldf']?>%</b></p>
+				<p>Rejected Revenue : <b onclick="rejectReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="margin-left: 75px;cursor:pointer;"><?="$".$$cab_name['reject_revenue']?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="rejectReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
+				<p>LDF where Bid Rejected :<b style="margin-left: 43px;"> <?=$$cab_name['ldf']?>%</b></p>
 			</div><?php  } $i++; } ?>
 		</div>
 		<div class="col-md-5"  style="background-color: #7f7575;">
@@ -159,6 +159,19 @@ function progressReport(from_cabin,to_cabin) {
 		$('#to_date').val('<?=$to_date?>');
 		$('#type').val( '<?=$type?>');
 		$('#offer_status').val(<?=$bid_accepted?>);
+		$('#month').val('');
+		$('#year').val('');
+	 $("#reportform").submit();	
+}
+
+function rejectReport(from_cabin,to_cabin) {	
+		$('#carrier').val('<?=$airlineID?>');
+		$('#from_cabin').val(from_cabin);
+		$('#to_cabin').val(to_cabin);
+		$('#from_date').val('<?=$from_date?>');
+		$('#to_date').val('<?=$to_date?>');
+		$('#type').val( '<?=$type?>');
+		$('#offer_status').val(<?=$bid_rejected?>);
 		$('#month').val('');
 		$('#year').val('');
 	 $("#reportform").submit();	
