@@ -10,9 +10,9 @@ class Rafeed_m extends MY_Model
 
 	//baggage
 	protected $_baggage_table_name = 'UP_ra_feed_baggage';
-	protected $__baggage_primary_key = 'rafeed_baggage_id';
+	protected $__baggage_primary_key = 'id';
 	protected $__baggage_primary_filter = 'intval';
-	protected $__baggage_order_by = "rafeed_baggage_id desc";
+	protected $__baggage_order_by = "id desc";
 
 	function __construct()
 	{
@@ -161,7 +161,7 @@ class Rafeed_m extends MY_Model
 
 	public function checkRaFeedBaggage($array)
 	{
-		$this->db->select('rafeed_baggage_id');
+		$this->db->select('id');
 		$this->db->from('UP_ra_feed_baggage');
 		$this->db->where($array);
 		$this->db->limit(1);
