@@ -39,13 +39,13 @@
 	<div class="col-md-12" style="background: #fff;margin: 20px 0;margin-top: 15px;border: solid 1px #999">
 	  <div class="row" style="background-color: #e2d8d5;">		
 		<div class="col-md-3" style="text-align:center;">
-		  <b><h3>Upgrades</h3></b>
+		  <h3><b>Upgrades</b></h3>
 		</div>
 		<div class="col-md-5" style="text-align:center;">
-		  <b><h3>Revenue</h3></b>
+		  <h3><b>Revenue</b></h3>
 		</div>
 		<div class="col-md-4" style="text-align:center;">
-		  <b><h3>Acceptance Rate</h3></b>
+		  <h3><b>Acceptance Rate</b></h3>
 		</div>
 	  </div>
 	 <div class="row">
@@ -71,23 +71,25 @@
 			</div><?php  } $i++; } ?>
 		</div>
 		<div class="col-md-5"  style="background-color: #e2d8d5;">
-			<div id="revenuechart" style="height: 250px; width: 100%;" ></div>					
+		    <div class="revenue-box">
+				<div class="upgrade-revenue-price-box">$<?=$total_accept_revenue?> </div>
+				<div class="upgrade-revenue-box">Upgrade Revenue</div>
+			</div>
+			<div id="revenuechart" style="height: 250px; width: 100%;margin-top: 9px" ></div>					
 			<div id="revenuemonthlychart" style="height: 250px; width: 100%;margin-top: 9px"></div>
 			<div id="report" style="margin: 10px;">
 				<button class="btn btn-danger" onclick="yearlyReport(1)" >Current year</button>
 				<button class="btn btn-danger" style="float: right;" onclick="yearlyReport(2)">Previous Year</button>
 			</div>
 		</div>
-		<div class="col-md-4">
-			<div class="upgrade-revenue-price-box">$<?=$total_accept_revenue?> </div>
-			<div class="upgrade-revenue-box">Upgrade Revenue</div>
+		<div class="col-md-4">			
 			<div style="margin-top: 45px">
 			<?php $i = 1; foreach($upgrade_cabins as $cab){
 			$cabs = explode('-',$cab['name']);
 			$cab_name = strtolower($cabs[0].$cabs[1]);
 			if(!empty($$cab_name['report']) && !empty($$cab_name['accept_revenue'])){ ?>		 
 				<div class="col-md-6">
-					<div id="progress-<?=$cab_name?>"  class="pie-title-center" data-percent="<?=round(($$cab_name['accept_revenue']/$total_accept_revenue)*100)?>" style="height: 180px; width: 100%;<?=($i>2)?"margin-top: -50px;":""?>>
+					<div id="progress-<?=$cab_name?>"  class="pie-title-center" data-percent="<?=round(($$cab_name['accept_revenue']/$total_accept_revenue)*100)?>" style="height: 180px; width: 100%;">
 						<a onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)">
 							<span style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="<?=number_format($$cab_name['accept_revenue'])?>" class="pie-value"></span>
 						</a>

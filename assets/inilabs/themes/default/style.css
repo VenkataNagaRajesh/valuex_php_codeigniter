@@ -4796,15 +4796,14 @@ input[type=number]::-webkit-outer-spin-button {
   color: white;
   font-weight: bold;
   padding: 9px;
-  margin-top: 20px;
-  margin-left: 86px;
+  margin-left: 100px;
 }
 .upgrade-revenue-box{
   height: 28px;
   width: 49%;
   background-color: #e2d8d5;
   text-align: center;
-  margin-left: 86px;
+  margin-left: 100px;
   font-weight: bold;
   font-size: 17px;
 }
@@ -4828,4 +4827,10 @@ span#png_links {
   font-family: Arial;
   padding: 3px;
   line-height: 15px;
+}
+.revenue-box {
+  height: 116px;
+  width: 100%;
+  background-color: #ffff;
+  padding: 10px;
 }
