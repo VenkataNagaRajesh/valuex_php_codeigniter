@@ -118,8 +118,8 @@ if(count($generateBoxArray)) {
     } ?>
    
 </div>
-<a href="<?=base_url('report/dragchart')?>"> <b>Drag chart type 1 <b></a>
-<a href="<?=base_url('report/dragchart1')?>"> <b>Drag chart type 2 <b></a>
+<a class="btn btn-danger" href="<?=base_url('report/dragchart')?>"> <b>Drag chart type 1 <b></a>
+<a class="btn btn-danger" href="<?=base_url('report/dragchart1')?>"> <b>Drag chart type 2 <b></a>
 <script>
 <?php if($show_notice){ ?>
    $('#notice-list').html('<?=$show_notice?>');
