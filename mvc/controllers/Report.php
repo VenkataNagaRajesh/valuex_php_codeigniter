@@ -418,8 +418,12 @@ class Report extends Admin_Controller {
 		$this->load->view('_layout_main', $this->data); 
 	}
 	
-	function dragChart(){
+	function dragchart(){
 		$this->data["subview"] = "report/draggable_chart";
+		$this->load->view('_layout_main', $this->data); 
+	}
+	function dragchart1(){
+		$this->data["subview"] = "report/drag-chart";
 		$this->load->view('_layout_main', $this->data); 
 	}
 }

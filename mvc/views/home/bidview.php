@@ -113,6 +113,14 @@
 											</td>-->
 										</tr>
 										<?php $n++; } ?>
+										<tr>
+											<td> Baggage Product </td>
+										</tr>
+										<tr>
+											<td> From To </td>
+											<td> Cabin </td>
+											<td> <input id="baggage_slider" data-slider-id='baggage_slider' type="text" data-slider-min="100" data-slider-max="300" data-slider-step="1" data-slider-value="150" data-slider-handle="round" min-slider-handle="200"/> </td>
+										</tr>
 									</tbody>
 								</table>
 								<!--========Mobile Data Bidding=======--> 
@@ -411,6 +419,13 @@ $('#<?=$mobile_view?>bid_slider_<?=$result->flight_number?>').slider({
 	}
 });
 <?php } } ?>
+
+$('#baggage_slider').slider({
+	tooltip: 'always',
+	formatter: function(value) {
+		return value+'kg';
+	}
+});
 
 $(".bid-visible").click(function () {   
 	 event.preventDefault();
