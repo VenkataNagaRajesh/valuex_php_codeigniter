@@ -12,6 +12,7 @@ class Client extends Admin_Controller {
 		$language = $this->session->userdata('lang');
 		$this->lang->load('client', $language);
 		$usertype = 2;				
+		
 	}
 
 	protected function rules() {
@@ -643,6 +644,9 @@ class Client extends Admin_Controller {
 					$email_array = explode('@',$this->input->post('email'));
 					$primary_client = $this->user_m->getClientByAirline($this->input->post('airlineID'),6)[0];
 					$url = $primary_client->domain;
+					if(substr( $url, 0, 4 ) != "http"){
+						$url = 'http://'.$url;
+				  	}
 					$pieces = parse_url($url);
 					$domain = isset($pieces['host']) ? $pieces['host'] : '';
 					preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs);				
@@ -674,13 +678,16 @@ class Client extends Admin_Controller {
 					$email_array = explode('@',$this->input->post('email'));
 					$primary_client = $this->user_m->getClientByAirline($this->input->post('airlineID'),6)[0];
 					$url = $primary_client->domain;
+					if(substr( $url, 0, 4 ) != "http"){
+						$url = 'http://'.$url;
+				  	}
 					$pieces = parse_url($url);
 					$domain = isset($pieces['host']) ? $pieces['host'] : '';
 					preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs);				
-					if( $regs['domain'] === $email_array[1]){
+					if( $regs['domain'] == $email_array[1]){
 						$array['permition'][$i] = 'yes';
 					} else {
-						$this->form_validation->set_message("unique_email", "%s not match with domain");
+						$this->form_validation->set_message("unique_email", "%s not match with domain ".$regs['domain']);
 					    $array['permition'][$i] = 'no';	
 					}					
 				}

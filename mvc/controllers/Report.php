@@ -8,6 +8,7 @@ class Report extends Admin_Controller {
 		$this->load->model('reportdata_m');
 		$this->load->model('user_m');
 		$this->load->model('airline_m');
+		$this->load->model('invfeed_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('report', $language);			
 	}
@@ -161,6 +162,9 @@ class Report extends Admin_Controller {
 				$this->data[$cab_name]['title'] = $cab['from_cabin'].' To '.$cab['to_cabin'];
 				$this->data[$cab_name]['from_cabin_id'] = $cab['from_cabin_id'];
 				$this->data[$cab_name]['to_cabin_id'] = $cab['to_cabin_id'];
+				$this->data[$cab_name]['tot_seat_capacity'] = array_sum(array_column($this->data[$cab_name]['report'],'tot_seat_capacity'));
+				$this->data[$cab_name]['tot_passengers_boarded'] = array_sum(array_column($this->data[$cab_name]['report'],'tot_passengers_boarded'));
+				$this->data[$cab_name]['ldf'] = ($this->data[$cab_name]['tot_passengers_boarded']/$this->data[$cab_name]['tot_seat_capacity'])*100;
 				$this->data['total_accept_revenue'] +=  $this->data[$cab_name]['accept_revenue'];
 			 } else {
 				 //unset($this->data[$cab_name]);
@@ -209,7 +213,24 @@ class Report extends Admin_Controller {
 						}
 						return false;
 					});
-				
+					$tot_cap = array(); $ldf_value = 0;
+					foreach($accepted_list as $accept){						
+						$unique_key = $accept->flight_number.'-'.$accept->flight_date.'-'.$accept->from_city_code.'-'.$accept->to_city_code; 
+						if(!isset($tot_cap[$unique_key])){
+							$inv = array();
+							$inv['flight_nbr'] = $accept->flight_number;
+							$inv['airline_id'] = $accept->carrier_code;
+							$inv['departure_date'] = $accept->flight_date;
+							$inv['origin_airport'] = $accept->from_city_code;
+							$inv['dest_airport'] = $accept->to_city_code;
+							$inv['cabin'] = $accept->upgrade_type;
+							$seats_data = $this->invfeed_m->getEmptyCabinSeats($inv);
+							$tot_cap[$unique_key] = $seats_data->seat_capacity;
+						}
+					}
+				    if(count($accepted_list) > 0){
+					  $ldf_value = (array_sum(array_column($accepted_list,'p_count'))/array_sum($tot_cap))*100;
+					}
 					$this->data[$cab_name]['accept_revenue'] = array_sum(array_column($accepted_list,'bid_value'));
 					$this->data[$cab_name]['passengers'] = array_sum(array_column($this->data[$cab_name]['report'],'p_count'));
 					$this->data[$cab_name]['avg_bid'] = $this->data[$cab_name]['accept_revenue'] / $this->data[$cab_name]['passengers'];
@@ -217,12 +238,17 @@ class Report extends Admin_Controller {
 					$this->data[$cab_name]['title'] = $cab['from_cabin'].' To '.$cab['to_cabin'];
 					$this->data[$cab_name]['from_cabin_id'] = $cab['from_cabin_id'];
 					$this->data[$cab_name]['to_cabin_id'] = $cab['to_cabin_id'];
+					$this->data[$cab_name]['tot_seat_capacity'] = array_sum($tot_cap);
+					$this->data[$cab_name]['tot_passengers_boarded'] = array_sum(array_column($accepted_list,'p_count'));
+					$this->data[$cab_name]['ldf'] = round($ldf_value);
 					$this->data['total_accept_revenue'] +=  $this->data[$cab_name]['accept_revenue'];
+					//echo $cab_name;
+					//print_r($this->data[$cab_name]);
 				} else {
 					//unset($this->data[$cab_name]);
 					continue;
 				}
-			}
+			} //exit;
 	    }		
         $this->data["subview"] = "report/index";
 		$this->load->view('_layout_main', $this->data); 
@@ -355,6 +381,25 @@ class Report extends Admin_Controller {
 				}
 				return false;
 			});
+
+			$tot_cap = array(); $ldf_value = 0;
+			foreach($accepted_list as $accept){						
+				$unique_key = $accept->flight_number.'-'.$accept->flight_date.'-'.$accept->from_city_code.'-'.$accept->to_city_code; 
+				if(!isset($tot_cap[$unique_key])){
+					$inv = array();
+					$inv['flight_nbr'] = $accept->flight_number;
+					$inv['airline_id'] = $accept->carrier_code;
+					$inv['departure_date'] = $accept->flight_date;
+					$inv['origin_airport'] = $accept->from_city_code;
+					$inv['dest_airport'] = $accept->to_city_code;
+					$inv['cabin'] = $accept->upgrade_type;
+					$seats_data = $this->invfeed_m->getEmptyCabinSeats($inv);
+					$tot_cap[$unique_key] = $seats_data->seat_capacity;
+				}
+			}
+			if(count($accepted_list) > 0){
+			  $ldf_value = (array_sum(array_column($accepted_list,'p_count'))/array_sum($tot_cap))*100;
+			}
 		
 			$this->data[$cab_name]['accept_revenue'] = array_sum(array_column($accepted_list,'bid_value'));
 			$this->data[$cab_name]['passengers'] = array_sum(array_column($this->data[$cab_name]['report'],'p_count'));
@@ -363,6 +408,9 @@ class Report extends Admin_Controller {
 			$this->data[$cab_name]['title'] = $cab['from_cabin'].' To '.$cab['to_cabin'];
 			$this->data[$cab_name]['from_cabin_id'] = $cab['from_cabin_id'];
 			$this->data[$cab_name]['to_cabin_id'] = $cab['to_cabin_id'];
+			$this->data[$cab_name]['tot_seat_capacity'] = array_sum($tot_cap);
+			$this->data[$cab_name]['tot_passengers_boarded'] = array_sum(array_column($accepted_list,'p_count'));
+			$this->data[$cab_name]['ldf'] = round($ldf_value);
 			$this->data['total_accept_revenue'] +=  $this->data[$cab_name]['accept_revenue'];
 		}
 		//print_r($this->data); exit;
@@ -370,8 +418,12 @@ class Report extends Admin_Controller {
 		$this->load->view('_layout_main', $this->data); 
 	}
 	
-	function dragChart(){
+	function dragchart(){
 		$this->data["subview"] = "report/draggable_chart";
+		$this->load->view('_layout_main', $this->data); 
+	}
+	function dragchart1(){
+		$this->data["subview"] = "report/drag-chart";
 		$this->load->view('_layout_main', $this->data); 
 	}
 }

@@ -391,22 +391,22 @@ class Partner extends Admin_Controller {
                     LEFT JOIN (
                         SELECT 	origin_set.partnerID,origin_set.origin_content,origin_set.origin_content_data,dest_set.dest_content,dest_set.dest_content_data 
                         FROM (  
-                        SELECT p.partnerID,p.origin_content,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name) ) AS origin_content_data FROM VX_partner p 
-                        LEFT OUTER JOIN  VX_data_defns c ON 
-                        (find_in_set(c.vx_aln_data_defnsID, p.origin_content) AND p.origin_level in (1,2,3,4,5)) 
-                        LEFT OUTER JOIN  VX_market_zone m  
-                        ON (find_in_set(m.market_id, p.origin_content) AND p.origin_level = 17)
-                        ) as origin_set
-                    
-                        LEFT JOIN (
-                            SELECT p.partnerID,p.dest_content,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name)) AS dest_content_data FROM VX_partner p 
+                            SELECT p.partnerID,p.origin_content,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name) ) AS origin_content_data FROM VX_partner p 
                             LEFT OUTER JOIN  VX_data_defns c ON 
-                            (find_in_set(c.vx_aln_data_defnsID, p.dest_content) AND p.dest_level in (1,2,3,4,5)) 
+                            (find_in_set(c.vx_aln_data_defnsID, p.origin_content) AND p.origin_level in (1,2,3,4,5)) 
                             LEFT OUTER JOIN  VX_market_zone m  
-                            ON (find_in_set(m.market_id, p.dest_content) AND p.dest_level = 17)
-                        ) as dest_set
-                        ON origin_set.partnerID = dest_set.partnerID    
-                    ) as SubSet
+                            ON (find_in_set(m.market_id, p.origin_content) AND p.origin_level = 17) GROUP BY p.partnerID
+                            ) as origin_set
+                    
+                            LEFT JOIN (
+                                SELECT p.partnerID,p.dest_content,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name)) AS dest_content_data FROM VX_partner p 
+                                LEFT OUTER JOIN  VX_data_defns c ON 
+                                (find_in_set(c.vx_aln_data_defnsID, p.dest_content) AND p.dest_level in (1,2,3,4,5)) 
+                                LEFT OUTER JOIN  VX_market_zone m  
+                                ON (find_in_set(m.market_id, p.dest_content) AND p.dest_level = 17) GROUP BY p.partnerID
+                            ) as dest_set
+                            ON origin_set.partnerID = dest_set.partnerID    
+                     ) as SubSet
                     on MainSet.partnerID = SubSet.partnerID
 		           $sWhere				  
 				   $sOrder		
