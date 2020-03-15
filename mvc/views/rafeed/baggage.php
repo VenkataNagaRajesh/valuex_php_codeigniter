@@ -1,6 +1,6 @@
 <div class="box">
     <div class="box-header" style="width:100%;">
-        <h3 class="box-title"><i class="fa <?= $icon ?>"></i> <?= $this->lang->line('panel_title') ?></h3>
+        <h3 class="box-title"><i class="fa <?= $icon ?>"></i> <?= $this->lang->line('panel_title_baggage') ?></h3>
         <ol class="breadcrumb">
             <li><a href="<?= base_url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= $this->lang->line('menu_dashboard') ?></a></li>
             <li class="active"><?= $this->lang->line('menu_rafeed') ?></li>
@@ -27,26 +27,6 @@
                 </h5>
                 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                     <div class='form-group'>
-
-                        <div class="col-sm-2">
-                            <?php
-                            $country['0'] = ' Booking Country';
-                            ksort($country);
-
-                            echo form_dropdown("booking_country", $country, set_value("booking_country", $booking_country), "id='booking_country' class='form-control hide-dropdown-icon select2'");    ?>
-
-                        </div>
-
-
-                        <div class="col-sm-2">
-                            <?php
-                            $city['0'] = ' Booking City';
-                            ksort($city);
-
-                            echo form_dropdown("booking_city", $city, set_value("booking_city", $booking_city), "id='booking_city' class='form-control hide-dropdown-icon select2'");    ?>
-
-                        </div>
-
 
                         <div class="col-sm-2">
                             <?php
@@ -100,8 +80,22 @@
 
                         <div class="col-sm-2">
                             <input type="text" class="form-control" placeholder='flight range' id="flight_range" name="flight_range" value="<?= set_value('flight_range') ?>">
+                        </div>
 
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" placeholder='weight' id="weight" name="weight" value="<?= set_value('weight') ?>">
+                        </div>
 
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" placeholder='ssr code' id="ssr_code" name="ssr_code" value="<?= set_value('ssr_code') ?>">
+                        </div>
+
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" placeholder='RFIC' id="rfic" name="rfic" value="<?= set_value('rfic') ?>">
+                        </div>
+
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" placeholder='RFISC' id="rfic" name="rfisc" value="<?= set_value('rfisc') ?>">
                         </div>
 
 
@@ -123,12 +117,6 @@
 
                         </div>
 
-
-
-
-
-
-
                         <div class="col-sm-3">
                             <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
                             <button type="button" class="btn btn-danger" onclick="downloadRAFeed()">Download</button>
@@ -142,12 +130,11 @@
                                 <tr>
                                     <th class="col-lg-1"><input class="filter" title="Select All" type="checkbox" id="bulkDelete" />#</th>
                                     <th class="col-lg-1"><?= $this->lang->line('airline_code') ?></th>
-                                    <th class="col-lg-1"><?= $this->lang->line('ticket_number') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('coupon_number') ?></th>
-                                    <th class="col-lg-1"><?= $this->lang->line('booking_country') ?></th>
-                                    <th class="col-lg-1"><?= $this->lang->line('booking_city') ?></th>
-                                    <th class="col-lg-1"><?= $this->lang->line('issuance_country') ?></th>
-                                    <th class="col-lg-1"><?= $this->lang->line('issuance_city') ?></th>
+                                    <th class="col-lg-1"><?= $this->lang->line('weight') ?></th>
+                                    <th class="col-lg-1"><?= $this->lang->line('rfic') ?></th>
+                                    <th class="col-lg-1"><?= $this->lang->line('rfisc') ?></th>
+                                    <th class="col-lg-1"><?= $this->lang->line('ssr_code') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('board_point') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('off_point') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('prorated_price') ?></th>
@@ -155,7 +142,6 @@
                                     <th class="col-lg-1"><?= $this->lang->line('class') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('fare_basis') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('departure_date') ?></th>
-
                                     <th class="col-lg-1"><?= $this->lang->line('day_of_week') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('operating_airline_code') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('marketing_airline_code') ?></th>
@@ -164,10 +150,7 @@
                                     <th class="col-lg-1"><?= $this->lang->line('office_id') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('channel') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('pax_type') ?></th>
-
-
                                     <th class="col-lg-1 noExport"><?= $this->lang->line('active') ?></th>
-
                                     <?php if (permissionChecker('rafeed_delete') || permissionChecker('rafeed_view')) { ?>
                                         <th class="col-lg-1 noExport"><?= $this->lang->line('action') ?></th>
                                     <?php } ?>
@@ -210,17 +193,20 @@
         $('#rafeedtable').DataTable({
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": "<?php echo base_url('rafeed/server_processing'); ?>",
+            "sAjaxSource": "<?php echo base_url('rafeed/server_processing_baggage'); ?>",
             "fnServerData": function(sSource, aoData, fnCallback, oSettings) {
                 aoData.push({
-                        "name": "bookingCountry",
-                        "value": $("#booking_country").val()
+                        "name": "weight",
+                        "value": $("#weight").val()
                     }, {
-                        "name": "bookingCity",
-                        "value": $("#booking_city").val()
+                        "name": "ssr_code",
+                        "value": $("#ssr_code").val()
                     }, {
-                        "name": "boardPoint",
-                        "value": $("#boarding_point").val()
+                        "name": "rfisc",
+                        "value": $("#rfisc").val()
+                    }, {
+                        "name": "rfic",
+                        "value": $("#rfic").val()
                     }, {
                         "name": "offPoint",
                         "value": $("#off_point").val()
@@ -259,24 +245,20 @@
                 {
                     "data": "airline_code"
                 },
-
-                {
-                    "data": "ticket_number"
-                },
                 {
                     "data": "coupon_number"
                 },
                 {
-                    "data": "booking_country"
+                    "data": "weight"
                 },
                 {
-                    "data": "booking_city"
+                    "data": "rfic"
                 },
                 {
-                    "data": "issuance_country"
+                    "data": "rfisc"
                 },
                 {
-                    "data": "issuance_city"
+                    "data": "ssr_code"
                 },
                 {
                     "data": "boarding_point"

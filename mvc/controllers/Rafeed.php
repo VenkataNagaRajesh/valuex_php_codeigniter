@@ -180,6 +180,107 @@ class Rafeed extends Admin_Controller
 		$this->load->view('_layout_main', $this->data);
 	}
 
+	public function baggage()
+	{
+
+		$this->data['headerassets'] = array(
+			'css' => array(
+				'assets/select2/css/select2.css',
+				'assets/select2/css/select2-bootstrap.css',
+				'assets/dist/themes/default/style.min.css',
+				'assets/datepicker/datepicker.css'
+			),
+			'js' => array(
+				'assets/select2/select2.js',
+				'assets/datepicker/datepicker.js'
+			)
+		);
+
+
+
+		if (!empty($this->input->post('booking_country'))) {
+			$this->data['booking_country'] = $this->input->post('booking_country');
+		} else {
+			$this->data['booking_country'] = 0;
+		}
+		if (!empty($this->input->post('booking_city'))) {
+			$this->data['booking_city'] = $this->input->post('booking_city');
+		} else {
+			$this->data['booking_city'] = 0;
+		}
+		if (!empty($this->input->post('boarding_point'))) {
+			$this->data['boarding_point'] = $this->input->post('boarding_point');
+		} else {
+			$this->data['boarding_point'] = 0;
+		}
+		if (!empty($this->input->post('off_point'))) {
+			$this->data['off_point'] = $this->input->post('off_point');
+		} else {
+			$this->data['off_point'] = 0;
+		}
+
+		if (!empty($this->input->post('airline_code'))) {
+			$this->data['airline_code'] = $this->input->post('airline_code');
+		} else {
+			if ($this->session->userdata('roleID') != 1) {
+				$this->data['airline_code'] = $this->session->userdata('default_airline');
+			} else {
+				$this->data['airline_code'] = 0;
+			}
+		}
+		if (!empty($this->input->post('class'))) {
+			$this->data['cla'] = $this->input->post('class');
+		} else {
+			$this->data['cla'] = 0;
+		}
+
+
+
+		if (!empty($this->input->post('flight_range'))) {
+			$this->data['flight_range'] = $this->input->post('flight_range');
+		} else {
+			$this->data['flight_range'] = '';
+		}
+
+		if (!empty($this->input->post('frequency'))) {
+			$this->data['frequency'] = $this->input->post('frequency');
+		} else {
+			$this->data['frequency'] = '';
+		}
+
+
+		if (!empty($this->input->post('start_date'))) {
+			$this->data['start_date'] = date('d-m-Y', $this->input->post('start_date'));
+		} else {
+			$this->data['start_date'] = '';
+		}
+
+		if (!empty($this->input->post('end_date'))) {
+			$this->data['end_date'] = date('d-m-Y', $this->input->post('end_date'));
+		} else {
+			$this->data['end_date'] = 0;
+		}
+
+		//print_r( $this->data['stateID']); exit;
+		$this->data['country'] = $this->rafeed_m->getCodesByType('2');
+		$this->data['city'] = $this->rafeed_m->getCodesByType('3');
+		//$this->data['airlines'] = $this->rafeed_m->getCodesByType('12');
+		$this->data['airport'] = $this->rafeed_m->getCodesByType('1');
+		$this->data['cabin'] = $this->rafeed_m->getCodesByType('13');
+
+		$roleID = $this->session->userdata('roleID');
+		$userID = $this->session->userdata('loginuserID');
+		if ($roleID != 1) {
+			$this->data['airlines'] = $this->user_m->getUserAirlines($userID);
+		} else {
+			$this->data['airlines'] = $this->airline_m->getAirlinesData();
+		}
+
+
+		$this->data["subview"] = "rafeed/baggage";
+		$this->load->view('_layout_main', $this->data);
+	}
+
 
 	public function delete()
 	{
@@ -897,8 +998,6 @@ class Rafeed extends Admin_Controller
 			$sWhere .= 'rf.cabin = ' . $this->input->get('Class');
 		}
 
-
-
 		if (!empty($this->input->get('flight_range'))) {
 			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
 			$num_arr = explode('-', $this->input->get('flight_range'));
@@ -962,6 +1061,218 @@ class Rafeed extends Admin_Controller
                           LEFT JOIN VX_data_defns dci on  (dci.vx_aln_data_defnsID = rf.booking_city) 
 			  LEFT JOIN VX_data_defns dico on (dico.vx_aln_data_defnsID = rf.issuance_country) 
                           LEFT JOIN VX_data_defns dici on  (dici.vx_aln_data_defnsID = rf.issuance_city)
+                          LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = rf.operating_airline_code)  
+			  LEFT JOIN VX_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code)
+			  LEFT JOIN VX_data_defns dcar on (dcar.vx_aln_data_defnsID = rf.carrier)
+                          LEFT JOIN  VX_data_defns dbp on (dbp.vx_aln_data_defnsID = rf.boarding_point)  
+                          LEFT JOIN VX_data_defns dop on (dop.vx_aln_data_defnsID = rf.off_point) 
+			 INNER JOIN VX_airline_cabin_def def on (def.carrier = rf.carrier)
+                           INNER JOIN VX_data_defns dcla on (dcla.alias = def.level and dcla.aln_data_typeID = 13 and rf.cabin = dcla.vx_aln_data_defnsID) 
+			   LEFT JOIN VX_data_defns dpax on (dpax.vx_aln_data_defnsID = rf.pax_type) 
+			  LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = rf.day_of_week) 
+		$sWhere			
+		$sOrder
+		$sLimit	";
+
+		$rResult = $this->install_m->run_query($sQuery);
+		$sQuery = "SELECT FOUND_ROWS() as total";
+		$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;
+
+		$output = array(
+			"sEcho" => intval($_GET['sEcho']),
+			"iTotalRecords" => $rResultFilterTotal,
+			"iTotalDisplayRecords" => $rResultFilterTotal,
+			"aaData" => array()
+		);
+
+		$i = 1;
+
+		$rownum = 1 + $_GET['iDisplayStart'];
+
+		foreach ($rResult as $feed) {
+			$feed->cbox = "<input type='checkbox'  class='deleteRow' value='" . $feed->rafeed_id . "'  /> " . $rownum;
+			$rownum++;
+
+			$feed->departure_date = date('d/m/Y', $feed->departure_date);
+
+			if (permissionChecker('rafeed_delete')) {
+				$feed->action .= btn_delete('rafeed/delete/' . $feed->rafeed_id, $this->lang->line('delete'));
+			}
+			$status = $feed->active;
+			$feed->active = "<div class='onoffswitch-small' id='" . $feed->rafeed_id . "'>";
+			$feed->active .= "<input type='checkbox' id='myonoffswitch" . $feed->rafeed_id . "' class='onoffswitch-small-checkbox' name='paypal_demo'";
+			if ($status) {
+				$feed->active .= " checked >";
+			} else {
+				$feed->active .= ">";
+			}
+
+			$feed->active .= "<label for='myonoffswitch" . $feed->rafeed_id . "' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
+			$feed->temp_id = $i;
+			$i++;
+			$output['aaData'][] = $feed;
+		}
+		if (isset($_REQUEST['export'])) {
+			$columns = array("#", "Airline Code", "Ticket Number", "Coupon number", "Booking Country", "Booking City", "Issuance Country", "Issuance City", "Board Point", "Off Point", "Prorated Price", "Cabin", "Class", "Fare Basis", "Departure Date", "Day Of Week", "Operating Airline", "Marketing Airline", "Carrier Code", "Flight Number", "Office", "Channel", "Pax Type");
+			$rows = array("temp_id", "airline_code", "ticket_number", "coupon_number", "booking_country", "booking_city", "issuance_country", "issuance_city", "boarding_point", "off_point", "prorated_price", "cabin", "class", "fare_basis", "departure_date", "day_of_week", "operating_airline_code", "marketing_airline_code", "carrier_code", "flight_number", "office_id", "channel", "pax_type");
+			$this->exportall($output['aaData'], $columns, $rows);
+		} else {
+			echo json_encode($output);
+		}
+	}
+
+	function server_processing_baggage()
+	{
+		$userID = $this->session->userdata('loginuserID');
+		$roleID = $this->session->userdata('roleID');
+
+
+
+		$aColumns = array(
+			'id', 'airline_code', 'ticket_number', 'coupon_number', 'dc.code', 'dci.code', 'dico.code', 'dici.code', 'dbp.code', 'dop.code', 'prorated_price', 'dcla.code', 'class', 'fare_basis', 'rf.departure_date', 'day_of_week', 'dai.code', 'dam.code', 'dcar.code', 'rf.flight_number', 'office_id', 'channel', 'dpax.code', 'rf.active', 'dfre.aln_data_value', 'dc.aln_data_value', 'dci.aln_data_value', 'dico.aln_data_value',
+			'dici.aln_data_value', 'dai.aln_data_value', 'dam.aln_data_value', 'dcar.aln_data_value', 'dbp.aln_data_value',
+			'dop.aln_data_value', 'def.desc'
+		);
+
+
+		$sLimit = "";
+
+		if (isset($_GET['iDisplayStart']) && $_GET['iDisplayLength'] != '-1') {
+			$sLimit = "LIMIT " . $_GET['iDisplayStart'] . "," . $_GET['iDisplayLength'];
+		}
+		if (isset($_GET['iSortCol_0'])) {
+			$sOrder = "ORDER BY  ";
+			for ($i = 0; $i < intval($_GET['iSortingCols']); $i++) {
+				if ($_GET['bSortable_' . intval($_GET['iSortCol_' . $i])] == "true") {
+					//if($_GET['iSortCol_0'] == 8){
+					//	$sOrder .= " (s.order_no*-1) DESC ,";
+					//} else {
+					$sOrder .= $aColumns[intval($_GET['iSortCol_' . $i])] . "
+							" . $_GET['sSortDir_' . $i] . ", ";
+					//}
+				}
+			}
+			$sOrder = substr_replace($sOrder, "", -2);
+
+			if ($sOrder == "ORDER BY") {
+				$sOrder = "";
+			}
+		}
+		$sWhere = "";
+		if ($_GET['sSearch'] != "") {
+			$sWhere = "WHERE (";
+			for ($i = 0; $i < count($aColumns); $i++) {
+				$sWhere .= $aColumns[$i] . " LIKE '%" . $_GET['sSearch'] . "%' OR ";
+			}
+			$sWhere = substr_replace($sWhere, "", -3);
+			$sWhere .= ')';
+		}
+
+		/* Individual column filtering */
+		for ($i = 0; $i < count($aColumns); $i++) {
+			if ($_GET['bSearchable_' . $i] == "true" && $_GET['sSearch_' . $i] != '') {
+				if ($sWhere == "") {
+					$sWhere = "WHERE ";
+				} else {
+					$sWhere .= " AND ";
+				}
+				$sWhere .= $aColumns[$i] . " LIKE '%" . $_GET['sSearch_' . $i] . "%' ";
+			}
+		}
+
+		if (!empty($this->input->get('boardPoint'))) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'rf.boarding_point = ' . $this->input->get('boardPoint');
+		}
+		if (!empty($this->input->get('offPoint'))) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'rf.off_point = ' . $this->input->get('offPoint');
+		}
+
+		if (!empty($this->input->get('weight'))) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'rf.weight = "' . $this->input->get('weight') . '"';
+		}
+
+		if (!empty($this->input->get('ssr_code'))) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'rf.ssr_code = "' . $this->input->get('ssr_code') . '"';
+		}
+
+		if (!empty($this->input->get('rfic'))) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'rf.rfic = "' . $this->input->get('rfic') . '"';
+		}
+
+		if (!empty($this->input->get('rfisc'))) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'rf.rfisc = "' . $this->input->get('rfisc') . '"';
+		}
+
+
+		if (!empty($this->input->get('airLine'))) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'rf.carrier= ' . $this->input->get('airLine');
+		}
+		if (!empty($this->input->get('Class'))) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'rf.cabin = ' . $this->input->get('Class');
+		}
+
+		if (!empty($this->input->get('flight_range'))) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$num_arr = explode('-', $this->input->get('flight_range'));
+
+			if ($num_arr[0] > 0 and $num_arr[1] > 0 and $num_arr[1] > $num_arr[0]) {
+				$sWhere .= 'rf.flight_number >= ' . $num_arr[0] . ' AND rf.flight_number <= ' . $num_arr[1];
+			} else if ($num_arr[0] > 0) {
+				$sWhere .= 'rf.flight_number =' . $num_arr[0];
+			}
+		}
+
+
+		if (!empty($this->input->get('start_date'))) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'rf.departure_date >= ' . strtotime($this->input->get('start_date'));
+		}
+		if (!empty($this->input->get('end_date'))) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'rf.departure_date <= ' .  strtotime($this->input->get('end_date'));
+		}
+
+		if (!empty($this->input->get('frequency'))) {
+			$frstr = $this->input->get('frequency');
+			$freq = $this->airports_m->getDefnsCodesListByType('14');
+			if ($frstr === '*') {
+				$frstr = '1234567';
+			}
+
+			if ($frstr != '0') {
+				$arr = str_split($frstr);
+				$freq_str = implode(',', array_map(function ($x) use ($freq) {
+					return array_search($x, $freq);
+				}, $arr));
+				$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+				$sWhere .= 'rf.day_of_week IN (' . $freq_str . ') ';
+			}
+		}
+
+		$roleID = $this->session->userdata('roleID');
+		$userID = $this->session->userdata('loginuserID');
+		if ($roleID != 1) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'rf.carrier IN (' . implode(',', $this->session->userdata('login_user_airlineID')) . ')';
+		}
+
+		$sWhere .=  ($sWhere == '') ? ' WHERE ' : ' AND ';
+		$sWhere .=  " rf.sub_season_record = 0 ";
+		$sQuery = " SELECT SQL_CALC_FOUND_ROWS rf.id, rf.coupon_number,rf.weight,rf.rfic,rf.rfisc,rf.ssr_code, 
+				dfre.code as day_of_week,  dfre.aln_data_value , dai.aln_data_value, dam.aln_data_value, 
+				dcar.aln_data_value, dbp.aln_data_value,dop.aln_data_value,def.desc,dcar.code as carrier_code,
+			    dai.code as operating_airline_code, dam.code as marketing_airline_code, flight_number, dbp.code as boarding_point, 
+                           dop.code as off_point,  def.cabin as cabin ,  departure_date, prorated_price, class,
+                           office_id, channel, dpax.code as pax_type ,rf.active ,rf.airline_code, rf.fare_basis
+                           FROM UP_ra_feed_baggage rf                          
                           LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = rf.operating_airline_code)  
 			  LEFT JOIN VX_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code)
 			  LEFT JOIN VX_data_defns dcar on (dcar.vx_aln_data_defnsID = rf.carrier)
