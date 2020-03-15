@@ -4780,3 +4780,57 @@ input[type=number]::-webkit-outer-spin-button {
   margin-top: -76px;
   line-height: 40px;
 }
+.report-cabin-header{
+  background: #ff6633;
+  color: #ffff;
+  text-align: center;
+  padding: 6px;
+  font-weight: bold;
+}
+.upgrade-revenue-price-box{
+  width: 49%;
+  height: 62px;
+  background-color: #ff6633;
+  text-align: center;
+  font-size: 30px;
+  color: white;
+  font-weight: bold;
+  padding: 9px;
+  margin-left: 100px;
+}
+.upgrade-revenue-box{
+  height: 28px;
+  width: 49%;
+  background-color: #e2d8d5;
+  text-align: center;
+  margin-left: 100px;
+  font-weight: bold;
+  font-size: 17px;
+}
+.bar_chart_tooltips_css {
+  background-color: white ! important;
+  border: 2px solid black ! important;
+  padding: 3px;
+}
+span#png_links {
+  position: absolute;
+  left: 535px;
+  top: 30px;
+  border: 1px black solid;
+  background-color: white;
+  cursor: pointer;
+  color: blue;
+  font-size: 10pt;
+  border: 2px solid gray;
+  border-radius: 5px;
+  font-weight: bold;
+  font-family: Arial;
+  padding: 3px;
+  line-height: 15px;
+}
+.revenue-box {
+  height: 116px;
+  width: 100%;
+  background-color: #ffff;
+  padding: 10px;
+}

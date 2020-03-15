@@ -108,6 +108,7 @@ $lang['menu_airline_cabin_def'] = 'Carrier Cabin Definition';
 $lang['menu_product'] = 'Product';
 $lang['menu_contract'] = 'Contract';
 $lang['menu_client_product'] = 'Client Product';
+$lang['menu_partner'] = 'Partner';
 /* End Update Menu */
 
 

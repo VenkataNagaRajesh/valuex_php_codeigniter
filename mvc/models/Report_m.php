@@ -18,7 +18,7 @@ class Report_m extends MY_Model {
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
                         MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status,
-			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code
+			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_code, SubSet.to_city_code,SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code
 
                 FROM ( 
                                 select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, bid_avg,bid_markup_val,
@@ -34,13 +34,12 @@ class Report_m extends MY_Model {
                                         INNER JOIN UP_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) 
                                          INNER JOIN UP_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type)
                                           LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20)
-                                          ".$swhere." AND (pe.booking_status =".$bid_accepted." OR pe.booking_status =".$bid_rejected." )                                       
-                                         ) as MainSet"; 
+                                          ".$swhere.") as MainSet"; 
                        
                         $query .= " INNER  JOIN (
                                         select  flight_number,group_concat(distinct first_name, ' ' , last_name , ' fqtv: ' , fqtv SEPARATOR '<br>'  ) as p_list ,group_concat(distinct fqtv) as fqtv,
                                                 group_concat(distinct dep_date) as flight_date  ,
-                                                pnr_ref, 
+                                                pnr_ref,pf1.from_city as from_city_code,pf1.to_city as to_city_code, 
                                                 group_concat(distinct fdef.cabin) as from_cabin  , fc.code as from_city, 
 						tc.code as to_city, from_city as boarding_point , to_city as off_point, 
 						fc.aln_data_value as from_city_name, tc.aln_data_value as to_city_name,
@@ -56,7 +55,7 @@ class Report_m extends MY_Model {
                                         where pf1.is_processed = 1 ".$dwhere." group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
                    ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number ) ";
                    $query .= " WHERE SubSet.carrier_code = ".$airlineID;
-                  
+                   $query .= " AND (MainSet.booking_status =".$bid_accepted." OR MainSet.booking_status =".$bid_rejected.")";
              //print_r($query)     ; exit;
             $result =   $this->db->query($query);
             return $result->result();

@@ -10,26 +10,32 @@ class Reportdata_m extends MY_Model {
     function getReportdata($where){
        $this->db->select("*")->from('VX_reportdata');
        $this->db->where($where);
-       $query = $this->db->get();
-       $query->result();
+       $query = $this->db->get();       
+       return $query->result();
     }
 
-    public function get_report($airlineID,$date,$type = 1){ 
+    public function get_report($airlineID,$from_date=null,$to_date,$type = 1){ 
       $bid_accepted =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
-      $bid_rejected =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');  
+      $bid_rejected =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');       
       if($type == 2){
-        $swhere = " WHERE bid.bid_submit_date <= ".strtotime($date);
+        $swhere = " WHERE bid.bid_submit_date <= ".strtotime($to_date);
+        if($from_date){
+          $swhere .= " AND bid.bid_submit_date >= ".strtotime($from_date);
+        }
         $order = " ORDER BY MainSet.bid_submit_date ASC";         
       } else {
-        $dwhere = " AND pf1.dep_date <= ".strtotime($date);
+        $dwhere = " AND pf1.dep_date <= ".strtotime($to_date);
+        if($from_date){
+          $dwhere .= " AND pf1.dep_date >= ".strtotime($from_date);
+        }
         $order = " ORDER BY SubSet.flight_date ASC"; 
-      }
+      }     
         
     $query = "  select  SQL_CALC_FOUND_ROWS  
                       MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                       SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
                       MainSet.to_cabin,MainSet.to_cabin_id, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status,
-    SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code
+    SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_code, SubSet.to_city_code, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code
 
               FROM ( 
                               select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, bid_avg,bid_markup_val,
@@ -45,13 +51,13 @@ class Reportdata_m extends MY_Model {
                                       INNER JOIN UP_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) 
                                        INNER JOIN UP_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type)
                                         LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20)
-                                        ".$swhere." AND (pe.booking_status =".$bid_accepted." OR pe.booking_status =".$bid_rejected.")                                       
+                                        ".$swhere."                                      
                                        ) as MainSet"; 
                      
                       $query .= " INNER  JOIN (
                                       select  flight_number,group_concat(distinct first_name, ' ' , last_name , ' fqtv: ' , fqtv SEPARATOR '<br>'  ) as p_list ,group_concat(distinct fqtv) as fqtv,
                                               group_concat(distinct dep_date) as flight_date  ,
-                                              pnr_ref, 
+                                              pnr_ref,pf1.from_city as from_city_code,pf1.to_city as to_city_code,  
                                               group_concat(distinct fdef.cabin) as from_cabin  , fc.code as from_city, 
           tc.code as to_city, from_city as boarding_point , to_city as off_point, 
           fc.aln_data_value as from_city_name, tc.aln_data_value as to_city_name,
@@ -66,15 +72,28 @@ class Reportdata_m extends MY_Model {
                                       LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
                                       where pf1.is_processed = 1 ".$dwhere." group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
                  ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number ) ";
-                 $query .= " WHERE SubSet.carrier_code = ".$airlineID.$order;
+                 $query .= " WHERE SubSet.carrier_code = ".$airlineID;
+                 $query .= " AND (MainSet.booking_status =".$bid_accepted." OR MainSet.booking_status =".$bid_rejected.")".$order;
                 
-          //print_r($query)     ; exit;
+        // print_r($query); //exit;
           $result =   $this->db->query($query);
           return $result->result();
   }
 
+  function checkdata($data){
+     $query = $this->db->get_where('VX_reportdata',$data);
+     return $query->row('dataID');
+  }
+
   function add_reportdata($data){
-      $this->mydebug->debug($data);
+      $this->db->insert('VX_reportdata',$data);
+      return ($this->db->affected_rows() != 1) ? false : true;
+  }
+
+  function update_reportdata($dataID,$data){
+     $this->db->where('dataID',$dataID);
+     $this->db->update('VX_reportdata',$data);
+     return ($this->db->affected_rows() != 1) ? false : true;
   }
 
 }
