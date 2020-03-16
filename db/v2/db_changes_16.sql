@@ -1,0 +1,2 @@
+insert into VX_permissions set description='Baggage RA feed','rafeed/baggage',productID=2;
+insert into VX_menu (menuName,link,icon,status,parentID,priority) values ('RA feed - Baggage','rafeed/baggage','fa-list','1','130','500');
