@@ -1272,7 +1272,7 @@ class Rafeed extends Admin_Controller
 			    dai.code as operating_airline_code, dam.code as marketing_airline_code, flight_number, dbp.code as boarding_point, 
                            dop.code as off_point,  def.cabin as cabin ,  departure_date, prorated_price, class,
                            office_id, channel, dpax.code as pax_type ,rf.active ,rf.airline_code, rf.fare_basis
-                           FROM UP_ra_feed_baggage rf                          
+                           FROM BG_ra_feed rf                          
                           LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = rf.operating_airline_code)  
 			  LEFT JOIN VX_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code)
 			  LEFT JOIN VX_data_defns dcar on (dcar.vx_aln_data_defnsID = rf.carrier)

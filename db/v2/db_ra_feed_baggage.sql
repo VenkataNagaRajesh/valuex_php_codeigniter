@@ -1,4 +1,4 @@
-CREATE TABLE `up_ra_feed_baggage` (
+CREATE TABLE `BG_ra_feed` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `airline_code` int(11) NOT NULL,
  `emd_nbr` bigint(16) NOT NULL,
