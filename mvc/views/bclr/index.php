@@ -5,7 +5,7 @@
 	<p class="card-header" data-toggle="collapse" data-target="#bclrAdd"><button style="margin:1px 0;" type="button" class="btn btn-danger pull-right" data-placement="left" title="Add BCLR" data-toggle="tooltip" id='bclr_add_btn' ><i class="fa fa-plus"></i></button></p>
  <?php } ?>
 	<div class="col-md-12 fclr-table-add collapse" id="bclrAdd">
-		<form class="form-horizontal" action="#" id='bclr_add_form'>
+		<form class="form-horizontal" action="#" id='bclr_form'>
 			<div class="col-md-12">           
             <div class="form-group">
 					<div class="col-md-2 col-sm-3">
@@ -19,6 +19,11 @@
                                );
                     ?>
 					</div>
+                    <div class="col-md-2 col-sm-3">
+                        <select  name="from_cabin"  id="from_cabin" placeholder="From Cabin" class="form-control select2">
+                        <option value="0">From Cabin</option>
+				        </select>
+                    </div>
 					<div class="col-md-2 col-sm-3">
                     <?php  $alist[0] = "Partner Carrier";
                                foreach($airlines as $airline){
@@ -38,15 +43,14 @@
 					</div>
                    
 					<div class="col-md-2 col-sm-3">
-                        <select  name="aircraft_type"  id="aircraft_type" class="form-control select2" multiple="multiple" placeholder="Aircraft Type">
-				        </select>
+                        <select  name="aircraft_type"  id="aircraft_type" class="form-control hide-dropdown-icon select2" placeholder="Aircraft Type">
+                         <option value="0"> Aircraft </option>
+				        </select> 
 					</div>
 					<div class="col-md-2 col-sm-3">
                        <input type="text" class="form-control" name="flight_num_range" placeholder="Flight Number Range" id="flight_num_range" value="<?=set_value('flight_num_range')?>" />
 					</div>
-                    <div class="col-md-2 col-sm-3">
-                        <input type="text" class="form-control" name="frequency" id="frequency" value="<?=set_value('frequency')?>" />                       
-                    </div>
+                    
                 </div>
                 <div class="form-group">
                     <div class="col-md-2 col-sm-3">
@@ -80,7 +84,7 @@
         			</div>				
 					<div class="col-md-2 col-sm-3">
                         <div class="input-group">
-							<input type="text" class="form-control" placeholder="Affective Date" id="affective_date" name="affective_date" value="<?=set_value('affective_date')?>">
+							<input type="text" class="form-control" placeholder="Effective Date" id="effective_date" name="effective_date" value="<?=set_value('effective_date')?>">
 							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 						</div>
                     </div>
@@ -94,18 +98,17 @@
                 <div class="form-group">
                     <div class="col-md-2 col-sm-3">
                      <?php                         
-                          $seasonlist[0] = "Season";                           
-                        echo form_dropdown("season", $seasonlist, set_value("season"), "id='season' class='form-control select2'");
-                        ?>
+                          $seasons['0'] = 'Season';
+                          ksort($seasons);
+                          echo form_dropdown("sseason_id", $seasons,set_value("sseason_id",$sseason_id), "id='sseason_id' class='form-control hide-dropdown-icon select2'"); 
+                    ?>                        
                     </div>
                     <div class="col-md-2 col-sm-3">
-                        <select  name="from_cabin"  id="from_cabin" placeholder="From Cabin" class="form-control select2">
-                        <option value="0">From Cabin</option>
-				        </select>
-                    </div> 
-                    <div class="col-md-2 col-sm-3">
-                        <input type="number" class="form-control" name="min_unit" id="min_unit" placeholder="Min Unit" value="<?=set_value('min_unit')?>" />                       
-                    </div> 
+                        <?php
+							$days_of_week[0] = 'Frequency';
+							ksort($days_of_week);
+							echo form_dropdown("frequency", $days_of_week, set_value("frequency"), "id='frequency' class='form-control hide-dropdown-icon select2'");?>  
+                    </div>                     
                     <div class="col-md-2 col-sm-3">
                      <?php                         
                           $unittypes[1] = "KG";                           
@@ -120,24 +123,39 @@
                                }
                                echo form_dropdown("rule_auth_carrier", $auth,set_value("rule_auth_carrier"), "id='rule_auth_carrier' class='form-control hide-dropdown-icon select2'");
                         ?>
-					</div>  
+					</div>
+                    <div class="col-md-2 col-sm-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Dep Time Start"  id="dep_time_start" name="dep_time_start" value="<?=set_value('dep_time_start')?>" >
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>     
+                    </div>  
+                    <div class="col-md-2 col-sm-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Dep Time End"  id="dep_time_end" name="dep_time_end" value="<?=set_value('dep_time_end')?>" >
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-2 col-sm-3">
+                        <input type="number" class="form-control" name="min_unit" id="min_unit" placeholder="Min Unit" value="<?=set_value('min_unit')?>" />                       
+                    </div>
                     <div class="col-md-2 col-sm-3">
                         <input type="number" class="form-control" name="max_capacity" id="max_capacity" placeholder="Max Capacity" value="<?=set_value('max_capacity')?>" />                       
-                    </div>
-                </div>        
-                <div class="from-group">
+                    </div>                      
                     <div class="col-md-2 col-sm-3">
                         <input type="number" class="form-control" name="min_price" id="min_price" placeholder="Min Price" value="<?=set_value('min_price')?>" />                       
                     </div> 
                     <div class="col-md-2 col-sm-3">
                         <input type="number" class="form-control" name="max_price" id="max_price" placeholder="Max Price" value="<?=set_value('max_price')?>" />                       
-                    </div> 
+					</div>
                     <input type="hidden" class="form-control" id="fclr_id" name="fclr_id"   value="" >
-					<div class="col-md-3 col-sm-4">
+					<div class="col-md-2 col-sm-3">
 						<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savebclr();">Add BCLR</a>
 						<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
-					</div>                                   
-                </div>				
+					</div>                     
+                </div>                				
 			</div>
 		</form>
 	</div>
@@ -187,9 +205,12 @@
 	</div>
 </div>
 <script>
+ $("#effective_date").datepicker();
+$("#discontinue_date").datepicker();
+$('#dep_time_start').timepicker();
+$('#dep_time_end').timepicker();
  $(document).ready(function() {	
-    $("#effective_date").datepicker();
-    $("#disconinue_date").datepicker();
+   
     $('#origin_level').trigger('change');
     $('#dest_level').trigger('change');
     loaddatatable();
@@ -262,6 +283,31 @@ $('#partner_carrierID').change(function(event) {
 	if ($('#dest_level').val() == 17 ) {
 		$('#dest_level').trigger('change');
 	}
+});
+
+$('#carrierID').change(function(){
+    var carrier = $(this).val();    
+    $.ajax({ 
+        async: false,            
+	    type: 'POST',            
+        url: "<?=base_url('bclr/getAircrafts')?>",            
+        data: {"carrierID":carrier},           
+        dataType: "html",                                  
+        success: function(data) {                         
+            $('#aircraft_type').html(data);             
+        }        
+    });
+
+    $.ajax({ 
+        async: false,            
+	    type: 'POST',            
+        url: "<?=base_url('bclr/getCabinsCarrier')?>",            
+        data: {"carrierID":carrier},           
+        dataType: "html",                                  
+        success: function(data) {                         
+            $('#from_cabin').html(data);             
+        }        
+    }); 
 });
 
 function loaddatatable() {
@@ -467,11 +513,14 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Frequency'});
 <script>
 
 function savebclr() {
-$.ajax({
+   var formdata = $('#bclr_form').serialize();
+   //console.log(formdata);
+    $.ajax({
           async: false,
           type: 'POST',
-          url: "<?=base_url('fclr/save')?>",          
-                  data: {"board_point" :$('#board_point').val(),
+          url: "<?=base_url('bclr/save')?>", 
+          data: formdata,         
+                 /* data: {"board_point" :$('#board_point').val(),
                          "off_point":$('#off_point').val(),
                          "season_id":$('#season_id').val(),
                          "carrier_code":$('#carrier_code').val(),
@@ -483,33 +532,32 @@ $.ajax({
 			  "max":$('#max').val(),
                           "avg":$('#avg').val(),
                           "slider_start":$('#slider_start').val(),
-                           "fclr_id":$('#fclr_id').val()},
-          dataType: "html",                     
-
-
-success: function(data) {
-
-                        var fclrinfo = jQuery.parseJSON(data);
-                        var status = fclrinfo['status'];
-			newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
-                        if (status == 'success' ) {
-                                alert(status);
-				form_reset();
-                                $("#fclrtable").dataTable().fnDestroy();
-                                loaddatatable();
-                        } else if (status == 'duplicate'){
-				alert('Duplicate Entry');
-			} else {                                
-                                alert($(status).text());
-                            $.each(fclrinfo['errors'], function(key, value) {
-                                        if(value != ''){                                         
-                                        $('#' + key).parent().addClass('has-error'); 
-                                        }                                               
-                });                             
-                        }
-             }
-
-          });
+                           "fclr_id":$('#fclr_id').val()},*/
+                    
+          dataType: "html",
+          success: function(data) {
+                    var bclrinfo = jQuery.parseJSON(data);
+                    var status = bclrinfo['status'];
+			        newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
+                    if (status == 'success' ) {
+                        alert(status);
+				        form_reset();
+                        $("#fclrtable").dataTable().fnDestroy();
+                        loaddatatable();
+                    } else if (status == 'duplicate'){
+				        alert('Duplicate Entry');
+			        } else {                                
+                        alert($(status).text());
+                        $.each(bclrinfo['errors'], function(key, value) {
+                            if(value != ''){                                         
+                            $('#' + key).parent().addClass('has-error'); 
+                            } else {
+                                $('#' + key).parent().removeClass('has-error');   
+                            }                                              
+                        });                             
+                    }
+          }
+        });
 }
 
 
@@ -658,9 +706,6 @@ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
 $('#fclrtable').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
-
-
-
 
 });
 </script>
