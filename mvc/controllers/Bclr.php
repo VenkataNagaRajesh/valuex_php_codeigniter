@@ -598,7 +598,7 @@ $sWhere $sOrder $sLimit";
                    }
 		
                   if(permissionChecker('bclr_delete')){
-                        $feed->action .= btn_delete('fclr/delete/'.$feed->fclr_id, $this->lang->line('delete'));                   
+                        $feed->action .= btn_delete('bclr/delete/'.$feed->bclr_id, $this->lang->line('delete'));                   
                   }
                   $status = $feed->active;
                   $feed->active = "<div class='onoffswitch-small' id='".$feed->bclr_id."'>";
