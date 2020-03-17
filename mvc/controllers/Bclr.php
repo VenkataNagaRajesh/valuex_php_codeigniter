@@ -23,17 +23,32 @@ class Bclr extends Admin_Controller {
                         array(
                                 'field' => 'carrierID',
                                 'label' => $this->lang->line("carrier"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valAirline'
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                        ),
+                        array(
+                                'field' => 'from_cabin',
+                                'label' => $this->lang->line("from_cabin"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
                         ),
                         array(
                                 'field' => 'partner_carrierID',
                                 'label' => $this->lang->line("partner_carrier"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valAirline'
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
                         ),
                         array(
                                 'field' => 'allow',
-                                'label' => $this->lang->line("allow"),
+                                'label' => $this->lang->line("allowance"),
                                 'rules' => 'trim|required|max_length[200]|xss_clean'
+                        ),
+                        array(
+                                'field' => 'aircraft_type',
+                                'label' => $this->lang->line("aircraft_type"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                        ),
+                        array(
+                                'field' => 'flight_num_range',
+                                'label' => $this->lang->line("flight_number_range"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valFlightrange'
                         ),			
 			array(
 				'field' => 'origin_level',
@@ -47,12 +62,12 @@ class Bclr extends Admin_Controller {
                         ),
                         array(
 				'field' => 'dest_level',
-				'label' => $this->lang->line("destination_level"),
+				'label' => $this->lang->line("dest_level"),
 				'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
                          ),
                         array(
                                 'field' => 'dest_content[]',
-                                'label' => $this->lang->line("destination_content"),
+                                'label' => $this->lang->line("dest_content"),
                                 'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateContent'
                         ),
                         array(
@@ -61,13 +76,83 @@ class Bclr extends Admin_Controller {
                                 'rules' => 'trim|required|xss_clean|max_length[60]'  
                         ),
                         array(
-                                'field' => 'discontine_date',
-                                'label' => $this->lang->line("discontine_date"),
+                                'field' => 'discontinue_date',
+                                'label' => $this->lang->line("discontinue_date"),
                                 'rules' => 'trim|required|xss_clean|max_length[60]'  
-                        )          
+                        ),
+                        array(
+                               'field' => 'frequency',
+                               'label' => $this->lang->line("frequency"),
+                               'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                        ),
+                        array(
+                                'field' => 'rule_auth_carrier',
+                                'label' => $this->lang->line("rule_auth"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                        ),
+                        array(
+                               'field' => 'dep_time_start',
+                               'label' => $this->lang->line("dep_time_start"),
+                               'rules' => 'trim|required|max_length[200]|xss_clean'
+                        ),
+                        array(
+                                'field' => 'dep_time_end',
+                                'label' => $this->lang->line("dep_time_end"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                         ), 
+                         array(
+                                'field' => 'min_unit',
+                                'label' => $this->lang->line("min_unit"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                         ),
+                         array(
+                                'field' => 'max_capacity',
+                                'label' => $this->lang->line("max_capacity"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                         ),    
+                         array(
+                                'field' => 'min_price',
+                                'label' => $this->lang->line("min_price"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                         ),
+                         array(
+                                'field' => 'max_price',
+                                'label' => $this->lang->line("max_price"),
+                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                         )       
 
 		);
 	        return $rules;
+        }
+
+        function validateLevel($post_string){
+              if($post_string == '0'){
+                    $this->form_validation->set_message("validateLevel", "%s is required");
+                     return FALSE;
+              }else{
+                     return TRUE;
+              }
+        }
+        
+        function validateContent($post_array){
+            if(count($post_array) < 1){
+                   $this->form_validation->set_message("validateContent", "%s is required");
+                    return FALSE;
+             }else{
+                    return TRUE;
+             }
+        }
+
+        function valFlightrange($post_string){
+           if(empty($post_string)){
+                $this->form_validation->set_message("valFlightrange", "%s is required");
+                return FALSE;
+           } else if(preg_match('/(\d+)-(\d+)/', $post_string, $matches)){
+                return TRUE;
+           }  else {
+             $this->form_validation->set_message("valFlightrange", "%s format like 1011-1050");
+             return FALSE;
+           }
         }
 
  
@@ -80,76 +165,108 @@ class Bclr extends Admin_Controller {
            $this->output->set_output(json_encode($fclr));
         }
 
+        public function getAircrafts(){
+           $carrierID = $this->input->post('carrierID');
+           $aircrafts = $this->airline_m->getAirCraftTypesList($carrierID);
+           //echo "<option value='0'> Select Aircraft </option>";
+           foreach($aircrafts as $aircraft){
+              echo "<option value='".$aircraft->aircraftID."'>".$aircraft->aln_data_value."</option>";
+           }
+        }
+
+        public function getCabinsCarrier(){
+           $carrierID = $this->input->post('carrierID');
+           $cabins = $this->airline_cabin_def_m->getCabinsDataForCarrier($carrierID,1);
+           echo "<option value='0'> From Cabin </option>";
+           foreach($cabins as $cabin){
+              echo "<option value='".$cabin->vx_aln_data_defnsID."'>".$cabin->cabin."</option>";
+           }
+           if(count($cabins) > 0){
+             echo "<option value='*'> All (*) </option>";
+           }
+        }
+
         public function save() {
-                if($_POST) {
-                        $fclr_id = $this->input->post("fclr_id");
-                        $rules = $this->rules();
-                        $this->form_validation->set_rules($rules);
-                        if ($this->form_validation->run() == FALSE) {
-                                $json['status'] = validation_errors();
+          if($_POST) {
+            $bclr_id = $this->input->post("bclr_id");
+            $rules = $this->rules();
+            $this->form_validation->set_rules($rules);
+            if ($this->form_validation->run() == FALSE) {
+              $json['status'] = validation_errors();
                 $json['errors'] = array(
-                'board_point' => form_error('board_point'),
-                'off_point' => form_error('off_point'),
+                'carrierID' => form_error('carrierID'),
+                'from_cabin' => form_error('from_cabin'),
+                'partner_carrierID' => form_error('partner_carrierID'),
+                'allow' => form_error('allow'),
+                'aircraft_type' => form_error('aircraft_type'),
+                'flight_num_range' => form_error('flight_num_range'),
+                'origin_level' => form_error('origin_level'),
+                'origin_content' => form_error('origin_content[]'),
+                'dest_level' => form_error('dest_level'),
+                'dest_content' => form_error('dest_content[]'),
+                'effective_date' => form_error('effective_date'),
+                'discontinue_date' => form_error('discontinue_date'),
                 'frequency' => form_error('frequency'),
-                'flight_number' => form_error('flight_number'),
-                                'carrier_code' => form_error('carrier_code'),
-                                'upgrade_from_cabin_type' => form_error('upgrade_from_cabin_type'),
-                                'upgrade_to_cabin_type' => form_error('upgrade_to_cabin_type'),
-                                'min' => form_error('min'),
-                                'max' => form_error('max'),
-				'avg' => form_error('avg'),
-                                'slider_start' => form_error('slider_start'),
+		'bag_type' => form_error('bag_type'),
+                'rule_auth_carrier' => form_error('rule_auth_carrier'),
+                'dep_time_start'=>form_error('dep_time_start'),
+                'dep_time_end'=>form_error('dep_time_end'),
+                'min_unit'=>form_error('min_unit'),
+                'max_capacity'=>form_error('max_capacity'),
+                'min_price'=>form_error('min_price'),
+                'max_price'=>form_error('max_price')
                 );
-                        } else {
-
-
-				$array["boarding_point"] = $this->input->post("board_point");
-                                $array["off_point"] = $this->input->post("off_point");
-                                $array["carrier_code"] = $this->input->post("carrier_code");
-                                $array["flight_number"] = $this->input->post("flight_number");
-                                $array['frequency'] = $this->input->post("frequency");
-                                $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
-                                $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
-                                $array['season_id'] = $this->input->post("season_id");
-                                $exist_id = $this->fclr_m->checkFCLREntry($array);
-
-				$array['average'] = $this->input->post("avg");
-                                $array['min'] = $this->input->post("min");
-                                $array['max'] = $this->input->post("max");
-                                $array['slider_start'] = $this->input->post("slider_start");
-
-				if ( $fclr_id ) {
-					if ( $exist_id && $exist_id != $fclr_id )  {
-						$json['status'] = 'duplicate';	
-					} else {
-						$array["modify_date"] = time();
-                                        	$array["modify_userID"] = $this->session->userdata('loginuserID');
-                                        	$this->fclr_m->update_fclr($array,$fclr_id);
-                                        	$json['status'] = 'success';
-					}
-				
-
-				}  else {
-					if ( $exist_id ) {
-						$json['status'] = 'duplicate';
-					} else {
-						$array["create_date"] = time();
-                                        	$array["modify_date"] = time();
-                                        	$array["create_userID"] = $this->session->userdata('loginuserID');
-                                         	$array["modify_userID"] = $this->session->userdata('loginuserID');
-                                        	$this->fclr_m->insert_fclr($array);
-                                        	$json['status'] = 'success';
-					}
-
-
-				}
-					}
-                } else {
-                        $json['status'] = "no data";
+            } else {
+                $array['carrierID'] = $this->input->post('carrierID');
+                $array['from_cabin'] = $this->input->post('from_cabin');
+                $array['partner_carrierID'] = $this->input->post('partner_carrierID');
+                $array['allow'] = $this->input->post('allow');
+                $array['aircraft_type'] = $this->input->post('aircraft_type');
+                $array['flight_num_range'] = $this->input->post('flight_num_range');
+                $array['origin_level'] = $this->input->post('origin_level');
+                $array['origin_content'] =  implode(',',$this->input->post('origin_content'));
+                $array['dest_level'] = $this->input->post('dest_level');
+                $array['dest_content'] =  implode(',',$this->input->post('dest_content'));
+                $array['effective_date'] = $this->input->post('effective_date');
+                $array['discontinue_date'] = $this->input->post('discontinue_date');
+                $array['frequency'] = $this->input->post('frequency');
+		$array['bag_type'] = $this->input->post('bag_type');
+                $array['rule_auth_carrier'] = $this->input->post('rule_auth_carrier');
+                $array['dep_time_start'] = $this->input->post('dep_time_start');
+                $array['dep_time_end'] = $this->input->post('dep_time_end');
+                $array['min_unit'] = $this->input->post('min_unit');
+                $array['max_capacity'] = $this->input->post('max_capacity');
+                $array['min_price'] = $this->input->post('min_price');
+                $array['max_price'] = $this->input->post('max_price');
+                $exist_id = $this->bclr_m->checkBCLREntry($array);
+		        if($bclr_id) {
+		                if ( $exist_id && $exist_id != $bclr_id )  {
+		        		$json['status'] = 'duplicate';	
+		        	} else {
+		        		$array["modify_date"] = time();
+                                       	$array["modify_userID"] = $this->session->userdata('loginuserID');
+                                       	$this->bclr_m->update_bclr($array,$bclr_id);
+                                       	$json['status'] = 'success';
+		        	}
+                         }  else {
+		        	if ( $exist_id ) {
+		        		$json['status'] = 'duplicate';
+		        	} else {
+		        		$array["create_date"] = time();
+                                       	$array["modify_date"] = time();
+                                       	$array["create_userID"] = $this->session->userdata('loginuserID');
+                                       	$array["modify_userID"] = $this->session->userdata('loginuserID');
+                                       	$this->bclr_m->insert_bclr($array);
+                                       	$json['status'] = 'success';
+		        	}
+		        }
                 }
+          } else {
+            $json['status'] = "no data";
+          }
 
-                 $this->output->set_content_type('application/json');
-        	 $this->output->set_output(json_encode($json));
+           $this->output->set_content_type('application/json');
+           $this->output->set_output(json_encode($json));
         }  
 
        
@@ -177,11 +294,13 @@ class Bclr extends Admin_Controller {
                         'css' => array(
                                 'assets/select2/css/select2.css',
                                 'assets/select2/css/select2-bootstrap.css',
-                                'assets/datepicker/datepicker.css'
+                                'assets/datepicker/datepicker.css',
+                                'assets/timepicker/timepicker.css'
                         ),
                         'js' => array(
                                 'assets/select2/select2.js',
-                                'assets/datepicker/datepicker.js'
+                                'assets/datepicker/datepicker.js',
+                                'assets/timepicker/timepicker.js'
                         )
                 );
 
@@ -253,7 +372,8 @@ class Bclr extends Admin_Controller {
                     $this->data['myairlines'] = $this->airline_m->getAirlinesData();
                 }
 		
-		 		
+                $this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14');  
+                $this->data['seasons'] = $this->season_m->getSeasonsList();	
 		$this->data["subview"] = "bclr/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -522,55 +642,8 @@ $sWhere $sOrder $sLimit";
 		  echo json_encode( $output );
 		}
 	}
-	
 
-/*
-	function calculate_Min_Max($fromCabin ,$toCabin ) {
-
-		 $fromCabinAvg = array_sum($fromCabin)/count($fromCabin);
-                $toCabinAvg = array_sum($toCabin)/count($toCabin);
-
-                $fromCabinSD = $this->fclr_m->Stand_Deviation($fromCabin);
-                $toCabinSD = $this->fclr_m->Stand_Deviation($toCabin);
-
-                $bidAvg = $toCabinAvg - $fromCabinAvg;
-
-                $bidSD =  sqrt(pow($fromCabinSD,2) + pow($toCabinSD,2));
-                $max = $bidAvg + (3 * $bidSD);
-                $min = $bidAvg - (3 * $bidSD);
-		
-
-                $feed->average = round($bidAvg,1);
-                $feed->min = round($min,1);
-                $feed->max = round($max,1);
-		$feed->slider_start = round(($bidAvg - (2 * $bidSD)),1); 
-		 return  $feed;
-
- 	}
-
-*/
-
-
- function calculate_Min_Max($fromCabinSD, $toCabinSD,  $fromCabinAvg, $toCabinAvg ) {
-
-
-                $bidAvg = $toCabinAvg - $fromCabinAvg;
-
-                $bidSD =  sqrt(pow($fromCabinSD,2) + pow($toCabinSD,2));
-                $max = $bidAvg + (3 * $bidSD);
-                $min = $bidAvg - (3 * $bidSD);
-                
-
-                $feed->average = round($bidAvg,1);
-                $feed->min = round($min,1);
-                $feed->max = round($max,1);
-                $feed->slider_start = round(($bidAvg - (2 * $bidSD)),1); 
-                 return  $feed;
-
-        }
-
-
-   function active() {
+        function active() {
                 if(permissionChecker('fclr_edit')) {
                         $id = $this->input->post('id');
                         $status = $this->input->post('status');
@@ -599,186 +672,20 @@ $sWhere $sOrder $sLimit";
                         echo "Error";
                 }
         }
+   
 
-
-   function generatedata() {
-
-$param = htmlentities(escapeString($this->uri->segment(3)));
-if((int)$param) {
-	$year = $param; 
-}else {
-	$current_year =  date("Y");
-        $year = $current_year - 1;
-
-}
-
- $where = " year(FROM_UNIXTIME(rf.departure_date)) = " .$year;
-/*	$sQuery = " 
-SELECT  boarding_point, carrier_code,off_point, season_id,flight_number, day_of_week , source_point, dest_point , departure_date,  group_concat(code,' ' , price SEPARATOR ';') as code_price  FROM (SELECT dcla.code ,operating_airline_code,season_id, departure_date ,day_of_week ,flight_number, dbp.code as source_point , dop.code as dest_point ,boarding_point,off_point , group_concat(prorated_price)  as price,dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = rf.booking_country)  LEFT JOIN vx_aln_data_defns dci on  (dci.vx_aln_data_defnsID = rf.booking_city) LEFT JOIN vx_aln_data_defns dico on (dico.vx_aln_data_defnsID = rf.issuance_country)  LEFT JOIN vx_aln_data_defns dici on  (dici.vx_aln_data_defnsID = rf.issuance_city) LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.operating_airline_code)  LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = rf.boarding_point) LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = rf.off_point) LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) LEFT JOIN VX_airline_cabin_class acc  on ( acc.carrier = rf.operating_airline_code AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class)   group by dcla.code, day_of_week,flight_number, boarding_point,off_point,season_id,departure_date,operating_airline_code  order by flight_number )  as MainSet group by  boarding_point, off_point, day_of_week, season_id, flight_number, departure_date,operating_airline_code
-";*/
-
-/*$sQuery = " 
-SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number, 
-        day_of_week ,departure_date,  group_concat(code,' ', cabin , ' ' , price SEPARATOR ';') as code_price  
-        FROM (
-               SELECT dcla.code ,rf.carrier,season_id, cabin ,departure_date ,day_of_week ,flight_number, 
-                      boarding_point,off_point , 
-                      group_concat(prorated_price)  as price,dai.code as carrier_code   
-               FROM VX_aln_ra_feed rf  
-               LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)  
-	       LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)
-               LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) 
-               LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) 
-               LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier 
-							AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) 
-		LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)
-		where acc.order > 1   AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN') 
-		group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,season_id,departure_date,rf.carrier  
-		order by flight_number )  as MainSet 
-		group by  boarding_point, off_point, day_of_week, season_id, flight_number, departure_date,carrier
-";*/
-
-
-//lower cabin
-
-/*$sQuery = " SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number, day_of_week ,  group_concat(code,' ', cabin , ' ' , price SEPARATOR ';') as code_price  FROM ( SELECT dcla.code ,rf.carrier,season_id, cabin ,day_of_week ,flight_number, boarding_point,off_point ,  group_concat(prorated_price)  as price,dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)   LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)                LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where " . $where . " AND   rf.season_id = 0 AND acc.order > 1  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,season_id,rf.carrier  order by flight_number, day_of_week)  as MainSet group by  boarding_point, off_point, day_of_week, season_id, flight_number,carrier";
-        $rResult1 = $this->install_m->run_query($sQuery);
-
-$sQuery = " SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number, 
-        group_concat(code,' ', cabin , ' ' , price SEPARATOR ';') as code_price  
-        FROM (
-               SELECT dcla.code ,rf.carrier,season_id, cabin ,flight_number, 
-                      boarding_point,off_point , 
-                      group_concat(prorated_price)  as price,dai.code as carrier_code   
-               FROM VX_aln_ra_feed rf  
-               LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)  
-               LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)
-               LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) 
-               LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) 
-               LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier 
-                                                        AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) 
-                LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)
-                where rf.season_id > 0 AND acc.order > 1   AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN') 
-                group by dcla.code, cabin ,flight_number, boarding_point,off_point,season_id,rf.carrier  
-                order by flight_number )  as MainSet 
-                group by  boarding_point, off_point, season_id, flight_number, carrier ";
-$rResult2 = $this->install_m->run_query($sQuery);
-$rResult = array_merge($rResult1, $rResult2);
-*/
-
-$list = $this->airline_cabin_def_m->getDummyCabinsList();
-$list1 = $list;
-$cabin_map_arr = array();
-//Y-4, W-3, C-2, F-1
-foreach($list as $l1 ) {
-	foreach($list1 as $l2){
-		if($l1->alias > $l2->alias){
-			$temp = array($l1->code,$l2->code);
-		$cabin_map_arr[] = $temp;
-		}
-	}
-
-}
-
-/*
-$cabin_map_arr = array(
-			array('Y','W'),
-			array('Y','C'),
-			array('W','C')
-		     );
-*/
-//with out season calculation on day_of_week
-// for 7 days in a week each entery for multiple levels
-
-$rResult1 = array();
-foreach ($cabin_map_arr as $cabin_arr) {
-$sQuery =  " 
-SELECT SuperSet.code as from_cabin, SubSet1.code as to_cabin, SuperSet.flight_number, SuperSet.boarding_point, SuperSet.off_point, SuperSet.from_sd as from_sd, SuperSet.from_avg as from_avg,SubSet1.to_sd , SubSet1.to_avg,SuperSet.day_of_week,SuperSet.carrier , SuperSet.cabin as from_cabin_code , SubSet1.cabin as to_cabin_code from  (SELECT dcla.code ,rf.carrier, cabin ,day_of_week ,flight_number, boarding_point,off_point ,  avg(prorated_price) as from_avg, std(prorated_price)  as from_sd,dai.code as carrier_code   FROM UP_ra_feed rf  LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)   LEFT JOIN VX_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)                LEFT JOIN VX_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN VX_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND  rf.season_id = 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[0]."' AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,rf.carrier  order by flight_number, day_of_week) as SuperSet
-INNER JOIN (
-select MainSet.code, MainSet.cabin ,MainSet.day_of_week, MainSet.to_sd, MainSet.to_avg, MainSet.boarding_point, MainSet.off_point , MainSet.flight_number ,MainSet.carrier from (SELECT acc.order as porder , dcla.code ,rf.carrier, cabin ,day_of_week ,flight_number, boarding_point,off_point ,  std(prorated_price)  as to_sd, avg(prorated_price) as to_avg, dai.code as carrier_code  FROM UP_ra_feed rf  LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)  LEFT JOIN VX_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where." AND  rf.season_id = 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[1]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , acc.order , day_of_week,flight_number, boarding_point,off_point,rf.carrier  order by acc.order desc
-) as MainSet
-        INNER JOIN
-        ( select max(corder) as porder,cabin ,  boarding_point,off_point,day_of_week,flight_number  , carrier from (SELECT acc.order as corder  , dcla.code ,rf.carrier,  std(prorated_price)  as to_sd, avg(prorated_price)  as to_avg, cabin ,day_of_week ,flight_number, boarding_point,off_point , dai.code as carrier_code   FROM UP_ra_feed rf  LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)    LEFT JOIN VX_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND  rf.season_id = 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[1]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , acc.order , day_of_week,flight_number, boarding_point,off_point,rf.carrier  order by acc.order desc) as MainSet group by  flight_number, boarding_point, off_point, carrier,day_of_week,cabin
-        ) SubSet  ON (MainSet.flight_number = SubSet.flight_number AND MainSet.boarding_point = SubSet.boarding_point AND MainSet.off_point = SubSet.off_point AND MainSet.day_of_week = SubSet.day_of_week AND MainSet.carrier = SubSet.carrier AND MainSet.porder = SubSet.porder )) as SubSet1 on (SuperSet.flight_number = SubSet1.flight_number AND SuperSet.boarding_point = SubSet1.boarding_point AND SuperSet.off_point = SubSet1.off_point AND SuperSet.day_of_week = SubSet1.day_of_week AND SuperSet.carrier = SubSet1.carrier) 
-";
-$rResult = $this->install_m->run_query($sQuery);
-$rResult1 = array_merge($rResult1, $rResult);
-}
-
-$rResult2 = array();
-foreach ($cabin_map_arr as $cabin_arr) {
-$sQuery =  " 
-
-SELECT SuperSet.code as from_cabin, SubSet1.code as to_cabin, SuperSet.flight_number, SuperSet.boarding_point, SuperSet.off_point, SuperSet.from_sd,  SuperSet.from_avg, SubSet1.to_avg, SubSet1.to_sd, SuperSet.season_id,SuperSet.carrier ,SuperSet.cabin as from_cabin_code , SubSet1.cabin as to_cabin_code from  (SELECT dcla.code ,rf.carrier,season_id, cabin ,flight_number, boarding_point,off_point ,  std(prorated_price)  as from_sd, avg(prorated_price) as from_avg, dai.code as carrier_code   FROM UP_ra_feed rf  LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)   LEFT JOIN VX_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)                LEFT JOIN VX_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN VX_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND   rf.season_id > 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[0]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , season_id,flight_number, boarding_point,off_point,season_id,rf.carrier  order by flight_number, season_id) as SuperSet
-INNER JOIN (
-select MainSet.code, MainSet.cabin ,MainSet.season_id, MainSet.to_sd, MainSet.to_avg, MainSet.boarding_point, MainSet.off_point , MainSet.flight_number ,MainSet.carrier from (SELECT acc.order as porder , dcla.code ,rf.carrier,season_id, cabin ,flight_number, boarding_point,off_point ,  std(prorated_price)  as to_sd,  avg(prorated_price)  as to_avg ,dai.code as carrier_code  FROM UP_ra_feed rf  LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)  LEFT JOIN VX_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND   rf.season_id > 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[1]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , acc.order , season_id,flight_number, boarding_point,off_point,season_id,rf.carrier  order by acc.order desc
-) as MainSet
-        INNER JOIN
-        ( select max(corder) as porder,cabin ,  boarding_point,off_point,season_id,flight_number  , carrier from (SELECT acc.order as corder  , dcla.code ,rf.carrier, std(prorated_price)  as to_sd, avg(prorated_price) as to_avg, cabin ,season_id ,flight_number, boarding_point,off_point , dai.code as carrier_code   FROM UP_ra_feed rf  LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)    LEFT JOIN VX_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where ".$where."  AND  rf.season_id > 0 AND acc.order > 0 AND dcla.code = '".$cabin_arr[1]."'  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , acc.order , season_id,flight_number, boarding_point,off_point,season_id,rf.carrier  order by acc.order desc) as MainSet group by  flight_number, boarding_point, off_point, carrier,season_id,cabin
-        ) SubSet  ON (MainSet.flight_number = SubSet.flight_number AND MainSet.boarding_point = SubSet.boarding_point AND MainSet.off_point = SubSet.off_point AND MainSet.season_id = SubSet.season_id AND MainSet.carrier = SubSet.carrier AND MainSet.porder = SubSet.porder )) as SubSet1 on (SuperSet.flight_number = SubSet1.flight_number AND SuperSet.boarding_point = SubSet1.boarding_point AND SuperSet.off_point = SubSet1.off_point AND SuperSet.season_id = SubSet1.season_id AND SuperSet.carrier = SubSet1.carrier) 
-";
-$rResult = $this->install_m->run_query($sQuery);
-$rResult2 = array_merge($rResult, $rResult2);
-}
-
-$rResult = array_merge($rResult1,$rResult2);
-
-              foreach ($rResult as $feed ) {
-			if($feed->season_id > 0 ) {
-				$array['season_id'] = $feed->season_id;
-				$array['frequency'] = 0;
-			} else {
-
-				 $array['season_id'] = 0;
-				 $array['frequency'] = $feed->day_of_week;
-			}
-			
-			$array['boarding_point'] = $feed->boarding_point;
-			$array['off_point'] = $feed->off_point;
-			$array['flight_number'] = $feed->flight_number;
-			$array['carrier_code'] = $feed->carrier;
-
-
-			//$fromCabin = explode(',',$feed->l_price);
-			//$toCabin  = explode(',',$feed->u_price);
-
-			//if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
-                                $array['from_cabin'] = $feed->from_cabin_code;
-                                $array['to_cabin'] = $feed->to_cabin_code;
-                                $data = $this->calculate_Min_Max($feed->from_sd, $feed->to_sd, $feed->from_avg, $feed->to_avg);
-                                $array1['average'] = $data->average;
-                                $array1['min'] = $data->min;
-                                $array1['max'] = $data->max;
-                                $array1['slider_start'] = $data->slider_start;
-                                $this->fclr_m->checkANDInsertFCLR($array,$array1);
-
-                         //}
-
+  public function delete_fclr_bulk_records(){
+        $data_ids = $_REQUEST['data_ids'];
+        $data_id_array = explode(",", $data_ids);
+        if(!empty($data_id_array)) {
+                foreach($data_id_array as $id) {
+                $this->data['rule'] = $this->bclr_m->get_single_bclr(array('bclr_id'=>$id));
+                if($this->data['rule']) {
+                $this->bclr_m->delete_bclr($id);
+                }           
                 }
-
-		$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                           redirect(base_url("fclr/index"));
-
-   }
-
-
-public function delete_fclr_bulk_records(){
-$data_ids = $_REQUEST['data_ids'];
-$data_id_array = explode(",", $data_ids);
-if(!empty($data_id_array)) {
-    foreach($data_id_array as $id) {
-
-	 $this->data['rule'] = $this->fclr_m->get_single_fclr(array('fclr_id'=>$id));
-                        if($this->data['rule']) {
-                                $this->fclr_m->delete_fclr($id);
-
-                        }
-    }
+        }
 }
-}
-
-
-
 
 }
 
