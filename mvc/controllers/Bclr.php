@@ -8,14 +8,16 @@ class Bclr extends Admin_Controller {
 		$this->load->model("airline_cabin_m");
 		$this->load->model('airline_cabin_def_m');
 		$this->load->model("fclr_m");
+		$this->load->model("bclr_m");
 		$this->load->model("season_m");
 		$this->load->model('airports_m');
 		$this->load->model('airline_m');
 		$this->load->model("marketzone_m");
 		$this->load->model('eligibility_exclusion_m');
-		$this->load->model('user_m');
+                $this->load->model('user_m');
+                $this->load->model('partner_m');
 		$language = $this->session->userdata('lang');
-		$this->lang->load('bclr', $language);	
+                $this->lang->load('bclr', $language);             
 	}	
 	
 	protected function rules() {
@@ -36,9 +38,9 @@ class Bclr extends Admin_Controller {
                                 'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
                         ),
                         array(
-                                'field' => 'allow',
+                                'field' => 'allowance',
                                 'label' => $this->lang->line("allowance"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean'
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
                         ),
                         array(
                                 'field' => 'aircraft_type',
@@ -147,7 +149,7 @@ class Bclr extends Admin_Controller {
            if(empty($post_string)){
                 $this->form_validation->set_message("valFlightrange", "%s is required");
                 return FALSE;
-           } else if(preg_match('/(\d+)-(\d+)/', $post_string, $matches)){
+           } else if(preg_match('/(\d+)-(\d+)/', trim($post_string), $matches)){
                 return TRUE;
            }  else {
              $this->form_validation->set_message("valFlightrange", "%s format like 1011-1050");
@@ -156,13 +158,13 @@ class Bclr extends Admin_Controller {
         }
 
  
-        public function getFCLRData() {
-           $id = $this->input->post('fclr_id');
+        public function getBCLRData() {
+           $id = $this->input->post('bclr_id');
            if((int)$id) {
-              $fclr = $this->fclr_m->get_single_fclr(array('fclr_id' => $id));   
+              $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));   
            }
            $this->output->set_content_type('application/json');
-           $this->output->set_output(json_encode($fclr));
+           $this->output->set_output(json_encode($bclr));
         }
 
         public function getAircrafts(){
@@ -184,6 +186,31 @@ class Bclr extends Admin_Controller {
            if(count($cabins) > 0){
              echo "<option value='*'> All (*) </option>";
            }
+        }
+
+        public function getSeasonsCarrier(){
+                $carrierID = $this->input->post('carrierID');
+                $seasons = $this->season_m->get_seasons_for_airline($carrierID);
+                echo "<option value='0'> Season </option>";
+                foreach($seasons as $season){
+                   echo "<option value='".$season->VX_aln_seasonID."'>".$season->season_name."</option>";
+                }                    
+        }
+
+        public function getPartnerCarriers(){
+                $carrierID = $this->input->post('carrierID');
+                $partners = $this->partner_m->getPartnerCarriers($carrierID);
+                echo "<option value='0'> Partner Carrier </option>";
+                foreach($partners as $partner){
+                   echo "<option value='".$partner->partner_carrierID."'>".$partner->code."</option>";
+                }                    
+        }
+
+        function convertTimeToSeconds($time_str) {
+            $time_str = date("H:i:s", strtotime($time_str));
+            $str = explode(':',$time_str);
+            $time_in_seconds = (3600 * $str[0] ) + ( 60 * $str[1]) + (1 * $str[2]);
+            return $time_in_seconds;       
         }
 
         public function save() {
@@ -220,20 +247,21 @@ class Bclr extends Admin_Controller {
                 $array['carrierID'] = $this->input->post('carrierID');
                 $array['from_cabin'] = $this->input->post('from_cabin');
                 $array['partner_carrierID'] = $this->input->post('partner_carrierID');
-                $array['allow'] = $this->input->post('allow');
-                $array['aircraft_type'] = $this->input->post('aircraft_type');
-                $array['flight_num_range'] = $this->input->post('flight_num_range');
+                $array['season_id'] = $this->input->post('season');
+                $array['allowance'] = $this->input->post('allowance');
+                $array['aircraft_typeID'] = $this->input->post('aircraft_type');
+                $array['flight_num_range'] = trim($this->input->post('flight_num_range'));
                 $array['origin_level'] = $this->input->post('origin_level');
                 $array['origin_content'] =  implode(',',$this->input->post('origin_content'));
                 $array['dest_level'] = $this->input->post('dest_level');
                 $array['dest_content'] =  implode(',',$this->input->post('dest_content'));
-                $array['effective_date'] = $this->input->post('effective_date');
-                $array['discontinue_date'] = $this->input->post('discontinue_date');
+                $array['effective_date'] = strtotime($this->input->post('effective_date'));
+                $array['discontinue_date'] = strtotime($this->input->post('discontinue_date'));
                 $array['frequency'] = $this->input->post('frequency');
 		$array['bag_type'] = $this->input->post('bag_type');
-                $array['rule_auth_carrier'] = $this->input->post('rule_auth_carrier');
-                $array['dep_time_start'] = $this->input->post('dep_time_start');
-                $array['dep_time_end'] = $this->input->post('dep_time_end');
+                $array['rule_auth'] = $this->input->post('rule_auth_carrier');
+                $array['dep_time_start'] = $this->convertTimeToSeconds($this->input->post('dep_time_start'));
+                $array['dep_time_end'] = $this->convertTimeToSeconds($this->input->post('dep_time_end'));
                 $array['min_unit'] = $this->input->post('min_unit');
                 $array['max_capacity'] = $this->input->post('max_capacity');
                 $array['min_price'] = $this->input->post('min_price');
@@ -274,16 +302,16 @@ class Bclr extends Admin_Controller {
         public function delete() {
                 $id = htmlentities(escapeString($this->uri->segment(3)));
                 if((int)$id) {
-                        $this->data['rule'] = $this->fclr_m->get_single_fclr(array('fclr_id'=>$id));
+                        $this->data['rule'] = $this->bclr_m->get_single_bclr(array('bclr_id'=>$id));
                         if($this->data['rule']) {
-                                $this->fclr_m->delete_fclr($id);
+                                $this->bclr_m->delete_bclr($id);
                                 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-                                redirect(base_url("fclr/index"));
+                                redirect(base_url("bclr/index"));
                         } else {
-                                redirect(base_url("fclr/index"));
+                                redirect(base_url("bclr/index"));
                         }
                 } else {
-                        redirect(base_url("fclr/index"));
+                        redirect(base_url("bclr/index"));
                 }
         }
 
@@ -387,7 +415,7 @@ class Bclr extends Admin_Controller {
 		$roleID = $this->session->userdata('roleID');	  
 
 
-	 $aColumns = array('fclr_id','dbp.code','dop.code','dai.code','flight_number','season_name','sea.ams_season_start_date', 'sea.ams_season_end_date','dfre.code','fdef.cabin','tdef.cabin','average','min','max','slider_start','fc.active','dop.code','dbp.code','dai.code','dfre.aln_data_value', 'dop.aln_data_value', 'dbp.aln_data_value', 'dai.aln_data_value', 'fdef.desc', 'tdef.desc');
+	 $aColumns = array("MainSet.bclr_id","MainSet.carrier_code","MainSet.partner_carrier_code","MainSet.allowance","MainSet.aircraft_type","MainSet.flight_num_range","MainSet.from_cabin_value","MainSet.origin_level_value","SubSet.origin_content_data","MainSet.dest_level_value","SubSet.dest_content_data","MainSet.effective_date","MainSet.discontinue_date","MainSet.season_name","MainSet.frequency_value","MainSet.bag_type","MainSet.rule_auth_carrier_code","MainSet.dep_time_start","MainSet.dep_time_end","MainSet.min_unit","MainSet.max_capacity","MainSet.min_price","MainSet.max_price","MainSet.active");
 		
 	
 		$sLimit = "";
@@ -471,50 +499,7 @@ class Bclr extends Admin_Controller {
 			if(!empty($this->input->get('sfclr_id'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'fclr_id = '.$this->input->get('sfclr_id');
-                        }
-
-			/*
-			if(!empty($this->input->get('depStartDate'))){
-                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'departure_date >= '. strtotime($this->input->get('depStartDate'));
-                        }
-                        if(!empty($this->input->get('depEndDate'))){
-                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'departure_date <= '.  strtotime($this->input->get('depEndDate'));
-                        }*/
-
-			
-
-
-			if(!empty($this->input->get('smarket'))){
-                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'smap.market_id = '. $this->input->get('smarket');
-                        }
-                        if(!empty($this->input->get('dmarket'))){
-                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'dmap.market_id = '.  $this->input->get('dmarket');
-                        }
-
-
-
-			 if(!empty($this->input->get('sfrom_cabin'))){
-                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'fc.from_cabin = '. $this->input->get('sfrom_cabin');
-                        }
-                        if(!empty($this->input->get('sto_cabin'))){
-                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'fc.to_cabin = '.  $this->input->get('sto_cabin');
-                        }
-
-
-		       if(!empty($this->input->get('sseason_id'))){
-                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'fc.season_id = '. $this->input->get('sseason_id');
-                        }
-                        if(!empty($this->input->get('scarrier'))){
-                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'fc.carrier_code = '.  $this->input->get('scarrier');
-                        }
+                        }		
 
 
                        if(!empty($this->input->get('frequency'))){
@@ -536,34 +521,51 @@ class Bclr extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
                 if($roleID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                        $sWhere .= 'fc.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
+                        $sWhere .= 'bc.carrierID IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
                 }
 
 
 			
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code as carrier_code , off_point, 
-		season_id,flight_number, fdef.cabin as fcabin, sea.season_name,
-            	tdef.cabin as tcabin,  dfre.code as day_of_week , fc.active, sea.ams_season_start_date as start_date, sea.ams_season_end_date as end_date,
-            	min,max,average,slider_start,from_cabin, to_cabin,
-		dbp.code as source_point , dop.code as dest_point,
-		dfre.aln_data_value, dop.aln_data_value, dbp.aln_data_value, dai.aln_data_value, fdef.desc,tdef.desc 
-		
-                    FROM UP_fare_control_range  fc
-                     LEFT JOIN  VX_data_defns dbp on (dbp.vx_aln_data_defnsID = fc.boarding_point) 
-		     LEFT JOIN VX_data_defns dop on (dop.vx_aln_data_defnsID = fc.off_point)    
-		     LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = fc.carrier_code)
-		     LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency)
-		     INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = fc.carrier_code)
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS MainSet.bclr_id,MainSet.allowance,MainSet.flight_num_range,MainSet.effective_date,MainSet.discontinue_date,MainSet.bag_type,MainSet.dep_time_start,MainSet.dep_time_end,MainSet.min_unit,MainSet.max_capacity,MainSet.min_price,MainSet.max_price,MainSet.active,
+                MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.aircraft_type,MainSet.frequency_value,MainSet.from_cabin_value,MainSet.season_name,MainSet.rule_auth_carrier_code,MainSet.origin_level_value,MainSet.dest_level_value,
+                SubSet.origin_content,SubSet.origin_content_data,SubSet.dest_content,SubSet.dest_content_data		
+                FROM
+                (
+                SELECT bc.bclr_id,bc.allowance,bc.flight_num_range,bc.effective_date,bc.discontinue_date,bc.bag_type,bc.dep_time_start,bc.dep_time_end,bc.min_unit,bc.max_capacity,bc.min_price,bc.max_price,bc.active,ddc.code carrier_code,ddpc.code partner_carrier_code,ddat.aln_data_value aircraft_type,dfre.aln_data_value frequency_value,tca.aln_data_value as from_cabin_value,sea.season_name,ddac.code as rule_auth_carrier_code,dto.alias as origin_level_value,dtd.alias as dest_level_value		
+                FROM BG_baggage_control_rule  bc
+                LEFT JOIN  VX_data_defns ddc on (ddc.vx_aln_data_defnsID = bc.carrierID AND ddc.aln_data_typeID = 12) 
+                LEFT JOIN VX_data_defns ddpc on (ddpc.vx_aln_data_defnsID = bc.partner_carrierID AND ddpc.aln_data_typeID = 12)    
+                LEFT JOIN VX_data_defns ddac on (ddac.vx_aln_data_defnsID = bc.rule_auth AND ddpc.aln_data_typeID = 12)
+                LEFT JOIN VX_data_types dto on (dto.vx_aln_data_typeID = bc.origin_level) 
+                LEFT JOIN VX_data_types dtd on (dtd.vx_aln_data_typeID = bc.dest_level)     
+                LEFT JOIN VX_data_defns ddat on (ddat.vx_aln_data_defnsID = bc.aircraft_typeID AND ddat.aln_data_typeID = 21)
+                LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = bc.frequency)
+                INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = bc.carrierID)
+                INNER JOIN VX_data_defns tca on (tca.alias = fdef.level and tca.aln_data_typeID = 13 AND tca.vx_aln_data_defnsID = bc.from_cabin)
+                LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = bc.season_id )
+                ) as MainSet 
+                LEFT JOIN (
+                SELECT 	origin_set.bclr_id,origin_set.origin_content,origin_set.origin_content_data,dest_set.dest_content,dest_set.dest_content_data 
+                FROM (  
+                SELECT bc.bclr_id,bc.origin_content,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name) ) AS origin_content_data FROM BG_baggage_control_rule bc 
+                LEFT OUTER JOIN  VX_data_defns c ON 
+                (find_in_set(c.vx_aln_data_defnsID, bc.origin_content) AND bc.origin_level in (1,2,3,4,5)) 
+                LEFT OUTER JOIN  VX_market_zone m  
+                ON (find_in_set(m.market_id, bc.origin_content) AND bc.origin_level = 17) GROUP BY bc.bclr_id
+                ) as origin_set
 
-		     INNER JOIN VX_data_defns fca on (fca.alias = fdef.level and fca.aln_data_typeID = 13 AND fca.vx_aln_data_defnsID = fc.from_cabin)
-		     
-		     INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = fc.carrier_code)
-                     INNER JOIN VX_data_defns tca on (tca.alias = tdef.level and tca.aln_data_typeID = 13 AND tca.vx_aln_data_defnsID = fc.to_cabin)
-		     LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = fc.season_id )
-		     LEFT JOIN VX_market_airport_map smap on (smap.airport_id = fc.boarding_point ) 
-		     LEFT JOIN VX_market_airport_map dmap on (dmap.airport_id = fc.off_point)
+                LEFT JOIN (
+                        SELECT bc.bclr_id,bc.dest_content,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name)) AS dest_content_data FROM BG_baggage_control_rule bc 
+                        LEFT OUTER JOIN  VX_data_defns c ON 
+                        (find_in_set(c.vx_aln_data_defnsID, bc.dest_content) AND bc.dest_level in (1,2,3,4,5)) 
+                        LEFT OUTER JOIN  VX_market_zone m  
+                        ON (find_in_set(m.market_id, bc.dest_content) AND bc.dest_level = 17) GROUP BY bc.bclr_id
+                ) as dest_set
+                ON origin_set.bclr_id = dest_set.bclr_id    
+                ) as SubSet
+                on MainSet.bclr_id = SubSet.bclr_id 
 
 $sWhere $sOrder $sLimit";
 
@@ -581,56 +583,34 @@ $sWhere $sOrder $sLimit";
 	    $i = 1;
 		$rownum = 1 + $_GET['iDisplayStart'];
 		foreach ($rResult as $feed ) {
-
-			 $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->fclr_id."'  /> ".$rownum ;
-                                $rownum++;
-
-			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
-			$feed->day_of_week = ($feed->day_of_week)? ($feed->day_of_week):"NA";
-			$feed->source = $feed->source_point;
-			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip"  data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
-			 $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
-			  $feed->dest = $feed->dest_point ;
-               $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip"  data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
-
-			
-			/*if ( $feed->season_id > 0 ) {
-				$season = $this->season_m->get_single_season(array('VX_aln_seasonID'=>$feed->season_id));
-				$feed->season_id =  $season->season_name ;
-				$feed->start_date = date('d-m-Y',$season->ams_season_start_date);
-				$feed->end_date  = date('d-m-Y',$season->ams_season_end_date);
-			} else {
-				 $feed->season_id = 'default season';
-				$feed->start_date = 'NA';
-				$feed->end_date = 'NA';
-			}*/
-
-
-			$feed->season_id = ($feed->season_name) ? ($feed->season_name) : 'default';
-			$feed->start_date = ($feed->start_date) ? date('d-m-Y',$feed->start_date) : 'NA';
-			$feed->end_date = $feed->end_date ? date('d-m-Y',$feed->end_date) : 'NA';
-            $feed->action = '';
-                  if(permissionChecker('fclr_edit')){
-
-			 $feed->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_fclr"  data-placement="top" onclick="editfclr('.$feed->fclr_id.')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></a>';
-                  }
+                   $feed->bag_type_value = ($feed->bag_type == 1)?"KG":"Piece";
+                   $feed->allowance = ($feed->allowance == 1)?"Whitelist":"Blacklist";
+                   $feed->dep_time_start = gmdate("H:i:s", $feed->dep_time_start);
+                   $feed->dep_time_end = gmdate("H:i:s", $feed->dep_time_end);
+         	   $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='".$feed->bclr_id."'  /> ".$rownum ;
+                           $rownum++;   
+		   
+		   $feed->effective_date = ($feed->effective_date) ? date('d-m-Y',$feed->effective_date) : 'NA';
+		   $feed->discontinue_date = ($feed->discontinue_date) ? date('d-m-Y',$feed->discontinue_date) : 'NA';
+                   $feed->action = '';
+                   if(permissionChecker('bclr_edit')){
+			$feed->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_fclr"  data-placement="top" onclick="editbclr('.$feed->bclr_id.')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></a>';
+                   }
 		
-                  if(permissionChecker('fclr_delete')){
-                   $feed->action .= btn_delete('fclr/delete/'.$feed->fclr_id, $this->lang->line('delete'));                   
+                  if(permissionChecker('bclr_delete')){
+                        $feed->action .= btn_delete('fclr/delete/'.$feed->fclr_id, $this->lang->line('delete'));                   
                   }
-                        $status = $feed->active;
-                        $feed->active = "<div class='onoffswitch-small' id='".$feed->fclr_id."'>";
-            $feed->active .= "<input type='checkbox' id='myonoffswitch".$feed->fclr_id."' class='onoffswitch-small-checkbox' name='paypal_demo'";
-                        if($status){
-                           $feed->active .= " checked >";
-                        } else {
-                           $feed->active .= ">";
-                        }
-
-                        $feed->active .= "<label for='myonoffswitch".$feed->fclr_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
-           $feed->id = $i; $i++;
-		$output['aaData'][] = $feed;
-
+                  $status = $feed->active;
+                  $feed->active = "<div class='onoffswitch-small' id='".$feed->bclr_id."'>";
+                  $feed->active .= "<input type='checkbox' id='myonoffswitch".$feed->bclr_id."' class='onoffswitch-small-checkbox' name='paypal_demo'";
+                  if($status){
+                     $feed->active .= " checked >";
+                  } else {
+                     $feed->active .= ">";
+                  }
+                  $feed->active .= "<label for='myonoffswitch".$feed->bclr_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
+                  $feed->id = $i; $i++;
+		  $output['aaData'][] = $feed;
 		}
 
 						 
@@ -644,7 +624,7 @@ $sWhere $sOrder $sLimit";
 	}
 
         function active() {
-                if(permissionChecker('fclr_edit')) {
+                if(permissionChecker('bclr_edit')) {
                         $id = $this->input->post('id');
                         $status = $this->input->post('status');
                         if($id != '' && $status != '') {
@@ -653,11 +633,11 @@ $sWhere $sOrder $sLimit";
                                         $data['modify_date'] = time();
                                         if($status == 'chacked') {
                                                 $data['active'] = 1 ;
-                                                $this->fclr_m->update_fclr($data, $id);
+                                                $this->bclr_m->update_bclr($data, $id);
                                                 echo 'Success';
                                         } elseif($status == 'unchacked') {
                                                 $data['active'] = 0 ;
-                                                $this->fclr_m->update_fclr($data, $id);
+                                                $this->bclr_m->update_bclr($data, $id);
                                                 echo 'Success';
                                         } else {
                                                 echo "Error";
@@ -674,7 +654,7 @@ $sWhere $sOrder $sLimit";
         }
    
 
-  public function delete_fclr_bulk_records(){
+  public function delete_bclr_bulk_records(){
         $data_ids = $_REQUEST['data_ids'];
         $data_id_array = explode(",", $data_ids);
         if(!empty($data_id_array)) {

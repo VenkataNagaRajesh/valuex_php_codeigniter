@@ -29,4 +29,12 @@ class Partner_m extends MY_Model {
 	public function delete_partner($id){
 		parent::delete($id);
 	}
+
+	public function getPartnerCarriers($carrierID){
+		$this->db->select('p.partner_carrierID,dd.code')->from('VX_partner p');
+		$this->db->join('VX_data_defns dd','dd.vx_aln_data_defnsID = p.partner_carrierID','LEFT');
+		$this->db->where('p.carrierID',$carrierID);
+		$query = $this->db->get();
+		return $query->result();
+	}
 }

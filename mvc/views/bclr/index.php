@@ -1,5 +1,5 @@
 <div class="fclr-bar">
-<?php  if(permissionChecker('fclr_add')) {  ?>
+<?php  if(permissionChecker('bclr_add')) {  ?>
 	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;border-radius: 2px;
     border:solid 1px #999;padding: 6px 5px;">Baggage Control Rule</h2>
 	<p class="card-header" data-toggle="collapse" data-target="#bclrAdd"><button style="margin:1px 0;" type="button" class="btn btn-danger pull-right" data-placement="left" title="Add BCLR" data-toggle="tooltip" id='bclr_add_btn' ><i class="fa fa-plus"></i></button></p>
@@ -25,15 +25,9 @@
 				        </select>
                     </div>
 					<div class="col-md-2 col-sm-3">
-                    <?php  $alist[0] = "Partner Carrier";
-                               foreach($airlines as $airline){
-                                   $alist[$airline->vx_aln_data_defnsID] = $airline->code;
-                               }
-                               echo form_dropdown("partner_carrierID", $alist,
-                                        set_value("partner_carrierID"), "id='partner_carrierID' class='form-control hide-dropdown-icon select2'"
-                           
-                               );
-                    ?>
+                        <select  name="partner_carrierID"  id="partner_carrierID" class="form-control select2">
+                        <option value="0">Partner Carrier</option>
+				        </select>
 					</div>
 					<div class="col-md-2 col-sm-3">
 						<?php 
@@ -100,7 +94,7 @@
                      <?php                         
                           $seasons['0'] = 'Season';
                           ksort($seasons);
-                          echo form_dropdown("sseason_id", $seasons,set_value("sseason_id",$sseason_id), "id='sseason_id' class='form-control hide-dropdown-icon select2'"); 
+                          echo form_dropdown("season", $seasons,set_value("season"), "id='season' class='form-control hide-dropdown-icon select2'"); 
                     ?>                        
                     </div>
                     <div class="col-md-2 col-sm-3">
@@ -150,7 +144,7 @@
                     <div class="col-md-2 col-sm-3">
                         <input type="number" class="form-control" name="max_price" id="max_price" placeholder="Max Price" value="<?=set_value('max_price')?>" />                       
 					</div>
-                    <input type="hidden" class="form-control" id="fclr_id" name="fclr_id"   value="" >
+                    <input type="hidden" class="form-control" id="bclr_id" name="bclr_id"   value="" >
 					<div class="col-md-2 col-sm-3">
 						<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savebclr();">Add BCLR</a>
 						<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
@@ -161,9 +155,9 @@
 	</div>
 	<div class="col-md-12 table-responsive">
 		<div class="auto-gen col-md-12" style="margin: 10px 0 20px;">
-		<a href="<?php echo base_url('fclr/generatedata') ?>">
+		<a href="<?php echo base_url('bclr/generatedata') ?>">
 			<i class="fa fa-upload"></i>
-			<?=$this->lang->line('generate_fclr')?>
+			<?=$this->lang->line('generate_bclr')?>
 		 </a>
 		</div>
 		<form class="form-horizontal" action="#">
@@ -175,27 +169,34 @@
 	</div>
 	<div class="col-md-12 fclr-table">
 		<div id="hide-table" class="fclr-table-data">
-             <table id="fclrtable" class="table table-bordered dataTable no-footer">
+             <table id="bclrtable" class="table table-bordered dataTable no-footer">
                  <thead>
 					<tr>
-
-					  <th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
-						<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
+					    <th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
 						<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('season')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('start_date')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('end_date')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('day_of_week')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('partner_carrier')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('allowance')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('aircraft_type')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('flight_number_range')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('from_cabin')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('to_cabin')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('avg')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('min')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('max')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('slider_start')?></th>
-						<th class="col-lg-1 noExport"><?=$this->lang->line('fclr_status')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('origin_level')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('origin_content')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('dest_level')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('dest_content')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('effective_date')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('discontinue_date')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('season')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('frequency')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('bag_type')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('rule_auth')?></th>
+						<th class="col-lg-1 noExport"><?=$this->lang->line('dep_time_start')?></th>
+						<th class="col-lg-1 noExport"><?=$this->lang->line('dep_time_end')?></th>
+						<th class="col-lg-1 noExport"><?=$this->lang->line('min_unit')?></th>
+						<th class="col-lg-1 noExport"><?=$this->lang->line('max_capacity')?></th>
+						<th class="col-lg-1 noExport"><?=$this->lang->line('min_price')?></th>
+						<th class="col-lg-1 noExport"><?=$this->lang->line('max_price')?></th>
                         <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
+                        <th class="col-lg-2 noExport"><?=$this->lang->line('active')?></th>
                     </tr>
                  </thead>
                  <tbody>                          
@@ -209,8 +210,7 @@
 $("#discontinue_date").datepicker();
 $('#dep_time_start').timepicker();
 $('#dep_time_end').timepicker();
- $(document).ready(function() {	
-   
+ $(document).ready(function() {   
     $('#origin_level').trigger('change');
     $('#dest_level').trigger('change');
     loaddatatable();
@@ -219,9 +219,9 @@ $('#dep_time_end').timepicker();
 $('#origin_level').change(function(event) {    
 	$('#origin_content').val(null).trigger('change')
     var level_id = $(this).val();                   
-    var airline_id = $('#partner_carrierID').val();  
+    var airline_id = $('#carrierID').val();  
 	if( level_id == '17' ) {
-		if($('#partner_carrierID').val() == '0') {
+		if($('#carrierID').val() == '0') {
 			alert('select Airline');
 			$("#origin_level").val(0);
             $('#origin_level').trigger('change');
@@ -240,9 +240,9 @@ $('#origin_level').change(function(event) {
 $('#dest_level').change(function(event) {    
 	$('#dest_content').val(null).trigger('change')
     var level_id = $(this).val(); 
-    var airline_id = $('#partner_carrierID').val();  
+    var airline_id = $('#carrierID').val();  
 	if( level_id == '17' ) {
-		if($('#partner_carrierID').val() == '0') {
+		if($('#carrierID').val() == '0') {
 			alert('select Airline');
 			$("#dest_level").val(0);
             $('#dest_level').trigger('change');
@@ -307,17 +307,39 @@ $('#carrierID').change(function(){
         success: function(data) {                         
             $('#from_cabin').html(data);             
         }        
+    });
+
+    $.ajax({ 
+        async: false,            
+	    type: 'POST',            
+        url: "<?=base_url('bclr/getSeasonsCarrier')?>",            
+        data: {"carrierID":carrier},           
+        dataType: "html",                                  
+        success: function(data) {                         
+            $('#season').html(data);             
+        }        
+    }); 
+
+    $.ajax({ 
+        async: false,            
+	    type: 'POST',            
+        url: "<?=base_url('bclr/getPartnerCarriers')?>",            
+        data: {"carrierID":carrier},           
+        dataType: "html",                                  
+        success: function(data) {                         
+            $('#partner_carrierID').html(data);             
+        }        
     }); 
 });
 
 function loaddatatable() {
-    $('#fclrtable').DataTable( {
+    $('#bclrtable').DataTable( {
       "bProcessing": true,
 	"stateSave": true,
       "bServerSide": true,
-      "sAjaxSource": "<?php echo base_url('fclr/server_processing'); ?>",
-       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
-       aoData.push({"name": "flightNbr","value": $("#sflight_number").val()},
+      "sAjaxSource": "<?php echo base_url('bclr/server_processing'); ?>",
+     /*  "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
+       aoData.push({"name": "carrierI","value": $("#sflight_number").val()},
 		           {"name": "flightNbrEnd","value": $("#end_flight_number").val()},
                    {"name": "boardPoint","value": $("#boarding_point").val()},
                    {"name": "offPoint","value": $("#soff_point").val()},
@@ -340,34 +362,42 @@ function loaddatatable() {
                     "url": sSource,
                     "data": aoData,
                     "success": fnCallback
-                         } ); }, 
+                         } ); }, */
           "stateSaveCallback": function (settings, data) {
-                window.localStorage.setItem("fclrdatatable", JSON.stringify(data));
+                window.localStorage.setItem("bclrdatatable", JSON.stringify(data));
             },
             "stateLoadCallback": function (settings) {
-                var data = JSON.parse(window.localStorage.getItem("fclrdatatable"));
+                var data = JSON.parse(window.localStorage.getItem("bclrdatatable"));
                 if (data) data.start = 0;
                 return data;
             },
 
 
       "columns": [ {"data": "chkbox" },
-		   {"data": "source_point" },
-	           {"data": "dest_point" },
-		   {"data": "carrier_code" },
-		   {"data": "flight_number" },
-		   {"data": "season_id" },
-		   {"data": "start_date" },
-		   {"data": "end_date" },
-		   {"data": "day_of_week" },
-		   {"data": "fcabin" },
-		   {"data": "tcabin" },
-		   {"data": "average" },
-                   {"data": "min" },
-		  {"data": "max" },
-		 {"data": "slider_start" },
-		 {"data": "active"},
-                  {"data": "action"}
+                   {"data": "carrier_code" },
+                   {"data": "partner_carrier_code" },
+                   {"data": "allowance" },
+                   {"data": "aircraft_type" },
+                   {"data": "flight_num_range" },
+                   {"data": "from_cabin_value" },
+                   {"data": "origin_level_value" },
+                   {"data": "origin_content_data" },
+                   {"data": "dest_level_value" },
+                   {"data": "dest_content_data" },
+                   {"data": "effective_date" },
+                   {"data": "discontinue_date" },
+                   {"data": "season_name" },
+                   {"data": "frequency_value" },
+                   {"data": "bag_type_value" },
+                   {"data": "rule_auth_carrier_code" },
+                   {"data": "dep_time_start" },
+                   {"data": "dep_time_end" },
+                   {"data": "min_unit" },
+                   {"data": "max_capacity" },
+                   {"data": "min_price" },
+                   {"data": "max_price" },
+                   {"data": "active"},
+                   {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
     // buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
@@ -383,10 +413,10 @@ function loaddatatable() {
 						var ids_string = ids.toString();  // array to string conversion 
 						$.ajax({
 							type: "POST",
-							url: "<?php echo base_url('fclr/delete_fclr_bulk_records'); ?>",
+							url: "<?php echo base_url('bclr/delete_bclr_bulk_records'); ?>",
 							data: {data_ids:ids_string},
 							success: function(result) {
-							   $('#fclrtable').DataTable().ajax.reload();
+							   $('#bclrtable').DataTable().ajax.reload();
 							   $('#bulkDelete').prop("checked",false);
 							},
 							async:false
@@ -402,15 +432,15 @@ function loaddatatable() {
                 { text: 'ExportAll', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
-                                url: "<?php echo base_url('fclr/server_processing'); ?>?page=all&&export=1",
+                                url: "<?php echo base_url('bclr/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val()},
+                                data: {sSearch: $("input[type=search]").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
 							$a.attr("href",data.file);
 							$("body").append($a);
-							$a.attr("download","fclr.xls");
+							$a.attr("download","bclr.xls");
 							$a[0].click();
 							$a.remove();
 						  });
@@ -423,23 +453,23 @@ function loaddatatable() {
 
   } 
 
-function downloadFCLR(){
+function downloadBCLR(){
 	$.ajax({
-       url: "<?php echo base_url('fclr/server_processing'); ?>?page=all&&export=1",
+       url: "<?php echo base_url('bclr/server_processing'); ?>?page=all&&export=1",
        type: 'get',
-       data: {"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val()},
+       data: {},
        dataType: 'json'
        }).done(function(data){
 			var $a = $("<a>");
 			$a.attr("href",data.file);
 			$("body").append($a);
-			$a.attr("download","fclr.xls");
+			$a.attr("download","bclr.xls");
 			$a[0].click();
 			$a.remove();
 		 });
 }
   
-   $('#fclrtable tbody').on('mouseover', 'tr', function () {
+   $('#bclrtable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({
         trigger: 'hover',
         html: true
@@ -448,7 +478,7 @@ function downloadFCLR(){
   
   var status = '';
   var id = 0;
- $('#fclrtable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
+ $('#bclrtable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");
@@ -460,7 +490,7 @@ function downloadFCLR(){
       if((status != '' || status != null) && (id !='')) {
           $.ajax({
               type: 'POST',
-              url: "<?=base_url('fclr/active')?>",
+              url: "<?=base_url('bclr/active')?>",
               data: "id=" + id + "&status=" + status,
               dataType: "html",
               success: function(data) {
@@ -542,7 +572,7 @@ function savebclr() {
                     if (status == 'success' ) {
                         alert(status);
 				        form_reset();
-                        $("#fclrtable").dataTable().fnDestroy();
+                        $("#bclrtable").dataTable().fnDestroy();
                         loaddatatable();
                     } else if (status == 'duplicate'){
 				        alert('Duplicate Entry');
@@ -561,7 +591,7 @@ function savebclr() {
 }
 
 
-function editfclr(fclr_id) {
+function editbclr(bclr_id) {
 
                 var isVisible = $( "#bclrAdd" ).is( ":visible" );
 
@@ -572,44 +602,36 @@ function editfclr(fclr_id) {
 $.ajax({
           async: false,
           type: 'POST',
-          url: "<?=base_url('fclr/getFCLRData')?>",          
+          url: "<?=base_url('bclr/getBCLRData')?>",          
                   data: {
-                           "fclr_id":fclr_id},
+                           "bclr_id":bclr_id},
           dataType: "html",                     
           success: function(data) {
-                var fclrinfo = jQuery.parseJSON(data);
-                $('#btn_txt').text('Update FCLR');
-                $('#carrier_code').val(fclrinfo['carrier_code']);
-                $('#carrier_code').trigger('change');
-                $('#board_point').val(fclrinfo['boarding_point']);
-		$('#board_point').trigger('change');
+                var bclrinfo = jQuery.parseJSON(data);
+                $('#btn_txt').text('Update BCLR');
+                $('#carrierID').val(bclrinfo['carrierID']).trigger('change');
+                $('#aircraft_typeID').val(bclrinfo['aircraft_typeID']);
+                $('#partner_carrierID').val(bclrinfo['partner_carrierID']);
+                $("#season").val(bclrinfo['season_id']);
+                $("#from_cabin").val(bclrinfo['from_cabin']);
+                $("#allowance").val(bclrinfo['allowance']);
+                $("#flight_num_range").val(bclrinfo['flight_num_range']);
+                $("#origin_level").val(bclrinfo['origin_level']).trigger('change');
+                $("#dest_level").val(bclrinfo['dest_level']).trigger('change');
+                $("#effective_date").val(bclrinfo['effective_date']);
+                $("#discontinue_date").val(bclrinfo['discontinue_date']);
+                $('#frequency').val(bclrinfo['frequency']);
+                $('#bag_type').val(bclrinfo['bag_type']);
+                $('#rule_auth_carrier').val(bclrinfo['rule_auth']);
+                $('#dep_time_start').val(bclrinfo['dep_time_start']);
+                $('#dep_time_end').val(bclrinfo['dep_time_end']);
+                $('#min_unit').val(bclrinfo['min_unit']);
+                $('#max_capacity').val(bclrinfo['max_capacity']);
+                $('#min_price').val(bclrinfo['min_price']);
+                $('#max_price').val(bclrinfo['max_price']);
 
-		 $('#off_point').val(fclrinfo['off_point']);
-                $('#off_point').trigger('change');
-
-		 $('#flight_number').val(fclrinfo['flight_number']);
-
-		  $('#season_id').val(fclrinfo['season_id']);
-                $('#season_id').trigger('change');
-
-
-                $('#frequency').val(fclrinfo['frequency']);
-                $('#frequency').trigger('change');
-
-		$('#upgrade_from_cabin_type').val(fclrinfo['from_cabin']);
-		$('#upgrade_from_cabin_type').trigger('change');
-
-		$('#upgrade_to_cabin_type').val(fclrinfo['to_cabin']);
-		$('#upgrade_to_cabin_type').trigger('change');
-
-
-		$('#min').val(fclrinfo['min']);
-		$('#max').val(fclrinfo['max']);
-		$('#avg').val(fclrinfo['average']);
-		$('#slider_start').val(fclrinfo['slider_start']);
-
-                var fclrid  = fclrinfo['fclr_id'];
-                $('#fclr_id').val(fclrid);
+                var bclrid  = bclrinfo['bclr_id'];
+                $('#bclr_id').val(bclrid);
 
 
 
