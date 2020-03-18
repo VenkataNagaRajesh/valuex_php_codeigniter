@@ -14,7 +14,7 @@
                                    $clist[$airline->vx_aln_data_defnsID] = $airline->code;
                                }
                                echo form_dropdown("carrierID", $clist,
-                                        set_value("carrierID"), "id='carrierID' class='form-control hide-dropdown-icon select2'"
+                                        set_value("carrierID",$carrierID), "id='carrierID' class='form-control hide-dropdown-icon select2'"
                            
                                );
                     ?>
@@ -803,22 +803,22 @@ function editbclr(bclr_id) {
     function form_reset(){    
         var $inputs = $('#bclr_add_form :input'); 
         $inputs.each(function (index) {
-          $(this).val("");  
+          $(this).val("");
+          $(this).parent().removeClass('has-error');  
         });
-        $('#carrierID').val(0).trigger('change');
-        $('#aircraft_type').val(0).trigger('change');
-        $('#partner_carrierID').val(0).trigger('change');
-        $("#season").val(0).trigger('change');
-        $("#from_cabin").val(0).trigger('change');
-        $("#allowance").val(0).trigger('change');
-        $("#flight_num_range").val(0);
-        $("#origin_level").val(0).trigger('change');
-        $('#origin_content').val(0).trigger('change');
-        $("#dest_level").val(0).trigger('change');
-        $('#dest_content').val(0).trigger('change');
-        $('#frequency').val(0).trigger('change');
-        $('#bag_type').val(0).trigger('change');
-        $('#rule_auth_carrier').val(0).trigger('change');        
+        $('#carrierID').val(0).trigger('change').parent().removeClass('has-error');
+        $('#aircraft_type').parent().removeClass('has-error');
+        $('#partner_carrierID').val(0).trigger('change').parent().removeClass('has-error');
+        $("#season").val(0).trigger('change').parent().removeClass('has-error');
+        $("#from_cabin").val(0).trigger('change').parent().removeClass('has-error');
+        $("#allowance").val(1).trigger('change'); 
+        $("#origin_level").val(0).trigger('change').parent().removeClass('has-error');
+        $('#origin_content').val(0).trigger('change').parent().removeClass('has-error');
+        $("#dest_level").val(0).trigger('change').parent().removeClass('has-error');
+        $('#dest_content').val(0).trigger('change').parent().removeClass('has-error');
+        $('#frequency').val(0).trigger('change').parent().removeClass('has-error');
+        $('#bag_type').val(1).trigger('change').parent();
+        $('#rule_auth_carrier').val(0).trigger('change').parent().removeClass('has-error');        
     }  
 
     $(document).ready(function(){

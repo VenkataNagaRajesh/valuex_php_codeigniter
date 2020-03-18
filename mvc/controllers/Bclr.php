@@ -441,9 +441,11 @@ class Bclr extends Admin_Controller {
                 $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
                
                 if($roleID != 1){
-                    $this->data['myairlines'] = $this->user_m->getUserAirlines($userID);	   
+                    $this->data['myairlines'] = $this->user_m->getUserAirlines($userID);
+                    $this->data['carrierID'] = $this->session->userdata('default_airline');	   
                 } else {
                     $this->data['myairlines'] = $this->airline_m->getAirlinesData();
+                    $this->data['carrierID'] = 0;	   
                 }
 		
                 $this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14');  
