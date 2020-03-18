@@ -62,14 +62,26 @@ class Bclr_m extends MY_Model {
                   $array["modify_userID"] = $this->session->userdata('loginuserID');
                  $this->bclr_m->insert_bclr($array);
             }
-	}
-
-
-
+        }
+        
         public function delete_bclr($id){
                 parent::delete($id);
         }    
 
-	
+	public function insert_cwt($data){
+            $this->db->insert('BG_cwt',$data);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        }
+
+        public function disable_cwt($bclr_id){
+            $this->db->where('bclr_id',$bclr_id);
+            $this->db->update('BG_cwt',array('active'=>0));
+            return TRUE;
+        }
+
+        public function getActiveCWT($bclr_id){
+            $query = $this->db->get_where('BG_cwt',array("active" => 1,"bclr_id" => $bclr_id));
+            return $query->result();
+        }
 }
 
