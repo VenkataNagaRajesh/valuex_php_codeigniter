@@ -1,10 +1,20 @@
 <div class="off-elg" style="margin-bottom:320px;">
-	<h2 class="title-tool-bar">Report</h2>
+	<div class="box-header" style="width:100%;">
+        <h3 class="box-title"><i class="fa fa-users"></i>CWT graph</h3>
+        <ol class="breadcrumb">
+            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
+            <li><a href="<?=base_url("bclr/index")?>">Back</a></li>
+            <li class="active">cwt graph</li>
+        </ol>
+    </div>
     <div class="col-md-12" > 
         <div class="col-md-6">
            <br/><!-- Just so that JSFiddle's Result label doesn't overlap the Chart -->
            <div id="interactive-chart" style="height: 360px; width: 100%;"></div>
-        </div>       
+        </div> 
+		<div class="col-md-6">
+		  <button class="btn btn-danger" onclick="getChartValues()">Update</button>
+		</div>      
     </div>
 </div>
 <script src="<?=base_url('assets/chartjs/canvasjs.min.js')?>"></script>  
@@ -14,25 +24,43 @@
 		  cobj = {x: <?=$key?>, y:<?=$value?>};
 		  pointsdata.push(cobj);
 	<?php  } ?>
-	console.log(pointsdata);
 		var interactiveChart = new CanvasJS.Chart("interactive-chart", {
 			animationEnabled: true,
+			exportEnabled: true,
 			theme: "light2",
 			title: {
-				text: "Try dragging Data Points to reposition them"
+				text: "Baggage Unit Price Setting",
+				fontSize: 20,
+				padding: 5,
+        		backgroundColor: "#f4d5a6",	
 			},
-			subtitles: [{
+			/* subtitles: [{
 				text: "Click anywhere on plotarea to add new Data Points"
-			}],
+			}], */
 			axisX: {
+				title: "Weight Capacity",
+				titleFontColor: "#4F81BC",
 				minimum: 1,
-				maximum: <?=$max_capacity?>
+				maximum: <?=count($points)+10?>
 			},
             axisY: {
-		        title: "Closing Price (in USD)",
+		        title: "Price per KG",
 				minimum: 1,
-				maximum: <?=end($points)+1;?>
+				maximum: <?=end($points)+10;?>,
+				titleFontColor: "#4F81BC",
+				suffix : "kg",
+				prefix : "",
+				//lineColor: "#4F81BC",
+				//tickColor: "#4F81BC",
+
             },
+			/* axisY2: {
+		title: "Distance",
+		titleFontColor: "#C0504E",
+		suffix : " m",
+		lineColor: "#C0504E",
+		tickColor: "#C0504E"
+	}, */
 			data: [
 			{
 				markerSize: 4,
@@ -43,7 +71,7 @@
 		       // yValueFormatString: "$##0.00",
                 //lineDashType: "dash",
                 showInLegend: true,
-                name: "Unique Visit",
+                name: "Price per KG",
                 markerType: "circle", //square
 				dataPoints: pointsdata					
 			}
@@ -143,5 +171,20 @@
 					}
 				}
 			});
+
+			function getChartValues(){
+				var data = interactiveChart.get("data");
+				console.log(data[0].dataPoints);
+				$.ajax({ 
+				async: false,            
+				type: 'POST',            
+				url: "<?=base_url('bclr/updatecwtgraph')?>",            
+				data: {"bclr_id":<?=$bclr_id?>,"points":data[0].dataPoints},           
+				dataType: "html",                                  
+				success: function(data) {                         
+					window.location.reload(true);
+				}        
+        }); 
+			}
 </script>
 		

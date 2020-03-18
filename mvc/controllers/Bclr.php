@@ -17,7 +17,7 @@ class Bclr extends Admin_Controller {
                 $this->load->model('user_m');
                 $this->load->model('partner_m');
 		$language = $this->session->userdata('lang');
-                $this->lang->load('bclr', $language);             
+                $this->lang->load('bclr', $language); 
 	}	
 	
 	protected function rules() {
@@ -288,7 +288,9 @@ class Bclr extends Admin_Controller {
                                        	$array["modify_date"] = time();
                                        	$array["create_userID"] = $this->session->userdata('loginuserID');
                                        	$array["modify_userID"] = $this->session->userdata('loginuserID');
-                                       	$this->bclr_m->insert_bclr($array);
+                                        $this->bclr_m->insert_bclr($array); 
+                                        $bclr_id = $this->db->insert_id();
+                                        $this->generateCWT($bclr_id);
                                        	$json['status'] = 'success';
 		        	}
 		        }
@@ -664,10 +666,14 @@ $sWhere $sOrder $sLimit";
                    if(permissionChecker('bclr_edit')){
 			$feed->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_fclr"  data-placement="top" onclick="editbclr('.$feed->bclr_id.')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></a>';
                    }
+
+                   if(!permissionChecker('bclr_view')){
+			$feed->action .=  '<a target="_blank" href="'.base_url('bclr/showcwtgraph/'.$feed->bclr_id).'" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="CWT graph"><i class="fa fa-eye"></i></a>';
+                   }
 		
-                  if(permissionChecker('bclr_delete')){
-                        $feed->action .= btn_delete('bclr/delete/'.$feed->bclr_id, $this->lang->line('delete'));                   
-                  }
+                   if(permissionChecker('bclr_delete')){
+                      $feed->action .= btn_delete('bclr/delete/'.$feed->bclr_id, $this->lang->line('delete'));                   
+                   }
                   $feed->status = $feed->active;
                   $feed->active = "<div class='onoffswitch-small' id='".$feed->bclr_id."'>";
                   $feed->active .= "<input type='checkbox' id='myonoffswitch".$feed->bclr_id."' class='onoffswitch-small-checkbox' name='paypal_demo'";
@@ -735,27 +741,74 @@ $sWhere $sOrder $sLimit";
         }
    }
 
-  public function cwtgraph(){
-      $id = $this->input->post('bclr_id');
-      $id = 3;      
-      $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));   
-      $this->data['min_price'] = $bclr->min_price;
+  public function showcwtgraph(){
+      $id = htmlentities(escapeString($this->uri->segment(3)));            
+      $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));
+      $cwtdata = $this->bclr_m->getActiveCWT($id);
+      $this->data['bclr_id'] = $id;   
+     /* $this->data['min_price'] = $bclr->min_price;
       $this->data['max_price'] = $bclr->max_price;
       $this->data['max_capacity'] = $bclr->max_capacity;
       $this->data['minmax_diff'] = $this->data['max_price'] - $this->data['min_price'];
       $this->data['perkg'] = $this->data['minmax_diff'] / $this->data['max_capacity'];
-     /*  echo "max-min ".$minmax_diff;
-      echo " max cap ".$max_capacity;
-      echo " Per KG ".$perkg; */
-     // $this->data['perkg'] = 3.14;
-      $this->data['points'][1] = $this->data['min_price'];
+    
+       $this->data['points'][1] = $this->data['min_price'];
       for($i=2;$i<=$this->data['max_capacity'];$i++){              
-          $price = $this->data['points'][$i-1]+$this->data['perkg'];
-          $this->data['points'][$i] = $price;
+        $price = $this->data['points'][$i-1]+$this->data['perkg'];
+        $this->data['points'][$i] = $price;
+      } */
+     // print_r($cwtdata); exit;
+      foreach($cwtdata as $cwt){
+        $this->data['points'][$cwt->cum_wt] = $cwt->price_per_kg;
       }
-      //print_r($points); exit;
+     
       $this->data["subview"] = "bclr/drag-chart";
       $this->load->view('_layout_main', $this->data); 
+  }
+
+  public function generateCWT($id){
+        $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));   
+        $min_price = $bclr->min_price;
+        $max_price = $bclr->max_price;
+        $max_capacity = $bclr->max_capacity;
+        $minmax_diff = $max_price - $min_price;
+        $perkg = $minmax_diff / $max_capacity;
+        
+        $points[1] = $min_price;
+        $data['bclr_id'] = $id;
+        $data['name'] = "cwt-graph-".$id;
+        $data['create_date'] = time();
+        $data['create_userID'] = $this->session->userdata('loginuserID');
+        $data['active'] = 1;
+        for($i=2;$i<=$max_capacity;$i++){              
+           $price = $points[$i-1]+$perkg;
+           $points[$i] = $price;          
+        }
+        foreach($points as $key => $value){
+           $data['cum_wt'] = $key;
+           $data['price_per_kg'] = $value;
+           $this->bclr_m->insert_cwt($data);
+        }
+        return TRUE;
+  }
+
+  public function updatecwtgraph(){
+      $points = $this->input->post('points');
+      $bclr_id = $this->input->post('bclr_id');
+      $this->bclr_m->disable_cwt($bclr_id);
+        $data['bclr_id'] = $bclr_id;
+        $data['name'] = "cwt-graph-".$id;
+        $data['create_date'] = time();
+        $data['create_userID'] = $this->session->userdata('loginuserID');
+        $data['active'] = 1;
+        foreach($points as $point){
+           $data['cum_wt'] = $point['x'];
+           $data['price_per_kg'] = $point['y'];
+           $this->bclr_m->insert_cwt($data);
+        }
+        $json = "updated";
+        $this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($json));
   }
    
 
