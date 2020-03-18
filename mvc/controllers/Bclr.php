@@ -668,10 +668,10 @@ $sWhere $sOrder $sLimit";
                   if(permissionChecker('bclr_delete')){
                         $feed->action .= btn_delete('bclr/delete/'.$feed->bclr_id, $this->lang->line('delete'));                   
                   }
-                  $status = $feed->active;
+                  $feed->status = $feed->active;
                   $feed->active = "<div class='onoffswitch-small' id='".$feed->bclr_id."'>";
                   $feed->active .= "<input type='checkbox' id='myonoffswitch".$feed->bclr_id."' class='onoffswitch-small-checkbox' name='paypal_demo'";
-                  if($status){
+                  if($feed->status){
                      $feed->active .= " checked >";
                   } else {
                      $feed->active .= ">";
@@ -683,8 +683,8 @@ $sWhere $sOrder $sLimit";
 
 						 
         if(isset($_REQUEST['export'])){
-		  $columns = array('#','Board Point','Off Point','Carrier','Flight Number','Season','From date','To date','Frequency','From Cabin','To Cabin','Average','Minimum','Maximum','Slider Position');
-		  $rows = array("id","source","dest","carrier_code","flight_number","season_id","start_date","end_date","day_of_week","fcabin","tcabin","average","min","max","slider_start");
+		  $columns = array('#',"Carrier","Partner Carrier","Allowance","Aircraft","Flight Number Range","From Cabin","Origin level","Origin Content","Destination Level","Destination Content","Effective Date","Discontinue Date","Season","Frequency","BagType","Rule Auth","Departure Time Start","Departure Time End","Min Unit","Max Capacity","Min Price","Max Price","Active");
+		  $rows = array("id","carrier_code","partner_carrier_code","allowance","aircraft_type","flight_num_range","from_cabin_value","origin_level_value","origin_content_data","dest_level_value","dest_content_data","effective_date","discontinue_date","season_name","frequency_value","bag_type_value","rule_auth_carrier_code","dep_time_start","dep_time_end","min_unit","max_capacity","min_price","max_price","status");
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );

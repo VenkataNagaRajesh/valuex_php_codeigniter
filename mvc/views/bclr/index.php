@@ -610,7 +610,7 @@ function loaddatatable() {
                            $.ajax({
                                 url: "<?php echo base_url('bclr/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val()},
+                                data: {sSearch: $("input[type=search]").val(),"carrierID": $("#flt_carrierID").val(),"partner_carrierID": $("#flt_partner_carrierID").val(),"allowance": $("#flt_allowance").val(),"frequency": $("#flt_frequency").val(),"effective_date": $("#flt_effective_date").val(),"discontinue_date": $("#flt_discontinue_date").val(),"origin_level": $("#flt_origin_level").val(),"origin_content": $("#flt_origin_content").val(),"dest_level": $("#flt_dest_level").val(),"dest_content": $("#flt_dest_content").val(),"rule_auth": $("#flt_rule_auth_carrier").val(),"bag_type": $("#flt_bag_type").val(),"min_price": $("#flt_min_price").val(),"max_price": $("#flt_max_price").val(),"min_unit": $("#flt_min_unit").val(),"max_capacity": $("#flt_max_capacity").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -633,7 +633,7 @@ function downloadBCLR(){
 	$.ajax({
        url: "<?php echo base_url('bclr/server_processing'); ?>?page=all&&export=1",
        type: 'get',
-       data: {},
+       data: {sSearch: $("input[type=search]").val(),"carrierID": $("#flt_carrierID").val(),"partner_carrierID": $("#flt_partner_carrierID").val(),"allowance": $("#flt_allowance").val(),"frequency": $("#flt_frequency").val(),"effective_date": $("#flt_effective_date").val(),"discontinue_date": $("#flt_discontinue_date").val(),"origin_level": $("#flt_origin_level").val(),"origin_content": $("#flt_origin_content").val(),"dest_level": $("#flt_dest_level").val(),"dest_content": $("#flt_dest_content").val(),"rule_auth": $("#flt_rule_auth_carrier").val(),"bag_type": $("#flt_bag_type").val(),"min_price": $("#flt_min_price").val(),"max_price": $("#flt_max_price").val(),"min_unit": $("#flt_min_unit").val(),"max_capacity": $("#flt_max_capacity").val()},
        dataType: 'json'
        }).done(function(data){
 			var $a = $("<a>");
