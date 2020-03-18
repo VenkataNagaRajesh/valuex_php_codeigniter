@@ -163,6 +163,10 @@ class Bclr extends Admin_Controller {
            if((int)$id) {
               $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));   
            }
+           $bclr->effective_date = date('d-m-Y',$bclr->effective_date);
+           $bclr->discontinue_date = date('d-m-Y',$bclr->discontinue_date);
+           $bclr->dep_time_start = gmdate("h:i A", $bclr->dep_time_start);
+           $bclr->dep_time_end = gmdate("h:i A", $bclr->dep_time_end);
            $this->output->set_content_type('application/json');
            $this->output->set_output(json_encode($bclr));
         }
@@ -335,61 +339,103 @@ class Bclr extends Admin_Controller {
                 $userID = $this->session->userdata('loginuserID');
                 $roleID = $this->session->userdata('roleID');
                 
-                if($this->input->post('carrierID')){
-                  $this->data['carrierID'] = $this->input->post('carrierID');
+                if($this->input->post('flt_carrierID')){
+                  $this->data['flt_carrierID'] = $this->input->post('flt_carrierID');
                 } elseif($roleID != 1){
-                  $this->data['carrierID'] = $this->session->userdata('default_airline'); 
+                  $this->data['flt_carrierID'] = $this->session->userdata('default_airline'); 
                 } else {
-                  $this->data['carrierID'] = 0;
+                  $this->data['flt_carrierID'] = 0;
                 }
                 
-                if($this->input->post('partner_carrierID')){
-                    $this->data['partner_carrierID'] = $this->input->post('partner_carrierID');
+                if($this->input->post('flt_partner_carrierID')){
+                    $this->data['flt_partner_carrierID'] = $this->input->post('flt_partner_carrierID');
                 } else {
-                    $this->data['partner_carrierID'] = 0;
+                    $this->data['flt_partner_carrierID'] = 0;
                 }
         
-                if($this->input->post('start_date')){
-                    $this->data['start_date'] = $this->input->post('start_date');
+                if($this->input->post('flt_effective_date')){
+                    $this->data['flt_effective_date'] = $this->input->post('flt_effective_date');
                 } else {
-                    $this->data['start_date'] = '';
+                    $this->data['flt_effective_date'] = '';
                 }
         
-                if($this->input->post('end_date')){
-                    $this->data['end_date'] = $this->input->post('end_date');
+                if($this->input->post('flt_discontinue_date')){
+                    $this->data['flt_discontinue_date'] = $this->input->post('flt_discontinue_date');
                 } else {
-                    $this->data['end_date'] = '';
+                    $this->data['flt_discontinue_date'] = '';
                 }
         
-                if($this->input->post('origin_content')){
-                    $this->data['origin_content'] = $this->input->post('origin_content');
+                if($this->input->post('flt_origin_content')){
+                    $this->data['flt_origin_content'] = $this->input->post('flt_origin_content');
                 } else {
-                    $this->data['origin_content'] = 0;
+                    $this->data['flt_origin_content'] = 0;
                 }
         
-                if($this->input->post('origin_level')){
-                    $this->data['origin_level'] = $this->input->post('origin_level');
+                if($this->input->post('flt_origin_level')){
+                    $this->data['flt_origin_level'] = $this->input->post('flt_origin_level');
                 } else {
-                    $this->data['origin_level'] = 0;
+                    $this->data['flt_origin_level'] = 0;
                 }
         
-                if($this->input->post('origin_content')){
-                    $this->data['origin_content'] = $this->input->post('origin_content');
+                if($this->input->post('flt_dest_content')){
+                    $this->data['flt_dest_content'] = $this->input->post('flt_dest_content');
                 } else {
-                    $this->data['origin_content'] = 0;
+                    $this->data['flt_dest_content'] = 0;
                 }
         
-                if($this->input->post('dest_level')){
-                    $this->data['dest_level'] = $this->input->post('dest_level');
+                if($this->input->post('flt_dest_level')){
+                    $this->data['flt_dest_level'] = $this->input->post('flt_dest_level');
                 } else {
-                    $this->data['dest_level'] = 0;
+                    $this->data['flt_dest_level'] = 0;
                 }
         
-                if($this->input->post('dest_content')){
-                    $this->data['dest_content'] = $this->input->post('dest_content');
+                if($this->input->post('flt_allowance')){
+                    $this->data['flt_allowance'] = $this->input->post('flt_allowance');
                 } else {
-                    $this->data['dest_content'] = 0;
-                }        
+                    $this->data['flt_allowance'] = 1;
+                }  
+                
+                if($this->input->post('flt_frequency')){
+                    $this->data['flt_frequency'] = $this->input->post('flt_frequency');
+                } else {
+                    $this->data['flt_frequency'] = 0;
+                }
+
+                if($this->input->post('flt_rule_auth_carrier')){
+                    $this->data['flt_rule_auth_carrier'] = $this->input->post('flt_rule_auth_carrier');
+                } else {
+                    $this->data['flt_rule_auth_carrier'] = 0;
+                }
+                
+                if($this->input->post('flt_bag_type')){
+                    $this->data['flt_bag_type'] = $this->input->post('flt_bag_type');
+                } else {
+                    $this->data['flt_bag_type'] = 1;
+                }
+
+                if($this->input->post('flt_min_unit')){
+                    $this->data['flt_min_unit'] = $this->input->post('flt_min_unit');
+                } else {
+                    $this->data['flt_min_unit'] = '';
+                }
+
+                if($this->input->post('flt_max_capacity')){
+                    $this->data['flt_max_capacity'] = $this->input->post('flt_max_capacity');
+                } else {
+                    $this->data['flt_max_capacity'] = '';
+                }
+
+                if($this->input->post('flt_min_price')){
+                    $this->data['flt_min_price'] = $this->input->post('flt_min_price');
+                } else {
+                    $this->data['flt_min_price'] = '';
+                }
+
+                if($this->input->post('flt_max_price')){
+                    $this->data['flt_max_price'] = $this->input->post('flt_max_price');
+                } else {
+                    $this->data['flt_max_price'] = '';
+                }
                 
                 $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 $this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
@@ -411,12 +457,9 @@ class Bclr extends Admin_Controller {
 
 
     function server_processing(){		
-		$userID = $this->session->userdata('loginuserID');
-		$roleID = $this->session->userdata('roleID');	  
-
-
-	 $aColumns = array("MainSet.bclr_id","MainSet.carrier_code","MainSet.partner_carrier_code","MainSet.allowance","MainSet.aircraft_type","MainSet.flight_num_range","MainSet.from_cabin_value","MainSet.origin_level_value","SubSet.origin_content_data","MainSet.dest_level_value","SubSet.dest_content_data","MainSet.effective_date","MainSet.discontinue_date","MainSet.season_name","MainSet.frequency_value","MainSet.bag_type","MainSet.rule_auth_carrier_code","MainSet.dep_time_start","MainSet.dep_time_end","MainSet.min_unit","MainSet.max_capacity","MainSet.min_price","MainSet.max_price","MainSet.active");
-		
+	$userID = $this->session->userdata('loginuserID');
+	$roleID = $this->session->userdata('roleID');	  
+        $aColumns = array("MainSet.bclr_id","MainSet.carrier_code","MainSet.partner_carrier_code","MainSet.allowance","MainSet.aircraft_type","MainSet.flight_num_range","MainSet.from_cabin_value","MainSet.origin_level_value","SubSet.origin_content_data","MainSet.dest_level_value","SubSet.dest_content_data","MainSet.effective_date","MainSet.discontinue_date","MainSet.season_name","MainSet.frequency_value","MainSet.bag_type","MainSet.rule_auth_carrier_code","MainSet.dep_time_start","MainSet.dep_time_end","MainSet.min_unit","MainSet.max_capacity","MainSet.min_price","MainSet.max_price","MainSet.active");
 	
 		$sLimit = "";
 		
@@ -471,69 +514,92 @@ class Bclr extends Admin_Controller {
 				}
 			}
 
-
-
-
-			if(!empty($this->input->get('boardPoint'))){
-                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'boarding_point = '.$this->input->get('boardPoint');
-                        }
-                        if(!empty($this->input->get('offPoint'))){
-                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'off_point = '.$this->input->get('offPoint');
-                        }
-
-
-			if(!empty($this->input->get('flightNbr'))){
-                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'flight_number >= '.$this->input->get('flightNbr');
-                        }
-
-		
-			if(!empty($this->input->get('flightNbrEnd'))){
-                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'flight_number <= '.$this->input->get('flightNbrEnd');
-                        }
-
-
-			if(!empty($this->input->get('sfclr_id'))){
-                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'fclr_id = '.$this->input->get('sfclr_id');
-                        }		
-
-
-                       if(!empty($this->input->get('frequency'))){
-                               $frstr = $this->input->get('frequency');
-                                $freq = $this->airports_m->getDefnsCodesListByType('14');
-				if($frstr === '*'){
-					$frstr = '1234567';
-				}
-                                 if ( $frstr != '0') {
-                                        $arr = str_split($frstr);
-                                        $freq_str = implode(',',array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr));
-                                        $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                        $sWhere .= 'fc.frequency IN ('.$freq_str.') ';
-                                  }
-
-                        }
-
-                  $roleID = $this->session->userdata('roleID');
-                $userID = $this->session->userdata('loginuserID');
-                if($roleID != 1){
-                         $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                        $sWhere .= 'bc.carrierID IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
+                if(!empty($this->input->get('carrierID'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.carrierID = '.  $this->input->get('carrierID');
+                }
+                if(!empty($this->input->get('partner_carrierID'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.partner_carrierID = '.  $this->input->get('partner_carrierID');
+                }
+                if(!empty($this->input->get('allowance'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.allowance = '.  $this->input->get('allowance');
+                }
+                if(!empty($this->input->get('frequency'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.frequency = '.  $this->input->get('frequency');
+                }
+                if(!empty($this->input->get('rule_auth'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.rule_auth = '.  $this->input->get('rule_auth');
+                }
+                if(!empty($this->input->get('bag_type'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.bag_type = '.  $this->input->get('bag_type');
+                }
+                if(!empty($this->input->get('effective_date'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.effective_date = '.  strtotime($this->input->get('effective_date'));
+                }
+                if(!empty($this->input->get('discontinue_date'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.discontinue_date = '.  strtotime($this->input->get('discontinue_date'));
+                }
+                if(!empty($this->input->get('min_price'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.min_price = '.  $this->input->get('min_price');
+                }
+                if(!empty($this->input->get('max_price'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.max_price = '.  $this->input->get('max_price');
+                }
+                if(!empty($this->input->get('min_unit'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.min_unit = '.  $this->input->get('min_unit');
+                }
+                if(!empty($this->input->get('max_capacity'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.max_capacity = '.  $this->input->get('max_capacity');
+                }
+                if(!empty($this->input->get('origin_level'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.origin_level = '.  $this->input->get('origin_level');
+                }
+                if(!empty($this->input->get('dest_level'))){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.dest_level = '.  $this->input->get('dest_level');
+                }
+                if(!empty($this->input->get('origin_content'))){
+                   $lval = explode(',',$this->input->get('origin_content'));
+                   foreach($lval as $val ) {
+                      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                      $sWhere .= ' FIND_IN_SET('.$val.',SubSet.origin_content)';
+                   }
+                }
+                if(!empty($this->input->get('dest_content'))){
+                    $lval = explode(',',$this->input->get('dest_content'));
+                    foreach($lval as $val ) {
+                       $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                       $sWhere .= ' FIND_IN_SET('.$val.',SubSet.dest_content)';
+                     }
                 }
 
+                $roleID = $this->session->userdata('roleID');
+                $userID = $this->session->userdata('loginuserID');
+                if($roleID != 1){
+                   $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $sWhere .= 'MainSet.carrierID IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
+                }	
 
-			
 
-
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS MainSet.bclr_id,MainSet.allowance,MainSet.flight_num_range,MainSet.effective_date,MainSet.discontinue_date,MainSet.bag_type,MainSet.dep_time_start,MainSet.dep_time_end,MainSet.min_unit,MainSet.max_capacity,MainSet.min_price,MainSet.max_price,MainSet.active,
-                MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.aircraft_type,MainSet.frequency_value,MainSet.from_cabin_value,MainSet.season_name,MainSet.rule_auth_carrier_code,MainSet.origin_level_value,MainSet.dest_level_value,
-                SubSet.origin_content,SubSet.origin_content_data,SubSet.dest_content,SubSet.dest_content_data		
+        $sQuery = "SELECT SQL_CALC_FOUND_ROWS MainSet.bclr_id,MainSet.carrierID,MainSet.partner_carrierID,MainSet.allowance,MainSet.flight_num_range,MainSet.effective_date,MainSet.discontinue_date,MainSet.bag_type,MainSet.dep_time_start,MainSet.dep_time_end,MainSet.min_unit,MainSet.max_capacity,MainSet.min_price,MainSet.max_price,MainSet.active,
+                MainSet.rule_auth,MainSet.frequency,MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.aircraft_type,MainSet.frequency_value,MainSet.from_cabin_value,MainSet.season_name,MainSet.rule_auth_carrier_code,MainSet.origin_level_value,MainSet.dest_level_value,
+                MainSet.origin_level,MainSet.dest_level,SubSet.origin_content,SubSet.origin_content_data,SubSet.dest_content,SubSet.dest_content_data		
                 FROM
                 (
-                SELECT bc.bclr_id,bc.allowance,bc.flight_num_range,bc.effective_date,bc.discontinue_date,bc.bag_type,bc.dep_time_start,bc.dep_time_end,bc.min_unit,bc.max_capacity,bc.min_price,bc.max_price,bc.active,ddc.code carrier_code,ddpc.code partner_carrier_code,ddat.aln_data_value aircraft_type,dfre.aln_data_value frequency_value,tca.aln_data_value as from_cabin_value,sea.season_name,ddac.code as rule_auth_carrier_code,dto.alias as origin_level_value,dtd.alias as dest_level_value		
+                SELECT bc.bclr_id,bc.carrierID,bc.partner_carrierID,bc.allowance,bc.frequency,bc.flight_num_range,bc.effective_date,bc.discontinue_date,bc.bag_type,bc.dep_time_start,bc.dep_time_end,bc.min_unit,bc.max_capacity,bc.min_price,bc.max_price,bc.active,
+                bc.rule_auth,bc.origin_level,bc.dest_level,ddc.code carrier_code,ddpc.code partner_carrier_code,ddat.aln_data_value aircraft_type,dfre.aln_data_value frequency_value,tca.aln_data_value as from_cabin_value,sea.season_name,ddac.code as rule_auth_carrier_code,dto.alias as origin_level_value,dtd.alias as dest_level_value		
                 FROM BG_baggage_control_rule  bc
                 LEFT JOIN  VX_data_defns ddc on (ddc.vx_aln_data_defnsID = bc.carrierID AND ddc.aln_data_typeID = 12) 
                 LEFT JOIN VX_data_defns ddpc on (ddpc.vx_aln_data_defnsID = bc.partner_carrierID AND ddpc.aln_data_typeID = 12)    
@@ -658,14 +724,14 @@ $sWhere $sOrder $sLimit";
         $data_ids = $_REQUEST['data_ids'];
         $data_id_array = explode(",", $data_ids);
         if(!empty($data_id_array)) {
-                foreach($data_id_array as $id) {
+           foreach($data_id_array as $id) {
                 $this->data['rule'] = $this->bclr_m->get_single_bclr(array('bclr_id'=>$id));
                 if($this->data['rule']) {
                 $this->bclr_m->delete_bclr($id);
                 }           
-                }
+           }
         }
-}
+   }
 
 }
 
