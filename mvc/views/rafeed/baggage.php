@@ -18,7 +18,7 @@
                         </a>
 
                         &nbsp;&nbsp;
-                        <a href="<?php echo base_url('rafeed/downloadFormat') ?>" class="btn btn-danger">
+                        <a href="<?php echo base_url('rafeed/downloadFormat/rafeed-baggage') ?>" class="btn btn-danger">
                             <!--<i class="fa fa-upload"></i>-->
                             <?= $this->lang->line('download_rafeed_format') ?>
                         </a>
