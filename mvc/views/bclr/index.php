@@ -515,6 +515,7 @@ function loaddatatable() {
       "bProcessing": true,
 	  "stateSave": true,
       "bServerSide": true,
+      "scrollX": true,
       "sAjaxSource": "<?php echo base_url('bclr/server_processing'); ?>",
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "carrierID","value": $("#flt_carrierID").val()},
@@ -549,7 +550,7 @@ function loaddatatable() {
             if (data) data.start = 0;
             return data;
         },
-        "columns": [ {"data": "chkbox" },
+        "columns":[{"data": "chkbox" },
                    {"data": "carrier_code" },
                    {"data": "partner_carrier_code" },
                    {"data": "allowance" },

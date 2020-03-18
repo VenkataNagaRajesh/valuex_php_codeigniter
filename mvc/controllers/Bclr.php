@@ -735,6 +735,30 @@ $sWhere $sOrder $sLimit";
         }
    }
 
+  public function cwtgraph(){
+      $id = $this->input->post('bclr_id');
+      $id = 3;      
+      $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));   
+      $this->data['min_price'] = $bclr->min_price;
+      $this->data['max_price'] = $bclr->max_price;
+      $this->data['max_capacity'] = $bclr->max_capacity;
+      $this->data['minmax_diff'] = $this->data['max_price'] - $this->data['min_price'];
+      $this->data['perkg'] = $this->data['minmax_diff'] / $this->data['max_capacity'];
+     /*  echo "max-min ".$minmax_diff;
+      echo " max cap ".$max_capacity;
+      echo " Per KG ".$perkg; */
+     // $this->data['perkg'] = 3.14;
+      $this->data['points'][1] = $this->data['min_price'];
+      for($i=2;$i<=$this->data['max_capacity'];$i++){              
+          $price = $this->data['points'][$i-1]+$this->data['perkg'];
+          $this->data['points'][$i] = $price;
+      }
+      //print_r($points); exit;
+      $this->data["subview"] = "bclr/drag-chart";
+      $this->load->view('_layout_main', $this->data); 
+  }
+   
+
 }
 
 
