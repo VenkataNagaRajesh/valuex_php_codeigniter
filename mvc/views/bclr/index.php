@@ -302,8 +302,8 @@
 						<th class="col-lg-1 noExport"><?=$this->lang->line('max_capacity')?></th>
 						<th class="col-lg-1 noExport"><?=$this->lang->line('min_price')?></th>
 						<th class="col-lg-1 noExport"><?=$this->lang->line('max_price')?></th>
-                        <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                         <th class="col-lg-2 noExport"><?=$this->lang->line('active')?></th>
+                        <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                     </tr>
                  </thead>
                  <tbody>                          

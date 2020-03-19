@@ -14,11 +14,11 @@ class Bclr extends Admin_Controller {
 		$this->load->model('airline_m');
 		$this->load->model("marketzone_m");
 		$this->load->model('eligibility_exclusion_m');
-                $this->load->model('user_m');
-                $this->load->model('partner_m');
+        $this->load->model('user_m');
+        $this->load->model('partner_m');
 		$language = $this->session->userdata('lang');
-                $this->lang->load('bclr', $language); 
-            //    $this->generateCWT(3); exit;
+        $this->lang->load('bclr', $language); 
+        //$this->generateCWT(3); exit;
 	}	
 	
 	protected function rules() {
@@ -53,21 +53,21 @@ class Bclr extends Admin_Controller {
                                 'label' => $this->lang->line("flight_number_range"),
                                 'rules' => 'trim|required|max_length[200]|xss_clean|callback_valFlightrange'
                         ),			
-			array(
-				'field' => 'origin_level',
-				'label' => $this->lang->line("origin_level"),
-				'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
-                         ),
                         array(
-                                'field' => 'origin_content[]',
-                                'label' => $this->lang->line("origin_content"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateContent'
+                            'field' => 'origin_level',
+                            'label' => $this->lang->line("origin_level"),
+                            'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
                         ),
                         array(
-				'field' => 'dest_level',
-				'label' => $this->lang->line("dest_level"),
-				'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
-                         ),
+                            'field' => 'origin_content[]',
+                            'label' => $this->lang->line("origin_content"),
+                            'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateContent'
+                        ),
+                        array(
+                            'field' => 'dest_level',
+                            'label' => $this->lang->line("dest_level"),
+                            'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                        ),
                         array(
                                 'field' => 'dest_content[]',
                                 'label' => $this->lang->line("dest_content"),
@@ -81,7 +81,7 @@ class Bclr extends Admin_Controller {
                         array(
                                 'field' => 'discontinue_date',
                                 'label' => $this->lang->line("discontinue_date"),
-                                'rules' => 'trim|required|xss_clean|max_length[60]'  
+                                'rules' => 'trim|required|xss_clean|max_length[60]|callback_valDate'  
                         ),
                         array(
                                'field' => 'frequency',
@@ -126,6 +126,44 @@ class Bclr extends Admin_Controller {
 
 		);
 	        return $rules;
+        }
+
+        function valDate($discontinue_date_post){
+            if(empty($discontinue_date_post)){
+                $this->form_validation->set_message("valDate", "%s is required");
+                return FALSE;
+            }else{
+                if($this->input->post('partner_carrierID') && $this->input->post('effective_date')){
+                  $where = array('carrierID'=>$this->input->post('carrierID'),"partner_carrierID"=>$this->input->post('partner_carrierID'));
+                  $partnerinfo = $this->partner_m->get_single_partner($where); 
+                 /*  $effective_date = new DateTime($this->input->post('effective_date'));
+                  $discontinue_date = new DateTime($discontinue_date_post);
+                  $datetimeFormat = 'Y-m-d';
+                  $start_date = new DateTime();
+                  $start_date->setTimestamp($partnerinfo->start_date);
+                  $end_date = new DateTime();
+                  $end_date->setTimestamp($partnerinfo->end_date);                
+                  echo  $effective_date->format($datetimeFormat)."</br>";
+                  echo  $discontinue_date->format($datetimeFormat)."</br>";
+                  echo  $start_date->format($datetimeFormat)."</br>";
+                  echo  $end_date->format($datetimeFormat)."</br>";
+                  2020-03-10</br>2020-03-18</br>2020-03-31</br>2020-03-28</br> */
+
+                  $effective_date = strtotime($this->input->post('effective_date'));
+                  $discontinue_date = strtotime($discontinue_date_post);
+                  $start_date = $partnerinfo->start_date;
+                  $end_date = $partnerinfo->end_date;
+
+                  if( ($start_date <= $effective_date) && ($discontinue_date <= $end_date)){
+                     return TRUE;
+                  } else {
+                    $this->form_validation->set_message("valDate","partner not available in this date");
+                    return FALSE; 
+                  }
+                } else {
+                    return TRUE;
+                }
+            }
         }
 
         function validateLevel($post_string){
@@ -823,7 +861,10 @@ $sWhere $sOrder $sLimit";
              $points[$point['x']] = $point['y'];
            }
         }
-
+        $diff = array_diff_key($cwtpoints,$points);
+        if(count($diff)){
+            $points = array_merge($points,$diff);
+        }
         ksort($points);
         if($points == $cwtpoints){
             $json['status'] ="There is no New Changes";

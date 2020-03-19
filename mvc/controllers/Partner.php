@@ -8,7 +8,7 @@ class Partner extends Admin_Controller {
         $this->load->model('airline_m');
         $this->load->model('airports_m');
 		$language = $this->session->userdata('lang');
-		$this->lang->load('partner', $language);			
+        $this->lang->load('partner', $language);
     }
     
     protected function rules() {
@@ -46,13 +46,33 @@ class Partner extends Admin_Controller {
             array(
                 'field' => 'end_date',
                 'label' => $this->lang->line("partner_end_date"),
-                'rules' => 'trim|required|xss_clean|max_length[60]'  
+                'rules' => 'trim|required|xss_clean|max_length[60]|callback_valEnddate'  
             ),          
 
 		);
 		return $rules;
     }
     
+    function valEnddate($enddate){
+        $enddate = new DateTime($enddate);
+        if(!empty($enddate)){
+            if($this->input->post('start_date')){
+                $startdate = new DateTime($this->input->post('start_date'));
+                if($enddate > $startdate){
+                    return TRUE;
+                } else {
+                    $this->form_validation->set_message("valEnddate", "%s must be greater than start date");
+                    return FALSE; 
+                }
+            } else {
+                return TRUE;
+            }
+        } else {
+            $this->form_validation->set_message("valEnddate", "%s is required ");
+                return FALSE;
+        }
+    }
+
     function validateLevel($post_string){
         if($post_string == '0'){
                $this->form_validation->set_message("validateLevel", "%s is required");
@@ -60,7 +80,7 @@ class Partner extends Admin_Controller {
          }else{
                 return TRUE;
          }
-      }
+    }
 
     function validateContent($post_array){
         if(count($post_array) < 1){
