@@ -83,5 +83,28 @@ class Bclr_m extends MY_Model {
             $query = $this->db->get_where('BG_cwt',array("active" => 1,"bclr_id" => $bclr_id));
             return $query->result();
         }
+
+        public function insert_update_cwt($data){
+           $where = array("bclr_id"=> $data['bclr_id'],"cum_wt"=>$data['cum_wt'],"active"=>1);
+           $result = $this->db->get_where('BG_cwt',$where)->row();
+           if($result){
+               $this->db->where('cwt_id',$result->cwt_id);
+               $this->db->update('BG_cwt',array('price_per_kg' => $data['price_per_kg']));
+           }  else {
+               $this->db->insert('BG_cwt',$data);
+           }  
+        }
+
+        public function checkGraphName($bclr_id,$name){
+            $query = $this->db->get_where('BG_cwt',array('bclr_id'=>$bclr_id,"name"=>$name));
+            //print_r($this->db->last_query());
+            $result = $query->row();
+            if($result){
+                return TRUE;
+            } else {
+                return FALSE;
+            }
+        }
+
 }
 

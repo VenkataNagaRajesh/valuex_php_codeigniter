@@ -18,6 +18,7 @@ class Bclr extends Admin_Controller {
                 $this->load->model('partner_m');
 		$language = $this->session->userdata('lang');
                 $this->lang->load('bclr', $language); 
+            //    $this->generateCWT(3); exit;
 	}	
 	
 	protected function rules() {
@@ -793,22 +794,52 @@ $sWhere $sOrder $sLimit";
   }
 
   public function updatecwtgraph(){
-      $points = $this->input->post('points');
+      $postpoints = $this->input->post('points');
       $bclr_id = $this->input->post('bclr_id');
-      $this->bclr_m->disable_cwt($bclr_id);
+      $graph_name = $this->input->post('graph_name');
+      $checkname = $this->bclr_m->checkGraphName($bclr_id,$graph_name);
+      if($checkname){
+        $json['status'] = "Already Exist with this name";
+      } else {
+        $cwtdata = $this->bclr_m->getActiveCWT($bclr_id);       
         $data['bclr_id'] = $bclr_id;
-        $data['name'] = "cwt-graph-".$id;
+        $data['name'] = $graph_name;
         $data['create_date'] = time();
         $data['create_userID'] = $this->session->userdata('loginuserID');
         $data['active'] = 1;
-        foreach($points as $point){
-           $data['cum_wt'] = $point['x'];
-           $data['price_per_kg'] = $point['y'];
-           $this->bclr_m->insert_cwt($data);
+
+        foreach($cwtdata as $cwt){
+            $cwtpoints[$cwt->cum_wt] = $cwt->price_per_kg;
         }
-        $json = "updated";
-        $this->output->set_content_type('application/json');
-        $this->output->set_output(json_encode($json));
+
+        foreach($postpoints as $point){
+           if(isset($points[$point['x']])){ 
+             if($cwtpoints[$point['x']] != $point['y']){
+                $points[$point['x']] = $point['y']; 
+             } else {
+                 continue;
+             }
+           } else {
+             $points[$point['x']] = $point['y'];
+           }
+        }
+
+        ksort($points);
+        if($points == $cwtpoints){
+            $json['status'] ="There is no New Changes";
+        } else {
+            $this->bclr_m->disable_cwt($bclr_id);
+            foreach($points as $key => $value){
+                $data['cum_wt'] = $key;
+                $data['price_per_kg'] = $value;
+                $this->bclr_m->insert_cwt($data);
+             }
+            $json['status'] = "updated";
+        }
+      }         
+        
+       $this->output->set_content_type('application/json');
+       $this->output->set_output(json_encode($json));
   }
    
 

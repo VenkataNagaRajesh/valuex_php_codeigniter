@@ -1,4 +1,4 @@
-<div class="off-elg" style="margin-bottom:320px;">
+<div class="box">
 	<div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa fa-users"></i>CWT graph</h3>
         <ol class="breadcrumb">
@@ -13,6 +13,7 @@
            <div id="interactive-chart" style="height: 360px; width: 100%;"></div>
         </div> 
 		<div class="col-md-6">
+		  <input type="text" name="graph_name" placeholder="Enter Unique Name" id="graph_name" />
 		  <button class="btn btn-danger" onclick="getChartValues()">Update</button>
 		</div>      
     </div>
@@ -28,6 +29,9 @@
 			animationEnabled: true,
 			exportEnabled: true,
 			theme: "light2",
+			//zoomEnabled: true,
+      		//zoomType: "xy",
+			//width: 800,
 			title: {
 				text: "Baggage Unit Price Setting",
 				fontSize: 20,
@@ -41,14 +45,15 @@
 				title: "Weight Capacity",
 				titleFontColor: "#4F81BC",
 				minimum: 1,
-				maximum: <?=count($points)+10?>
+				maximum: <?=count($points)+10?>,
+				//interval: 5,
 			},
             axisY: {
 		        title: "Price per KG",
 				minimum: 1,
 				maximum: <?=end($points)+10;?>,
 				titleFontColor: "#4F81BC",
-				suffix : "kg",
+				suffix : "",
 				prefix : "",
 				//lineColor: "#4F81BC",
 				//tickColor: "#4F81BC",
@@ -73,7 +78,8 @@
                 showInLegend: true,
                 name: "Price per KG",
                 markerType: "circle", //square
-				dataPoints: pointsdata					
+				dataPoints: pointsdata
+									
 			}
 			/*,{
 				markerSize: 4,
@@ -173,18 +179,28 @@
 			});
 
 			function getChartValues(){
-				var data = interactiveChart.get("data");
-				console.log(data[0].dataPoints);
-				$.ajax({ 
-				async: false,            
-				type: 'POST',            
-				url: "<?=base_url('bclr/updatecwtgraph')?>",            
-				data: {"bclr_id":<?=$bclr_id?>,"points":data[0].dataPoints},           
-				dataType: "html",                                  
-				success: function(data) {                         
-					window.location.reload(true);
-				}        
-        }); 
+				var graph_name = $('#graph_name').val();
+				if(graph_name == '' ||graph_name == null){
+                   alert("Enter graph Name"); 
+				} else {
+					var data = interactiveChart.get("data");
+					//console.log(data[0].dataPoints);
+					$.ajax({ 
+						async: false,            
+						type: 'POST',            
+						url: "<?=base_url('bclr/updatecwtgraph')?>",            
+						data: {"bclr_id":<?=$bclr_id?>,"graph_name":graph_name,"points":data[0].dataPoints},           
+						dataType: "html",                                  
+						success: function(data) {
+							var obj = jQuery.parseJSON(data);
+							if( obj.status === "updated" ){
+							window.location.reload(true);
+							} else {
+								alert(obj.status);
+							}                         
+						}       
+					}); 
+				} 
 			}
 </script>
 		
