@@ -1335,10 +1335,20 @@ class Rafeed extends Admin_Controller
 
 
 
-	function downloadFormat()
+	function downloadFormat($p_nType = 'rafeed')
 	{
 		$this->load->helper('download');
-		$filename = APPPATH . 'downloads/rafeed.xlsx';
+
+		switch($p_nType) {
+
+			case 'rafeed-baggage' : 
+				$filename = APPPATH . 'downloads/rafeed-baggage.xlsx';
+				break;
+			default :
+				$filename = APPPATH . 'downloads/rafeed.xlsx';
+		}
+
+		
 		force_download($filename, null);
 	}
 
