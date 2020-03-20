@@ -30,6 +30,8 @@
                                foreach($airlines as $airline){
                                    $alist[$airline->vx_aln_data_defnsID] = $airline->code;
                                }
+                               $carrierID = $this->session->userdata('login_user_airlineID')[0];
+                               unset($alist[$carrierID]);
                                echo form_dropdown("partner_carrierID", $alist,
                                         set_value("partner_carrierID"), "id='partner_carrierID' class='form-control hide-dropdown-icon select2'"
                                     );

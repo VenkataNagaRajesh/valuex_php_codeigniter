@@ -19,7 +19,7 @@
 			</div> -->
         </div> 
 		<div class="col-md-2">
-		  <input type="text" name="graph_name" placeholder="Enter Unique Name" id="graph_name" />
+		  <input type="text" name="graph_name" placeholder="Enter Unique Name" id="graph_name" value="<?=$cwt_name?>"/>
 		  <button class="btn btn-danger" onclick="getChartValues()">Update</button>
 		</div>      
     </div>
@@ -56,7 +56,7 @@
 				titleFontColor: "#4F81BC",
 				minimum: 1,
 				maximum: <?=count($points)+10?>,
-				interval: 5,
+				//interval: 5,
 				//viewportMinimum: -50,
         		//viewportMaximum: 50
 			},

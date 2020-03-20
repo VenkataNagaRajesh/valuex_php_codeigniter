@@ -73,6 +73,11 @@ class Bclr_m extends MY_Model {
             return ($this->db->affected_rows() != 1) ? false : true;
         }
 
+        public function update_cwt($data,$where){
+            $this->db->where($where);
+            $this->db->update('BG_cwt',$data);
+        }
+
         public function disable_cwt($bclr_id){
             $this->db->where('bclr_id',$bclr_id);
             $this->db->update('BG_cwt',array('active'=>0));

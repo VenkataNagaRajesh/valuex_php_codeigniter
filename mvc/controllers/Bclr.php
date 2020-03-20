@@ -800,7 +800,7 @@ $sWhere $sOrder $sLimit";
       foreach($cwtdata as $cwt){
         $this->data['points'][$cwt->cum_wt] = $cwt->price_per_kg;
       }
-     
+      $this->data['cwt_name'] = $cwtdata[0]->name;
       $this->data["subview"] = "bclr/drag-chart";
       $this->load->view('_layout_main', $this->data); 
   }
@@ -836,9 +836,7 @@ $sWhere $sOrder $sLimit";
       $bclr_id = $this->input->post('bclr_id');
       $graph_name = $this->input->post('graph_name');
       $checkname = $this->bclr_m->checkGraphName($bclr_id,$graph_name);
-      if($checkname){
-        $json['status'] = "Already Exist with this name";
-      } else {
+     
         $cwtdata = $this->bclr_m->getActiveCWT($bclr_id);       
         $data['bclr_id'] = $bclr_id;
         $data['name'] = $graph_name;
@@ -867,17 +865,25 @@ $sWhere $sOrder $sLimit";
         }
         ksort($points);
         if($points == $cwtpoints){
-            $json['status'] ="There is no New Changes";
-        } else {
-            $this->bclr_m->disable_cwt($bclr_id);
-            foreach($points as $key => $value){
-                $data['cum_wt'] = $key;
-                $data['price_per_kg'] = $value;
-                $this->bclr_m->insert_cwt($data);
-             }
+            //$json['status'] ="There is no New Changes";
+            if(!$checkname && $cwtdata[0]->name != $graph_name){
+                $this->bclr_m->update_cwt(array('name'=>$graph_name),array('bclr_id'=>$bclr_id,'active'=>1));
+            }
             $json['status'] = "updated";
+        } else {
+            if($checkname){
+                $json['status'] = "Already Exist with this name";
+            } else {
+                $this->bclr_m->disable_cwt($bclr_id);
+                foreach($points as $key => $value){
+                    $data['cum_wt'] = $key;
+                    $data['price_per_kg'] = $value;
+                    $this->bclr_m->insert_cwt($data);
+                }
+                 $json['status'] = "updated";
+            }
         }
-      }         
+             
         
        $this->output->set_content_type('application/json');
        $this->output->set_output(json_encode($json));
