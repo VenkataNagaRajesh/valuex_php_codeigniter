@@ -616,10 +616,16 @@ class Rafeed extends Admin_Controller
 
 		// rate per unit
 		$arrBaggageRaFeed['rate_per_unit'] = $Row[array_search('rate per unit', $import_header)];
-		if (!ctype_digit($arrBaggageRaFeed['rate_per_unit']) || !(in_array($arrBaggageRaFeed['rate_per_unit'], range(1, 9999)))) {
+
+		if(!is_numeric($arrBaggageRaFeed['rate_per_unit']) || !($arrBaggageRaFeed['rate_per_unit'] > 0 && $arrBaggageRaFeed['rate_per_unit'] < 9999)) {
 			$this->mydebug->rafeed_log("Rate Per Unit should be numeric or between 1 to 9999 in row " . $column, 1);
 			return;
 		}
+
+		// if (!(in_array($arrBaggageRaFeed['rate_per_unit'], range(1, 9999)))) {
+		// 	$this->mydebug->rafeed_log("Rate Per Unit should be numeric or between 1 to 9999 in row " . $column, 1);
+		// 	return;
+		// }
 
 		//weight
 		$arrBaggageRaFeed['weight'] = $Row[array_search('wt', $import_header)];
@@ -644,8 +650,8 @@ class Rafeed extends Admin_Controller
 
 		//SSR CODE
 		$arrBaggageRaFeed['ssr_code'] = $Row[array_search('ssr code',  $import_header)];
-		if (!(ctype_alpha($arrBaggageRaFeed['ssr_code'])) || strlen($arrBaggageRaFeed['ssr_code']) != 4) {
-			$this->mydebug->rafeed_log("SSR CODE unit should be a character and length only 4 in row" . $column, 1);
+		if (!(ctype_alnum ($arrBaggageRaFeed['ssr_code'])) || strlen($arrBaggageRaFeed['ssr_code']) != 4) {
+			$this->mydebug->rafeed_log("SSR CODE unit should be a alphanumeric and length only 4 in row" . $column, 1);
 			return;
 		}
 

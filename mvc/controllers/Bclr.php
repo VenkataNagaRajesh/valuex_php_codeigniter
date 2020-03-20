@@ -134,7 +134,7 @@ class Bclr extends Admin_Controller {
                 return FALSE;
             }else{
                 if($this->input->post('partner_carrierID') && $this->input->post('effective_date')){
-                  $where = array('carrierID'=>$this->input->post('carrierID'),"partner_carrierID"=>$this->input->post('partner_carrierID'));
+                  /* $where = array('carrierID'=>$this->input->post('carrierID'),"partner_carrierID"=>$this->input->post('partner_carrierID'));
                   $partnerinfo = $this->partner_m->get_single_partner($where); 
                  /*  $effective_date = new DateTime($this->input->post('effective_date'));
                   $discontinue_date = new DateTime($discontinue_date_post);
@@ -147,7 +147,7 @@ class Bclr extends Admin_Controller {
                   echo  $discontinue_date->format($datetimeFormat)."</br>";
                   echo  $start_date->format($datetimeFormat)."</br>";
                   echo  $end_date->format($datetimeFormat)."</br>";
-                  2020-03-10</br>2020-03-18</br>2020-03-31</br>2020-03-28</br> */
+                  2020-03-10</br>2020-03-18</br>2020-03-31</br>2020-03-28</br> //
 
                   $effective_date = strtotime($this->input->post('effective_date'));
                   $discontinue_date = strtotime($discontinue_date_post);
@@ -159,7 +159,23 @@ class Bclr extends Admin_Controller {
                   } else {
                     $this->form_validation->set_message("valDate","partner not available in this date");
                     return FALSE; 
-                  }
+                  } */
+                  $effective_date = strtotime($this->input->post('effective_date'));
+                  $discontinue_date = strtotime($discontinue_date_post);
+                  $where = array(
+                      "carrierID"=>$this->input->post('carrierID'),
+                      "partner_carrierID"=>$this->input->post('partner_carrierID'),
+                      "start_date <=" => $effective_date,
+                      "end_date >=" => $discontinue_date
+                    );
+                  $partnerinfo = $this->partner_m->get_single_partner($where);
+                  if(count($partnerinfo) > 0){       
+                    return TRUE;
+                 } else {
+                   $this->form_validation->set_message("valDate","partner not available in this date");
+                   return FALSE; 
+                 }
+
                 } else {
                     return TRUE;
                 }
@@ -174,6 +190,8 @@ class Bclr extends Admin_Controller {
                      return TRUE;
               }
         }
+
+
         
         function validateContent($post_array){
             if(count($post_array) < 1){

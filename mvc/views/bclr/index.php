@@ -111,12 +111,15 @@
                         ?>
                     </div> 
                     <div class="col-md-2 col-sm-3">
-                        <?php  $auth[0] = "Rule Auth";
+                        <?php  /* $auth[0] = "Rule Auth";
                                foreach($airlines as $airline){
                                    $auth[$airline->vx_aln_data_defnsID] = $airline->code;
                                }
-                               echo form_dropdown("rule_auth_carrier", $auth,set_value("rule_auth_carrier"), "id='rule_auth_carrier' class='form-control hide-dropdown-icon select2'");
+                               echo form_dropdown("rule_auth_carrier", $auth,set_value("rule_auth_carrier"), "id='rule_auth_carrier' class='form-control hide-dropdown-icon select2'"); */
                         ?>
+                        <select  name="rule_auth_carrier"  id="rule_auth_carrier" class="form-control select2">
+                            <option value="0">Rule Auth</option>
+				        </select>
 					</div>
                     <div class="col-md-2 col-sm-3">
                         <div class="input-group">
@@ -479,7 +482,8 @@
             data: {"carrierID":carrier},           
             dataType: "html",                                  
             success: function(data) {                         
-                $('#partner_carrierID').html(data);             
+                $('#partner_carrierID').html(data);
+                $('#rule_auth_carrier').html(data);             
             }        
         }); 
         if ($('#origin_level').val() == 17 ) {
