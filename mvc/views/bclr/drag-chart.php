@@ -8,11 +8,17 @@
         </ol>
     </div>
     <div class="col-md-12" > 
-        <div class="col-md-6">
+        <div class="col-md-10">
            <br/><!-- Just so that JSFiddle's Result label doesn't overlap the Chart -->
            <div id="interactive-chart" style="height: 360px; width: 100%;"></div>
+		  <!--  <div class="chartWrapper" style="height: 380px; width: 600px; overflow-x:auto;position:relative;">
+			<div class="chartAreaWrapper">
+				<div id="interactive-chart" style="height: 360px; width: 100%;"></div>
+			</div>
+			<canvas id="overlayedAxis"></canvas>
+			</div> -->
         </div> 
-		<div class="col-md-6">
+		<div class="col-md-2">
 		  <input type="text" name="graph_name" placeholder="Enter Unique Name" id="graph_name" />
 		  <button class="btn btn-danger" onclick="getChartValues()">Update</button>
 		</div>      
@@ -27,16 +33,20 @@
 	<?php  } ?>
 		var interactiveChart = new CanvasJS.Chart("interactive-chart", {
 			animationEnabled: true,
-			exportEnabled: true,
+			//exportEnabled: true,
 			theme: "light2",
 			//zoomEnabled: true,
-      		//zoomType: "xy",
-			//width: 800,
+      		//zoomType: "x",
+			//width: 1000,
+			//height:500,
 			title: {
 				text: "Baggage Unit Price Setting",
 				fontSize: 20,
 				padding: 5,
         		backgroundColor: "#f4d5a6",	
+			},
+			legend: {
+			verticalAlign: "bottom"  // "top" , "bottom"
 			},
 			/* subtitles: [{
 				text: "Click anywhere on plotarea to add new Data Points"
@@ -46,7 +56,9 @@
 				titleFontColor: "#4F81BC",
 				minimum: 1,
 				maximum: <?=count($points)+10?>,
-				//interval: 5,
+				interval: 5,
+				//viewportMinimum: -50,
+        		//viewportMaximum: 50
 			},
             axisY: {
 		        title: "Price per KG",
@@ -72,14 +84,14 @@
 				type: "line", //spline,line,area
 				cursor: "move",
                 color: "#1bbde2",
+			//	click: onClick,
                // xValueFormatString: "DD MMM",
 		       // yValueFormatString: "$##0.00",
                 //lineDashType: "dash",
                 showInLegend: true,
                 name: "Price per KG",
-                markerType: "circle", //square
-				dataPoints: pointsdata
-									
+                markerType: "circle", //square				
+				dataPoints: pointsdata									
 			}
 			/*,{
 				markerSize: 4,
@@ -116,6 +128,22 @@
 								
 			]
 		});
+/* 
+		copyAxis("interactive-chart", "overlayedAxis");
+
+function copyAxis(containerId, destId){
+  var chartCanvas = $("#interactive-chart .canvasjs-chart-canvas").get(0);  
+  var destCtx = $("#" + destId).get(0).getContext("2d");
+  
+  var axisWidth = 30;
+  var axisHeight = 335;
+  
+  destCtx.canvas.width = axisWidth;
+  destCtx.canvas.height = axisHeight;
+
+  destCtx.drawImage(chartCanvas, 0, 0, axisWidth, axisHeight, 0, 0, axisWidth, axisHeight);
+} */
+		
     
     interactiveChart.render();
     		var record = false;
@@ -124,8 +152,7 @@
 			var selected;
 			var newData = false;
 			var timerId = null;
-			
-			$("#interactive-chart .canvasjs-chart-canvas").last().on({
+			$("#interactive-chart .canvasjs-chart-canvas").last().on({				
 				mousedown: function(e) {
 					parentOffset = jQuery(this).parent().offset();
 					relX = e.pageX - parentOffset.left;
@@ -148,7 +175,7 @@
 					interactiveChart.data[0].addTo("dataPoints", {x: xValue, y: yValue});
 					interactiveChart.axisX[0].set("maximum", Math.max(interactiveChart.axisX[0].maximum, xValue + 30));
 						//interactiveChart.render();
-					}
+					}					
 				},
 
 				mousemove: function(e) {
@@ -177,6 +204,8 @@
 					}
 				}
 			});
+
+
 
 			function getChartValues(){
 				var graph_name = $('#graph_name').val();
