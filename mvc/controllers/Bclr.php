@@ -13,6 +13,7 @@ class Bclr extends Admin_Controller {
 		$this->load->model('airports_m');
 		$this->load->model('airline_m');
 		$this->load->model("marketzone_m");
+		$this->load->model("market_airport_map_m");
 		$this->load->model('eligibility_exclusion_m');
         $this->load->model('user_m');
         $this->load->model('partner_m');
@@ -61,7 +62,7 @@ class Bclr extends Admin_Controller {
                         array(
                             'field' => 'origin_content[]',
                             'label' => $this->lang->line("origin_content"),
-                            'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateContent'
+                            'rules' => 'trim|required|max_length[200]|xss_clean|callback_valOrigin'
                         ),
                         array(
                             'field' => 'dest_level',
@@ -71,7 +72,7 @@ class Bclr extends Admin_Controller {
                         array(
                                 'field' => 'dest_content[]',
                                 'label' => $this->lang->line("dest_content"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateContent'
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valDestination'
                         ),
                         array(
                                 'field' => 'effective_date',
@@ -126,6 +127,126 @@ class Bclr extends Admin_Controller {
 
 		);
 	        return $rules;
+        }
+
+        public function valOrigin(){            
+            if(count($this->input->post('origin_content')) > 0 ){
+                if($this->input->post('partner_carrierID') && $this->input->post('effective_date') && $this->input->post('discontinue_date')){
+                  $effective_date = strtotime($this->input->post('effective_date'));
+                  $discontinue_date = strtotime($this->input->post('discontinue_date_post'));
+                  $where = array(
+                      "carrierID"=>$this->input->post('carrierID'),
+                      "partner_carrierID"=>$this->input->post('partner_carrierID'),
+                      "start_date <=" => $effective_date,
+                      "end_date >=" => $discontinue_date
+                    );
+                  $partnerinfo = $this->partner_m->get_single_partner($where);
+                  if(count($partnerinfo) > 0){
+                    $orig_list = []; $partner_orig_list = [];
+                        if ($this->input->post('origin_level') == 1) {
+                            $orig_list = $this->input->post('origin_content'); 
+                        } else if ($this->input->post('origin_level') == 17){
+                            $orig_list = $this->market_airport_map_m->getAirportsByMarketzones($this->input->post('origin_content'));                     
+                        } else { 
+                            foreach ( $this->input->post('origin_content') as $level_id ) {
+                                if (!empty($level_id)) {	
+                                $olist = $this->marketzone_m->getAirportsList($level_id);
+                                $orig_list = array_merge($orig_list,$olist); 
+                                }
+                            }
+                        }                       
+
+                        $org_con = explode(',',$partnerinfo->origin_content);
+                        if ($partnerinfo->origin_level == 1) {
+                            $partner_orig_list = $org_con; 
+                        } else if ($partnerinfo->origin_level == 17){
+                            $partner_orig_list = $this->market_airport_map_m->getAirportsByMarketzones($org_con);                     
+                        } else { 
+                            foreach ($org_con as $level_id ) {
+                                if (!empty($level_id)) {	
+                                $polist = $this->marketzone_m->getAirportsList($level_id);
+                                $partner_orig_list = array_merge($partner_orig_list,$polist); 
+                                }
+                            }
+                        }                        
+
+                        $diff = array_diff($orig_list,$partner_orig_list);
+                        if(count($diff) > 0){
+                            $this->form_validation->set_message("valOrigin", "%s is not in partner origin content");
+                            return FALSE; 
+                        } else {
+                            return TRUE;
+                        }
+                    } else {
+                        return TRUE;
+                    }
+                } else {
+                    return TRUE;
+                }
+            } else {
+                $this->form_validation->set_message("valOrigin", "%s is required");
+                return FALSE;
+            }
+        }
+
+
+        public function valDestination(){            
+            if(count($this->input->post('dest_content')) > 0 ){
+                if($this->input->post('partner_carrierID') && $this->input->post('effective_date') && $this->input->post('discontinue_date')){
+                  $effective_date = strtotime($this->input->post('effective_date'));
+                  $discontinue_date = strtotime($this->input->post('discontinue_date_post'));
+                  $where = array(
+                      "carrierID"=>$this->input->post('carrierID'),
+                      "partner_carrierID"=>$this->input->post('partner_carrierID'),
+                      "start_date <=" => $effective_date,
+                      "end_date >=" => $discontinue_date
+                    );
+                  $partnerinfo = $this->partner_m->get_single_partner($where);
+                  if(count($partnerinfo) > 0){
+                    $dest_list = []; $partner_dest_list = [];
+                        if ($this->input->post('dest_level') == 1) {
+                            $dest_list = $this->input->post('dest_content'); 
+                        } else if ($this->input->post('dest_level') == 17){
+                            $dest_list = $this->market_airport_map_m->getAirportsByMarketzones($this->input->post('dest_content'));                     
+                        } else { 
+                            foreach ($this->input->post('dest_content') as $level_id ) {
+                                if (!empty($level_id)) {	
+                                    $dlist = $this->marketzone_m->getAirportsList($level_id);
+                                    $dest_list = array_merge($dest_list,$dlist); 
+                                }
+                            }
+                        }                       
+
+                        $dest_con = explode(',',$partnerinfo->dest_content);
+                        if ($partnerinfo->dest_level == 1) {
+                            $partner_dest_list = $dest_con; 
+                        } else if ($partnerinfo->dest_level == 17){
+                            $partner_dest_list = $this->market_airport_map_m->getAirportsByMarketzones($dest_con);                     
+                        } else { 
+                            foreach ($dest_con as $level_id ) {
+                                if (!empty($level_id)) {	
+                                $pdlist = $this->marketzone_m->getAirportsList($level_id);
+                                $partner_dest_list = array_merge($partner_dest_list,$pdlist); 
+                                }
+                            }
+                        }                        
+                        $diff = array_diff($dest_list,$partner_dest_list);
+                        if(count($diff) > 0){
+                            $this->form_validation->set_message("valDestination", "%s is not in partner destination content");
+                            return FALSE; 
+                        } else {
+                            return TRUE;
+                        }
+                    } else {
+                        return TRUE;
+                    }
+                } else {
+                    return TRUE;
+                }
+            } else {
+                $this->form_validation->set_message("valOrigin", "%s is required");
+                return FALSE;
+            }
         }
 
         function valDate($discontinue_date_post){
