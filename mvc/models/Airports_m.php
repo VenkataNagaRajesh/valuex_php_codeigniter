@@ -135,10 +135,10 @@ class Airports_m extends MY_Model
 		$result = $query->result();
 		$arr = array();
 		foreach ($result as $def) {
-			$arr[$def->VX_data_defnsID] = $def->code;
+			$arr[$def->vx_aln_data_defnsID] = $def->code;
 		}
 
-
+        
 		return $arr;
 	}
 

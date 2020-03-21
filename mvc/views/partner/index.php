@@ -121,8 +121,14 @@ $(document).ready(function(){
     $('#origin_content').val(origin_content).trigger('change');
     $('#dest_level').val(<?=$dest_level?>).trigger('change');
     var dest_content = [<?=implode(',',$dest_content)?>];
-    $('#dest_content').val(dest_content).trigger('change');        
+    $('#dest_content').val(dest_content).trigger('change'); 
+    $('#carrierID').val(<?=$carrierID?>).trigger('change'); 
 });
+
+$('#carrierID').change(function(){
+    $("#partner_carrierID option[value='"+$(this).val()+"']").remove();   
+});
+
 $('#origin_level').change(function(event) {    
 	$('#origin_content').val(null).trigger('change')
     var level_id = $(this).val();                   

@@ -440,6 +440,7 @@ class Contract extends Admin_Controller {
 			   $this->data['users'] = $this->user_m->getClientByAirline($this->data['contract']->airlineID,6);					   
 			if($_POST){  
 				$rules = $this->rules();
+				unset($rules[0]);
 				$this->form_validation->set_rules($rules);
 				if ($this->form_validation->run() == FALSE) {
 					//echo validation_errors();

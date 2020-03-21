@@ -2,6 +2,7 @@
 
 /* List Language  */
 $lang['panel_title'] = "RA Feed";
+$lang['panel_title_baggage'] = 'RA Feed - Baggage';
 $lang['slno'] = "#";
 $lang['action'] = "Action";
 $lang['active'] = 'Status';
@@ -16,12 +17,12 @@ $lang['file_clear'] = 'Clear';
 $lang['file_browse'] = 'File Browse';
 $lang['airline_code'] = 'Airline Code';
 $lang['fare_basis'] = 'Fare Basis';
-$lang['ticket_number']='Ticket Number';
+$lang['ticket_number'] = 'Ticket Number';
 $lang['coupon_number'] = 'Coupon number';
 $lang['flight_number'] = 'Flight Number';
-$lang['booking_country']='Booking Country';
+$lang['booking_country'] = 'Booking Country';
 $lang['booking_city'] = 'Booking City';
-$lang['issuance_country']='Issuance Country';
+$lang['issuance_country'] = 'Issuance Country';
 $lang['issuance_city'] = 'Issuance City';
 $lang['dep_time'] = 'Departure Time';
 $lang['arrival_time'] = 'Arrival Time';
@@ -42,3 +43,8 @@ $lang['operating_airline_code'] = 'Operating Airline';
 $lang['marketing_airline_code'] = 'Marketing Airline';
 $lang['rafeed_created_user'] = 'Created By';
 $lang['rafeed_created_date'] = 'Create Date';
+
+$lang['weight'] = 'Weight';
+$lang['ssr_code'] = 'SSR CODE';
+$lang['rfic']   = 'RFIC';
+$lang['rfisc']  = 'RFISC';

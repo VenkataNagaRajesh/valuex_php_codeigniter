@@ -39,7 +39,7 @@ class season_m extends MY_Model {
 			$this->db->join('VX_data_types dt2','dt2.vx_aln_data_typeID = s.ams_dest_levelID','LEFT');
 			$this->db->join('VX_data_defns dd','dd.vx_aln_data_defnsID = s.airlineID','LEFT');
 		if($id != 0){ $this->db->where('s.airlineID',$id); }
-		if($this->session->userdata('roleID') == 2){
+		if($this->session->userdata('roleID') != 1){
 		   $this->db->where_in('s.airlineID',$this->session->userdata('login_user_airlineID'));
 		}
 		$query = $this->db->get();
