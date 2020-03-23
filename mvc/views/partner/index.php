@@ -126,7 +126,10 @@ $(document).ready(function(){
 });
 
 $('#carrierID').change(function(){
-    $("#partner_carrierID option[value='"+$(this).val()+"']").remove();   
+    var carrierID = $(this).val();
+    if(carrierID != 0){
+        $("#partner_carrierID option[value='"+carrierID+"']").remove();   
+    }
 });
 
 $('#origin_level').change(function(event) {    
