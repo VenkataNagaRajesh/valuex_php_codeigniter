@@ -1,0 +1,1 @@
+alter table BG_baggage_control_rule modify column frequency varchar(100) NOT NULL DEFAULT 0;

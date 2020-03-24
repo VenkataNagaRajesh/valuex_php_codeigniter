@@ -87,7 +87,7 @@ class Bclr extends Admin_Controller {
                         array(
                                'field' => 'frequency',
                                'label' => $this->lang->line("frequency"),
-                               'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                               'rules' => 'trim|max_length[200]|xss_clean|callback_valFrequency'
                         ),
                         array(
                                 'field' => 'rule_auth_carrier',
@@ -125,8 +125,36 @@ class Bclr extends Admin_Controller {
                                 'rules' => 'trim|required|max_length[200]|xss_clean'
                          )       
 
-		);
+		        );
 	        return $rules;
+        }
+
+        function valFrequency($num) {
+            if($num == '*') {
+                return true;
+            } else {
+                if ( $num != '' ){
+                    $arr = str_split($num);
+                    $freq = range(1,7);
+                    foreach($arr as $a ) {
+                        if( !in_array($a, $freq) ) {
+                            $this->form_validation->set_message("valFrequency", "%s must be in 1-7");
+                            return false;
+                        }
+                    }
+                        if (count($arr) > 7 ) {
+                            $this->form_validation->set_message("valFrequency", "%s must be 7 digits");
+                            return false;
+                        } else if (count($arr) != count(array_unique($arr))){
+                            $this->form_validation->set_message("valFrequency", "%s contains duplicate values");
+                            return false;
+                        } else	{
+                            return true;
+                        }
+                } else {
+                    return true;
+                }
+            }
         }
 
         public function valOrigin(){            
@@ -244,7 +272,7 @@ class Bclr extends Admin_Controller {
                     return TRUE;
                 }
             } else {
-                $this->form_validation->set_message("valOrigin", "%s is required");
+                $this->form_validation->set_message("valDestination", "%s is required");
                 return FALSE;
             }
         }
@@ -341,6 +369,11 @@ class Bclr extends Admin_Controller {
            if((int)$id) {
               $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));   
            }
+           $freq = $this->airports_m->getDefnsCodesListByType('14');
+			if($bclr->frequency != 0 ) {
+			  $arr = explode(',',$bclr->frequency);
+		  	  $bclr->frequency = implode('',array_map(function($x) use ($freq) { return $freq[$x]; }, $arr));
+			}
            $bclr->effective_date = date('d-m-Y',$bclr->effective_date);
            $bclr->discontinue_date = date('d-m-Y',$bclr->discontinue_date);
            $bclr->dep_time_start = gmdate("h:i A", $bclr->dep_time_start);
@@ -439,7 +472,7 @@ class Bclr extends Admin_Controller {
                 $array['dest_content'] =  implode(',',$this->input->post('dest_content'));
                 $array['effective_date'] = strtotime($this->input->post('effective_date'));
                 $array['discontinue_date'] = strtotime($this->input->post('discontinue_date'));
-                $array['frequency'] = $this->input->post('frequency');
+              //  $array['frequency'] = $this->input->post('frequency');
 		$array['bag_type'] = $this->input->post('bag_type');
                 $array['rule_auth'] = $this->input->post('rule_auth_carrier');
                 $array['dep_time_start'] = $this->convertTimeToSeconds($this->input->post('dep_time_start'));
@@ -448,6 +481,17 @@ class Bclr extends Admin_Controller {
                 $array['max_capacity'] = $this->input->post('max_capacity');
                 $array['min_price'] = $this->input->post('min_price');
                 $array['max_price'] = $this->input->post('max_price');
+
+                    $freq = $this->airports_m->getDefnsCodesListByType('14');
+					$frstr = $this->input->post("frequency") ? $this->input->post("frequency") : 0; 
+					if($frstr === '*'){
+						$frstr = '1234567';
+					}
+					if ( $frstr != '0') {
+						$arr = str_split($frstr);
+						$array["frequency"]  = implode(',',array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr));				
+					}
+
                 $exist_id = $this->bclr_m->checkBCLREntry($array);
 		        if($bclr_id) {
 		                if ( $exist_id && $exist_id != $bclr_id )  {
@@ -628,7 +672,7 @@ class Bclr extends Admin_Controller {
                     $this->data['carrierID'] = 0;	   
                 }
 		
-                $this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14');  
+                //$this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14');  
                 $this->data['seasons'] = $this->season_m->getSeasonsList();	
 		$this->data["subview"] = "bclr/index";
 		$this->load->view('_layout_main', $this->data);
@@ -641,7 +685,7 @@ class Bclr extends Admin_Controller {
     function server_processing(){		
 	$userID = $this->session->userdata('loginuserID');
 	$roleID = $this->session->userdata('roleID');	  
-        $aColumns = array("MainSet.bclr_id","MainSet.carrier_code","MainSet.partner_carrier_code","MainSet.allowance","MainSet.aircraft_type","MainSet.flight_num_range","MainSet.from_cabin_value","MainSet.origin_level_value","SubSet.origin_content_data","MainSet.dest_level_value","SubSet.dest_content_data","MainSet.effective_date","MainSet.discontinue_date","MainSet.season_name","MainSet.frequency_value","MainSet.bag_type","MainSet.rule_auth_carrier_code","MainSet.dep_time_start","MainSet.dep_time_end","MainSet.min_unit","MainSet.max_capacity","MainSet.min_price","MainSet.max_price","MainSet.active");
+        $aColumns = array("MainSet.bclr_id","MainSet.carrier_code","MainSet.partner_carrier_code","MainSet.allowance","MainSet.aircraft_type","MainSet.flight_num_range","MainSet.from_cabin_value","MainSet.origin_level_value","SubSet.origin_content_data","MainSet.dest_level_value","SubSet.dest_content_data","MainSet.effective_date","MainSet.discontinue_date","MainSet.season_name","SubSet.frequency","MainSet.bag_type","MainSet.rule_auth_carrier_code","MainSet.dep_time_start","MainSet.dep_time_end","MainSet.min_unit","MainSet.max_capacity","MainSet.min_price","MainSet.max_price","MainSet.active");
 	
 		$sLimit = "";
 		
@@ -776,12 +820,12 @@ class Bclr extends Admin_Controller {
 
 
         $sQuery = "SELECT SQL_CALC_FOUND_ROWS MainSet.bclr_id,MainSet.carrierID,MainSet.partner_carrierID,MainSet.allowance,MainSet.flight_num_range,MainSet.effective_date,MainSet.discontinue_date,MainSet.bag_type,MainSet.dep_time_start,MainSet.dep_time_end,MainSet.min_unit,MainSet.max_capacity,MainSet.min_price,MainSet.max_price,MainSet.active,
-                MainSet.rule_auth,MainSet.frequency,MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.aircraft_type,MainSet.frequency_value,MainSet.from_cabin_value,MainSet.season_name,MainSet.rule_auth_carrier_code,MainSet.origin_level_value,MainSet.dest_level_value,
-                MainSet.origin_level,MainSet.dest_level,SubSet.origin_content,SubSet.origin_content_data,SubSet.dest_content,SubSet.dest_content_data		
+                MainSet.rule_auth,MainSet.frequency,MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.aircraft_type,MainSet.from_cabin_value,MainSet.season_name,MainSet.rule_auth_carrier_code,MainSet.origin_level_value,MainSet.dest_level_value,
+                MainSet.origin_level,MainSet.dest_level,SubSet.origin_content,SubSet.origin_content_data,SubSet.dest_content,SubSet.dest_content_data,SubSet.dayslist,SubSet.frequency		
                 FROM
                 (
                 SELECT bc.bclr_id,bc.carrierID,bc.partner_carrierID,bc.allowance,bc.frequency,bc.flight_num_range,bc.effective_date,bc.discontinue_date,bc.bag_type,bc.dep_time_start,bc.dep_time_end,bc.min_unit,bc.max_capacity,bc.min_price,bc.max_price,bc.active,
-                bc.rule_auth,bc.origin_level,bc.dest_level,ddc.code carrier_code,ddpc.code partner_carrier_code,ddat.aln_data_value aircraft_type,dfre.aln_data_value frequency_value,tca.aln_data_value as from_cabin_value,sea.season_name,ddac.code as rule_auth_carrier_code,dto.alias as origin_level_value,dtd.alias as dest_level_value		
+                bc.rule_auth,bc.origin_level,bc.dest_level,ddc.code carrier_code,ddpc.code partner_carrier_code,ddat.aln_data_value aircraft_type,tca.aln_data_value as from_cabin_value,sea.season_name,ddac.code as rule_auth_carrier_code,dto.alias as origin_level_value,dtd.alias as dest_level_value		
                 FROM BG_baggage_control_rule  bc
                 LEFT JOIN  VX_data_defns ddc on (ddc.vx_aln_data_defnsID = bc.carrierID AND ddc.aln_data_typeID = 12) 
                 LEFT JOIN VX_data_defns ddpc on (ddpc.vx_aln_data_defnsID = bc.partner_carrierID AND ddpc.aln_data_typeID = 12)    
@@ -789,13 +833,12 @@ class Bclr extends Admin_Controller {
                 LEFT JOIN VX_data_types dto on (dto.vx_aln_data_typeID = bc.origin_level) 
                 LEFT JOIN VX_data_types dtd on (dtd.vx_aln_data_typeID = bc.dest_level)     
                 LEFT JOIN VX_data_defns ddat on (ddat.vx_aln_data_defnsID = bc.aircraft_typeID AND ddat.aln_data_typeID = 21)
-                LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = bc.frequency)
                 INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = bc.carrierID)
                 INNER JOIN VX_data_defns tca on (tca.alias = fdef.level and tca.aln_data_typeID = 13 AND tca.vx_aln_data_defnsID = bc.from_cabin)
                 LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = bc.season_id )
                 ) as MainSet 
                 LEFT JOIN (
-                SELECT 	origin_set.bclr_id,origin_set.origin_content,origin_set.origin_content_data,dest_set.dest_content,dest_set.dest_content_data 
+                SELECT 	origin_set.bclr_id,origin_set.origin_content,origin_set.origin_content_data,dest_set.dest_content,dest_set.dest_content_data,ThirdSet.frequency, ThirdSet.dayslist 
                 FROM (  
                 SELECT bc.bclr_id,bc.origin_content,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name) ) AS origin_content_data FROM BG_baggage_control_rule bc 
                 LEFT OUTER JOIN  VX_data_defns c ON 
@@ -811,7 +854,16 @@ class Bclr extends Admin_Controller {
                         LEFT OUTER JOIN  VX_market_zone m  
                         ON (find_in_set(m.market_id, bc.dest_content) AND bc.dest_level = 17) GROUP BY bc.bclr_id
                 ) as dest_set
-                ON origin_set.bclr_id = dest_set.bclr_id    
+                ON origin_set.bclr_id = dest_set.bclr_id 
+
+                 LEFT JOIN 
+                        (
+ 					select bc.bclr_id,group_concat(c.code) as frequency  , bc.frequency as dayslist
+	            		        from  BG_baggage_control_rule bc 
+                                         LEFT join VX_data_defns c on find_in_set(c.vx_aln_data_defnsID, bc.frequency) group by bc.bclr_id  
+                        ) as ThirdSet
+
+                        on ThirdSet.bclr_id = origin_set.bclr_id   
                 ) as SubSet
                 on MainSet.bclr_id = SubSet.bclr_id 
 
@@ -862,13 +914,23 @@ $sWhere $sOrder $sLimit";
                   }
                   $feed->active .= "<label for='myonoffswitch".$feed->bclr_id."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
                   $feed->id = $i; $i++;
+                  if ( $feed->frequency != '' ) {
+                    $freq = explode(',',$feed->frequency);
+                    ksort($freq);
+                    $arr = array('1','2','3','4','5','6','7');
+                    $feed->frequency = implode('',array_map(function($x) use ($freq) { if(in_array($x,$freq)) return $x; else return '.'; }, $arr));
+                        
+                } else {
+                    $feed->frequency = 'NA';
+                }
+
 		  $output['aaData'][] = $feed;
 		}
 
 						 
         if(isset($_REQUEST['export'])){
 		  $columns = array('#',"Carrier","Partner Carrier","Allowance","Aircraft","Flight Number Range","From Cabin","Origin level","Origin Content","Destination Level","Destination Content","Effective Date","Discontinue Date","Season","Frequency","BagType","Rule Auth","Departure Time Start","Departure Time End","Min Unit","Max Capacity","Min Price","Max Price","Active");
-		  $rows = array("id","carrier_code","partner_carrier_code","allowance","aircraft_type","flight_num_range","from_cabin_value","origin_level_value","origin_content_data","dest_level_value","dest_content_data","effective_date","discontinue_date","season_name","frequency_value","bag_type_value","rule_auth_carrier_code","dep_time_start","dep_time_end","min_unit","max_capacity","min_price","max_price","status");
+		  $rows = array("id","carrier_code","partner_carrier_code","allowance","aircraft_type","flight_num_range","from_cabin_value","origin_level_value","origin_content_data","dest_level_value","dest_content_data","effective_date","discontinue_date","season_name","frequency","bag_type_value","rule_auth_carrier_code","dep_time_start","dep_time_end","min_unit","max_capacity","min_price","max_price","status");
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );

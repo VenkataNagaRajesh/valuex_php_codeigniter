@@ -99,9 +99,10 @@
                     </div>
                     <div class="col-md-2 col-sm-3">
                         <?php
-							$days_of_week[0] = 'Frequency';
+							/* $days_of_week[0] = 'Frequency';
 							ksort($days_of_week);
-							echo form_dropdown("frequency", $days_of_week, set_value("frequency"), "id='frequency' class='form-control hide-dropdown-icon select2'");?>  
+							echo form_dropdown("frequency", $days_of_week, set_value("frequency"), "id='frequency' class='form-control hide-dropdown-icon select2'"); */ ?> 
+						<input type="text" class="form-control" placeholder="Frequency" id="frequency" name="frequency" value="<?=set_value('frequency')?>" >
                     </div>                     
                     <div class="col-md-2 col-sm-3">
                      <?php                         
@@ -568,7 +569,7 @@ function loaddatatable() {
                    {"data": "effective_date" },
                    {"data": "discontinue_date" },
                    {"data": "season_name" },
-                   {"data": "frequency_value" },
+                   {"data": "frequency" },
                    {"data": "bag_type_value" },
                    {"data": "rule_auth_carrier_code" },
                    {"data": "dep_time_start" },
@@ -786,7 +787,7 @@ function editbclr(bclr_id) {
                 $('#dest_content').val(bclrinfo['dest_content'].split(",")).trigger('change');
                 $("#effective_date").val(bclrinfo['effective_date']);
                 $("#discontinue_date").val(bclrinfo['discontinue_date']);
-                $('#frequency').val(bclrinfo['frequency']).trigger('change');
+                //$('#frequency').val(bclrinfo['frequency']).trigger('change');
                 $('#bag_type').val(bclrinfo['bag_type']).trigger('change');
                 $('#rule_auth_carrier').val(bclrinfo['rule_auth']).trigger('change');               
                 $('#min_unit').val(bclrinfo['min_unit']);
@@ -798,6 +799,12 @@ function editbclr(bclr_id) {
                 $('#dep_time_end').timepicker('setTime',bclrinfo['dep_time_end']);
                 $('#dep_time_start').val(bclrinfo['dep_time_start']);
                 $('#dep_time_end').val(bclrinfo['dep_time_end']);
+
+                if (bclrinfo['frequency'] == '0') {
+			        bclrinfo['frequency'] = '';
+		        }
+
+                $('#frequency').val(bclrinfo['frequency']);;
 
                 var bclrid  = bclrinfo['bclr_id'];
                 $('#bclr_id').val(bclrid);
