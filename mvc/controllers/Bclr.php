@@ -19,8 +19,8 @@ class Bclr extends Admin_Controller {
         $this->load->model('partner_m');
 		$language = $this->session->userdata('lang');
         $this->lang->load('bclr', $language); 
-        //$this->generateCWT(3); exit;
-	}	
+        //$this->generateCWT(3); exit;      
+    }
 	
 	protected function rules() {
 		$rules = array(
@@ -32,7 +32,7 @@ class Bclr extends Admin_Controller {
                         array(
                                 'field' => 'from_cabin',
                                 'label' => $this->lang->line("from_cabin"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valFromCabin'
                         ),
                         array(
                                 'field' => 'partner_carrierID',
@@ -127,6 +127,15 @@ class Bclr extends Admin_Controller {
 
 		        );
 	        return $rules;
+        }
+
+        function valFromCabin($cabin){
+           if($cabin === 0){
+                $this->form_validation->set_message("valFromCabin", "%s is required".$cabin);
+                return false;
+           } else {
+               return TRUE;
+           }
         }
 
         function valFrequency($num) {
@@ -415,7 +424,7 @@ class Bclr extends Admin_Controller {
         public function getPartnerCarriers(){
                 $carrierID = $this->input->post('carrierID');
                 $partners = $this->partner_m->getPartnerCarriers($carrierID);
-                echo "<option value='0'> Partner Carrier </option>";
+                echo "<option value='0'> Select Carrier </option>";
                 foreach($partners as $partner){
                    echo "<option value='".$partner->partner_carrierID."'>".$partner->code."</option>";
                 }                    
@@ -460,7 +469,7 @@ class Bclr extends Admin_Controller {
                 );
             } else {
                 $array['carrierID'] = $this->input->post('carrierID');
-                $array['from_cabin'] = $this->input->post('from_cabin');
+                //$array['from_cabin'] = $this->input->post('from_cabin');
                 $array['partner_carrierID'] = $this->input->post('partner_carrierID');
                 $array['season_id'] = $this->input->post('season');
                 $array['allowance'] = $this->input->post('allowance');
@@ -491,7 +500,17 @@ class Bclr extends Admin_Controller {
 						$arr = str_split($frstr);
 						$array["frequency"]  = implode(',',array_map(function($x) use ($freq) { return array_search($x, $freq); }, $arr));				
 					}
-
+                $from_cabin = $this->input->post('from_cabin');
+                if($from_cabin === '*'){
+                    $cabins = $this->airline_cabin_def_m->getCabinsDataForCarrier($array['carrierID'],1);
+                    foreach($cabins as $cabin){
+                    $from_cabins[] = $cabin->vx_aln_data_defnsID;
+                    }
+                    $from_cabin_str = implode(',',$from_cabins); 
+                    $array['from_cabin'] = $from_cabin_str;
+                } else {
+                    $array['from_cabin'] = $from_cabin;
+                }
                 $exist_id = $this->bclr_m->checkBCLREntry($array);
 		        if($bclr_id) {
 		                if ( $exist_id && $exist_id != $bclr_id )  {
@@ -570,7 +589,6 @@ class Bclr extends Admin_Controller {
                 } else {
                   $this->data['flt_carrierID'] = 0;
                 }
-                
                 if($this->input->post('flt_partner_carrierID')){
                     $this->data['flt_partner_carrierID'] = $this->input->post('flt_partner_carrierID');
                 } else {
@@ -674,8 +692,8 @@ class Bclr extends Admin_Controller {
 		
                 //$this->data['days_of_week'] = $this->airports_m->getDefnsCodesListByType('14');  
                 $this->data['seasons'] = $this->season_m->getSeasonsList();	
-		$this->data["subview"] = "bclr/index";
-		$this->load->view('_layout_main', $this->data);
+        		$this->data["subview"] = "bclr/index";
+		        $this->load->view('_layout_main', $this->data);
 	}
 	
 
@@ -820,12 +838,12 @@ class Bclr extends Admin_Controller {
 
 
         $sQuery = "SELECT SQL_CALC_FOUND_ROWS MainSet.bclr_id,MainSet.carrierID,MainSet.partner_carrierID,MainSet.allowance,MainSet.flight_num_range,MainSet.effective_date,MainSet.discontinue_date,MainSet.bag_type,MainSet.dep_time_start,MainSet.dep_time_end,MainSet.min_unit,MainSet.max_capacity,MainSet.min_price,MainSet.max_price,MainSet.active,
-                MainSet.rule_auth,MainSet.frequency,MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.aircraft_type,MainSet.from_cabin_value,MainSet.season_name,MainSet.rule_auth_carrier_code,MainSet.origin_level_value,MainSet.dest_level_value,
-                MainSet.origin_level,MainSet.dest_level,SubSet.origin_content,SubSet.origin_content_data,SubSet.dest_content,SubSet.dest_content_data,SubSet.dayslist,SubSet.frequency		
+                MainSet.rule_auth,MainSet.frequency,MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.aircraft_type,MainSet.season_name,MainSet.rule_auth_carrier_code,MainSet.origin_level_value,MainSet.dest_level_value,
+                MainSet.origin_level,MainSet.dest_level,SubSet.origin_content,SubSet.origin_content_data,SubSet.dest_content,SubSet.dest_content_data,SubSet.dayslist,SubSet.frequency,SubSet.from_cabin_value		
                 FROM
                 (
                 SELECT bc.bclr_id,bc.carrierID,bc.partner_carrierID,bc.allowance,bc.frequency,bc.flight_num_range,bc.effective_date,bc.discontinue_date,bc.bag_type,bc.dep_time_start,bc.dep_time_end,bc.min_unit,bc.max_capacity,bc.min_price,bc.max_price,bc.active,
-                bc.rule_auth,bc.origin_level,bc.dest_level,ddc.code carrier_code,ddpc.code partner_carrier_code,ddat.aln_data_value aircraft_type,tca.aln_data_value as from_cabin_value,sea.season_name,ddac.code as rule_auth_carrier_code,dto.alias as origin_level_value,dtd.alias as dest_level_value		
+                bc.rule_auth,bc.origin_level,bc.dest_level,ddc.code carrier_code,ddpc.code partner_carrier_code,ddat.aln_data_value aircraft_type,sea.season_name,ddac.code as rule_auth_carrier_code,dto.alias as origin_level_value,dtd.alias as dest_level_value		
                 FROM BG_baggage_control_rule  bc
                 LEFT JOIN  VX_data_defns ddc on (ddc.vx_aln_data_defnsID = bc.carrierID AND ddc.aln_data_typeID = 12) 
                 LEFT JOIN VX_data_defns ddpc on (ddpc.vx_aln_data_defnsID = bc.partner_carrierID AND ddpc.aln_data_typeID = 12)    
@@ -838,7 +856,7 @@ class Bclr extends Admin_Controller {
                 LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = bc.season_id )
                 ) as MainSet 
                 LEFT JOIN (
-                SELECT 	origin_set.bclr_id,origin_set.origin_content,origin_set.origin_content_data,dest_set.dest_content,dest_set.dest_content_data,ThirdSet.frequency, ThirdSet.dayslist 
+                SELECT 	origin_set.bclr_id,origin_set.origin_content,origin_set.origin_content_data,dest_set.dest_content,dest_set.dest_content_data,ThirdSet.frequency, ThirdSet.dayslist,FourthSet.from_cabin_value 
                 FROM (  
                 SELECT bc.bclr_id,bc.origin_content,COALESCE(group_concat(c.code),group_concat(c.aln_data_value),group_concat(m.market_name) ) AS origin_content_data FROM BG_baggage_control_rule bc 
                 LEFT OUTER JOIN  VX_data_defns c ON 
@@ -863,7 +881,16 @@ class Bclr extends Admin_Controller {
                                          LEFT join VX_data_defns c on find_in_set(c.vx_aln_data_defnsID, bc.frequency) group by bc.bclr_id  
                         ) as ThirdSet
 
-                        on ThirdSet.bclr_id = origin_set.bclr_id   
+                        on ThirdSet.bclr_id = origin_set.bclr_id 
+
+                LEFT JOIN 
+                        (
+ 					    select bc.bclr_id,group_concat(fc.aln_data_value) as from_cabin_value 
+	            		        from  BG_baggage_control_rule bc 
+                                         LEFT join VX_data_defns fc on find_in_set(fc.vx_aln_data_defnsID, bc.from_cabin) group by bc.bclr_id  
+                        ) as FourthSet
+
+                        on FourthSet.bclr_id = origin_set.bclr_id   
                 ) as SubSet
                 on MainSet.bclr_id = SubSet.bclr_id 
 

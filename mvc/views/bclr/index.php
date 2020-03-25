@@ -12,6 +12,9 @@
                     <?php  $clist[0] = "Carrier";
                                foreach($myairlines as $airline){
                                    $clist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                   if($this->session->userdata('roleID') != 1 && $this->session->userdata('login_user_airlineID')[0] == $airline->vx_aln_data_defnsID){
+                                       $login_airline_name = $airline->code;
+                                   }
                                }
                                echo form_dropdown("carrierID", $clist,
                                         set_value("carrierID",$carrierID), "id='carrierID' class='form-control hide-dropdown-icon select2'"
@@ -328,6 +331,7 @@
     $(document).ready(function() {   
         $('#origin_level').trigger('change');
         $('#dest_level').trigger('change');
+        $('#carrierID').val(<?=$this->session->userdata('login_user_airlineID')[0]?>).trigger('change');
         $('#flt_carrierID').val(<?=$flt_carrierID?>).trigger('change');
         $('#flt_partner_carrierID').val(<?=$flt_partner_carrierID?>).trigger('change');
         $('#flt_origin_level').val(<?=$flt_origin_level?>).trigger('change');
@@ -483,8 +487,12 @@
             data: {"carrierID":carrier},           
             dataType: "html",                                  
             success: function(data) {                         
-                $('#partner_carrierID').html(data);
-                $('#rule_auth_carrier').html(data);             
+                $('#partner_carrierID').html(data);                
+                <?php if($this->session->userdata('roleID') != 1){ ?>
+                 data += "<option value='<?php echo $this->session->userdata('login_user_airlineID')[0]; ?>'> <?=$login_airline_name?></option>";
+                <?php } ?>   
+                console.log(data);        
+                $('#rule_auth_carrier').html(data); 
             }        
         }); 
         if ($('#origin_level').val() == 17 ) {
