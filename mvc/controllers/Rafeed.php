@@ -332,6 +332,9 @@ class Rafeed extends Admin_Controller
 				$status = "success";
 				$message = $this->lang->line('menu_success');
 
+				// set execution time to unlimited
+				ini_set('max_execution_time', '0');
+
 				try {
 					$file = $_FILES['file']['tmp_name'];
 					if (move_uploaded_file($file, APPPATH . "/uploads/" . $_FILES['file']['name'])) {
@@ -529,7 +532,7 @@ class Rafeed extends Admin_Controller
 		}
 
 		//depature date
-		$arrBaggageRaFeed['departure_date'] = date('Y-m-d', strtotime(str_replace('-', '/', $Row[array_search('flight date', $import_header)])));
+		$arrBaggageRaFeed['departure_date'] = date('Y-m-d', strtotime(str_replace('/', '-', $Row[array_search('flight date', $import_header)])));
 
 		if (!preg_match("/^([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $arrBaggageRaFeed['departure_date'])) {
 			$this->mydebug->rafeed_log("flight date formate missing " . $column, 1);
@@ -617,7 +620,7 @@ class Rafeed extends Admin_Controller
 		// rate per unit
 		$arrBaggageRaFeed['rate_per_unit'] = $Row[array_search('rate per unit', $import_header)];
 
-		if(!is_numeric($arrBaggageRaFeed['rate_per_unit']) || !($arrBaggageRaFeed['rate_per_unit'] > 0 && $arrBaggageRaFeed['rate_per_unit'] < 9999)) {
+		if (!is_numeric($arrBaggageRaFeed['rate_per_unit']) || !($arrBaggageRaFeed['rate_per_unit'] > 0 && $arrBaggageRaFeed['rate_per_unit'] < 9999)) {
 			$this->mydebug->rafeed_log("Rate Per Unit should be numeric or between 1 to 9999 in row " . $column, 1);
 			return;
 		}
@@ -650,7 +653,7 @@ class Rafeed extends Admin_Controller
 
 		//SSR CODE
 		$arrBaggageRaFeed['ssr_code'] = $Row[array_search('ssr code',  $import_header)];
-		if (!(ctype_alnum ($arrBaggageRaFeed['ssr_code'])) || strlen($arrBaggageRaFeed['ssr_code']) != 4) {
+		if (!(ctype_alnum($arrBaggageRaFeed['ssr_code'])) || strlen($arrBaggageRaFeed['ssr_code']) != 4) {
 			$this->mydebug->rafeed_log("SSR CODE unit should be a alphanumeric and length only 4 in row" . $column, 1);
 			return;
 		}
@@ -1345,16 +1348,16 @@ class Rafeed extends Admin_Controller
 	{
 		$this->load->helper('download');
 
-		switch($p_nType) {
+		switch ($p_nType) {
 
-			case 'rafeed-baggage' : 
+			case 'rafeed-baggage':
 				$filename = APPPATH . 'downloads/rafeed-baggage.xlsx';
 				break;
-			default :
+			default:
 				$filename = APPPATH . 'downloads/rafeed.xlsx';
 		}
 
-		
+
 		force_download($filename, null);
 	}
 
