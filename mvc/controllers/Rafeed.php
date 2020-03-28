@@ -343,6 +343,8 @@ class Rafeed extends Admin_Controller
 						$this->mydebug->rafeed_log("Processing the excel file " . $_FILES['file']['name'], 0);
 						$Reader = new SpreadsheetReader($file);
 
+						$strRedirector = "index";
+
 						$Sheets = $Reader->Sheets();
 						foreach ($Sheets as $Index => $Name) {
 							$Reader->ChangeSheet($Index);
@@ -412,6 +414,7 @@ class Rafeed extends Admin_Controller
 
 										switch (strtolower($cDocumentType)) {
 											case 'd': // baggage rafeed
+												$strRedirector = "baggage";
 												$this->baggageUpload($Row, $import_header, $column);
 												break;
 
@@ -440,7 +443,12 @@ class Rafeed extends Admin_Controller
 					unlink($file);
 				}
 				$this->session->set_flashdata($status, $message);
-				redirect(base_url("rafeed/index"));
+
+				if ($strRedirector == "index") {
+					redirect(base_url("rafeed/index"));
+				} else if ($strRedirector == "baggage") {
+					redirect(base_url("rafeed/baggage"));
+				}
 			}
 		} else {
 			$this->data["subview"] = "rafeed/upload";
