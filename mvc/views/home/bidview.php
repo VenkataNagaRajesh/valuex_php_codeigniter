@@ -114,12 +114,12 @@
 										</tr>
 										<?php $n++; } ?>
 										<tr>
-											<td> Baggage Product </td>
+											<td style="color: black;"><b> Baggage Product</b> </td>
 										</tr>
 										<tr>
-											<td> From To </td>
-											<td> Cabin </td>
-											<td> <input id="baggage_slider" data-slider-id='baggage_slider' type="text" data-slider-min="100" data-slider-max="300" data-slider-step="1" data-slider-value="150" data-slider-handle="round" min-slider-handle="200"/> </td>
+											<td style="color: black;"> From To </td>
+											<td style="color: black;"> Cabin </td>
+											<td style="color: black;"> <b><i class="fa fa-dollar"></i><?=$baggage_min_val?>&nbsp;&nbsp;&nbsp;&nbsp;</b><input id="baggage_slider" data-slider-id='baggage_slider' type="text" data-slider-min="<?=$baggage_min_val?>" data-slider-max="<?=$baggage_max_val?>" data-slider-step="1" data-slider-value="<?=$baggage_min_val/$baggage_max_val?>" data-slider-handle="round" min-slider-handle="200"/><b> &nbsp;&nbsp;<i class="fa fa-dollar"></i><?=$baggage_max_val?></b> </td>
 										</tr>
 									</tbody>
 								</table>
@@ -346,7 +346,10 @@
 <script>
 var mile_value = <?=$mile_value?>;
 var mile_proportion = <?=$mile_proportion?>;
-
+var cwtpoints = [];
+<?php foreach($cwtpoints as $key => $val){ ?>
+	cwtpoints[<?=$key?>] = <?=$val?>;
+<?php } ?>
 $(document).ready(function () {	
    $('#milesSlider .slider-selection').css({"background":"#0feded"});
 	   $('#milesSlider .slider-handle').css({"background":"#0feded"});	
@@ -379,6 +382,7 @@ $(document).ready(function () {
 	$("#tot").text(numformat(total));
 	$("#bidtot").text(numformat(total));
     mileSliderUpdate(); 
+	$('#baggage_slider .slider-selection').css({"background":"red"});
 });
 
 function updateCabinMedia(flight_number){
@@ -422,8 +426,8 @@ $('#<?=$mobile_view?>bid_slider_<?=$result->flight_number?>').slider({
 
 $('#baggage_slider').slider({
 	tooltip: 'always',
-	formatter: function(value) {
-		return value+'kg';
+	formatter: function(value) {		
+		return value+'<?=$baggage_bag_type?>'+'= $'+cwtpoints[value];
 	}
 });
 

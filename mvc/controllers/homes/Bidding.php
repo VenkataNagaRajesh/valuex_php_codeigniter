@@ -16,6 +16,7 @@ class Bidding extends MY_Controller {
 		 $this->load->model('install_m');
 		 $this->load->model('airline_m');
 		 $this->load->model("reset_m");
+		 $this->load->model("bclr_m");
 		 $this->load->library('session');
          $this->load->helper('form');
          $this->load->library('form_validation');
@@ -118,8 +119,13 @@ class Bidding extends MY_Controller {
             $this->data['mail_header_color'] = '#333';			
 		}
 		
-		
-       	
+		$this->data['baggage_bag_type'] = $this->preference_m->get_preference_value_bycode('BAG_TYPE','24',5500);
+		$this->data['baggage_min_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MIN_VAL','24',5500);
+		$this->data['baggage_max_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MAX_VAL','24',5500);
+		$cwtdata = $this->bclr_m->getActiveCWT(3);
+		foreach($cwtdata as $cwt){
+            $this->data['cwtpoints'][$cwt->cum_wt] = $cwt->price_per_kg;
+        }
 	  //  print_r($this->data['results']); exit;
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);
