@@ -1020,6 +1020,17 @@ $sWhere $sOrder $sLimit";
         foreach ($cwtdata as $cwt) {
             $this->data['points'][$cwt->cum_wt] = $cwt->price_per_kg;
         }
+
+        $objCWTData = $this->getCWTHistorialData($bclr);
+        $this->data['last_year_avg_per_kg'] = $objCWTData->average_weight;
+        $this->data['min_weight'] = $bclr->min_unit;
+        $this->data['max_weight'] = $bclr->max_capacity;
+
+        foreach (range($this->data['min_weight'], $this->data['max_weight']) as $nWeight) {
+            $this->data['historic_data'][$nWeight] = $this->data['last_year_avg_per_kg'];
+        }
+
+
         $this->data['cwt_name'] = $cwtdata[0]->name;
         $this->data["subview"] = "bclr/drag-chart";
         $this->load->view('_layout_main', $this->data);
