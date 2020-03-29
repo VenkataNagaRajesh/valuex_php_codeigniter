@@ -406,10 +406,9 @@ var cwtpoints = [];
 <?php foreach($cwtpoints as $key => $val){ ?>
 	cwtpoints[<?=$key?>] = <?=$val?>;
 <?php } ?>
-$(document).ready(function () {
-	
+$(document).ready(function () {	
    $('#milesSlider .slider-selection').css({"background":"#0feded"});
-	   $('#milesSlider .slider-handle').css({"background":"#0feded"});	
+   $('#milesSlider .slider-handle').css({"background":"#0feded"});	
    tot_avg = 0;
   <?php foreach($results as $result){  if($result->fclr != null){  ?>	  
 	<?php  $flag =0;
