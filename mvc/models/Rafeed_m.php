@@ -167,7 +167,8 @@ class Rafeed_m extends MY_Model
 		$this->db->limit(1);
 		$query = $this->db->get();
 		$check = $query->row();
-		if ($check->rafeed_id) {
+
+		if ($check->id) {
 			return false;
 		} else {
 			return true;
