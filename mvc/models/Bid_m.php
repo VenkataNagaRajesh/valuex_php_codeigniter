@@ -235,5 +235,10 @@ class bid_m extends MY_Model {
 		//$this->mydebug->debug($this->db->last_query());
 		return $query->result();
 	}
+
+	public function create_order(){
+		$this->db->insert('VX_order',array('date'=>time()));
+		return ($this->db->affected_rows() != 1) ? false : $this->db->insert_id();
+	}
 	
 }

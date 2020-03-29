@@ -16,6 +16,10 @@ class Resubmit extends MY_Controller {
 		 $this->load->model('install_m');
 		 $this->load->model('airline_m');
 		 $this->load->model("reset_m");
+		 $this->load->model("bclr_m");
+		 $this->load->model("contract_m");
+		 $this->load->model("baggage_m");
+
 		 $this->load->library('session');
          $this->load->helper('form');
          $this->load->library('form_validation');
@@ -119,7 +123,42 @@ class Resubmit extends MY_Controller {
 			 $this->data['mail_header_color'] = '#333'; 
 			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');			
 		}
-		
+
+		$this->data['baggage_bag_type'] = $this->preference_m->get_preference_value_bycode('BAG_TYPE','24',5500);
+		$this->data['baggage_min_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MIN_VAL','24',5500);
+		$this->data['baggage_max_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MAX_VAL','24',5500);
+		$cwtdata = $this->bclr_m->getActiveCWT(1);
+		foreach($cwtdata as $cwt){
+            $this->data['cwtpoints'][$cwt->cum_wt] = round($cwt->price_per_kg);
+		}
+
+		/* checking products contracts for airline */
+		$where = array(
+				'c.airlineID'=>$airline->airlineID,
+				'cp.start_date <= ' => date('Y-m-d 00:00:00'),
+				'cp.end_date >= ' => date('Y-m-d 00:00:00'),
+				'c.active' => 1
+				);
+		$contract_info = $this->contract_m->getAirlineCurrentProducts($where);
+		$this->data['active_products'] = explode(',',$contract_info->active_products);
+		if(in_array(2,$this->data['active_products'])) {		
+			$baggage1 = $this->bclr_m->get_single_bclr(array('bclr_id'=>1));
+			$old_baggage1 = $this->baggage_m->get_single_baggage(array('bclr_id'=>1,"offer_id"=>$this->data['results'][0]->offer_id));
+			$baggage1->weight = $old_baggage1->weight;
+			$baggage1->miles = $old_baggage1->miles;
+			$baggage1->sold_weight = 50;
+			$baggage2 = $this->bclr_m->get_single_bclr(array('bclr_id'=>2));
+			$old_baggage2 = $this->baggage_m->get_single_baggage(array('bclr_id'=>2,"offer_id"=>$this->data['results'][0]->offer_id));
+			$baggage2->weight = $old_baggage2->weight;
+			$baggage2->miles = $old_baggage2->miles;
+
+
+			$baggage2->sold_weight = 50;
+			$this->data['baggage'][0] = $baggage1;
+			$this->data['baggage'][1] = $baggage2;
+            $this->data['bid_miles'] = $this->data['bid_miles'] + ($old_baggage1->miles + $old_baggage2->miles); 			
+		} 
+		//print_r($old_baggage2); exit;
 		$this->data["subview"] = "home/resubmit";
 		$this->load->view('_layout_home', $this->data);	
 	  }		

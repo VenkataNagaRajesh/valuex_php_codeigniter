@@ -447,7 +447,7 @@ class Contract extends Admin_Controller {
 					$this->data["subview"] = "contract/edit";
 					$this->load->view('_layout_main', $this->data);
 				} else {
-					$data['airlineID'] = $this->input->post('airlineID');
+					//$data['airlineID'] = $this->input->post('airlineID');
 					$data['name'] = $this->input->post('name');					               
 					$data['modify_date'] = time();
 					$data['active'] = $this->input->post('active');                

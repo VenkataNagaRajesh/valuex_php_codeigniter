@@ -331,7 +331,9 @@
     $(document).ready(function() {   
         $('#origin_level').trigger('change');
         $('#dest_level').trigger('change');
-        $('#carrierID').val(<?=$this->session->userdata('login_user_airlineID')[0]?>).trigger('change');
+        <?php if($this->session->userdata('login_user_airlineID')[0]) { ?>
+            $('#carrierID').val(<?=$this->session->userdata('login_user_airlineID')[0]?>).trigger('change');
+        <?php } ?>
         $('#flt_carrierID').val(<?=$flt_carrierID?>).trigger('change');
         $('#flt_partner_carrierID').val(<?=$flt_partner_carrierID?>).trigger('change');
         $('#flt_origin_level').val(<?=$flt_origin_level?>).trigger('change');

@@ -1,1 +1,1 @@
-ALTER TABLE BGg_baggage_control_rule modify column from_cabin varchar(100) NOT NULL DEFAULT 0;
+ALTER TABLE BG_baggage_control_rule modify column from_cabin varchar(100) NOT NULL DEFAULT 0;

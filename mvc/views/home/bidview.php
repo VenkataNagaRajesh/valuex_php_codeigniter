@@ -85,8 +85,7 @@
 											  <!-- <div class="<?=($result->fclr == null)?"bid-visible":""?>">
 											       <b><input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid <br></b>								
 												</div>	-->												   
-                                              </div>
-                                                											
+                                              </div>                                                											
 											</td>
 											<td>
 												<?php if($result->fclr != null){													 
@@ -113,24 +112,49 @@
 											</td>-->
 										</tr>
 										<?php $n++; } ?>
+										<?php if(in_array(2,$active_products) && count($baggage) > 0){ ?>
 										<tr>
 											<td style="color: black;"><b> Baggage Product</b> </td>
 										</tr>
+										<?php foreach($baggage as $bslider){ ?>
 										<tr>
-											<td style="color: black;"> From To </td>
-											<td style="color: black;"> Cabin </td>
-											<td style="color: black;"> <b><i class="fa fa-dollar"></i><?=$baggage_min_val?>&nbsp;&nbsp;&nbsp;&nbsp;</b><input id="baggage_slider" data-slider-id='baggage_slider' type="text" data-slider-min="<?=$baggage_min_val?>" data-slider-max="<?=$baggage_max_val?>" data-slider-step="1" data-slider-value="<?=$baggage_min_val/$baggage_max_val?>" data-slider-handle="round" min-slider-handle="200"/><b> &nbsp;&nbsp;<i class="fa fa-dollar"></i><?=$baggage_max_val?></b> </td>
+											<td style="color: black;">
+												<div class="bid-info">
+													<div class="col-md-5">
+														<p style="color:<?=$mail_header_color?>">DEL <span class="time-bid"><?=date('H:i A')?></span></p>
+														<ul>
+															<li><?php echo date('d M'); ?></li>
+															<li style="color:<?=$mail_header_color?>">Flight CA1234</li>
+														</ul>
+													</div>
+													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
+													<div class="col-md-5">
+														<p style="color:<?=$mail_header_color?>">DAC<span class="time-bid"><?=date('H:i A')?></span></p>
+														<ul>
+															<li><?php echo date('d M'); ?></li>
+															<li style="color:<?=$mail_header_color?>">Flight CA1234</li>
+														</ul>
+													</div>
+												</div>
+											</td>
+											<td style="color: black;"> <?=$results[0]->current_cabin?> </td>
+											<td style="color: black;"> <b><?=$bslider->min_unit.$baggage_bag_type?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
+												<input id="baggage_slider<?=$bslider->bclr_id?>" data-slider-id='baggage_slider<?=$bslider->bclr_id?>Slider' type="text" data-slider-min="<?=$bslider->min_unit?>" data-slider-max="<?=$baggage_max_val?>" data-slider-step="1" data-slider-value="<?=$bslider->min_unit/$baggage_max_val?>" data-slider-handle="round" min-slider-handle="50"/>
+												<b> &nbsp;&nbsp;<?=$baggage_max_val.$baggage_bag_type?></b> 
+											</td>
 										</tr>
+										 <?php } } ?>
 									</tbody>
 								</table>
 								<!--========Mobile Data Bidding=======--> 
 								<div class="hidden-lg hidden-md hidden-sm mob-slide">
-									<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">		<div class="panel panel-success">
+									<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">		
+										<div class="panel panel-success">
 											<div class="panel-heading" role="tab" id="headingOne">
 												<h4 class="panel-title">
 													<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
 														<i class="short-full glyphicon glyphicon-plus"></i>
-														<p><?=$n?> . <?php echo $result->air_from_city; ?> To <?php echo $result->air_to_city; ?> </p>
+														<p><?=$n-1?> . <?php echo $result->air_from_city; ?> To <?php echo $result->air_to_city; ?> </p>
 													</a>
 												</h4>
 											</div>
@@ -306,12 +330,21 @@
 										</div>
 									</div>
 								</div>
+								<?php if(in_array(2,$active_products)){ ?>
+									<div class="col-md-4 actual-cash">
+									<p>Upgrade Total Cash to be Paid <strong><i class="fa fa-dollar"></i> <b id="up_paid_cash"></b></strong></p>
+									<p>Upgrade Total Miles to be Paid : <b id="up_paid_miles"></b> </p>
+									<p>Baggage Total Cash to be Paid <strong><i class="fa fa-dollar"></i> <b id="bg_paid_cash"></b></strong></p>
+									<p>Baggage Total Miles to be Paid : <b id="bg_paid_miles"></b> </p>
+									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$result->offer_id?>)" style="background:<?=$mail_header_color?>">Pay Now</a>	
+								</div>
+								<?php } else { ?>
 								<div class="col-md-4 actual-cash">
 									<p>Total Cash to be Paid <strong><i class="fa fa-dollar"></i> <b id="paid_cash"></b></strong></p>
 									<p>Total Miles to be Paid : <b id="paid_miles"></b> </p>
 									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$result->offer_id?>)" style="background:<?=$mail_header_color?>">Pay Now</a>	
-                                  					
 								</div>
+								<?php } ?>
 							</form>
 						</div>
 					</div>
@@ -352,7 +385,7 @@ var cwtpoints = [];
 <?php } ?>
 $(document).ready(function () {	
    $('#milesSlider .slider-selection').css({"background":"#0feded"});
-	   $('#milesSlider .slider-handle').css({"background":"#0feded"});	
+   $('#milesSlider .slider-handle').css({"background":"#0feded"});	
    tot_avg = 0;
   <?php foreach($results as $result){  if($result->fclr != null){  ?>	  
 	<?php $flag =0;
@@ -382,7 +415,10 @@ $(document).ready(function () {
 	$("#tot").text(numformat(total));
 	$("#bidtot").text(numformat(total));
     mileSliderUpdate(); 
-	$('#baggage_slider .slider-selection').css({"background":"red"});
+	<?php if(in_array(2,$active_products) && count($baggage) > 0){ foreach($baggage as $bslider){ ?>
+	$('#baggage_slider<?=$bslider->bclr_id?>Slider .slider-selection').css({"background":"#f952be"});
+    $('#baggage_slider<?=$bslider->bclr_id?>Slider .slider-handle').css({"background":"#f952be"});
+	<?php } } ?>
 });
 
 function updateCabinMedia(flight_number){
@@ -424,12 +460,27 @@ $('#<?=$mobile_view?>bid_slider_<?=$result->flight_number?>').slider({
 });
 <?php } } ?>
 
-$('#baggage_slider').slider({
+//baggage slider jquery
+<?php if(in_array(2,$active_products) && count($baggage)>0){ foreach($baggage as $bslider){ ?> 
+$('#baggage_slider<?=$bslider->bclr_id?>').slider({
 	tooltip: 'always',
-	formatter: function(value) {		
+	formatter: function(value) {
 		return value+'<?=$baggage_bag_type?>'+'= $'+cwtpoints[value];
 	}
 });
+$("#baggage_slider<?=$bslider->bclr_id?>").on("slide", function(slideEvt) {
+	var tot_avg = getTotal().toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+	$("#tot").text(numformat(tot_avg));
+	$("#bidtot").text(numformat(tot_avg));	 
+    mileSliderUpdate();	
+});
+$("#baggage_slider<?=$bslider->bclr_id?>").on("click", function(slideEvt) { 
+	var tot_avg = getTotal();
+	$("#tot").text(numformat(tot_avg));
+	$("#bidtot").text(numformat(tot_avg));	 
+    mileSliderUpdate();	
+});
+<?php } } ?>
 
 $(".bid-visible").click(function () {   
 	 event.preventDefault();
@@ -442,11 +493,23 @@ $('#miles').slider({
 		//var bid_amount = $("#ex1").slider('getValue');
 		var bid_amount = getTotal();
 		var pay_cash = bid_amount - Math.round(dollar);
-		$("#paid_cash").text(numformat(pay_cash));
-        $("#paid_miles").text(numformat(value) + ' Miles'+'($'+numformat(Math.round(dollar))+')'); 		
+		var bg_val = 0;
+		<?php if(in_array(2,$active_products) && count($baggage)>0) { ?>
+		  <?php foreach($baggage as $bslider){ ?>
+		  var bg_val = bg_val + cwtpoints[$("#baggage_slider<?=$bslider->bclr_id?>").slider('getValue')];
+		  <?php } ?>
+		   var up_pay_cash = (bid_amount - bg_val) - Math.round(dollar/2);;
+		   var bg_pay_cash = (bg_val) - Math.round(dollar/2);;
+			$("#up_paid_cash").text(numformat(up_pay_cash));
+			$("#bg_paid_cash").text(numformat(bg_pay_cash));
+			$("#up_paid_miles").text(numformat(value/2) + ' Miles'+'($'+numformat(Math.round(dollar/2))+')'); 		
+			$("#bg_paid_miles").text(numformat(value/2) + ' Miles'+'($'+numformat(Math.round(dollar/2))+')'); 		
+        <?php } else { ?>
+			$("#paid_cash").text(numformat(pay_cash));
+        	$("#paid_miles").text(numformat(value) + ' Miles'+'($'+numformat(Math.round(dollar))+')'); 		
+		<?php } ?>
 		return '$'+numformat(pay_cash)+' + '+numformat(value) + ' Miles'+'($'+numformat(Math.round(dollar))+')';
 		//return value;
-		
 	}
 });
 
@@ -461,7 +524,7 @@ $("#<?=$mobile_view?>bid_slider_<?=$result->flight_number?>").on("slide", functi
 	$("#tot").text(numformat(tot_avg));
 	$("#bidtot").text(numformat(tot_avg));	 
     mileSliderUpdate();	
-    changeColors(<?=$result->flight_number?>);	 
+    changeColors(<?=$result->flight_number?>);		 
 });
 $("#<?=$mobile_view?>bid_slider_<?=$result->flight_number?>").on("click", function(slideEvt) { 
 	var tot_avg = getTotal();
@@ -525,7 +588,12 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 		  //if(action == 1){
          if($('input[type=checkbox][name=<?=$mobile_view?>bid_action_<?=$result->flight_number?>]').prop("checked") == false){    			  
 		   tot_avg = tot_avg+$("#<?=$mobile_view?>bid_slider_<?=$result->flight_number?>").slider('getValue')*<?=$passengers_count?>;
-		  }
+		  } 
+		<?php } } ?>
+		<?php if(in_array(2,$active_products) && count($baggage) > 0) { 
+		  foreach($baggage as $bslider){ ?> 
+		  var bg_val = $("#baggage_slider<?=$bslider->bclr_id?>").slider('getValue');
+		  tot_avg = tot_avg + cwtpoints[bg_val];
 		<?php } } ?>
       return tot_avg; 
  }
@@ -554,9 +622,6 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 		//$('#bid_slider_'+id+'Slider .slider-handle').css({"background":"#009900"});
 		$('#<?=$mobile_view?>bid_slider_'+id+'Slider .slider-selection').css({"background":" -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"},{"background":" -webkit-linear-gradient(left, #f94231 1%,#d6b822 37%,#d6b822 37%,#d6b822 40%,#39ed25 67%,#146d28 99%,#146d28 99%,#7db9e8 100%)"}); 
      }  
-	
-	 
-	 
 	 
  }
  
@@ -578,21 +643,39 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 	 	/* var lhtml = '<div class="ring">Loading<span></span></div>';
 		//$('.myloading').html(lhtml);
 		var image = "<?php echo base_url(). 'assets/home/images/Spinner.gif'; ?>";
-$('#loading').html("<img src='"+image+"' />"); */
-		
-      var miles = $("#miles").slider('getValue');
-      var tot_bid = getTotal();
-	  var pay_cash = tot_bid - Math.round(miles * mile_value);		
-    $.ajax({
+		$('#loading').html("<img src='"+image+"' />"); */
+		var miles = $("#miles").slider('getValue');
+		var tot_bid = getTotal();
+		var pay_cash = tot_bid - Math.round(miles * mile_value);	
+		var paysuccess = 0;
+    	$.ajax({
           async: false,
           type: 'POST',
           url: "<?=base_url('homes/bidding/saveCardData')?>",          
 		  data: {"card_number" :$('#card_number').val(),"month_expiry":$('#month_expiry').val(),"year_expiry":$('#year_expiry').val(),"cvv":$('#cvv').val(),"offer_id":offer_id,"cash":pay_cash,"miles":miles,"tot_bid":tot_bid},
           dataType: "html",	         		  
           success: function(data) {
-            var cardinfo = jQuery.parseJSON(data);              		
+            var cardinfo = jQuery.parseJSON(data);
+			var orderID = cardinfo['orderID'];
+
             if(cardinfo['status'] == "success"){
-		      <?php foreach($results as $result){  if($result->fclr != null){ ?>
+				<?php if(in_array(2,$active_products) && count($baggage)>0){ ?>
+					var bg_tot_value = 0;
+				<?php foreach($baggage as $bslider){ ?>
+					bg_tot_value = bg_tot_value + cwtpoints[$("#baggage_slider<?=$bslider->bclr_id?>").slider('getValue')];
+				<?php } ?>
+					var up_miles = $("#miles").slider('getValue')/2;
+					var up_tot_bid = tot_bid - bg_tot_value;
+					var up_pay_cash = up_tot_bid - Math.round(up_miles * mile_value);
+					var bg_miles = $("#miles").slider('getValue')/2;
+					var bg_tot_bid = bg_tot_value;
+					var bg_pay_cash = bg_tot_bid - Math.round(bg_miles * mile_value); 
+				<?php } else { ?>
+					var up_miles = miles;
+					var up_tot_bid = tot_bid;
+					var up_pay_cash = pay_cash;
+                <?php } ?>
+		      <?php foreach($results as $result){  if($result->fclr != null) { ?>
 				var bid_value = $("#<?=$mobile_view?>bid_slider_<?=$result->flight_number?>").slider('getValue')*<?=$passengers_count?>;			
 				//var pay_cash = bid_value - Math.round(miles * mile_value);				
 				var flight_number = <?=$result->flight_number?>;				
@@ -605,22 +688,55 @@ $('#loading').html("<img src='"+image+"' />"); */
 				} else {
 					var bid_action = 0;
 				}
-				$.ajax({
+				 $.ajax({
 				  async: false,
 				  type: 'POST',
 				  url: "<?=base_url('homes/bidding/saveBidData')?>",          
-				  data: {"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id,'bid_action':bid_action,"tot_cash":pay_cash,"tot_miles":miles,"tot_bid":tot_bid,"type":"submit"},
+				  data: {"orderID":orderID,"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id,'bid_action':bid_action,"tot_cash":up_pay_cash,"tot_miles":up_miles,"tot_bid":up_tot_bid,"type":"submit"},
 				  dataType: "html",			
 				  success: function(data) {
 					var info = jQuery.parseJSON(data);              		
 					if(info['status'] == "success"){
-						window.location = "<?=base_url('home/paysuccess')?>/"+offer_id;
+						//window.location = "<?=base_url('home/paysuccess')?>/"+offer_id;
+						paysuccess = 1;
 					} else {
-						alert(info['status']);
+						//alert(info['status']);
+						paysuccess = 0;
+						status = status + "<p>"+info['status']+"</p>";
 					}			
 				  }
-			   });
+			   }); 
 			  <?php } } ?>
+			  <?php if(in_array(2,$active_products)&& count($baggage)>0){ ?>
+			       if(status != ''){
+					<?php foreach($baggage as $bslider){ ?>
+						var bg_weight = $("#baggage_slider<?=$bslider->bclr_id?>").slider('getValue');
+						var bg_value = cwtpoints[bg_weight];
+						$.ajax({
+						async: false,
+						type: 'POST',
+						url: "<?=base_url('homes/bidding/saveBaggageData')?>",          
+						data: {"bclr_id":<?=$bslider->bclr_id?>,"orderID":orderID,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"tot_miles":bg_miles,"tot_bid":bg_tot_bid},
+						dataType: "html",			
+						success: function(data) {
+							var info = jQuery.parseJSON(data);              		
+							if(info['status'] == "success"){
+								paysuccess = 1;
+							} else {
+								//alert(info['status']);
+								paysuccess = 0;
+								status = status + "<p>"+info['status']+"</p>";
+							}			
+						}
+						});				   
+			   		<?php } ?>
+			       }
+			<?php } ?>
+               if(paysuccess == 1){
+				   window.location = "<?=base_url('home/paysuccess')?>/"+offer_id;
+			   } else {
+				   alert($(status).text());
+			   }
 			} else {
 				var status = cardinfo['status'];
 				alert($(status).text());
@@ -641,6 +757,3 @@ $('#loading').html("<img src='"+image+"' />"); */
     $('.panel-group').on('hidden.bs.collapse', toggleIcon);
     $('.panel-group').on('shown.bs.collapse', toggleIcon);
 </script>
-
-
-

@@ -17,13 +17,20 @@
 	<link href="<?php echo base_url('assets/home/css/magnific-popup.css'); ?>" rel="stylesheet">
 	<link href="<?php echo base_url('assets/home/css/bootstrap-datepicker.min.css'); ?>" rel="stylesheet">
 	<link href="<?php echo base_url('assets/home/css/style.css'); ?>" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">	
+	<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/bootstrap-slider.js"></script>
+
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/bootstrap-slider.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/bootstrap-slider.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/css/bootstrap-slider.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/css/bootstrap-slider.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.1/css/bootstrap-slider.min.css" /> -->
+  <script src="<?php echo base_url('assets/bootstrap-slider/jquery.min.js'); ?>"></script>
+  <script src="<?php echo base_url('assets/bootstrap-slider/bootstrap.min.js'); ?>"></script>
+  <script src="<?php echo base_url('assets/bootstrap-slider/bootstrap-slider.js'); ?> " ></script>
+  <script src="<?php echo base_url('assets/bootstrap-slider/bootstrap-slider.min.js'); ?> "></script>
+  <link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-slider/bootstrap-slider.css'); ?>" />
+  <link rel="stylesheet" href="<?php echo base_url('assets/bootstrap-slider/bootstrap-slider.min.css'); ?>" />
     
 </head>	
 
