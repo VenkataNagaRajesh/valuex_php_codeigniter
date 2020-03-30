@@ -17,8 +17,6 @@
 <div class="box">
     <div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa icon-template"></i> <?=$this->lang->line('panel_title')?></h3>
-
-
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li><a href="<?=base_url("mailandsmstemplate/index")?>"><?php //echo $this->lang->line('menu_mailandsmstemplate'); ?>Back</a></li>
@@ -88,6 +86,25 @@
                            </div>
                            <span class="col-sm-4 control-label">
                                <?php echo form_error('airlineID'); ?>
+                           </span>
+                       </div>
+
+                       <?php
+                           if(form_error('template_typeID'))
+                               echo "<div class='form-group has-error' >";
+                           else
+                               echo "<div class='form-group' >";
+                       ?>
+                           <label for="template_typeID" class="col-sm-1 control-label">
+                               <?="Template Type"?>
+                           </label>
+                           <div class="col-sm-4">
+                               <?php                                                                   
+                                echo form_dropdown("template_typeID", $template_types, set_value("template_typeID"), "id='template_typeID' class='form-control'");
+                               ?>
+                           </div>
+                           <span class="col-sm-4 control-label">
+                               <?php echo form_error('template_typeID'); ?>
                            </span>
                        </div>
                       

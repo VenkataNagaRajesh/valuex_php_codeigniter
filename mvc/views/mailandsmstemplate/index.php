@@ -26,8 +26,8 @@
 			   <div class="col-sm-2">			   
                <?php $list = array("0" => "Select Carrier");               
                    foreach($airlines as $airline){
-								 $list[$airline->vx_aln_data_defnsID] = $airline->code;
-							 }							
+						$list[$airline->vx_aln_data_defnsID] = $airline->code;
+				   }							
 				   echo form_dropdown("filter_airline", $list,set_value("filter_airline",$filter_airline), "id='filter_airline' class='form-control select2'");    ?>
                 </div>                 	    
                 <div class="col-sm-2">
@@ -43,6 +43,7 @@
                                 <th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_name')?></th>
 								<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_airline')?></th>
                                 <th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_category')?></th>
+                                <th class="col-sm-2"><?="Template Type"?></th>
 								<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_default')?></th>
 								<!--<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_template')?></th>-->
                                 <?php if(permissionChecker('mailandsmstemplate_edit') || permissionChecker('mailandsmstemplate_delete') || permissionChecker('mailandsmstemplate_view')) {
@@ -129,6 +130,7 @@ $(document).ready(function() {
                   {"data": "name" },
 				  {"data": "airline_code" },
 				  {"data": "category"},				
+				  {"data": "template_type"},				
 				  {"data": "default"},
                   {"data": "action"}
 				  ],			     

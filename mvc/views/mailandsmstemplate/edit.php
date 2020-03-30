@@ -90,6 +90,25 @@
                                <?php echo form_error('airlineID'); ?>
                            </span>
                        </div>
+
+                       <?php
+                           if(form_error('template_typeID'))
+                               echo "<div class='form-group has-error' >";
+                           else
+                               echo "<div class='form-group' >";
+                       ?>
+                           <label for="template_typeID" class="col-sm-1 control-label">
+                               <?="Template Type"?>
+                           </label>
+                           <div class="col-sm-4">
+                               <?php                                                                   
+                                echo form_dropdown("template_typeID", $template_types, set_value("template_typeID",$mailtemplate->template_typeID), "id='template_typeID' class='form-control'");
+                               ?>
+                           </div>
+                           <span class="col-sm-4 control-label">
+                               <?php echo form_error('template_typeID'); ?>
+                           </span>
+                       </div>
                       
 					   <div class='form-group' >
 						   <label for="default" class="col-sm-1 control-label">
