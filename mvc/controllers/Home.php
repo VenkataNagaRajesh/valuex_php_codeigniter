@@ -230,5 +230,42 @@ class Home extends MY_Controller {
 		$this->email->message($message);
 		$this->email->send();
 	}
+
+	public function uptemp1() {        		
+		$this->load->view('email-temps/up_temp1', $this->data);
+	}
+
+	public function uptemp2() {        		
+		$this->data["subview"] = "email-temps/up_temp2";
+		$this->load->view('email-temps/up_temp2', $this->data);
+	}
+	public function uptemp3() {        		
+		$this->data["subview"] = "email-temps/up_temp3";
+		$this->load->view('email-temps/up_temp3', $this->data);
+	}
+	public function bgtemp1() {        		
+		$this->data["subview"] = "email-temps/bg_temp1";
+		$this->load->view('email-temps/bg_temp1', $this->data);
+	}
+	public function bgtemp2() {        		
+		$this->data["subview"] = "email-temps/bg_temp2";
+		$this->load->view('email-temps/bg_temp2', $this->data);
+	}
+	public function bgtemp3() {        		
+		$this->data["subview"] = "email-temps/bg_temp3";
+		$this->load->view('email-temps/bg_temp3', $this->data);
+	}
+	public function upbgtemp1() {        		
+		$this->data["subview"] = "email-temps/up_bg_temp1";
+		$this->load->view('email-temps/up_bg_temp1', $this->data);
+	}
+	public function upbgtemp2() {        		
+		$this->data["subview"] = "email-temps/up_bg_temp2";
+		$this->load->view('email-temps/up_bg_temp2', $this->data);
+	}
+	public function upbgtemp3() {        		
+		$this->data["subview"] = "email-temps/up_bg_temp3";
+		$this->load->view('email-temps/up_bg_temp3', $this->data);
+	}
 		
 }

@@ -8,8 +8,8 @@ insert into VX_permissions set description='Baggage Report Delete',name='bgrepor
 insert into VX_permissions set description='Baggage Report View',name='bgreport_view',productID=2;
 
 insert into VX_data_types set name="mail_template_types",alias='Mail Template Types',create_userID=1,modify_userID=1,active=1,create_date=1554788423,modify_date=1554788423;
-insert into vx_data_defns set aln_data_typeID=25,aln_data_value='Upgrade Template',parentID=0,alias='upgrade_template',create_userID=1,modify_userID=1,active=1,create_date=1554788423,modify_date=1554788423;
-insert into vx_data_defns set aln_data_typeID=25,aln_data_value='Baggage Template',parentID=0,alias='baggage_template',create_userID=1,modify_userID=1,active=1,create_date=1554788423,modify_date=1554788423;
-insert into vx_data_defns set aln_data_typeID=25,aln_data_value='Upgrade & Baggage Template',parentID=0,alias='upgrade_baggage_template',create_userID=1,modify_userID=1,active=1,create_date=1554788423,modify_date=1554788423;
+insert into VX_data_defns set aln_data_typeID=25,aln_data_value='Upgrade Template',parentID=0,alias='upgrade_template',create_userID=1,modify_userID=1,active=1,create_date=1554788423,modify_date=1554788423;
+insert into VX_data_defns set aln_data_typeID=25,aln_data_value='Baggage Template',parentID=0,alias='baggage_template',create_userID=1,modify_userID=1,active=1,create_date=1554788423,modify_date=1554788423;
+insert into VX_data_defns set aln_data_typeID=25,aln_data_value='Upgrade & Baggage Template',parentID=0,alias='upgrade_baggage_template',create_userID=1,modify_userID=1,active=1,create_date=1554788423,modify_date=1554788423;
 
 alter table VX_mailandsmstemplate add column template_typeID int(11) NOT NULL;
