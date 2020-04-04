@@ -48,9 +48,22 @@
                             <div class="select2-wrapper">
                              <select class="form-control" name="img_type" id="img_type">
                             <!-- <option value="gallery">Gallery</option>-->
-                             <option value="upgrade_offer_mail_template1">Upgrade Offer Mail Template 1(732*184)</option>
-                             <option value="upgrade_offer_mail_template2">Upgrade Offer Mail Template 2(344*438)</option>
-                             <option value="upgrade_offer_mail_template3">Upgrade Offer Mail Template 3(732*184)</option>				 
+                             <!-- <option value="upgrade_offer_mail_template1_banner">Upgrade Offer Mail Template1 Banner(732*184)</option>
+                             <option value="upgrade_offer_mail_template1_left_img">Upgrade Offer Mail Template1 Left Image(732*184)</option>
+                             <option value="upgrade_offer_mail_template1_right_img">Upgrade Offer Mail Template1 Right Image(732*184)</option>
+                             <option value="upgrade_offer_mail_template2_banner">Upgrade Offer Mail Template2 Banner(344*438)</option>
+                             <option value="upgrade_offer_mail_template3_banner">Upgrade Offer Mail Template3 Banner(732*184)</option> -->	
+                             <option value="up_tpl1_bnr">Upgrade Template 1 Banner(1267*675)</option>			 
+                             <option value="up_tpl1_lft_img">Upgrade Template 1 Left Image(303*205)</option>			 
+                             <option value="up_tpl1_rgt_img">Upgrade Template 1 Right Image(303*205)</option>			 
+                             <option value="up_tpl2_bnr">Upgrade Template 2 Banner(1267*675)</option>			 
+                             <option value="up_tpl3_bnr">Upgrade Template 3 Banner(1267*675)</option>			 
+                             <option value="bg_tpl1_bnr">Baggage Template 1 Banner(1267*675)</option>			 
+                             <option value="bg_tpl2_bnr">Baggage Template 2 Banner(1235*883)</option>			 
+                             <option value="bg_tpl3_bnr">Baggage Template 3 Banner(1267*675)</option>			 
+                             <option value="upbg_tpl1_bnr">Upgrade Baggage Template 1 Banner(800*371)</option>			 
+                             <option value="upbg_tpl2_bnr">Upgrade Baggage Template 2 Banner(760*200)</option>			 
+                             <option value="upbg_tpl3_bnr">Upgrade Baggage Template 3 Banner(700*500)</option>			 
                              <option value="airline_logo">Airline Logo Mail template(84*60)</option>				 
                              </select>
                             </div>

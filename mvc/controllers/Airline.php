@@ -761,7 +761,7 @@ class Airline extends Admin_Controller {
 				$cpt = count($_FILES['images']['name']);			
 			   for($i=0; $i<$cpt; $i++)	{
 				   $imgcount = $this->airline_m->getImagesCount($this->input->post('airlineID'),$this->input->post('img_type'));
-               $file_name = $_FILES["images"]['name'][$i];
+              	   $file_name = $_FILES["images"]['name'][$i];
                    $random = rand(1, 10000000000000000);
 				   $makeRandom = hash('sha512',$this->input->post('airlineID').$random.$imgcount.config_item("encryption_key"));
                    $file_name_rename = $makeRandom;
@@ -773,7 +773,7 @@ class Airline extends Admin_Controller {
 					$_FILES['image']['tmp_name'] = $_FILES['images']['tmp_name'][$i]; 
 					$_FILES['image']['error'] = $_FILES['images']['error'][$i]; 
 					$_FILES['image']['size'] = $_FILES['images']['size'][$i]; 
-                     if($this->input->post('img_type') == "upgrade_offer_mail_template2"){
+                    /*  if($this->input->post('img_type') == "upgrade_offer_mail_template2"){
 						 $width = '344';
 						 $height = '438';
 					} else if($this->input->post('img_type') == "upgrade_offer_mail_template1" || $this->input->post('img_type') == "upgrade_offer_mail_template3" ){
@@ -785,7 +785,33 @@ class Airline extends Admin_Controller {
 					}else {
 						 $width = '416';
 						 $height = '290';
-					}
+					} */
+					$type = $this->input->post('img_type');
+					if($type == 'up_tpl1_lft_img' || $type == 'up_tpl1_rgt_img'){
+						$width = '303';
+						$height = '205';
+					} else if($type == 'airline_logo'){
+						$width = '216';
+						$height = '89';
+					} else if($type == 'bg_tpl2_bnr'){
+						$width = "1235";
+						$height = "883";
+					} else if($type == 'bg_tpl3_bnr'){
+						$width = "800";
+						$height = "400";
+					} else if($type == 'upbg_tpl1_bnr'){
+						$width = "800";
+						$height = "371";
+					} else if($type == 'upbg_tpl2_bnr'){
+						$width = "760";
+						$height = "200";
+					} else if($type == 'upbg_tpl3_bnr'){
+						$width = "700";
+						$height = "500";
+					} else {
+						$width = '1267';
+						$height = '675';
+				   }
 					$config['upload_path'] = "./uploads/images";
 					$config['allowed_types'] = 'gif|jpg|png'; 
 			 		$config['file_name'] = $new_file;
@@ -806,7 +832,7 @@ class Airline extends Admin_Controller {
 						  'create_date' => time(),
 						  'create_userID' => $this->session->userdata('loginuserID')					 
 						);
-                          		
+                          //print_r($gallery); exit;		
 					   $galleryID = $this->airline_m->add_gallery($gallery);
 						if($galleryID){
 						  $this->session->set_flashdata('success', $this->lang->line('menu_success'));	   

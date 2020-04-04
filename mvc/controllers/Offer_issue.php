@@ -34,14 +34,14 @@ class Offer_issue extends Admin_Controller {
                 'first_name'   => 'Lakshmi',
                 'last_name' => 'Amujuru',
                 'tomail' => 'lakshmi.amujuru@sweken.com',
-                'pnr_ref' => 'BA1258',
+                'pnr_ref' => 'CA1252',
                 'coupon_code' => 'sssssssss',
                 'mail_subject' => "upgrade offer template 2",
                         'bidnow_link' => base_url('home/index'),
-                'airlineID' => 5418		
+                'airlineID' => 5500		
                 );			       
-                $this->sendMailTemplateParser('bid_accepted',$data);
-                        exit;
+               // $this->sendMailTemplateParser('bid_accepted',$data);
+                //        exit;
                 //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);
                 $this->upgradeOfferMail($data);		 
 	}
@@ -1009,9 +1009,14 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 		$results = $this->bid_m->getPassengers($pnr_ref);
 		$exclude = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 		$cabins  = $this->airline_cabin_m->getAirlineCabins();
-		//print_r($results); exit;
 		foreach($results as $result){
-		  $result->to_cabins = explode(',',$result->to_cabins);
+                  $result->to_cabins = explode(',',$result->to_cabins);
+                  $dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
+		  $arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
+		  $dteStart = new DateTime($dept); 
+		  $dteEnd   = new DateTime($arrival); 
+		  $dteDiff  = $dteStart->diff($dteEnd);
+		  $result->time_diff = $dteDiff->format('%H hrs %i Min');
 		  $cdata = array();
 		   foreach($result->to_cabins as $value){
 				$cdata = explode('-',$value);              		
@@ -1025,22 +1030,63 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 					$result->tocabins[] = array('cabin_name' => $c);
 				}
 			if($result->fclr != null && !empty($result->tocabins)){			
-				$info['dep_date'] = date('d-m-Y',$result->dep_date);
-				$info['dep_time'] = date('H:i:s',$result->dept_time);
+				$info['dep_date'] = date('D d M Y',$result->dep_date);
+                                $info['dep_time'] = date('H:i',$result->dept_time);
+                                $info['arrival_date'] = date('D d M Y',$result->arrival_date);
+				$info['arrival_time'] = date('H:i',$result->darrival_time);
 				$info['carrier_code'] = $result->carrier_code;
+				$info['carrier_name'] = $result->carrier_name;
 				$info['flight_number'] = $result->flight_number;
 				$info['from_city_code'] = $result->from_city_code;
+				$info['from_city'] = $result->from_city;
 				$info['to_city_code'] = $result->to_city_code;
+				$info['to_city'] = $result->to_city;
 				$info['seat_no'] = $result->seat_no;
 				$info['current_cabin'] = $result->current_cabin;
-				$info['cabins'] = $result->tocabins;
-				$offerdata[] = $info;
-		    }
-		}
-		
-		$pax_names = $this->bid_m->getPaxNames($pnr_ref);
-		 $maildata['offer_data'] = $offerdata;		
-      
+                                $info['cabins'] = $result->tocabins;
+                                $info['time_diff'] = $result->time_diff;
+				$offerdata[0] = $info;
+				$offerdata[1] = $info;
+                    }
+                    $maildata['carrier_name'] = $result->carrier_name;
+                }
+                if(count($results)>0){
+                  $maildata['highest_upgrade_class'] = $results[0]->tocabins[0]['cabin_name'];
+                }
+		//print_r($results); exit;
+
+                $primary_client = $this->user_m->getClientByAirline($maildata['airlineID'],6)[0];	   
+		 $pax_names = $this->bid_m->getPaxNames($pnr_ref);
+                 $maildata['offer_data'] = $offerdata;
+                 $maildata['fb_icon'] = base_url('assets/mail-temps/facebook.png');		
+                 $maildata['tag_img'] = base_url('assets/mail-temps/tag.png');		
+                 $maildata['twitter_icon'] = base_url('assets/mail-temps/twitter.png');	
+                 $maildata['pinterest_icon'] = base_url('assets/mail-temps/pinterest.png');	
+                 $maildata['openbrowser_img'] = base_url('assets/mail-temps/openBrowser.png');	
+                 $maildata['bg_tpl1_bnrtop'] = base_url('assets/mail-temps/bg_temp1_images/bannerTop.png');	
+                 $maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
+                 $maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
+                 $maildata['bg_tpl2_contact_img'] = base_url('assets/mail-temps/bg_temp2_images/contactUs.png');	
+                 $maildata['bg_tpl2_twitter_icon'] = base_url('assets/mail-temps/bg_temp2_images/whiteTweet.png');	
+                 $maildata['bg_tpl2_fb_icon'] = base_url('assets/mail-temps/bg_temp2_images/whitebook.png');	
+                 $maildata['bg_tpl2_white_cam'] = base_url('assets/mail-temps/bg_temp2_images/whiteCam.png');	
+                 $maildata['bg_tpl2_line_img'] = base_url('assets/mail-temps/bg_temp2_images/line.png');	
+                 $maildata['upbg_tpl1_bag_img'] = base_url('assets/mail-temps/up_bg_temp1_images/bag.png');	
+                 $maildata['upbg_tpl1_fb_icon'] = base_url('assets/mail-temps/up_bg_temp1_images/facebook.png');	
+                 $maildata['upbg_tpl1_twitter_icon'] = base_url('assets/mail-temps/up_bg_temp1_images/twitter.png');	
+                 $maildata['upbg_tpl2_bg_img'] = base_url('assets/mail-temps/up_bg_temp2_images/bigImg.png');	
+                 $maildata['upbg_tpl2_bag_img'] = base_url('assets/mail-temps/up_bg_temp2_images/bag.jpg');	
+                 $maildata['upbg_tpl3_bigimg'] = base_url('assets/mail-temps/up_bg_temp3_images/bigImg.jpg');	
+                 $maildata['domain'] = $primary_client->domain;
+                 $maildata['primary_phone'] = $primary_client->phone;
+                 $maildata['primary_mail'] = $primary_client->email;
+                 $maildata['fb_link'] ="facebook.com";
+                 $maildata['twitter_link'] ="twitter.com";
+                 $maildata['pinterest_link'] ="pinterest.com";
+                 $maildata['unsubscribe_link'] =base_url('home/index');
+                 $maildata['forward_friend_link'] =base_url('home/index');
+                 $maildata['openbrowser_link'] =base_url('home/index');
+                 $maildata['not_intrested_link'] =base_url('home/index');
        // print_r($maildata); exit;		
 		$this->sendMailTemplateParser('upgrade_offer',$maildata);
 	}		
