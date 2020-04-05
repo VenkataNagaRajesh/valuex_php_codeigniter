@@ -1045,8 +1045,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 				$info['current_cabin'] = $result->current_cabin;
                                 $info['cabins'] = $result->tocabins;
                                 $info['time_diff'] = $result->time_diff;
-				$offerdata[0] = $info;
-				$offerdata[1] = $info;
+				$offerdata[] = $info;
                     }
                     $maildata['carrier_name'] = $result->carrier_name;
                 }

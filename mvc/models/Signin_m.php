@@ -6,6 +6,7 @@ class signin_m extends MY_Model {
 		parent::__construct();
 		$this->load->model("setting_m");
 		$this->load->model('role_m');
+		$this->load->model('usertype_m');
 		$this->load->model('loginlog_m');
 	}
 
@@ -47,7 +48,8 @@ class signin_m extends MY_Model {
 
 		if($captchaResponse['success'] == TRUE) {
 			if(in_array('yes', $array['permition'])) {
-				$usertype = $this->role_m->get_role($userdata->roleID);
+				$role = $this->role_m->get_role($userdata->roleID);
+				$usertype = $this->usertype_m->get_usertype($userdata->usertypeID);
 				if(count($usertype)) {
 					if($userdata->active == 1) {
 						$data = array(
@@ -57,6 +59,7 @@ class signin_m extends MY_Model {
 							"roleID" => $userdata->roleID,
 							'usertypeID' => $userdata->usertypeID,
 							'usertype' => $usertype->usertype,
+							'role' => $role->role,
 							"username" => $userdata->username,
 							"photo" => $userdata->photo,
 							"lang" => $lang,
