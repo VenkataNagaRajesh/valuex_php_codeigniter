@@ -1,6 +1,7 @@
+
 <div class="seasons">
 	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Seasons</h2>
-	<p class="card-header" data-toggle="collapse" data-target="#seasonAdd"><button type="button" id = 'add_season_button' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Season" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
+	<p class="card-header" data-toggle="collapse" data-target="#seasonAdd"><button type="button" id = 'add_season_button' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Season" data-toggle="tooltip"><i class="fa fa-plus" id="plus_icon"></i></button></p>
 	<div class="col-md-12 season-add-box collapse" id="seasonAdd">
 		<form class="form-horizontal" action="#" id="season_form">
 			<div class="form-group">
@@ -243,61 +244,45 @@
 	</div>
 </div>
 <script type="text/javascript">
-    jQuery(document).ready(function() {	
+jQuery(document).ready(function() {	
 	seasoncalender('<?php echo json_encode($seasonslist)?>');
 	//alert('<?php echo json_encode($seasonslist)?>');
-	loaddatatable();
 	//loadSeasonList(<?php echo json_encode($seasonslist)?>);
 });
 
-function seasoncalender (seasonlist = '[]') {
-	
-	var season_data = jQuery.parseJSON(seasonlist);
-  // console.log(seasonlist);
-        // An array of dates
-     var eventDates = {}; var season = {}; var name = {};
-	 var datecal = new Date().getFullYear();
-	 //$_POST['color_season']=10; 
-	     //  var html = '';
-             for(var i=0; i<season_data.length; i++){
-		for ( var k=0 ; k<season_data[i]['dates'].length; k++){	
-	       eventDates[ new Date( season_data[i]['dates'][k] )] = new Date( season_data[i]['dates'][k] ).toString();
-		    season[ new Date( season_data[i]['dates'][k] )] = season_data[i]['VX_aln_seasonID'];
-			if(name[ new Date( season_data[i]['dates'][k] )]){
-				name[ new Date( season_data[i]['dates'][k] )] = name[ new Date( season_data[i]['dates'][k] )]+' \n '+season_data[i]['season_name']+'(Airline:'+season_data[i]['airline_code']+',Origin:'+season_data[i]['origin_values']+',Destination:'+season_data[i]['dest_values']+')' ;
-			} else {
-			name[ new Date( season_data[i]['dates'][k] )] = season_data[i]['season_name']+'(Airline:'+season_data[i]['airline_code']+',Origin:'+season_data[i]['origin_values']+',Destination:'+season_data[i]['dest_values']+')' ;
-			}
-                 			
-	   } 
-	    $("<style> .season"+season_data[i]['VX_aln_seasonID'] + " { color:#fffff !important;  background:"+season_data[i]['season_color'] + " !important;} </style>").appendTo("head");		
+$( window ).load(function() {
+	loaddatatable();
+});
+
+$("#add_season_button").on('click',function(){
+	var seasonAdd_class_val = $("#seasonAdd").attr('class');
+	var fa_icon = $("#plus_icon").attr('class');
+	if(fa_icon == "fa fa-plus") {
+		$("#plus_icon").attr('class','fa fa-minus');
+	} else {
+		$("#plus_icon").attr('class','fa fa-plus');
+	}
+
+	if(seasonAdd_class_val=="col-md-12 season-add-box collapse") {
+		$('#color_airline_season').trigger('change');	
+		$("#ams_orig_levelID").trigger('change');
+		$('#ams_dest_levelID').trigger('change');
+		$('#origID').trigger('change');
+		$('#destID').trigger('change');	
+		var orig_level = [<?php echo implode(',',$this->input->post("ams_orig_level_value")); ?>];
+		$('#ams_orig_level_value').val(orig_level).trigger('change');
+		var dest_level = [<?php echo implode(',',$this->input->post("ams_dest_level_value")); ?>];
+		$('#ams_dest_level_value').val(dest_level).trigger('change');
 		
-     }   
-        if(season_data.length == 1) {
-		 datecal = new Date(season_data[0]['ams_season_start_date']).getFullYear();
-		}
+		var origValues = [<?php echo implode(',',$this->input->post("origValues")); ?>];
+		$('#origValues').val(origValues).trigger('change');
+		var destValues = [<?php echo implode(',',$this->input->post("destValues")); ?>];
+		$('#destValues').val(destValues).trigger('change');	
 		
-        jQuery('#calendar1').datepicker({		    
-           // changeMonth: true,
-           // changeYear: true,
-            numberOfMonths: [3,4],  
-            defaultDate: new Date(datecal, 0, 1),			
-		    beforeShowDay: function( date ) {					
-                var highlight = eventDates[date];
-				var color = "";
-				var seasonid = season[highlight];
-                var season_name = name[highlight];					
-				 if( highlight ) {                   
-					return [true,"season"+seasonid,season_name];								
-                } else {
-                    return [true, '', ''];
-                }  
-				
-            }
-        }); 
-		
-    }
-	
+		$("input[name=is_return_inclusive][value=0]").attr('checked', 'checked');
+	}
+
+});
 
 $('#color_airline_season').change(function(event) {    
 	//alert('here');
@@ -320,8 +305,148 @@ $('#color_airline_season').change(function(event) {
               }        
       });       
 });
- 
-function getCalenderBySeason(season){
+
+$("#ams_orig_levelID").change(function(){
+	
+	$(this).parent().removeClass('has-error');
+	$('#ams_orig_level_value').val(null).trigger('change');
+    var level_id = $(this).val();                 
+    var airline_id = $('#airlineID').val();
+		if( level_id == '17' ) {
+			if($('#airlineID').val() == '0') {
+				alert('select Airline');
+				$("#ams_orig_levelID").val(0);
+				$('#ams_orig_levelID').trigger('change');
+				return false;
+			}
+        }
+
+    $.ajax({ 
+        async: false,            
+	    type: 'POST',            
+        url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+		data: {
+			"id":level_id,
+			"airline_id":airline_id,
+            },
+		dataType: "html",                                  
+		success: function(data) {               
+			$('#ams_orig_level_value').html(data); 
+		}        
+    }); 
+});
+
+$('#ams_dest_levelID').change(function(e){
+	$(this).parent().removeClass('has-error');
+	$('#ams_dest_level_value').val(null).trigger('change')
+     var level_id = $(this).val();                 
+	  var airline_id = $('#airlineID').val();
+                 if( level_id == '17' ) {
+                if($('#airlineID').val() == '0') {
+                        alert('select Airline');
+                        $("#ams_dest_levelID").val(0);
+                           $('#ams_dest_levelID').trigger('change');
+
+                        return false;
+                }
+        }
+
+    $.ajax({ 
+             async: false,            
+	         type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+		 data: {
+                           "id":level_id,
+                           "airline_id":airline_id,
+                                },
+
+             dataType: "html",                                  
+             success: function(data) {               
+               $('#ams_dest_level_value').html(data);
+			 }        
+      }); 
+});	
+
+$('#origID').change(function(e){
+	$(this).parent().removeClass('has-error');
+	$('#origValues').val(null).trigger('change')
+     var level_id = $(this).val();                 
+    $.ajax({ 
+             async: false,            
+	         type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+             data: "id=" + level_id,            
+             dataType: "html",                                  
+             success: function(data) {               
+                $('#origValues').html(data); 
+			 }        
+      }); 
+});
+
+$('#destID').change(function(e){
+	$(this).parent().removeClass('has-error');
+	$('#destValues').val(null).trigger('change')
+     var level_id = $(this).val();                 
+    $.ajax({ 
+             async: false,            
+	         type: 'POST',            
+             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
+             data: "id=" + level_id,            
+             dataType: "html",                                  
+             success: function(data) {               
+                $('#destValues').html(data); 
+			 }        
+      }); 
+});
+
+function seasoncalender (seasonlist = '[]') 
+{
+	var season_data = jQuery.parseJSON(seasonlist);
+ 	 // console.log(seasonlist);
+        // An array of dates
+     var eventDates = {}; var season = {}; var name = {};
+	 var datecal = new Date().getFullYear();
+	 //$_POST['color_season']=10; 
+	     //  var html = '';
+    for(var i=0; i<season_data.length; i++) {
+		for ( var k=0 ; k<season_data[i]['dates'].length; k++) {	
+	       eventDates[ new Date( season_data[i]['dates'][k] )] = new Date( season_data[i]['dates'][k] ).toString();
+		    season[ new Date( season_data[i]['dates'][k] )] = season_data[i]['VX_aln_seasonID'];
+			if(name[ new Date( season_data[i]['dates'][k] )]){
+				name[ new Date( season_data[i]['dates'][k] )] = name[ new Date( season_data[i]['dates'][k] )]+' \n '+season_data[i]['season_name']+'(Airline:'+season_data[i]['airline_code']+',Origin:'+season_data[i]['origin_values']+',Destination:'+season_data[i]['dest_values']+')' ;
+			} else {
+			name[ new Date( season_data[i]['dates'][k] )] = season_data[i]['season_name']+'(Airline:'+season_data[i]['airline_code']+',Origin:'+season_data[i]['origin_values']+',Destination:'+season_data[i]['dest_values']+')' ;
+			}
+                 			
+	   } 
+	    $("<style> .season"+season_data[i]['VX_aln_seasonID'] + " { color:#fffff !important;  background:"+season_data[i]['season_color'] + " !important;} </style>").appendTo("head");			
+    }   
+
+	if(season_data.length == 1) {
+		datecal = new Date(season_data[0]['ams_season_start_date']).getFullYear();
+	}
+	
+	jQuery('#calendar1').datepicker({		    
+		// changeMonth: true,
+		// changeYear: true,
+		numberOfMonths: [3,4],  
+		defaultDate: new Date(datecal, 0, 1),			
+		beforeShowDay: function( date ) {					
+			var highlight = eventDates[date];
+			var color = "";
+			var seasonid = season[highlight];
+			var season_name = name[highlight];					
+				if( highlight ) {                   
+				return [true,"season"+seasonid,season_name];								
+			} else {
+				return [true, '', ''];
+			}  
+		}
+	}); 
+}
+
+function getCalenderBySeason(season)
+{
 	$.ajax({
           async: false,
           type: 'POST',
@@ -334,36 +459,34 @@ function getCalenderBySeason(season){
          }
 	 });
 }
-  
 </script>
 <script>
+function downloadSeason(){
+	$.ajax({
+		url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
+		type: 'get',
+		data: {"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val(),"origValues": $("#origValues").val(),"destValues": $("#destValues").val()},
+		dataType: 'json'
+	}).done(function(data){
+	var $a = $("<a>");
+	$a.attr("href",data.file);
+	$("body").append($a);
+	$a.attr("download","season.xls");
+	$a[0].click();
+	$a.remove();
+	});
+}
   
-  function downloadSeason(){
-	   $.ajax({
-           url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
-           type: 'get',
-           data: {"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val(),"origValues": $("#origValues").val(),"destValues": $("#destValues").val()},
-           dataType: 'json'
-        }).done(function(data){
-		var $a = $("<a>");
-		$a.attr("href",data.file);
-		$("body").append($a);
-		$a.attr("download","season.xls");
-		$a[0].click();
-		$a.remove();
-	  });
-  }
+$('#seasonslist tbody').on('mouseover', 'tr', function () {
+	$('[data-toggle="tooltip"]').tooltip({
+		trigger: 'hover',
+		html: true
+	});
+});
   
-   $('#seasonslist tbody').on('mouseover', 'tr', function () {
-    $('[data-toggle="tooltip"]').tooltip({
-        trigger: 'hover',
-        html: true
-    });
-  });
-  
-  var status = '';
-  var id = 0;
- $('#seasonslist tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
+var status = '';
+var id = 0;
+$('#seasonslist tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");
@@ -476,127 +599,30 @@ $("#ams_season_start_date").datepicker({
 });
 $("#ams_season_end_date").datepicker();
 
-
-
 $('#season_color').colorpicker({});
 
 $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: " value"});
 				 
 $(document).ready(function(){
-    $('#color_airline_season').trigger('change');	
-	$('#ams_orig_levelID').trigger('change');
-    $('#ams_dest_levelID').trigger('change');
-    $('#origID').trigger('change');
-    $('#destID').trigger('change');	
-	var orig_level = [<?php echo implode(',',$this->input->post("ams_orig_level_value")); ?>];
-	$('#ams_orig_level_value').val(orig_level).trigger('change');
-	var dest_level = [<?php echo implode(',',$this->input->post("ams_dest_level_value")); ?>];
-	$('#ams_dest_level_value').val(dest_level).trigger('change');
+    // $('#color_airline_season').trigger('change');	
+	// $("#ams_orig_levelID").trigger('change');
+    // $('#ams_dest_levelID').trigger('change');
+    // $('#origID').trigger('change');
+    // $('#destID').trigger('change');	
+	// var orig_level = [<?php echo implode(',',$this->input->post("ams_orig_level_value")); ?>];
+	// $('#ams_orig_level_value').val(orig_level).trigger('change');
+	// var dest_level = [<?php echo implode(',',$this->input->post("ams_dest_level_value")); ?>];
+	// $('#ams_dest_level_value').val(dest_level).trigger('change');
 	
-	var origValues = [<?php echo implode(',',$this->input->post("origValues")); ?>];
-	$('#origValues').val(origValues).trigger('change');
-	var destValues = [<?php echo implode(',',$this->input->post("destValues")); ?>];
-	$('#destValues').val(destValues).trigger('change');	
+	// var origValues = [<?php echo implode(',',$this->input->post("origValues")); ?>];
+	// $('#origValues').val(origValues).trigger('change');
+	// var destValues = [<?php echo implode(',',$this->input->post("destValues")); ?>];
+	// $('#destValues').val(destValues).trigger('change');	
 	
-	$("input[name=is_return_inclusive][value=0]").attr('checked', 'checked');
-});
-
-$('#ams_orig_levelID').change(function(e){
-	$(this).parent().removeClass('has-error');
-	$('#ams_orig_level_value').val(null).trigger('change')
-     var level_id = $(this).val();                 
-     var airline_id = $('#airlineID').val();
-		 if( level_id == '17' ) {
-                if($('#airlineID').val() == '0') {
-                        alert('select Airline');
-                        $("#ams_orig_levelID").val(0);
-                           $('#ams_orig_levelID').trigger('change');
-
-                        return false;
-                }
-        }
-
-    $.ajax({ 
-             async: false,            
-	         type: 'POST',            
-             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-		 data: {
-                           "id":level_id,
-                           "airline_id":airline_id,
-                                },
-
-             dataType: "html",                                  
-             success: function(data) {               
-                $('#ams_orig_level_value').html(data); 
-			 }        
-      }); 
-});
-	
-
-$('#origID').change(function(e){
-	$(this).parent().removeClass('has-error');
-	$('#origValues').val(null).trigger('change')
-     var level_id = $(this).val();                 
-    $.ajax({ 
-             async: false,            
-	         type: 'POST',            
-             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-             data: "id=" + level_id,            
-             dataType: "html",                                  
-             success: function(data) {               
-                $('#origValues').html(data); 
-			 }        
-      }); 
-});
-
-$('#destID').change(function(e){
-	$(this).parent().removeClass('has-error');
-	$('#destValues').val(null).trigger('change')
-     var level_id = $(this).val();                 
-    $.ajax({ 
-             async: false,            
-	         type: 'POST',            
-             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-             data: "id=" + level_id,            
-             dataType: "html",                                  
-             success: function(data) {               
-                $('#destValues').html(data); 
-			 }        
-      }); 
+	// $("input[name=is_return_inclusive][value=0]").attr('checked', 'checked');
 });
 			
-$('#ams_dest_levelID').change(function(e){
-	$(this).parent().removeClass('has-error');
-	$('#ams_dest_level_value').val(null).trigger('change')
-     var level_id = $(this).val();                 
-	  var airline_id = $('#airlineID').val();
-                 if( level_id == '17' ) {
-                if($('#airlineID').val() == '0') {
-                        alert('select Airline');
-                        $("#ams_dest_levelID").val(0);
-                           $('#ams_dest_levelID').trigger('change');
-
-                        return false;
-                }
-        }
-
-    $.ajax({ 
-             async: false,            
-	         type: 'POST',            
-             url: "<?=base_url('marketzone/getSubdataTypes')?>",            
-		 data: {
-                           "id":level_id,
-                           "airline_id":airline_id,
-                                },
-
-             dataType: "html",                                  
-             success: function(data) {               
-               $('#ams_dest_level_value').html(data);
-			 }        
-      }); 
-});	
-
 $("#orig_all").click(function(){
     if($("#orig_all").is(':checked') ){
         $("#ams_orig_level_value > option").prop("selected","selected");
@@ -606,7 +632,6 @@ $("#orig_all").click(function(){
          $("#ams_orig_level_value").trigger("change");
      }
 });
-
 
 $("#dest_all").click(function(){
     if($("#dest_all").is(':checked') ){
@@ -618,75 +643,76 @@ $("#dest_all").click(function(){
      }
 });
 
-  function form_reset(){    
-	  var $inputs = $('#season_form :input:not(:radio)'); 
-	  $inputs.each(function (index)
-       {
-          $(this).val(""); 
-         $(this).parent().removeClass('has-error'); 		  
-       });
-	   $("#airlineID").removeAttr("selected");
-	   $('#airlineID').trigger('change');
-	   $("#orig_all").removeAttr("checked");
-	   $("#dest_all").removeAttr("checked");
-       $("#ams_orig_levelID").removeAttr("selected");
-	   $('#ams_orig_levelID').trigger('change');	   
-	   $("#ams_dest_levelID").removeAttr("selected");
-	   $('#ams_dest_levelID').trigger('change');
-       $("input[name=is_return_inclusive][value=0]").attr('checked', 'checked');	   
-  }
+//reset form
+function form_reset(){    
+	var $inputs = $('#season_form :input:not(:radio)'); 
+	$inputs.each(function (index)
+	{
+		$(this).val(""); 
+		$(this).parent().removeClass('has-error'); 		  
+	});
+	$("#airlineID").removeAttr("selected");
+	$('#airlineID').trigger('change');
+	$("#orig_all").removeAttr("checked");
+	$("#dest_all").removeAttr("checked");
+	$("#ams_orig_levelID").removeAttr("selected");
+	$('#ams_orig_levelID').trigger('change');	   
+	$("#ams_dest_levelID").removeAttr("selected");
+	$('#ams_dest_levelID').trigger('change');
+	$("input[name=is_return_inclusive][value=0]").attr('checked', 'checked');	   
+}
+//save season form data
+function saveseason() {
+	$.ajax({
+		async: false,
+		type: 'POST',
+		url: "<?=base_url('season/save')?>",          
+		data: {"airlineID" :$('#airlineID').val(),
+			"season_name":$('#season_name').val(),
+			"ams_orig_levelID":$('#ams_orig_levelID').val(),
+			"ams_orig_level_value":$('#ams_orig_level_value').val(),
+			"ams_dest_levelID":$('#ams_dest_levelID').val(),
+			"ams_dest_level_value":$('#ams_dest_level_value').val(),
+			"ams_season_start_date":$('#ams_season_start_date').val(),
+			"ams_season_end_date":$('#ams_season_end_date').val(),
+			"season_color":$('#season_color').val(),
+			"is_return_inclusive":$('input[type=radio][name=is_return_inclusive]:checked').val(),
+			"desc":$('#desc').val(),				
+			"season_id":$('#season_id').val()},
+		dataType: "html",                     
+		success: function(data) {
+		var seasoninfo = jQuery.parseJSON(data);
+		var status = seasoninfo['status'];			
+		if (status == 'success' ) {				
+			alert("Successfully Saved..!");
+			form_reset();
+			$("#seasonslist").dataTable().fnDestroy();
+			loaddatatable();				
+			$("#calendar1").datepicker("destroy");
+			seasoncalender(JSON.stringify(seasoninfo['season_list']));
+				if (seasoninfo['has_reconf_perm']) {
+				<?php
+				$link = '<h2><a href="'.base_url('trigger/season_trigger').'" class="btn btn-danger"> <i class="fa fa-plus"></i> '.$this->lang->line('generate_map_table').' </a></h2>';   ?>
 
-    function saveseason() {
-      $.ajax({
-          async: false,
-          type: 'POST',
-          url: "<?=base_url('season/save')?>",          
-          data: {"airlineID" :$('#airlineID').val(),
-			    "season_name":$('#season_name').val(),
-			    "ams_orig_levelID":$('#ams_orig_levelID').val(),
-			    "ams_orig_level_value":$('#ams_orig_level_value').val(),
-		        "ams_dest_levelID":$('#ams_dest_levelID').val(),
-			    "ams_dest_level_value":$('#ams_dest_level_value').val(),
-			    "ams_season_start_date":$('#ams_season_start_date').val(),
-                "ams_season_end_date":$('#ams_season_end_date').val(),
-				"season_color":$('#season_color').val(),
-				"is_return_inclusive":$('input[type=radio][name=is_return_inclusive]:checked').val(),
-			    "desc":$('#desc').val(),				
-			    "season_id":$('#season_id').val()},
-         dataType: "html",                     
-         success: function(data) {
-			var seasoninfo = jQuery.parseJSON(data);
-			var status = seasoninfo['status'];			
-			if (status == 'success' ) {				
-				alert("Successfully Saved..!");
-				form_reset();
-				$("#seasonslist").dataTable().fnDestroy();
-				loaddatatable();				
-				$("#calendar1").datepicker("destroy");
-				seasoncalender(JSON.stringify(seasoninfo['season_list']));
-                  if (seasoninfo['has_reconf_perm']) {
-                    <?php
-                    $link = '<h2><a href="'.base_url('trigger/season_trigger').'" class="btn btn-danger"> <i class="fa fa-plus"></i> '.$this->lang->line('generate_map_table').' </a></h2>';   ?>
-
-                  $('#season_reconfigure').html('<?php echo $link?>');
-                        }
-			} else {				
-				alert($(status).text());
-			    $.each(seasoninfo['errors'], function(key, value) {
-					if(value != ''){					 
-                      			$('#' + key).parent().addClass('has-error'); 
-					}                  				
-                });				
-			}
-	     }
-     });
-   }
+				$('#season_reconfigure').html('<?php echo $link?>');
+					}
+		} else {				
+			alert($(status).text());
+			$.each(seasoninfo['errors'], function(key, value) {
+				if(value != ''){					 
+							$('#' + key).parent().addClass('has-error'); 
+				}                  				
+			});				
+		}
+		}
+	});
+}
    
-    $('#season-form').on('keyup change', function () {       
-        $(this).parent().removeClass('has-error');
-    });
+$('#season-form').on('keyup change', function () {       
+	$(this).parent().removeClass('has-error');
+});
    
-   function editseason(season_id) {
+function editseason(season_id) {
       var isVisible = $( "#seasonAdd" ).is( ":visible" );
       var isHidden = $( "#seasonAdd" ).is( ":hidden" );
 	   if( isVisible == false ) {
@@ -728,157 +754,150 @@ $("#dest_all").click(function(){
          }
 	 });
 }
-   
-   function loaddatatable(){
-	   $('#seasonslist').DataTable( {
-      "bProcessing": true,
-      "bServerSide": true,
-      "sAjaxSource": "<?php echo base_url('season/server_processing'); ?>", 
-	  "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) { 
-      aoData.push(
-	  {"name": "seasonID","value": $("#seasonID").val()},
-	  {"name": "origID","value": $("#origID").val()},
-      {"name": "active","value": $("#active").val()},	  
-	  {"name": "destID","value": $("#destID").val()},
-	  {"name": "origValues","value": $("#origValues").val()},	  
-	  {"name": "destValues","value": $("#destValues").val()},
-	 // {"name": "airlinecode","value": $("#airlinecode").val()}),
-      {"name": "filter_airline","value": $("#filter_airline").val()}),	  
-	  //pushing custom parameters
-                oSettings.jqXHR = $.ajax( {
-                    "dataType": 'json',
-                    "type": "GET",
-                    "url": sSource,
-                    "data": aoData,
-                    "success": fnCallback
-			 } ); },	  
-      "columns": [{"data": "chkbox" },
-                   {"data": "season_name" },
-				 // {"data": "airline_name" },
-				  {"data": "airline_code" },
-				  {"data": "orig_level" },
-				  {"data": "orig_level_values" },
-				  {"data": "dest_level" }, 
-                  {"data": "dest_level_values"},
-				  {"data": "ams_season_start_date" },
-				  {"data": "ams_season_end_date" },
-				  {"data": "is_return_inclusive" },
-				  {"data": "season_color"},
-	            <?php if (permissionChecker('season_edit')){ ?>
-	              {"data": "active"},
-    		  <?php } if(permissionChecker('season_edit') || permissionChecker('season_delete')){ ?>
-                  {"data": "action"}
-			  <?php } ?>
-				  ],			     
-     dom: 'B<"clear">lfrtip',
-     //buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
-	  buttons: [{text: 'Delete',
-				  action: function ( e, dt, node, config ) {
-					 if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
-						var ids = [];
-						$('.deleteRow').each(function(){
-							if($(this).is(':checked')) { 
-								ids.push($(this).val());
-							}
-						});
-						var ids_string = ids.toString();  // array to string conversion 
+
+//load seasons data
+function loaddatatable(){
+	$('#seasonslist').DataTable( {
+	"bProcessing": true,
+	"bServerSide": true,
+	"sAjaxSource": "<?php echo base_url('season/server_processing'); ?>", 
+	"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) { 
+	aoData.push(
+	{"name": "seasonID","value": $("#seasonID").val()},
+	{"name": "origID","value": $("#origID").val()},
+	{"name": "active","value": $("#active").val()},	  
+	{"name": "destID","value": $("#destID").val()},
+	{"name": "origValues","value": $("#origValues").val()},	  
+	{"name": "destValues","value": $("#destValues").val()},
+	// {"name": "airlinecode","value": $("#airlinecode").val()}),
+	{"name": "filter_airline","value": $("#filter_airline").val()}),	  
+	//pushing custom parameters
+			oSettings.jqXHR = $.ajax( {
+				"dataType": 'json',
+				"type": "GET",
+				"url": sSource,
+				"data": aoData,
+				"success": fnCallback
+			} ); },	  
+	"columns": [{"data": "chkbox" },
+				{"data": "season_name" },
+				// {"data": "airline_name" },
+				{"data": "airline_code" },
+				{"data": "orig_level" },
+				{"data": "orig_level_values" },
+				{"data": "dest_level" }, 
+				{"data": "dest_level_values"},
+				{"data": "ams_season_start_date" },
+				{"data": "ams_season_end_date" },
+				{"data": "is_return_inclusive" },
+				{"data": "season_color"},
+			<?php if (permissionChecker('season_edit')){ ?>
+				{"data": "active"},
+			<?php } if(permissionChecker('season_edit') || permissionChecker('season_delete')){ ?>
+				{"data": "action"}
+			<?php } ?>
+				],			     
+	dom: 'B<"clear">lfrtip',
+	//buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
+	buttons: [{text: 'Delete',
+				action: function ( e, dt, node, config ) {
+					if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+					var ids = [];
+					$('.deleteRow').each(function(){
+						if($(this).is(':checked')) { 
+							ids.push($(this).val());
+						}
+					});
+					var ids_string = ids.toString();  // array to string conversion 
+					$.ajax({
+						type: "POST",
+						url: "<?php echo base_url('season/delete_season_bulk_records'); ?>",
+						data: {data_ids:ids_string},
+						success: function(result) {
+						//var seasoninfo = jQuery.parseJSON(result);
+							$('#seasonslist').DataTable().ajax.reload();
+							
+							$('#bulkDelete').prop("checked",false);
+							$("#calendar1").datepicker("destroy");
+							seasoncalender(JSON.stringify(result['seasonslist']));
+						},
+						async:false
+					});
+				}
+				}
+			},
+			{ extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+			{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+			{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+			{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
+			{ text: 'ExportAll', exportOptions: { columns: ':visible' },
+					action: function(e, dt, node, config) {
 						$.ajax({
-							type: "POST",
-							url: "<?php echo base_url('season/delete_season_bulk_records'); ?>",
-							data: {data_ids:ids_string},
-							success: function(result) {
-							//var seasoninfo = jQuery.parseJSON(result);
-							   $('#seasonslist').DataTable().ajax.reload();
-							  
-							   $('#bulkDelete').prop("checked",false);
-							   $("#calendar1").datepicker("destroy");
-				              seasoncalender(JSON.stringify(result['seasonslist']));
-							},
-							async:false
-						});
+							url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
+							type: 'get',
+							data: {sSearch: $("input[type=search]").val(),"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val(),"origValues": $("#origValues").val(),"destValues": $("#destValues").val()},
+							dataType: 'json'
+						}).done(function(data){
+					var $a = $("<a>");
+					$a.attr("href",data.file);
+					$("body").append($a);
+					$a.attr("download","season.xls");
+					$a[0].click();
+					$a.remove();
+					});
 					}
-				  }
-                },
-	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
-                       action: function(e, dt, node, config) {
-                          $.ajax({
-                               url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
-                               type: 'get',
-                               data: {sSearch: $("input[type=search]").val(),"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val(),"origValues": $("#origValues").val(),"destValues": $("#destValues").val()},
-                               dataType: 'json'
-                           }).done(function(data){
-						var $a = $("<a>");
-						$a.attr("href",data.file);
-						$("body").append($a);
-						$a.attr("download","season.xls");
-						$a[0].click();
-						$a.remove();
-					  });
-                       }
-                 }	                
-            ] 
-   // "autoWidth": false,
-	//"columnDefs": [ {"targets": 0,"width": "50px"},{"targets":2,"width":"73px"},{"targets":4,"width":"100px"},{"targets":5,"width":"94px"},{"targets":6,"width":"133px"},{"targets":7,"width":"93px"}]
-    });
-   }
-   
-  
+				}	                
+		] 
+// "autoWidth": false,
+//"columnDefs": [ {"targets": 0,"width": "50px"},{"targets":2,"width":"73px"},{"targets":4,"width":"100px"},{"targets":5,"width":"94px"},{"targets":6,"width":"133px"},{"targets":7,"width":"93px"}]
+});
+}
 
 $(document).ready(function () {
+	$("#bulkDelete").on('click',function() { // bulk checked
+			var status = this.checked;
+			$(".deleteRow").each( function() {
+			if(status == 1 && $(this).prop('checked')) {
+					
+			} else {
+					if (status == false && $(this).prop('checked') == false) {
 
-$("#bulkDelete").on('click',function() { // bulk checked
-        var status = this.checked;
-        $(".deleteRow").each( function() {
-          if(status == 1 && $(this).prop('checked')) {
-                
-          } else {
-                if (status == false && $(this).prop('checked') == false) {
-
-                } else {
-                         $(this).prop("checked",status);
-                        $(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
-                }
-         }
-        });
-    });
-
-
-
-$('#deleteTriger').on("click", function(event){ // triggering delete one by one
-        if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
-            var ids = [];
-            $('.deleteRow').each(function(){
-                if($(this).is(':checked')) { 
-                    ids.push($(this).val());
-                }
-            });
-            var ids_string = ids.toString();  // array to string conversion 
-            $.ajax({
-                type: "POST",
-                url: "<?php echo base_url('season/delete_season_bulk_records'); ?>",
-                data: {data_ids:ids_string},
-                success: function(result) {
-                   $('#seasonslist').DataTable().ajax.reload();
-                   $('#bulkDelete').prop("checked",false);
-                },
-                async:false
-            });
-        }
-    }); 
+					} else {
+							$(this).prop("checked",status);
+							$(this).not("#bulkDelete").closest('tr').toggleClass('rowselected');
+					}
+			}
+			});
+		});
 
 
 
-$('#seasonslist').on('click', '.deleteRow', function() {
+	$('#deleteTriger').on("click", function(event){ // triggering delete one by one
+			if( $('.deleteRow:checked').length > 0 ){  // at-least one checkbox checked
+				var ids = [];
+				$('.deleteRow').each(function(){
+					if($(this).is(':checked')) { 
+						ids.push($(this).val());
+					}
+				});
+				var ids_string = ids.toString();  // array to string conversion 
+				$.ajax({
+					type: "POST",
+					url: "<?php echo base_url('season/delete_season_bulk_records'); ?>",
+					data: {data_ids:ids_string},
+					success: function(result) {
+					$('#seasonslist').DataTable().ajax.reload();
+					$('#bulkDelete').prop("checked",false);
+					},
+					async:false
+				});
+			}
+		}); 
+
+
+
+	$('#seasonslist').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
     });
-
-
-        });
-
-
-
+});
 </script>
