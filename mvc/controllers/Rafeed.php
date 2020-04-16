@@ -886,8 +886,8 @@ class Rafeed extends Admin_Controller
 			return;
 		}
 
-		var_dump($rafeed);
-		exit;
+// 		var_dump($rafeed);
+// 		exit;
 		if ($this->rafeed_m->checkRaFeed($rafeed)) {
 			$rafeed['create_date'] = time();
 			$rafeed['modify_date'] = time();
