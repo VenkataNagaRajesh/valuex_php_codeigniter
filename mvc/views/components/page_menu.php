@@ -24,10 +24,10 @@
                             ?>
 							
 							
-                            <a href="<?=base_url("profile/index")?>">
+                            <!-- <a href="<?=base_url("profile/index")?>">
                                 <i class="fa fa-hand-o-right color-green"></i>
                                 <?=$this->session->userdata("usertype")."->".$this->session->userdata("role")?>
-                            </a>
+                            </a> -->
 							
 							<?php if($this->session->userdata('usertypeID') == 1 && $this->session->userdata('roleID') != 1 && $this->session->userdata('roleID') != 5){ 
 								$carray[0] = 'Select Carrier';

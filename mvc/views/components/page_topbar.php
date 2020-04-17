@@ -331,12 +331,13 @@
 							  <?php } ?>
                                 <span class="mbl-user-name">
                                     <?php
-                                        $name = $this->session->userdata('name');
-                                        if(strlen($name) > 11) {
-                                           echo substr($name, 0,11). ".."; 
-                                        } else {
-                                            echo $name;
-                                        }
+                                        // $name = $this->session->userdata('name');
+                                        // if(strlen($name) > 11) {
+                                        //    echo substr($name, 0,11). ".."; 
+                                        // } else {
+                                        //     echo $name;
+                                        // }
+                                        echo $this->session->userdata("usertype")."-".$this->session->userdata("role");
                                     ?>
                                     <i class="caret"></i>
                                 </span>   
