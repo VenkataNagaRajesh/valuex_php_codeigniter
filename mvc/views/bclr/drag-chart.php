@@ -11,12 +11,12 @@
 		<div class="col-md-10">
 			<br /><!-- Just so that JSFiddle's Result label doesn't overlap the Chart -->
 			<div id="interactive-chart" style="height: 360px; width: 100%;"></div>
-			<!--  <div class="chartWrapper" style="height: 380px; width: 600px; overflow-x:auto;position:relative;">
+			 <div class="chartWrapper" style="height: 380px; width: 600px;position:relative;">
 			<div class="chartAreaWrapper">
 				<div id="interactive-chart" style="height: 360px; width: 100%;"></div>
 			</div>
 			<canvas id="overlayedAxis"></canvas>
-			</div> -->
+			</div>
 		</div>
 		<div class="col-md-2">
 			<input type="text" name="graph_name" placeholder="Enter Unique Name" id="graph_name" value="<?= $cwt_name ?>" />
@@ -27,16 +27,17 @@
 <script src="<?= base_url('assets/chartjs/canvasjs.min.js') ?>"></script>
 <script>
 	var pointsdata = [];
-	var historic_data = [];
+	// var historic_data = [];
+	// var revenue_data = [];
 
 
-	<?php foreach ($historic_data as $nXCo => $nYCo) { ?>
-		cobj = {
-			x: <?= $nXCo ?>,
-			y: <?= $nYCo ?>
-		};
-		historic_data.push(cobj);
-	<?php } ?>
+	// <?php foreach ($historic_data as $nXCo => $nYCo) { ?>
+	// 	cobj = {
+	// 		x: <?= $nXCo ?>,
+	// 		y: <?= $nYCo ?>
+	// 	};
+	// 	historic_data.push(cobj);
+	// <?php } ?>
 
 	<?php foreach ($points as $key => $value) { ?>
 		cobj = {
@@ -46,114 +47,110 @@
 		pointsdata.push(cobj);
 	<?php  } ?>
 
-	var interactiveChart = new CanvasJS.Chart("interactive-chart", {
+	// <?php foreach ($revenue_data as $nXRCo => $nYRCo) { ?>
+	// 	cobj = {
+	// 		x: <?= $nXRCo ?>,
+	// 		y: <?= $nYRCo ?>
+	// 	};
+	// 	revenue_data.push(cobj);
+	// <?php  } ?>
+
+	var interactiveChart = new CanvasJS.Chart("interactive-chart", 
+	{
 		animationEnabled: true,
-		//exportEnabled: true,
+		exportEnabled: true,
 		theme: "light2",
-		//zoomEnabled: true,
-		//zoomType: "x",
-		//width: 1000,
-		//height:500,
-		title: {
+		zoomEnabled: true,
+		zoomType: "x",
+		width: 1000,
+		height:500,
+		title:{
 			text: "Baggage Unit Price Setting",
 			fontSize: 20,
 			padding: 5,
 			backgroundColor: "#f4d5a6",
 		},
-		legend: {
-			verticalAlign: "bottom" // "top" , "bottom"
-		},
-		/* subtitles: [{
-			text: "Click anywhere on plotarea to add new Data Points"
-		}], */
-		axisX: {
+		axisX:{
 			title: "Weight Capacity",
 			titleFontColor: "#4F81BC",
-			minimum: 1,
-			maximum: <?= count($points) + 10 ?>,
-			//interval: 5,
-			//viewportMinimum: -50,
-			//viewportMaximum: 50
+			minimum: "1",
+			maximum: "<?= count($points) + 20 ?>",
+			interval: 5,
 		},
-		axisY: {
+		axisY:[{
 			title: "Price per KG",
-			minimum: 1,
-			maximum: <?= $last_year_avg_per_kg + $last_year_avg_per_kg ?>,
+			minimum: "1",
+			maximum: "<?= $last_year_average_price_per_kg + $last_year_average_price_per_kg ?>",
 			titleFontColor: "#4F81BC",
-			suffix: "",
-			prefix: "",
-			//lineColor: "#4F81BC",
-			//tickColor: "#4F81BC",
-
+			interval: 5,
 		},
-		/* axisY2: {
-		title: "Distance",
-		titleFontColor: "#C0504E",
-		suffix : " m",
-		lineColor: "#C0504E",
-		tickColor: "#C0504E"
-	}, */
-		data: [{
-				markerSize: 4,
-				type: "line", //spline,line,area
-				cursor: "move",
-				color: "#1bbde2",
-				//	click: onClick,
-				// xValueFormatString: "DD MMM",
-				// yValueFormatString: "$##0.00",
-				//lineDashType: "dash",
-				showInLegend: true,
-				name: "Price per KG",
-				markerType: "circle", //square				
-				dataPoints: pointsdata
-			},
-			{
-				markerSize: 4,
-				type: "line", //spline,line,area
-				cursor: "move",
-				color: "#ff6633",
-				//	click: onClick,
-				// xValueFormatString: "DD MMM",
-				// yValueFormatString: "$##0.00",
-				//lineDashType: "dash",
-				showInLegend: true,
-				name: "Price per KG",
-				markerType: "circle", //square				
-				dataPoints: historic_data
-			},
-			/*,{
-				markerSize: 4,
-				type: "line", //spline,line,area
-				cursor: "move",
-                color: "red",
-               // xValueFormatString: "DD MMM",
-		       // yValueFormatString: "$##0.00",
-                //lineDashType: "dash",
-                showInLegend: true,
-                name: "Unique Visit",
-                markerType: "circle", //square				
-				dataPoints: [
-				{ x: 1, y: 10 },
-				{ x: 2, y: 15 },
-				{ x: 3, y: 20 },
-				{ x: 4, y: 22 },
-				{ x: 5, y: 25 },
-				{ x: 6, y: 30 },
-				{ x: 7, y: 34 },
-				{ x: 8, y: 39 },
-				{ x: 9, y: 39 },
-				{ x: 10, y: 5 },
-				{ x: 11, y: 10 },
-				{ x: 12, y: 15 },
-				{ x: 13, y: 20 },
-				{ x: 14, y: 22 },
-				{ x: 15, y: 25 },
-				{ x: 16, y: 30 },
-				{ x: 17, y: 34 },
-				{ x: 18, y: 39 }			            
-				]			
-			}*/
+		],
+		axisY2:[{
+			title: "Revenue $",
+			minimum: "1",
+			maximum: "<?= $last_year_revenue_per_flight+100  ?>",
+			titleFontColor: "#C0504E",
+			interval: 50,
+		},
+		],
 
+	data: [
+		{
+			type: "line",
+			showInLegend: true,
+			//axisYIndex: 0, //Defaults to Zero
+			name: "Price per KG",
+			xValueFormatString: "####",
+			cursor: "move",
+			color: "#1bbde2",
+			markerType: "circle",
+			dataPoints: pointsdata
+		},
+		{
+			type: "line",
+			showInLegend: true,
+			// axisYIndex: 1, //Defaults to Zero
+			name: "Last Year Average Revenue Per Flight",
+			xValueFormatString: "####",
+			markerType: "circle",
+			cursor: "move",
+			color: "#ff6633",
+			axisYType: "secondary",
+			// dataPoints: historic_data
+			dataPoints: [
+				{ x: <?= $min_weight ?>, y: <?= $last_year_revenue_per_flight ?>  },
+				{ x: <?= $max_weight ?>, y: <?= $last_year_revenue_per_flight ?>  }
+			]
+		},
+		{
+			type: "line",
+			showInLegend: true,                  
+			axisYType: "secondary",
+			cursor: "move",
+			color: "#808080",
+			//axisYIndex: 0, //Defaults to Zero
+			name: "Projected Revenue Per Flight",
+			xValueFormatString: "####",
+			yValueFormatString: "$##0.00",
+			markerType: "circle",
+			dataPoints: [
+				{ x: 5, y: 450  },
+				{ x: 50, y: 450  }
+			]
+		},
+		{
+			type: "spline",
+			showInLegend: true, 
+			name: "Last Year Average",               	
+			axisYType: "secondary",
+			axisYIndex: 1, //When axisYType is secondary, axisYIndex indexes to secondary Y axis & not to primary Y axis
+			xValueFormatString: "####",
+			cursor: "move",
+			color: "red",
+			dataPoints: [ 
+				{ x: <?= $average_weight ?>, y: <?= $last_year_average_price_per_kg ?>  }
+			]
+		}
 		]
 	});
 	/* 
@@ -174,67 +171,67 @@
 
 
 	interactiveChart.render();
-	var record = false;
-	var snapDistance = 5;
-	var xValue, yValue, parentOffset, relX, relY;
-	var selected;
-	var newData = false;
-	var timerId = null;
-	$("#interactive-chart .canvasjs-chart-canvas").last().on({
-		mousedown: function(e) {
-			parentOffset = jQuery(this).parent().offset();
-			relX = e.pageX - parentOffset.left;
-			relY = e.pageY - parentOffset.top;
-			xValue = Math.round(interactiveChart.axisX[0].convertPixelToValue(relX));
-			yValue = Math.round(interactiveChart.axisY[0].convertPixelToValue(relY));
-			var dps = interactiveChart.data[0].dataPoints;
-			for (var i = 0; i < dps.length; i++) {
-				if ((xValue >= dps[i].x - snapDistance && xValue <= dps[i].x + snapDistance) &&
-					(yValue >= dps[i].y - snapDistance && yValue <= dps[i].y + snapDistance)) {
-					record = true;
-					selected = i;
-					break;
-				} else {
-					selected = null;
-				}
-			}
-			newData = (selected === null) ? true : false;
-			if (newData) {
-				interactiveChart.data[0].addTo("dataPoints", {
-					x: xValue,
-					y: yValue
-				});
-				interactiveChart.axisX[0].set("maximum", Math.max(interactiveChart.axisX[0].maximum, xValue + 30));
-				//interactiveChart.render();
-			}
-		},
+	// var record = false;
+	// var snapDistance = 5;
+	// var xValue, yValue, parentOffset, relX, relY;
+	// var selected;
+	// var newData = false;
+	// var timerId = null;
+	// $("#interactive-chart .canvasjs-chart-canvas").last().on({
+	// 	mousedown: function(e) {
+	// 		parentOffset = jQuery(this).parent().offset();
+	// 		relX = e.pageX - parentOffset.left;
+	// 		relY = e.pageY - parentOffset.top;
+	// 		xValue = Math.round(interactiveChart.axisX[0].convertPixelToValue(relX));
+	// 		yValue = Math.round(interactiveChart.axisY[0].convertPixelToValue(relY));
+	// 		var dps = interactiveChart.data[0].dataPoints;
+	// 		for (var i = 0; i < dps.length; i++) {
+	// 			if ((xValue >= dps[i].x - snapDistance && xValue <= dps[i].x + snapDistance) &&
+	// 				(yValue >= dps[i].y - snapDistance && yValue <= dps[i].y + snapDistance)) {
+	// 				record = true;
+	// 				selected = i;
+	// 				break;
+	// 			} else {
+	// 				selected = null;
+	// 			}
+	// 		}
+	// 		newData = (selected === null) ? true : false;
+	// 		if (newData) {
+	// 			interactiveChart.data[0].addTo("dataPoints", {
+	// 				x: xValue,
+	// 				y: yValue
+	// 			});
+	// 			interactiveChart.axisX[0].set("maximum", Math.max(interactiveChart.axisX[0].maximum, xValue + 30));
+	// 			//interactiveChart.render();
+	// 		}
+	// 	},
 
-		mousemove: function(e) {
-			if (record && !newData) {
-				parentOffset = jQuery(this).parent().offset();
-				relX = e.pageX - parentOffset.left;
-				relY = e.pageY - parentOffset.top;
-				xValue = Math.round(interactiveChart.axisX[0].convertPixelToValue(relX));
-				yValue = Math.round(interactiveChart.axisY[0].convertPixelToValue(relY));
-				clearTimeout(timerId);
-				timerId = setTimeout(function() {
-					if (selected !== null) {
-						interactiveChart.data[0].dataPoints[selected].x = xValue;
-						interactiveChart.data[0].dataPoints[selected].y = yValue;
-						interactiveChart.render();
-					}
-				}, 0);
-			}
-		},
-		mouseup: function(e) {
-			if (selected !== null) {
-				interactiveChart.data[0].dataPoints[selected].x = xValue;
-				interactiveChart.data[0].dataPoints[selected].y = yValue;
-				interactiveChart.render();
-				record = false;
-			}
-		}
-	});
+	// 	mousemove: function(e) {
+	// 		if (record && !newData) {
+	// 			parentOffset = jQuery(this).parent().offset();
+	// 			relX = e.pageX - parentOffset.left;
+	// 			relY = e.pageY - parentOffset.top;
+	// 			xValue = Math.round(interactiveChart.axisX[0].convertPixelToValue(relX));
+	// 			yValue = Math.round(interactiveChart.axisY[0].convertPixelToValue(relY));
+	// 			clearTimeout(timerId);
+	// 			timerId = setTimeout(function() {
+	// 				if (selected !== null) {
+	// 					interactiveChart.data[0].dataPoints[selected].x = xValue;
+	// 					interactiveChart.data[0].dataPoints[selected].y = yValue;
+	// 					interactiveChart.render();
+	// 				}
+	// 			}, 0);
+	// 		}
+	// 	},
+	// 	mouseup: function(e) {
+	// 		if (selected !== null) {
+	// 			interactiveChart.data[0].dataPoints[selected].x = xValue;
+	// 			interactiveChart.data[0].dataPoints[selected].y = yValue;
+	// 			interactiveChart.render();
+	// 			record = false;
+	// 		}
+	// 	}
+	// });
 
 
 
