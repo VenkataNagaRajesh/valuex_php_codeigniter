@@ -288,6 +288,7 @@
 					<tr>
 					    <th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
 						<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('version_id')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('partner_carrier')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('allowance')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('aircraft_type')?></th>
@@ -328,6 +329,10 @@
     $("#flt_effective_date").datepicker();
     $("#flt_discontinue_date").datepicker();
 
+    $(window).on('load',function(){
+        loaddatatable();
+    });
+
     $(document).ready(function() {   
         $('#origin_level').trigger('change');
         $('#dest_level').trigger('change');
@@ -342,7 +347,7 @@
         $('#flt_dest_level').val(<?=$flt_dest_level?>).trigger('change');
         var flt_dest_content = [<?=implode(',',$flt_dest_content)?>];
         $('#flt_dest_content').val(flt_dest_content).trigger('change');
-        loaddatatable();
+    
     });
 
     $('#origin_level').change(function(event) {    
@@ -567,6 +572,7 @@ function loaddatatable() {
         },
         "columns":[{"data": "chkbox" },
                    {"data": "carrier_code" },
+                   {"data": "version_id"},
                    {"data": "partner_carrier_code" },
                    {"data": "allowance" },
                    {"data": "aircraft_type" },
