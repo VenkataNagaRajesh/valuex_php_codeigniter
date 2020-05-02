@@ -19,7 +19,27 @@ class Bclr_m extends MY_Model {
 
         function get_single_bclr($array=NULL) {
                 $query = parent::get_single($array);
+                // print_r($this->db->last_query());die();
                 return $query;
+        }
+
+        function get_single_bg_cwt_bclr_id($array=NULL) {
+            $this->db->select('cwt_bclr_id');
+            $this->db->from('BG_cwt_bclr_new');
+            $this->db->where($array);
+            $query = $this->db->get();
+            $check = $query->row();
+            if($check->cwt_bclr_id) {
+                return $check->cwt_bclr_id;
+            } else {
+              return false;
+            }
+        }
+
+        function get_cwt_bclr_data($bclr_id)
+        {
+            $query = $this->db->get_where('BG_cwt_bclr_new',array("active" => 1,"bclr_id" => $bclr_id));
+            return $query->result();
         }
 
         function insert_bclr($array) {
@@ -33,14 +53,16 @@ class Bclr_m extends MY_Model {
         }
 
 	function checkBCLREntry($array){
-                $this->db->select('bclr_id');
+                $this->db->select('bclr_id','version_id');
                 $this->db->from('BG_baggage_control_rule');
                 $this->db->where($array);
                 $this->db->limit(1);
                 $query = $this->db->get();
                 $check = $query->row();
+                $get_bclr_entry = array();
                 if($check->bclr_id) {
-                    return $check->bclr_id;
+                    $get_bclr_entry = [$check->bclr_id,$check->version_id];
+                    return $get_bclr_entry;
                 } else {
                   return false;
                 }
@@ -73,6 +95,11 @@ class Bclr_m extends MY_Model {
             return ($this->db->affected_rows() != 1) ? false : true;
         }
 
+        public function insert_cwt_bclr($data){
+            $this->db->insert('BG_cwt_bclr_new',$data);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        }
+
         public function update_cwt($data,$where){
             $this->db->where($where);
             $this->db->update('BG_cwt',$data);
@@ -86,6 +113,7 @@ class Bclr_m extends MY_Model {
 
         public function getActiveCWT($bclr_id){
             $query = $this->db->get_where('BG_cwt',array("active" => 1,"bclr_id" => $bclr_id));
+            // print_r($this->db->last_query());die();
             return $query->result();
         }
 
