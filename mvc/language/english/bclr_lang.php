@@ -7,6 +7,7 @@ $lang['action'] = "Action";
 $lang['active'] = 'Status';
 $lang['bclr_status'] = 'Status';
 $lang['carrier'] = 'Carrier';
+$lang['version_id'] = 'Version';
 $lang['partner_carrier'] = 'Partner Carrier';
 $lang['allowance'] = 'Allowance';
 $lang['origin_level'] = 'Origin Level';
