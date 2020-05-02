@@ -516,24 +516,28 @@ class Bclr extends Admin_Controller
 
                 $exist_id = $this->bclr_m->checkBCLREntry($array);
                 if ($bclr_id) {
-                    if ($exist_id && $exist_id != $bclr_id) {
+                    if ($exist_id[0] && $exist_id[0] != $bclr_id) {
                         $json['status'] = 'duplicate';
                     } else {
                         $array["modify_date"] = time();
+                        $array['version_id'] = $exist_id[1]+1;
+
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
                         $this->bclr_m->update_bclr($array, $bclr_id);
                         $json['status'] = 'success';
                     }
                 } else {
-                    if ($exist_id) {
+                    if ($exist_id[0]) {
                         $json['status'] = 'duplicate';
                     } else {
                         $array["create_date"] = time();
                         $array["modify_date"] = time();
+                        $array['version_id'] = 1;
                         $array["create_userID"] = $this->session->userdata('loginuserID');
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
                         $this->bclr_m->insert_bclr($array);
                         $bclr_id = $this->db->insert_id();
+                        $this->generateCWTBCLR($bclr_id);
                         $this->generateCWT($bclr_id);
                         $json['status'] = 'success';
                     }
@@ -546,8 +550,6 @@ class Bclr extends Admin_Controller
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($json));
     }
-
-
 
     public function delete()
     {
@@ -702,15 +704,11 @@ class Bclr extends Admin_Controller
         $this->load->view('_layout_main', $this->data);
     }
 
-
-
-
-
     function server_processing()
     {
         $userID = $this->session->userdata('loginuserID');
         $roleID = $this->session->userdata('roleID');
-        $aColumns = array("MainSet.bclr_id", "MainSet.carrier_code", "MainSet.partner_carrier_code", "MainSet.allowance", "MainSet.aircraft_type", "MainSet.flight_num_range", "MainSet.from_cabin_value", "MainSet.origin_level_value", "SubSet.origin_content_data", "MainSet.dest_level_value", "SubSet.dest_content_data", "MainSet.effective_date", "MainSet.discontinue_date", "MainSet.season_name", "SubSet.frequency", "MainSet.bag_type", "MainSet.rule_auth_carrier_code", "MainSet.dep_time_start", "MainSet.dep_time_end", "MainSet.min_unit", "MainSet.max_capacity", "MainSet.min_price", "MainSet.max_price", "MainSet.active");
+        $aColumns = array("MainSet.bclr_id", "MainSet.version_id", "MainSet.carrier_code", "MainSet.partner_carrier_code", "MainSet.allowance", "MainSet.aircraft_type", "MainSet.flight_num_range", "MainSet.from_cabin_value", "MainSet.origin_level_value", "SubSet.origin_content_data", "MainSet.dest_level_value", "SubSet.dest_content_data", "MainSet.effective_date", "MainSet.discontinue_date", "MainSet.season_name", "SubSet.frequency", "MainSet.bag_type", "MainSet.rule_auth_carrier_code", "MainSet.dep_time_start", "MainSet.dep_time_end", "MainSet.min_unit", "MainSet.max_capacity", "MainSet.min_price", "MainSet.max_price", "MainSet.active");
 
         $sLimit = "";
 
@@ -832,12 +830,12 @@ class Bclr extends Admin_Controller
         }
 
 
-        $sQuery = "SELECT SQL_CALC_FOUND_ROWS MainSet.bclr_id,MainSet.carrierID,MainSet.partner_carrierID,MainSet.allowance,MainSet.flight_num_range,MainSet.effective_date,MainSet.discontinue_date,MainSet.bag_type,MainSet.dep_time_start,MainSet.dep_time_end,MainSet.min_unit,MainSet.max_capacity,MainSet.min_price,MainSet.max_price,MainSet.active,
+        $sQuery = "SELECT SQL_CALC_FOUND_ROWS MainSet.bclr_id,MainSet.version_id,MainSet.carrierID,MainSet.partner_carrierID,MainSet.allowance,MainSet.flight_num_range,MainSet.effective_date,MainSet.discontinue_date,MainSet.bag_type,MainSet.dep_time_start,MainSet.dep_time_end,MainSet.min_unit,MainSet.max_capacity,MainSet.min_price,MainSet.max_price,MainSet.active,
                 MainSet.rule_auth,MainSet.frequency,MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.aircraft_type,MainSet.from_cabin_value,MainSet.season_name,MainSet.rule_auth_carrier_code,MainSet.origin_level_value,MainSet.dest_level_value,
                 MainSet.origin_level,MainSet.dest_level,SubSet.origin_content,SubSet.origin_content_data,SubSet.dest_content,SubSet.dest_content_data,SubSet.dayslist,SubSet.frequency		
                 FROM
                 (
-                SELECT bc.bclr_id,bc.carrierID,bc.partner_carrierID,bc.allowance,bc.frequency,bc.flight_num_range,bc.effective_date,bc.discontinue_date,bc.bag_type,bc.dep_time_start,bc.dep_time_end,bc.min_unit,bc.max_capacity,bc.min_price,bc.max_price,bc.active,
+                SELECT bc.bclr_id,bc.version_id,bc.carrierID,bc.partner_carrierID,bc.allowance,bc.frequency,bc.flight_num_range,bc.effective_date,bc.discontinue_date,bc.bag_type,bc.dep_time_start,bc.dep_time_end,bc.min_unit,bc.max_capacity,bc.min_price,bc.max_price,bc.active,
                 bc.rule_auth,bc.origin_level,bc.dest_level,ddc.code carrier_code,ddpc.code partner_carrier_code,ddat.aln_data_value aircraft_type,tca.aln_data_value as from_cabin_value,sea.season_name,ddac.code as rule_auth_carrier_code,dto.alias as origin_level_value,dtd.alias as dest_level_value		
                 FROM BG_baggage_control_rule  bc
                 LEFT JOIN  VX_data_defns ddc on (ddc.vx_aln_data_defnsID = bc.carrierID AND ddc.aln_data_typeID = 12) 
@@ -846,8 +844,10 @@ class Bclr extends Admin_Controller
                 LEFT JOIN VX_data_types dto on (dto.vx_aln_data_typeID = bc.origin_level) 
                 LEFT JOIN VX_data_types dtd on (dtd.vx_aln_data_typeID = bc.dest_level)     
                 LEFT JOIN VX_data_defns ddat on (ddat.vx_aln_data_defnsID = bc.aircraft_typeID AND ddat.aln_data_typeID = 21)
-                INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = bc.carrierID)
-                INNER JOIN VX_data_defns tca on (tca.alias = fdef.level and tca.aln_data_typeID = 13 AND tca.vx_aln_data_defnsID = bc.from_cabin)
+                -- INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = bc.carrierID)
+                -- INNER JOIN VX_data_defns tca on (tca.alias = fdef.level and tca.aln_data_typeID = 13 AND tca.vx_aln_data_defnsID = bc.from_cabin)
+                LEFT JOIN VX_data_defns tca on (  tca.aln_data_typeID = 13 AND tca.vx_aln_data_defnsID = bc.from_cabin)
+                LEFT JOIN VX_airline_cabin_def fdef on (fdef.carrier = bc.carrierID and tca.alias = fdef.level AND fdef.cabin = tca.code )
                 LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = bc.season_id )
                 ) as MainSet 
                 LEFT JOIN (
@@ -880,8 +880,7 @@ class Bclr extends Admin_Controller
                 ) as SubSet
                 on MainSet.bclr_id = SubSet.bclr_id 
 
-$sWhere $sOrder $sLimit";
-
+        $sWhere $sOrder $sLimit";
 
         $rResult = $this->install_m->run_query($sQuery);
         $sQuery = "SELECT FOUND_ROWS() as total";
@@ -895,6 +894,7 @@ $sWhere $sOrder $sLimit";
 
         $i = 1;
         $rownum = 1 + $_GET['iDisplayStart'];
+        // print_r($rResult);
         foreach ($rResult as $feed) {
             $feed->bag_type_value = ($feed->bag_type == 1) ? "KG" : "Piece";
             $feed->allowance = ($feed->allowance == 1) ? "Whitelist" : "Blacklist";
@@ -910,7 +910,7 @@ $sWhere $sOrder $sLimit";
                 $feed->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_fclr"  data-placement="top" onclick="editbclr(' . $feed->bclr_id . ')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></a>';
             }
 
-            if (!permissionChecker('bclr_view')) {
+            if (permissionChecker('bclr_view')) {
                 $feed->action .=  '<a target="_blank" href="' . base_url('bclr/showcwtgraph/' . $feed->bclr_id) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="CWT graph"><i class="fa fa-eye"></i></a>';
             }
 
@@ -945,8 +945,8 @@ $sWhere $sOrder $sLimit";
 
 
         if (isset($_REQUEST['export'])) {
-            $columns = array('#', "Carrier", "Partner Carrier", "Allowance", "Aircraft", "Flight Number Range", "From Cabin", "Origin level", "Origin Content", "Destination Level", "Destination Content", "Effective Date", "Discontinue Date", "Season", "Frequency", "BagType", "Rule Auth", "Departure Time Start", "Departure Time End", "Min Unit", "Max Capacity", "Min Price", "Max Price", "Active");
-            $rows = array("id", "carrier_code", "partner_carrier_code", "allowance", "aircraft_type", "flight_num_range", "from_cabin_value", "origin_level_value", "origin_content_data", "dest_level_value", "dest_content_data", "effective_date", "discontinue_date", "season_name", "frequency", "bag_type_value", "rule_auth_carrier_code", "dep_time_start", "dep_time_end", "min_unit", "max_capacity", "min_price", "max_price", "status");
+            $columns = array('#', "Carrier", "Version", "Partner Carrier", "Allowance", "Aircraft", "Flight Number Range", "From Cabin", "Origin level", "Origin Content", "Destination Level", "Destination Content", "Effective Date", "Discontinue Date", "Season", "Frequency", "BagType", "Rule Auth", "Departure Time Start", "Departure Time End", "Min Unit", "Max Capacity", "Min Price", "Max Price", "Active");
+            $rows = array("id", "carrier_code", "version_id", "partner_carrier_code", "allowance", "aircraft_type", "flight_num_range", "from_cabin_value", "origin_level_value", "origin_content_data", "dest_level_value", "dest_content_data", "effective_date", "discontinue_date", "season_name", "frequency", "bag_type_value", "rule_auth_carrier_code", "dep_time_start", "dep_time_end", "min_unit", "max_capacity", "min_price", "max_price", "status");
             $this->exportall($output['aaData'], $columns, $rows);
         } else {
             echo json_encode($output);
@@ -1003,32 +1003,25 @@ $sWhere $sOrder $sLimit";
     {
         $id = htmlentities(escapeString($this->uri->segment(3)));
         $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));
+        
         $cwtdata = $this->bclr_m->getActiveCWT($id);
+        $getBGBclrdata = $this->bclr_m->get_cwt_bclr_data($id);
         $this->data['bclr_id'] = $id;
-        /* $this->data['min_price'] = $bclr->min_price;
-      $this->data['max_price'] = $bclr->max_price;
-      $this->data['max_capacity'] = $bclr->max_capacity;
-      $this->data['minmax_diff'] = $this->data['max_price'] - $this->data['min_price'];
-      $this->data['perkg'] = $this->data['minmax_diff'] / $this->data['max_capacity'];
-    
-       $this->data['points'][1] = $this->data['min_price'];
-      for($i=2;$i<=$this->data['max_capacity'];$i++){              
-        $price = $this->data['points'][$i-1]+$this->data['perkg'];
-        $this->data['points'][$i] = $price;
-      } */
-        // print_r($cwtdata); exit;
+       
+      
         foreach ($cwtdata as $cwt) {
             $this->data['points'][$cwt->cum_wt] = $cwt->price_per_kg;
         }
-
-        $objCWTData = $this->getCWTHistorialData($bclr);
-        $this->data['last_year_avg_per_kg'] = $objCWTData->average_weight;
+    
+        
+        $this->data['last_year_average_price_per_kg'] = $getBGBclrdata[0]->last_year_average_price_per_kg;
+        $this->data['last_year_revenue_per_flight'] = $getBGBclrdata[0]->last_year_revenue_per_flight;
+        
         $this->data['min_weight'] = $bclr->min_unit;
         $this->data['max_weight'] = $bclr->max_capacity;
-
-        foreach (range($this->data['min_weight'], $this->data['max_weight']) as $nWeight) {
-            $this->data['historic_data'][$nWeight] = $this->data['last_year_avg_per_kg'];
-        }
+        $this->data['min_price'] = $bclr->min_price;
+        $this->data['max_price'] = $bclr->max_price;
+        $this->data['average_weight'] = $getBGBclrdata[0]->average_weight;
 
 
         $this->data['cwt_name'] = $cwtdata[0]->name;
@@ -1039,6 +1032,7 @@ $sWhere $sOrder $sLimit";
     public function generateCWT($id)
     {
         $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));
+        $cwt_bclr_id = $this->bclr_m->get_single_bg_cwt_bclr_id(['bclr_id' => $id]);
         $min_price = $bclr->min_price;
         $max_price = $bclr->max_price;
         $max_capacity = $bclr->max_capacity;
@@ -1058,8 +1052,74 @@ $sWhere $sOrder $sLimit";
         foreach ($points as $key => $value) {
             $data['cum_wt'] = $key;
             $data['price_per_kg'] = $value;
+            $data['cwt_bclr_id'] = $cwt_bclr_id;
             $this->bclr_m->insert_cwt($data);
         }
+        return TRUE;
+    }
+
+    public function generateCWTBCLR($id)
+    {
+        $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));
+        $min_price = $bclr->min_price;
+        $max_price = $bclr->max_price;
+        $max_capacity = $bclr->max_capacity;
+        $objCWTData = $this->getCWTHistorialData($bclr);
+        if($objCWTData->no_of_passingers > 0)
+        {
+            $no_of_passengers = $objCWTData->no_of_passingers;
+            $total_revenue = $objCWTData->total_revenue;
+            $total_weight = $objCWTData->total_weight;
+            $average_weight = $objCWTData->average_weight;
+            $average_price = $objCWTData->average_price;
+            $total_flight_count =  $objCWTData->total_flight_count;
+            $total_pax_count = $objCWTData->total_pax_count;
+            $last_year_average_price_per_kg = $total_revenue/$total_weight;
+            $last_year_total_weight_per_flight = $total_weight/$total_flight_count;
+            $last_year_revenue_per_flight = $total_revenue/$total_flight_count;
+            $total_number_pax_per_flight_who_bought_the_baggage = $total_pax_count/$total_flight_count;
+            $average_weight_per_flight_per_pax = $last_year_total_weight_per_flight/$total_number_pax_per_flight_who_bought_the_baggage;
+            $average_price_per_flight_per_pax = $last_year_revenue_per_flight/$total_number_pax_per_flight_who_bought_the_baggage;
+
+        } else {
+            $no_of_passengers = 0;
+            $total_revenue = 0;
+            $total_weight = 0;
+            $average_wight = 0;
+            $average_price = 0;
+            $total_flight_count =  0;
+            $total_pax_count = 0;
+            $last_year_average_price_per_kg = 0;
+            $last_year_total_weight_per_flight = 0;
+            $last_year_revenue_per_flight = 0;
+            $average_weight_per_flight_per_pax = 0;
+            $average_price_per_flight_per_pax = 0;
+        }
+        $bclr_details = json_encode((array) $bclr);
+        $cwt_array = array();
+        $cwt_array['bclr_id'] = $id;
+        $cwt_array['version_id'] = $bclr->version_id;
+        $cwt_array['bclr_details'] = $bclr_details;
+        $cwt_array['no_of_passengers'] = $no_of_passengers;
+        $cwt_array['total_revenue'] = $total_revenue;
+        $cwt_array['total_weight'] = $total_weight;
+        $cwt_array['average_weight'] = $average_weight;
+        $cwt_array['average_price'] = $average_price;
+        $cwt_array['total_flight_count'] = $total_flight_count;
+        $cwt_array['total_pax_count'] = $total_pax_count;
+        $cwt_array['last_year_average_price_per_kg'] = $last_year_average_price_per_kg;
+        $cwt_array['last_year_total_weight_per_flight'] = $last_year_total_weight_per_flight;
+        $cwt_array['last_year_revenue_per_flight'] = $last_year_revenue_per_flight;
+        $cwt_array['average_weight_per_flight_per_pax'] = $average_weight_per_flight_per_pax;
+        $cwt_array['average_price_per_flight_per_pax'] = $average_price_per_flight_per_pax;
+     
+        $cwt_array['cwt_graphname_bclr_id_version_id'] = "cwt-graph-" . $id."-".$bclr->version_id;
+        $cwt_array['bclr_max_capacity'] = $max_capacity;
+        $cwt_array['bclr_min_price'] = $min_price;
+        $cwt_array['bclr_max_price'] = $max_price;
+        $cwt_array['active'] = 1;
+        $cwt_array['created_user_id'] = $this->session->userdata('loginuserID');
+        $this->bclr_m->insert_cwt_bclr($cwt_array);
         return TRUE;
     }
 
@@ -1128,7 +1188,12 @@ $sWhere $sOrder $sLimit";
 
         $nCarrerID = $arrBclrData->carrierID;
         $strOrigin = $arrBclrData->origin_content;
+       
+        $origin_list_p = array_column($this->marketzone_m->getParentsofAirport($strOrigin),"vx_aln_data_defnsID");
+        $implode_org_p = implode(",", $origin_list_p);
         $strDestination = $arrBclrData->dest_content;
+        $dest_list_p = array_column($this->marketzone_m->getParentsofAirport($strDestination), "vx_aln_data_defnsID");
+        $implode_dest_p = implode(",", $dest_list_p);
         $strStartDate = ($arrBclrData->effective_date - $nOneYear); //unix time stamp - one year
         $strEndDate = ($arrBclrData->discontinue_date - $nOneYear); //unix time stamp - one year
 
@@ -1137,11 +1202,13 @@ $sWhere $sOrder $sLimit";
         $sQuery = "SELECT 
               count(id) as no_of_passingers, 
               SUM(prorated_price ) as total_revenue,
-              SUM(weight) as tital_weight,
+              SUM(weight) as total_weight,
               AVG(weight) as average_weight,
-              AVG(prorated_price) as average_price   
-      from bg_ra_feed where carrier = $nCarrerID and origin IN ($strOrigin) and destinition IN ($strDestination) and  departure_date  BETWEEN $strStartDate and $strEndDate";
-
+              AVG(prorated_price) as average_price,
+              COUNT(flight_number) as total_flight_count,
+              COUNT(pax_type) as total_pax_count
+      from bg_ra_feed where carrier = $nCarrerID and origin IN ($implode_org_p) and destinition IN ($implode_dest_p) and  departure_date  BETWEEN $strStartDate and $strEndDate";
+      
         return $rResult = $this->install_m->run_query($sQuery)[0];
     }
 }
