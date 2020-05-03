@@ -20,7 +20,7 @@
 		</div>
 		<div class="col-md-2">
 			<input type="text" name="graph_name" placeholder="Enter Unique Name" id="graph_name" value="<?= $cwt_name ?>" />
-			<button class="btn btn-danger" onclick="getChartValues()">Update</button>
+			<button class="btn btn-danger" disabled="disabled">Update Graph</button>
 		</div>
 	</div>
 </div>
@@ -217,32 +217,32 @@
 
 
 
-	function getChartValues() {
-		var graph_name = $('#graph_name').val();
-		if (graph_name == '' || graph_name == null) {
-			alert("Enter graph Name");
-		} else {
-			var data = interactiveChart.get("data");
-			//console.log(data[0].dataPoints);
-			$.ajax({
-				async: false,
-				type: 'POST',
-				url: "<?= base_url('bclr/updatecwtgraph') ?>",
-				data: {
-					"bclr_id": <?= $bclr_id ?>,
-					"graph_name": graph_name,
-					"points": data[0].dataPoints
-				},
-				dataType: "html",
-				success: function(data) {
-					var obj = jQuery.parseJSON(data);
-					if (obj.status === "updated") {
-						window.location.reload(true);
-					} else {
-						alert(obj.status);
-					}
-				}
-			});
-		}
-	}
+	// function getChartValues() {
+	// 	var graph_name = $('#graph_name').val();
+	// 	if (graph_name == '' || graph_name == null) {
+	// 		alert("Enter graph Name");
+	// 	} else {
+	// 		var data = interactiveChart.get("data");
+	// 		//console.log(data[0].dataPoints);
+	// 		$.ajax({
+	// 			async: false,
+	// 			type: 'POST',
+	// 			url: "<?= base_url('bclr/updatecwtgraph') ?>",
+	// 			data: {
+	// 				"bclr_id": <?= $bclr_id ?>,
+	// 				"graph_name": graph_name,
+	// 				"points": data[0].dataPoints
+	// 			},
+	// 			dataType: "html",
+	// 			success: function(data) {
+	// 				var obj = jQuery.parseJSON(data);
+	// 				if (obj.status === "updated") {
+	// 					window.location.reload(true);
+	// 				} else {
+	// 					alert(obj.status);
+	// 				}
+	// 			}
+	// 		});
+	// 	}
+	// }
 </script>
