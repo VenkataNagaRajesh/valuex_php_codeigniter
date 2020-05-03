@@ -883,6 +883,7 @@ class Bclr extends Admin_Controller
         $sWhere $sOrder $sLimit";
 
         $rResult = $this->install_m->run_query($sQuery);
+        // print_r($rResult);die();
         $sQuery = "SELECT FOUND_ROWS() as total";
         $rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;
         $output = array(
@@ -897,6 +898,7 @@ class Bclr extends Admin_Controller
         // print_r($rResult);
         foreach ($rResult as $feed) {
             $feed->bag_type_value = ($feed->bag_type == 1) ? "KG" : "Piece";
+            $feed->from_cabin_value = ($feed->from_cabin_value == "") ? "*" : $feed->from_cabin_value;
             $feed->allowance = ($feed->allowance == 1) ? "Whitelist" : "Blacklist";
             $feed->dep_time_start = gmdate("H:i:s", $feed->dep_time_start);
             $feed->dep_time_end = gmdate("H:i:s", $feed->dep_time_end);
