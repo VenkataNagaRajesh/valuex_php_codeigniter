@@ -27,17 +27,6 @@
 <script src="<?= base_url('assets/chartjs/canvasjs.min.js') ?>"></script>
 <script>
 	var pointsdata = [];
-	// var historic_data = [];
-	// var revenue_data = [];
-
-
-	// <?php foreach ($historic_data as $nXCo => $nYCo) { ?>
-	// 	cobj = {
-	// 		x: <?= $nXCo ?>,
-	// 		y: <?= $nYCo ?>
-	// 	};
-	// 	historic_data.push(cobj);
-	// <?php } ?>
 
 	<?php foreach ($points as $key => $value) { ?>
 		cobj = {
@@ -47,14 +36,7 @@
 		pointsdata.push(cobj);
 	<?php  } ?>
 
-	// <?php foreach ($revenue_data as $nXRCo => $nYRCo) { ?>
-	// 	cobj = {
-	// 		x: <?= $nXRCo ?>,
-	// 		y: <?= $nYRCo ?>
-	// 	};
-	// 	revenue_data.push(cobj);
-	// <?php  } ?>
-
+	
 	var interactiveChart = new CanvasJS.Chart("interactive-chart", 
 	{
 		animationEnabled: true,

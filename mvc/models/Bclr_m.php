@@ -19,7 +19,6 @@ class Bclr_m extends MY_Model {
 
         function get_single_bclr($array=NULL) {
                 $query = parent::get_single($array);
-                // print_r($this->db->last_query());die();
                 return $query;
         }
 
@@ -113,7 +112,6 @@ class Bclr_m extends MY_Model {
 
         public function getActiveCWT($bclr_id){
             $query = $this->db->get_where('BG_cwt',array("active" => 1,"bclr_id" => $bclr_id));
-            // print_r($this->db->last_query());die();
             return $query->result();
         }
 
@@ -130,7 +128,6 @@ class Bclr_m extends MY_Model {
 
         public function checkGraphName($bclr_id,$name){
             $query = $this->db->get_where('BG_cwt',array('bclr_id'=>$bclr_id,"name"=>$name));
-            //print_r($this->db->last_query());
             $result = $query->row();
             if($result){
                 return TRUE;
