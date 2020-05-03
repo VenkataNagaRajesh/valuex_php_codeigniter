@@ -1012,18 +1012,23 @@ class Bclr extends Admin_Controller
         foreach ($cwtdata as $cwt) {
             $this->data['points'][$cwt->cum_wt] = $cwt->price_per_kg;
         }
+
+        if(count($getBGBclrdata))
+        {
+            $this->data['last_year_average_price_per_kg'] = $getBGBclrdata[0]->last_year_average_price_per_kg;
+            $this->data['last_year_revenue_per_flight'] = $getBGBclrdata[0]->last_year_revenue_per_flight;
+            $this->data['average_weight'] = $getBGBclrdata[0]->average_weight;
+        } else {
+            $this->data['last_year_average_price_per_kg'] = 0;
+            $this->data['last_year_revenue_per_flight'] = 0;
+            $this->data['average_weight'] = 0;
+        }
     
-        
-        $this->data['last_year_average_price_per_kg'] = $getBGBclrdata[0]->last_year_average_price_per_kg;
-        $this->data['last_year_revenue_per_flight'] = $getBGBclrdata[0]->last_year_revenue_per_flight;
-        
         $this->data['min_weight'] = $bclr->min_unit;
         $this->data['max_weight'] = $bclr->max_capacity;
         $this->data['min_price'] = $bclr->min_price;
         $this->data['max_price'] = $bclr->max_price;
-        $this->data['average_weight'] = $getBGBclrdata[0]->average_weight;
-
-
+     
         $this->data['cwt_name'] = $cwtdata[0]->name;
         $this->data["subview"] = "bclr/drag-chart";
         $this->load->view('_layout_main', $this->data);
