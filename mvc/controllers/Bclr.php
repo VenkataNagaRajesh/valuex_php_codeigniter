@@ -1029,6 +1029,16 @@ class Bclr extends Admin_Controller
             $this->data['last_year_average_price_per_kg'] = $getBGBclrdata[0]->last_year_average_price_per_kg;
             $this->data['last_year_revenue_per_flight'] = $getBGBclrdata[0]->last_year_revenue_per_flight;
             $this->data['average_weight'] = $getBGBclrdata[0]->average_weight;
+            $this->data['no_of_passengers'] = $getBGBclrdata[0]->no_of_passengers;
+            $this->data['total_revenue'] = $getBGBclrdata[0]->total_revenue;
+            $this->data['total_weight'] = $getBGBclrdata[0]->total_weight;
+            $this->data['average_weight'] = $getBGBclrdata[0]->average_weight;
+            $this->data['average_price'] = $getBGBclrdata[0]->average_price;
+            $this->data['total_flight_count'] = $getBGBclrdata[0]->total_flight_count;
+            $this->data['total_pax_count'] = $getBGBclrdata[0]->total_pax_count;
+            $this->data['last_year_total_weight_per_flight'] = $getBGBclrdata[0]->last_year_total_weight_per_flight;
+            $this->data['average_weight_per_flight_per_pax'] = $getBGBclrdata[0]->average_weight_per_flight_per_pax;
+            $this->data['average_price_per_flight_per_pax'] = $getBGBclrdata[0]->average_price_per_flight_per_pax;
         } else {
             $this->data['last_year_average_price_per_kg'] = 0;
             $this->data['last_year_revenue_per_flight'] = 0;
