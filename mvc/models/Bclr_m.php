@@ -52,7 +52,7 @@ class Bclr_m extends MY_Model {
         }
 
 	function checkBCLREntry($array){
-                $this->db->select('bclr_id','version_id');
+                $this->db->select('bclr_id,version_id');
                 $this->db->from('BG_baggage_control_rule');
                 $this->db->where($array);
                 $this->db->limit(1);
@@ -85,23 +85,37 @@ class Bclr_m extends MY_Model {
             }
         }
         
-        public function delete_bclr($id){
-                parent::delete($id);
-        }    
+        // public function delete_bclr($id){
+        //         parent::delete($id);
+        // }  
+        
+    public function delete_bclr($id){
+        $this->db->where(['bclr_id' => $id]);
+        $this->db->update('BG_baggage_control_rule', ['active' => 0]);
+        return true;
+    }
 
 	public function insert_cwt($data){
             $this->db->insert('BG_cwt',$data);
             return ($this->db->affected_rows() != 1) ? false : true;
         }
 
-        public function insert_cwt_bclr($data){
-            $this->db->insert('BG_cwt_bclr_new',$data);
-            return ($this->db->affected_rows() != 1) ? false : true;
-        }
-
         public function update_cwt($data,$where){
             $this->db->where($where);
             $this->db->update('BG_cwt',$data);
+            // print_r($this->db->last_query());
+        }
+
+        public function insert_cwt_bclr($data){
+            $this->db->insert('BG_cwt_bclr_new', $data);
+            return ($this->db->affected_rows() != 1) ? false : true;
+        }
+
+        public function update_cwt_bclr($data, $where){
+            $this->db->where($where);
+            $this->db->update('BG_cwt_bclr_new', $data);
+            // print_r($this->db->last_query());die();
+            return TRUE;
         }
 
         public function disable_cwt($bclr_id){
@@ -134,6 +148,23 @@ class Bclr_m extends MY_Model {
             } else {
                 return FALSE;
             }
+        }
+
+        public function getVersionID($bclr_id)
+        {
+            $this->db->select('version_id');
+            $this->db->from('BG_baggage_control_rule');
+            $this->db->where(['bclr_id' => $bclr_id]);
+            $query = $this->db->get();
+            $check = $query->row();
+            return $check->version_id;
+        }
+
+        public function delete_cwt($where)
+        {
+            $this -> db -> where($where);
+            $this -> db -> delete('BG_cwt');
+            return TRUE;
         }
 
 }
