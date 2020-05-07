@@ -1107,7 +1107,7 @@ class Bclr extends Admin_Controller
             $no_of_passengers = 0;
             $total_revenue = 0;
             $total_weight = 0;
-            $average_wight = 0;
+            $average_weight = 0;
             $average_price = 0;
             $total_flight_count =  0;
             $total_pax_count = 0;
