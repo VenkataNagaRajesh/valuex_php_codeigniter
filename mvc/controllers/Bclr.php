@@ -520,10 +520,17 @@ class Bclr extends Admin_Controller
                         $json['status'] = 'duplicate';
                     } else {
                         $array["modify_date"] = time();
-                        $array['version_id'] = $exist_id[1]+1;
-
+                        if($exist_id[1])
+                        {
+                            $version_id = $exist_id[1]+1;
+                        } else {
+                            $version_id = $this->bclr_m->getVersionID($bclr_id)+1;
+                        }
+                        $array['version_id'] = $version_id;
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
                         $this->bclr_m->update_bclr($array, $bclr_id);
+                        $this->generateCWTBCLR($bclr_id, "update");
+                        $this->generateCWT($bclr_id, "update");
                         $json['status'] = 'success';
                     }
                 } else {
@@ -537,8 +544,8 @@ class Bclr extends Admin_Controller
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
                         $this->bclr_m->insert_bclr($array);
                         $bclr_id = $this->db->insert_id();
-                        $this->generateCWTBCLR($bclr_id);
-                        $this->generateCWT($bclr_id);
+                        $this->generateCWTBCLR($bclr_id, "insert");
+                        $this->generateCWT($bclr_id, "insert");
                         $json['status'] = 'success';
                     }
                 }
@@ -829,6 +836,8 @@ class Bclr extends Admin_Controller
             $sWhere .= 'MainSet.carrierID IN (' . implode(',', $this->session->userdata('login_user_airlineID')) . ')';
         }
 
+        $sWhere.= " AND MainSet.active = '1'";
+
 
         $sQuery = "SELECT SQL_CALC_FOUND_ROWS MainSet.bclr_id,MainSet.version_id,MainSet.carrierID,MainSet.partner_carrierID,MainSet.allowance,MainSet.flight_num_range,MainSet.effective_date,MainSet.discontinue_date,MainSet.bag_type,MainSet.dep_time_start,MainSet.dep_time_end,MainSet.min_unit,MainSet.max_capacity,MainSet.min_price,MainSet.max_price,MainSet.active,
                 MainSet.rule_auth,MainSet.frequency,MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.aircraft_type,MainSet.from_cabin_value,MainSet.season_name,MainSet.rule_auth_carrier_code,MainSet.origin_level_value,MainSet.dest_level_value,
@@ -1036,18 +1045,18 @@ class Bclr extends Admin_Controller
         $this->load->view('_layout_main', $this->data);
     }
 
-    public function generateCWT($id)
+    public function generateCWT($id, $action_status="")
     {
         $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));
         $cwt_bclr_id = $this->bclr_m->get_single_bg_cwt_bclr_id(['bclr_id' => $id]);
-        $min_price = $bclr->min_price;
-        $max_price = $bclr->max_price;
-        $max_capacity = $bclr->max_capacity;
-        $minmax_diff = $max_price - $min_price;
-        $perkg = $minmax_diff / $max_capacity;
+        $min_price = $bclr->min_price; //5
+        $max_price = $bclr->max_price; //50
+        $max_capacity = $bclr->max_capacity; //70
+        $minmax_diff = $max_price - $min_price; //45
+        $perkg = $minmax_diff / $max_capacity; //0.642
 
-        $points[1] = $min_price;
-        $data['bclr_id'] = $id;
+        $points[1] = $min_price; //5
+        $data['bclr_id'] = $id; //2
         $data['name'] = "cwt-graph-" . $id;
         $data['create_date'] = time();
         $data['create_userID'] = $this->session->userdata('loginuserID');
@@ -1056,6 +1065,12 @@ class Bclr extends Admin_Controller
             $price = $points[$i - 1] + $perkg;
             $points[$i] = $price;
         }
+
+        if($action_status == "update")
+        {
+            $this->bclr_m->delete_cwt([ 'bclr_id' => $id ]);
+        }
+
         foreach ($points as $key => $value) {
             $data['cum_wt'] = $key;
             $data['price_per_kg'] = $value;
@@ -1065,7 +1080,7 @@ class Bclr extends Admin_Controller
         return TRUE;
     }
 
-    public function generateCWTBCLR($id)
+    public function generateCWTBCLR($id, $action_status="")
     {
         $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));
         $min_price = $bclr->min_price;
@@ -1104,7 +1119,7 @@ class Bclr extends Admin_Controller
         }
         $bclr_details = json_encode((array) $bclr);
         $cwt_array = array();
-        $cwt_array['bclr_id'] = $id;
+        
         $cwt_array['version_id'] = $bclr->version_id;
         $cwt_array['bclr_details'] = $bclr_details;
         $cwt_array['no_of_passengers'] = $no_of_passengers;
@@ -1126,7 +1141,13 @@ class Bclr extends Admin_Controller
         $cwt_array['bclr_max_price'] = $max_price;
         $cwt_array['active'] = 1;
         $cwt_array['created_user_id'] = $this->session->userdata('loginuserID');
-        $this->bclr_m->insert_cwt_bclr($cwt_array);
+        if($action_status == "insert")
+        {
+            $cwt_array['bclr_id'] = $id;
+            $this->bclr_m->insert_cwt_bclr($cwt_array);
+        } else {
+            $this->bclr_m->update_cwt_bclr($cwt_array, ['bclr_id' => $id]);
+        }
         return TRUE;
     }
 
