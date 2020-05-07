@@ -23,6 +23,63 @@
 			<button class="btn btn-danger" disabled="disabled">Update Graph</button>
 		</div>
 	</div>
+	<div>
+		<div class='table col-md-12'>
+		<h3>Graph Calculation Details:</h3>
+			<table border='1' style="background:white;">
+				<tbody>
+					<tr>
+						<td>No of Passengers: </td><td><?= $no_of_passengers ?></td>
+					</tr>
+					<tr>
+						<td>Total Revenue: </td><td><?= $total_revenue ?></td>
+					</tr>
+					<tr>
+						<td>Total Weight: </td><td><?= $total_weight ?></td>
+					</tr>
+					<tr>
+						<td>Average Weight: </td><td><?= $average_weight ?></td>
+					</tr>
+					<tr>
+						<td>Average Price: </td><td><?= $average_price ?></td>
+					</tr>
+					<tr>
+						<td>Total Flight Count: </td><td><?= $total_flight_count ?></td>
+					</tr>
+					<tr>
+						<td>Total Pax Count: </td><td><?= $total_pax_count ?></td>
+					</tr>
+					<tr>
+						<td>Last Year Average Price Per Kg: </td><td><?= $last_year_average_price_per_kg ?></td>
+					</tr>
+					<tr>
+						<td>Last Year  Total Weight Per Flight: </td><td><?= $last_year_total_weight_per_flight ?></td>
+					</tr>
+					<tr>
+						<td>Last Year  Total Revenue Per Flight: </td><td><?= $last_year_revenue_per_flight ?></td>
+					</tr>
+					<tr>
+						<td>Average Weight Per Flight Per Pax: </td><td><?= $average_weight_per_flight_per_pax ?></td>
+					</tr>
+					<tr>
+						<td>Average Price Per Flight Per Pax: </td><td><?= $average_price_per_flight_per_pax ?></td>
+					</tr>
+					<tr>
+						<td>Min Weight: </td><td><?= $min_weight ?></td>
+					</tr>
+					<tr>
+						<td>Max Weight: </td><td><?= $max_weight ?></td>
+					</tr>
+					<tr>
+						<td>Min Price: </td><td><?= $min_price ?></td>
+					</tr>
+					<tr>
+						<td>Max Price: </td><td><?= $max_price ?></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
 <script src="<?= base_url('assets/chartjs/canvasjs.min.js') ?>"></script>
 <script>
