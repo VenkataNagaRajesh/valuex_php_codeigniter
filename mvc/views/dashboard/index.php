@@ -23,6 +23,7 @@
 //comment added new
 <?php } ?>
 <?php
+/*
 $arrayColor = array(
     'bg-orange-dark',
     'bg-teal-light',
@@ -37,6 +38,23 @@ $arrayColor = array(
 	'bg-blue-light',
 	'bg-pink-light',
 	'bg-teal-light',
+    'bg-pink-light'
+);
+*/
+
+$arrayColor = array(
+    'txt-bg-colr1',
+    'txt-bg-colr2',
+    'txt-bg-colr3',
+        'txt-bg-colr4',
+        'txt-bg-colr5',
+        'txt-bg-colr6',
+        'txt-bg-colr7',
+    'txt-bg-colr8',
+    'txt-bg-colr9',
+        'txt-bg-colr10',
+        'bg-pink-light',
+        'bg-teal-light',
     'bg-pink-light'
 );
 
@@ -94,31 +112,34 @@ foreach ($getAllSessionDatas as $getAllSessionDataKey => $getAllSessionData) {
     </div>
 </div>
 <?php
-
-if(count($generateBoxArray)) {  
+if(count($generateBoxArray)) {
+    $i=1;
     foreach ($generateBoxArray as $generateBoxArrayKey => $generateBoxValue) { ?>
-	  <div class="col-lg-3 col-xs-6">
-		  <div class="small-box ">
-			  <a class="small-box-footer <?=$generateBoxValue['color']?>" href="<?=base_url($generateBoxValue['link'])?>">
-				  <div class="icon <?=$generateBoxValue['color']?>" style="padding: 9.5px 18px 8px 18px;">
-					 <i class="fa <?=$generateBoxValue['icon']?>"></i>
-				  </div>
-				  <div class="inner ">
-					  <h3 class="text-white">
-						  <?=$generateBoxValue['count']?>
-					  </h3 class="text-white">
-					  <p class="text-white">
-						  <?php echo $generateBoxValue['menu']; ?>
-					  </p>
-				  </div>
-			  </a>
-		  </div>
-	  </div>  
-  <?php } 
+          <div class="col-lg-3 col-xs-6">
+                  <div class="small-box ">
+                          <a class="small-box-footer" href="<?=base_url($generateBoxValue['link'])?>">
+                                  <div class="icon" style="padding: 9.5px 18px 8px 18px;">
+                                      <div class="icon-box<?= $i ?>">
+                                         <i class="fa <?=$generateBoxValue['icon']?>"></i>
+                                         </div>
+                                  </div>
+                                  <div class="inner">
+                                          <h3 class="text-white">
+                                                  <?=$generateBoxValue['count']?>
+                                          </h3 class="text-white">
+                                          <p class="txt-box <?=$generateBoxValue['color']?>">
+                                                  <?php echo $generateBoxValue['menu']; ?>
+                                          </p>
+                                  </div>
+                          </a>
+                  </div>
+          </div>
+  <?php
+  $i++;
+
+    }
     } ?>
-   
 </div>
-<a class="btn btn-danger" href="<?=base_url('report/dragchart')?>"> <b>Drag chart type 1 <b></a>
 <a class="btn btn-danger" href="<?=base_url('report/dragchart1')?>"> <b>Drag chart type 2 <b></a>
 <script>
 <?php if($show_notice){ ?>
@@ -126,7 +147,3 @@ if(count($generateBoxArray)) {
    $('#notice-warning').css('display','block');
 <?php } ?>
 </script>
-
-
-
-

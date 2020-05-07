@@ -1,14 +1,14 @@
 
 <div class="seasons">
 	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Seasons</h2>
-	<p class="card-header" data-toggle="collapse" data-target="#seasonAdd"><button type="button" id = 'add_season_button' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Season" data-toggle="tooltip"><i class="fa fa-plus" id="plus_icon"></i></button></p>
+	 <p class="card-header" data-toggle="collapse" data-target="#seasonAdd"><button type="button" id = 'add_season_button' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Season" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="col-md-12 season-add-box collapse" id="seasonAdd">
 		<form class="form-horizontal" action="#" id="season_form">
 			<div class="form-group">
 				<div class="row">
 					<div class="col-md-3 col-sm-3 select-form">
 						<div class="col-md-12">
-							<input type="text" class="form-control"  placeholder="Season Name" id="season_name" name="season_name" value="<?=set_value('season_name')?>">
+							<input type="text" class="form-control"  placeholder="Enter Season Name" id="season_name" name="season_name" value="<?=set_value('season_name')?>">
 						</div>
 						<div class="col-md-12">
 							<?php
@@ -172,13 +172,13 @@
 					<?php $activestatus[1]="Active";	$activestatus[0]="In Active";				
 				  echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
-				<div class="col-sm-3 col-md-2">
-				 <button type="button" class=" form-control btn btn-danger" name="filter" id="filter"  onclick="$('#seasonslist').dataTable().fnDestroy();;loaddatatable();">Filter</button>				 
+				<div class="bttn-cl">
+                                	<button type="button" class=" form-control btn btn-danger" name="filter" id="filter"  onclick="$('#seasonslist').dataTable().fnDestroy();;loaddatatable();" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
 				 
 				 <!-- <button data-toggle="collapse" data-target="#seasonList" type="button" class="form-control btn btn-danger"><i class="fa fa-table"></i> View</button>-->
 				</div>
-				<div class="col-sm-2">
-				 <button type="button" class="form-control btn btn-danger" name="filter" onclick="downloadSeason()">Download</button>
+				<div class="bttn-cl">
+                               	 <button type="button" class="form-control btn btn-danger" name="filter" onclick="downloadSeason()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
 				</div>
                				
 			</div>

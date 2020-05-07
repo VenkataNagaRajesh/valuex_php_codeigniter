@@ -1,10 +1,9 @@
 <div class="eer">
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;border-radius: 2px;
-    border:solid 1px #999;padding: 7px 5px;">Eligibility Exclusion Rules</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Eligibility Exclusion Rules</h2>
 	<p class="card-header" data-toggle="collapse" data-target="#eerAdd"><button type="button" id = 'rule_add_btn' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Rule" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="table-responsive col-md-12 collapse" id="eerAdd">
 		<div class="col-md-12"><h2>Rule Criteria</h2></div>
-		<form class="form-horizontal" id='add_rule_form' action="#">
+	<br>	<form class="form-horizontal" id='add_rule_form' action="#">
 			<div class="col-md-12">
 				<div class="form-group">
 					<div class="col-md-3 col-sm-3">
@@ -391,8 +390,8 @@
                                   
 
                 <div class="col-md-3 col-sm-6">
-		<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#ruleslist').dataTable().fnDestroy();;loaddatatable();">Filter</a>
-		<a type="button" class="btn btn-danger" onclick="downloadEligibilityExc()">Download</a>
+		<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#ruleslist').dataTable().fnDestroy();;loaddatatable();" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></a>
+		<a type="button" class="btn btn-danger" onclick="downloadEligibilityExc()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></a>
 
                 </div>
 

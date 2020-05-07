@@ -5,7 +5,7 @@
 <?php $this->load->view("components/page_topbar"); ?>
 <?php $this->load->view("components/page_menu"); ?>
 
-        <aside class="right-side">
+        <aside class="content-wrapper">
             <section class="content">
                 <div class="row">
                     <div class="col-xs-12">

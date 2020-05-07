@@ -1,7 +1,6 @@
 <div class="fclr-bar">
 <?php  if(permissionChecker('fclr_add')) {  ?>
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;border-radius: 2px;
-    border:solid 1px #999;padding: 6px 5px;">Fare Control Range</h2>
+ 	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Fare Control Range</h2>
 	<p class="card-header" data-toggle="collapse" data-target="#fclrAdd"><button style="margin:1px 0;" type="button" class="btn btn-danger pull-right" data-placement="left" title="Add FCLR" data-toggle="tooltip" id='fclr_add_btn' ><i class="fa fa-plus"></i></button></p>
  <?php } ?>
 	<div class="col-md-12 fclr-table-add collapse" id="fclrAdd">
@@ -200,12 +199,13 @@
                 <input type="text" class="form-control" placeholder='FCLR ID' id="sfclr_id" name="sfclr_id" value="<?=set_value('sfclr_id',$sfclr_id)?>" >
                                                 </div>
 					</div>
-					<div class="col-md-12">
-						<div class="col-md-2 col-sm-3 pull-right">
-								<a href="#" type="button"  id='btn_txt' class="btn btn-danger form-control" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
+					<div class="col-md-12" style="padding-right:20px;">
+                                               <div class="bttn-cl pull-right">
+                                                               <a href="#" type="button"  id='btn_txt' class="btn btn-danger form-control" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></a>
+
 						</div>
-						<div class="col-md-2 col-sm-3 pull-right">
-								<a type="button" class="btn btn-danger form-control" onclick="downloadFCLR()">Download</a>
+ 						<div class="bttn-cl pull-right">
+                                                               <a type="button" class="btn btn-danger form-control" onclick="downloadFCLR()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></a>
 						</div>
 					</div>
 				</div>

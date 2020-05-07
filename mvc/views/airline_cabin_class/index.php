@@ -27,7 +27,7 @@
                   <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
                </ul>
 
-	<br/> <br/>    
+	<br/>    
 <div class="col-md-12">	
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
@@ -62,8 +62,8 @@
 
 
                 <div class="col-sm-3 col-md-3">
-                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
-				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabinmap()">Download</button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
+				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabinmap()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
                 </div>
                           </div>
                          </form>

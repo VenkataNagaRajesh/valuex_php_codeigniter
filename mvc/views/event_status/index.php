@@ -55,8 +55,8 @@
                  </div>
 
 
-                <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                <div class="bttn-cl">
+                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
                 </div>
                           </div>
                          </form>

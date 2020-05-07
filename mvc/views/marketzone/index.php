@@ -191,10 +191,11 @@
                                                         </select>
                                                 </div>
 
-						<div class="col-md-1 col-sm-3">
-							<a href="#" type="button"  id='filter_button' class="btn btn-danger" onclick="$('#tztable').dataTable().fnDestroy();loaddatatable();" style="padding: 6px 12px;">Filter</a>
+						<div class="bttn-cl">
+                                                       <a href="#" type="button"  id='filter_button' class="btn btn-danger" onclick="$('#tztable').dataTable().fnDestroy();loaddatatable();" style="padding: 6px 12px;"data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></a>
+
 						</div>
-						<div class="col-md-1 col-sm-3">
+						<div class="bttn-cl">
 							<a href="#" type="button"  class="btn btn-danger" onclick="downloadZone()" data-title="Download" data-toggle="tooltip" data-placement="top" style="padding: 6px 12px;"><i class="fa fa-download"></i></a>
 						</div>
 					</div>

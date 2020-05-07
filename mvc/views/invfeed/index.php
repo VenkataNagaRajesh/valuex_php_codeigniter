@@ -91,8 +91,8 @@
 
 
                 <div class="col-md-3 col-sm-6"><br>
-                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
-				  <button type="button" class="btn btn-danger" onclick="downloadINVFeed()">Download</button>
+			 <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
+                       	 <button type="button" class="btn btn-danger" onclick="downloadINVFeed()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
                 </div>	             				
 			  </div>
 			 </form>			

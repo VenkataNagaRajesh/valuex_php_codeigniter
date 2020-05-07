@@ -102,9 +102,10 @@
 
 
 			
-				<div class="col-sm-2 pull-right">
-					<button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
-					<button type="button" class="btn btn-danger" onclick="downloadBidData()">Download</button>
+				 <div class="col-sm-1 pull-right">
+                                       <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
+                                       <button type="button" class="btn btn-danger" onclick="downloadBidData()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
+
 				</div>
 			</div>
 		</form>

@@ -26,7 +26,7 @@
                   <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
                </ul>
 
-	<br/> <br/>
+	<br/> 
 
 
                     
@@ -61,8 +61,8 @@
 
 
                 <div class="col-sm-4">
-                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
-				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabins()">Download</button>			   
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
+				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabins()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>			   
                 </div>
 				
                           </div>

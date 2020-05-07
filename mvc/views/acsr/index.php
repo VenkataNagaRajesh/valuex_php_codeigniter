@@ -174,8 +174,8 @@
                         </div>-->
                                   
                 <div class="col-md-3 col-sm-4">
-                  <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
-				  <button type="button" class="btn btn-danger" onclick="downloadACSR()">Download</button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
+				  <button type="button" class="btn btn-danger" onclick="downloadACSR()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
                 </div>
 
 </div>

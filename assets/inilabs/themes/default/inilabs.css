@@ -78,12 +78,14 @@
 
 /* Side Menu  Start */
 .sidebar .sidebar-menu > li > a:hover {
-  background-color:  #000 !important;
-  color: #f8a20c !important;
+    background-color: #f26522 !important;
+    color: #fff !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16);
 }
 .sidebar .sidebar-menu .treeview-menu > li > a:hover {
-  background-color: #232a2f;
-  color: #ddd;
+  background-color: #f26522 ;
+  color: #fff !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16);
 }
 /* Side Menu Close */
 
@@ -94,7 +96,7 @@
   padding: 6px;
   margin-bottom: 0px;
   position: relative;
-  font-size: 12px;
+  font-size: 15px;
 }
 /* Breadcrumb Close */
 
@@ -113,8 +115,10 @@
 
 /* Lable Start */
 .form-horizontal .control-label {
-  text-align: left;
-  font-size: 12px;
+text-align: left;
+    font-size: 14px;
+    font-family: lato;
+    font-weight: 500;
 }
 
 label {
@@ -747,24 +751,76 @@ label {
 }
 
 .bg-purple-light {
-    background-color: #9575CD !important;
+    background: linear-gradient(to bottom, #4CAF50, #5cb860) !important;
     color: #fff !important;
 }
 
 .bg-pink-light {
-    background-color: #F06292 !important;
+    background: linear-gradient(to bottom, #FF9800, #ffa21a) !important;
     color: #fff !important;
 }
 
 .bg-teal-light {
-    background-color: #4DB6AC !important;
-    color: #fff !important;
+    background:#f2ba02 !important;
+    color: #f2ba02 !important;
 }
 
 .bg-orange-dark {
-    background-color: #FF8A65 !important;
-    color: #fff !important;
+    background: #fdac86 !important;
+    color: #fdac86 !important;
 }
+.txt-bg-colr1{
+     background: #fdac86 !important;
+    color: #fff !important;
+    font-weight:500;
+}
+.txt-bg-colr2{
+     background: #fcc100 !important;
+    color: #fff !important;
+    font-weight:500;
+}
+.txt-bg-colr3{
+     background: #5b7dff !important;
+    color: #fff !important;
+    font-weight:500;
+}
+.txt-bg-colr4{
+     background: #5fc27e !important;
+    color: #fff !important;
+    font-weight:500;
+}
+.txt-bg-colr5{
+     background: #9d7bd8 !important;
+    color: #fff !important;
+    font-weight:500;
+}
+.txt-bg-colr6{
+     background: #47bac1 !important;
+    color: #fff !important;
+    font-weight:500;
+}
+.txt-bg-colr7{
+     background: #fb777c !important;
+    color: #fff !important;
+    font-weight:500;
+}
+.txt-bg-colr8{
+     background: #7e91f6 !important;
+    color: #fff !important;
+    font-weight:500;
+}
+.txt-bg-colr9{
+     background: #f06292 !important;
+    color: #fff !important;
+    font-weight:500;
+}
+.txt-bg-colr10{
+     background: #ce93d8 !important;
+    color: #fff !important;
+    font-weight:500;
+}
+
+
 
 @media print
 {
@@ -946,7 +1002,7 @@ label {
 }
 .custom-menu li a span i{
 	margin-right:13px;
-	background: #000;
+	/*background: #000;*/
 	width: 25px !important;
 	height: 25px;
 	text-align: center;
@@ -956,10 +1012,12 @@ label {
 .custom-menu li a .fa-angle-left::before {
 	font-size:13px;
 }
-.skin-blue .sidebar > .sidebar-menu > li > a:hover, .skin-blue .sidebar > .sidebar-menu > li.active > a{
-	background:#ff6633;
+ .skin-blue .sidebar > .sidebar-menu > li.active > a{
+	background:#535353;
 }
-
+.skin-blue .sidebar > .sidebar-menu > li:hover{
+	background:#f0570d;
+}
 /*custom styles*/
 .mail-logo-preview-input {
     position: relative;
