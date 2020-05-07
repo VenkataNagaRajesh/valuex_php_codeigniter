@@ -1235,7 +1235,7 @@ class Bclr extends Admin_Controller
               AVG(prorated_price) as average_price,
               COUNT(flight_number) as total_flight_count,
               COUNT(pax_type) as total_pax_count
-      from bg_ra_feed where carrier = $nCarrerID and origin IN ($implode_org_p) and destinition IN ($implode_dest_p) and  departure_date  BETWEEN $strStartDate and $strEndDate";
+      from BG_ra_feed where carrier = $nCarrerID and origin IN ($implode_org_p) and destinition IN ($implode_dest_p) and  departure_date  BETWEEN $strStartDate and $strEndDate";
       
         return $rResult = $this->install_m->run_query($sQuery)[0];
     }
