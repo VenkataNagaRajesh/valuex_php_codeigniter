@@ -1226,6 +1226,13 @@ class Bclr extends Admin_Controller
 
         $nCarrerID = $arrBclrData->carrierID;
         $strOrigin = $arrBclrData->origin_content;
+        
+        $cabin = $arrBclrData->from_cabin;
+        $flight_number = $arrBclrData->flight_num_range;
+
+        $flight_num_range = explode("-", $flight_number);
+        $start_flight_range = $flight_num_range[0];
+        $end_flight_range = $flight_num_range[1];
        
         $origin_list_p = array_column($this->marketzone_m->getParentsofAirport($strOrigin),"vx_aln_data_defnsID");
         $implode_org_p = implode(",", $origin_list_p);
