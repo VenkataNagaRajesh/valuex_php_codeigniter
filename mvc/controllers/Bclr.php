@@ -1225,6 +1225,12 @@ class Bclr extends Admin_Controller
         $nCarrerID = $arrBclrData->carrierID;
         $strOrigin = $arrBclrData->origin_content;
         $cabin = $arrBclrData->from_cabin;
+        $cabin_sql = "";
+        if($cabin == '*') {
+            $cabin_sql = "cabin like '%'";
+        } else {
+            $cabin_sql = "cabin = '$cabin'";
+        }
         $flight_number = $arrBclrData->flight_num_range;
 
         $flight_num_range = explode("-", $flight_number);
@@ -1257,9 +1263,6 @@ class Bclr extends Admin_Controller
               COUNT(flight_number) as total_flight_count,
               COUNT(pax_type) as total_pax_count
       from BG_ra_feed where carrier = $nCarrerID and origin IN ($implode_org_p) and destinition IN ($implode_dest_p) and  flight_number between $start_flight_range and $end_flight_range and
-      departure_date  BETWEEN $start_time and $end_time  AND cabin = '$cabin'";
-
-      
-        return $rResult = $this->install_m->run_query($sQuery)[0];
+      departure_date  BETWEEN $start_time and $end_time  AND $cabin_sql";
     }
 }
