@@ -23,8 +23,12 @@
                     ?>
 					</div>
                     <div class="col-md-2 col-sm-3">
-                        <select  name="from_cabin"  id="from_cabin" placeholder="From Cabin" class="form-control select2">
-                        <option value="0">From Cabin</option>
+ 			 <!--<select  name="origin_content[]"  id="origin_content" placeholder="Origin Content" class="form-control select2" multiple="multiple">
+				        </select>  
+                        -->
+                       <select  name="from_cabin"  id="from_cabin" placeholder="From Cabin" class="form-control select2" multiple="multiple">
+	 <option> <input type="checkbox" id="cabin_checkbox" >Select All</option>
+                        
 				        </select>
                     </div>
 					<div class="col-md-2 col-sm-3">
@@ -435,7 +439,15 @@
             $('#flt_dest_content').html(data); }        
         });       
     });
-
+    $("#cabin_checkbox").click(function(){
+        if($("#cabin_checkbox").is(':checked') ){
+            $("#from_cabin > option").prop("selected","selected");
+            $("#from_cabin").trigger("change");
+        } else {
+            $("#from_cabin > option").removeAttr("selected");
+            $("#from_cabin").trigger("change");
+        }
+    });
     $("#origin_checkbox_level").click(function(){
         if($("#origin_checkbox_level").is(':checked') ){
             $("#origin_content > option").prop("selected","selected");
@@ -775,7 +787,6 @@ function savebclr() {
 
 
 function editbclr(bclr_id) {
-
     var isVisible = $( "#bclrAdd" ).is( ":visible" );
     var isHidden = $( "#bclrAdd" ).is( ":hidden" );
     if( isVisible == false ) {
