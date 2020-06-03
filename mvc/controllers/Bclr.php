@@ -411,13 +411,13 @@ class Bclr extends Admin_Controller
     {
         $carrierID = $this->input->post('carrierID');
         $cabins = $this->airline_cabin_def_m->getCabinsDataForCarrier($carrierID, 1);
-        echo "<option value='0'> From Cabin </option>";
+        //echo "<option value='0'> From Cabin </option>";
         foreach ($cabins as $cabin) {
             echo "<option value='" . $cabin->vx_aln_data_defnsID . "'>" . $cabin->cabin . "</option>";
         }
-        if (count($cabins) > 0) {
-            echo "<option value='*'> All (*) </option>";
-        }
+       // if (count($cabins) > 0) {
+        //    echo "<option value='*'> All (*) </option>";
+       // }
     }
 
     public function getSeasonsCarrier()
