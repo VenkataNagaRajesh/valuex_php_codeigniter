@@ -1,29 +1,30 @@
 <div class="box">
-	<div class="box-header" style="width:100%;">
-		<h3 class="box-title"><i class="fa fa-users"></i>CWT graph</h3>
-		<ol class="breadcrumb">
-			<li><a href="<?= base_url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= $this->lang->line('menu_dashboard') ?></a></li>
-			<li><a href="<?= base_url("bclr/index") ?>">Back</a></li>
-			<li class="active">cwt graph</li>
-		</ol>
-	</div>
-	<div class="col-md-12">
-		<div class="col-md-10">
-			<br /><!-- Just so that JSFiddle's Result label doesn't overlap the Chart -->
-			<div id="interactive-chart" style="height: 360px; width: 100%;"></div>
-			 <div class="chartWrapper" style="height: 380px; width: 600px;position:relative;">
-			<div class="chartAreaWrapper">
-				<div id="interactive-chart" style="height: 360px; width: 100%;"></div>
-			</div>
-			<canvas id="overlayedAxis"></canvas>
-			</div>
-		</div>
-		<div class="col-md-2">
-			<input type="text" name="graph_name" placeholder="Enter Unique Name" id="graph_name" value="<?= $cwt_name ?>" />
-			<button class="btn btn-danger" disabled="disabled">Update Graph</button>
-		</div>
-	</div>
-	<div>
+        <div class="box-header" style="width:100%;">
+                <h3 class="box-title"><i class="fa fa-users"></i>CWT graph</h3>
+                <ol class="breadcrumb">
+                        <li><a href="<?= base_url("dashboard/index") ?>"><i class="fa fa-laptop"></i> <?= $this->lang->line('menu_dashboard') ?></a></li>
+                        <li><a href="<?= base_url("bclr/index") ?>">Back</a></li>
+                        <li class="active">cwt graph-1</li>
+                </ol>
+        </div>
+        <div class="col-md-12">
+                <div class="col-md-10">
+                        <br /><!-- Just so that JSFiddle's Result label doesn't overlap the Chart -->
+                        <div id="interactive-chart" style="height: 360px; width: 100%;"></div>
+                         <div class="chartWrapper" style="height: 380px; width: 600px;position:relative;">
+                        <div class="chartAreaWrapper">
+                                <div id="interactive-chart" style="height: 360px; width: 100%;"></div>
+                        </div>
+                        <canvas id="overlayedAxis"></canvas>
+                        </div>
+                </div>
+                <div class="col-md-2">
+                        <input type="text" name="graph_name" placeholder="Enter Unique Name" id="graph_name" value="<?= $cwt_name ?>" />
+                        <button class="btn btn-danger" enabled="enabled">Edit Graph</button>
+                </div>
+        </div>
+        <div>
+
 		<div class='table col-md-12'>
 		<h3>Graph Calculation Details:</h3>
 			<table border='1' style="background:white;">
@@ -100,7 +101,7 @@
 		exportEnabled: true,
 		theme: "light2",
 		zoomEnabled: true,
-		zoomType: "x",
+		zoomType: "X",
 		width: 1000,
 		height:500,
 		title:{
@@ -118,15 +119,15 @@
 		},
 		axisY:[{
 			title: "Price per KG",
-			minimum: "1",
-			maximum: "<?= $last_year_average_price_per_kg + $last_year_average_price_per_kg ?>",
+			minimum: "<?= $min_weight?>",
+			maximum: "<?= $max_weight?>",
 			titleFontColor: "#4F81BC",
 			interval: 5,
 		},
 		],
 		axisY2:[{
 			title: "Revenue $",
-			minimum: "1",
+			minimum:  "1",
 			maximum: "<?= $last_year_revenue_per_flight+100  ?>",
 			titleFontColor: "#C0504E",
 			interval: 50,
@@ -181,13 +182,11 @@
 			type: "spline",
 			showInLegend: true, 
 			name: "Last Year Average",               	
-			axisYType: "secondary",
-			axisYIndex: 1, //When axisYType is secondary, axisYIndex indexes to secondary Y axis & not to primary Y axis
 			xValueFormatString: "####",
 			cursor: "move",
 			color: "red",
 			dataPoints: [ 
-				{ x: <?= $average_weight ?>, y: <?= $last_year_average_price_per_kg ?>  }
+				{ x: <?= $last_year_total_weight_per_flight ?>, y: <?= $last_year_average_price_per_kg ?>  }
 			]
 		}
 		]
@@ -209,7 +208,7 @@
 	} */
 
 
-	interactiveChart.render();
+	 interactiveChart.render();
 	// var record = false;
 	// var snapDistance = 5;
 	// var xValue, yValue, parentOffset, relX, relY;
@@ -274,10 +273,10 @@
 
 
 
-	// function getChartValues() {
-	// 	var graph_name = $('#graph_name').val();
+	//	 function getChartValues() {
+	//	var graph_name = $('#graph_name').val();
 	// 	if (graph_name == '' || graph_name == null) {
-	// 		alert("Enter graph Name");
+	//		alert("Enter graph Name");
 	// 	} else {
 	// 		var data = interactiveChart.get("data");
 	// 		//console.log(data[0].dataPoints);
@@ -289,7 +288,7 @@
 	// 				"bclr_id": <?= $bclr_id ?>,
 	// 				"graph_name": graph_name,
 	// 				"points": data[0].dataPoints
-	// 			},
+	//			},
 	// 			dataType: "html",
 	// 			success: function(data) {
 	// 				var obj = jQuery.parseJSON(data);
@@ -303,3 +302,17 @@
 	// 	}
 	// }
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
