@@ -23,8 +23,7 @@
                         <button class="btn btn-danger" enabled="enabled">Edit Graph</button>
                 </div>
         </div>
-/bclr/drag-chart.phpg
-div>
+</div>
 
 		<div class='table col-md-12'>
 		<h3>Graph Calculation Details chart:</h3>
@@ -316,4 +315,5 @@ div>
 
 
 
-
+        alculation Details chart:
+No Of Passengers:
