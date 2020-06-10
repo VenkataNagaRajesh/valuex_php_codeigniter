@@ -23,10 +23,11 @@
                         <button class="btn btn-danger" enabled="enabled">Edit Graph</button>
                 </div>
         </div>
-        <div>
+/bclr/drag-chart.phpg
+div>
 
 		<div class='table col-md-12'>
-		<h3>Graph Calculation Details:</h3>
+		<h3>Graph Calculation Details chart:</h3>
 			<table border='1' style="background:white;">
 				<tbody>
 					<tr>
