@@ -166,7 +166,7 @@ class Bclr extends Admin_Controller
         if (count($this->input->post('origin_content')) > 0) {
             if ($this->input->post('partner_carrierID') && $this->input->post('effective_date') && $this->input->post('discontinue_date')) {
                 $effective_date = strtotime($this->input->post('effective_date'));
-                $discontinue_date = strtotime($this->input->post('discontinue_date_post'));
+                $discontinue_date = strtotime($this->input->post('discontinue_date'));
                 $where = array(
                     "carrierID" => $this->input->post('carrierID'),
                     "partner_carrierID" => $this->input->post('partner_carrierID'),
@@ -205,6 +205,7 @@ class Bclr extends Admin_Controller
                     }
 
                     $diff = array_diff($orig_list, $partner_orig_list);
+                    
                     if (count($diff) > 0) {
                         $this->form_validation->set_message("valOrigin", "%s is not in partner origin content");
                         return FALSE;
@@ -410,13 +411,13 @@ class Bclr extends Admin_Controller
     {
         $carrierID = $this->input->post('carrierID');
         $cabins = $this->airline_cabin_def_m->getCabinsDataForCarrier($carrierID, 1);
-        echo "<option value='0'> From Cabin </option>";
+        //echo "<option value='0'> From Cabin </option>";
         foreach ($cabins as $cabin) {
             echo "<option value='" . $cabin->vx_aln_data_defnsID . "'>" . $cabin->cabin . "</option>";
         }
-        if (count($cabins) > 0) {
-            echo "<option value='*'> All (*) </option>";
-        }
+       // if (count($cabins) > 0) {
+        //    echo "<option value='*'> All (*) </option>";
+       // }
     }
 
     public function getSeasonsCarrier()
@@ -490,8 +491,11 @@ class Bclr extends Admin_Controller
                 $array['origin_content'] =  implode(',', $this->input->post('origin_content'));
                 $array['dest_level'] = $this->input->post('dest_level');
                 $array['dest_content'] =  implode(',', $this->input->post('dest_content'));
+               
                 $array['effective_date'] = strtotime($this->input->post('effective_date'));
+                // echo  $array['effective_date'] ;
                 $array['discontinue_date'] = strtotime($this->input->post('discontinue_date'));
+                // echo  $array['discontinue_date'] ;die();
                 //  $array['frequency'] = $this->input->post('frequency');
                 $array['bag_type'] = $this->input->post('bag_type');
                 $array['rule_auth'] = $this->input->post('rule_auth_carrier');
@@ -1045,6 +1049,7 @@ class Bclr extends Admin_Controller
             $this->data['average_weight'] = 0;
         }
     
+
         $this->data['min_weight'] = $bclr->min_unit;
         $this->data['max_weight'] = $bclr->max_capacity;
         $this->data['min_price'] = $bclr->min_price;
@@ -1099,12 +1104,14 @@ class Bclr extends Admin_Controller
         $objCWTData = $this->getCWTHistorialData($bclr);
         if($objCWTData->no_of_passingers > 0)
         {
+       	    $objCWTFlightCount = $this->getCWTHistorialData($bclr, 1); //Get Flight count
+	    $total_flight_count = $objCWTFlightCount->total_flight_count;
             $no_of_passengers = $objCWTData->no_of_passingers;
             $total_revenue = $objCWTData->total_revenue;
             $total_weight = $objCWTData->total_weight;
             $average_weight = $objCWTData->average_weight;
             $average_price = $objCWTData->average_price;
-            $total_flight_count =  $objCWTData->total_flight_count;
+            #$total_flight_count =  $objCWTData->total_flight_count;
             $total_pax_count = $objCWTData->total_pax_count;
             $last_year_average_price_per_kg = $total_revenue/$total_weight;
             $last_year_total_weight_per_flight = $total_weight/$total_flight_count;
@@ -1220,17 +1227,81 @@ class Bclr extends Admin_Controller
         $this->output->set_output(json_encode($json));
     }
 
-    private function getCWTHistorialData($arrBclrData = array())
+    // private function getCWTHistorialData($arrBclrData = array())
+    // {
+
+    //     $nCarrerID = $arrBclrData->carrierID;
+    //     $strOrigin = $arrBclrData->origin_content;
+    //     $cabin = $arrBclrData->from_cabin;
+    //     $cabin_sql = "";
+    //     if($cabin == '*') {
+    //         $cabin_sql = "cabin like '%'";
+    //     } else {
+    //         $cabin_sql = "cabin = '$cabin'";
+    //     }
+    //     $flight_number = $arrBclrData->flight_num_range;
+
+    //     $flight_num_range = explode("-", $flight_number);
+    //     $start_flight_range = $flight_num_range[0];
+    //     $end_flight_range = $flight_num_range[1];
+        
+       
+    //     $origin_list_p = array_column($this->marketzone_m->getParentsofAirport($strOrigin),"vx_aln_data_defnsID");
+    //     $implode_org_p = implode(",", $origin_list_p);
+    //     $strDestination = $arrBclrData->dest_content;
+    //     $dest_list_p = array_column($this->marketzone_m->getParentsofAirport($strDestination), "vx_aln_data_defnsID");
+    //     $implode_dest_p = implode(",", $dest_list_p);
+    //     $start_date_m = date("m-d", $arrBclrData->effective_date);
+    //     $get_previous_year = date("Y", $arrBclrData->effective_date);
+    //     $start_date = ($get_previous_year -1) . "-". $start_date_m; // 2019-01-05
+    //     $start_time = strtotime($start_date);
+    //     $end_date_m = date("m-d", $arrBclrData->discontinue_date);
+    //     $get_end_previous_year = date("Y", $arrBclrData->discontinue_date);
+    //     $end_date = ($get_end_previous_year -1) . "-". $end_date_m; // 2019-01-05
+    //     $end_time = strtotime($end_date);
+       
+    //     $sQuery = '';
+
+    //     $sQuery = "SELECT 
+    //           count(id) as no_of_passingers, 
+    //           SUM(prorated_price ) as total_revenue,
+    //           SUM(weight) as total_weight,
+    //           AVG(weight) as average_weight,
+    //           AVG(prorated_price) as average_price,
+    //           COUNT(flight_number) as total_flight_count,
+    //           COUNT(pax_type) as total_pax_count
+    //   from BG_ra_feed where carrier = $nCarrerID and origin IN ($implode_org_p) and destinition IN ($implode_dest_p) and  flight_number between $start_flight_range and $end_flight_range and
+    //   departure_date  BETWEEN $start_time and $end_time  AND $cabin_sql";
+
+    // //   echo $sQuery;die();
+      
+    //     return $rResult = $this->install_m->run_query($sQuery)[0];
+    // }
+
+    public function cwttest() {
+        $id = htmlentities(escapeString($this->uri->segment(3)));
+         $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));
+            $min_price = $bclr->min_price;
+            $max_price = $bclr->max_price;
+            $max_capacity = $bclr->max_capacity;
+            $objCWTData = $this->getCWTHistorialData($bclr);
+            $total_flight_count = $this->getCWTHistorialData($bclr,1);
+        echo "<pre>BCLR=" . print_r($bclr,1) . "</pre>";
+        echo "<pre>CWTCALC=" . print_r($objCWTData,1) . "</pre>";
+        echo "<pre>total_flight_count=" . print_r($total_flight_count,1) . "</pre>";
+        exit;
+    
+        }
+
+    private function getCWTHistorialData($arrBclrData = array(), $total_flight_count = 0)
     {
         $nCarrerID = $arrBclrData->carrierID;
         $strOrigin = $arrBclrData->origin_content;
         $cabin = $arrBclrData->from_cabin;
-        $cabin_sql = "";
-        if($cabin == '*') {
-            $cabin_sql = "cabin like '%'";
-        } else {
-            $cabin_sql = "cabin = '$cabin'";
-        }
+        $frequency = $arrBclrData->frequency;
+        $dep_time_start = $arrBclrData->dep_time_start;
+        $dep_time_end = $arrBclrData->dep_time_end;
+
         $flight_number = $arrBclrData->flight_num_range;
 
         $flight_num_range = explode("-", $flight_number);
@@ -1239,30 +1310,89 @@ class Bclr extends Admin_Controller
         
        
         $origin_list_p = array_column($this->marketzone_m->getParentsofAirport($strOrigin),"vx_aln_data_defnsID");
-        $implode_org_p = implode(",", $origin_list_p);
         $strDestination = $arrBclrData->dest_content;
         $dest_list_p = array_column($this->marketzone_m->getParentsofAirport($strDestination), "vx_aln_data_defnsID");
-        $implode_dest_p = implode(",", $dest_list_p);
         $start_date_m = date("m-d", $arrBclrData->effective_date);
         $get_previous_year = date("Y", $arrBclrData->effective_date);
         $start_date = ($get_previous_year -1) . "-". $start_date_m; // 2019-01-05
-        $start_time = strtotime($start_date);
-        $end_date_m = date("m-d", $arrBclrData->discontinue_date);
-        $get_end_previous_year = date("Y", $arrBclrData->discontinue_date);
-        $end_date = ($get_end_previous_year -1) . "-". $end_date_m; // 2019-01-05
-        $end_time = strtotime($end_date);
-       
-        $sQuery = '';
+        if ( $dep_time_start ) {
+            $start_date .= " ".  gmdate('H:i:s', $dep_time_start);
+        }
+        
+        echo "<br>start_date=" . $start_date;
+            $end_date_m = date("m-d", $arrBclrData->discontinue_date);
+            $get_end_previous_year = date("Y", $arrBclrData->discontinue_date);
+            $end_date = ($get_end_previous_year -1) . "-". $end_date_m; // 2019-01-05
+        echo "<br>end_date=" . $end_date;
+            $end_time = strtotime($end_date);
+        if ( $dep_time_end ) {
+            $end_date .= " ".  gmdate('H:i:s', $dep_time_end);
+        }
+        
+            $sQuery = '';
 
-        $sQuery = "SELECT 
-              count(id) as no_of_passingers, 
-              SUM(prorated_price ) as total_revenue,
-              SUM(weight) as total_weight,
-              AVG(weight) as average_weight,
-              AVG(prorated_price) as average_price,
-              COUNT(flight_number) as total_flight_count,
-              COUNT(pax_type) as total_pax_count
-      from BG_ra_feed where carrier = $nCarrerID and origin IN ($implode_org_p) and destinition IN ($implode_dest_p) and  flight_number between $start_flight_range and $end_flight_range and
-      departure_date  BETWEEN $start_time and $end_time  AND $cabin_sql";
+	if ( $total_flight_count ) {
+        	$sQuery .= " SELECT COUNT(*) as total_flight_count FROM ( SELECT count(*) ";
+	} else {
+        $sQuery .= " SELECT
+                count(id) as no_of_passingers, 
+                SUM(prorated_price ) as total_revenue,
+                SUM(weight) as total_weight,
+                AVG(weight) as average_weight,
+                AVG(prorated_price) as average_price,
+                COUNT(pax_type) as total_pax_count ";
+	}
+        $sQuery .= " from BG_ra_feed where id is NOT NULL ";
+        
+
+        if ( $nCarrerID ) {
+            $sQuery .= " AND carrier = " . $nCarrerID . " ";
+        }
+        if ( $origin_list_p ) {
+            if (is_array($origin_list_p)) {
+                $sQuery .= " AND origin IN (" . implode(',',$origin_list_p) . ")";
+            } else {
+                $sQuery .= " AND origin = " . $origin_list_p . " ";
+            }
+        }
+        if ( $dest_list_p ) {
+            if (is_array($dest_list_p)) {
+                $sQuery .= " AND destinition IN (" . implode(',',$dest_list_p) . ")";
+            } else {
+                $sQuery .= " AND destinition = " . $dest_list_p . " ";
+            }
+        }
+        if ( $start_flight_range && $end_flight_range ) {
+            $sQuery .= " AND  flight_number between $start_flight_range and $end_flight_range ";
+        } else if ( $start_flight_range ) {
+            $sQuery .= " AND  flight_number = " . $start_flight_range;
+        }
+        if ( $start_date && $end_date ) {
+            $sQuery .= " AND  departure_date BETWEEN UNIX_TIMESTAMP('$start_date') and UNIX_TIMESTAMP('$end_date')  ";
+        } else if ( $start_date ) {
+            $sQuery .= " AND  departure_date > UNIX_TIMESTAMP('$start_date') ";
+        }
+
+        if ( $cabin ) {
+            if (is_array($cabin)) {
+                $sQuery .= "AND cabin IN (" . implode(',',$cabin) . ")";
+            } elseif($cabin == '*') {
+                $sQuery .= "AND cabin like '%' ";
+            } else {
+                $sQuery .= "AND cabin = '".$cabin."' ";
+            }
+        }
+        if ( $frequency ) {
+            if (is_array($frequency)) {
+                $sQuery .= "AND day_of_week IN (" . implode(',',$frequency) . ")";
+            } else {
+                $sQuery .= "AND day_of_week IN  (" . $frequency . ") ";
+            }
+        }
+	if ( $total_flight_count ) {
+                $sQuery .= " GROUP BY  departure_date, flight_number ) as ftable  ";
+	}
+    	//echo "<br>$sQuery ";
+       return $rResult = $this->install_m->run_query($sQuery)[0];
     }
 }
