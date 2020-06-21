@@ -245,10 +245,20 @@ group by mz.market_id";
 		$str = '';
 		return implode('<br>+',array_column($result, 'aln_data_value'));
 	}
+
+	function getDataDefById($id){
+		 $this->db->select('*')->from('VX_data_defns');
+         	 $this->db->where('vx_aln_data_defnsID',$id);
+		 $this->db->where('active','1');
+		$this->db->order_by('vx_aln_data_defnsID');
+         	$query = $this->db->get();
+         	$result =  $query->row();
+		return $result;
+	}
 	
 	function getSubDataDefns($id){
 		  
-		 $this->db->select('vx_aln_data_defnsID, aln_data_value,code')->from('VX_data_defns');
+		 $this->db->select('vx_aln_data_defnsID, aln_data_typeID, aln_data_value,code')->from('VX_data_defns');
          	 $this->db->where('aln_data_typeID',$id);
 		 $this->db->where('active','1');
 		$this->db->order_by('aln_data_value');
@@ -398,5 +408,34 @@ function getParentsofAirportByType($airportID,$id) {
 		$query = $this->db->get();
 		return $query->row('count');
 	}	
+
+    	function getAirportsByLevelAndLevelID($levelIds, $level = 0) { 
+		//Level means level type ids Market, Country, City, Airport 
+		//Level IDs means  MarketID, CountryID, CityID, AirportID 
+
+		if (!is_array($levelIds)){
+			$arr = explode(',', $levelIds); 
+		} else {
+			$arr = $levelIds; 
+		}
+		$ids = array_map('trim', $arr);//Removing any trailing spaces
+
+		$data = Array();
+		if ( $level == 17 ) { //Market Zones
+			//Get All Market List recursive from Mapping table 
+			$data =	$this->getAirportsForMarketsList($ids);
+		} else {
+			//Get for Data Definitions table
+			foreach ($ids as $id) {
+				$dd = $this->getDataDefById($id);
+				if ($dd->aln_data_typeID == 1) { //IF Airport Type just add it
+                        		$data = array_merge($data,Array($id));
+				} else {
+                        		$data = array_merge($data,$this->getAirportsList($id));
+				}
+			}
+		}
+		return $data;
+	}
 }
 

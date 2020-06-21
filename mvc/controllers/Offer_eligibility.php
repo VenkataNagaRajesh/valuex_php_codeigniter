@@ -17,6 +17,7 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model("season_m");
 		$this->load->model("airports_m");
 		$this->load->model("user_m");
+		$this->load->model("contract_m");
 		$language = $this->session->userdata('lang');
 		//$this->load->library('encrypt');
 		$this->lang->load('offer_eligibility', $language);	
@@ -349,19 +350,60 @@ $sWhere $sOrder $sLimit";
 		  echo json_encode( $output );
 		}
 	}
-	
 
+	
 
    function generatedata() {
 
+	# Get Contracts to decide what carrier and what products offers to be generated
+	$contracts = $this->contract_m->getActiveContracts();
 
-		 $days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
+	foreach($contracts as $contract) {
+		//echo "<pre>" . print_r($contract,1). "</pre>";
+		$this->mydebug->debug(print_r($contract,1));
+		$product = $contract['productID'];
 
-                 $current_time = time();
+		switch ($product) {
+			case 1:
+			$this->mydebug->debug("OFFER GEN: PRODUCT UPGRADE : CARRIER ID: " . $contract['airlineID');
+   			 #processGenUpgradeOffers($contract['airlineID');
+			break;
+			case 2:
+			$this->mydebug->debug("OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: " . $contract['airlineID');
+   			 processGenBaggageOffers($contract['airlineID');
+			break;
+		}
+			
+	}
+
+		
+   }
+
+   function processGenBaggageOffers($carrierId) {
+
+		$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
+
+		$days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
+                $current_time = time();
+                $tstamp = $current_time + ($days * 86400);
+		
+		# GET  PAX FEED OF EACH  ADULT 
+		$sQuery = " SELECT * FROM VX_daily_tkt_pax_feed  WHERE is_processed = 0  AND dep_date >= ".$tstamp." AND carrier_code = $carrierId by dtpf_id";
+		$rResult = $this->install_m->run_query($sQuery);
+
+   }
+ 	
+
+   function processGenBaggageOffers($carrierId) {
+
+
+		$days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
+
+                $current_time = time();
                 $tstamp = $current_time + ($days * 86400);
 
 
-		$sQuery = " SELECT * FROM VX_daily_tkt_pax_feed  WHERE is_processed = 0  AND dep_date >= ".$tstamp." order by dtpf_id";
+		$sQuery = " SELECT * FROM VX_daily_tkt_pax_feed  WHERE is_processed = 0  AND dep_date >= ".$tstamp." AND carrier_code = $carrierId by dtpf_id";
 		$rResult = $this->install_m->run_query($sQuery);
 
 		/*$exclQuery = "SELECT * from VX_aln_eligibility_excl_rules ";

@@ -533,9 +533,13 @@ class Bclr extends Admin_Controller
                         $array['version_id'] = $version_id;
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
                         $this->bclr_m->update_bclr($array, $bclr_id);
-                        $this->generateCWTBCLR($bclr_id, "update");
+                        $msg = $this->generateCWTBCLR($bclr_id, "update");
                         $this->generateCWT($bclr_id, "update");
-                        $json['status'] = 'success';
+			if ($msg ) {
+                        	$json['status'] = "success : $msg";
+			} else {
+                        	$json['status'] = 'success';
+			}
                     }
                 } else {
                     if ($exist_id[0]) {
@@ -1117,7 +1121,7 @@ class Bclr extends Admin_Controller
             $last_year_total_weight_per_flight = $total_weight/$total_flight_count;
             $last_year_revenue_per_flight = $total_revenue/$total_flight_count;
             $total_number_pax_per_flight_who_bought_the_baggage = $total_pax_count/$total_flight_count;
-            $average_weight_per_flight_per_pax = $last_year_total_weight_per_flight/$total_number_pax_per_flight_who_bought_the_baggage;
+            $average_weight_per_flight_per_pax = $total_weight/$total_number_pax_per_flight_who_bought_the_baggage;
             $average_price_per_flight_per_pax = $last_year_revenue_per_flight/$total_number_pax_per_flight_who_bought_the_baggage;
 
         } else {
@@ -1165,7 +1169,10 @@ class Bclr extends Admin_Controller
         } else {
             $this->bclr_m->update_cwt_bclr($cwt_array, ['bclr_id' => $id]);
         }
-        return TRUE;
+	if ( !$no_of_passengers ) {
+		$msg  = "Warning!, No data matched with selected BC Rules#$id in Baggage RA Feed";
+	}
+        return $msg ? $msg : FALSE;
     }
 
     public function updatecwtgraph()
@@ -1289,6 +1296,10 @@ class Bclr extends Admin_Controller
         echo "<pre>BCLR=" . print_r($bclr,1) . "</pre>";
         echo "<pre>CWTCALC=" . print_r($objCWTData,1) . "</pre>";
         echo "<pre>total_flight_count=" . print_r($total_flight_count,1) . "</pre>";
+	$data =	$this->marketzone_m->getAirportsByLevelAndLevelID(Array(2054,2050));
+        echo "<pre>AIRPORTS=" . print_r($data,1) . "</pre>";
+	
+	
         exit;
     
         }
@@ -1296,7 +1307,6 @@ class Bclr extends Admin_Controller
     private function getCWTHistorialData($arrBclrData = array(), $total_flight_count = 0)
     {
         $nCarrerID = $arrBclrData->carrierID;
-        $strOrigin = $arrBclrData->origin_content;
         $cabin = $arrBclrData->from_cabin;
         $frequency = $arrBclrData->frequency;
         $dep_time_start = $arrBclrData->dep_time_start;
@@ -1309,9 +1319,9 @@ class Bclr extends Admin_Controller
         $end_flight_range = $flight_num_range[1];
         
        
-        $origin_list_p = array_column($this->marketzone_m->getParentsofAirport($strOrigin),"vx_aln_data_defnsID");
-        $strDestination = $arrBclrData->dest_content;
-        $dest_list_p = array_column($this->marketzone_m->getParentsofAirport($strDestination), "vx_aln_data_defnsID");
+	$origin_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($arrBclrData->origin_content, $arrBclrData->origin_level);
+	$dest_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($arrBclrData->dest_content, $arrBclrData->dest_level);
+
         $start_date_m = date("m-d", $arrBclrData->effective_date);
         $get_previous_year = date("Y", $arrBclrData->effective_date);
         $start_date = ($get_previous_year -1) . "-". $start_date_m; // 2019-01-05
@@ -1319,11 +1329,11 @@ class Bclr extends Admin_Controller
             $start_date .= " ".  gmdate('H:i:s', $dep_time_start);
         }
         
-        echo "<br>start_date=" . $start_date;
+        //echo "<br>start_date=" . $start_date;
             $end_date_m = date("m-d", $arrBclrData->discontinue_date);
             $get_end_previous_year = date("Y", $arrBclrData->discontinue_date);
             $end_date = ($get_end_previous_year -1) . "-". $end_date_m; // 2019-01-05
-        echo "<br>end_date=" . $end_date;
+        //echo "<br>end_date=" . $end_date;
             $end_time = strtotime($end_date);
         if ( $dep_time_end ) {
             $end_date .= " ".  gmdate('H:i:s', $dep_time_end);
@@ -1350,16 +1360,16 @@ class Bclr extends Admin_Controller
         }
         if ( $origin_list_p ) {
             if (is_array($origin_list_p)) {
-                $sQuery .= " AND origin IN (" . implode(',',$origin_list_p) . ")";
+                $sQuery .= " AND boarding_point IN (" . implode(',',$origin_list_p) . ")";
             } else {
-                $sQuery .= " AND origin = " . $origin_list_p . " ";
+                $sQuery .= " AND boarding_point = " . $origin_list_p . " ";
             }
         }
         if ( $dest_list_p ) {
             if (is_array($dest_list_p)) {
-                $sQuery .= " AND destinition IN (" . implode(',',$dest_list_p) . ")";
+                $sQuery .= " AND off_point IN (" . implode(',',$dest_list_p) . ")";
             } else {
-                $sQuery .= " AND destinition = " . $dest_list_p . " ";
+                $sQuery .= " AND off_point = " . $dest_list_p . " ";
             }
         }
         if ( $start_flight_range && $end_flight_range ) {

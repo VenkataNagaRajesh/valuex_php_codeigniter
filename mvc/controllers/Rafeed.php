@@ -1283,7 +1283,7 @@ class Rafeed extends Admin_Controller
 
 		$sWhere .=  ($sWhere == '') ? ' WHERE ' : ' AND ';
 		$sWhere .=  " rf.sub_season_record = 0 ";
-		$sQuery = " SELECT SQL_CALC_FOUND_ROWS rf.id, rf.coupon_number,rf.weight,rf.rfic,rf.rfisc,rf.ssr_code, 
+		$sQuery = " SELECT SQL_CALC_FOUND_ROWS rf.id as rafeed_id, rf.coupon_number,rf.weight,rf.rfic,rf.rfisc,rf.ssr_code, 
 				dfre.code as day_of_week,  dfre.aln_data_value , dai.aln_data_value, dam.aln_data_value, 
 				dcar.aln_data_value, dbp.aln_data_value,dop.aln_data_value,def.desc,dcar.code as carrier_code,
 			    dai.code as operating_airline_code, dam.code as marketing_airline_code, flight_number, dbp.code as boarding_point, 

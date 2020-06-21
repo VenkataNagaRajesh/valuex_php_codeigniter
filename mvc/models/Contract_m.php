@@ -113,6 +113,18 @@ class Contract_m extends MY_Model {
 		return $query->row();
 	}
 
+	function getActiveContracts() {
+
+		$this->db->select('c.name, c.airlineID,  cp.productID, cp.end_date')->from('VX_contract c');
+		$this->db->join('VX_contract_products cp','cp.contractID = c.contractID','LEFT');
+		$this->db->join('VX_products p','p.productID = cp.productID','LEFT');
+		$this->db->where("end_date  > NOW()");
+		$this->db->order_by(" airlineID, productID");
+		$query = $this->db->get();
+		//print_r($this->db->last_query()); exit;
+		return $query->result();
+	}
+
 	
 }
 

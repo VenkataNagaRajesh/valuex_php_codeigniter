@@ -208,6 +208,9 @@
                         "name": "rfic",
                         "value": $("#rfic").val()
                     }, {
+                        "name": "boardPoint",
+                        "value": $("#boarding_point").val()
+                    }, {
                         "name": "offPoint",
                         "value": $("#off_point").val()
                     }, {

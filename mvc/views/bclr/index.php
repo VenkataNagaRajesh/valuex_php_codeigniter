@@ -760,7 +760,7 @@ function savebclr() {
                     var bclrinfo = jQuery.parseJSON(data);
                     var status = bclrinfo['status'];
 			        newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
-                    if (status == 'success' ) {
+                    if (status.includes('success')) {
                         alert(status);
 				        form_reset();
                         $("#bclrtable").dataTable().fnDestroy();

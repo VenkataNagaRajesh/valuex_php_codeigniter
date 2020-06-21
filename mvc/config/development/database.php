@@ -1,4 +1,4 @@
-<?php if (!defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 /*
 | -------------------------------------------------------------------
 | DATABASE CONNECTIVITY SETTINGS
@@ -39,7 +39,7 @@
 |							- good for ensuring strict SQL while developing
 |
 | The $active_group variable lets you choose which connection group to
-| make active.  By default there is only one group (the 'default' group).
+| make active. By default there is only one group (the 'default' group).
 |
 | The $active_record variables lets you determine whether or not to load
 | the active record class
@@ -49,9 +49,9 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'valuex';
-$db['default']['password'] = 'valuex';
-$db['default']['database'] = 'valuex';
+$db['default']['username'] = 'swekenco_valuex';
+$db['default']['password'] = 'Valuex-1!';
+$db['default']['database'] = 'swekenco_valuex';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = FALSE;
@@ -63,4 +63,3 @@ $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = FALSE;
 $db['default']['stricton'] = TRUE;
-$db['default']['save_queries'] = TRUE;
