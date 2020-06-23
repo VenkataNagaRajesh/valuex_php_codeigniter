@@ -79,6 +79,41 @@ class Offer_eligibility_m extends MY_Model {
                 return parent::hash($string);
         }
 
+	function getBaggagePaxData($carrierId, $timestamp) {
+		$sQuery = "SELECT carrier_code, pnr_ref, first_name, last_name FROM ";
+		$sQuery .= " (SELECT DISTINCT dtpf.carrier_code, dtpf.pnr_ref, dtpf.first_name,dtpf.last_name FROM `VX_daily_tkt_pax_feed` `dtpf` ";
+		$sQuery .= " LEFT JOIN `VX_data_defns` `dd` ON `dtpf`.`ptc` = `dd`.`vx_aln_data_defnsID` AND `aln_data_typeID` = 18 ";
+		$sQuery .= " LEFT JOIN `VX_airline_cabin_class` `cc` ON `dtpf`.`carrier_code` = `cc`.`carrier` AND `dtpf`.`class` = `cc`.`airline_class` ";
+		$sQuery .= " WHERE `is_bg_offer_processed` =0 AND `dd`.`code` = 'ADT' ";
+		$sQuery .= " AND `dd`.`code` != 'UNN' AND `cc`.`is_revenue` = 1 ";
+		$sQuery .= " AND `dtpf`.`carrier_code` = $carrierId"; 
+		$sQuery .= " AND `dep_date` > $timestamp ORDER BY `pnr_ref`) t1 GROUP BY pnr_ref";
+		$result = $this->install_m->run_query($sQuery);
+		//print_r($this->db->last_query());
+                return  $result;
+	}
+
+	function getBaggageSingleAdultPax($pax_pnr_single) {
+		$sQuery = "SELECT *, ddcu.parentID as from_country, dddcu.parentID as to_country FROM  VX_daily_tkt_pax_feed dtpf ";
+		$sQuery .= " LEFT JOIN `VX_data_defns` `dd` ON (`dtpf`.`ptc` = `dd`.`vx_aln_data_defnsID` AND `dd`.`aln_data_typeID` = 18) ";
+		$sQuery .= " LEFT JOIN `VX_airline_cabin_class` `cc` ON (`dtpf`.`carrier_code` = `cc`.`carrier` AND `dtpf`.`class` = `cc`.`airline_class`) ";
+		$sQuery .= " LEFT JOIN `VX_data_defns` `ddoc` ON (`dtpf`.`from_city` = `ddoc`.`vx_aln_data_defnsID`) ";
+		$sQuery .= " LEFT JOIN `VX_data_defns` `ddcu` ON (`ddoc`.`parentID` = `ddcu`.`vx_aln_data_defnsID` ) ";
+		$sQuery .= " LEFT JOIN `VX_data_defns` `dddc` ON (`dtpf`.`to_city` = `dddc`.`vx_aln_data_defnsID` ) ";
+		$sQuery .= " LEFT JOIN `VX_data_defns` `dddcu` ON (`dddc`.`parentID` = `dddcu`.`vx_aln_data_defnsID`) ";
+		$sQuery .= " WHERE `is_bg_offer_processed` =0 AND `dd`.`code` = 'ADT' ";
+		$sQuery .= " AND `dd`.`code` != 'UNN' AND `cc`.`is_revenue` = 1 ";
+		$sQuery .= " AND `dtpf`.`carrier_code` = " . $pax_pnr_single->carrier_code; 
+		$sQuery .= " AND `pnr_ref` = '" .  $pax_pnr_single->pnr_ref . "'";
+		$sQuery .= " AND `first_name` = '" .  $pax_pnr_single->first_name . "'";
+		$sQuery .= " AND `last_name` = '" .  $pax_pnr_single->last_name . "'";
+		print_r($sQuery);
+		$result = $this->install_m->run_query($sQuery);
+	//	print_r($this->db->last_query());
+                return  $result;
+	}
+
+
 	
 }
 

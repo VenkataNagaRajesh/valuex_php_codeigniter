@@ -11,6 +11,7 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model("eligibility_exclusion_m");
 		$this->load->model("airline_m");
 		$this->load->model("season_m");
+		$this->load->model("partner_m");
 		$this->load->model('paxfeed_m');
 		$this->load->model("marketzone_m");
 		$this->load->model("fclr_m");
@@ -350,6 +351,11 @@ $sWhere $sOrder $sLimit";
 		  echo json_encode( $output );
 		}
 	}
+	
+	function calculateOND($pax_list, $bg_ond_partners) {
+
+
+	}
 
 	
 
@@ -359,18 +365,19 @@ $sWhere $sOrder $sLimit";
 	$contracts = $this->contract_m->getActiveContracts();
 
 	foreach($contracts as $contract) {
-		//echo "<pre>" . print_r($contract,1). "</pre>";
+		echo "<pre>" . print_r($contract,1). "</pre>";
 		$this->mydebug->debug(print_r($contract,1));
-		$product = $contract['productID'];
+		$product = $contract->productID;
+		$carrierId = $contract->airlineID;
 
 		switch ($product) {
 			case 1:
-			$this->mydebug->debug("OFFER GEN: PRODUCT UPGRADE : CARRIER ID: " . $contract['airlineID');
-   			 #processGenUpgradeOffers($contract['airlineID');
+			$this->mydebug->debug("OFFER GEN: PRODUCT UPGRADE : CARRIER ID: " . $carrierId);
+   			 #$this->processGenUpgradeOffers($carrierId);
 			break;
 			case 2:
-			$this->mydebug->debug("OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: " . $contract['airlineID');
-   			 processGenBaggageOffers($contract['airlineID');
+			$this->mydebug->debug("OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: " . $carrierId);
+   			 $this->processGenBaggageOffers($carrierId);
 			break;
 		}
 			
@@ -380,21 +387,53 @@ $sWhere $sOrder $sLimit";
    }
 
    function processGenBaggageOffers($carrierId) {
+		$carrierId = 5500;
+		echo ("OFFER GEN: PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
 
 		$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
 
 		$days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
                 $current_time = time();
                 $tstamp = $current_time + ($days * 86400);
+                $tstamp = 0;//For testing
 		
-		# GET  PAX FEED OF EACH  ADULT 
-		$sQuery = " SELECT * FROM VX_daily_tkt_pax_feed  WHERE is_processed = 0  AND dep_date >= ".$tstamp." AND carrier_code = $carrierId by dtpf_id";
-		$rResult = $this->install_m->run_query($sQuery);
+		//$id = $this->airline_cabin_class_m->checkCarrierDataByID($id);
+		# GET  PAXA FEED OF PTC TYPE ADT  ADULT , exclude UNN and NON-REV of speicific Class
+		# FILTER 
+		$bg_pax_data = $this->offer_eligibility_m->getBaggagePaxData($carrierId, $tstamp);
+		$bg_partners = $this->partner_m->getPartnerCarriers($carrierId);
+		foreach($bg_partners as $partner) {
+			$bg_ond_partners[$carrierId][]= $partner->partner_carrierID;
+		}
+			echo "<br>PARTNERS=<pre>" . print_r($bg_partners,1) . "</pre>";
+		
 
+		foreach ($bg_pax_data as $pax_pnr_single ) {
+			echo "<br>SINGLEPNR=<pre>" . print_r($pax_pnr_single,1) . "</pre>";
+			$single_adult_full_pax = $this->offer_eligibility_m->getBaggageSingleAdultPax($pax_pnr_single);
+			echo "<br>FULLPAX=<pre>" . print_r($single_adult_full_pax,1) . "</pre>";
+			foreach ($single_adult_full_pax as $s_pax ) {
+			    $pnr = $this->pnr_ref;
+			    $pax_list[$pnr]['from_city'] =  $s_pax->from_city;
+			    $pax_list[$pnr]['to_city'] =  $s_pax->to_city;
+			    $pax_list[$pnr]['total_dep_date'] =  $s_pax->dep_date;
+			    $pax_list[$pnr]['total_arrival_date'] =  $s_pax->arrival_date;
+			    $pax_list[$pnr]['carrier_code'] =  $s_pax->carrier_code;
+			    $pax_list[$pnr]['pax_nbr'] =  $s_pax->carrier_code;
+			    $pax_list[$pnr]['seg_nbr'] =  $s_pax->seg_nbr;
+			    $pax_list[$pnr]['get_origin_country_code'] =  $s_pax->from_country;
+			    $pax_list[$pnr]['get_dest_country_code'] =  $s_pax->to_country;
+			    $pax_list[$pnr]['get_origin_city_ocde'] =  $s_pax->from_city;
+			    $pax_list[$pnr]['get_dest_city_ocde'] =  $s_pax->to_city;
+			    $pax_list[$pnr]['flight_number'] =  $s_pax->flight_number;
+			    $pax_list[$pnr]['dtpf_id'] =  $s_pax->dtpf_id;
+			}
+			$pax_ond = $this->calculateOND($pax_list, $bg_ond_partners);
+		}
    }
  	
 
-   function processGenBaggageOffers($carrierId) {
+   function processGenUpgradeOffers($carrierId) {
 
 
 		$days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
