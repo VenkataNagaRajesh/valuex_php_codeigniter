@@ -353,8 +353,206 @@ $sWhere $sOrder $sLimit";
 	}
 	
 	function calculateOND($pax_list, $bg_ond_partners) {
+		$twentyfourhours =  24*60*60;
+		$twelevehours =  12*60*60;
+		$eighthours =  8*60*60;
+		$current_carrier_code =  'XX';
+
+		foreach (array_keys($pax_list) as $pnr ) {
+		$ond = Array();
+		$i = 1;
+			print "PNR=$pnr----------------------------------------------------------------------------------------------------\n";
+			foreach($pax_list[$pnr] as $ckey => $crow) {
+				$paxId = $crow['dtpf_id']; 
+		echo "\n\nROW=".($ckey+1) . " - SEG=" . $paxId;
+
+				if ($ckey == 0 ) {
+					echo "\nFIRST ROW CREATE NEW OND   ======";
+					$domesticCountryCode = $crow['get_origin_country_code'];
+					$originAiport = $crow['from_city'];
+					createOND($i, $paxId);
+					continue;
+				}
 
 
+				/* Case 2a check
+				If current flight is Domestic & next flight is INTL, then introduce break  
+				introduce break; go to next flight;
+				*/
+				$nfkey = $ckey + 1;	
+				$pfkey = $ckey - 1;	
+				$pfrow = $pax_list[$pnr][$pfkey];
+				$nfrow = $pax_list[$pnr][$nfkey];
+
+				if ( isDomestic($crow['get_origin_country_code'], $crow['get_dest_country_code']) &&  isDomestic($pfrow['get_origin_country_code'], $pfrow['get_dest_country_code'])) {
+					$checkHours = $eighthours;
+					$checkHoursDp = 8;;
+
+				} elseif ((isDomestic($crow['get_origin_country_code'], $crow['get_dest_country_code']) &&  isInternational($pfrow['get_origin_country_code'], $pfrow['get_dest_country_code'])) || (isInternational($crow['get_origin_country_code'], $crow['get_dest_country_code']) &&  isDomestic($pfrow['get_origin_country_code'], $pfrow['get_dest_country_code']))) {
+
+					$checkHours = $twelevehours;
+					$checkHoursDp = 12;;
+				} elseif ( isInternational($crow['get_origin_country_code'], $crow['get_dest_country_code']) &&  isInternational($pfrow['get_origin_country_code'], $pfrow['get_dest_country_code'])) {
+					$checkHours = $twentyfourhours;
+					$checkHoursDp = 24;
+				}
+
+
+				if ( ! isPartner($crow['carrier_code'], $current_carrier_code, $bg_ond_partners)) {
+					echo "\nCURRENT CARRIER " . $crow['carrier_code'] . " NOT A PARTNER WITH " . $current_carrier_code  . "  ======";
+					$i++;
+					echo "\nCURRENT CARRIER NOT A PARTNER - NEW OND CREATAED $i  - NO SILDER ======";
+					createOND("NOSLIDER", $paxId);
+					continue;
+
+				} else {
+					echo "\nCURRENT FLIGT CARRIER " . $crow['carrier_code'] . " IS PARTNER WITH " . $current_carrier_code  . "  ======";
+				}
+
+
+
+
+				if ( isDomestic($crow['get_origin_country_code'], $crow['get_dest_country_code'])) {
+					echo "\nCURRENT IS DOMESTIC  ======";
+					if( $pfkey >= 0) { //Prev row exits $pfrow =  $pax_list[$pnr][$pfkey];
+						if ( $crow['from_city'] == $pfrow['to_city']) {
+							echo "\nCURRENT IS DOMESTIC - CUR CITY " . $crow['from_city'] . " MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
+							if ((strtotime($crow['total_dep_date']) - strtotime( $pfrow['total_arrival_date'])) < $checkHours) {
+								echo "\nCURRENT IS DOMESTIC - WITHIN $checkHoursDp Hrs  ======";
+								if ( $crow['to_city'] == $pfrow['from_city'] && $pfrow['from_city'] == $originAiport) {
+									echo "\nCURRENT IS DOMESTIC - CUR TO CITY " . $crow['to_city'] . " MATCHED WITH PREV FROM CITY " . $pfrow['from_city']  . "  ======";
+									$i++;
+									echo "\nCURRENT IS DOMESTIC - NEW OND CREATAED $i ======";
+									createOND($i, $paxId);
+									continue;
+									
+								} else {
+									echo "\nCURRENT IS DOMESTIC - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . " START CHECK FARTHER END MATCHES WITH ORIGIN AIPRORT $originAiport !";
+									if ( $nfrow && ($crow['to_city'] == $originAiport ||  $nfrow['to_city'] == $originAiport)) {
+										if ( $pfrow &&  $pax_list[$pnr][$pfkey-1] )  {
+										$i++;
+										}
+										echo "\nCURRENT IS DOMESTIC - CUR TO CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN CITY OR  NEXT FLIGHT " . $pfrow['to_city'] . " MATCHED WITH ORIGIN - FARTHER POINT ADDING TO NEW OND $i ======";
+										createOND($i, $paxId);
+										if ( $pfrow &&  !$pax_list[$pnr][$pfkey-1] ){ 
+											#$i++;
+											echo "\nCURRENT IS DOMESTIC - FARTHER POINT - JUST 3 ROWS CASE - CREATE OND FOR NEXT ROW $i ======";
+										}
+										continue;
+									} else {
+									echo "\nCURRENT IS DOMESTIC - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . "  ADDING TO PREV OND $i ======";
+									createOND($i, $paxId);
+									continue;
+									}
+
+								}
+								
+							} else {
+								echo "\nCURRENT IS DOMESTIC -BUT MORE THAN $checkHoursDp Hrs  ======";
+								$i++;
+								echo "\nCURRENT IS DOMESTIC - NEW OND CREATAED $i ======";
+								createOND($i, $paxId);
+								continue;
+							}
+					
+						} else {
+							echo "\nCURRENT IS DOMESTIC - CUR CITY " . $crow['from_city'] . "  NOT MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
+							$i++;
+							echo "\nCURRENT IS DOMESTIC - NEW OND CREATAED $i ======";
+							createOND($i, $paxId);
+							continue;
+						}
+					}
+						
+				} else {
+					echo "\nCURRENT IS INTERNATIONAL  ======";
+					if( $pfkey >= 0) { //Prev row exits $pfrow =  $pax_list[$pnr][$pfkey];
+						if ( $crow['from_city'] == $pfrow['to_city']) {
+							echo "\nCURRENT IS INTERNATIONAL - CUR CITY " . $crow['from_city'] . " MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
+							if ((strtotime($crow['total_dep_date']) - strtotime( $pfrow['total_arrival_date'])) < $checkHours) {
+								echo "\nCURRENT IS INTERNATIONAL - WITHIN $checkHoursDp Hrs  ======";
+								if ( $crow['to_city'] == $pfrow['from_city'] && $pfrow['from_city'] == $originAiport) {
+									echo "\nCURRENT IS INTERNATIONAL - CUR TO CITY " . $crow['to_city'] . " MATCHED WITH PREV FROM CITY " . $pfrow['from_city']  . "  ======";
+									$i++;
+									echo "\nCURRENT IS INTERNATIONAL - NEW OND CREATAED $i ======";
+									createOND($i, $paxId);
+									continue;
+									
+								} else {
+									echo "\nCURRENT IS INTERNATIONAL - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . " START CHECK FARTHER END MATCHES WITH ORIGIN AIPRORT $originAiport !";
+									if ( $nfrow && ($crow['to_city'] == $originAiport ||  $nfrow['to_city'] == $originAiport)) {
+										if ( $pfrow &&  $pax_list[$pnr][$pfkey-1] )  {
+										$i++;
+										}
+										echo "\nCURRENT IS INTERNATIONAL - CUR TO CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN CITY OR  NEXT FLIGHT " . $pfrow['to_city'] . " MATCHED WITH ORIGIN - FARTHER POINT ADDING TO NEW OND $i ======";
+										createOND($i, $paxId);
+										if ( $pfrow &&  !$pax_list[$pnr][$pfkey-1] ){ 
+											$i++;
+											echo "\nCURRENT IS INTERNATIONAL - FARTHER POINT - JUST 3 ROWS CASE - CREATE OND FOR NEXT ROW $i ======";
+										}
+										continue;
+									} else {
+									echo "\nCURRENT IS INTERNATIONAL - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . "  ADDING TO PREV OND $i ======";
+									createOND($i, $paxId);
+									continue;
+									}
+						
+
+								}
+								
+							} else {
+								echo "\nCURRENT IS INTERNATIONAL -BUT MORE THAN $checkHoursDp Hrs  ======";
+								$i++;
+								echo "\nCURRENT IS INTERNATIONAL - NEW OND CREATAED $i ======";
+								createOND($i, $paxId);
+								continue;
+							}
+					
+						} else {
+							echo "\nCURRENT IS INTERNATIONAL - CUR CITY " . $crow['from_city'] . "  NOT MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
+							$i++;
+							echo "\nCURRENT IS INTERNATIONAL - NEW OND CREATAED $i ======";
+							createOND($i, $paxId);
+							continue;
+						}
+					}
+				}
+
+			}
+			print_r($ond);
+			print "PNR $pnr  END=====================================================================================\n";
+		}
+		return $ond;
+	}
+
+	function createOND($ondi, $seg) {
+		global $ond;
+		global $pax_list;
+		$ond[$ondi][] = $seg;
+	}
+
+
+	function isPartner($carrier, $current_carrier_code, $partners) {
+
+		if ( ($current_carrier_code == $carrier ) || in_array($carrier , $partners[$current_carrier_code])) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function isDomestic($orgCountry, $destCountry) {
+	if ($orgCountry == $destCountry) {
+			return true;
+		}
+		return false;
+	}
+
+	function isInternational($orgCountry, $destCountry) {
+		if ($orgCountry != $destCountry) {
+			return true;
+		}
+		return false;
 	}
 
 	
@@ -428,7 +626,11 @@ $sWhere $sOrder $sLimit";
 			    $pax_list[$pnr]['flight_number'] =  $s_pax->flight_number;
 			    $pax_list[$pnr]['dtpf_id'] =  $s_pax->dtpf_id;
 			}
+
 			$pax_ond = $this->calculateOND($pax_list, $bg_ond_partners);
+
+
+			#Determine matching BCLR for this PAX 
 		}
    }
  	
