@@ -58,6 +58,9 @@
 						<td>Last Year Average Price Per Kg: </td><td><?= $last_year_average_price_per_kg ?></td>
 					</tr>
 					<tr>
+						<td>No of Pax Per Flight: </td><td><?= $no_of_pax_per_flight ?></td>
+					</tr>
+					<tr>
 						<td>Last Year  Total Weight Per Flight: </td><td><?= $last_year_total_weight_per_flight ?></td>
 					</tr>
 					<tr>

@@ -1047,10 +1047,12 @@ class Bclr extends Admin_Controller
             $this->data['last_year_total_weight_per_flight'] = $getBGBclrdata[0]->last_year_total_weight_per_flight;
             $this->data['average_weight_per_flight_per_pax'] = $getBGBclrdata[0]->average_weight_per_flight_per_pax;
             $this->data['average_price_per_flight_per_pax'] = $getBGBclrdata[0]->average_price_per_flight_per_pax;
+            $this->data['no_of_pax_per_flight'] = $getBGBclrdata[0]->no_of_passengers/$getBGBclrdata[0]->total_flight_count;
         } else {
             $this->data['last_year_average_price_per_kg'] = 0;
             $this->data['last_year_revenue_per_flight'] = 0;
             $this->data['average_weight'] = 0;
+            $this->data['no_of_pax_per_flight'] = 0;
         }
     
 
@@ -1121,11 +1123,13 @@ class Bclr extends Admin_Controller
             $last_year_total_weight_per_flight = $total_weight/$total_flight_count;
             $last_year_revenue_per_flight = $total_revenue/$total_flight_count;
             $total_number_pax_per_flight_who_bought_the_baggage = $total_pax_count/$total_flight_count;
-            $average_weight_per_flight_per_pax = $total_weight/$total_number_pax_per_flight_who_bought_the_baggage;
+		$no_of_pax_per_flight =  $no_of_passengers/$total_flight_count;
+            $average_weight_per_flight_per_pax = $last_year_total_weight_per_flight/$no_of_pax_per_flight;
             $average_price_per_flight_per_pax = $last_year_revenue_per_flight/$total_number_pax_per_flight_who_bought_the_baggage;
 
         } else {
             $no_of_passengers = 0;
+            $no_of_pax_per_flight = 0;
             $total_revenue = 0;
             $total_weight = 0;
             $average_weight = 0;
@@ -1402,7 +1406,7 @@ class Bclr extends Admin_Controller
 	if ( $total_flight_count ) {
                 $sQuery .= " GROUP BY  departure_date, flight_number ) as ftable  ";
 	}
-    	//echo "<br>$sQuery ";
+    	echo "<br>$sQuery ";
        return $rResult = $this->install_m->run_query($sQuery)[0];
     }
 }
