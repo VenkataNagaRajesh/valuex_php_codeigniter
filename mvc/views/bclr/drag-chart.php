@@ -8,7 +8,6 @@
                 </ol>
         </div>
         <div class="col-md-12">
-	<?php if ($no_of_passengers) { ?>
                 <div class="col-md-10">
                         <br /><!-- Just so that JSFiddle's Result label doesn't overlap the Chart -->
                         <div id="interactive-chart" style="height: 360px; width: 100%;"></div>
@@ -21,11 +20,9 @@
                 </div>
                 <div class="col-md-2">
                         <input type="text" name="graph_name" placeholder="Enter Unique Name" id="graph_name" value="<?= $cwt_name ?>" />
-                        <button class="btn btn-danger" enabled="enabled">Edit Graph</button>
+						<a target="_blank" class="btn btn-danger" href="<?=base_url('bclr/editcwtgraph')?>"> <b>Edit Cwt Graph <b></a>
+                       <!-- <button class="btn btn-danger" enabled="enabled">Edit Graph</button>-->
                 </div>
-	<?php } else {?>
-		<?php echo "<h2>Data might be wrong!. Can not generate graph. Please re-check BCRL Rule</h2>"; ?>
-	<?php } ?>
         </div>
 </div>
 
@@ -119,12 +116,14 @@
 			titleFontColor: "#4F81BC",
 			minimum: "1",
 			maximum: "<?= count($points) + 20 ?>",
+			interval: 5,
 		},
 		axisY:[{
 			title: "Price per KG",
 			minimum: "<?= $min_weight?>",
 			maximum: "<?= $max_weight?>",
 			titleFontColor: "#4F81BC",
+			interval: 5,
 		},
 		],
 		axisY2:[{
@@ -132,6 +131,7 @@
 			minimum:  "1",
 			maximum: "<?= $last_year_revenue_per_flight+100  ?>",
 			titleFontColor: "#C0504E",
+			//interval: 50,
 		},
 		],
 
@@ -303,3 +303,17 @@
 	// 	}
 	// }
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
