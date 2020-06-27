@@ -1313,11 +1313,7 @@ class Bclr extends Admin_Controller
         $dep_time_end = $arrBclrData->dep_time_end;
 
         $flight_number = $arrBclrData->flight_num_range;
-
-        $flight_num_range = explode("-", $flight_number);
-        $start_flight_range = $flight_num_range[0];
-        $end_flight_range = $flight_num_range[1];
-        
+  
        
 	$origin_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($arrBclrData->origin_content, $arrBclrData->origin_level);
 	$dest_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($arrBclrData->dest_content, $arrBclrData->dest_level);
@@ -1405,4 +1401,13 @@ class Bclr extends Admin_Controller
     	//echo "<br>$sQuery ";
        return $rResult = $this->install_m->run_query($sQuery)[0];
     }
+    /* Prathyusha commented not required
+    function dragchart(){
+		$this->data["subview"] = "bclr/editcwtgraph";
+		$this->load->view('_layout_main', $this->data); 
+	} */
+	function editcwtgraph(){
+		$this->data["subview"] = "bclr/editcwtgraph";
+		$this->load->view('_layout_main', $this->data); 
+	}
 }
