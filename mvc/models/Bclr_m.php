@@ -13,6 +13,7 @@ class Bclr_m extends MY_Model {
 
         function get_bclr($array=NULL, $signal=FALSE) {
                 $query = parent::get($array, $signal);
+             print_r($this->db->last_query());
                 return $query;
         }
 
@@ -165,6 +166,12 @@ class Bclr_m extends MY_Model {
             $this -> db -> where($where);
             $this -> db -> delete('BG_cwt');
             return TRUE;
+        }
+
+        function get_bclr_by_carrier_id($carrier_id)
+        {
+            $query = $this->db->get_where('BG_baggage_control_rule',array("active" => 1,"carrierID" => $carrier_id));
+            return $query->result();
         }
 
 }

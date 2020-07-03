@@ -18,6 +18,7 @@ class Paxfeed_m extends MY_Model {
 	
 	function get_single_paxfeed($array=NULL) {
 		$query = parent::get_single($array);
+		//print_r($this->db->last_query());
 		return $query;
 	}
 

@@ -113,7 +113,5 @@ class Offer_eligibility_m extends MY_Model {
                 return  $result;
 	}
 
-
-	
 }
 

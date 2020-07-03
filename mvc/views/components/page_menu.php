@@ -69,7 +69,7 @@
             <a href="<?= base_url($menu['link']) ?>" class="nav-link">
               <i class="nav-icon fa <?=$menu['icon']?>"></i>
               <span>
-                <?=$menu['menuName']?></span>
+                <?=ucwords($menu['menuName'])?></span>
                  <span class="pull-right-container">
                   <?php if(count($menu['child'])>0){ ?> <i class="right fa fa-angle-left"></i><?php } ?>
               </span>
@@ -82,7 +82,7 @@
               <li class="nav-item  <?=($child['link']==$this->router->fetch_class())?'active':''?>">
                 <a href="<?=base_url($child['link'])?>" class="nav-link">
                   <i class="fa <?=$child['icon']?> nav-icon"></i>
-                  <span><?=$child['menuName']?></span   >
+                  <span><?=ucwords($child['menuName'])?></span   >
                 </a>
               </li>
             <?php } } ?>

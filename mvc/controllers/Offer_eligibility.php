@@ -16,7 +16,7 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model('paxfeed_m');
 		$this->load->model("marketzone_m");
 		$this->load->model("fclr_m");
-		$this->load->model("seasobclr_m");
+		$this->load->model("season_m");
 		$this->load->model("airports_m");
 		$this->load->model("user_m");
 		$this->load->model("contract_m");
@@ -371,7 +371,7 @@ $sWhere $sOrder $sLimit";
 					echo "\nFIRST ROW CREATE NEW OND   ======";
 					$domesticCountryCode = $crow['get_origin_country_code'];
 					$originAiport = $crow['from_city'];
-					createOND($i, $paxId);
+					$ond = $this->createOND($ond,$i, $paxId);
 					continue;
 				}
 
@@ -385,25 +385,25 @@ $sWhere $sOrder $sLimit";
 				$pfrow = $pax_list[$pnr][$pfkey];
 				$nfrow = $pax_list[$pnr][$nfkey];
 
-				if ( isDomestic($crow['get_origin_country_code'], $crow['get_dest_country_code']) &&  isDomestic($pfrow['get_origin_country_code'], $pfrow['get_dest_country_code'])) {
+				if ( $this->isDomestic($crow['get_origin_country_code'], $crow['get_dest_country_code']) &&  $this->isDomestic($pfrow['get_origin_country_code'], $pfrow['get_dest_country_code'])) {
 					$checkHours = $eighthours;
 					$checkHoursDp = 8;;
 
-				} elseif ((isDomestic($crow['get_origin_country_code'], $crow['get_dest_country_code']) &&  isInternational($pfrow['get_origin_country_code'], $pfrow['get_dest_country_code'])) || (isInternational($crow['get_origin_country_code'], $crow['get_dest_country_code']) &&  isDomestic($pfrow['get_origin_country_code'], $pfrow['get_dest_country_code']))) {
+				} elseif (($this->isDomestic($crow['get_origin_country_code'], $crow['get_dest_country_code']) &&  $this->isInternational($pfrow['get_origin_country_code'], $pfrow['get_dest_country_code'])) || ($this->isInternational($crow['get_origin_country_code'], $crow['get_dest_country_code']) &&  $this->isDomestic($pfrow['get_origin_country_code'], $pfrow['get_dest_country_code']))) {
 
 					$checkHours = $twelevehours;
 					$checkHoursDp = 12;;
-				} elseif ( isInternational($crow['get_origin_country_code'], $crow['get_dest_country_code']) &&  isInternational($pfrow['get_origin_country_code'], $pfrow['get_dest_country_code'])) {
+				} elseif ( $this->isInternational($crow['get_origin_country_code'], $crow['get_dest_country_code']) &&  $this->isInternational($pfrow['get_origin_country_code'], $pfrow['get_dest_country_code'])) {
 					$checkHours = $twentyfourhours;
 					$checkHoursDp = 24;
 				}
 
 
-				if ( ! isPartner($crow['carrier_code'], $current_carrier_code, $bg_ond_partners)) {
+				if ( ! $this->isPartner($crow['carrier_code'], $current_carrier_code, $bg_ond_partners)) {
 					echo "\nCURRENT CARRIER " . $crow['carrier_code'] . " NOT A PARTNER WITH " . $current_carrier_code  . "  ======";
 					$i++;
 					echo "\nCURRENT CARRIER NOT A PARTNER - NEW OND CREATAED $i  - NO SILDER ======";
-					createOND("NOSLIDER", $paxId);
+					$ond = $this->createOND($ond,"NOSLIDER", $paxId);
 					continue;
 
 				} else {
@@ -413,7 +413,7 @@ $sWhere $sOrder $sLimit";
 
 
 
-				if ( isDomestic($crow['get_origin_country_code'], $crow['get_dest_country_code'])) {
+				if ( $this->isDomestic($crow['get_origin_country_code'], $crow['get_dest_country_code'])) {
 					echo "\nCURRENT IS DOMESTIC  ======";
 					if( $pfkey >= 0) { //Prev row exits $pfrow =  $pax_list[$pnr][$pfkey];
 						if ( $crow['from_city'] == $pfrow['to_city']) {
@@ -424,7 +424,7 @@ $sWhere $sOrder $sLimit";
 									echo "\nCURRENT IS DOMESTIC - CUR TO CITY " . $crow['to_city'] . " MATCHED WITH PREV FROM CITY " . $pfrow['from_city']  . "  ======";
 									$i++;
 									echo "\nCURRENT IS DOMESTIC - NEW OND CREATAED $i ======";
-									createOND($i, $paxId);
+									$ond = $this->createOND($ond,$i, $paxId);
 									continue;
 									
 								} else {
@@ -434,7 +434,7 @@ $sWhere $sOrder $sLimit";
 										$i++;
 										}
 										echo "\nCURRENT IS DOMESTIC - CUR TO CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN CITY OR  NEXT FLIGHT " . $pfrow['to_city'] . " MATCHED WITH ORIGIN - FARTHER POINT ADDING TO NEW OND $i ======";
-										createOND($i, $paxId);
+										$ond = $this->createOND($ond,$i, $paxId);
 										if ( $pfrow &&  !$pax_list[$pnr][$pfkey-1] ){ 
 											#$i++;
 											echo "\nCURRENT IS DOMESTIC - FARTHER POINT - JUST 3 ROWS CASE - CREATE OND FOR NEXT ROW $i ======";
@@ -442,7 +442,7 @@ $sWhere $sOrder $sLimit";
 										continue;
 									} else {
 									echo "\nCURRENT IS DOMESTIC - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . "  ADDING TO PREV OND $i ======";
-									createOND($i, $paxId);
+									$ond = $this->createOND($ond,$i, $paxId);
 									continue;
 									}
 
@@ -452,7 +452,7 @@ $sWhere $sOrder $sLimit";
 								echo "\nCURRENT IS DOMESTIC -BUT MORE THAN $checkHoursDp Hrs  ======";
 								$i++;
 								echo "\nCURRENT IS DOMESTIC - NEW OND CREATAED $i ======";
-								createOND($i, $paxId);
+								$ond = $this->createOND($ond,$i, $paxId);
 								continue;
 							}
 					
@@ -460,7 +460,7 @@ $sWhere $sOrder $sLimit";
 							echo "\nCURRENT IS DOMESTIC - CUR CITY " . $crow['from_city'] . "  NOT MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
 							$i++;
 							echo "\nCURRENT IS DOMESTIC - NEW OND CREATAED $i ======";
-							createOND($i, $paxId);
+							$ond = $this->createOND($ond,$i, $paxId);
 							continue;
 						}
 					}
@@ -476,7 +476,7 @@ $sWhere $sOrder $sLimit";
 									echo "\nCURRENT IS INTERNATIONAL - CUR TO CITY " . $crow['to_city'] . " MATCHED WITH PREV FROM CITY " . $pfrow['from_city']  . "  ======";
 									$i++;
 									echo "\nCURRENT IS INTERNATIONAL - NEW OND CREATAED $i ======";
-									createOND($i, $paxId);
+									$ond = $this->createOND($ond,$i, $paxId);
 									continue;
 									
 								} else {
@@ -486,7 +486,7 @@ $sWhere $sOrder $sLimit";
 										$i++;
 										}
 										echo "\nCURRENT IS INTERNATIONAL - CUR TO CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN CITY OR  NEXT FLIGHT " . $pfrow['to_city'] . " MATCHED WITH ORIGIN - FARTHER POINT ADDING TO NEW OND $i ======";
-										createOND($i, $paxId);
+										$ond = $this->createOND($ond,$i, $paxId);
 										if ( $pfrow &&  !$pax_list[$pnr][$pfkey-1] ){ 
 											$i++;
 											echo "\nCURRENT IS INTERNATIONAL - FARTHER POINT - JUST 3 ROWS CASE - CREATE OND FOR NEXT ROW $i ======";
@@ -494,7 +494,7 @@ $sWhere $sOrder $sLimit";
 										continue;
 									} else {
 									echo "\nCURRENT IS INTERNATIONAL - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . "  ADDING TO PREV OND $i ======";
-									createOND($i, $paxId);
+									$ond = $this->createOND($ond,$i, $paxId);
 									continue;
 									}
 						
@@ -505,7 +505,7 @@ $sWhere $sOrder $sLimit";
 								echo "\nCURRENT IS INTERNATIONAL -BUT MORE THAN $checkHoursDp Hrs  ======";
 								$i++;
 								echo "\nCURRENT IS INTERNATIONAL - NEW OND CREATAED $i ======";
-								createOND($i, $paxId);
+								$ond = $this->createOND($ond,$i, $paxId);
 								continue;
 							}
 					
@@ -513,23 +513,21 @@ $sWhere $sOrder $sLimit";
 							echo "\nCURRENT IS INTERNATIONAL - CUR CITY " . $crow['from_city'] . "  NOT MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
 							$i++;
 							echo "\nCURRENT IS INTERNATIONAL - NEW OND CREATAED $i ======";
-							createOND($i, $paxId);
+							$ond = $this->createOND($ond,$i, $paxId);
 							continue;
 						}
 					}
 				}
 
 			}
-			print_r($ond);
 			print "PNR $pnr  END=====================================================================================\n";
 		}
 		return $ond;
 	}
 
-	function createOND($ondi, $seg) {
-		global $ond;
-		global $pax_list;
-		$ond[$ondi][] = $seg;
+	function createOND($ond, $i, $seg) {
+		$ond[$i][] = $seg;
+		return $ond;
 	}
 
 
@@ -562,9 +560,11 @@ $sWhere $sOrder $sLimit";
 
 	# Get Contracts to decide what carrier and what products offers to be generated
 	$contracts = $this->contract_m->getActiveContracts();
+	echo "<pre>CONTRACTS=" . print_r($contracts,1). "</pre>";
+   	$this->processGenBaggageOffers(5500);
+exit;
 
 	foreach($contracts as $contract) {
-		echo "<pre>" . print_r($contract,1). "</pre>";
 		$this->mydebug->debug(print_r($contract,1));
 		$product = $contract->productID;
 		$carrierId = $contract->airlineID;
@@ -586,7 +586,13 @@ $sWhere $sOrder $sLimit";
    }
 
    function processGenBaggageOffers($carrierId) {
-		$carrierId = 5500;
+	
+		$bclr_rules = $this->bclr_m->get_bclr_by_carrier_id($carrierId);
+		if ( !count($bclr_rules) ) {
+			echo ("OFFER GEN: PROCESS BAGGAGE : NO BCLR RULES FOUND FOR CARRIER ID: " . $carrierId);
+			return;
+		}
+
 		echo ("OFFER GEN: PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
 
 		$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
@@ -609,32 +615,60 @@ $sWhere $sOrder $sLimit";
 
 		$pax_ond = Array();
 		foreach ($bg_pax_data as $pax_pnr_single ) {
-			echo "<br>SINGLEPNR=<pre>" . print_r($pax_pnr_single,1) . "</pre>";
+			#echo "<br>SINGLEPNR=<pre>" . print_r($pax_pnr_single,1) . "</pre>";
 			$single_adult_full_pax = $this->offer_eligibility_m->getBaggageSingleAdultPax($pax_pnr_single);
-			echo "<br>FULLPAX=<pre>" . print_r($single_adult_full_pax,1) . "</pre>";
+			//echo "<br>FULLPAX=<pre>" . print_r($single_adult_full_pax,1) . "</pre>";
+			$pax_cnt = 0;
 			foreach ($single_adult_full_pax as $s_pax ) {
-			    $pnr = $this->pnr_ref;
-			    $pax_list[$pnr]['from_city'] =  $s_pax->from_city;
-			    $pax_list[$pnr]['to_city'] =  $s_pax->to_city;
-			    $pax_list[$pnr]['total_dep_date'] =  $s_pax->dep_date;
-			    $pax_list[$pnr]['total_arrival_date'] =  $s_pax->arrival_date;
-			    $pax_list[$pnr]['carrier_code'] =  $s_pax->carrier_code;
-			    $pax_list[$pnr]['pax_nbr'] =  $s_pax->carrier_code;
-			    $pax_list[$pnr]['seg_nbr'] =  $s_pax->seg_nbr;
-			    $pax_list[$pnr]['get_origin_country_code'] =  $s_pax->from_country;
-			    $pax_list[$pnr]['get_dest_country_code'] =  $s_pax->to_country;
-			    $pax_list[$pnr]['get_origin_city_ocde'] =  $s_pax->from_city;
-			    $pax_list[$pnr]['get_dest_city_ocde'] =  $s_pax->to_city;
-			    $pax_list[$pnr]['flight_number'] =  $s_pax->flight_number;
-			    $pax_list[$pnr]['dtpf_id'] =  $s_pax->dtpf_id;
+			    $pnr = $s_pax->pnr_ref;
+			    $pax_list[$pnr][$pax_cnt]['from_city'] =  $s_pax->from_city;
+			    $pax_list[$pnr][$pax_cnt]['to_city'] =  $s_pax->to_city;
+			    $pax_list[$pnr][$pax_cnt]['total_dep_date'] =  $s_pax->dep_date;
+			    $pax_list[$pnr][$pax_cnt]['total_arrival_date'] =  $s_pax->arrival_date;
+			    $pax_list[$pnr][$pax_cnt]['carrier_code'] =  $s_pax->carrier_code;
+			    $pax_list[$pnr][$pax_cnt]['pax_nbr'] =  $s_pax->carrier_code;
+			    $pax_list[$pnr][$pax_cnt]['seg_nbr'] =  $s_pax->seg_nbr;
+			    $pax_list[$pnr][$pax_cnt]['get_origin_country_code'] =  $s_pax->from_country;
+			    $pax_list[$pnr][$pax_cnt]['get_dest_country_code'] =  $s_pax->to_country;
+			    $pax_list[$pnr][$pax_cnt]['get_origin_city_ocde'] =  $s_pax->from_city;
+			    $pax_list[$pnr][$pax_cnt]['get_dest_city_ocde'] =  $s_pax->to_city;
+			    $pax_list[$pnr][$pax_cnt]['flight_number'] =  $s_pax->flight_number;
+			    $pax_list[$pnr][$pax_cnt]['dtpf_id'] =  $s_pax->dtpf_id;
+			    $pax_cnt++;
 			}
+		echo "<pre>ALL  PAX  = " . print_r($pax_list,1). "</pre>";
 
-			$pax_ond[] =  $this->calculateOND($pax_list, $bg_ond_partners);
+			$tmp_ond = $this->calculateOND($pax_list, $bg_ond_partners);
+			if (count($tmp_ond)) {
+				$pax_ond[] = $tmp_ond;
+			}
 		}
+		echo "<br>+++++++++++++++++++++++++++++++++++++++++++++";
+		echo "<pre>All PAX OND = " . print_r($pax_ond,1). "</pre>";
+		echo "<br>+++++++++++++++++++++++++++++++++++++++++++++";
 
 		#Determine matching BCLR for all OND  
-		$rules = $this->bclr_m->get_bclr();
+
 		foreach($pax_ond as $ond) {
+			foreach($ond as $pax_arr) {
+				foreach($pax_arr as $dtpfId) {
+					$bclrId = 0;
+					foreach($bclr_rules as $bclr_rule) {
+						$bclrId = $this->getMatchedBclrForPax($dtpfId, $bclr_rule);
+						#if ($bclrId) break;
+					}
+					if ( $bclrId) {
+						echo ("<br>OFFER GEN: PROCESS BAGGAGE : MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+						$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+					} else {
+						$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE :  NO BCLR MATCHED  FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+						echo ("<br>OFFER GEN: PROCESS BAGGAGE : NO BCLR ID $bclrId MATCHED FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+					}
+					
+				}
+			}
+		}
+/*
 
 			 $ext = array();
 					$ext['dtpf_id'] = $feed->dtpf_id;
@@ -716,8 +750,58 @@ $sWhere $sOrder $sLimit";
 				$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
 				$this->offer_eligibility_m->insert_dtpfext($ext);
 			}
-		 }
+*/
+	}
 
+	function getMatchedBclrForPax($dtpfId, $bclr) {
+        	#$bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $bclrId));
+		$bclrId = $bclr->bclr_id;
+		$carrierId = $bclr->carrierID;
+		$min_price = $bclr->min_price;
+		$max_price = $bclr->max_price;
+		$max_capacity = $bclr->max_capacity;
+		$nCarrerID = $bclr->carrierID;
+		$cabin = $bclr->from_cabin;
+		$frequency = $bclr->frequency;
+		$dep_time_start = $bclr->dep_time_start;
+		$dep_time_end = $bclr->dep_time_end;
+		$flight_number = $bclr->flight_num_range;
+		$flight_num_range = explode("-", $flight_number);
+		$start_flight_range = $flight_num_range[0];
+		$end_flight_range = $flight_num_range[1];
+		$origin_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($bclr->origin_content, $bclr->origin_level);
+		echo "<br>ORGIN LIST=" .implode(',',$origin_list_p);
+		$dest_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($bclr->dest_content, $bclr->dest_level);
+		echo "<br>DEST LIST=" .implode(',',$dest_list_p);
+		
+		//echo "<br>start_date=" . $start_date;
+		$pax = $this->paxfeed_m->get_single_paxfeed(Array("dtpf_id" => $dtpfId));
+		#print_r($pax);
+		
+		# Validate, carrier, origin, destination, date , flight, frequency, partner, cabin, class 
+		echo "<pre>SINGLE PAX  = " . print_r($pax,1). "</pre>";
+		echo "<pre>SINGLE BCLR  = " . print_r($bclr,1). "</pre>";
+	echo "<br>DEPART MATCH=" . date("d M Y H:i:s", $pax->dep_date+$pax->dep_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dep_time_start)) ."  , " . date("d M Y H:i:s",$pax->dep_date+$pax->dep_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dep_time_end);
+	echo "<br>ARRIVA MATCH=" . date("d M Y H:i:s", $pax->arrival_date+$pax->arrival_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dep_time_start)) ."  , " . date("d M Y H:i:s",$pax->arrival_date+$pax->arrival_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dep_time_end);
+		
+		if (
+		($bclr->carrierID == $pax->carrier_code ) 
+		&& ( in_array($pax->frequency, explode(',',$bclr->frequency)))
+		&& ( $pax->flight_number >= $start_flight_range  && $pax->flight_number >= $end_flight_range) 
+		&& ( $pax->dep_date + $pax->dep_time >= ($bclr->effective_date + $bclr->dep_time_start)   && ($pax->dep_date + $pax->dep_time) <= ($bclr->discontinue_date + $bclr->dep_time_end)) 
+		&& ( $pax->arrival_date + $pax->arrival_time >= ($bclr->effective_date + $bclr->dep_time_start)   && ($pax->arrival_date + $pax->arrival_time) <= ($bclr->discontinue_date + $bclr->dep_time_end)) 
+		&& ( in_array($pax->cabin, explode(',',$bclr->from_cabin))) 
+		&& ( in_array($pax->from_city, $origin_list_p))  
+		&& ( in_array($pax->to_city, explode(',',$bclr->dest_list_p)))
+
+		) {
+			echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MMATCHED BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			$this->mydebug->debug("OFFER GEN: PRODUCT BAGGAGE : MATCHED BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			return $bclrId;
+		} else {
+			echo ("<br>OFFER GEN: PRODUCT BAGGAGE : NOT MATCHED BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+		}
+		return 0;
 	}
  	
 
@@ -920,16 +1004,16 @@ $sWhere $sOrder $sLimit";
 	        }
 		*/
 
-	}
+		}
 
 		$this->session->set_flashdata('success', $this->lang->line('menu_success'));
                            redirect(base_url("offer_eligibility/index"));
 
 
 	}
+
 	public function offdtlpage() {		
 		$this->data["subview"] = "offer_eligibility/offdtlpage";
 		$this->load->view('_layout_main', $this->data);
 	}
 }
-
