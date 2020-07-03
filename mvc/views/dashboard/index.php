@@ -68,6 +68,8 @@ function allModuleArray($roleID='1', $dashboardWidget) {
     )
   );
   return $userAllModuleArray;
+
+  return $userAllModuleArray;
 }
 $wdgets = array();
 foreach($dashboardWidget as $key => $value){
@@ -140,7 +142,7 @@ if(count($generateBoxArray)) {
     }
     } ?>
 </div>
-<a class="btn btn-danger" href="<?=base_url('report/dragchart1')?>"> <b>Drag chart type 2 <b></a>
+<!--<a class="btn btn-danger" href="<?=base_url('report/dragchart1')?>"> <b>Drag chart type 2 <b></a> -->
 <script>
 <?php if($show_notice){ ?>
    $('#notice-list').html('<?=$show_notice?>');

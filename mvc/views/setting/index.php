@@ -463,9 +463,9 @@
                             <div>
                                 <span class="backendThemeBodyHeight" style="display:block; width: 20%; float: left; background-color: <?=$theme->leftcolor?>">
                                 </span>
-                                <span class="backendThemeBodyHeight" style="display:block; width: 80%; float: left; background: #f4f5f7" id="themeBodyContent-<?=strtolower(str_replace(' ', '', $theme->themename))?>">
+                                <span class="backendThemeBodyHeight" style="display:block; width: 80%; float: left; background: #f4f5f7" id="themeBodyContent-<?=ucfirst(str_replace(' ', '', $theme->themename))?>">
                                 <?php  ?>
-                                        <?php if($setting->backend_theme == strtolower(str_replace(' ', '', $theme->themename)))  {?>
+                                        <?php if($setting->backend_theme ==ucfirst(str_replace(' ', '', $theme->themename)))  {?>
                                         <center class="backendThemeBodyMargin">
                                             <button type="button" class="btn btn-danger">
                                                 <i  class="fa fa-check-circle"></i>
