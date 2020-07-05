@@ -119,14 +119,12 @@
 			titleFontColor: "#4F81BC",
 			minimum: "1",
 			maximum: "<?= count($points) + 20 ?>",
-			interval: 5,
 		},
 		axisY:[{
 			title: "Price per KG",
 			minimum: "<?= $min_weight?>",
 			maximum: "<?= $max_weight?>",
 			titleFontColor: "#4F81BC",
-			interval: 5,
 		},
 		],
 		axisY2:[{

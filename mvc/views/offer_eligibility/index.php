@@ -129,6 +129,8 @@
 							<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('pax_id')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('fclr_id')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('bclr_id')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('ond')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
@@ -259,6 +261,8 @@ $('#to_cabin').val('<?=$to_cabin?>').trigger('change');
       "columns": [ {"data": "sno" },
 		   {"data": "dtpf_id" },
 		   {"data": "fclr_id" },
+		   {"data": "bclr_id" },
+		   {"data": "ond" },
 		   {"data": "season_id" },
 		   {"data": "source_point" },
 	       {"data": "dest_point" },
