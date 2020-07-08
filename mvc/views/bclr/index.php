@@ -23,9 +23,9 @@
                     ?>
 					</div>
                     <div class="col-md-2 col-sm-3">
-                        <select  name="from_cabin"  id="from_cabin" placeholder="From Cabin" class="form-control select2" multiple="multiple">
-<span> <input type="checkbox" id="cabin_checkbox_level">Select All</span>
+                        <select  name="from_cabin[]"  id="from_cabin" placeholder="From Cabin Content" class="form-control select2" multiple="multiple">
 				        </select>
+			<span> <input type="checkbox" id="cabin_checkbox_level">Select All</span>
                     </div>
 					<div class="col-md-2 col-sm-3">
                         <select  name="partner_carrierID"  id="partner_carrierID" class="form-control select2">
@@ -230,7 +230,7 @@
                             <input type="number" class="form-control" name="flt_min_unit" id="flt_min_unit" placeholder="Min Unit" value="<?=set_value('flt_min_unit',$flt_min_unit)?>" />                       
                         </div>
                     </div>
-					<div class="col-md-2 col-sm-3 select-form">
+		<div class="col-md-2 col-sm-3 select-form">
                         <div class="col-md-12">
 							<input type="text" class="form-control" placeholder="Effective Date" id="flt_effective_date" name="flt_effective_date" value="<?=set_value('flt_effective_date',$flt_effective_date)?>">
 						</div>
@@ -240,8 +240,12 @@
                         <div class="col-md-12">
                             <input type="number" class="form-control" name="flt_max_capacity" id="flt_max_capacity" placeholder="Max Capacity" value="<?=set_value('flt_max_capacity',$flt_max_capacity)?>" />                       
                         </div>
-					</div>
-					<div class="col-md-2 col-sm-3 select-form">
+                        <div class="col-md-12">
+                            <select  name="flt_from_cabin[]"  id="flt_from_cabin" placeholder="From Cabin" class="form-control select2" multiple="multiple">
+                            </select>
+			</div>						
+		</div>
+		<div class="col-md-2 col-sm-3 select-form">
                         <div class="col-md-12">
                             <?php                         
                                 $foriginlist[0] = "Origin Level";
@@ -272,7 +276,7 @@
 						<div class="col-md-12">
                             <select  name="flt_dest_content[]"  id="flt_dest_content" placeholder="Destination Content" class="form-control select2" multiple="multiple">
                             </select>
-						</div>						
+			</div>						
                         <div class="col-md-12">
 							<a type="button" class="btn btn-danger form-control" onclick="downloadBCLR()">Download</a>
                         </div>
@@ -347,6 +351,8 @@
         $('#flt_dest_level').val(<?=$flt_dest_level?>).trigger('change');
         var flt_dest_content = [<?=implode(',',$flt_dest_content)?>];
         $('#flt_dest_content').val(flt_dest_content).trigger('change');
+        var flt_from_cabin = [<?=implode(',',$flt_from_cabin)?>];
+        $('#flt_from_cabin').val(flt_from_cabin).trigger('change');
     
     });
 
@@ -518,6 +524,20 @@
         }
     });
 
+    $('#from_cabin').change(function(){
+        var carrier = $(this).val();    
+        $.ajax({ 
+            async: false,            
+            type: 'POST',            
+            url: "<?=base_url('bclr/getCabinsCarrier')?>",            
+            data: {"carrierID":carrier},           
+            dataType: "html",                                  
+            success: function(data) {                         
+                $('#from_cabin').html(data);             
+            }        
+        });
+    });
+
     $('#flt_carrierID').change(function(){
         var carrier = $(this).val();    
         $.ajax({ 
@@ -535,7 +555,17 @@
         }
         if ($('#flt_dest_level').val() == 17 ) {
             $('#flt_dest_level').trigger('change');
-        }
+	}
+        $.ajax({ 
+            async: false,            
+            type: 'POST',            
+            url: "<?=base_url('bclr/getCabinsCarrier')?>",            
+            data: {"carrierID":carrier},           
+            dataType: "html",                                  
+            success: function(data) {                         
+                $('#flt_from_cabin').html(data);             
+            }        
+        });
     });
 
 function loaddatatable() {
@@ -547,7 +577,7 @@ function loaddatatable() {
       "sAjaxSource": "<?php echo base_url('bclr/server_processing'); ?>",
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "carrierID","value": $("#flt_carrierID").val()},
-		           {"name": "partner_carrierID","value": $("#flt_partner_carrierID").val()},
+		   {"name": "partner_carrierID","value": $("#flt_partner_carrierID").val()},
                    {"name": "allowance","value": $("#flt_allowance").val()},
                    {"name": "frequency","value": $("#flt_frequency").val()},		                           
                    {"name": "effective_date","value": $("#flt_effective_date").val()},		                           
@@ -558,6 +588,7 @@ function loaddatatable() {
                    {"name": "dest_content","value": $("#flt_dest_content").val()},		                           
                    {"name": "rule_auth","value": $("#flt_rule_auth_carrier").val()},		                           
                    {"name": "bag_type","value": $("#flt_bag_type").val()},		                           
+                   {"name": "from_cabin","value": $("#flt_from_cabin").val()},		                           
                    {"name": "min_price","value": $("#flt_min_price").val()},		                           
                    {"name": "max_price","value": $("#flt_max_price").val()},		                           
                    {"name": "min_unit","value": $("#flt_min_unit").val()},		                           
@@ -585,7 +616,7 @@ function loaddatatable() {
                    {"data": "allowance" },
                    {"data": "aircraft_type" },
                    {"data": "flight_num_range" },
-                   {"data": "from_cabin_value" },
+                   {"data": "from_cabin_data" },
                    {"data": "origin_level_value" },
                    {"data": "origin_content_data" },
                    {"data": "dest_level_value" },
@@ -663,7 +694,7 @@ function downloadBCLR(){
 	$.ajax({
        url: "<?php echo base_url('bclr/server_processing'); ?>?page=all&&export=1",
        type: 'get',
-       data: {sSearch: $("input[type=search]").val(),"carrierID": $("#flt_carrierID").val(),"partner_carrierID": $("#flt_partner_carrierID").val(),"allowance": $("#flt_allowance").val(),"frequency": $("#flt_frequency").val(),"effective_date": $("#flt_effective_date").val(),"discontinue_date": $("#flt_discontinue_date").val(),"origin_level": $("#flt_origin_level").val(),"origin_content": $("#flt_origin_content").val(),"dest_level": $("#flt_dest_level").val(),"dest_content": $("#flt_dest_content").val(),"rule_auth": $("#flt_rule_auth_carrier").val(),"bag_type": $("#flt_bag_type").val(),"min_price": $("#flt_min_price").val(),"max_price": $("#flt_max_price").val(),"min_unit": $("#flt_min_unit").val(),"max_capacity": $("#flt_max_capacity").val()},
+       data: {sSearch: $("input[type=search]").val(),"carrierID": $("#flt_carrierID").val(),"partner_carrierID": $("#flt_partner_carrierID").val(),"allowance": $("#flt_allowance").val(),"frequency": $("#flt_frequency").val(),"effective_date": $("#flt_effective_date").val(),"discontinue_date": $("#flt_discontinue_date").val(),"origin_level": $("#flt_origin_level").val(),"origin_content": $("#flt_origin_content").val(),"dest_level": $("#flt_dest_level").val(),"dest_content": $("#flt_dest_content").val(),"rule_auth": $("#flt_rule_auth_carrier").val(),"bag_type": $("#flt_bag_type").val(),"min_price": $("#flt_min_price").val(),"max_price": $("#flt_max_price").val(),"min_unit": $("#flt_min_unit").val(),"max_capacity": $("#flt_max_capacity").val()}, "from_cabin": $("#flt_from_cabin").val(),
        dataType: 'json'
        }).done(function(data){
 			var $a = $("<a>");
@@ -802,7 +833,7 @@ function editbclr(bclr_id) {
                 $('#aircraft_type').val(bclrinfo['aircraft_typeID']).trigger('change');
                 $('#partner_carrierID').val(bclrinfo['partner_carrierID']).trigger('change');
                 $("#season").val(bclrinfo['season_id']).trigger('change');
-                $("#from_cabin").val(bclrinfo['from_cabin']).trigger('change');
+                $('#from_cabin').val(bclrinfo['from_cabin'].split(",")).trigger('change');
                 $("#allowance").val(bclrinfo['allowance']).trigger('change');
                 $("#flight_num_range").val(bclrinfo['flight_num_range']);
                 $("#origin_level").val(bclrinfo['origin_level']).trigger('change');

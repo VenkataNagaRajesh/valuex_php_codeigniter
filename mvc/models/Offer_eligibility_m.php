@@ -22,7 +22,7 @@ class Offer_eligibility_m extends MY_Model {
                 return $query;
         }
 
-        function insert_dtpfext($array) {
+        function insert_dtpfext_fclr($array) {
 		$arr['fclr_id'] = $array['fclr_id'];
 		$arr['dtpf_id'] = $array['dtpf_id'];
 		//$arr['booking_status'] = $array['booking_status'];		
@@ -32,10 +32,21 @@ class Offer_eligibility_m extends MY_Model {
 		}
         }
 
+        function insert_dtpfext_bclr($array) {
+		$arr['bclr_id'] = $array['bclr_id'];
+		$arr['dtpf_id'] = $array['dtpf_id'];
+		//$arr['booking_status'] = $array['booking_status'];		
+		$ret = $this->checkDTPFExtEntry($arr);
+		if (!$ret){
+              	  $error = parent::insert($array);
+               	  return TRUE;
+		}
+        }
+
 	function update_dtpfext($data, $list1) {
 		$this->db->where_in('dtpfext_id', $list1);
                 $this->db->update('UP_dtpf_ext', $data);
-        $this->mydebug->debug($this->db->last_query());
+        	$this->mydebug->debug($this->db->last_query());
         }
 
 	function checkDTPFExtEntry($array){
@@ -46,12 +57,10 @@ class Offer_eligibility_m extends MY_Model {
                 $query = $this->db->get();
                 $check = $query->row();
                 if($check->dtpfext_id) {
-                    return false ;
+                    return TRUE ;
                 } else {
-                  return true;
+                  return FALSE;
                 }
-
-
         }
 
 
@@ -113,7 +122,5 @@ class Offer_eligibility_m extends MY_Model {
                 return  $result;
 	}
 
-
-	
 }
 
