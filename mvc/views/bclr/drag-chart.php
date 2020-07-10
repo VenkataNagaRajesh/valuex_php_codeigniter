@@ -28,49 +28,12 @@
 
 		<div class='table col-md-12'>
 		<h3>Graph Calculation Details chart:</h3>
-			<table border='1' style="background:white;">
+		</h4> Input Data Values:</h4>
+		<h5>Blue Graph Line Plotting:</h5>
+			<table border='1' style="background:white;" cellpadding="5">
 				<tbody>
-					<tr>
-						<td>No of Passengers: </td><td><?= $no_of_passengers ?></td>
-					</tr>
-					<tr>
-						<td>Total Revenue: </td><td><?= $total_revenue ?></td>
-					</tr>
-					<tr>
-						<td>Total Weight: </td><td><?= $total_weight ?></td>
-					</tr>
-					<tr>
-						<td>Average Weight: </td><td><?= $average_weight ?></td>
-					</tr>
-					<tr>
-						<td>Average Price: </td><td><?= $average_price ?></td>
-					</tr>
-					<tr>
-						<td>Total Flight Count: </td><td><?= $total_flight_count ?></td>
-					</tr>
-					<tr>
-						<td>Total Pax Count: </td><td><?= $total_pax_count ?></td>
-					</tr>
-					<tr>
-						<td>Last Year Average Price Per Kg: </td><td><?= $last_year_average_price_per_kg ?></td>
-					</tr>
-					<tr>
-						<td>No of Pax Per Flight: </td><td><?= $no_of_pax_per_flight ?></td>
-					</tr>
-					<tr>
-						<td>Last Year  Total Weight Per Flight: </td><td><?= $last_year_total_weight_per_flight ?></td>
-					</tr>
-					<tr>
-						<td>Last Year  Total Revenue Per Flight: </td><td><?= $last_year_revenue_per_flight ?></td>
-					</tr>
-					<tr>
-						<td>Average Weight Per Flight Per Pax: </td><td><?= $average_weight_per_flight_per_pax ?></td>
-					</tr>
-					<tr>
-						<td>Average Price Per Flight Per Pax: </td><td><?= $average_price_per_flight_per_pax ?></td>
-					</tr>
-					<tr>
-						<td>Min Weight: </td><td><?= $min_weight ?></td>
+				<tr>
+						<td width="80%">Min Weight: </td><td><?= $min_weight ?></td>
 					</tr>
 					<tr>
 						<td>Max Weight: </td><td><?= $max_weight ?></td>
@@ -83,6 +46,62 @@
 					</tr>
 				</tbody>
 			</table>
+		</div>
+		<div class='table col-md-12'> 
+		</h4> Statically Data Values:</h4>
+			<table border='1' style="background:white;" cellpadding="5">
+				<tbody>
+					<!--<tr>
+						<td>No of Passengers: </td><td><?= $no_of_passengers ?></td>
+					</tr>-->
+					<tr>
+						<td width="80%">Total Revenue: </td><td><?= $total_revenue ?></td>
+					</tr>
+					<tr>
+						<td>Total Weight: </td><td><?= $total_weight ?></td>
+					</tr>
+					<!--<tr>
+						<td>Average Weight: </td><td><?= $average_weight ?></td>
+					</tr>
+					<tr>
+						<td>Average Price: </td><td><?= $average_price ?></td>
+					</tr>-->
+					<tr>
+						<td>Total Flight Count: </td><td><?= $total_flight_count ?></td>
+					</tr>
+					<tr>
+						<td>Total Pax Count: </td><td><?= $total_pax_count ?></td>
+					</tr>
+					
+					<tr>
+						<td>No of Pax Per Flight: </td><td><?= $no_of_pax_per_flight ?></td>
+					</tr>
+					</tbody>
+			</table>
+			</div>
+			<div class='table col-md-12'> 
+		</h4> Defined Data Values:</h4>
+			<table border='1' style="background:white;" cellpadding="5">
+				<tbody>
+				<tr>
+						<td width="80%">Last Year Average Price Per Kg: </td><td><?= $last_year_average_price_per_kg ?></td>
+					</tr>
+					<tr>
+						<td>Last Year  Total Weight Per Flight: </td><td><?= $last_year_total_weight_per_flight ?></td>
+					</tr>
+					<tr>
+						<td>Last Year  Total Revenue Per Flight(Organe Line): </td><td><?= $last_year_revenue_per_flight ?></td>
+					</tr>
+					<tr>
+						<td>Average Weight Per Flight Per Pax(Red Dot): </td><td><?= $average_weight_per_flight_per_pax ?></td>
+					</tr>
+					<tr>
+						<td>Average Price Per Flight Per Pax(Red Dot): </td><td><?= $average_price_per_flight_per_pax ?></td>
+					</tr>
+					
+				</tbody>
+			</table>
+			</div>
 		</div>
 	</div>
 </div>
@@ -118,7 +137,7 @@
 			title: "Weight Capacity",
 			titleFontColor: "#4F81BC",
 			minimum: "1",
-			maximum: "<?= count($points) + 20 ?>",
+			maximum: "<?= count($points) + 20 ?>",                 
 		},
 		axisY:[{
 			title: "Price per KG",
@@ -167,7 +186,7 @@
 		{
 			type: "line",
 			showInLegend: true,                  
-			axisYType: "secondary",
+			//axisYType: "secondary",
 			cursor: "move",
 			color: "#808080",
 			//axisYIndex: 0, //Defaults to Zero
@@ -175,20 +194,17 @@
 			xValueFormatString: "####",
 			yValueFormatString: "$##0.00",
 			markerType: "circle",
-			dataPoints: [
-				{ x: 5, y: 450  },
-				{ x: 50, y: 450  }
-			]
+			
 		},
 		{
 			type: "spline",
 			showInLegend: true, 
-			name: "Last Year Average",               	
+			name: "Last Year Average per pax",               	
 			xValueFormatString: "####",
 			cursor: "move",
 			color: "red",
 			dataPoints: [ 
-				{ x: <?= $last_year_total_weight_per_flight ?>, y: <?= $last_year_average_price_per_kg ?>  }
+				{ x: <?= $average_price_per_flight_per_pax ?>, y: <?= $average_weight_per_flight_per_pax  ?>  }
 			]
 		}
 		]
@@ -263,7 +279,7 @@
 	// 			}, 0);
 	// 		}
 	// 	},
-	// 	mouseup: function(e) {
+	//	 	mouseup: function(e) {
 	// 		if (selected !== null) {
 	// 			interactiveChart.data[0].dataPoints[selected].x = xValue;
 	// 			interactiveChart.data[0].dataPoints[selected].y = yValue;

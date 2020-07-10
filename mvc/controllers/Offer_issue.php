@@ -31,12 +31,12 @@ class Offer_issue extends Admin_Controller {
 	function testmail(){
                 //lakshmi.amujuru@sweken.com,sirisha.majji@sweken.com,swekenit@gmail.com,anitha.jeereddi@sweken.com	    
                 $data = array(
-                'first_name'   => 'Lakshmi',
-                'last_name' => 'Amujuru',
-                'tomail' => 'lakshmi.amujuru@sweken.com',
-                'pnr_ref' => 'CA1252',
+                'first_name'   => 'prathyusha',
+                'last_name' => 'kommineni',
+                'tomail' => 'prathyushakommineni317@gmail.com',
+                'pnr_ref' => 'CA1235',
                 'coupon_code' => 'sssssssss',
-                'mail_subject' => "upgrade offer template 2",
+                'mail_subject' => "upgrade temp offer  3",
                         'bidnow_link' => base_url('home/index'),
                 'airlineID' => 5500		
                 );			       
@@ -1006,10 +1006,12 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
     public function upgradeOfferMail($maildata){
 		$pnr_ref = $maildata['pnr_ref'];
-		$results = $this->bid_m->getPassengers($pnr_ref);
+                $results = $this->bid_m->getPassengers($pnr_ref);
 		$exclude = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-		$cabins  = $this->airline_cabin_m->getAirlineCabins();
+                $cabins  = $this->airline_cabin_m->getAirlineCabins();
 		foreach($results as $result){
+                        
+                 
                   $result->to_cabins = explode(',',$result->to_cabins);
                   $dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
 		  $arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
@@ -1024,7 +1026,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 					$tocabins[$cdata[3]] = $cabins[$cdata[0]];
 					//$result->tocabins[] = array('cabin_name' => $cabins[$cdata[0]]); 
 				}              
-           }
+                }
 		        ksort($tocabins);
 				foreach($tocabins as $c){
 					$result->tocabins[] = array('cabin_name' => $c);
@@ -1047,25 +1049,37 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                                 $info['time_diff'] = $result->time_diff;
 				$offerdata[] = $info;
                     }
+                    $result->bclr = 10;
+                    $result->fclr = 0;
+                    if($result->fclr != 0){
+                        $template = "upgrade_temp_offer";    
+                     }elseif($result->bclr != 0){
+                        $template = "baggage_temp_offer";
+                     } else {
+                        $template = "upgrade_baggage_temp_offer";
+                     }
+                     $template = "upgrade_baggage_temp_offer";
+
                     $maildata['carrier_name'] = $result->carrier_name;
                 }
                 if(count($results)>0){
                   $maildata['highest_upgrade_class'] = $results[0]->tocabins[0]['cabin_name'];
                 }
-		//print_r($results); exit;
+		//print_r($results); exit();
 
                 $primary_client = $this->user_m->getClientByAirline($maildata['airlineID'],6)[0];	   
 		 $pax_names = $this->bid_m->getPaxNames($pnr_ref);
                  $maildata['offer_data'] = $offerdata;
-                 $maildata['fb_icon'] = base_url('assets/mail-temps/facebook.png');		
-                 $maildata['tag_img'] = base_url('assets/mail-temps/tag.png');		
-                 $maildata['twitter_icon'] = base_url('assets/mail-temps/twitter.png');	
-                 $maildata['pinterest_icon'] = base_url('assets/mail-temps/pinterest.png');	
-                 $maildata['openbrowser_img'] = base_url('assets/mail-temps/openBrowser.png');	
-                 $maildata['bg_tpl1_bnrtop'] = base_url('assets/mail-temps/bg_temp1_images/bannerTop.png');	
-                 $maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
-                 $maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
-                 $maildata['bg_tpl2_contact_img'] = base_url('assets/mail-temps/bg_temp2_images/contactUs.png');	
+                 //$maildata['fb_icon'] = base_url('assets/mail-temps/facebook.png');		
+                 //$maildata['tag_img'] = base_url('assets/mail-temps/tag.png');		
+                 //$maildata['twitter_icon'] = base_url('assets/mail-temps/twitter.png');	
+                 //$maildata['pinterest_icon'] = base_url('assets/mail-temps/pinterest.png');	
+                 //$maildata['openbrowser_img'] = base_url('assets/mail-temps/openBrowser.png');
+                 //$maildata['bg_tpl1_bnr'] = base_url('assets/mail-temps/bg_temp1_images/header.jpg');
+                 //$maildata['bg_tpl1_bnrtop'] = base_url('assets/mail-temps/bg_temp1_images/bannerTop.png');	
+                 //$maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
+                 //$maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
+                 //$maildata['bg_tpl2_contact_img'] = base_url('assets/mail-temps/bg_temp2_images/contactUs.png');	
                  $maildata['bg_tpl2_twitter_icon'] = base_url('assets/mail-temps/bg_temp2_images/whiteTweet.png');	
                  $maildata['bg_tpl2_fb_icon'] = base_url('assets/mail-temps/bg_temp2_images/whitebook.png');	
                  $maildata['bg_tpl2_white_cam'] = base_url('assets/mail-temps/bg_temp2_images/whiteCam.png');	
@@ -1075,7 +1089,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                  $maildata['upbg_tpl1_twitter_icon'] = base_url('assets/mail-temps/up_bg_temp1_images/twitter.png');	
                  $maildata['upbg_tpl2_bg_img'] = base_url('assets/mail-temps/up_bg_temp2_images/bigImg.png');	
                  $maildata['upbg_tpl2_bag_img'] = base_url('assets/mail-temps/up_bg_temp2_images/bag.jpg');	
-                 $maildata['upbg_tpl3_bigimg'] = base_url('assets/mail-temps/up_bg_temp3_images/bigImg.jpg');	
+                 $maildata['upbg_tpl3_bigimg'] = base_url('assets/mail-temps/up_bg_temp3_images/bigImg.jpg');
+                 $maildata['upbg_tpl1_bnr'] = base_url('assets/mail-temps/up_bg_temp1_images/bg.jpg');
                  $maildata['domain'] = $primary_client->domain;
                  $maildata['primary_phone'] = $primary_client->phone;
                  $maildata['primary_mail'] = $primary_client->email;
@@ -1086,8 +1101,10 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                  $maildata['forward_friend_link'] =base_url('home/index');
                  $maildata['openbrowser_link'] =base_url('home/index');
                  $maildata['not_intrested_link'] =base_url('home/index');
+                 
        // print_r($maildata); exit;		
-		$this->sendMailTemplateParser('upgrade_offer',$maildata);
+                //$this->sendMailTemplateParser('upgrade_offer',$maildata);
+                $this->sendMailTemplateParser($template,$maildata);
 	}		
 		
 
