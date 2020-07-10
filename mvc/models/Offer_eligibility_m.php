@@ -26,9 +26,10 @@ class Offer_eligibility_m extends MY_Model {
 		$arr['fclr_id'] = $array['fclr_id'];
 		$arr['dtpf_id'] = $array['dtpf_id'];
 		//$arr['booking_status'] = $array['booking_status'];		
-		if ($this->checkDTPFExtEntry($arr)){
+		$ret = $this->checkDTPFExtEntry($arr);
+		if (!$ret){
               	  $error = parent::insert($array);
-                	return TRUE;
+               	  return TRUE;
 		}
         }
 

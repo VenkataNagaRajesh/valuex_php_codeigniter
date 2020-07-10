@@ -579,8 +579,9 @@ $sWhere $sOrder $sLimit";
 		}
 			
 	}
+	$this->session->set_flashdata('success', $this->lang->line('menu_success'));
+	redirect(base_url("offer_eligibility/index"));
 
-		
    }
 
    function processGenBaggageOffers($carrierId) {
@@ -918,22 +919,21 @@ $sWhere $sOrder $sLimit";
 					if($matched > 0 ) {
 						$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
                                                 $ext['exclusion_id'] = $matched;
-                                                $this->offer_eligibility_m->insert_dtpfext_fcrl($ext);
+                                                $this->offer_eligibility_m->insert_dtpfext_fclr($ext);
 
 					}else {
 							$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
-                                                                $this->offer_eligibility_m->insert_dtpfext_fcrl($ext);
+                                                                $this->offer_eligibility_m->insert_dtpfext_fclr($ext);
 
 					}
 
 				}else {
 			        	$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
-					$this->offer_eligibility_m->insert_dtpfext_fcrl($ext);
+					$this->offer_eligibility_m->insert_dtpfext_fclr($ext);
 				}
 			 }
 		}
 
-		$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 	}
 
 	public function offdtlpage() {		

@@ -537,7 +537,7 @@ class Bclr extends Admin_Controller
                         {
                             $version_id = $exist_id[1]+1;
                         } else {
-                            $version_id = $this->bclr_m->getVersionID($bclr_id)+1;
+                            $this->bclr_m->getVersionID($bclr_id)+1;
                         }
                         $array['version_id'] = $version_id;
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
@@ -1266,57 +1266,6 @@ class Bclr extends Admin_Controller
         $this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($json));
     }
-
-    // private function getCWTHistorialData($arrBclrData = array())
-    // {
-
-    //     $nCarrerID = $arrBclrData->carrierID;
-    //     $strOrigin = $arrBclrData->origin_content;
-    //     $cabin = $arrBclrData->from_cabin;
-    //     $cabin_sql = "";
-    //     if($cabin == '*') {
-    //         $cabin_sql = "cabin like '%'";
-    //     } else {
-    //         $cabin_sql = "cabin = '$cabin'";
-    //     }
-    //     $flight_number = $arrBclrData->flight_num_range;
-
-    //     $flight_num_range = explode("-", $flight_number);
-    //     $start_flight_range = $flight_num_range[0];
-    //     $end_flight_range = $flight_num_range[1];
-        
-       
-    //     $origin_list_p = array_column($this->marketzone_m->getParentsofAirport($strOrigin),"vx_aln_data_defnsID");
-    //     $implode_org_p = implode(",", $origin_list_p);
-    //     $strDestination = $arrBclrData->dest_content;
-    //     $dest_list_p = array_column($this->marketzone_m->getParentsofAirport($strDestination), "vx_aln_data_defnsID");
-    //     $implode_dest_p = implode(",", $dest_list_p);
-    //     $start_date_m = date("m-d", $arrBclrData->effective_date);
-    //     $get_previous_year = date("Y", $arrBclrData->effective_date);
-    //     $start_date = ($get_previous_year -1) . "-". $start_date_m; // 2019-01-05
-    //     $start_time = strtotime($start_date);
-    //     $end_date_m = date("m-d", $arrBclrData->discontinue_date);
-    //     $get_end_previous_year = date("Y", $arrBclrData->discontinue_date);
-    //     $end_date = ($get_end_previous_year -1) . "-". $end_date_m; // 2019-01-05
-    //     $end_time = strtotime($end_date);
-       
-    //     $sQuery = '';
-
-    //     $sQuery = "SELECT 
-    //           count(id) as no_of_passingers, 
-    //           SUM(prorated_price ) as total_revenue,
-    //           SUM(weight) as total_weight,
-    //           AVG(weight) as average_weight,
-    //           AVG(prorated_price) as average_price,
-    //           COUNT(flight_number) as total_flight_count,
-    //           COUNT(pax_type) as total_pax_count
-    //   from BG_ra_feed where carrier = $nCarrerID and origin IN ($implode_org_p) and destinition IN ($implode_dest_p) and  flight_number between $start_flight_range and $end_flight_range and
-    //   departure_date  BETWEEN $start_time and $end_time  AND $cabin_sql";
-
-    // //   echo $sQuery;die();
-      
-    //     return $rResult = $this->install_m->run_query($sQuery)[0];
-    // }
 
     public function cwttest() {
         $id = htmlentities(escapeString($this->uri->segment(3)));
