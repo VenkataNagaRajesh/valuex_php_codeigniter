@@ -52,9 +52,6 @@ class Offer_issue_m extends MY_Model {
                 $passgr = $query->row();
 		
 		return $passgr;
-
-
-
 	}
 	
 	function getPassengerDataByStatus($offerid,$flight_number = null,$status,$fclr_id = null,$fclr_true = 0) {
@@ -204,16 +201,10 @@ function get_flight_date($offer_id,$flight_number){
 
 
 	function getOfferDetailsForIssue($id) {
-/*
-$sql = "
-		select car.code as carrier_code ,pf.pnr_ref, pf.dep_date as flight_date ,df.code as from_city , dt.code as to_city , oref.offer_id, flight_number,group_concat(first_name,' ' , last_name) as p_list,  bs.aln_data_value as booking_status    from VX_aln_offer_ref oref LEFT JOIN VX_aln_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref) LEFT JOIN VX_aln_dtpf_ext pext on (pext.dtpf_id = pf.dtpf_id)  LEFT JOIN  vx_aln_data_defns df on(df.vx_aln_data_defnsID = pf.from_city and df.aln_data_typeID = 1 )  LEFT JOIN  vx_aln_data_defns dt on(dt.vx_aln_data_defnsID = pf.to_city and dt.aln_data_typeID = 1 )  LEFT JOIN  vx_aln_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status and bs.aln_data_typeID = 20 )  LEFT JOIN vx_aln_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code  and car.aln_data_typeID = 12 ) where pf.is_up_offer_processed = 1 and bs.alias != 'excl' AND oref.offer_id=".$id." group by pf.pnr_ref, pf.from_city, pf.to_city, pf.carrier_code ,pf.flight_number, pf.dep_date ,oref.offer_id, pext.booking_status" ;
-
-*/
 
 
 
 $sql = " select  SQL_CALC_FOUND_ROWS MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin, MainSet.to_cabin , MainSet.cash, MainSet.miles, MainSet.booking_status, SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number FROM (  select distinct oref.offer_id, tdef.desc as to_cabin , oref.create_date as offer_date ,pf.flight_number, bs.aln_data_value as booking_status, oref.pnr_ref,oref.cash_percentage, oref.cash, oref.miles from  UP_offer_ref oref  LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref) INNER JOIN UP_dtpf_ext pext on (pext.dtpf_id = pf.dtpf_id) LEFT JOIN UP_fare_control_range fc on (fc.fclr_id = pext.fclr_id) INNER JOIN  VX_airline_cabin_def tdef on (pf.carrier_code = tdef.carrier ) INNER  JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = fc.to_cabin AND tcab.aln_data_typeID = 13 AND tcab.alias = tdef.level)  LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)     WHERE  oref.offer_id = ".$id.") as MainSet     INNER JOIN (select  flight_number,  group_concat(distinct dep_date) as flight_date  , pnr_ref,group_concat(first_name, ' ' , last_name  ) as p_list ,  from_city as from_city_code, to_city as to_city_code, group_concat(distinct fdef.desc) as from_cabin  , fc.code as from_city, tc.code as to_city, car.code as carrier , pf1.carrier_code from VX_daily_tkt_pax_feed pf1  LEFT JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = pf1.ptc AND ptc.aln_data_typeID = 18) LEFT JOIN VX_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1) LEFT JOIN VX_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1) INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf1.carrier_code) INNER JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 AND cab.alias = fdef.level) LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12) where pf1.is_up_offer_processed = 1  group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number )";
-
 
 	$rResult = $this->install_m->run_query($sql);
 
@@ -230,6 +221,24 @@ $sql = " select  SQL_CALC_FOUND_ROWS MainSet.offer_id, MainSet.offer_date, SubSe
 	public function getEncoded($str) {
 		return $this->hash($str);
         }
+
+	function getBaggageOffer($pnr_ref) {
+
+		$this->db->select("pext.ond, pext.bclr_id, pf.*, fc.aln_data_value as from_city_name, tc.aln_data_value as to_city_name, fc.code as from_city_code, tc.code as to_city_code, car.aln_data_value carrier_name")->from('VX_daily_tkt_pax_feed pf');
+		$this->db->join('UP_offer_ref oref', 'oref.pnr_ref =  pf.pnr_ref', 'LEFT');
+		$this->db->join('UP_dtpf_ext pext', 'pext.dtpf_id =  pf.dtpf_id AND pext.bclr_id > 0', 'LEFT');
+		$this->db->join(' VX_data_defns dd', 'dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20', 'LEFT');
+		$this->db->join(' VX_data_defns car', 'car.vx_aln_data_defnsID = pf.carrier_code AND car.aln_data_typeID = 12', 'LEFT');
+		$this->db->join(' VX_data_defns fc', 'fc.vx_aln_data_defnsID = pf.from_city AND fc.aln_data_typeID = 1', 'LEFT');
+		$this->db->join(' VX_data_defns tc', 'tc.vx_aln_data_defnsID = pf.to_city AND tc.aln_data_typeID = 1', 'LEFT');
+		$this->db->where('oref.pnr_ref',$pnr_ref); 
+		$this->db->order_by('pext.ond ASC'); 
+		#$this->db->where('dd.alias','bid_received');
+		#$this->db->group_by(array('pf.pnr_ref' , 'booking_status', 'from_city','to_city','carrier_code','carrier_c', 'from_city_name','to_city_name'));
+		$query = $this->db->get();
+		#var_dump($this->db->last_query());exit;
+                return $query->result();
+	}
 
 	
 }

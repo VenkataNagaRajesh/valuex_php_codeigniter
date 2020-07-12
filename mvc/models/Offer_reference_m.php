@@ -50,7 +50,7 @@ class Offer_reference_m extends MY_Model {
 
 	    function update_offer_ref($data, $id = NULL) {
                 parent::update($data, $id);
-				$this->mydebug->debug($this->db->last_query());
+			//	$this->mydebug->debug($this->db->last_query());
                 return $id;
         }
 
@@ -64,14 +64,16 @@ class Offer_reference_m extends MY_Model {
 		return $this->hash($str);
         }
 		
-		public function getOfferDataByRef($pnr_ref){
-			$this->db->select('ref.offer_status,MIN(tpf.dep_date) dep_date,tpf.carrier_code')->from('VX_daily_tkt_pax_feed tpf');
-			$this->db->join('UP_offer_ref ref','ref.pnr_ref = tpf.pnr_ref','LEFT');
-            $this->db->where('ref.pnr_ref',$pnr_ref);
+	public function getOfferDataByRef($pnr_ref) {
+		$this->db->select('ref.offer_status,MIN(tpf.dep_date) dep_date,tpf.carrier_code')->from('VX_daily_tkt_pax_feed tpf');
+		$this->db->join('UP_offer_ref ref','ref.pnr_ref = tpf.pnr_ref','LEFT');
+            	$this->db->where('ref.pnr_ref',$pnr_ref);
             //$this->db->group_by('tpf.flight_number');			
+				//$this->mydebug->debug($this->db->last_query());
+
             $query = $this->db->get();
             return 	$query->row();		
-		}
+	}
 		
 	function offersTotalCount(){
 		$this->db->select('count(*) count')->from('UP_offer_ref');		
@@ -81,4 +83,3 @@ class Offer_reference_m extends MY_Model {
 
 	
 }
-

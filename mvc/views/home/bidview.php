@@ -41,7 +41,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php $n=1; foreach($results as $result){ ?>
+										<?php $n=1; foreach($results as $result){?>
 										<tr>
 										<td><div class="col-md-12"><p><?=$n?> . <?php echo $result->air_from_city; ?> To <?php echo $result->air_to_city; ?> </p></div></td>
 										</tr>
@@ -49,7 +49,7 @@
 											<td>								
 												<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
 													<div class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $result->from_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time)?></span></p>
+														<p style="color:<?=$mail_header_color?>"><?php echo $result->from_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time);?></span></p>
 														<small><?php echo $result->from_city; ?></small>
 														<ul>
 															<li><?php echo date('d M',$result->dep_date); ?></li>
@@ -59,7 +59,7 @@
 													</div>
 													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
 													<div class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $result->to_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time)?></span></p>
+														<p style="color:<?=$mail_header_color?>"><?php echo $result->to_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time);?></span></p>
 														<small><?php echo $result->to_city; ?></small>
 														<ul>
 															<li><?php echo date('d M',$result->arrival_date); ?></li>
@@ -112,27 +112,31 @@
 											</td>-->
 										</tr>
 										<?php $n++; } ?>
-										<?php if(in_array(2,$active_products) && count($baggage) > 0){ ?>
+										<?php if(count($baggage) > 0){ ?>
 										<tr>
 											<td style="color: black;"><b> Baggage Product</b> </td>
 										</tr>
-										<?php foreach($baggage as $bslider){ ?>
+										<?php foreach($baggage as $bg => $row){ ?>
+										<?php $pax = $baggage[$bg]['pax'];?>
+
 										<tr>
 											<td style="color: black;">
 												<div class="bid-info">
 													<div class="col-md-5">
-														<p style="color:<?=$mail_header_color?>">DEL <span class="time-bid"><?=date('H:i A')?></span></p>
+														<p style="color:<?=$mail_header_color?>"><?php echo $pax->from_city_code; ?> <span class="time-bid"><?=date('H:i A',$pax->dep_date+$pax->dept_time);?></span></p>
+														<small><?php echo $pax->from_city_name; ?></small>
 														<ul>
-															<li><?php echo date('d M'); ?></li>
-															<li style="color:<?=$mail_header_color?>">Flight CA1234</li>
+															<li><?php echo date('d M',$pax->dep_date);; ?></li>
+															<li style="color:<?=$mail_header_color?>">Flight <?php echo $pax->flight_number;?></li>
 														</ul>
 													</div>
 													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
 													<div class="col-md-5">
-														<p style="color:<?=$mail_header_color?>">DAC<span class="time-bid"><?=date('H:i A')?></span></p>
+														<p style="color:<?=$mail_header_color?>"><?php echo $pax->to_city_code; ?><span class="time-bid"><?=date('H:i A',$pax->arrival_date+$pax->arrival_time);?></span></p>
+														<small><?php echo $pax->to_city_name; ?></small>
 														<ul>
-															<li><?php echo date('d M'); ?></li>
-															<li style="color:<?=$mail_header_color?>">Flight CA1234</li>
+															<li><?php echo date('d M',$pax->arrival_date);; ?></li>
+															<li style="color:<?=$mail_header_color?>">Flight <?php echo $pax->flight_number;?></li>
 														</ul>
 													</div>
 												</div>

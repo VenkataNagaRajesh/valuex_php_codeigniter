@@ -68,18 +68,18 @@ class Bidding extends MY_Controller {
 			$tocabins = array();
 			$tocabins1 = array();
 			$result->to_cabins = explode(',',$result->to_cabins);
-			   foreach($result->to_cabins as $value){
-                $data = explode('-',$value);
-                 $tocabins1[$data[3]][$data[1].'-'.$data[2]] = $data[0];
-               }			  
-			     // asort($tocabins1);
-				  ksort($tocabins1);
-				  foreach($tocabins1 as $cabins){
-					  foreach($cabins as $key => $value){
-					    $tocabins[$key] = $value;
-					  }					  
-				  } 
-              $result->to_cabins = $tocabins;
+			foreach($result->to_cabins as $value){
+				$data = explode('-',$value);
+				 $tocabins1[$data[3]][$data[1].'-'.$data[2]] = $data[0];
+               		}			  
+		     	// asort($tocabins1);
+			ksort($tocabins1);
+			foreach($tocabins1 as $cabins){
+				  foreach($cabins as $key => $value){
+				    $tocabins[$key] = $value;
+				  }					  
+			} 
+              		$result->to_cabins = $tocabins;
 			   
 			$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
 			$arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
@@ -87,7 +87,7 @@ class Bidding extends MY_Controller {
 			$dteEnd   = new DateTime($arrival); 
 			$dteDiff  = $dteStart->diff($dteEnd);
 			$result->time_diff = $dteDiff->format('%d days %H hours %i min');
-            $this->data['passengers_count'] = count(explode(',',$result->pax_names)); 			
+            		$this->data['passengers_count'] = count(explode(',',$result->pax_names)); 			
      	}      
         //$this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
 		$this->data['cabins']  = $this->bid_m->get_cabins($this->data['results'][0]->carrier);
@@ -120,34 +120,25 @@ class Bidding extends MY_Controller {
 			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');	
             $this->data['mail_header_color'] = '#333';			
 		}
-		
-		$this->data['baggage_bag_type'] = $this->preference_m->get_preference_value_bycode('BAG_TYPE','24',5500);
-		$this->data['baggage_min_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MIN_VAL','24',5500);
-		$this->data['baggage_max_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MAX_VAL','24',5500);
-		$cwtdata = $this->bclr_m->getActiveCWT(1);
-		foreach($cwtdata as $cwt){
-            $this->data['cwtpoints'][$cwt->cum_wt] = round($cwt->price_per_kg);
+
+		$pnr_ref = $this->session->userdata('pnr_ref');
+		if ( $pnr_ref ) {
+			$bgoffer = $this->offer_issue_m->getBaggageOffer($pnr_ref);
+		#echo "<pre>" . print_r($bgoffer,1) . "</pre>"; exit;
+			if ( $bgoffer) {
+				$this->data['baggage_bag_type'] = $this->preference_m->get_preference_value_bycode('BAG_TYPE','24',$airline->airlineID);
+				$this->data['baggage_min_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MIN_VAL','24',$airline->airlineID);
+				$this->data['baggage_max_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MAX_VAL','24',$airline->airlineID);
+				foreach($bgoffer as $bg ) {
+					#echo "<pre>" . print_r($bg,1) . "</pre>"; exit;
+					#$cwtdata = $this->bclr_m->getActiveCWT(1);
+					$cwtdata = $this->bclr_m->getActiveCWT($bg->bclr_id);
+					$this->data['baggage'][$bg->dtpf_id]['pax'] = $bg;
+					$this->data['baggage'][$bg->dtpf_id]['cwt'] = $cwtdata;
+				}
+			}
 		}
-
-		/* checking products contracts for airline */
-		$where = array(
-				'c.airlineID'=>$airline->airlineID,
-				'cp.start_date <= ' => date('Y-m-d 00:00:00'),
-				'cp.end_date >= ' => date('Y-m-d 00:00:00'),
-				'c.active' => 1
-				);
-		$contract_info = $this->contract_m->getAirlineCurrentProducts($where);
-		$this->data['active_products'] = explode(',',$contract_info->active_products);
-		if(in_array(2,$this->data['active_products'])) {		
-			$baggage1 = $this->bclr_m->get_single_bclr(array('bclr_id'=>1));
-			$baggage1->sold_weight = 50;
-			$baggage2 = $this->bclr_m->get_single_bclr(array('bclr_id'=>2));
-			$baggage2->sold_weight = 50;
-			$this->data['baggage'][0] = $baggage1;
-			$this->data['baggage'][1] = $baggage2;
-		}           
-
-       // print_r($this->data['active_products']); exit;
+		#echo "<pre>" . print_r($this->data['baggage'],1) . "</pre>"; exit;
 		$this->data["subview"] = "home/bidview";
 		$this->load->view('_layout_home', $this->data);
 	}
