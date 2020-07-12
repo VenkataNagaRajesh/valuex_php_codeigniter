@@ -210,7 +210,7 @@ td[class="spechide"]
     <tr>
       <td valign="top" width="340" class="specbundle2"><div class="contentEditableContainer contentImageEditable">
                               <div class="contentEditable" >
-                                <img width="150" src="../assets/mail-temps/upg_temp3_png/images/crenva.png" data-max-width="340" alt='[CLIENTS.COMPANY_NAME]'>
+                                <img width="150" src="../assets/mail-temps/upg_temp3_img/images/crenva.png" data-max-width="340" alt='[CLIENTS.COMPANY_NAME]'>
                               </div>
                             </div></td>
       <!--<td valign="top" class="specbundle2" align='right'><div class="contentEditableContainer contentTextEditable">
@@ -241,7 +241,7 @@ td[class="spechide"]
                       <td bgcolor='#B57801'>
                         <div class="contentEditableContainer contentImageEditable">
                           <div class="contentEditable" >
-                            <img class="banner" src="../assets/mail-temps/upg_temp3_png/images/bg1.jpg" data-default="placeholder" data-max-width="600" width='600' alt='Happy New Year!' border="0">
+                            <img class="banner" src="../assets/mail-temps/upg_temp3_img/images/bg1.jpg" data-default="placeholder" data-max-width="600" width='600' alt='Happy New Year!' border="0">
                           </div>
                         </div>
                       </td>
