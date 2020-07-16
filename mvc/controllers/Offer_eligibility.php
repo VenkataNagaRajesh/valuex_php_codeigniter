@@ -134,10 +134,10 @@ class Offer_eligibility extends Admin_Controller {
 
 
 		
-	    $aColumns = array('dtpfext_id','pext.dtpf_id','pext.fclr_id','sea.season_name','dbp.code','dop.code','pf.pnr_ref','pf.dep_date','dai.code','pf.flight_number',
+	    $aColumns = array('pext.dtpf_id', 'dtpfext_id','pext.fclr_id','sea.season_name','dbp.code','dop.code','pf.pnr_ref','pf.dep_date','dai.code','pf.flight_number',
 			 'fdef.cabin','tdef.cabin','dfre.code','fc.average','fc.min','fc.max','fc.slider_start',
 			 'bs.aln_data_value','dbp.aln_data_value','dop.aln_data_value','dai.aln_data_value','fdef.desc',
-			 'tdef.desc','dfre.aln_data_value','pf.pnr_ref', 'pext.bacr_id', 'pext.ond');
+			 'tdef.desc','dfre.aln_data_value','pf.pnr_ref', 'pext.bclr_id', 'pext.ond');
 	
 		$sLimit = "";
 		
@@ -158,10 +158,13 @@ class Offer_eligibility extends Admin_Controller {
 				}				
 				  $sOrder = substr_replace( $sOrder, "", -2 );
 				
-				if ( $sOrder == "ORDER BY" )
+				if ( $sOrder == "ORDER BY  " )
 				{
-					$sOrder = "";
+					$sOrder .= " dtpf_id ";
+
 				}
+			} else {
+				$sOrder .= " pext.dtpf_id DESC ";
 			}
 			$sWhere = "";
 			if ( $_GET['sSearch'] != "" )
@@ -303,6 +306,8 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id,  pext.bclr_id,  pext.ond, p
 		     INNER JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
 
 $sWhere $sOrder $sLimit";
+
+	#echo "QER=" . $sQuery; exit;
 
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";

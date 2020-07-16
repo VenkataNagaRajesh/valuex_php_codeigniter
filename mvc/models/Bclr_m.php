@@ -13,7 +13,7 @@ class Bclr_m extends MY_Model {
 
         function get_bclr($array=NULL, $signal=FALSE) {
                 $query = parent::get($array, $signal);
-             print_r($this->db->last_query());
+             //print_r($this->db->last_query());
                 return $query;
         }
 
