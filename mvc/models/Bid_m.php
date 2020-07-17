@@ -46,7 +46,7 @@ class bid_m extends MY_Model {
    */
   
    function getPassengers($pnr_ref,$bidstatus = NULL){
-	  $this->db->select("car.aln_data_value carrier_name,tpf.carrier_code carrier,tpf.cabin,tpf.pnr_ref,tpf.seat_no,def.desc current_cabin,group_concat(distinct fclr.fclr_id) fclr,group_concat(distinct fclr.to_cabin,'-',fclr.fclr_id,'-',pfe.booking_status,'-',tdef.level) to_cabins,group_concat( distinct round(fclr.min)) min,group_concat( distinct round(fclr.max)) max,group_concat( distinct round(fclr.average)) avg,group_concat( distinct round(fclr.slider_start)) slider_position,tpf.flight_number,tpf.dep_date, tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat( pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.miles,oref.offer_id,air_city1.aln_data_value air_from_city,air_city2.aln_data_value air_to_city,bid.bid_value,bid.miles bid_miles,bid.upgrade_type bid_upgrade")->from('VX_daily_tkt_pax_feed tpf');	
+	  $this->db->select("group_concat(distinct pfe.bclr_id) bclr, car.aln_data_value carrier_name,tpf.carrier_code carrier,tpf.cabin,tpf.pnr_ref,tpf.seat_no,def.desc current_cabin,group_concat(distinct fclr.fclr_id) fclr,group_concat(distinct fclr.to_cabin,'-',fclr.fclr_id,'-',pfe.booking_status,'-',tdef.level) to_cabins,group_concat( distinct round(fclr.min)) min,group_concat( distinct round(fclr.max)) max,group_concat( distinct round(fclr.average)) avg,group_concat( distinct round(fclr.slider_start)) slider_position,tpf.flight_number,tpf.dep_date, tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat( pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.miles,oref.offer_id,air_city1.aln_data_value air_from_city,air_city2.aln_data_value air_to_city,bid.bid_value,bid.miles bid_miles,bid.upgrade_type bid_upgrade")->from('VX_daily_tkt_pax_feed tpf');	
       $this->db->join('UP_dtpf_ext pfe','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');		 
 	  $this->db->join('UP_fare_control_range fclr','(fclr.fclr_id = pfe.fclr_id AND fclr.from_cabin=tpf.cabin)','LEFT');	
 	  $this->db->join('VX_data_defns  tci','(tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)','LEFT');
@@ -75,7 +75,7 @@ class bid_m extends MY_Model {
 	    $this->db->group_by('tpf.flight_number');
 		//$this->db->order_by('defto.level','ASC');
 	    $query = $this->db->get();  
-		//print_r($this->db->last_query()); exit;
+	//	print_r($this->db->last_query()); exit;
 	  return $query->result();
   }
   

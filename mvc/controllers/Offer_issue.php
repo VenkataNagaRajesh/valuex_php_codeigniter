@@ -25,7 +25,7 @@ class Offer_issue extends Admin_Controller {
 		$this->load->model("user_m");
 		$language = $this->session->userdata('lang');		
 		$this->lang->load('offer', $language);  
-     
+   
 	}	
 	
 	function testmail(){
@@ -34,7 +34,8 @@ class Offer_issue extends Admin_Controller {
                 'first_name'   => 'prathyusha',
                 'last_name' => 'kommineni',
                 'tomail' => 'prathyushakommineni317@gmail.com',
-                'pnr_ref' => 'CA1235',
+               # 'tomail' => 'amsi63@gmail.com',
+                'pnr_ref' => 'CA1278',
                 'coupon_code' => 'sssssssss',
                 'mail_subject' => "upgrade temp offer  3",
                         'bidnow_link' => base_url('home/index'),
@@ -1009,6 +1010,10 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                 $results = $this->bid_m->getPassengers($pnr_ref);
 		$exclude = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
                 $cabins  = $this->airline_cabin_m->getAirlineCabins();
+
+		$bclr_offer = 0;
+		$fclr_offer = 0;
+
 		foreach($results as $result){
                         
                  
@@ -1026,7 +1031,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 					$tocabins[$cdata[3]] = $cabins[$cdata[0]];
 					//$result->tocabins[] = array('cabin_name' => $cabins[$cdata[0]]); 
 				}              
-                }
+                	}
 		        ksort($tocabins);
 				foreach($tocabins as $c){
 					$result->tocabins[] = array('cabin_name' => $c);
@@ -1049,19 +1054,23 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                                 $info['time_diff'] = $result->time_diff;
 				$offerdata[] = $info;
                     }
-                    $result->bclr = 10;
-                    $result->fclr = 0;
-                    if($result->fclr != 0){
-                        $template = "upgrade_temp_offer";    
-                     }elseif($result->bclr != 0){
-                        $template = "baggage_temp_offer";
-                     } else {
-                        $template = "upgrade_baggage_temp_offer";
-                     }
-                     $template = "upgrade_baggage_temp_offer";
-
+		    if ( $result->bclr ) {
+			$bclr_offer  = 1;
+		    }
+		    if ( $result->fclr ) {
+			$fclr_offer  = 1;
+		    }
+		    
                     $maildata['carrier_name'] = $result->carrier_name;
                 }
+
+		if ( $bclr_offer && $fclr_offer ) {
+                        $template = "upgrade_baggage_offer";    
+		} elseif( $fclr_offer) {
+                        $template = "upgrade_offer";    
+		} elseif( $bclr_offer) {
+                        $template = "baggage_offer";    
+		}
                 if(count($results)>0){
                   $maildata['highest_upgrade_class'] = $results[0]->tocabins[0]['cabin_name'];
                 }
@@ -1102,7 +1111,6 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                  $maildata['openbrowser_link'] =base_url('home/index');
                  $maildata['not_intrested_link'] =base_url('home/index');
                  
-       // print_r($maildata); exit;		
                 //$this->sendMailTemplateParser('upgrade_offer',$maildata);
                 $this->sendMailTemplateParser($template,$maildata);
 	}		
