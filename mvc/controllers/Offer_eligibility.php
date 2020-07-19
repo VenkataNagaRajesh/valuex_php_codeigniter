@@ -374,6 +374,7 @@ $sWhere $sOrder $sLimit";
 					echo "\nFIRST ROW CREATE NEW OND   ======";
 					$domesticCountryCode = $crow['get_origin_country_code'];
 					$originAiport = $crow['from_city'];
+					$originDistance = $crow['distance'];
 					$ond = $this->createOND($ond,$i, $paxId);
 					continue;
 				}
@@ -432,23 +433,30 @@ $sWhere $sOrder $sLimit";
 									
 								} else {
 									echo "\nCURRENT IS DOMESTIC - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . " START CHECK FARTHER END MATCHES WITH ORIGIN AIPRORT $originAiport !";
-									if ( $nfrow && ($crow['to_city'] == $originAiport ||  $nfrow['to_city'] == $originAiport)) {
-										if ( $pfrow &&  $pax_list[$pnr][$pfkey-1] )  {
+									if ( !$nfrow && ($crow['to_city'] == $originAiport && $crow['distance'] == $originDistance)) {
 										$i++;
-										}
 										echo "\nCURRENT IS DOMESTIC - CUR TO CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN CITY OR  NEXT FLIGHT " . $pfrow['to_city'] . " MATCHED WITH ORIGIN - FARTHER POINT ADDING TO NEW OND $i ======";
 										$ond = $this->createOND($ond,$i, $paxId);
-										if ( $pfrow &&  !$pax_list[$pnr][$pfkey-1] ){ 
-											#$i++;
-											echo "\nCURRENT IS DOMESTIC - FARTHER POINT - JUST 3 ROWS CASE - CREATE OND FOR NEXT ROW $i ======";
-										}
 										continue;
 									} else {
-									echo "\nCURRENT IS DOMESTIC - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . "  ADDING TO PREV OND $i ======";
-									$ond = $this->createOND($ond,$i, $paxId);
-									continue;
-									}
+										echo "\nCURRENT IS DOMESTIC - DISTANCE CASE ";
+										if ( ($crow['to_city'] != $originAiport) && ($crow['distance'] && $pfrow['distance'] && ($crow['distance'] <= $pfrow['distance']))) { 
+											$i++;
+											echo "\nCURRENT IS DOMESTIC - DISTANCE CASE : CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH ORIGIN AND DISTANCE IS LESS THAN PREVOUS  CREATING NEW OND $i ======";
+											$ond = $this->createOND($ond,$i, $paxId);
+											continue;
+										} elseif ( ($crow['from_city'] == $originAiport) ) { 
+											$i++;
+											echo "\nCURRENT IS DOMESTIC - DISTANCE CASE : CUR FROM CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN  CITY  " . $originAiport . "  ADDING TO PREV OND $i ======";
+											$ond = $this->createOND($ond,$i, $paxId);
+											continue;
+										} else {
+											echo "\nCURRENT IS DOMESTIC - DISTANCE CASE : DEFAULT CASE   ADDING TO PREV OND $i ======";
+											$ond = $this->createOND($ond,$i, $paxId);
+											continue;
+										}
 
+									}
 								}
 								
 							} else {
@@ -496,9 +504,22 @@ $sWhere $sOrder $sLimit";
 										}
 										continue;
 									} else {
-									echo "\nCURRENT IS INTERNATIONAL - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . "  ADDING TO PREV OND $i ======";
-									$ond = $this->createOND($ond,$i, $paxId);
-									continue;
+										echo "\nCURRENT IS INTERNATIONAL - DISTANCE CASE ";
+										if ( ($crow['to_city'] != $originAiport) && ($crow['distance'] && $pfrow['distance'] && ($crow['distance'] <= $pfrow['distance']))) { 
+											$i++;
+											echo "\nCURRENT IS INTERNATIONAL - DISTANCE CASE : CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH ORIGIN AND DISTANCE IS LESS THAN PREVOUS  CREATING NEW OND $i ======";
+											$ond = $this->createOND($ond,$i, $paxId);
+											continue;
+										} elseif ( ($crow['from_city'] == $originAiport) ) { 
+											$i++;
+											echo "\nCURRENT IS INTERNATIONAL - DISTANCE CASE : CUR FROM CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN  CITY  " . $originAiport . "  ADDING TO PREV OND $i ======";
+											$ond = $this->createOND($ond,$i, $paxId);
+											continue;
+										} else {
+											echo "\nCURRENT IS INTERNATIONAL - DISTANCE CASE : DEFAULT CASE   ADDING TO PREV OND $i ======";
+											$ond = $this->createOND($ond,$i, $paxId);
+											continue;
+										}
 									}
 						
 
