@@ -127,9 +127,10 @@
 					<thead>
 						<tr>
 							<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('pax_id')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('fclr_id')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('bclr_id')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('rule_id')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('product_offer_type')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('ond')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
@@ -259,9 +260,10 @@ $('#to_cabin').val('<?=$to_cabin?>').trigger('change');
                          } ); }, 
 
       "columns": [ {"data": "sno" },
+		   {"data": "offer_id" },
 		   {"data": "dtpf_id" },
-		   {"data": "fclr_id" },
-		   {"data": "bclr_id" },
+		   {"data": "rule_id" },
+		   {"data": "product_offer_type" },
 		   {"data": "ond" },
 		   {"data": "season_id" },
 		   {"data": "source_point" },

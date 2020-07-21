@@ -134,10 +134,10 @@ class Offer_eligibility extends Admin_Controller {
 
 
 		
-	    $aColumns = array('pext.dtpf_id', 'dtpfext_id','pext.fclr_id','sea.season_name','dbp.code','dop.code','pf.pnr_ref','pf.dep_date','dai.code','pf.flight_number',
+	    $aColumns = array('pext.dtpf_id', 'dtpfext_id','pext.rule_id', 'product_offer_type', 'pext.product_id', 'sea.season_name','dbp.code','dop.code','pf.pnr_ref','pf.dep_date','dai.code','pf.flight_number',
 			 'fdef.cabin','tdef.cabin','dfre.code','fc.average','fc.min','fc.max','fc.slider_start',
 			 'bs.aln_data_value','dbp.aln_data_value','dop.aln_data_value','dai.aln_data_value','fdef.desc',
-			 'tdef.desc','dfre.aln_data_value','pf.pnr_ref', 'pext.bclr_id', 'pext.ond');
+			 'tdef.desc','dfre.aln_data_value','pf.pnr_ref', 'pext.ond', 'of.offer_id');
 	
 		$sLimit = "";
 		
@@ -285,16 +285,18 @@ class Offer_eligibility extends Admin_Controller {
 	
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id,  pext.bclr_id,  pext.ond, pext.dtpf_id , pext.dtpfext_id ,
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as product_offer_type, pext.product_id, pext.ond, pext.dtpf_id , pext.dtpfext_id ,
 		 boarding_point, dai.code as carrier_code , off_point, season_id,pf.flight_number, fdef.cabin as fcabin, 
             	tdef.cabin as tcabin, dfre.code as day_of_week , sea.season_name,
             	pf.dep_date as departure_date, min,max,average,slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, 
 		pf.pnr_ref
-		     from UP_dtpf_ext pext 
+		     from VX_offer_info pext 
 		     INNER JOIN VX_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_up_offer_processed = 1 and pf.active = 1)
-		     LEFT JOIN UP_fare_control_range fc on  (pext.fclr_id = fc.fclr_id)
+		     LEFT JOIN UP_fare_control_range fc on  (pext.rule_id = fc.fclr_id)
 		     LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = fc.season_id )
+		     LEFT JOIN VX_offer of on (of.pnr_ref = pf.pnr_ref )
+		     LEFT JOIN VX_products vp on (vp.productID = pext.product_id )
                      LEFT JOIN  VX_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
 		     LEFT JOIN VX_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
 		     LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = pf.carrier_code AND dai.aln_data_typeID = 12)
@@ -307,7 +309,6 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.fclr_id,  pext.bclr_id,  pext.ond, p
 
 $sWhere $sOrder $sLimit";
 
-	#echo "QER=" . $sQuery; exit;
 
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
@@ -335,9 +336,15 @@ $sWhere $sOrder $sLimit";
 				$feed->booking_status = '<a href="'.base_url('eligibility_exclusion/index/'.$excl_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->exclusion_id.'">'.$feed->booking_status.'</a>';
 
 			}
-            $feed->fclrID = $feed->fclr_id;
+            $feed->fclrID = $feed->rule_id;
 			$feed->dtpfID = $feed->dtpf_id ;
-			$feed->fclr_id = '<a target="_new" style="color:blue;" href="'.base_url('fclr/index/'.$feed->fclr_id).'"  >'.$feed->fclr_id.'</a>';
+			if ($feed->product_id == 1) {
+				$prod_c = 'fclr';
+			} elseif ($feed->product_id == 2) {
+				$prod_c = 'bclr';
+			}
+			$feed->rule_id = '<a target="_new" style="color:blue;" href="'.base_url($prod_c . '/index/'.$feed->rule_id).'"  >'.$feed->rule_id.'</a>';
+			$feed->offer_id = '<a target="_new" style="color:blue;" href="'.base_url('offer_issue/view/'.$feed->offer_id).'"  >'.$feed->offer_id.'</a>';
 			$feed->dtpf_id = '<a target="_new" style="color:blue;" href="'.base_url('paxfeed/index/'.$feed->dtpf_id).'"  >'.$feed->dtpf_id.'</a>';
 
 			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default";
@@ -348,8 +355,8 @@ $sWhere $sOrder $sLimit";
 
 		
 		if(isset($_REQUEST['export'])){
-		  $columns = array("#","PAX Feed ID","FCLR ID", "BCLR_ID", "OND",  "Season","Board Point","Off Point","PNR Reference","Departure Date","Carrier","Flight Number" ,"From Cabin","To Cabin","Frequency","Average","Min","Max","Slider Position","Booking Status");
-		  $rows = array("id","dtpfID","fclrID","BCLR_ID", "OND", "season_id","spoint","dpoint","pnr_ref","departure_date","carrier_code","flight_number" ,"fcabin","tcabin","day_of_week","average","min","max","slider_start","bstatus");
+		  $columns = array("#","PAX Feed ID","RULE_ID", "OFFER_ID", "OFFER TYPE", "OND",  "Season","Board Point","Off Point","PNR Reference","Departure Date","Carrier","Flight Number" ,"From Cabin","To Cabin","Frequency","Average","Min","Max","Slider Position","Booking Status");
+		  $rows = array("id","dtpfID","rule_id","product_offer_type", "OND", "offer_id", "season_id","spoint","dpoint","pnr_ref","departure_date","carrier_code","flight_number" ,"fcabin","tcabin","day_of_week","average","min","max","slider_start","bstatus");
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );
@@ -699,7 +706,8 @@ $sWhere $sOrder $sLimit";
 						$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
 						$ext = array();
 						$ext['dtpf_id'] = $dtpfId;
-						$ext['bclr_id'] =  $bclrId;
+						$ext['rule_id'] =  $bclrId;
+                                                $ext['product_id'] = 2;//BAGGAGE PRODUCT
 						$ext['ond'] = $ond_grp;
 						$ext["create_date"] = time();
 						$ext["modify_date"] = time();
@@ -878,7 +886,8 @@ $sWhere $sOrder $sLimit";
 
 				 $ext = array();
                                                 $ext['dtpf_id'] = $feed->dtpf_id;
-                                                $ext['fclr_id'] = $f->fclr_id;
+                                                $ext['rule_id'] = $f->fclr_id;
+                                                $ext['product_id'] = 1;//UPGRADE PRODUCT
                                                 $ext["create_date"] = time();
                                                 $ext["modify_date"] = time();
                                                 $ext["create_userID"] = $this->session->userdata('loginuserID');

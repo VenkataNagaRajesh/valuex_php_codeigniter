@@ -3,7 +3,7 @@
 class bid_m extends MY_Model {
   
   function pnr_code_validate($pnr,$code){	//7k7BXu
-	$this->db->select('count(*) count')->from('UP_offer_ref');	 
+	$this->db->select('count(*) count')->from('VX_offer');	 
 	 $this->db->where('pnr_ref',$pnr);
 	 $this->db->where('coupon_code',$code);
 	 //$this->db->where('offer_status',$status);
@@ -19,7 +19,7 @@ class bid_m extends MY_Model {
 
  /*  function getPassengers($pnr_ref,$bidstatus = NULL){
 	  $this->db->select("tpf.cabin,tpf.pnr_ref,tpf.seat_no,cab.aln_data_value current_cabin,group_concat(distinct fclr.fclr_id) fclr,group_concat(distinct fclr.to_cabin,'-',fclr.fclr_id,'-',pfe.booking_status) to_cabins,group_concat( distinct round(fclr.min)) min,group_concat( distinct round(fclr.max)) max,group_concat( distinct round(fclr.average)) avg,group_concat( distinct round(fclr.slider_start)) slider_position,tpf.flight_number,tpf.dep_date, tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat( pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.miles,oref.offer_id,air_city1.aln_data_value air_from_city,air_city2.aln_data_value air_to_city,bid.bid_value,bid.miles bid_miles,bid.upgrade_type bid_upgrade")->from('VX_aln_daily_tkt_pax_feed tpf');	
-      $this->db->join('UP_dtpf_ext pfe','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');		 
+      $this->db->join('VX_offer_info pfe','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');		 
 	  $this->db->join('UP_fare_control_range fclr','(fclr.fclr_id = pfe.fclr_id AND fclr.from_cabin=tpf.cabin)','LEFT');	
 	  $this->db->join('vx_aln_data_defns  tci','(tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)','LEFT');
 	  $this->db->join('vx_aln_data_defns  cab','(cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13)','LEFT');
@@ -46,14 +46,14 @@ class bid_m extends MY_Model {
    */
   
    function getPassengers($pnr_ref,$bidstatus = NULL){
-	  $this->db->select("group_concat(distinct pfe.bclr_id) bclr, car.aln_data_value carrier_name,tpf.carrier_code carrier,tpf.cabin,tpf.pnr_ref,tpf.seat_no,def.desc current_cabin,group_concat(distinct fclr.fclr_id) fclr,group_concat(distinct fclr.to_cabin,'-',fclr.fclr_id,'-',pfe.booking_status,'-',tdef.level) to_cabins,group_concat( distinct round(fclr.min)) min,group_concat( distinct round(fclr.max)) max,group_concat( distinct round(fclr.average)) avg,group_concat( distinct round(fclr.slider_start)) slider_position,tpf.flight_number,tpf.dep_date, tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat( pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.miles,oref.offer_id,air_city1.aln_data_value air_from_city,air_city2.aln_data_value air_to_city,bid.bid_value,bid.miles bid_miles,bid.upgrade_type bid_upgrade")->from('VX_daily_tkt_pax_feed tpf');	
-      $this->db->join('UP_dtpf_ext pfe','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');		 
-	  $this->db->join('UP_fare_control_range fclr','(fclr.fclr_id = pfe.fclr_id AND fclr.from_cabin=tpf.cabin)','LEFT');	
+	  $this->db->select("group_concat(distinct pfe.rule_id) bclr, car.aln_data_value carrier_name,tpf.carrier_code carrier,tpf.cabin,tpf.pnr_ref,tpf.seat_no,def.desc current_cabin,group_concat(distinct fclr.fclr_id) fclr,group_concat(distinct fclr.to_cabin,'-',fclr.fclr_id,'-',pfe.booking_status,'-',tdef.level) to_cabins,group_concat( distinct round(fclr.min)) min,group_concat( distinct round(fclr.max)) max,group_concat( distinct round(fclr.average)) avg,group_concat( distinct round(fclr.slider_start)) slider_position,tpf.flight_number,tpf.dep_date, tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat( pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.miles,oref.offer_id,air_city1.aln_data_value air_from_city,air_city2.aln_data_value air_to_city,bid.bid_value,bid.miles bid_miles,bid.upgrade_type bid_upgrade")->from('VX_daily_tkt_pax_feed tpf');	
+      $this->db->join('VX_offer_info pfe','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');		 
+	  $this->db->join('UP_fare_control_range fclr','(fclr.fclr_id = pfe.rule_id AND fclr.from_cabin=tpf.cabin)','LEFT');	
 	  $this->db->join('VX_data_defns  tci','(tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)','LEFT');
 	 // $this->db->join('vx_aln_data_defns  cab','(cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13)','LEFT');
 	  $this->db->join('VX_data_defns dcla','(dcla.aln_data_typeID = 13 and tpf.cabin = dcla.vx_aln_data_defnsID)','INNER');
 	  $this->db->join('VX_airline_cabin_def def','(def.carrier = tpf.carrier_code) AND (dcla.alias = def.level)','INNER');
-	  $this->db->join('UP_offer_ref oref','oref.pnr_ref = tpf.pnr_ref','LEFT');
+	  $this->db->join('VX_offer oref','oref.pnr_ref = tpf.pnr_ref','LEFT');
 	  $this->db->join('VX_data_defns dd','(dd.vx_aln_data_defnsID = oref.offer_status AND dd.aln_data_typeID = 20)','LEFT');	 
 	  $this->db->join('VX_data_defns c1','(c1.vx_aln_data_defnsID = tpf.from_city AND c1.aln_data_typeID = 1)','LEFT');
 	  $this->db->join('VX_data_defns c2','(c2.vx_aln_data_defnsID = tpf.to_city AND c2.aln_data_typeID = 1)','LEFT');
@@ -88,11 +88,11 @@ class bid_m extends MY_Model {
   }
   
    public function get_offer_data($offer_id){
-	   $this->db->select("def.desc cabin,udef.desc upgrade_type,tpf.seat_no,tpf.pnr_ref,tpf.carrier_code  carrier,tpf.dep_date,tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,car.aln_data_value carrier_name,tpf.flight_number,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.cash,oref.miles,bid.bid_value")->from('UP_dtpf_ext pfe');	
+	   $this->db->select("def.desc cabin,udef.desc upgrade_type,tpf.seat_no,tpf.pnr_ref,tpf.carrier_code  carrier,tpf.dep_date,tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,car.aln_data_value carrier_name,tpf.flight_number,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.cash,oref.miles,bid.bid_value")->from('VX_offer_info pfe');	
 	  $this->db->join('VX_data_defns dd','(dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20)','LEFT');
 	  $this->db->join('VX_daily_tkt_pax_feed tpf','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');
-	  $this->db->join('UP_fare_control_range fclr','(fclr.fclr_id = pfe.fclr_id AND fclr.from_cabin=tpf.cabin)','LEFT');	
-	  $this->db->join('UP_offer_ref oref','oref.pnr_ref = tpf.pnr_ref','LEFT');
+	  $this->db->join('UP_fare_control_range fclr','(fclr.fclr_id = pfe.rule_id AND fclr.from_cabin=tpf.cabin)','LEFT');	
+	  $this->db->join('VX_offer oref','oref.pnr_ref = tpf.pnr_ref','LEFT');
 	  $this->db->join('UP_bid bid','bid.offer_id = oref.offer_id','LEFT');
 	  //$this->db->join('vx_aln_data_defns upcab','upcab.vx_aln_data_defnsID = bid.upgrade_type','LEFT');
 	  //$this->db->join('vx_aln_data_defns  cab','(cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13)','LEFT');
@@ -199,7 +199,7 @@ class bid_m extends MY_Model {
     }
 	
 	function getOfferStatus($pnr_ref){
-		$this->db->select('ref.offer_status status_no,d.aln_data_value status')->from('UP_offer_ref ref');
+		$this->db->select('ref.offer_status status_no,d.aln_data_value status')->from('VX_offer ref');
 		$this->db->join('VX_data_defns d','(d.vx_aln_data_defnsID = ref.offer_status AND d.aln_data_typeID = 20)','LEFT');
 		$this->db->where('ref.pnr_ref',$pnr_ref);
 		$query = $this->db->get();

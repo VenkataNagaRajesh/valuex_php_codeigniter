@@ -439,14 +439,14 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
                                 select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, bid_avg,bid_markup_val,
                                 tdef.cabin as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank
                                 from  
-                                        UP_offer_ref oref 
+                                        VX_offer oref 
                                         INNER JOIN UP_bid bid on (bid.offer_id = oref.offer_id) 
                                         INNER JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref 
                                                         and pf.flight_number = bid.flight_number) 
 
 					INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code) 
 					INNER JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13 and tcab.alias = tdef.level)
-                                        INNER JOIN UP_dtpf_ext pe on ( pe.dtpf_id = pf.dtpf_id ) 
+                                        INNER JOIN VX_offer_info pe on ( pe.dtpf_id = pf.dtpf_id ) 
                                          INNER JOIN UP_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type)
                                           LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
                                           ".$mainsetWhere."
