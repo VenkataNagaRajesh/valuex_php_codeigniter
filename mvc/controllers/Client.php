@@ -4,7 +4,7 @@ class Client extends Admin_Controller {
 
 	function __construct() {
 		parent::__construct();
-        $this->load->model("client_m");
+        	$this->load->model("client_m");
 		$this->load->model("user_m");
 		$this->load->model('role_m');
 		$this->load->model('airline_m');
@@ -297,10 +297,10 @@ class Client extends Admin_Controller {
                 'js' => array(
                         'assets/select2/select2.js',  					
                 )
-        );
+        	);
 		$usertypeID = 2;
 		$this->data['roles'] = $this->role_m->get_role();
-        $this->data['airlinelist'] = $this->airline_m->getAirlinesData();		
+        	$this->data['airlinelist'] = $this->airline_m->getAirlinesData();		
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -375,6 +375,14 @@ class Client extends Admin_Controller {
 			   $this->data["subview"] = "client/adds";
 			   $this->load->view('_layout_main', $this->data);
 		   } else {					   
+			$isClientAdmin = $this->client_m->isClientAdminUserExists($this->input->post('airlineID'));
+			if ( $isClientAdmin ) {
+				$this->session->set_flashdata('error', "Client Admin  User already exists for this carrier");
+				#$this->form_validation->set_message("error", "Client Admin  User already exists for this carrier");
+				$this->data["subview"] = "client/adds";
+				$this->load->view('_layout_main', $this->data);
+				return;
+		   	}
 			$array["name"] = $this->input->post("name");
 			$array["domain"] = $primary_client->domain;				
 			$array["email"] = $this->input->post("email");
@@ -675,6 +683,7 @@ class Client extends Admin_Controller {
 					$this->form_validation->set_message("unique_email", "%s already exists");
 					$array['permition'][$i] = 'no';
 				} else {
+					/*
 					$email_array = explode('@',$this->input->post('email'));
 					$primary_client = $this->user_m->getClientByAirline($this->input->post('airlineID'),6)[0];
 					$url = $primary_client->domain;
@@ -690,6 +699,7 @@ class Client extends Admin_Controller {
 						$this->form_validation->set_message("unique_email", "%s not match with domain ".$regs['domain']);
 					    $array['permition'][$i] = 'no';	
 					}					
+					*/
 				}
 				$i++;
 			}
