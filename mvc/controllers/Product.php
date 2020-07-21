@@ -42,9 +42,15 @@ class Product extends Admin_Controller {
 					"modify_date" => date("Y-m-d h:i:s"),
 					"create_userID" => $this->session->userdata('loginuserID')					
 				);
-				$this->product_m->insert_product($array);
-				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-				redirect(base_url("product/index"));
+				if (!$this->product_m->checkProductExists($this->input->post("name"))) {
+					$this->product_m->insert_product($array);
+					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
+					redirect(base_url("product/index"));
+				} else {
+					$this->session->set_flashdata('error', 'Product with this name already exists!');
+					$this->data["subview"] = "product/add";
+					$this->load->view('_layout_main', $this->data);
+				}
 			}
 		} else {
 			$this->data["subview"] = "product/add";
@@ -70,9 +76,15 @@ class Product extends Admin_Controller {
 							"modify_date" => date("Y-m-d h:i:s")
 						);
 
-						$this->product_m->update_product($array, $id);
-						$this->session->set_flashdata('success', $this->lang->line('menu_success'));
-						redirect(base_url("product/index"));
+						if (!$this->product_m->checkProductExists($this->input->post("name"))) {
+							$this->product_m->update_product($array, $id);
+							$this->session->set_flashdata('success', $this->lang->line('menu_success'));
+							redirect(base_url("product/index"));
+						}  else {
+							$this->session->set_flashdata('error', 'Product with this name already exists!');
+							$this->data["subview"] = "product/edit";
+							$this->load->view('_layout_main', $this->data);
+						}
 					}
 				} else {
 					$this->data["subview"] = "product/edit";
