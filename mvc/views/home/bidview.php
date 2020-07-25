@@ -43,11 +43,11 @@
 									<tbody>
 										<?php $n=1; foreach($results as $result){?>
 										<tr>
-										<td><div class="col-md-12"><p><?=$n?> . <?php echo $result->air_from_city; ?> To <?php echo $result->air_to_city; ?> </p></div></td>
+										<td><div class="col-md-12"><p><?=$n?> . <?php echo $result->from_city; ?> To <?php echo $result->to_city; ?> </p></div></td>
 										</tr>
 										<tr>
 											<td>								
-												<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
+												<div style="text-align:left" class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
 													<div class="col-md-5">
 														<p style="color:<?=$mail_header_color?>"><?php echo $result->from_city; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time);?></span></p>
 														<ul>
@@ -58,7 +58,7 @@
 														<small><?php echo $result->from_airport; ?></small>
 													</div>
 													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
-													<div class="col-md-5">
+													<div style="align:left" class="col-md-5">
 														<p style="color:<?=$mail_header_color?>"><?php echo $result->to_city; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time);?></span></p>
 														<ul>
 															<li><?php echo date('d M Y',$result->arrival_date); ?></li>
@@ -76,15 +76,12 @@
 													<label class="cabins-<?=$result->flight_number?> radio-inline <?=($status == $excluded_status)?"bid-visible":""?>" >
 														<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" ><?php echo $cabins[$value]; ?>
 													</label><br>
-												   <?php if($status != $excluded_status) { $i++; } } } ?>
+												   <?php if($status == $excluded_status) { $i++; } } } ?>
 												   <?php if($i != 0){?>
                                                		<label class="checkbox-inline<?=($result->fclr == null)?"bid-visible":""?>">
 														<input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid 
 													</label>	
 												   <?php } ?>													
-											  <!-- <div class="<?=($result->fclr == null)?"bid-visible":""?>">
-											       <b><input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid <br></b>								
-												</div>	-->												   
                                               </div>                                                											
 											</td>
 											<td>
@@ -104,40 +101,34 @@
 													</div>
 												<?php }  ?>
 											</td>
-											<!--<td>
-											  <div class="<?=($result->fclr == null)?"bid-visible":""?>">
-											  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="1" checked/> Yes <br>
-											  <input type="radio" name="bid_action_<?=$result->flight_number?>" value="0"/> No
-											  </div>
-											</td>-->
 										</tr>
 										<?php $n++; } ?>
 										<?php if(count($baggage) > 0){ ?>
 										<tr>
-											<td style="color: black;"><b> Baggage Product</b> </td>
+											<td colspan=3 style="color: black;"><b> Baggage offer</b> </td>
 										</tr>
 										<?php foreach($baggage as $bg => $row){ ?>
 										<?php $pax = $baggage[$bg]['pax'];?>
 
 										<tr>
 											<td style="color: black;">
-												<div class="bid-info">
+												<div style="text-align:left" class="bid-info">
 													<div class="col-md-5">
 														<p style="color:<?=$mail_header_color?>"><?php echo $pax->from_city; ?> <span class="time-bid"><?=date('H:i A',$pax->dep_date+$pax->dept_time);?></span></p>
 														<ul>
 															<li><?php echo date('d M Y',$pax->dep_date);; ?></li>
 															<li style="color:<?=$mail_header_color?>"><?php echo $pax->flight_number;?></li>
 														</ul>
-														<small><?php echo $pax->from_city_name; ?></small>
+														<small><?php echo $pax->from_airport; ?></small>
 													</div>
 													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
-													<div class="col-md-5">
+													<div style="text-align:left" class="col-md-5">
 														<p style="color:<?=$mail_header_color?>"><?php echo $pax->to_city; ?><span class="time-bid"><?=date('H:i A',$pax->arrival_date+$pax->arrival_time);?></span></p>
 														<ul>
 															<li><?php echo date('d M Y',$pax->arrival_date);; ?></li>
 															<li style="color:<?=$mail_header_color?>"><?php echo $pax->flight_number;?></li>
 														</ul>
-														<small><?php echo $pax->to_city_name; ?></small>
+														<small><?php echo $pax->to_airport; ?></small>
 													</div>
 												</div>
 											</td>
@@ -158,7 +149,7 @@
 												<h4 class="panel-title">
 													<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
 														<i class="short-full glyphicon glyphicon-plus"></i>
-														<p><?=$n-1?> . <?php echo $result->air_from_city; ?> To <?php echo $result->air_to_city; ?> </p>
+														<p><?=$n-1?> . <?php echo $result->from_city; ?> To <?php echo $result->to_city; ?> </p>
 													</a>
 												</h4>
 											</div>
@@ -201,16 +192,13 @@
 																<label class="cabins-<?=$result->flight_number?> radio-inline <?=($status == $excluded_status)?"bid-visible":""?>" >
 																	<input type="radio" name="mb_bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" ><?php echo $cabins[$value]; ?>
 																</label><br>
-															   <?php if($status != $excluded_status) { $i++; } } } ?>
+															   <?php if($status == $excluded_status) { $i++; } } } ?>
 															   <?php if($i != 0){?>
 																			<label class="checkbox-inline<?=($result->fclr == null)?"bid-visible":""?>">
 																	<input type="checkbox" name="mb_bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid 
 																</label>	
 															   <?php } ?>
 															</div>
-													  <!-- <div class="<?=($result->fclr == null)?"bid-visible":""?>">
-														   <b><input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid <br></b>								
-														</div>	-->												   
 														</div><br><br>
 														<div class="col-xs-12">
 															<div style="background:<?=$mail_header_color?>" class="col-xs-12">

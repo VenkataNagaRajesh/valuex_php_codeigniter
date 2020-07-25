@@ -225,13 +225,15 @@ $sql = " select  SQL_CALC_FOUND_ROWS MainSet.offer_id, MainSet.offer_date, SubSe
 
 	function getBaggageOffer($pnr_ref) {
 
-		$this->db->select("pext.ond, pext.rule_id, pf.*, fc.aln_data_value as from_city_name, tc.aln_data_value as to_city_name, fc.code as from_city_code, tc.code as to_city_code, car.aln_data_value carrier_name")->from('VX_daily_tkt_pax_feed pf');
+		$this->db->select("pext.ond, pext.rule_id, pf.*, fc.aln_data_value as from_airport, tc.aln_data_value as to_airport, fc.code as from_city_code, tc.code as to_city_code, car.aln_data_value carrier_name, c1.aln_data_value as from_city, c2.aln_data_value as to_city")->from('VX_daily_tkt_pax_feed pf');
 		$this->db->join('VX_offer oref', 'oref.pnr_ref =  pf.pnr_ref', 'LEFT');
 		$this->db->join('VX_offer_info pext', 'pext.dtpf_id =  pf.dtpf_id AND pext.rule_id > 0', 'LEFT');
 		$this->db->join(' VX_data_defns dd', 'dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20', 'LEFT');
 		$this->db->join(' VX_data_defns car', 'car.vx_aln_data_defnsID = pf.carrier_code AND car.aln_data_typeID = 12', 'LEFT');
 		$this->db->join(' VX_data_defns fc', 'fc.vx_aln_data_defnsID = pf.from_city AND fc.aln_data_typeID = 1', 'LEFT');
 		$this->db->join(' VX_data_defns tc', 'tc.vx_aln_data_defnsID = pf.to_city AND tc.aln_data_typeID = 1', 'LEFT');
+		  $this->db->join('VX_data_defns c1','(c1.vx_aln_data_defnsID = fc.parentID AND c1.aln_data_typeID = 3)','LEFT');
+		  $this->db->join('VX_data_defns c2','(c2.vx_aln_data_defnsID = tc.parentID AND c2.aln_data_typeID = 3)','LEFT');
 		$this->db->where('oref.pnr_ref',$pnr_ref); 
 		$this->db->where('pext.product_id',2);  //BAGGAGE
 		$this->db->order_by('pext.ond ASC'); 

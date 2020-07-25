@@ -173,6 +173,7 @@ class bid_m extends MY_Model {
 		$this->db->join('VX_daily_tkt_pax_feed p','p.carrier_code = d.vx_aln_data_defnsID','LEFT');
 		$this->db->where('p.pnr_ref',$pnr_ref);
 		$query = $this->db->get();
+		//echo $this->db->last_query();exit;
 		return $query->row();
 	}
 	
