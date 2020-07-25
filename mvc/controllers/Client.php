@@ -473,6 +473,13 @@ class Client extends Admin_Controller {
 					$this->data["subview"] = "client/edit";
 					$this->load->view('_layout_main', $this->data);
 				} else {
+					$isClientAdmin = $this->client_m->isClientAdminUserExists($this->input->post('airlineID'));
+					if ( $isClientAdmin != $id ) {
+						$this->session->set_flashdata('error', "Only One Client admin per carrier is allowed!");
+						$this->data["subview"] = "client/edit";
+						$this->load->view('_layout_main', $this->data);
+						return;
+					}
 					$array["name"] = $this->input->post("name");					
 					$array["roleID"] = $this->input->post("roleID");
 					$array["dob"] = date("Y-m-d", strtotime($this->input->post("dob")));
@@ -823,10 +830,14 @@ class Client extends Admin_Controller {
               $sWhere .= 'ca.airlineID = '.$this->input->get('airlineID');		 
 	        }
 			
-			if($this->input->get('active') < 2 ){
-		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'c.active = '.$this->input->get('active');		 
-	        }
+		if($this->input->get('active') < 2 ){
+			$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+			$sWhere .= 'c.active = '.$this->input->get('active');		 
+	        } else {
+			//Default show Active users 
+			$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+			$sWhere .= 'c.active = 1';
+		}
 			
 		    $sGroupby = " GROUP BY c.userID";
 		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,r.role,ut.usertype,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM VX_user c LEFT JOIN VX_usertype ut ON ut.usertypeID = c.usertypeID LEFT JOIN VX_role r ON r.roleID = c.roleID LEFT JOIN VX_user_airline ca ON ca.userID = c.userID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
@@ -835,6 +846,7 @@ class Client extends Admin_Controller {
             $sHaving			
 			$sOrder
 			$sLimit	"; 
+
 		//print_r($sQuery); exit;
 		$rResult = $this->install_m->run_query($sQuery);
 		$sQuery = "SELECT FOUND_ROWS() as total";

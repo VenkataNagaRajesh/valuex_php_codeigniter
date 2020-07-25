@@ -49,23 +49,23 @@
 											<td>								
 												<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
 													<div class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $result->from_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time);?></span></p>
-														<small><?php echo $result->from_city; ?></small>
+														<p style="color:<?=$mail_header_color?>"><?php echo $result->from_city; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time);?></span></p>
 														<ul>
-															<li><?php echo date('d M',$result->dep_date); ?></li>
-															<li style="color:<?=$mail_header_color?>">Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
+															<li><?php echo date('d M Y',$result->dep_date); ?></li>
+															<li style="color:<?=$mail_header_color?>"><?php echo $result->carrier_code.$result->flight_number; ?></li>
 															<!--<li><?=$result->time_diff?></li>-->
 														</ul>
+														<small><?php echo $result->from_airport; ?></small>
 													</div>
 													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
 													<div class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $result->to_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time);?></span></p>
-														<small><?php echo $result->to_city; ?></small>
+														<p style="color:<?=$mail_header_color?>"><?php echo $result->to_city; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time);?></span></p>
 														<ul>
-															<li><?php echo date('d M',$result->arrival_date); ?></li>
-															<li style="color:<?=$mail_header_color?>">Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
+															<li><?php echo date('d M Y',$result->arrival_date); ?></li>
+															<li style="color:<?=$mail_header_color?>"><?php echo $result->carrier_code.$result->flight_number; ?></li>
 															<!--<li><?=$result->time_diff?></li>-->
 														</ul>
+														<small><?php echo $result->to_airport; ?></small>
 													</div>
 												</div>											
 											</td>
@@ -123,21 +123,21 @@
 											<td style="color: black;">
 												<div class="bid-info">
 													<div class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $pax->from_city_code; ?> <span class="time-bid"><?=date('H:i A',$pax->dep_date+$pax->dept_time);?></span></p>
-														<small><?php echo $pax->from_city_name; ?></small>
+														<p style="color:<?=$mail_header_color?>"><?php echo $pax->from_city; ?> <span class="time-bid"><?=date('H:i A',$pax->dep_date+$pax->dept_time);?></span></p>
 														<ul>
-															<li><?php echo date('d M',$pax->dep_date);; ?></li>
-															<li style="color:<?=$mail_header_color?>">Flight <?php echo $pax->flight_number;?></li>
+															<li><?php echo date('d M Y',$pax->dep_date);; ?></li>
+															<li style="color:<?=$mail_header_color?>"><?php echo $pax->flight_number;?></li>
 														</ul>
+														<small><?php echo $pax->from_city_name; ?></small>
 													</div>
 													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
 													<div class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $pax->to_city_code; ?><span class="time-bid"><?=date('H:i A',$pax->arrival_date+$pax->arrival_time);?></span></p>
-														<small><?php echo $pax->to_city_name; ?></small>
+														<p style="color:<?=$mail_header_color?>"><?php echo $pax->to_city; ?><span class="time-bid"><?=date('H:i A',$pax->arrival_date+$pax->arrival_time);?></span></p>
 														<ul>
-															<li><?php echo date('d M',$pax->arrival_date);; ?></li>
-															<li style="color:<?=$mail_header_color?>">Flight <?php echo $pax->flight_number;?></li>
+															<li><?php echo date('d M Y',$pax->arrival_date);; ?></li>
+															<li style="color:<?=$mail_header_color?>"><?php echo $pax->flight_number;?></li>
 														</ul>
+														<small><?php echo $pax->to_city_name; ?></small>
 													</div>
 												</div>
 											</td>
@@ -171,23 +171,23 @@
 															</div>
 															<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
 																<div class="col-md-5">
-																	<p style="color:<?=$mail_header_color?>"><?php echo $result->from_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time)?></span></p>
-																	<small data-toggle="tooltip" data-placement="top" title="<?php echo $result->from_city; ?>" class="badge">Airport Info</small>
+																	<p style="color:<?=$mail_header_color?>"><?php echo $result->from_city; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time)?></span></p>
 																	<ul>
-																		<li><?php echo date('d M',$result->dep_date); ?></li>
-																		<li style="color:<?=$mail_header_color?>">Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
+																		<li><?php echo date('d M Y',$result->dep_date); ?></li>
+																		<li style="color:<?=$mail_header_color?>"><?php echo $result->carrier_code.$result->flight_number; ?></li>
 																		<!--<li><?=$result->time_diff?></li>-->
 																	</ul>
+																	<small data-toggle="tooltip" data-placement="top" title="<?php echo $result->from_city; ?>" class="badge">Airport Info</small>
 																</div>
 																<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
 																<div class="col-md-5">
-																	<p style="color:<?=$mail_header_color?>"><?php echo $result->to_city_code; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time)?></span></p>
-																	<small data-toggle="tooltip" data-placement="top" title="<?php echo $result->to_city; ?>" class="badge">Airport Info</small>
+																	<p style="color:<?=$mail_header_color?>"><?php echo $result->to_city; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time)?></span></p>
 																	<ul>
-																		<li><?php echo date('d M',$result->arrival_date); ?></li>
-																		<li style="color:<?=$mail_header_color?>">Flight <?php echo $result->carrier_code.$result->flight_number; ?></li>
+																		<li><?php echo date('d M Y',$result->arrival_date); ?></li>
+																		<li style="color:<?=$mail_header_color?>"><?php echo $result->carrier_code.$result->flight_number; ?></li>
 																		<!--<li><?=$result->time_diff?></li>-->
 																	</ul>
+																	<small data-toggle="tooltip" data-placement="top" title="<?php echo $result->to_city; ?>" class="badge">Airport Info</small>
 																</div>
 															</div>
 														</div><br>

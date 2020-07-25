@@ -31,7 +31,7 @@
                 </div>	
 				<div class="col-sm-4 col-md-3">
 					<button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
->                                 	<button type="button" class="btn btn-danger" name="download" onclick="downloadClients()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
+                                 	<button type="button" class="btn btn-danger" name="download" onclick="downloadClients()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
                 </div>
 				
             </div>				

@@ -26,6 +26,17 @@ class product_m extends MY_Model {
 		return TRUE;
 	}
 
+	function checkProductExists($product_name) {
+		$array = Array("name" => $produt_name);
+            	$query = $this->db->get_where('VX_products',array("name"=>$product_name));
+            	$result = $query->row();
+		if ($result) {
+			return $result->productID;
+		} else {
+			return FALSE;
+		}
+	}
+
 	function update_product($data, $id = NULL) {
 		parent::update($data, $id);
 		return $id;

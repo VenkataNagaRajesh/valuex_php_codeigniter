@@ -90,7 +90,8 @@ class user_m extends MY_Model {
 	}
 
 	function delete_user($id){
-		parent::delete($id);
+		$data['active'] = 0;
+		parent::update($data, $id);
 	}
 
 	function hash($string) {

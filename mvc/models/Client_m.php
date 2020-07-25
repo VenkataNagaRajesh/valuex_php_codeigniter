@@ -69,6 +69,7 @@ class client_m extends MY_Model {
 		$this->db->select('count(*) as cnt')->from('VX_user u');
 		$this->db->join('VX_user_airline ua','ua.userID = u.userID','INNER');
 		$this->db->where('u.roleID',6);
+		$this->db->where('u.active',1);
 		$this->db->where('ua.airlineID',$carrierId);
 		$query = $this->db->get();
              //print_r($this->db->last_query()); exit;
