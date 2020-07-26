@@ -4835,3 +4835,6 @@ width: 100%;
 	position: absolute;
 	right: 0;
 }
+.tooltip-inner {
+    max-width: 100% !important;
+}

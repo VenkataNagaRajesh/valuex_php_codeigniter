@@ -142,10 +142,6 @@
 							<th class="col-lg-1"><?=$this->lang->line('from_cabin')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('to_cabin')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('day_of_week')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('avg')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('min')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('max')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('slider_start')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('booking_status')?></th>
 						</tr>
 					 </thead>
@@ -272,13 +268,9 @@ $('#to_cabin').val('<?=$to_cabin?>').trigger('change');
 		   {"data": "departure_date" },
 		   {"data": "carrier_code" },
 		   {"data": "flight_number" },
-		   {"data": "fcabin" },
-		   {"data": "tcabin" },
+		   {"data": "from_cabin" },
+		   {"data": "to_cabin" },
 		   {"data": "day_of_week" },
-		   {"data": "average" },
-           {"data": "min" },
-		   {"data": "max" },
-		   {"data": "slider_start" },
 		   {"data": "booking_status" }
 				  ],			     
      dom: 'B<"clear">lfrtip',

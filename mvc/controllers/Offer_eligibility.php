@@ -135,7 +135,7 @@ class Offer_eligibility extends Admin_Controller {
 
 		
 	    $aColumns = array('pext.dtpf_id', 'dtpfext_id','pext.rule_id', 'product_offer_type', 'pext.product_id', 'sea.season_name','dbp.code','dop.code','pf.pnr_ref','pf.dep_date','dai.code','pf.flight_number',
-			 'fdef.cabin','tdef.cabin','dfre.code','fc.average','fc.min','fc.max','fc.slider_start',
+			 'from_cabin','to_cabin','dfre.code','fc.average','fc.min','fc.max','fc.slider_start',
 			 'bs.aln_data_value','dbp.aln_data_value','dop.aln_data_value','dai.aln_data_value','fdef.desc',
 			 'tdef.desc','dfre.aln_data_value','pf.pnr_ref', 'pext.ond', 'of.offer_id');
 	
@@ -286,14 +286,15 @@ class Offer_eligibility extends Admin_Controller {
 
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as product_offer_type, pext.product_id, pext.ond, pext.dtpf_id , pext.dtpfext_id ,
-		 boarding_point, dai.code as carrier_code , off_point, season_id,pf.flight_number, fdef.cabin as fcabin, 
+		 boarding_point, dai.code as carrier_code , off_point, fc.season_id,pf.flight_number, fdef.cabin as fcabin, 
             	tdef.cabin as tcabin, dfre.code as day_of_week , sea.season_name,
-            	pf.dep_date as departure_date, min,max,average,slider_start,from_cabin, to_cabin,
+            	pf.dep_date as departure_date, min,max,average,slider_start,fca.aln_data_value as from_cabin, tca.aln_data_value as to_cabin,
 		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, 
-		pf.pnr_ref
+		pf.pnr_ref , bc.min_unit, bc.max_capacity, bc.min_price, bc.max_price
 		     from VX_offer_info pext 
 		     INNER JOIN VX_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_up_offer_processed = 1 and pf.active = 1)
-		     LEFT JOIN UP_fare_control_range fc on  (pext.rule_id = fc.fclr_id)
+		     LEFT JOIN UP_fare_control_range fc on  (pext.rule_id = fc.fclr_id AND pext.product_id = 1)
+		     LEFT JOIN BG_baggage_control_rule bc on  (pext.rule_id = bc.bclr_id AND pext.product_id = 2)
 		     LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = fc.season_id )
 		     LEFT JOIN VX_offer of on (of.pnr_ref = pf.pnr_ref )
 		     LEFT JOIN VX_products vp on (vp.productID = pext.product_id )
@@ -302,9 +303,9 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as pro
 		     LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = pf.carrier_code AND dai.aln_data_typeID = 12)
 		     LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = pf.frequency AND dfre.aln_data_typeID = 14)
 		     LEFT JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf.carrier_code AND pf.airline_code = fdef.carrier)
-		     LEFT JOIN VX_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13 and fca.alias = fdef.level)
+		     LEFT JOIN VX_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13 )
 		     LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code AND  pf.airline_code = tdef.carrier)
-                     LEFT JOIN VX_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13 and tca.alias = tdef.level)
+                     LEFT JOIN VX_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13 )
 		     INNER JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
 
 $sWhere $sOrder $sLimit";
@@ -340,10 +341,12 @@ $sWhere $sOrder $sLimit";
 			$feed->dtpfID = $feed->dtpf_id ;
 			if ($feed->product_id == 1) {
 				$prod_c = 'fclr';
+				$rule_title = 'FCLR ID ' . $feed->rule_id . ': MIN - ' . $feed->min . ', MAX - ' . $feed->max . ', AVG - ' . $feed->average . ', SLIDER START POISTION - ' . $feed->slider_start;
 			} elseif ($feed->product_id == 2) {
 				$prod_c = 'bclr';
+				$rule_title = 'BCLR ID: ' . $feed->rule_id . ': MIN UNIT - ' . $feed->min_unit . ', MAX CAPACITY - ' . $feed->max_capacity . ', MIN. PRICE - ' . $feed->min_price . ', MAX PRICE - ' . $feed->max_price;
 			}
-			$feed->rule_id = '<a target="_new" style="color:blue;" href="'.base_url($prod_c . '/index/'.$feed->rule_id).'"  >'.$feed->rule_id.'</a>';
+			$feed->rule_id = '<div><a target="_new" data-toggle="tooltip" data-container="body" title="'. $rule_title. '"  style="color:blue;" href="'.base_url($prod_c . '/index/'.$feed->rule_id).'"  >'.$feed->rule_id.'</a></div>';
 			$feed->offer_id = '<a target="_new" style="color:blue;" href="'.base_url('offer_issue/view/'.$feed->offer_id).'"  >'.$feed->offer_id.'</a>';
 			$feed->dtpf_id = '<a target="_new" style="color:blue;" href="'.base_url('paxfeed/index/'.$feed->dtpf_id).'"  >'.$feed->dtpf_id.'</a>';
 

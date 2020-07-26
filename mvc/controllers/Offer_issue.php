@@ -52,9 +52,13 @@ class Offer_issue extends Admin_Controller {
                 $id = htmlentities(escapeString($this->uri->segment(3)));
 
                 if ((int)$id) {
-                        $this->data["ofr"] = $this->offer_issue_m->getOfferDetailsForIssue($id);
+                        $offer_products = $this->offer_issue_m->getProductsforOffer($id);
+                        $this->data['products'] = $this->offer_issue_m->getProductsforOffer($id);
+			foreach($this->data["products"] as $pdId => $value ) {
+                        	$this->data["offers"][$pdId] = $this->offer_issue_m->getOfferDetails($id, $pdId);
+			}
 
-                        if($this->data["ofr"]) {
+                        if($this->data["offers"]) {
                                 $this->data["subview"] = "offer/view";
                                 $this->load->view('_layout_main', $this->data);
                         } else {
@@ -69,26 +73,27 @@ class Offer_issue extends Admin_Controller {
 
 	
 
-public function index() {
-$this->data['headerassets'] = array(
-                'css' => array(
-                        'assets/select2/css/select2.css',
-                        'assets/select2/css/select2-bootstrap.css',
-                                                'assets/datepicker/datepicker.css'
-                ),
-                'js' => array(
-                        'assets/select2/select2.js',
-                                                'assets/datepicker/datepicker.js'
-                )
-        );
+	public function index() {
+
+		$this->data['headerassets'] = array(
+			'css' => array(
+				'assets/select2/css/select2.css',
+				'assets/select2/css/select2-bootstrap.css',
+							'assets/datepicker/datepicker.css'
+			),
+			'js' => array(
+				'assets/select2/select2.js',
+							'assets/datepicker/datepicker.js'
+			)
+        	);
 
 
-	     $userID = $this->session->userdata('loginuserID');
+	     	$userID = $this->session->userdata('loginuserID');
                 $roleID = $this->session->userdata('roleID');
                 if($roleID != 1){
-						 $this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
-						   } else {
-                   $this->data['carriers'] = $this->airline_m->getAirlinesData();
+		 	$this->data['carriers'] = $this->user_m->getUserAirlines($userID);	   
+	   	} else {
+                   	$this->data['carriers'] = $this->airline_m->getAirlinesData();
                 }
 
 
@@ -97,21 +102,22 @@ $this->data['headerassets'] = array(
                 $this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
 //		 $this->data['carrier'] =  $this->airports_m->getDefnsCodesListByType('12');
 
-          if($this->input->post('carrier')){
-		   $this->data['car'] = $this->input->post('carrier');
-	     } else {
-		   if($roleID != 1){
-             $this->data['car'] = $this->session->userdata('default_airline');
-		   } else {
-			 $this->data['car'] = 0;
-		   }
-         }
-		 
-	$this->data["subview"] = "offer/index";
+		  if($this->input->post('carrier')){
+			   $this->data['car'] = $this->input->post('carrier');
+		     } else {
+			   if($roleID != 1){
+		     $this->data['car'] = $this->session->userdata('default_airline');
+			   } else {
+				 $this->data['car'] = 0;
+			   }
+		 }
+			 
+		$this->data["subview"] = "offer/index";
                 $this->load->view('_layout_main', $this->data);
 
 
-}
+	}
+
 	public function run_offer_issue() {
         $this->data['headerassets'] = array(
                 'css' => array(
