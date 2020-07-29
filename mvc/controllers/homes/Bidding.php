@@ -56,13 +56,15 @@ class Bidding extends MY_Controller {
 		}
 		
 		$this->data['results'] = $this->bid_m->getPassengers($this->session->userdata('pnr_ref'));
-		//print_r($this->data['results'] ); exit;
+		#print_r($this->data['results'] ); exit;
 		//$this->data['tomail'] = explode(',',$this->data['results'][0]->email_list)[0]; 
 		if(empty($this->data['results'])){
 			redirect(base_url('home/index'));
 		}
                
+			$offerId = 0;
 		foreach($this->data['results'] as $result ){
+			$offerId = $result->offer_id;
 			//reducing duplicate names for multi cabins case
 			$result->pax_names = $this->bid_m->getPaxNames($this->session->userdata('pnr_ref'));
 			$tocabins = array();
@@ -123,6 +125,7 @@ class Bidding extends MY_Controller {
 
 		$pnr_ref = $this->session->userdata('pnr_ref');
 		if ( $pnr_ref ) {
+                        $this->data['active_products'] = array_keys($this->offer_issue_m->getProductsforOffer($offerId));
 			$bgoffer = $this->offer_issue_m->getBaggageOffer($pnr_ref);
 		#echo "<pre>" . print_r($bgoffer,1) . "</pre>"; exit;
 			if ( $bgoffer) {
@@ -132,9 +135,13 @@ class Bidding extends MY_Controller {
 				foreach($bgoffer as $bg ) {
 					#echo "<pre>" . print_r($bg,1) . "</pre>"; exit;
 					#$cwtdata = $this->bclr_m->getActiveCWT(1);
-					$cwtdata = $this->bclr_m->getActiveCWT($bg->bclr_id);
+					$cwtdata = $this->bclr_m->getActiveCWT($bg->rule_id);
+					$bclrdata = $this->bclr_m->get_bclr($bg->rule_id);
+#print_r($bclrdata);exit;
+					$bclrdata->bag_type = $bclrdata->bag_type == 1 ? 'KG' : 'PC';
 					$this->data['baggage'][$bg->dtpf_id]['pax'] = $bg;
-					$this->data['baggage'][$bg->dtpf_id]['cwt'] = $cwtdata;
+					$this->data['cwtdata'][$bg->ond] = $cwtdata;
+					$this->data['bclr'][$bg->ond] = $bclrdata;
 				}
 			}
 		}

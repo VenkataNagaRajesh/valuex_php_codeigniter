@@ -52,7 +52,6 @@ class Offer_issue extends Admin_Controller {
                 $id = htmlentities(escapeString($this->uri->segment(3)));
 
                 if ((int)$id) {
-                        $offer_products = $this->offer_issue_m->getProductsforOffer($id);
                         $this->data['products'] = $this->offer_issue_m->getProductsforOffer($id);
 			foreach($this->data["products"] as $pdId => $value ) {
                         	$this->data["offers"][$pdId] = $this->offer_issue_m->getOfferDetails($id, $pdId);

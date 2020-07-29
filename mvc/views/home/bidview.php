@@ -108,34 +108,34 @@
 											<td colspan=3 style="color: black;"><b> Baggage offer</b> </td>
 										</tr>
 										<?php foreach($baggage as $bg => $row){ ?>
-										<?php $pax = $baggage[$bg]['pax'];?>
+										<?php $bslider = $baggage[$bg]['pax'];?>
 
 										<tr>
 											<td style="color: black;">
 												<div style="text-align:left" class="bid-info">
 													<div class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $pax->from_city; ?> <span class="time-bid"><?=date('H:i A',$pax->dep_date+$pax->dept_time);?></span></p>
+														<p style="color:<?=$mail_header_color?>"><?php echo $bslider->from_city; ?> <span class="time-bid"><?=date('H:i A',$bslider->dep_date+$bslider->dept_time);?></span></p>
 														<ul>
-															<li><?php echo date('d M Y',$pax->dep_date);; ?></li>
-															<li style="color:<?=$mail_header_color?>"><?php echo $pax->flight_number;?></li>
+															<li><?php echo date('d M Y',$bslider->dep_date);; ?></li>
+															<li style="color:<?=$mail_header_color?>"><?php echo $bslider->flight_number;?></li>
 														</ul>
-														<small><?php echo $pax->from_airport; ?></small>
+														<small><?php echo $bslider->from_airport; ?></small>
 													</div>
 													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
 													<div style="text-align:left" class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $pax->to_city; ?><span class="time-bid"><?=date('H:i A',$pax->arrival_date+$pax->arrival_time);?></span></p>
+														<p style="color:<?=$mail_header_color?>"><?php echo $bslider->to_city; ?><span class="time-bid"><?=date('H:i A',$bslider->arrival_date+$bslider->arrival_time);?></span></p>
 														<ul>
-															<li><?php echo date('d M Y',$pax->arrival_date);; ?></li>
-															<li style="color:<?=$mail_header_color?>"><?php echo $pax->flight_number;?></li>
+															<li><?php echo date('d M Y',$bslider->arrival_date);; ?></li>
+															<li style="color:<?=$mail_header_color?>"><?php echo $bslider->flight_number;?></li>
 														</ul>
-														<small><?php echo $pax->to_airport; ?></small>
+														<small><?php echo $bslider->to_airport; ?></small>
 													</div>
 												</div>
 											</td>
 											<td style="color: black;"> <?=$results[0]->current_cabin?> </td>
-											<td style="color: black;"> <b><?=$bslider->min_unit.$baggage_bag_type?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
-												<input id="baggage_slider<?=$bslider->bclr_id?>" data-slider-id='baggage_slider<?=$bslider->bclr_id?>Slider' type="text" data-slider-min="<?=$bslider->min_unit?>" data-slider-max="<?=$baggage_max_val?>" data-slider-step="1" data-slider-value="<?=$bslider->min_unit/$baggage_max_val?>" data-slider-handle="round" min-slider-handle="50"/>
-												<b> &nbsp;&nbsp;<?=$baggage_max_val.$baggage_bag_type?></b> 
+											<td style="color: black;"><b><?=$bclr[$bslider->ond]->bag_type . " - " . $bclr[$bslider->ond]->min_unit?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
+												<input id="baggage_slider<?=$bslider->ond?>" data-slider-id='baggage_slider<?=$bslider->ond?>Slider' type="text" data-slider-min="<?=$bclr[$bslider->ond]->min_unit?>" data-slider-max="<?=$bclr[$bslider->ond]->max_capacity;?>" data-slider-step="1" data-slider-value="<?=$bclr[$bslider->ond]->min_price;?>" data-slider-handle="round" min-slider-handle="50"/>
+												<b> &nbsp;&nbsp;<?=$bclr[$bslider->ond]->max_capacity?></b> 
 											</td>
 										</tr>
 										 <?php } } ?>
@@ -371,9 +371,11 @@
 <script>
 var mile_value = <?=$mile_value?>;
 var mile_proportion = <?=$mile_proportion?>;
-var cwtpoints = [];
-<?php foreach($cwtpoints as $key => $val){ ?>
-	cwtpoints[<?=$key?>] = <?=$val?>;
+<?php foreach($cwtdata as $ond => $cwtpoints){ ?>
+var cwtpoints<?=$ond?> = [];
+<?php foreach($cwtpoints as $cwt){ ?>
+	cwtpoints<?=$ond?>[<?=$cwt['cum_wt']?>] = <?=$cwt['price_per_kg']?>;
+<?php } ?>
 <?php } ?>
 $(document).ready(function () {	
    $('#milesSlider .slider-selection').css({"background":"#0feded"});
@@ -407,9 +409,10 @@ $(document).ready(function () {
 	$("#tot").text(numformat(total));
 	$("#bidtot").text(numformat(total));
     mileSliderUpdate(); 
-	<?php if(in_array(2,$active_products) && count($baggage) > 0){ foreach($baggage as $bslider){ ?>
-	$('#baggage_slider<?=$bslider->bclr_id?>Slider .slider-selection').css({"background":"#f952be"});
-    $('#baggage_slider<?=$bslider->bclr_id?>Slider .slider-handle').css({"background":"#f952be"});
+	<?php if(in_array(2,$active_products) && count($baggage) > 0){ foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
+		
+	$('#baggage_slider<?=$bslider->ond?>Slider .slider-selection').css({"background":"#f952be"});
+    $('#baggage_slider<?=$bslider->ond?>Slider .slider-handle').css({"background":"#f952be"});
 	<?php } } ?>
 });
 
@@ -453,20 +456,20 @@ $('#<?=$mobile_view?>bid_slider_<?=$result->flight_number?>').slider({
 <?php } } ?>
 
 //baggage slider jquery
-<?php if(in_array(2,$active_products) && count($baggage)>0){ foreach($baggage as $bslider){ ?> 
-$('#baggage_slider<?=$bslider->bclr_id?>').slider({
+<?php if(in_array(2,$active_products) && count($baggage)>0){ foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
+$('#baggage_slider<?=$bslider->ond?>').slider({
 	tooltip: 'always',
 	formatter: function(value) {
-		return value+'<?=$baggage_bag_type?>'+'= $'+cwtpoints[value];
+		return value + ' <?=$bclr[$bslider->ond]->bag_type?>' + ' = $'+cwtpoints<?=$bslider->ond?>[value];
 	}
 });
-$("#baggage_slider<?=$bslider->bclr_id?>").on("slide", function(slideEvt) {
+$("#baggage_slider<?=$bslider->ond?>").on("slide", function(slideEvt) {
 	var tot_avg = getTotal().toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 	$("#tot").text(numformat(tot_avg));
 	$("#bidtot").text(numformat(tot_avg));	 
     mileSliderUpdate();	
 });
-$("#baggage_slider<?=$bslider->bclr_id?>").on("click", function(slideEvt) { 
+$("#baggage_slider<?=$bslider->ond?>").on("click", function(slideEvt) { 
 	var tot_avg = getTotal();
 	$("#tot").text(numformat(tot_avg));
 	$("#bidtot").text(numformat(tot_avg));	 
@@ -487,8 +490,8 @@ $('#miles').slider({
 		var pay_cash = bid_amount - Math.round(dollar);
 		var bg_val = 0;
 		<?php if(in_array(2,$active_products) && count($baggage)>0) { ?>
-		  <?php foreach($baggage as $bslider){ ?>
-		  var bg_val = bg_val + cwtpoints[$("#baggage_slider<?=$bslider->bclr_id?>").slider('getValue')];
+		  <?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
+		  var bg_val = bg_val + cwtpoints<?=$bslider->ond?>[$("#baggage_slider<?=$bslider->ond?>").slider('getValue')];
 		  <?php } ?>
 		   var up_pay_cash = (bid_amount - bg_val) - Math.round(dollar/2);;
 		   var bg_pay_cash = (bg_val) - Math.round(dollar/2);;
@@ -578,14 +581,16 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 		<?php foreach($results as $result){  if($result->fclr != null){ ?>//$(this). prop("checked") == true
 		  // var action = $('input[type=checkbox][name=bid_action_<?=$result->flight_number?>]:checked').val();	  
 		  //if(action == 1){
-         if($('input[type=checkbox][name=<?=$mobile_view?>bid_action_<?=$result->flight_number?>]').prop("checked") == false){    			  
+         //if($('input[type=checkbox][name=<?=$mobile_view?>bid_action_<?=$result->flight_number?>]').prop("checked") == false){    			  
 		   tot_avg = tot_avg+$("#<?=$mobile_view?>bid_slider_<?=$result->flight_number?>").slider('getValue')*<?=$passengers_count?>;
-		  } 
+	//	  } 
 		<?php } } ?>
 		<?php if(in_array(2,$active_products) && count($baggage) > 0) { 
-		  foreach($baggage as $bslider){ ?> 
-		  var bg_val = $("#baggage_slider<?=$bslider->bclr_id?>").slider('getValue');
-		  tot_avg = tot_avg + cwtpoints[bg_val];
+		  foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
+		  var bg_val = $("#baggage_slider<?=$bslider->ond?>").slider('getValue');
+		  if ( bg_val) {
+		  	tot_avg = tot_avg + cwtpoints<?=$bslider->ond?>[bg_val];
+		   }
 		<?php } } ?>
       return tot_avg; 
  }
@@ -653,8 +658,8 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
             if(cardinfo['status'] == "success"){
 				<?php if(in_array(2,$active_products) && count($baggage)>0){ ?>
 					var bg_tot_value = 0;
-				<?php foreach($baggage as $bslider){ ?>
-					bg_tot_value = bg_tot_value + cwtpoints[$("#baggage_slider<?=$bslider->bclr_id?>").slider('getValue')];
+				<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
+					bg_tot_value = bg_tot_value + cwtpoints<?=$bslider->ond?>[$("#baggage_slider<?=$bslider->ond?>").slider('getValue')];
 				<?php } ?>
 					var up_miles = $("#miles").slider('getValue')/2;
 					var up_tot_bid = tot_bid - bg_tot_value;
@@ -701,14 +706,14 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 			  <?php } } ?>
 			  <?php if(in_array(2,$active_products)&& count($baggage)>0){ ?>
 			       if(status != ''){
-					<?php foreach($baggage as $bslider){ ?>
-						var bg_weight = $("#baggage_slider<?=$bslider->bclr_id?>").slider('getValue');
-						var bg_value = cwtpoints[bg_weight];
+					<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
+						var bg_weight = $("#baggage_slider<?=$bslider->ond?>").slider('getValue');
+						var bg_value = cwtpoints<?=$bslider->ond?>[bg_weight];
 						$.ajax({
 						async: false,
 						type: 'POST',
 						url: "<?=base_url('homes/bidding/saveBaggageData')?>",          
-						data: {"bclr_id":<?=$bslider->bclr_id?>,"orderID":orderID,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"tot_miles":bg_miles,"tot_bid":bg_tot_bid},
+						data: {"ond":<?=$bslider->ond?>,"orderID":orderID,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"tot_miles":bg_miles,"tot_bid":bg_tot_bid},
 						dataType: "html",			
 						success: function(data) {
 							var info = jQuery.parseJSON(data);              		

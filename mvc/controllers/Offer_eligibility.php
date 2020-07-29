@@ -134,8 +134,8 @@ class Offer_eligibility extends Admin_Controller {
 
 
 		
-	    $aColumns = array('pext.dtpf_id', 'dtpfext_id','pext.rule_id', 'product_offer_type', 'pext.product_id', 'sea.season_name','dbp.code','dop.code','pf.pnr_ref','pf.dep_date','dai.code','pf.flight_number',
-			 'from_cabin','to_cabin','dfre.code','fc.average','fc.min','fc.max','fc.slider_start',
+	    $aColumns = array('pext.dtpf_id', 'dtpfext_id','pext.rule_id', 'vp.name', 'pext.product_id', 'sea.season_name','dbp.code','dop.code','pf.pnr_ref','pf.dep_date','dai.code','pf.flight_number',
+			 'fca.aln_data_value','tca.aln_data_value','dfre.code','fc.average','fc.min','fc.max','fc.slider_start',
 			 'bs.aln_data_value','dbp.aln_data_value','dop.aln_data_value','dai.aln_data_value','fdef.desc',
 			 'tdef.desc','dfre.aln_data_value','pf.pnr_ref', 'pext.ond', 'of.offer_id');
 	
@@ -309,7 +309,6 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as pro
 		     INNER JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
 
 $sWhere $sOrder $sLimit";
-
 
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";

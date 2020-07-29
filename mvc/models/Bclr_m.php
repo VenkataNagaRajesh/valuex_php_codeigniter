@@ -126,8 +126,11 @@ class Bclr_m extends MY_Model {
         }
 
         public function getActiveCWT($bclr_id){
-            $query = $this->db->get_where('BG_cwt',array("active" => 1,"bclr_id" => $bclr_id));
-            return $query->result();
+            $this->db->select('cum_wt, price_per_kg');
+            $this->db->from('BG_cwt');
+            $this->db->where(array("active" => 1,"bclr_id" => $bclr_id));
+	    $query = $this->db->get();
+            return $query->result_array();
         }
 
         public function insert_update_cwt($data){
