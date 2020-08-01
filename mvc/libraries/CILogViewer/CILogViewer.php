@@ -66,12 +66,12 @@ class CILogViewer {
      * These are the constants representing the
      * various API commands there are
      */
-    private const API_QUERY_PARAM = "api";
-    private const API_FILE_QUERY_PARAM = "f";
-    private const API_LOG_STYLE_QUERY_PARAM = "sline";
-    private const API_CMD_LIST = "list";
-    private const API_CMD_VIEW = "view";
-    private const API_CMD_DELETE = "delete";
+    const API_QUERY_PARAM = "api";
+    const API_FILE_QUERY_PARAM = "f";
+    const API_LOG_STYLE_QUERY_PARAM = "sline";
+    const API_CMD_LIST = "list";
+    const API_CMD_VIEW = "view";
+    const API_CMD_DELETE = "delete";
 
 
     public function __construct() {
