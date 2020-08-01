@@ -7,35 +7,11 @@ class Rafeed extends Admin_Controller
 	private $arrHeader = array(
 		"Airline Code",
 		"Document Type",
-		"Ticket Number",
-		"Coupon Number",
-		"Carrier",
-		"Flight Number",
-		"Boarding Point",
-		"Off Point",
-		"CPN Value",
-		"Class",
-		"Flight Date",
-		"Fare Basis",
-		"Cabin",
-		"Booking Country",
-		"Booking City",
-		"Issuance Country",
-		"Issuance City",
-		"Marketing Airline Code",
-		"Operating Airline Code",
-		"OfficeID",
-		"Channel",
-		"Pax Type",
-	);
-
-	private $arrBaggageHeader = array(
-		"Airline Code",
-		"Document Type",
 		"EMD nbr",
 		"Coupon Number",
 		"Carrier",
 		"Flight Number",
+		"Ticket Number",
 		"Boarding Point",
 		"Off Point",
 		"CPN Value",
@@ -43,23 +19,26 @@ class Rafeed extends Admin_Controller
 		"Flight Date",
 		"Fare Basis",
 		"Cabin",
-		"Marketing Airline Code",
-		"Operating Airline Code",
-		"OfficeID",
-		"Channel",
-		"Pax Type",
 		"Coupon routing",
 		"Rate per unit",
 		"Wt",
 		"Currency",
 		"RFIC",
 		"RFISC",
-		"SSR CODE"
+		"SSR CODE",
+		"Marketing Airline Code",
+		"Operating Airline Code",
+		"Booking Country",
+		"Booking City",
+		"Issuance Country",
+		"Issuance City",
+		"OfficeID",
+		"Channel",
+		"Pax Type",
 	);
 
 	private $arrHeaderTypes = [
-		'arrHeader',
-		'arrBaggageHeader'
+		'arrHeader'
 	];
 
 	function __construct()
@@ -376,42 +355,40 @@ class Rafeed extends Admin_Controller
 										sort($arrColumns);
 										sort($import_header);
 
+
+
 										// comaper and return matched header
 										if ($arrColumns  === $import_header) {
 											return $arrColumnType;
 										}
 									}, $this->arrHeaderTypes);
 
+
 									// remove null, false and empty values
 									$arrheaderTypeData = array_filter($arrheaderTypeData);
 
 									//check matched headers
 									if (count($arrheaderTypeData) != 1) {
+										$status = "failed";
+										$this->mydebug->rafeed_log("Received Columns = ". print_r(import_header,1), 0);
 
-										$this->mydebug->rafeed_log("Multipule type columns matched ", 0);
+										$this->mydebug->rafeed_log("Columns mis match, expected columns = ". print_r(import_header,1), 0);
 										break;
-									}
-
-									// get headers
-									$header = $this->{array_shift($arrheaderTypeData)};
-
-									// convert into lowercase
-									$header = array_map('strtolower', $header);
-
-									if (count(array_diff($header, $import_header)) == 0) {
+									} else {
 										$this->mydebug->rafeed_log("Header matched for " . $_FILES['file']['name'], 0);
 										$this->mydebug->rafeed_log("Processing records.. ", 0);
 										$flag = 1;
 									}
+
 								} else {
 									if ($flag == 1) {
 										$cDocumentType = strtolower($Row[array_search('document type', $import_header)]);
 
 										if (is_null($cDocumentType)) {
+											$status = "failed";
 											$this->mydebug->rafeed_log("Document type missed in file ", 0);
 											break;
 										}
-
 										switch (strtolower($cDocumentType)) {
 											case 'd': // baggage rafeed
 												$strRedirector = "baggage";
@@ -426,6 +403,7 @@ class Rafeed extends Admin_Controller
 												$this->mydebug->rafeed_log("Document type missed in file ", 0);
 										}
 									} else {
+										$status = "failed";
 										$this->mydebug->rafeed_log("Header mismatch", 1);
 										//print_r("mismatch");
 										break;
@@ -460,8 +438,9 @@ class Rafeed extends Admin_Controller
 	public function baggageUpload($Row = array(), $import_header = array(), $column = 1)
 	{
 		// check columns count
-		if (count($Row) != 25) {
-			$this->mydebug->rafeed_log("Columns Count Missmatch" . $column, 1);
+
+		if (count($Row) != 30) {
+			$this->mydebug->rafeed_log("Baggage: Columns Count Missmatch" . $column, 1);
 			return;
 		}
 
@@ -514,6 +493,11 @@ class Rafeed extends Admin_Controller
 			return;
 		}
 
+		if (!strlen($arrBaggageRaFeed['boarding_point'])) {
+			$this->mydebug->rafeed_log("Boarding point record not found for " . $boarding_point, 1);
+			return;
+		}
+
 		// off point
 		$off_point = $Row[array_search('off point', $import_header)];
 
@@ -521,6 +505,11 @@ class Rafeed extends Admin_Controller
 			$this->airports_m->getDefIdByTypeAndCode($off_point, '1');
 		if (strlen($off_point) != 3 || !ctype_alpha($off_point)) {
 			$this->mydebug->rafeed_log("Off point should be 3 alpha code in row " . $column, 1);
+			return;
+		}
+
+		if (!strlen($arrBaggageRaFeed['off_point'])) {
+			$this->mydebug->rafeed_log("Off point record not found for " . $off_point, 1);
 			return;
 		}
 
@@ -711,8 +700,8 @@ class Rafeed extends Admin_Controller
 	{
 
 		// check columns count
-		if (count($Row) != 22) {
-			$this->mydebug->rafeed_log("Columns Count Missmatch" . $column, 1);
+			if (count($Row) != 30) {
+			$this->mydebug->rafeed_log("Ticket Upgrade: Columns Count Missmatch = " . $column, 1);
 			return;
 		}
 
@@ -799,6 +788,11 @@ class Rafeed extends Admin_Controller
 			return;
 		}
 
+		if (!strlen($rafeed['boarding_point'])) {
+			$this->mydebug->rafeed_log("Boarding point record not found for " . $boarding_point, 1);
+			return;
+		}
+
 		$off_point = $Row[array_search('off point', $import_header)];
 
 		$rafeed['off_point'] =
@@ -807,6 +801,12 @@ class Rafeed extends Admin_Controller
 			$this->mydebug->rafeed_log("Off point should be 3 alpha code in row " . $column, 1);
 			return;
 		}
+
+		if (!strlen($rafeed['off_point'])) {
+			$this->mydebug->rafeed_log("Off point record not found for " . $off_point, 1);
+			return;
+		}
+
 		$cabin = $Row[array_search('cabin', $import_header)];
 		$rafeed['cabin'] = $this->airline_cabin_def_m->getCabinIDForCarrierANDCabin($rafeed['carrier'], $cabin);
 

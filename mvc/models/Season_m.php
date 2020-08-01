@@ -147,6 +147,7 @@ class season_m extends MY_Model {
                 //$this->db->order_by('VX_aln_seasonID','desc');
 // select CONCAT(day(FROM_UNIXTIME(ams_season_start_date)),'-',month(FROM_UNIXTIME(ams_season_start_date)),'-',year(FROM_UNIXTIME(ams_season_start_date))) as date , FROM_UNIXTIME(ams_season_start_date) , day(FROM_UNIXTIME(ams_season_start_date)) as day ,month(FROM_UNIXTIME(ams_season_start_date)) as mon from VX_aln_season where CONCAT(day(FROM_UNIXTIME(ams_season_start_date)),'-',month(FROM_UNIXTIME(ams_season_start_date)),'-',year(FROM_UNIXTIME(ams_season_start_date))) = '1-6-2019';
                 $query = $this->db->get();
+		#print_r($this->db->last_query()); exit;
 		$result = $query->result();
 		if (count($result) > 0 ) {
 
