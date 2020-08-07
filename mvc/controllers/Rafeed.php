@@ -414,6 +414,7 @@ class Rafeed extends Admin_Controller
 								$i++;
 							}
 						}
+						$this->mydebug->rafeed_log("RA FEED Upload complete1!", 1);
 					}
 				} catch (Exception $E) {
 					echo $E->getMessage();
@@ -686,7 +687,8 @@ class Rafeed extends Admin_Controller
 				$insert_id = $this->rafeed_m->insert_ra_baggage($arrBaggageRaFeed);
 			}
 			if ($insert_id) {
-				$this->mydebug->rafeed_log("uploaded row " . $column, 0);
+				#$this->mydebug->rafeed_log("uploaded row " . $column, 0);
+				return;
 			} else {
 
 				$this->mydebug->rafeed_log("Record not inserted for row " . $column, 1);
@@ -924,7 +926,7 @@ class Rafeed extends Admin_Controller
 				$insert_id = $this->rafeed_m->insert_rafeed($rafeed);
 			}
 			if ($insert_id) {
-				$this->mydebug->rafeed_log("uploaded row " . $column, 0);
+				#$this->mydebug->rafeed_log("uploaded row " . $column, 0);
 				return;
 			} else {
 
