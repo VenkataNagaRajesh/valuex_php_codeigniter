@@ -330,7 +330,7 @@ class Rafeed extends Admin_Controller
 							$this->mydebug->rafeed_log(" **** $Name -- Sheet processing ****", 0);
 
 							$i = 0;
-							$column = 0;
+							$column = 1;
 							$cDocumentType = NULL;
 
 							foreach ($Reader as $Row) {
@@ -372,7 +372,7 @@ class Rafeed extends Admin_Controller
 										$status = "failed";
 										$this->mydebug->rafeed_log("Received Columns = ". print_r(import_header,1), 0);
 
-										$this->mydebug->rafeed_log("Columns mis match, expected columns = ". print_r(import_header,1), 0);
+										$this->mydebug->rafeed_log("Columns mis match, expected columns = ". print_r($import_header,1), 0);
 										break;
 									} else {
 										$this->mydebug->rafeed_log("Header matched for " . $_FILES['file']['name'], 0);
@@ -386,7 +386,7 @@ class Rafeed extends Admin_Controller
 
 										if (is_null($cDocumentType)) {
 											$status = "failed";
-											$this->mydebug->rafeed_log("Document type missed in file ", 0);
+											$this->mydebug->rafeed_log("Document type missed in file - ". $column, 0);
 											break;
 										}
 										switch (strtolower($cDocumentType)) {
@@ -400,7 +400,8 @@ class Rafeed extends Admin_Controller
 												break;
 
 											default:
-												$this->mydebug->rafeed_log("Document type missed in file ", 0);
+												$status = "failed";
+												$this->mydebug->rafeed_log("Document type ($cDocumentType) missed in file - " . $column, 0);
 										}
 									} else {
 										$status = "failed";
@@ -529,19 +530,20 @@ class Rafeed extends Admin_Controller
 		}
 
 		//depature date
-		$arrBaggageRaFeed['departure_date'] = date('Y-m-d', strtotime(str_replace('/', '-', $Row[array_search('flight date', $import_header)])));
+		$dt = explode("-",str_replace('/', '-', $Row[array_search('flight date', $import_header)]));
+		$arrBaggageRaFeed['departure_date'] = date("Y-m-d", mktime(0, 0, 0, $dt[0], $dt[1], $dt[2]));
 
-		if (!preg_match("/^([0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/", $arrBaggageRaFeed['departure_date'])) {
-			$this->mydebug->rafeed_log("flight date formate missing " . $column, 1);
+		if (!preg_match("/(([0-9]{4}-[0-9]{2})-([0-9]{2}))/", $arrBaggageRaFeed['departure_date'], $matches)) {
+			$this->mydebug->rafeed_log("flight date formate missing - " . $arrBaggageRaFeed['departure_date'] . " - " . $column, 1);
 			return;
 		}
-
 		$arrBaggageRaFeed['departure_date'] = strtotime($arrBaggageRaFeed['departure_date']);
 
-		//fare basis	
+		//$rafeed['departure_date'] = strtotime(str_replace('-', '/', $Row[array_search('flight date', $import_header)]));
 		$day_of_week = date('w', $arrBaggageRaFeed['departure_date']);
 		$day = ($day_of_week) ? $day_of_week : 7;
 		$arrBaggageRaFeed['day_of_week'] = $this->airports_m->getDefIdByTypeAndCode($day, '14');
+
 
 		$arrBaggageRaFeed['fare_basis'] = $Row[array_search('fare basis', $import_header)];
 
@@ -826,12 +828,21 @@ class Rafeed extends Admin_Controller
 
 		$cabin_class_data = $this->airline_cabin_class_m->getCabinFromClassForCarrier($rafeed['carrier'], $rafeed['class']);
 		if ($cabin_class_data->cabin_id != $rafeed['cabin']) {
-			$this->mydebug->rafeed_log("Class - cabin Mapping not matched for row " . $column, 1);
+			$this->mydebug->rafeed_log("Class - " .  $rafeed['class'] . " ,Carrier - " . $rafeed['carrier']. " - cabin Mapping not matched for row ",1);
 			return;
 		}
 
-		$rafeed['departure_date'] =
-			strtotime(str_replace('-', '/', $Row[array_search('flight date', $import_header)]));
+		$dt = explode("-",str_replace('/', '-', $Row[array_search('flight date', $import_header)]));
+		$rafeed['departure_date'] = date("Y-m-d", mktime(0, 0, 0, $dt[0], $dt[1], $dt[2]));
+
+		if (!preg_match("/(([0-9]{4}-[0-9]{2})-([0-9]{2}))/", $rafeed['departure_date'], $matches)) {
+			$this->mydebug->rafeed_log("flight date formate missing - " . $rafeed['departure_date'] . " - " . $column, 1);
+			return;
+		}
+
+		$rafeed['departure_date'] = strtotime($rafeed['departure_date']);
+
+		//$rafeed['departure_date'] = strtotime(str_replace('-', '/', $Row[array_search('flight date', $import_header)]));
 		$day_of_week = date('w', $rafeed['departure_date']);
 		$day = ($day_of_week) ? $day_of_week : 7;
 		$rafeed['day_of_week'] = $this->airports_m->getDefIdByTypeAndCode($day, '14');
@@ -914,15 +925,16 @@ class Rafeed extends Admin_Controller
 			}
 			if ($insert_id) {
 				$this->mydebug->rafeed_log("uploaded row " . $column, 0);
+				return;
 			} else {
 
 				$this->mydebug->rafeed_log("Record not inserted for row " . $column, 1);
+				return;
 			}
 		} else {
 			$this->mydebug->rafeed_log("Duplicate Entry", 1);
 			return;
 		}
-		$this->mydebug->rafeed_log("coulmns count didn't match for " . $column, '1');
 	}
 
 	function server_processing()
