@@ -623,11 +623,11 @@ $sWhere $sOrder $sLimit";
 	
 		$bclr_rules = $this->bclr_m->get_bclr_by_carrier_id($carrierId);
 		if ( !count($bclr_rules) ) {
-			echo ("OFFER GEN: PROCESS BAGGAGE : NO BCLR RULES FOUND FOR CARRIER ID: " . $carrierId);
+			echo ("<br>OFFER GEN: PROCESS BAGGAGE : NO BCLR RULES FOUND FOR CARRIER ID: " . $carrierId);
 			return;
 		}
 
-		echo ("OFFER GEN: PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
+		echo ("<br>OFFER GEN: PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
 
 		$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
 
@@ -670,7 +670,7 @@ $sWhere $sOrder $sLimit";
 			    $pax_list[$pnr][$pax_cnt]['dtpf_id'] =  $s_pax->dtpf_id;
 			    $pax_cnt++;
 			}
-		echo "<pre>ALL  PAX  = " . print_r($pax_list,1). "</pre>";
+		echo "<br><pre>ALL  PAX  = " . print_r($pax_list,1). "</pre>";
 
 			$tmp_ond = $this->calculateOND($pax_list, $bg_ond_partners);
 			if (count($tmp_ond)) {

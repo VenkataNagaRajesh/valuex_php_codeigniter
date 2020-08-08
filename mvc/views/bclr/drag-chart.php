@@ -109,13 +109,13 @@
 <script>
 	var pointsdata = [];
 
-	<?php foreach ($points as $key => $value) { ?>
+	<?php if (count($points)) {  foreach ($points as $key => $value) { ?>
 		cobj = {
 			x: <?= $key ?>,
 			y: <?= $value ?>
 		};
 		pointsdata.push(cobj);
-	<?php  } ?>
+	<?php  } }?>
 
 	
 	var interactiveChart = new CanvasJS.Chart("interactive-chart", 
@@ -320,17 +320,3 @@
 	// 	}
 	// }
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-        

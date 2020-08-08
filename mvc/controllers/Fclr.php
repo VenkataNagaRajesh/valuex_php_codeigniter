@@ -953,41 +953,45 @@ class Fclr extends Admin_Controller
                 }
 
                 $rResult = array_merge($rResult1, $rResult2);
+		if ($rResult ) {
 
-                foreach ($rResult as $feed) {
-                        if ($feed->season_id > 0) {
-                                $array['season_id'] = $feed->season_id;
-                                $array['frequency'] = 0;
-                        } else {
+			foreach ($rResult as $feed) {
+				if ($feed->season_id > 0) {
+					$array['season_id'] = $feed->season_id;
+					$array['frequency'] = 0;
+				} else {
 
-                                $array['season_id'] = 0;
-                                $array['frequency'] = $feed->day_of_week;
-                        }
+					$array['season_id'] = 0;
+					$array['frequency'] = $feed->day_of_week;
+				}
 
-                        $array['boarding_point'] = $feed->boarding_point;
-                        $array['off_point'] = $feed->off_point;
-                        $array['flight_number'] = $feed->flight_number;
-                        $array['carrier_code'] = $feed->carrier;
+				$array['boarding_point'] = $feed->boarding_point;
+				$array['off_point'] = $feed->off_point;
+				$array['flight_number'] = $feed->flight_number;
+				$array['carrier_code'] = $feed->carrier;
 
 
-                        //$fromCabin = explode(',',$feed->l_price);
-                        //$toCabin  = explode(',',$feed->u_price);
+				//$fromCabin = explode(',',$feed->l_price);
+				//$toCabin  = explode(',',$feed->u_price);
 
-                        //if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
-                        $array['from_cabin'] = $feed->from_cabin_code;
-                        $array['to_cabin'] = $feed->to_cabin_code;
-                        $data = $this->calculate_Min_Max($feed->from_sd, $feed->to_sd, $feed->from_avg, $feed->to_avg);
-                        $array1['average'] = $data->average;
-                        $array1['min'] = $data->min;
-                        $array1['max'] = $data->max;
-                        $array1['slider_start'] = $data->slider_start;
-                        $this->fclr_m->checkANDInsertFCLR($array, $array1);
+				//if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
+				$array['from_cabin'] = $feed->from_cabin_code;
+				$array['to_cabin'] = $feed->to_cabin_code;
+				$data = $this->calculate_Min_Max($feed->from_sd, $feed->to_sd, $feed->from_avg, $feed->to_avg);
+				$array1['average'] = $data->average;
+				$array1['min'] = $data->min;
+				$array1['max'] = $data->max;
+				$array1['slider_start'] = $data->slider_start;
+				$this->fclr_m->checkANDInsertFCLR($array, $array1);
 
-                        //}
+				//}
 
-                }
+			}
+                	$this->session->set_flashdata('success', $this->lang->line('menu_success'));
+		} else {
+                       $this->session->set_flashdata('error', 'Could not find any RA feeed records to generate FCLR records');
+		}
 
-                $this->session->set_flashdata('success', $this->lang->line('menu_success'));
                 redirect(base_url("fclr/index"));
         }
 

@@ -1058,7 +1058,7 @@ class Bclr extends Admin_Controller
        
       
         foreach ($cwtdata as $cwt) {
-            $this->data['points'][$cwt->cum_wt] = $cwt->price_per_kg;
+            $this->data['points'][$cwt['cum_wt']] = $cwt['price_per_kg'];
         }
 
         if(count($getBGBclrdata))
