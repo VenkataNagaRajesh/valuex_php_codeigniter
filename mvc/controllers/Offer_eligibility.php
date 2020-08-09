@@ -627,7 +627,7 @@ $sWhere $sOrder $sLimit";
 			return;
 		}
 
-		echo ("<br>OFFER GEN: PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
+		echo ("<br>OFFER GEN: START PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
 
 		$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
 
@@ -787,26 +787,121 @@ $sWhere $sOrder $sLimit";
 		#print_r($pax);
 		
 		# Validate, carrier, origin, destination, date , flight, frequency, partner, cabin, class 
-		echo "<br><br>==========================================================================================";
+		echo "<br><br>MATCHSTART ==========================================================================================";
 		echo "<pre>SINGLE PAX  = " . print_r($pax,1). "</pre>";
 		echo "<pre>SINGLE BCLR  = " . print_r($bclr,1). "</pre>";
 	echo "<br>DEPART MATCH=" . date("d M Y H:i:s", $pax->dep_date+$pax->dep_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dep_time_start)) ."  , " . date("d M Y H:i:s",$pax->dep_date+$pax->dep_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dep_time_end);
 	echo "<br>ARRIVA MATCH=" . date("d M Y H:i:s", $pax->arrival_date+$pax->arrival_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dep_time_start)) ."  , " . date("d M Y H:i:s",$pax->arrival_date+$pax->arrival_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dep_time_end);
 		echo "<br>ORGIN LIST=" .implode(',',$origin_list_p);
 		echo "<br>DEST LIST=" .implode(',',$dest_list_p);
-		echo "<br>+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+		echo "<br>MATCHEND +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
 		
-		if (
-		($bclr->carrierID == $pax->carrier_code ) 
-		&& ( in_array($pax->frequency, explode(',',$bclr->frequency)))
-		&& ( $pax->flight_number >= $start_flight_range  && $pax->flight_number >= $end_flight_range) 
-		&& ( $pax->dep_date + $pax->dep_time >= ($bclr->effective_date + $bclr->dep_time_start)   && ($pax->dep_date + $pax->dep_time) <= ($bclr->discontinue_date + $bclr->dep_time_end)) 
-		&& ( $pax->arrival_date + $pax->arrival_time >= ($bclr->effective_date + $bclr->dep_time_start)   && ($pax->arrival_date + $pax->arrival_time) <= ($bclr->discontinue_date + $bclr->dep_time_end)) 
-		&& ( in_array($pax->cabin, explode(',',$bclr->from_cabin))) 
-		&& ( in_array($pax->from_city, $origin_list_p))  
-		&& ( in_array($pax->to_city, $dest_list_p))
+		$matched = 0;
+		if ($bclr->carrierID == $pax->carrier_code ) {
+			echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED CARRIER CODE - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			$matched++ ;
+		} else {
+			echo ("<br>OFFER GEN: PRODUCT BAGGAGE : NOT MATCHED CARRIER CODE - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+		}
 
-		) {
+
+		if( $bclr->frequency) {
+			if (  in_array($pax->frequency, explode(',',$bclr->frequency))) {
+				$matched++ ;
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED FREQUECY  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : NOT MATCHED FREQUECY  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			}
+		} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED FREQUECY MATCH ALL  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+				$matched++ ;
+		}
+			
+		if( $start_flight_range ) {
+			if ( $pax->flight_number >= $start_flight_range ) {
+				$matched++ ;
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED FLIGHT START RANGE  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : NOT MATCHED FLIGHT START RANGE   - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			}
+		} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED FLIGHT START RANGE MATHC ALL - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+				$matched++;
+		}
+
+		if( $end_flight_range ) {
+			if ( $pax->flight_number <= $end_flight_range ) {
+				$matched++ ;
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED FLIGHT END RANGE  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : NOT MATCHED FLIGHT END RANGE  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			}
+		} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED FLIGHT END RANGE MATHC ALL - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+				$matched++;
+		}
+		
+		if( $bclr->effective_date + $bclr->dep_time_start > 0 ) {
+			if ( $pax->dep_date + $pax->dep_time >= ($bclr->effective_date + $bclr->dep_time_start)   && ($pax->dep_date + $pax->dep_time) <= ($bclr->discontinue_date + $bclr->dep_time_end))  {
+				$matched++ ;
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED DEPARTURE DATE RANGE  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : NOT MATCHED DEPARTURE DATE RANGE  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			}
+		} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED DEPARTURE DATE  MATCH  ALL - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+				$matched++;
+		}
+		
+		if( $bclr->effective_date + $bclr->dep_time_start > 0 ) {
+			if ( $pax->arrival_date + $pax->arrival_time >= ($bclr->effective_date + $bclr->dep_time_start)   && ($pax->arrival_date + $pax->arrival_time) <= ($bclr->discontinue_date + $bclr->dep_time_end)) {
+				$matched++ ;
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED ARRIVAL DATE RANGE  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : NOT MATCHED ARRIVAL DATE RANGE  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			}
+		} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED ARRIVAL DATE  MATCH  ALL - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+				$matched++;
+		}
+		
+		if( $bclr->from_cabin) {
+			if ( in_array($pax->cabin, explode(',',$bclr->from_cabin))) {
+				$matched++ ;
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED CABIN  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : NOT MATCHED CABIN  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			}
+		} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED CABIN MATCH ALL  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+				$matched++ ;
+		}
+			
+		if( count($origin_list_p)) {
+			if  ( in_array($pax->from_city, $origin_list_p))  {
+				$matched++ ;
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED ORIGIN CITY  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : NOT MATCHED ORIGIN CITY  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			}
+		} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED ORIGIN CITY MATCH ALL  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+				$matched++ ;
+		}
+			
+		if( count($dest_list_p)) {
+			if ( in_array($pax->to_city, $dest_list_p)) {
+				$matched++ ;
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED DESTINATION CITY  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : NOT MATCHED DESTINATION CITY  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+			}
+		} else {
+				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED DESTINVATION CITY MATCH ALL  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
+				$matched++ ;
+		}
+			
+		if ( $matched == 9 ) { //All Matched
 			echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MMATCHED BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
 			$this->mydebug->debug("OFFER GEN: PRODUCT BAGGAGE : MATCHED BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
 			return $bclrId;

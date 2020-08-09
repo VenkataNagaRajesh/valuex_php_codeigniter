@@ -609,7 +609,7 @@ function loaddatatable() {
             if (data) data.start = 0;
             return data;
         },
-        "columns":[{"data": "chkbox" },
+        "columns":[{"data": "bclr_id" },
                    {"data": "carrier_code" },
                    {"data": "version_id"},
                    {"data": "partner_carrier_code" },

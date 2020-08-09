@@ -537,7 +537,7 @@ class Bclr extends Admin_Controller
                         {
                             $version_id = $exist_id[1]+1;
                         } else {
-                            $this->bclr_m->getVersionID($bclr_id)+1;
+                            $version_id = $this->bclr_m->getVersionID($bclr_id)+1;
                         }
                         $array['version_id'] = $version_id;
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
@@ -974,7 +974,7 @@ class Bclr extends Admin_Controller
                 $feed->active .= ">";
             }
             $feed->active .= "<label for='myonoffswitch" . $feed->bclr_id . "' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";
-            $feed->id = $i;
+            $feed->id = $feed->bclr_id;
             $i++;
             if ($feed->frequency != '') {
                 $freq = explode(',', $feed->frequency);
@@ -994,7 +994,7 @@ class Bclr extends Admin_Controller
 
         if (isset($_REQUEST['export'])) {
             $columns = array('#', "Carrier", "Version", "Partner Carrier", "Allowance", "Aircraft", "Flight Number Range", "From Cabin", "Origin level", "Origin Content", "Destination Level", "Destination Content", "Effective Date", "Discontinue Date", "Season", "Frequency", "BagType", "Rule Auth", "Departure Time Start", "Departure Time End", "Min Unit", "Max Capacity", "Min Price", "Max Price", "Active");
-            $rows = array("id", "carrier_code", "version_id", "partner_carrier_code", "allowance", "aircraft_type", "flight_num_range", "from_cabin_data", "origin_level_value", "origin_content_data", "dest_level_value", "dest_content_data", "effective_date", "discontinue_date", "season_name", "frequency", "bag_type_value", "rule_auth_carrier_code", "dep_time_start", "dep_time_end", "min_unit", "max_capacity", "min_price", "max_price", "status");
+            $rows = array("bclr_id", "carrier_code", "version_id", "partner_carrier_code", "allowance", "aircraft_type", "flight_num_range", "from_cabin_data", "origin_level_value", "origin_content_data", "dest_level_value", "dest_content_data", "effective_date", "discontinue_date", "season_name", "frequency", "bag_type_value", "rule_auth_carrier_code", "dep_time_start", "dep_time_end", "min_unit", "max_capacity", "min_price", "max_price", "status");
             $this->exportall($output['aaData'], $columns, $rows);
         } else {
             echo json_encode($output);

@@ -49,6 +49,7 @@ class Bclr_m extends MY_Model {
 
 	  function update_bclr($data, $id = NULL) {
                 parent::update($data, $id);
+            //print_r($this->db->last_query());
                 return $id;
         }
 
@@ -58,14 +59,13 @@ class Bclr_m extends MY_Model {
                 $this->db->where($array);
                 $this->db->limit(1);
                 $query = $this->db->get();
+            //print_r($this->db->last_query());
                 $check = $query->row();
                 $get_bclr_entry = array();
                 if($check->bclr_id) {
                     $get_bclr_entry = [$check->bclr_id,$check->version_id];
-                    return $get_bclr_entry;
-                } else {
-                  return false;
                 }
+                return $get_bclr_entry;
         }
 
 
