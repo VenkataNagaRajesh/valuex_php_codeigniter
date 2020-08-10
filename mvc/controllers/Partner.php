@@ -267,7 +267,7 @@ class Partner extends Admin_Controller {
                         $this->data["subview"] = "partner/edit";
                         $this->load->view('_layout_main', $this->data);
                     } else {
-                        if(permissionChecker('partner_add') && $usertypeID==1){
+                        if(permissionChecker('partner_edit') && $usertypeID==1){
                             $data['carrierID'] = $this->input->post("carrier");
                         }
                         $data["partner_carrierID"] = $this->input->post("partner_carrierID");

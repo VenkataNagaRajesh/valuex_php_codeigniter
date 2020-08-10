@@ -18,7 +18,7 @@
 
                 <?php 
                         $usertypeID = $this->session->userdata('usertypeID');
-                        if(permissionChecker('partner_add') && $usertypeID==1){
+                        if(permissionChecker('partner_edit') && $usertypeID==1){
                         
                             if(form_error('carrierID')) 
                                 echo "<div class='form-group has-error' >";
