@@ -248,7 +248,7 @@ figure {
 	display: flex;
 	margin-bottom: 10px;
 	padding: 0 12px;
-	width:310px;
+	width:345px;
 }
 /*.bid-tab .tab-content .pass-info .bid-radio{
 	margin-bottom: 3em;
@@ -262,7 +262,7 @@ figure {
 	position: relative;
 }
 .bid-tab .tab-content .pass-info .bid-visible{
-		opacity:0.5;
+	opacity:0.5;
 }
 .bid-tab .side-image img{
 	height:110px;
