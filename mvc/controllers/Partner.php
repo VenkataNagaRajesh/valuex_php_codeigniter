@@ -178,7 +178,7 @@ class Partner extends Admin_Controller {
 		$this->load->view('_layout_main', $this->data);
     }
 
-    public function add(){
+    public function add(){ 
         $this->data['headerassets'] = array(
             'css' => array(
                     'assets/select2/css/select2.css',
@@ -194,7 +194,8 @@ class Partner extends Admin_Controller {
             )
         );
         $userID = $this->session->userdata('loginuserID');
-		$roleID = $this->session->userdata('roleID');	
+        $roleID = $this->session->userdata('roleID');
+        $usertypeID = $this->session->userdata('usertypeID');	
         $this->data['airlines'] = $this->airline_m->getAirlinesData();
         $types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
         foreach($types as $type){
@@ -250,7 +251,8 @@ class Partner extends Admin_Controller {
             )
         );
         $userID = $this->session->userdata('loginuserID');
-		$roleID = $this->session->userdata('roleID');	
+        $roleID = $this->session->userdata('roleID');	
+        $usertypeID = $this->session->userdata('usertypeID');
         $this->data['airlines'] = $this->airline_m->getAirlinesData();
         $types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
         foreach($types as $type){

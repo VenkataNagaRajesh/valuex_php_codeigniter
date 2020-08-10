@@ -36,7 +36,7 @@
                                 $carrierID = $this->session->userdata('login_user_airlineID')[0];
                                 unset($alist[$carrierID]);
                                 echo form_dropdown("carrier", $alist,
-                                            set_value("carrierID"), "id='carrier' class='form-control hide-dropdown-icon select2'"
+                                            set_value("carrierID",$partner->carrierID), "id='carrier' class='form-control hide-dropdown-icon select2'"
                                         );
                                     ?>
                             </div>

@@ -11,7 +11,7 @@
         </ol>
     </div><!-- /.box-header -->
     <!-- form start -->
-    <div class="box-body">
+    <div class="box-body"> 
         <div class="row">
             <div class="col-sm-8">
                 <form class="form-horizontal" partner="form" method="post">
