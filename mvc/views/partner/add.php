@@ -15,7 +15,35 @@
         <div class="row">
             <div class="col-sm-8">
                 <form class="form-horizontal" partner="form" method="post">
-
+                <?php 
+                        $usertypeID = $this->session->userdata('usertypeID');
+                        if(permissionChecker('partner_add') && $usertypeID==1){
+                        
+                            if(form_error('carrierID')) 
+                                echo "<div class='form-group has-error' >";
+                            else     
+                                echo "<div class='form-group' >";
+                        ?>
+                            <label for="usertype" class="col-sm-2 control-label">
+                                Carrier <span class="text-red">*</span>
+                            </label>
+                            <div class="col-sm-6">
+                                <?php  $alist[0] = "Select Carrier";
+                                foreach($airlines as $airline){
+                                    $alist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                }
+                                $carrierID = $this->session->userdata('login_user_airlineID')[0];
+                                unset($alist[$carrierID]);
+                                echo form_dropdown("carrier", $alist,
+                                            set_value("carrierID"), "id='carrier' class='form-control hide-dropdown-icon select2'"
+                                        );
+                                    ?>
+                            </div>
+                            <span class="col-sm-4 control-label">
+                                <?php echo form_error('partner_carrierID'); ?>
+                            </span>
+                        </div>
+                    <?php } ?>
                     <?php 
                         if(form_error('partner_carrierID')) 
                             echo "<div class='form-group has-error' >";
@@ -23,10 +51,10 @@
                             echo "<div class='form-group' >";
                     ?>
                         <label for="usertype" class="col-sm-2 control-label">
-                            <?=$this->lang->line("partner_carrier")?>
+                        <?=$this->lang->line("partner_carrier")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
-                             <?php  $alist[0] = "Select Carrier";
+                        <?php  $alist[0] = "Select Partner Carrier";
                                foreach($airlines as $airline){
                                    $alist[$airline->vx_aln_data_defnsID] = $airline->code;
                                }

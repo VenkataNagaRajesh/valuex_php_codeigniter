@@ -5,7 +5,7 @@ class Partner extends Admin_Controller {
 	function __construct() {
 		parent::__construct();	
         $this->load->model('partner_m');
-        $this->load->model('airline_m');
+        $this->load->model('airline_m'); 
         $this->load->model('airports_m');
 		$language = $this->session->userdata('lang');
         $this->lang->load('partner', $language);
@@ -207,7 +207,12 @@ class Partner extends Admin_Controller {
                 $this->data["subview"] = "partner/add";
                 $this->load->view('_layout_main', $this->data);
             } else { 
-                $array['carrierID'] = $this->session->userdata('login_user_airlineID')[0];               
+                if(permissionChecker('partner_add') && $usertypeID==1){
+                    $array['carrierID'] = $this->input->post("carrier");
+                }else{
+                    $array['carrierID'] = $this->session->userdata('login_user_airlineID')[0];
+                }
+                               
                 $array["partner_carrierID"] = $this->input->post("partner_carrierID");
                 $array["origin_level"] = $this->input->post("origin_level");
 			    $array["origin_content"] =  implode(',',$this->input->post("origin_content"));
@@ -261,7 +266,10 @@ class Partner extends Admin_Controller {
                     if ($this->form_validation->run() == FALSE) {
                         $this->data["subview"] = "partner/edit";
                         $this->load->view('_layout_main', $this->data);
-                    } else {                       
+                    } else {
+                        if(permissionChecker('partner_add') && $usertypeID==1){
+                            $data['carrierID'] = $this->input->post("carrier");
+                        }
                         $data["partner_carrierID"] = $this->input->post("partner_carrierID");
                         $data["origin_level"] = $this->input->post("origin_level");
                         $data["origin_content"] =  implode(',',$this->input->post("origin_content"));
