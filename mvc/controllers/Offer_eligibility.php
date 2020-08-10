@@ -145,9 +145,9 @@ class Offer_eligibility extends Admin_Controller {
 			{		
 			  $sLimit = "LIMIT ".$_GET['iDisplayStart'].",".$_GET['iDisplayLength'];
 			}
-			if ( isset( $_GET['iSortCol_0'] ) )
+			$sOrder = "ORDER BY  ";
+			if ( isset( $_GET['iSortCol_0']) &&  $_GET['iSortCol_0'] != 0   )
 			{
-				$sOrder = "ORDER BY  ";
 				for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ) ; $i++ )
 				{
 					if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
@@ -164,7 +164,7 @@ class Offer_eligibility extends Admin_Controller {
 
 				}
 			} else {
-				$sOrder .= " pext.dtpf_id DESC ";
+				$sOrder .= " of.offer_id DESC, pext.product_id ASC, pext.ond ASC ";
 			}
 			$sWhere = "";
 			if ( $_GET['sSearch'] != "" )
@@ -309,6 +309,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as pro
 		     INNER JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
 
 $sWhere $sOrder $sLimit";
+#print_r($sQuery) ;exit;
 
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";

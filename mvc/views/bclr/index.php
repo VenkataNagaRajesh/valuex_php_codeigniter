@@ -720,7 +720,7 @@ function downloadBCLR(){
           status = 'chacked';
           id = $(this).parent().attr("id");
       } else {
-          status = 'unchacked';
+          status = 'unchecked';
           id = $(this).parent().attr("id");
       }
 
