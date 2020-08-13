@@ -11,7 +11,7 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-8">
+            <div class="col-sm-9">
                 <form class="form-horizontal" role="form" method="post">
                 <div class="form-group">
                 <div class="col-md-6">
@@ -71,7 +71,7 @@
                    while(count($products) >= $i) {
                 ?>
                   <div class="form-group" style="margin: 0 0 10px;border: solid 1px #ddd;padding: 19px 0 0;">
-                  <div class="col-md-6">
+                  <div class="col-md-7">
                     <?php 
                     if(form_error('pmod'.$i.'-productID')) 
                         echo "<div class='form-group has-error' >";
@@ -111,7 +111,7 @@
                         </div>				                                          
                       </div>
                     </div>  
-                    <div class="col-md-6">          
+                    <div class="col-md-5">          
                     <?php
                         if(form_error('pmod'.$i.'-start-date'))
                             echo "<div class='form-group has-error' >";

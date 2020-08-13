@@ -95,7 +95,7 @@
                                                 <th class="col-lg-1"><?php echo "Images Count"?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_video')?></th>
                                 <?php if(permissionChecker('airline_cabin_edit')) { ?>
-                                  <th class="col-lg-1 noExport"><?=$this->lang->line('airline_cabin_status')?></th>
+                                  <th class="col-lg-1 noExport">Active</th>
                                 <?php } ?>
 
                                  <?php if(permissionChecker('airline_cabin_edit') || permissionChecker('airline_cabin_view') ||  permissionChecker('airline_cabin_delete')) { ?>

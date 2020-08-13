@@ -67,9 +67,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-1 pull-right">
-					<button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
-					<button type="button" class="btn btn-danger" onclick="downloadOfferData()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
+				<div class="col-md-12">
+					<button type="submit" class="btn btn-danger pull-right" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
+					<button type="button" class="btn btn-danger pull-right" onclick="downloadOfferData()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
 				</div>
 			</div>
 		</form>

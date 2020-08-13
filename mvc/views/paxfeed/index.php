@@ -195,10 +195,10 @@
 			<th class="col-lg-1">FCLR Data</th>
 			
 			
-		 <th class="col-lg-1 noExport"><?=$this->lang->line('active')?></th>
+		 <th class="col-lg-1 noExport" style="display:none;"><?=$this->lang->line('active')?></th>
 
 	<?php if(permissionChecker('paxfeed_delete')){?>
-                                <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-1 noExport" style="display:none;"><?=$this->lang->line('action')?></th>
 						<?php }?>
                     </tr>
                  </thead>
@@ -279,9 +279,9 @@
                                   {"data": "office_id"},
 				    {"data": "channel" },
 					{"data": "is_fclr_processed"},
-                                    {"data": "fclr_data" },
-				{"data": "active"},
-				  {"data": "action"}
+                                    {"data": "fclr_data" }
+				/*{"data": "active"},
+				  {"data": "action"}*/
 				  ],			     
      dom: 'B<"clear">lfrtip',
     // buttons: [ 'copy', 'csv', 'excel','pdf' ]

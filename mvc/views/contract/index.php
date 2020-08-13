@@ -63,7 +63,7 @@
                             } else if($product->expire <= 30){
                                 $product->color = "#e0a90c";
                             } else {
-                                $product->color = "green";
+                                $product->color = "#333";
                             }
                          if($j == 1){ ?>
                     <tr>

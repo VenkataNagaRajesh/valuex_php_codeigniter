@@ -82,7 +82,7 @@
 				<th class="col-lg-1">Level</th>
                                                 <th class="col-lg-1">Description</th>
                                 <?php if(permissionChecker('airline_cabin_edit')) { ?>
-                                  <th class="col-lg-1 noExport"><?=$this->lang->line('airline_cabin_status')?></th>
+                                  <th class="col-lg-1 noExport">Active</th>
                                 <?php } ?>
 
                                  <?php if(permissionChecker('airline_cabin_edit') ||  permissionChecker('airline_cabin_delete')) { ?>
