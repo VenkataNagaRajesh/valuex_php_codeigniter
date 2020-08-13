@@ -61,6 +61,117 @@
                     </div>
                     </div>
                 </div>
+                <div class="form-group">
+                <div class="col-md-6">
+                <?php 
+                        if(form_error('email_id')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="email_id" class="col-sm-4 control-label">
+                            Email <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">                        				 
+                           <input type="text" class="form-control"  id="email_id" name="email_id" value="<?=set_value('email_id',$contract->email_id)?>" > 
+                           <span class="control-label">
+                                <?php echo form_error('email_id'); ?>
+                            </span>							 
+                        </div>                     
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                    <?php 
+                        if(form_error('designation')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="designation" class="col-sm-3 control-label">
+                        Designation<span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-9">                          				 
+                        <input type="text" class="form-control"  id="designation" name="designation" value="<?=set_value('designation',$contract->designation)?>" > 
+                            <span class="control-label">
+                                <?php echo form_error('designation'); ?>
+                            </span>                         
+                        </div>                      
+                    </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                <div class="col-md-6">
+                <?php 
+                        if(form_error('telephone')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="telephone" class="col-sm-4 control-label">
+                        Telephone<span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">                        				 
+                           <input type="text" class="form-control"  id="telephone" name="telephone" value="<?=set_value('telephone',$contract->telephone)?>" > 
+                           <span class="control-label">
+                                <?php echo form_error('telephone'); ?>
+                            </span>							 
+                        </div>                     
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                    <?php 
+                        if(form_error('ext_no')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="ext_no" class="col-sm-3 control-label">
+                            Extension Number<span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-9">       
+                        <input type="text" class="form-control"  id="ext_no" name="ext_no" value="<?=set_value('ext_no',$contract->ext_no)?>" >                    				 
+                               
+                            <span class="control-label">
+                                <?php echo form_error('ext_no'); ?>
+                            </span>                         
+                        </div>                      
+                    </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                <div class="col-md-6">
+                <?php 
+                        if(form_error('mobile_number')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="mobile_number" class="col-sm-4 control-label">
+                           Mobile Number<span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">                        				 
+                           <input type="text" class="form-control"  id="mobile_number" name="mobile_number" value="<?=set_value('mobile_number',$contract->mobile_number)?>" > 
+                           <span class="control-label">
+                                <?php echo form_error('mobile_number'); ?>
+                            </span>							 
+                        </div>                     
+                    </div>
+                    </div>
+                    <div class="col-md-6">
+                    <?php 
+                        if(form_error('airlineID')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+                        
+                        
+                        <div class="col-sm-9">                          				 
+                                                    
+                        </div>                      
+                    </div>
+                    </div>
+                </div>
                 <?php 
                    $productslist[0]=$this->lang->line("select_product");					
                    foreach($products as $product){	

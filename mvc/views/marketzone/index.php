@@ -641,6 +641,7 @@ function savezone() {
                                 alert('Marketzone updated successfully');
                         }
 			form_reset();
+			location.reload();
                         $("#tztable").dataTable().fnDestroy();
                         loaddatatable();
                         if (zoneinfo['has_reconf_perm'] && zoneinfo['reconfigure']) {
