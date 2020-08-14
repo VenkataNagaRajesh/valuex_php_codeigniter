@@ -164,7 +164,7 @@ class Offer_eligibility extends Admin_Controller {
 
 				}
 			} else {
-				$sOrder .= " of.offer_id DESC, pext.product_id ASC, pext.ond ASC ";
+				$sOrder .= "  of.offer_id DESC, pf.pnr_ref ASC, pext.product_id ASC, pext.ond ASC ";
 			}
 			$sWhere = "";
 			if ( $_GET['sSearch'] != "" )
@@ -292,7 +292,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as pro
 		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, 
 		pf.pnr_ref , bc.min_unit, bc.max_capacity, bc.min_price, bc.max_price
 		     from VX_offer_info pext 
-		     INNER JOIN VX_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id AND pf.is_up_offer_processed = 1 and pf.active = 1)
+		     LEFT JOIN VX_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id and pf.active = 1)
 		     LEFT JOIN UP_fare_control_range fc on  (pext.rule_id = fc.fclr_id AND pext.product_id = 1)
 		     LEFT JOIN BG_baggage_control_rule bc on  (pext.rule_id = bc.bclr_id AND pext.product_id = 2)
 		     LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = fc.season_id )
@@ -306,7 +306,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as pro
 		     LEFT JOIN VX_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13 )
 		     LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code AND  pf.airline_code = tdef.carrier)
                      LEFT JOIN VX_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13 )
-		     INNER JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
+		     LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
 
 $sWhere $sOrder $sLimit";
 #print_r($sQuery) ;exit;
@@ -370,18 +370,19 @@ $sWhere $sOrder $sLimit";
 		$twentyfourhours =  24*60*60;
 		$twelevehours =  12*60*60;
 		$eighthours =  8*60*60;
-		$current_carrier_code =  'XX';
+		#$current_carrier_code =  'XX';
 
 		foreach (array_keys($pax_list) as $pnr ) {
 		$ond = Array();
 		$i = 1;
-			print "PNR=$pnr----------------------------------------------------------------------------------------------------\n";
+			print "PNR=$pnr----------------------------------------------------------------------------------------------------<br>\n";
 			foreach($pax_list[$pnr] as $ckey => $crow) {
 				$paxId = $crow['dtpf_id']; 
-		echo "\n\nROW=".($ckey+1) . " - SEG=" . $paxId;
+		echo "<br>\n<br>\nROW=".($ckey+1) . " - SEG=" . $paxId;
 
 				if ($ckey == 0 ) {
-					echo "\nFIRST ROW CREATE NEW OND   ======";
+					echo "<br><br>\nFIRST ROW CREATE NEW OND   ======";
+					$current_carrier_code = $crow['carrier_code'];
 					$domesticCountryCode = $crow['get_origin_country_code'];
 					$originAiport = $crow['from_city'];
 					$originDistance = $crow['distance'];
@@ -414,54 +415,54 @@ $sWhere $sOrder $sLimit";
 
 
 				if ( ! $this->isPartner($crow['carrier_code'], $current_carrier_code, $bg_ond_partners)) {
-					echo "\nCURRENT CARRIER " . $crow['carrier_code'] . " NOT A PARTNER WITH " . $current_carrier_code  . "  ======";
+					echo "<br>\n<br>CURRENT CARRIER " . $crow['carrier_code'] . " NOT A PARTNER WITH " . $current_carrier_code  . "  ======";
 					$i++;
-					echo "\nCURRENT CARRIER NOT A PARTNER - NEW OND CREATAED $i  - NO SILDER ======";
-					$ond = $this->createOND($ond,"NOSLIDER", $paxId);
+					echo "<br>\n<br>CURRENT CARRIER NOT A PARTNER - NEW OND CREATAED $i  - NO SILDER ======";
+					$ond = $this->createOND($ond,"NP", $paxId); //NOT A PARTNER
 					continue;
 
 				} else {
-					echo "\nCURRENT FLIGT CARRIER " . $crow['carrier_code'] . " IS PARTNER WITH " . $current_carrier_code  . "  ======";
+					echo "<br>\n<br>CURRENT FLIGT CARRIER " . $crow['carrier_code'] . " IS PARTNER WITH " . $current_carrier_code  . "  ======";
 				}
 
 
 
 
 				if ( $this->isDomestic($crow['get_origin_country_code'], $crow['get_dest_country_code'])) {
-					echo "\nCURRENT IS DOMESTIC  ======";
+					echo "<br>\nCURRENT IS DOMESTIC  ======";
 					if( $pfkey >= 0) { //Prev row exits $pfrow =  $pax_list[$pnr][$pfkey];
 						if ( $crow['from_city'] == $pfrow['to_city']) {
-							echo "\nCURRENT IS DOMESTIC - CUR CITY " . $crow['from_city'] . " MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
-							if ((strtotime($crow['total_dep_date']) - strtotime( $pfrow['total_arrival_date'])) < $checkHours) {
-								echo "\nCURRENT IS DOMESTIC - WITHIN $checkHoursDp Hrs  ======";
+							echo "<br>\nCURRENT IS DOMESTIC - CUR CITY " . $crow['from_city'] . " MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
+							if ((($crow['total_dep_date']) - ( $pfrow['total_arrival_date'])) < $checkHours) {
+								echo "<br>\nCURRENT IS DOMESTIC - WITHIN $checkHoursDp Hrs, DEP=" . ($crow['total_dep_date']) . ",ARR=" .  ( $pfrow['total_arrival_date']). "  ======";
 								if ( $crow['to_city'] == $pfrow['from_city'] && $pfrow['from_city'] == $originAiport) {
-									echo "\nCURRENT IS DOMESTIC - CUR TO CITY " . $crow['to_city'] . " MATCHED WITH PREV FROM CITY " . $pfrow['from_city']  . "  ======";
+									echo "<br>\nCURRENT IS DOMESTIC - CUR TO CITY " . $crow['to_city'] . " MATCHED WITH PREV FROM CITY " . $pfrow['from_city']  . "  ======";
 									$i++;
-									echo "\nCURRENT IS DOMESTIC - NEW OND CREATAED $i ======";
+									echo "<br>\nCURRENT IS DOMESTIC - NEW OND CREATAED $i ======";
 									$ond = $this->createOND($ond,$i, $paxId);
 									continue;
 									
 								} else {
-									echo "\nCURRENT IS DOMESTIC - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . " START CHECK FARTHER END MATCHES WITH ORIGIN AIPRORT $originAiport !";
+									echo "<br>\nCURRENT IS DOMESTIC - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . " START CHECK FARTHER END MATCHES WITH ORIGIN AIPRORT $originAiport !";
 									if ( !$nfrow && ($crow['to_city'] == $originAiport && $crow['distance'] == $originDistance)) {
 										$i++;
-										echo "\nCURRENT IS DOMESTIC - CUR TO CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN CITY OR  NEXT FLIGHT " . $pfrow['to_city'] . " MATCHED WITH ORIGIN - FARTHER POINT ADDING TO NEW OND $i ======";
+										echo "<br>\nCURRENT IS DOMESTIC - CUR TO CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN CITY OR  NEXT FLIGHT " . $pfrow['to_city'] . " MATCHED WITH ORIGIN - FARTHER POINT ADDING TO NEW OND $i ======";
 										$ond = $this->createOND($ond,$i, $paxId);
 										continue;
 									} else {
-										echo "\nCURRENT IS DOMESTIC - DISTANCE CASE ";
+										echo "<br>\nCURRENT IS DOMESTIC - DISTANCE CASE ";
 										if ( ($crow['to_city'] != $originAiport) && ($crow['distance'] && $pfrow['distance'] && ($crow['distance'] <= $pfrow['distance']))) { 
 											$i++;
-											echo "\nCURRENT IS DOMESTIC - DISTANCE CASE : CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH ORIGIN AND DISTANCE IS LESS THAN PREVOUS  CREATING NEW OND $i ======";
+											echo "<br>\nCURRENT IS DOMESTIC - DISTANCE CASE : CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH ORIGIN AND DISTANCE IS LESS THAN PREVOUS  CREATING NEW OND $i ======";
 											$ond = $this->createOND($ond,$i, $paxId);
 											continue;
 										} elseif ( ($crow['from_city'] == $originAiport) ) { 
 											$i++;
-											echo "\nCURRENT IS DOMESTIC - DISTANCE CASE : CUR FROM CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN  CITY  " . $originAiport . "  ADDING TO PREV OND $i ======";
+											echo "<br>\nCURRENT IS DOMESTIC - DISTANCE CASE : CUR FROM CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN  CITY  " . $originAiport . "  ADDING TO PREV OND $i ======";
 											$ond = $this->createOND($ond,$i, $paxId);
 											continue;
 										} else {
-											echo "\nCURRENT IS DOMESTIC - DISTANCE CASE : DEFAULT CASE   ADDING TO PREV OND $i ======";
+											echo "<br>\nCURRENT IS DOMESTIC - DISTANCE CASE : DEFAULT CASE   ADDING TO PREV OND $i ======";
 											$ond = $this->createOND($ond,$i, $paxId);
 											continue;
 										}
@@ -470,63 +471,63 @@ $sWhere $sOrder $sLimit";
 								}
 								
 							} else {
-								echo "\nCURRENT IS DOMESTIC -BUT MORE THAN $checkHoursDp Hrs  ======";
+								echo "<br>\nCURRENT IS DOMESTIC -BUT MORE THAN $checkHoursDp Hrs  ======";
 								$i++;
-								echo "\nCURRENT IS DOMESTIC - NEW OND CREATAED $i ======";
+								echo "<br>\nCURRENT IS DOMESTIC - NEW OND CREATAED $i ======";
 								$ond = $this->createOND($ond,$i, $paxId);
 								continue;
 							}
 					
 						} else {
-							echo "\nCURRENT IS DOMESTIC - CUR CITY " . $crow['from_city'] . "  NOT MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
+							echo "<br>\nCURRENT IS DOMESTIC - CUR CITY " . $crow['from_city'] . "  NOT MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
 							$i++;
-							echo "\nCURRENT IS DOMESTIC - NEW OND CREATAED $i ======";
+							echo "<br>\nCURRENT IS DOMESTIC - NEW OND CREATAED $i ======";
 							$ond = $this->createOND($ond,$i, $paxId);
 							continue;
 						}
 					}
 						
 				} else {
-					echo "\nCURRENT IS INTERNATIONAL  ======";
+					echo "<br>\nCURRENT IS INTERNATIONAL  ======";
 					if( $pfkey >= 0) { //Prev row exits $pfrow =  $pax_list[$pnr][$pfkey];
 						if ( $crow['from_city'] == $pfrow['to_city']) {
-							echo "\nCURRENT IS INTERNATIONAL - CUR CITY " . $crow['from_city'] . " MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
-							if ((strtotime($crow['total_dep_date']) - strtotime( $pfrow['total_arrival_date'])) < $checkHours) {
-								echo "\nCURRENT IS INTERNATIONAL - WITHIN $checkHoursDp Hrs  ======";
+							echo "<br>\nCURRENT IS INTERNATIONAL - CUR CITY " . $crow['from_city'] . " MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
+							if ((($crow['total_dep_date']) -( $pfrow['total_arrival_date'])) < $checkHours) {
+								echo "<br>\nCURRENT IS INTERNATIONAL - WITHIN $checkHoursDp Hrs  ======";
 								if ( $crow['to_city'] == $pfrow['from_city'] && $pfrow['from_city'] == $originAiport) {
-									echo "\nCURRENT IS INTERNATIONAL - CUR TO CITY " . $crow['to_city'] . " MATCHED WITH PREV FROM CITY " . $pfrow['from_city']  . "  ======";
+									echo "<br>\nCURRENT IS INTERNATIONAL - CUR TO CITY " . $crow['to_city'] . " MATCHED WITH PREV FROM CITY " . $pfrow['from_city']  . "  ======";
 									$i++;
-									echo "\nCURRENT IS INTERNATIONAL - NEW OND CREATAED $i ======";
+									echo "<br>\nCURRENT IS INTERNATIONAL - NEW OND CREATAED $i ======";
 									$ond = $this->createOND($ond,$i, $paxId);
 									continue;
 									
 								} else {
-									echo "\nCURRENT IS INTERNATIONAL - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . " START CHECK FARTHER END MATCHES WITH ORIGIN AIPRORT $originAiport !";
+									echo "<br>\nCURRENT IS INTERNATIONAL - CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH PREV FROM CITY  " . $pfrow['from_city'] . " START CHECK FARTHER END MATCHES WITH ORIGIN AIPRORT $originAiport !";
 									if ( $nfrow && ($crow['to_city'] == $originAiport ||  $nfrow['to_city'] == $originAiport)) {
 										if ( $pfrow &&  $pax_list[$pnr][$pfkey-1] )  {
 										$i++;
 										}
-										echo "\nCURRENT IS INTERNATIONAL - CUR TO CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN CITY OR  NEXT FLIGHT " . $pfrow['to_city'] . " MATCHED WITH ORIGIN - FARTHER POINT ADDING TO NEW OND $i ======";
+										echo "<br>\nCURRENT IS INTERNATIONAL - CUR TO CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN CITY OR  NEXT FLIGHT " . $pfrow['to_city'] . " MATCHED WITH ORIGIN - FARTHER POINT ADDING TO NEW OND $i ======";
 										$ond = $this->createOND($ond,$i, $paxId);
 										if ( $pfrow &&  !$pax_list[$pnr][$pfkey-1] ){ 
 											$i++;
-											echo "\nCURRENT IS INTERNATIONAL - FARTHER POINT - JUST 3 ROWS CASE - CREATE OND FOR NEXT ROW $i ======";
+											echo "<br>\nCURRENT IS INTERNATIONAL - FARTHER POINT - JUST 3 ROWS CASE - CREATE OND FOR NEXT ROW $i ======";
 										}
 										continue;
 									} else {
-										echo "\nCURRENT IS INTERNATIONAL - DISTANCE CASE ";
+										echo "<br>\nCURRENT IS INTERNATIONAL - DISTANCE CASE ";
 										if ( ($crow['to_city'] != $originAiport) && ($crow['distance'] && $pfrow['distance'] && ($crow['distance'] <= $pfrow['distance']))) { 
 											$i++;
-											echo "\nCURRENT IS INTERNATIONAL - DISTANCE CASE : CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH ORIGIN AND DISTANCE IS LESS THAN PREVOUS  CREATING NEW OND $i ======";
+											echo "<br>\nCURRENT IS INTERNATIONAL - DISTANCE CASE : CUR TO CITY ". $crow['to_city']  . " NOT MATCHED WITH ORIGIN AND DISTANCE IS LESS THAN PREVOUS  CREATING NEW OND $i ======";
 											$ond = $this->createOND($ond,$i, $paxId);
 											continue;
 										} elseif ( ($crow['from_city'] == $originAiport) ) { 
 											$i++;
-											echo "\nCURRENT IS INTERNATIONAL - DISTANCE CASE : CUR FROM CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN  CITY  " . $originAiport . "  ADDING TO PREV OND $i ======";
+											echo "<br>\nCURRENT IS INTERNATIONAL - DISTANCE CASE : CUR FROM CITY ". $crow['to_city']  . "  MATCHED WITH ORIGIN  CITY  " . $originAiport . "  ADDING TO PREV OND $i ======";
 											$ond = $this->createOND($ond,$i, $paxId);
 											continue;
 										} else {
-											echo "\nCURRENT IS INTERNATIONAL - DISTANCE CASE : DEFAULT CASE   ADDING TO PREV OND $i ======";
+											echo "<br>\nCURRENT IS INTERNATIONAL - DISTANCE CASE : DEFAULT CASE   ADDING TO PREV OND $i ======";
 											$ond = $this->createOND($ond,$i, $paxId);
 											continue;
 										}
@@ -536,17 +537,17 @@ $sWhere $sOrder $sLimit";
 								}
 								
 							} else {
-								echo "\nCURRENT IS INTERNATIONAL -BUT MORE THAN $checkHoursDp Hrs  ======";
+								echo "<br>\nCURRENT IS INTERNATIONAL -BUT MORE THAN $checkHoursDp Hrs  ======";
 								$i++;
-								echo "\nCURRENT IS INTERNATIONAL - NEW OND CREATAED $i ======";
+								echo "<br>\nCURRENT IS INTERNATIONAL - NEW OND CREATAED $i ======";
 								$ond = $this->createOND($ond,$i, $paxId);
 								continue;
 							}
 					
 						} else {
-							echo "\nCURRENT IS INTERNATIONAL - CUR CITY " . $crow['from_city'] . "  NOT MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
+							echo "<br>\nCURRENT IS INTERNATIONAL - CUR CITY " . $crow['from_city'] . "  NOT MATCHED WITH PREV ARRIVAL " . $pfrow['to_city'] . " ======";
 							$i++;
-							echo "\nCURRENT IS INTERNATIONAL - NEW OND CREATAED $i ======";
+							echo "<br>\nCURRENT IS INTERNATIONAL - NEW OND CREATAED $i ======";
 							$ond = $this->createOND($ond,$i, $paxId);
 							continue;
 						}
@@ -554,7 +555,7 @@ $sWhere $sOrder $sLimit";
 				}
 
 			}
-			print "PNR $pnr  END=====================================================================================\n";
+			print "PNR $pnr  END=====================================================================================<br>\n";
 		}
 		return $ond;
 	}
@@ -609,28 +610,33 @@ $sWhere $sOrder $sLimit";
    			 $this->processGenUpgradeOffers($carrierId);
 			break;
 			case 2:
+			$carriers[] = $carrierId;
 			$this->mydebug->debug("OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: " . $carrierId);
-   			 $this->processGenBaggageOffers($carrierId);
 			break;
 		}
 			
 	}
+
+	//Process BAGGAGE OFFERS
+ 	$this->processGenBaggageOffers($carriers);
+
 	$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 	redirect(base_url("offer_eligibility/index"));
 
    }
 
-   function processGenBaggageOffers($carrierId) {
+   function processGenBaggageOffers($carriers) {
 	
-		$bclr_rules = $this->bclr_m->get_bclr_by_carrier_id($carrierId);
+		$bclr_rules = $this->bclr_m->get_bclr_by_all_carriers($carriers);
+		#echo "<br>OND BCLR ALLCARR=<pre>" . print_r($bclr_rules,1) . "</pre>";
+		#$bclr_rules = $this->bclr_m->get_bclr_by_carrier_id($carrierId);
 		if ( !count($bclr_rules) ) {
-			echo ("<br>OFFER GEN: PROCESS BAGGAGE : NO BCLR RULES FOUND FOR CARRIER ID: " . $carrierId);
+			echo ("<br>OFFER GEN: PROCESS BAGGAGE : NO BCLR RULES FOUND FOR CARRIER IDS: " . implode(',', $carriers));
 			return;
 		}
 
-		echo ("<br>OFFER GEN: START PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
+		echo ("<br>OFFER GEN: START PROCESS BAGGAGE :");
 
-		$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : CARRIER ID: " . $carrierId);
 
 		$days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
                 $current_time = time();
@@ -640,17 +646,18 @@ $sWhere $sOrder $sLimit";
 		//$id = $this->airline_cabin_class_m->checkCarrierDataByID($id);
 		# GET  PAXA FEED OF PTC TYPE ADT  ADULT , exclude UNN and NON-REV of speicific Class
 		# FILTER 
-		$bg_pax_data = $this->offer_eligibility_m->getBaggagePaxData($carrierId, $tstamp);
-		$bg_partners = $this->partner_m->getPartnerCarriers($carrierId);
-		foreach($bg_partners as $partner) {
-			$bg_ond_partners[$carrierId][]= $partner->partner_carrierID;
-		}
+		$bg_pax_data = $this->offer_eligibility_m->getBaggagePaxDataForAllCarriers($carriers, $tstamp);
+		$bg_partners = $this->partner_m->getAllPartnerCarriers($carriers);
 			echo "<br>PARTNERS=<pre>" . print_r($bg_partners,1) . "</pre>";
+		foreach($bg_partners as $partner) {
+			$bg_ond_partners[$partner->carrierID][]= $partner->partner_carrierID;
+		}
+			echo "<br>OND PARTNERS=<pre>" . print_r($bg_ond_partners,1) . "</pre>";
 		
 
 		$pax_ond = Array();
 		foreach ($bg_pax_data as $pax_pnr_single ) {
-			#echo "<br>SINGLEPNR=<pre>" . print_r($pax_pnr_single,1) . "</pre>";
+			//echo "<br>SINGLEPNR=<pre>" . print_r($pax_pnr_single,1) . "</pre>";
 			$single_adult_full_pax = $this->offer_eligibility_m->getBaggageSingleAdultPax($pax_pnr_single);
 			//echo "<br>FULLPAX=<pre>" . print_r($single_adult_full_pax,1) . "</pre>";
 			$pax_cnt = 0;
@@ -658,8 +665,8 @@ $sWhere $sOrder $sLimit";
 			    $pnr = $s_pax->pnr_ref;
 			    $pax_list[$pnr][$pax_cnt]['from_city'] =  $s_pax->from_city;
 			    $pax_list[$pnr][$pax_cnt]['to_city'] =  $s_pax->to_city;
-			    $pax_list[$pnr][$pax_cnt]['total_dep_date'] =  $s_pax->dep_date;
-			    $pax_list[$pnr][$pax_cnt]['total_arrival_date'] =  $s_pax->arrival_date;
+			    $pax_list[$pnr][$pax_cnt]['total_dep_date'] =  $s_pax->dep_date + $s_pax->dept_time;
+			    $pax_list[$pnr][$pax_cnt]['total_arrival_date'] =  $s_pax->arrival_date + $s_pax->arrival_time;
 			    $pax_list[$pnr][$pax_cnt]['carrier_code'] =  $s_pax->carrier_code;
 			    $pax_list[$pnr][$pax_cnt]['pax_nbr'] =  $s_pax->carrier_code;
 			    $pax_list[$pnr][$pax_cnt]['seg_nbr'] =  $s_pax->seg_nbr;
@@ -669,13 +676,14 @@ $sWhere $sOrder $sLimit";
 			    $pax_list[$pnr][$pax_cnt]['get_dest_city_ocde'] =  $s_pax->to_city;
 			    $pax_list[$pnr][$pax_cnt]['flight_number'] =  $s_pax->flight_number;
 			    $pax_list[$pnr][$pax_cnt]['dtpf_id'] =  $s_pax->dtpf_id;
+			    $pax_list[$pnr][$pax_cnt]['carrier_code'] =  $s_pax->carrier_code;
 			    $pax_cnt++;
 			}
-		echo "<br><pre>ALL  PAX  = " . print_r($pax_list,1). "</pre>";
+			echo "<br><pre>ALL  PAX  = " . print_r($pax_list,1). "</pre>";
 
 			$tmp_ond = $this->calculateOND($pax_list, $bg_ond_partners);
 			if (count($tmp_ond)) {
-				$pax_ond[] = $tmp_ond;
+				$pax_ond[$pax_pnr_single->pnr_ref] = $tmp_ond;
 			}
 		}
 		echo "<br>+++++++++++++++++++++++++++++++++++++++++++++";
@@ -684,51 +692,74 @@ $sWhere $sOrder $sLimit";
 
 		#Determine matching BCLR for all OND  
 
-		foreach($pax_ond as $ond) {
-			$ond_grp =0;
-			foreach($ond as $pax_arr) {
-				$ond_grp++;
+		foreach($pax_ond as $pnr => $ond) {
+			foreach($ond as $ond_grp => $pax_arr) {
+							echo ("<br>ONGRP GEN: $ond_grp ". print_r($pax_arr,1));
 				foreach($pax_arr as $dtpfId) {
+							echo ("<br>ONGRP : $ond_grp  DTPF=".$dtpfId);
 					$bclrIds = Array();
-					foreach($bclr_rules as $bclr_rule) {
-						$bId = $this->getMatchedBclrForPax($dtpfId, $bclr_rule);
-						if ( $bId ) {
-							$bclrIds[] = $bId;
+					$ext = array();
+					if ( $ond_grp != 'NP') {
+						$pax = $this->paxfeed_m->get_single_paxfeed(Array("dtpf_id" => $dtpfId));
+						foreach($bclr_rules[$pax->carrier_code] as $bclr_rule) {
+							#echo ("<br>ONGRP GEN: $ond_grp: DTPF=$dtpfId, BCLR= ". print_r($bclr_rule,1));
+							#echo ("<br>ONGRP GEN: $ond_grp: DTPF=$dtpfId" );
+							$bId = $this->getMatchedBclrForPax($pax, $bclr_rule);
+							if ( $bId ) {
+								$bclrIds[] = $bId;
+							}
+							#echo ("<br>ONGRP GEN: $ond_grp: BID=$bId" );
+							#if ($bclrId) break;
 						}
-						#if ($bclrId) break;
-					}
-					if ( count($bclrIds) > 1 ) {
-						echo ("<br>OFFER GEN: PROCESS BAGGAGE : MATCHED MORE THAN ONE BCLRID ".  print_r($bclrIds,1) . " FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
-						$bclrId = $this->findBestMatchBclrRule($bclrIds, $bclr_rules);
-					} else {
-						$bclrId = $bclrIds[0];
-					}
-					if ( $bclrId) {
+						if ( count($bclrIds) > 1 ) {
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : MATCHED MORE THAN ONE BCLRID ".  print_r($bclrIds,1) . " FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+							$bclrId = $this->findBestMatchBclrRule($bclrIds, $bclr_rules);
+						} else {
+							$bclrId = $bclrIds[0];
+						}
+						if ( $bclrId) {
 
-						echo ("<br>OFFER GEN: PROCESS BAGGAGE : BEST MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
-						$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
-						$ext = array();
-						$ext['dtpf_id'] = $dtpfId;
-						$ext['rule_id'] =  $bclrId;
-                                                $ext['product_id'] = 2;//BAGGAGE PRODUCT
-						$ext['ond'] = $ond_grp;
-						$ext["create_date"] = time();
-						$ext["modify_date"] = time();
-						$ext["create_userID"] = $this->session->userdata('loginuserID');
-						$ext["modify_userID"] = $this->session->userdata('loginuserID');
-						$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
-						echo ("<br>OFFER GEN: PROCESS BAGGAGE : INSERT MATCHED " . print_r($ext,1). "  CARRIER ID: " . $carrierId);
-						$this->offer_eligibility_m->insert_dtpfext_bclr($ext);
-						$this->paxfeed_m->update_paxfeed(array('is_bg_offer_processed' => '1'), $dtpfId);
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : BEST MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+							$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+							if ( $bclr_rules[$bclrId]['partner_carrierID'] ) {
+								$pax1 = $this->paxfeed_m->get_single_paxfeed(Array("dtpf_id" => $dtpfId));
+								if ( $pax1->carrier_code == $bclr_rules[$bclrId]['partner_carrierID'] )
+									if ( $bclr_rules[$bclrId]['allowance']) {
+									$ext['ond'] = $ond_grp;
+								} else {
+									$ext['ond'] = 'BL'; //PARTNER  BLOCK LIST
+								}
+							} else {
+								$ext['ond'] = $ond_grp;
+							}
+						} else {
+							$bclrId = 0;
+							$ext['ond'] = 'NBCLR'; //NO BC LR MATCHED
+							$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE :  NO BCLR MATCHED  FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : NO BCLR ID $bclrId MATCHED FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+						}
 					} else {
-						$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE :  NO BCLR MATCHED  FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
-						echo ("<br>OFFER GEN: PROCESS BAGGAGE : NO BCLR ID $bclrId MATCHED FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+						$bclrId = 0;
+						$ext['ond'] = $ond_grp;
+						echo ("<br>OFFER GEN: PROCESS BAGGAGE : NOT A PARTNER AND NO SLIDER FOR  PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+						$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : NOT A PARTNER AND NO SLIDER FOR  PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
 					}
+					$ext['dtpf_id'] = $dtpfId;
+					$ext['rule_id'] =  $bclrId;
+					$ext['product_id'] = 2;//BAGGAGE PRODUCT
+					$ext["create_date"] = time();
+					$ext["modify_date"] = time();
+					$ext["create_userID"] = $this->session->userdata('loginuserID');
+					$ext["modify_userID"] = $this->session->userdata('loginuserID');
+					$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
+					echo ("<br>OFFER GEN: PROCESS BAGGAGE : INSERT MATCHED " . print_r($ext,1) );
+					$this->offer_eligibility_m->insert_dtpfext_bclr($ext);
+					$this->paxfeed_m->update_paxfeed(array('is_bg_offer_processed' => '1'), $dtpfId);
 					
 				}
 			}
 		}
-
+		echo ("<br>OFFER GEN: PROCESS BAGGAGE : COMPLETED!");
 	}
 
 	function findBestMatchBclrRule($bclrIds, $bclr_rules) {
@@ -764,7 +795,7 @@ $sWhere $sOrder $sLimit";
 		return $thebest;
 	}
 
-	function getMatchedBclrForPax($dtpfId, $bclr) {
+	function getMatchedBclrForPax($pax, $bclr) {
         	#$bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $bclrId));
 		$bclrId = $bclr->bclr_id;
 		$carrierId = $bclr->carrierID;
@@ -784,7 +815,6 @@ $sWhere $sOrder $sLimit";
 		$dest_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($bclr->dest_content, $bclr->dest_level);
 		
 		//echo "<br>start_date=" . $start_date;
-		$pax = $this->paxfeed_m->get_single_paxfeed(Array("dtpf_id" => $dtpfId));
 		#print_r($pax);
 		
 		# Validate, carrier, origin, destination, date , flight, frequency, partner, cabin, class 
