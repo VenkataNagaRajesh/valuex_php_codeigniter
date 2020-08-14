@@ -89,7 +89,7 @@
 					<div class="col-md-3 col-sm-3">
 						<label class="control-label col-md-3">Color</label>
 						<div class="col-md-9">
-							<input type="color" class="form-control" id="season_color" name="season_color" value="<?=set_value('season_color')?>" >
+							<input type="text" class="form-control" id="season_color" name="season_color" value="<?=set_value('season_color')?>" >
 						</div>
 					</div>
 					<div class="col-md-4 col-sm-4">
@@ -116,9 +116,9 @@
 			</div>
 		</form>
 	</div>
-	<div class="col-md-12 season-table">
+		<br></br>
 	   <div id='season_reconfigure'>
-
+								 
 					 <?php if(permissionChecker('season_reconfigure')) {
 					 if( isset ($reconfigure)) {?>
                                			<a href="<?php echo base_url('trigger/season_trigger') ?>" class="btn btn-danger">
@@ -128,7 +128,8 @@
                         <?php } }?>
 
        </div>
-		
+	   
+	   <div class="col-md-12 season-table">	
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form">		   
 			<div class='form-group'>			 
 				<div class="col-sm-3 col-md-2">			   
@@ -686,6 +687,7 @@ function saveseason() {
 		if (status == 'success' ) {				
 			alert("Successfully Saved..!");
 			form_reset();
+			location.reload();
 			$("#seasonslist").dataTable().fnDestroy();
 			loaddatatable();				
 			$("#calendar1").datepicker("destroy");

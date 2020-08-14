@@ -27,9 +27,9 @@ class CILogViewer {
     ];
 
 
-    const LOG_LINE_START_PATTERN = "/((INFO)|(ERROR)|(DEBUG)|(ALL))[\s-\d:]+(-->)/";
+    const LOG_LINE_START_PATTERN = "/((ERROR)|(DEBUG)|(ALL))[\s-\d:]+(-->)/";
     const LOG_DATE_PATTERN = "/(\d{4,}-[\d-:]{2,})\s([\d:]{2,})/";
-    const LOG_LEVEL_PATTERN = "/^((ERROR)|(INFO)|(DEBUG))/";
+    const LOG_LEVEL_PATTERN = "/^((ERROR)|(DEBUG))/";
 
     //this is the path (folder) on the system where the log files are stored
     private $logFolderPath;

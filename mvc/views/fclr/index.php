@@ -200,7 +200,7 @@
                                                 </div>
 					</div>
 					<div class="col-md-12" style="padding-right:20px;">
-                                               <div class="bttn-cl pull-right">
+                                               <div class="bttn-cl pull-right" style="margin-left: 15px;">
                                                                <a href="#" type="button"  id='btn_txt' class="btn btn-danger form-control" onclick="$('#fclrtable').dataTable().fnDestroy();;loaddatatable();" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></a>
 
 						</div>
@@ -233,7 +233,7 @@
 						<th class="col-lg-1"><?=$this->lang->line('min')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('max')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('slider_start')?></th>
-						<th class="col-lg-1 noExport"><?=$this->lang->line('fclr_status')?></th>
+						<th class="col-lg-1 noExport">Active</th>
                         <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                     </tr>
                  </thead>

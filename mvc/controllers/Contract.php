@@ -28,6 +28,31 @@ class Contract extends Admin_Controller {
 				'field' => 'name', 
 				'label' => $this->lang->line("contract_name"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]'
+			),
+			array(
+				'field' => 'email_id', 
+				'label' => $this->lang->line("email_id"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|valid_email'
+			),
+			array(
+				'field' => 'designation', 
+				'label' => $this->lang->line("designation"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]'
+			),
+			array(
+				'field' => 'telephone', 
+				'label' => $this->lang->line("telephone"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]'
+			),
+			array(
+				'field' => 'ext_no', 
+				'label' => $this->lang->line("ext_no"), 
+				'rules' => 'trim|required|xss_clean|max_length[5]'
+			),
+			array(
+				'field' => 'mobile_number', 
+				'label' => $this->lang->line("mobile_number"), 
+				'rules' => 'trim|required|xss_clean|max_length[10]'
 			)
 			);
 
@@ -358,7 +383,12 @@ class Contract extends Admin_Controller {
 
 				// Contract Adding
 				$data['airlineID'] = $this->input->post('airlineID');
-				$data['name'] = $this->input->post('name');              
+				$data['name'] = $this->input->post('name'); 
+				$data['email_id'] = $this->input->post('email_id');
+				$data['designation'] = $this->input->post('designation'); 
+				$data['telephone'] = $this->input->post('telephone'); 
+				$data['ext_no'] = $this->input->post('ext_no'); 
+				$data['mobile_number'] = $this->input->post('mobile_number');              
 				$data['active'] = $this->input->post('active');
                 $data['create_date'] = time();
                 $data['modify_date'] = time();
@@ -448,7 +478,12 @@ class Contract extends Admin_Controller {
 					$this->load->view('_layout_main', $this->data);
 				} else {
 					//$data['airlineID'] = $this->input->post('airlineID');
-					$data['name'] = $this->input->post('name');					               
+					$data['name'] = $this->input->post('name');	
+					$data['email_id'] = $this->input->post('email_id'); 
+					$data['designation'] = $this->input->post('designation'); 
+					$data['telephone'] = $this->input->post('telephone'); 
+					$data['ext_no'] = $this->input->post('ext_no'); 
+					$data['mobile_number'] = $this->input->post('mobile_number');				               
 					$data['modify_date'] = time();
 					$data['active'] = $this->input->post('active');                
 					$data['modify_userID'] = $this->session->userdata('loginuserID');					             

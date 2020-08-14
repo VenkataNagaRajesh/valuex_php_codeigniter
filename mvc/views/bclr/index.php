@@ -152,7 +152,7 @@
                         <input type="number" class="form-control" name="max_price" id="max_price" placeholder="Max Price" value="<?=set_value('max_price')?>" />                       
 					</div>
                     <input type="hidden" class="form-control" id="bclr_id" name="bclr_id"   value="" >
-					<div class="col-md-2 col-sm-3">
+					<div class="col-md-4 col-sm-3">
 						<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savebclr();">Add BCLR</a>
 						<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
 					</div>                     
@@ -314,7 +314,7 @@
 						<th class="col-lg-1 noExport"><?=$this->lang->line('max_capacity')?></th>
 						<th class="col-lg-1 noExport"><?=$this->lang->line('min_price')?></th>
 						<th class="col-lg-1 noExport"><?=$this->lang->line('max_price')?></th>
-                        <th class="col-lg-2 noExport"><?=$this->lang->line('active')?></th>
+                        <th class="col-lg-2 noExport">Active</th>
                         <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                     </tr>
                  </thead>

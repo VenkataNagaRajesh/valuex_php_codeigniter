@@ -35,15 +35,18 @@
 									<thead style="background:<?=$mail_header_color?>">
 										<tr>
 											<th>Flight Information</th>
-											<th style="text-align:left;">Upgrade To Cabin</th>
+											<th style="text-align:left;"></th>
 											<th>Bid Amount</th>
 											<!--<th>Action</th>-->
 										</tr>
 									</thead>
 									<tbody>
+										<tr><th><p>Upgrade Offer</p></th></tr>
 										<?php $n=1; foreach($results as $result){?>
 										<tr>
-										<td><div class="col-md-12"><p><?=$n?> . <?php echo $result->from_city; ?> To <?php echo $result->to_city; ?> </p></div></td>
+											<td><div class="col-md-12"><p><?=$n?> . <?php echo $result->from_city; ?> To <?php echo $result->to_city; ?> </p></div></td>
+											<td><p>Upgrade To</p></td>
+											<td></td>
 										</tr>
 										<tr>
 											<td>								
@@ -103,13 +106,19 @@
 											</td>
 										</tr>
 										<?php $n++; } ?>
-										<?php if(count($baggage) > 0){ ?>
+										<?php $n = 1; if(count($baggage) > 0){ ?>
 										<tr>
 											<td colspan=3 style="color: black;"><b> Baggage offer</b> </td>
 										</tr>
 										<?php foreach($baggage as $bg => $row){ ?>
 										<?php $bslider = $baggage[$bg]['pax'];?>
-
+										<tr>
+											<td>
+												<p><?=$n++ ?> . <?php echo $bslider->from_city; ?> To <?php echo $bslider->to_city; ?> </p>
+											</td>
+											<td><p>Upgrade To</p></td>
+											<td></td>
+										</tr>
 										<tr>
 											<td style="color: black;">
 												<div style="text-align:left" class="bid-info">
@@ -133,12 +142,16 @@
 												</div>
 											</td>
 											<td style="color: black;"> <?=$results[0]->current_cabin?> </td>
-											<td style="color: black;"><b><?=$bclr[$bslider->ond]->bag_type . " - " . $bclr[$bslider->ond]->min_unit?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
-												<input id="baggage_slider<?=$bslider->ond?>" data-slider-id='baggage_slider<?=$bslider->ond?>Slider' type="text" data-slider-min="<?=$bclr[$bslider->ond]->min_unit?>" data-slider-max="<?=$bclr[$bslider->ond]->max_capacity;?>" data-slider-step="1" data-slider-value="<?=$bclr[$bslider->ond]->min_price;?>" data-slider-handle="round" min-slider-handle="50"/>
-												<b> &nbsp;&nbsp;<?=$bclr[$bslider->ond]->max_capacity?></b> 
+											<td style="color: black;" >
+												<div class="price-range col-md-12">	
+													<b><?=$bclr[$bslider->ond]->bag_type . " - " . $bclr[$bslider->ond]->min_unit?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
+													<input id="baggage_slider<?=$bslider->ond?>" data-slider-id='baggage_slider<?=$bslider->ond?>Slider' type="text" data-slider-min="<?=$bclr[$bslider->ond]->min_unit?>" data-slider-max="<?=$bclr[$bslider->ond]->max_capacity;?>" data-slider-step="1" data-slider-value="<?=$bclr[$bslider->ond]->min_price;?>" data-slider-handle="round" min-slider-handle="50"/>
+													<b> &nbsp;&nbsp;<?=$bclr[$bslider->ond]->max_capacity?></b>
+												</div>
 											</td>
 										</tr>
-										 <?php } } ?>
+										 <?php } ?>
+										 <?php } ?>
 									</tbody>
 								</table>
 								<!--========Mobile Data Bidding=======--> 

@@ -12,12 +12,13 @@
          $usertype = $this->session->userdata("usertype");
          if(permissionChecker('partner_add')) {?>
          <h5 class="page-header">
-             <a href="<?php echo base_url('partner/add') ?>" data-toggle="tooltip" data-title="Add Role" data-placement="left" class="btn btn-danger">
+             <a href="<?php echo base_url('partner/add') ?>" data-toggle="tooltip" data-title="Add Partner" data-placement="left" class="btn btn-danger">
                  <i class="fa fa-plus"></i> 
              </a>
          </h5>
      <?php } ?>
     <!-- form start -->
+    <br/>
     <div class="box-body">
         <div class="row">        
             <div class="col-md-12">

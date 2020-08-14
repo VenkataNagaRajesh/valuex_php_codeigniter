@@ -5,7 +5,7 @@ class Partner extends Admin_Controller {
 	function __construct() {
 		parent::__construct();	
         $this->load->model('partner_m');
-        $this->load->model('airline_m');
+        $this->load->model('airline_m'); 
         $this->load->model('airports_m');
 		$language = $this->session->userdata('lang');
         $this->lang->load('partner', $language);
@@ -178,7 +178,7 @@ class Partner extends Admin_Controller {
 		$this->load->view('_layout_main', $this->data);
     }
 
-    public function add(){
+    public function add(){ 
         $this->data['headerassets'] = array(
             'css' => array(
                     'assets/select2/css/select2.css',
@@ -194,7 +194,8 @@ class Partner extends Admin_Controller {
             )
         );
         $userID = $this->session->userdata('loginuserID');
-		$roleID = $this->session->userdata('roleID');	
+        $roleID = $this->session->userdata('roleID');
+        $usertypeID = $this->session->userdata('usertypeID');	
         $this->data['airlines'] = $this->airline_m->getAirlinesData();
         $types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
         foreach($types as $type){
@@ -207,7 +208,12 @@ class Partner extends Admin_Controller {
                 $this->data["subview"] = "partner/add";
                 $this->load->view('_layout_main', $this->data);
             } else { 
-                $array['carrierID'] = $this->session->userdata('login_user_airlineID')[0];               
+                if(permissionChecker('partner_add') && $usertypeID==1){
+                    $array['carrierID'] = $this->input->post("carrier");
+                }else{
+                    $array['carrierID'] = $this->session->userdata('login_user_airlineID')[0];
+                }
+                               
                 $array["partner_carrierID"] = $this->input->post("partner_carrierID");
                 $array["origin_level"] = $this->input->post("origin_level");
 			    $array["origin_content"] =  implode(',',$this->input->post("origin_content"));
@@ -245,7 +251,8 @@ class Partner extends Admin_Controller {
             )
         );
         $userID = $this->session->userdata('loginuserID');
-		$roleID = $this->session->userdata('roleID');	
+        $roleID = $this->session->userdata('roleID');	
+        $usertypeID = $this->session->userdata('usertypeID');
         $this->data['airlines'] = $this->airline_m->getAirlinesData();
         $types = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
         foreach($types as $type){
@@ -261,7 +268,10 @@ class Partner extends Admin_Controller {
                     if ($this->form_validation->run() == FALSE) {
                         $this->data["subview"] = "partner/edit";
                         $this->load->view('_layout_main', $this->data);
-                    } else {                       
+                    } else {
+                        if(permissionChecker('partner_edit') && $usertypeID==1){
+                            $data['carrierID'] = $this->input->post("carrier");
+                        }
                         $data["partner_carrierID"] = $this->input->post("partner_carrierID");
                         $data["origin_level"] = $this->input->post("origin_level");
                         $data["origin_content"] =  implode(',',$this->input->post("origin_content"));

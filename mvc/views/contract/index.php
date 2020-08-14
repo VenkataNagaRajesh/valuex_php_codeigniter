@@ -44,7 +44,7 @@
 						<th class="col-lg-1"><?=$this->lang->line('start_date')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('end_date')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('no_users')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('expire_message')?></th>
+                        <th class="col-lg-1">Expired</th>
 						<th class="col-lg-1 noExport"><?=$this->lang->line('contract_active')?></th>
                         <?php if(permissionChecker('contract_edit') || permissionChecker('contract_delete')) { ?>
                          <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
@@ -63,7 +63,7 @@
                             } else if($product->expire <= 30){
                                 $product->color = "#e0a90c";
                             } else {
-                                $product->color = "green";
+                                $product->color = "#333";
                             }
                          if($j == 1){ ?>
                     <tr>
@@ -75,7 +75,7 @@
                         <td><?=date_format(date_create($product->start_date),'d-m-Y')?></td>
                         <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
                         <td><?=$product->no_users?></td>
-                        <td style="color:<?=$product->color?>;"><?="Expires in ". $product->expire."D"?></td>
+                        <td style="color:<?=$product->color?>;"><?="Expired in ". $product->expire."D"?></td>
                         <td data-title="<?=$this->lang->line('contract_active')?>" rowspan="<?=count($contract->products)?>">
                             <div class="onoffswitch-small" id="<?=$contract->contractID?>">
                                   <input type="checkbox" id="myonoffswitch<?=$contract->contractID?>" class="onoffswitch-small-checkbox" name="paypal_demo" <?php if($contract->active === '1') echo "checked='checked'"; ?>>
@@ -101,7 +101,7 @@
                         <td><?=date_format(date_create($product->start_date),'d-m-Y')?></td>
                         <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
                         <td><?=$product->no_users?></td>
-                        <td style="color:<?=$product->color?>;"><?="Expires in ". $product->expire."D"?></td>
+                        <td style="color:<?=$product->color?>;"><?="Expired in ". $product->expire."D"?></td>
                     </tr>
                     <?php } ?>
                      <?php $j++; } //products end
