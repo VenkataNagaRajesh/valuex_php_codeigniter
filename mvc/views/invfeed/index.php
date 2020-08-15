@@ -114,10 +114,10 @@
                          <th class="col-lg-1"><?=$this->lang->line('seat_capacity')?></th>
                          <th class="col-lg-1"><?=$this->lang->line('sold_weight')?></th>
 						
-						 <th class="col-lg-1 noExport"><?=$this->lang->line('active')?></th>
+						 <th class="col-lg-1 noExport" style="display:none;"><?=$this->lang->line('active')?></th>
 
 						<?php if(permissionChecker('invfeed_delete') || permissionChecker('invfeed_view')){?>
-                                                <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
+                                                <th class="col-lg-1 noExport" style="display:none;"><?=$this->lang->line('action')?></th>
 						<?php }?>
                     </tr>
                  </thead>
@@ -195,9 +195,9 @@ $('#cabin').val('<?=$cabin?>').trigger('change');
                   {"data": "sold_seats"},
                   {"data": "aircraft_type"},
                   {"data": "seat_capacity"},
-                  {"data": "sold_weight"},
-				  {"data": "active"},
-				  {"data": "action"}
+                  {"data": "sold_weight"}
+				  /*{"data": "active"},
+				  {"data": "action"}*/
 				  ],			     
      dom: 'B<"clear">lfrtip',
     // buttons: [ 'copy', 'csv', 'excel','pdf' ]	  

@@ -10,64 +10,66 @@
     <!-- form start -->
   <div class="box-body">
     <div class="row">
-       <div class="col-sm-12">			
+       <div class="col-sm-12" style="padding:0;">			
 	     <div class="nav-tabs-custom">
-               <ul class="nav nav-tabs">
-                  <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
-               </ul>
-
-	        <br/> <br/>
-       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
-          <div class='form-group'>
-            <div class="col-sm-3 col-md-2">
-             <?php $slist = array("0" => "Season");               
-					   foreach($seasonslist as $key => $season){
-						  $slist[$key] = $season;
-						}							
-				echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
-            </div>
-			
-            <div class="col-sm-3 col-md-2">
-			 <?php  $types['VX_season_airport_origin_map']="Origin Map";
-			        $types['VX_season_airport_dest_map']="Destination Map";
-				 echo form_dropdown("type", $types,set_value("type",$type), "id='type' class='form-control hide-dropdown-icon select2'");    ?>
-            </div>
-			
-			<div class="col-sm-3 col-md-2">
-			 <?php  $list['0'] = " Airport";
-			     foreach($airports_list as $alist ) {
-				    $list[$alist->vx_aln_data_defnsID] = $alist->code;
-			     }
-				 echo form_dropdown("airportID", $list,set_value("airportID",$airportID), "id='airportID' class='form-control hide-dropdown-icon select2'");    ?>
-            </div>
-			
-            <div class="col-sm-3 col-md-3">
-              <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
-			  <button type="button" class="btn btn-danger" onclick="downloadSeasonAirport()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
-            </div>			
-          </div>
-        </form>		
-	    <div class="tab-content">
-          <div id="all" class="tab-pane active">
-            <div id="hide-table">
-             <table id="satable" class="table table-striped table-bordered table-hover dataTable no-footer">
-              <thead>
-               <tr>
-                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-				 <th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>
-			     <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
-                 <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>
-				 <th class="col-lg-1"><?=$this->lang->line('country')?></th>				
-				 <th class="col-lg-1"><?=$this->lang->line('region')?></th>	
-				 <th class="col-lg-1"><?=$this->lang->line('area')?></th>	
-               </tr>
-              </thead>
-			   <tbody>
-			   </tbody>
-			  </table>
-	  	    </div>
-           </div>
-         </div>
+          <ul class="nav nav-tabs">
+             <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
+          </ul>
+		<div class="col-md-12">
+		   <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+			  <div class='form-group'>
+				<div class="col-sm-3 col-md-2">
+				 <?php $slist = array("0" => "Season");               
+						   foreach($seasonslist as $key => $season){
+							  $slist[$key] = $season;
+							}							
+					echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
+				</div>
+				
+				<div class="col-sm-3 col-md-2">
+				 <?php  $types['VX_season_airport_origin_map']="Origin Map";
+						$types['VX_season_airport_dest_map']="Destination Map";
+					 echo form_dropdown("type", $types,set_value("type",$type), "id='type' class='form-control hide-dropdown-icon select2'");    ?>
+				</div>
+				
+				<div class="col-sm-3 col-md-2">
+				 <?php  $list['0'] = " Airport";
+					 foreach($airports_list as $alist ) {
+						$list[$alist->vx_aln_data_defnsID] = $alist->code;
+					 }
+					 echo form_dropdown("airportID", $list,set_value("airportID",$airportID), "id='airportID' class='form-control hide-dropdown-icon select2'");    ?>
+				</div>
+				
+				<div class="col-sm-3 col-md-3">
+				  <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
+				  <button type="button" class="btn btn-danger" onclick="downloadSeasonAirport()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
+				</div>			
+			  </div>
+			</form>	
+		</div>
+		<div class="col-md-12">
+			<div class="tab-content">
+			  <div id="all" class="tab-pane active">
+				<div id="hide-table">
+				 <table id="satable" class="table table-striped table-bordered table-hover dataTable no-footer">
+				  <thead>
+				   <tr>
+					 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+					 <th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>
+					 <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
+					 <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>
+					 <th class="col-lg-1"><?=$this->lang->line('country')?></th>				
+					 <th class="col-lg-1"><?=$this->lang->line('region')?></th>	
+					 <th class="col-lg-1"><?=$this->lang->line('area')?></th>	
+				   </tr>
+				  </thead>
+				   <tbody>
+				   </tbody>
+				  </table>
+				</div>
+			   </div>
+			 </div>
+		 </div>
        </div>
 	  </div>
      </div>

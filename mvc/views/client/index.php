@@ -9,13 +9,13 @@
     </div><!-- /.box-header -->
 	 <?php if(permissionChecker('client_add')) {   ?>
          <h5 class="page-header">
-             <a href="<?php echo base_url('client/adds') ?>" data-toggle="tooltip" data-title="Add Airline Client" data-placement="left" class="btn btn-danger">
+             <a style="margin:0;" href="<?php echo base_url('client/adds') ?>" data-toggle="tooltip" data-title="Add Airline Client" data-placement="left" class="btn btn-danger">
                  <i class="fa fa-plus"></i> 
              </a>
          </h5>
      <?php } ?>
-     
-	 <form class="form-horizontal col-md-12" role="form" method="post" enctype="multipart/form-data">		   
+     <br>
+	 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>
 			    <div class="col-sm-4 col-md-3">			   
                  <?php $status = array("InActive","Active","Status");               
@@ -55,7 +55,7 @@
                                 <th class="col-lg-2"><?=$this->lang->line('client_role')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_usertype')?></th>                                
                                 <?php if(permissionChecker('client_edit')) { ?>
-                                <th class="col-lg-1 noExport"><?=$this->lang->line('client_status')?></th>
+                                <th class="col-lg-1 noExport">Active</th>
                                 <?php } ?>
                                 <?php if(permissionChecker('client_edit') || permissionChecker('client_delete') || permissionChecker('client_view')) { ?>
                                 <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>

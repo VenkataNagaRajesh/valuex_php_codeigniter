@@ -24,7 +24,7 @@
 			</div>
 		</div>
 	</div>
-	<span class="card-header" data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id = 'add_zone_button' class="btn btn-danger" style="margin:1px 0;" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></span>
+	<span class="card-header" data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id = 'add_zone_button' class="btn btn-danger" style="margin:1px 0;position:absolute;" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></span>
 	<div class="col-md-12 collapse" id="mzonesAdd">
 		<form class="form-horizontal" role="form" method="post" id='add_zone' enctype="multipart/form-data">
 		<div class="col-md-12">
@@ -210,7 +210,7 @@
 				   <tr>				      
 						<th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/> #
 						<th><?=$this->lang->line('market_name')?></th>
-						<th><?php echo "Airline";?></th>
+						<th><?php echo "Carrier Code";?></th>
 						<th><?=$this->lang->line('level_type')?></th>
 						<th><?=$this->lang->line('amz_level_value')?></th>
 						<th><?=$this->lang->line('amz_incl_type')?></th>

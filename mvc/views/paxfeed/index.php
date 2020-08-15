@@ -196,6 +196,7 @@
 			<th class="col-lg-1">Operating Carrier</th>
             <th class="col-lg-1">Marketing Carrier</th>
 			
+			
 		 <th class="col-lg-1 noExport" style="display:none;"><?=$this->lang->line('active')?></th>
 
 	<?php if(permissionChecker('paxfeed_delete')){?>
@@ -283,6 +284,7 @@
                                     {"data": "fclr_data" },
                                     {"data": "operating_carrier" },
                                     {"data": "marketing_carrier" }
+                                   
 				/*{"data": "active"},
 				  {"data": "action"}*/
 				  ],			     

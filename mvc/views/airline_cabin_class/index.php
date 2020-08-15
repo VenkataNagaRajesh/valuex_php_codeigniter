@@ -84,7 +84,7 @@
 				<th class="col-lg-1"><?=$this->lang->line('order')?></th>
 				<th class="col-lg-1">RBD Markup</th>
                                 <?php if(permissionChecker('airline_cabin_class_edit')) { ?>
-                                        <th class="col-lg-1 noExport"><?=$this->lang->line('airline_cabin_status')?></th>
+                                        <th class="col-lg-1 noExport">Active</th>
                                 <?php } ?>
 
                                  <?php if(permissionChecker('airline_cabin_class_edit') || permissionChecker('airline_cabin_class_view') ||  permissionChecker('airline_cabin_class_delete')) { ?>
