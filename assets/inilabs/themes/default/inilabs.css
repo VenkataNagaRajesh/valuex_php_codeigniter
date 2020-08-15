@@ -93,7 +93,7 @@
 .box > .box-header > .breadcrumb {
   background: none !important;
   float: right;
-  padding: 6px;
+  padding: 4px 15px;
   margin-bottom: 0px;
   position: relative;
   font-size: 15px;
@@ -116,8 +116,7 @@
 /* Lable Start */
 .form-horizontal .control-label {
 text-align: left;
-    font-size: 14px;
-    font-family: lato;
+    font-size: 13px;
     font-weight: 500;
 }
 
@@ -130,7 +129,8 @@ label {
 /* From span Start*/
 .form-horizontal > .form-group > span {
   font-weight: 000;
-  color: #FF0B07;
+  /*color: #FF0B07;*/
+  color: #fff;
 }
 /*  From span Close */
 

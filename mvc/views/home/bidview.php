@@ -84,8 +84,11 @@
                                                		<label class="checkbox-inline<?=($result->fclr == null)?"bid-visible":""?>">
 														<input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid 
 													</label>	
-												   <?php } ?>													
-                                              </div>                                                											
+												   <?php } ?>
+													<label class="radio-inline">
+														<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="" >No Bid
+													</label>
+                                              </div>
 											</td>
 											<td>
 												<?php if($result->fclr != null){													 
@@ -116,7 +119,7 @@
 											<td>
 												<p><?=$n++ ?> . <?php echo $bslider->from_city; ?> To <?php echo $bslider->to_city; ?> </p>
 											</td>
-											<td><p>Upgrade To</p></td>
+											<td><p>Booked Cabin</p></td>
 											<td></td>
 										</tr>
 										<tr>
@@ -141,7 +144,11 @@
 													</div>
 												</div>
 											</td>
-											<td style="color: black;"> <?=$results[0]->current_cabin?> </td>
+											<td style="color: black;"> <p><?=$results[0]->current_cabin?> </p>
+												<label class="radio-inline">
+													<input type="radio" name="current_cabin<?=$results->flight_number?>" value="" >Not Interested
+												</label>
+											</td>
 											<td style="color: black;" >
 												<div class="price-range col-md-12">	
 													<b><?=$bclr[$bslider->ond]->bag_type . " - " . $bclr[$bslider->ond]->min_unit?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
