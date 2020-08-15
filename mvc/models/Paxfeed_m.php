@@ -11,7 +11,7 @@ class Paxfeed_m extends MY_Model {
 		parent::__construct();
 	}
 
-	function get_paxfeed($array=NULL, $signal=FALSE) {
+	function get_paxfeed($array=NULL, $signal=FALSE) { 
 		$query = parent::get($array, $signal);
 		return $query;
 	}	
@@ -55,8 +55,10 @@ class Paxfeed_m extends MY_Model {
 
 	function process_tiermarkup($pnr_list){
 		foreach($pnr_list as $pnr){
-			$this->db->select('max(tier_markup) as tier_markup,max(rbd_markup) as rbd_markup,flight_number,carrier_code,from_city,to_city')->from('VX_daily_tkt_pax_feed');
+			$this->db->select('max(tier_markup) as tier_markup,max(rbd_markup) as rbd_markup,flight_number,operating_carrier,marketing_carrier,carrier_code,from_city,to_city')->from('VX_daily_tkt_pax_feed');
 			$this->db->where('pnr_ref',$pnr);
+			$this->db->where('operating_carrier',$operating);
+			$this->db->where('marketing_carrier',$marketing);
 			$this->db->group_by(array('flight_number','carrier_code','from_city','to_city'));
 			$query = $this->db->get();
 	                $data = $query->result();
@@ -67,6 +69,8 @@ class Paxfeed_m extends MY_Model {
 				$arr['tier_markup'] = $v->tier_markup;
 				$where = array();
 				$where['pnr_ref'] = $pnr;
+				$where['operating_carrier'] = $operating;
+				$where['marketing_carrier'] = $marketing;
 				$where['flight_number'] = $v->flight_number;
 				$where['carrier_code'] = $v->carrier_code;
 				$where['from_city'] = $v->from_city;
