@@ -153,7 +153,7 @@ class Paxfeed extends Admin_Controller {
                //$time_start = microtime(true);
 		$column = 0;                   
              foreach ($Reader as $Row){
-				
+		 	
 			$column++;
 		$Row = array_map('trim', $Row);
                  if($i == 0){ // header checking                                         
@@ -237,7 +237,7 @@ class Paxfeed extends Admin_Controller {
 						
 						
 						$this->mydebug->paxfeed_log("Operating Carrier Code should be 2 alphabets in row " . $column , 1);
-						
+						continue;
 						  
 				  }
 				  		
@@ -248,7 +248,7 @@ class Paxfeed extends Admin_Controller {
 						
 						
 						$this->mydebug->paxfeed_log("Marketing Carrier Code should be 2 alphabets in row " . $column , 1);
-						  
+						continue;  
 				  }
 
 				 
@@ -270,11 +270,11 @@ class Paxfeed extends Admin_Controller {
 					
                                       $paxfeedraw['seg_nbr'] =  $Row[array_search('seg nbr',$import_header)];
 
-					if ( strlen($paxfeedraw['seg_nbr']) <= 2 || !is_numeric($paxfeedraw['seg_nbr'])) {
+					if ( strlen($paxfeedraw['seg_nbr']) >= 3 || !is_numeric($paxfeedraw['seg_nbr'])) {
 						
 											  $this->mydebug->paxfeed_log("SEG nbr should be lessthan or equal 2 digits in row " . $column , 1);
 											 
-												
+											  continue;	
 												
 										}
 					
