@@ -7,7 +7,7 @@
             <li class="active"><?=$this->lang->line('menu_paxfeed')?></li>
         </ol>
     </div><!-- /.box-header -->
-    <!-- form start -->
+    <!-- form start --> 
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">              
@@ -193,6 +193,8 @@
                          <th class="col-lg-1"><?=$this->lang->line('channel')?></th>
 			<th class="col-lg-1">FCLR Report</th>
 			<th class="col-lg-1">FCLR Data</th>
+			<th class="col-lg-1">Operating Carrier</th>
+            <th class="col-lg-1">Marketing Carrier</th>
 			
 			
 		 <th class="col-lg-1 noExport" style="display:none;"><?=$this->lang->line('active')?></th>
@@ -279,7 +281,10 @@
                                   {"data": "office_id"},
 				    {"data": "channel" },
 					{"data": "is_fclr_processed"},
-                                    {"data": "fclr_data" }
+                                    {"data": "fclr_data" },
+                                    {"data": "operating_carrier" },
+                                    {"data": "marketing_carrier" }
+                                   
 				/*{"data": "active"},
 				  {"data": "action"}*/
 				  ],			     

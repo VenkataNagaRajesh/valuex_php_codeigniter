@@ -135,43 +135,51 @@ class Paxfeed extends Admin_Controller {
 
 
 
-	$header = array_map("strtolower", array("Airline Code","PNR ref","Pax nbr","first name","last name","ptc","FQTV","seg nbr","carrier code","flight nbr","dept date","arrival date","dept time", "arrival time","class","board point","off point","PAX contact email","Phone","Booking country","booking city","office-id","channel","tier markup"));	
+	$header = array_map("strtolower", array("Airline Code","PNR ref","Pax nbr","first name","last name","ptc","FQTV","seg nbr","carrier code","flight nbr","dept date","arrival date","dept time", "arrival time","class","board point","off point","PAX contact email","Phone","Booking country","booking city","office-id","channel","tier markup","Operating Carrier","Marketing Carrier"));	
 		$header = array_map('strtolower', $header);
-
+		
 
 				$Sheets = $Reader -> Sheets();
                         //      print_r(count($header)); exit;
-                                $Sheets = $Reader -> Sheets();
+								$Sheets = $Reader -> Sheets();
+								
                         //      $defnData = $this->airports_m->getDefns();
 
 		$this->mydebug->paxfeed_log("Processing the excel file " . $_FILES['file']['name'] , 0);
           foreach ($Sheets as $Index => $Name){
-              $Reader -> ChangeSheet($Index);
+			  $Reader -> ChangeSheet($Index);
+			  
               $i = 0;
                //$time_start = microtime(true);
 		$column = 0;                   
              foreach ($Reader as $Row){
+		 	
 			$column++;
 		$Row = array_map('trim', $Row);
                  if($i == 0){ // header checking                                         
 
                   	$flag = 0 ;
 		       // $Row = array_map('trim', $Row);
-	                $import_header = array_map('strtolower', $Row);
+					$import_header = array_map('strtolower', $Row);
+					
 
                         if(count(array_diff($header,$import_header)) == 0){
                              $flag = 1;
 				$this->mydebug->paxfeed_log("Header Matched for file  " . $_FILES['file']['name'] , 0);
+				
                          } else {
 					$this->mydebug->paxfeed_log("Header mismatch" , 1);
 					break;
 			 }
                         } else {
-                             if($flag == 1){                                                                                      
-			   	 if(count($Row) == 24){ //print_r($Row); exit;						
+							 if($flag == 1){                                                                                      
+					if(count($Row) == 26){ //print_r($Row); exit;	
+											
 				    $this->mydebug->paxfeed_log("Columns count Matched for row " . $column , 0);
 					$paxfeedraw = array();
-			   	      $paxfeedraw['airline_code'] =  $Row[array_search('airline code',$import_header)];
+					
+						 $paxfeedraw['airline_code'] =  $Row[array_search('airline code',$import_header)];
+						
 					if (!is_numeric($paxfeedraw['airline_code']) || strlen($paxfeedraw['airline_code']) != '3' ) {
 						$this->mydebug->paxfeed_log("Airline code should be 3 digits in row " . $column , 1);
 						continue;
@@ -181,14 +189,18 @@ class Paxfeed extends Admin_Controller {
 					 if ( strlen($paxfeedraw['pnr_ref']) != '6' ) {
                                                 $this->mydebug->paxfeed_log("PNR ref should be of length 6 in row " . $column , 1);
                                                 continue;
-                                        }
+										}
+										
 
-                                      $paxfeedraw['pax_nbr'] = $Row[array_search('pax nbr',$import_header)];
+									  $paxfeedraw['pax_nbr'] = $Row[array_search('pax nbr',$import_header)];
+									  
 
 					if ( strlen($paxfeedraw['pax_nbr']) >= 3 || !is_numeric($paxfeedraw['pax_nbr'])) {
                                                 $this->mydebug->paxfeed_log("Pax nbr should be of length 2 in row " . $column , 1);
                                                 continue;
-                                        }
+										}
+				
+										
 
                                       $paxfeedraw['first_name'] = trim($Row[array_search('first name',$import_header)]);
 
@@ -217,10 +229,32 @@ class Paxfeed extends Admin_Controller {
                                          $this->mydebug->paxfeed_log("Last name should contain alphabets only in row " .$column  , 1);
                                                 continue;
 
-                                        }*/
+										}*/
+										
+					$paxfeedraw['operating_carrier'] = trim($Row[array_search('operating carrier',$import_header)]);
+					
+					if ( strlen($paxfeedraw['operating_carrier']) != 2){
+						
+						
+						$this->mydebug->paxfeed_log("Operating Carrier Code should be 2 alphabets in row " . $column , 1);
+						continue;
+						  
+				  }
+				  		
+				  
+
+					$paxfeedraw['marketing_carrier'] = trim($Row[array_search('marketing carrier',$import_header)]);
+					if ( strlen($paxfeedraw['marketing_carrier']) != 2){
+						
+						
+						$this->mydebug->paxfeed_log("Marketing Carrier Code should be 2 alphabets in row " . $column , 1);
+						continue;  
+				  }
+
+				 
 
 
-                                      $paxfeedraw['ptc'] = $Row[array_search('ptc',$import_header)];
+                    $paxfeedraw['ptc'] = $Row[array_search('ptc',$import_header)];
 
 					 if ( strlen($paxfeedraw['ptc']) >= 4 || !ctype_alpha($paxfeedraw['ptc'])) {
                                               $this->mydebug->paxfeed_log("PTC should be 3 characters in row " . $column , 1);
@@ -236,11 +270,15 @@ class Paxfeed extends Admin_Controller {
 					
                                       $paxfeedraw['seg_nbr'] =  $Row[array_search('seg nbr',$import_header)];
 
-					if ( strlen($paxfeedraw['seg_nbr']) != 2 || !is_numeric($paxfeedraw['seg_nbr'])) {
-                                              $this->mydebug->paxfeed_log("SEG nbr should be 2 digits in row " . $column , 1);
-                                                continue;
-                                        }
-
+					if ( strlen($paxfeedraw['seg_nbr']) >= 3 || !is_numeric($paxfeedraw['seg_nbr'])) {
+						
+											  $this->mydebug->paxfeed_log("SEG nbr should be lessthan or equal 2 digits in row " . $column , 1);
+											 
+											  continue;	
+												
+										}
+					
+										
 
                                       $paxfeedraw['carrier_code'] =  $Row[array_search('carrier code',$import_header)];
 
@@ -341,7 +379,7 @@ class Paxfeed extends Admin_Controller {
                                                 $this->mydebug->paxfeed_log("Tier markup should be 1-4 in row " . $column , 1);
                                                 continue;
 
-                                        }
+										}
 					
 
 					$exist_pax_raw = $this->paxfeedraw_m->checkPaxFeedRaw($paxfeedraw);
@@ -400,6 +438,18 @@ class Paxfeed extends Admin_Controller {
                                                 continue;
 					}
 
+					if( $paxfeedraw['operating_carrier'] != $pnr_exist->operating_carrier) {
+
+						$this->mydebug->paxfeed_log("Multi Pax entry,  invalid carrier code for row " . $column , 1);
+                                                continue;
+					}
+
+					if( $paxfeedraw['marketing_carrier'] != $pnr_exist->marketing_carrier) {
+
+						$this->mydebug->paxfeed_log("Multi Pax entry,  invalid carrier code for row " . $column , 1);
+                                                continue;
+					}
+
 					if($cabin_new_entry->cabin_id !=  $cabin_old_entry->cabin_id){
                                                 $this->mydebug->paxfeed_log("Multi Pax entry,  Invalid cabin for row " . $column , 1);
                                                 continue;
@@ -449,7 +499,9 @@ class Paxfeed extends Admin_Controller {
 	 				$paxfeed['airline_code'] = $paxfeedraw['airline_code'];
                                         $paxfeed['pnr_ref'] = $paxfeedraw['pnr_ref'];
                                         $paxfeed['pax_nbr'] = $paxfeedraw['pax_nbr'];
-                                        $paxfeed['first_name'] = $paxfeedraw['first_name'];
+										$paxfeed['first_name'] = $paxfeedraw['first_name'];
+										$paxfeed['operating_carrier'] = $paxfeedraw['operating_carrier'];
+										$paxfeed['marketing_carrier'] = $paxfeedraw['marketing_carrier'];
 					$paxfeed['last_name'] = $paxfeedraw['last_name'];
                                         $paxfeed['ptc'] = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['ptc'],'18');;
                                         $paxfeed['fqtv'] = $paxfeedraw['fqtv'];
@@ -529,7 +581,8 @@ class Paxfeed extends Admin_Controller {
                                                              $paxfeed['create_date'] = time();
                                                              $paxfeed['modify_date'] = time();
                                                              $paxfeed['create_userID'] = $this->session->userdata('loginuserID');
-                                                             $paxfeed['modify_userID'] = $this->session->userdata('loginuserID');
+															 $paxfeed['modify_userID'] = $this->session->userdata('loginuserID');
+								
 						//	print_r($rafeed);exit;
                                                               $insert_id = $this->paxfeed_m->insert_paxfeed($paxfeed);
 								if ( $insert_id ) {
@@ -586,14 +639,13 @@ class Paxfeed extends Admin_Controller {
 
 
 		
-$aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'last_name','ptc.code','fqtv','dca.code','seg_nbr',
+$aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','marketing_carrier','pax_nbr','first_name' ,'last_name','ptc.code','fqtv','dca.code','seg_nbr',
 		   'flight_number','dep_date','dept_time','arrival_date','arrival_time','class', 'cdef.cabin','df.code','dt.code',
 			'tier','dfre.code','pax_contact_email','phone','cou.code','cit.code','office_id','channel','is_fclr_processed','fclr_data','pax.active',
 			'ptc.aln_data_value','dca.aln_data_value','cdef.desc','df.aln_data_value','dt.aln_data_value',
 			'dfre.aln_data_value','cou.aln_data_value','cit.aln_data_value');
 	
 		$sLimit = "";
-		
 			if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
 			{		
 			  $sLimit = "LIMIT ".$_GET['iDisplayStart'].",".$_GET['iDisplayLength'];
@@ -692,7 +744,22 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
                                 $sWhere .= 'pax.ptc = '.$this->input->get('pax_type');
 
 
-                        }
+						}
+						
+						if(!empty($this->input->get('operating_carrier'))){
+							$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+							$sWhere .= 'operating_carrier = '.$this->input->get('operating_carrier');
+
+
+					}
+
+
+					if(!empty($this->input->get('marketing_carrier'))){
+						$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+						$sWhere .= 'marketing_carrier = '.$this->input->get('marketing_carrier');
+
+
+				}
 
 
 			if(!empty($this->input->get('start_date'))){
@@ -751,7 +818,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
 
-			dtpf_id,first_name, last_name, pnr_ref, pax_nbr,flight_number, pax.ptc ,ptc.code as ptc_code, fqtv, seg_nbr, dep_date, class ,dt.code as to_city, is_fclr_processed, fclr_data,
+			dtpf_id,first_name, last_name, pnr_ref,operating_carrier,marketing_carrier, pax_nbr,flight_number, pax.ptc ,ptc.code as ptc_code, fqtv, seg_nbr, dep_date, class ,dt.code as to_city, is_fclr_processed, fclr_data,
 			df.code as from_city, pax_contact_email, phone, cou.code as booking_country, cit.code as booking_city, office_id, 
 			pax.airline_code , channel, dca.code as carrier_code, cdef.cabin as cabin, pax.arrival_time,
 			pax.dept_time, pax.arrival_date,pax.frequency,pax.tier,dfre.code as frequency,cdef.desc,
@@ -768,11 +835,12 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 		$sWhere			
 		$sOrder
 		$sLimit	"; 
+		
 	
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
 	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
-			
+		
 		$output = array(
 		"sEcho" => intval($_GET['sEcho']),
 		"iTotalRecords" => $rResultFilterTotal,
@@ -814,8 +882,8 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','pax_nbr','first_name' ,'
 			$output['aaData'][] = $feed;				
 		}
 		if(isset($_REQUEST['export'])){
-		  $columns = array("#","Airline Code","PNR Reference","PAX Number","First Name","Last Name","PTC","FQTV","Carrier Code","Seg Number","Flight Number","Departure Date","Departure Time","Arrival Date","Arrival Time","Class","Cabin","Board Point","Off Point","Tier","Frequency","Pax Contact Email","Phone","Booking Country","Booking City","Office","Channel",'FCLR Report','FCLR Data');
-		  $rows = array("id","airline_code","pnr_ref","pax_nbr","first_name","last_name","ptc_code","fqtv","carrier_code","seg_nbr","flight_number","dep_date","dept_time","arrival_date","arrival_time","class","cabin","from_city","to_city","tier","frequency","pax_contact_email","phone","booking_country","booking_city","office_id","channel",'is_fclr_processed','fclr_data');
+		  $columns = array("#","Airline Code","PNR Reference","PAX Number","First Name","Last Name","PTC","FQTV","Carrier Code","Seg Number","Flight Number","Departure Date","Departure Time","Arrival Date","Arrival Time","Class","Cabin","Board Point","Off Point","Tier","Frequency","Pax Contact Email","Phone","Booking Country","Booking City","Office","Channel",'FCLR Report','FCLR Data','Operating Carrier','Marketing Carrier');
+		  $rows = array("id","airline_code","pnr_ref","pax_nbr","first_name","last_name","ptc_code","fqtv","carrier_code","seg_nbr","flight_number","dep_date","dept_time","arrival_date","arrival_time","class","cabin","from_city","to_city","tier","frequency","pax_contact_email","phone","booking_country","booking_city","office_id","channel",'is_fclr_processed','fclr_data','operating_carrier','marketing_carrier');
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );
@@ -882,7 +950,8 @@ if(!empty($data_id_array)) {
 
 public function process_fclr_matching_report() {
 
-                $sQuery = " SELECT * FROM VX_daily_tkt_pax_feed pf where fclr_data = 0 order by dtpf_id";
+				$sQuery = " SELECT * FROM VX_daily_tkt_pax_feed pf where fclr_data = 0 order by dtpf_id";
+				
                 $rResult = $this->install_m->run_query($sQuery);
 
 		foreach ($rResult as $feed ) {
