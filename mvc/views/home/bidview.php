@@ -110,54 +110,54 @@
 										</tr>
 										<?php $n++; } ?>
 										<?php $n = 1; if(count($baggage) > 0){ ?>
-										<tr>
-											<td colspan=3 style="color: black;"><b> Baggage offer</b> </td>
-										</tr>
-										<?php foreach($baggage as $bg => $row){ ?>
-										<?php $bslider = $baggage[$bg]['pax'];?>
-										<tr>
-											<td>
-												<p><?=$n++ ?> . <?php echo $bslider->from_city; ?> To <?php echo $bslider->to_city; ?> </p>
-											</td>
-											<td><p>Booked Cabin</p></td>
-											<td></td>
-										</tr>
-										<tr>
-											<td style="color: black;">
-												<div style="text-align:left" class="bid-info">
-													<div class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $bslider->from_city; ?> <span class="time-bid"><?=date('H:i A',$bslider->dep_date+$bslider->dept_time);?></span></p>
-														<ul>
-															<li><?php echo date('d M Y',$bslider->dep_date);; ?></li>
-															<li style="color:<?=$mail_header_color?>"><?php echo $bslider->flight_number;?></li>
-														</ul>
-														<small><?php echo $bslider->from_airport; ?></small>
-													</div>
-													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
-													<div style="text-align:left" class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $bslider->to_city; ?><span class="time-bid"><?=date('H:i A',$bslider->arrival_date+$bslider->arrival_time);?></span></p>
-														<ul>
-															<li><?php echo date('d M Y',$bslider->arrival_date);; ?></li>
-															<li style="color:<?=$mail_header_color?>"><?php echo $bslider->flight_number;?></li>
-														</ul>
-														<small><?php echo $bslider->to_airport; ?></small>
-													</div>
-												</div>
-											</td>
-											<td style="color: black;"> <p><?=$results[0]->current_cabin?> </p>
-												<label class="radio-inline">
-													<input type="radio" name="current_cabin<?=$results->flight_number?>" value="" >Not Interested
-												</label>
-											</td>
-											<td style="color: black;" >
-												<div class="price-range col-md-12">	
-													<b><?=$bclr[$bslider->ond]->bag_type . " - " . $bclr[$bslider->ond]->min_unit?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
-													<input id="baggage_slider<?=$bslider->ond?>" data-slider-id='baggage_slider<?=$bslider->ond?>Slider' type="text" data-slider-min="<?=$bclr[$bslider->ond]->min_unit?>" data-slider-max="<?=$bclr[$bslider->ond]->max_capacity;?>" data-slider-step="1" data-slider-value="<?=$bclr[$bslider->ond]->min_price;?>" data-slider-handle="round" min-slider-handle="50"/>
-													<b> &nbsp;&nbsp;<?=$bclr[$bslider->ond]->max_capacity?></b>
-												</div>
-											</td>
-										</tr>
-										 <?php } ?>
+											<tr>
+												<td colspan=3 style="color: black;"><b> Baggage offer</b> </td>
+											</tr>
+											<?php foreach($baggage as $bg => $row){ ?>
+												<?php $bslider = $baggage[$bg]['pax'];?>
+												<tr>
+													<td>
+														<p><?=$n++ ?> . <?php echo $bslider->from_city; ?> To <?php echo $bslider->to_city; ?> </p>
+													</td>
+													<td><p>Booked Cabin</p></td>
+													<td></td>
+												</tr>
+												<tr>
+													<td style="color: black;">
+														<div style="text-align:left" class="bid-info">
+															<div class="col-md-5">
+																<p style="color:<?=$mail_header_color?>"><?php echo $bslider->from_city; ?> <span class="time-bid"><?=date('H:i A',$bslider->dep_date+$bslider->dept_time);?></span></p>
+																<ul>
+																	<li><?php echo date('d M Y',$bslider->dep_date);; ?></li>
+																	<li style="color:<?=$mail_header_color?>"><?php echo $bslider->flight_number;?></li>
+																</ul>
+																<small><?php echo $bslider->from_airport; ?></small>
+															</div>
+															<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
+															<div style="text-align:left" class="col-md-5">
+																<p style="color:<?=$mail_header_color?>"><?php echo $bslider->to_city; ?><span class="time-bid"><?=date('H:i A',$bslider->arrival_date+$bslider->arrival_time);?></span></p>
+																<ul>
+																	<li><?php echo date('d M Y',$bslider->arrival_date);; ?></li>
+																	<li style="color:<?=$mail_header_color?>"><?php echo $bslider->flight_number;?></li>
+																</ul>
+																<small><?php echo $bslider->to_airport; ?></small>
+															</div>
+														</div>
+													</td>
+													<td style="color: black;"><p><?=$results[0]->current_cabin?></p>
+														<label class="radio-inline">
+															<input type="radio" name="current_cabin<?=$results->flight_number?>" value="" >Not Interested
+														</label>
+													</td>
+													<td style="color: black;" >
+														<div class="price-range col-md-12">	
+															<b><?=$bclr[$bslider->ond]->bag_type . " - " . $bclr[$bslider->ond]->min_unit?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
+															<input id="baggage_slider<?=$bslider->ond?>" data-slider-id='baggage_slider<?=$bslider->ond?>Slider' type="text" data-slider-min="<?=$bclr[$bslider->ond]->min_unit?>" data-slider-max="<?=$bclr[$bslider->ond]->max_capacity;?>" data-slider-step="1" data-slider-value="<?=$bclr[$bslider->ond]->min_price;?>" data-slider-handle="round" min-slider-handle="50"/>
+															<b> &nbsp;&nbsp;<?=$bclr[$bslider->ond]->max_capacity?></b>
+														</div>
+													</td>
+												</tr>
+											<?php } ?>
 										 <?php } ?>
 									</tbody>
 								</table>
@@ -282,14 +282,18 @@
 							<img class="img-responsive img-thumbnail" src="<?php echo base_url('uploads/images/'.$img->image); ?>" alt="img1">
 						</div>-->
 						<?php //} ?>
-						<div class="side-image">
-						</div>
+						<div class="side-image"></div>
 					</div>
 					<div class="col-sm-12 hidden-xs hidden-md hidden-lg">
 						<marquee>
 						 <div class="side-image">
                          </div>
 						 </marquee>
+					</div>
+					<div class="col-md-2">
+						<h2 class="baggage-title"><span>Baggage</span></h2>
+						<div class="bg-title-border"></div>
+						<img src="<?php echo base_url('assets/home/images/baggage.jpg'); ?>"  class="img-responsive" />
 					</div>
 				</div>
                 <div id="payment" class="">
