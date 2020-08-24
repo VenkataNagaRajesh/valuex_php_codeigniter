@@ -274,12 +274,22 @@ class Pref_setting extends Admin_Controller {
                                                   
 			  } else {
                                                      
-				$list =$this->airports_m->getDefns($pref->pref_get_value);
-                                $typelist[0] = "Select Value";
-                                foreach($list as $defn){
-                                          $typelist[$defn->vx_aln_data_defnsID] = $defn->aln_data_value;
+				
+
+                               if($pref->pref_code=='BAG_TYPE'){
+                                       $typelist[0] = "Select Value";
+                                       $typelist[1] = "KG";
+                                       $typelist[2] = "PC";
+
+                                        echo form_dropdown($label, $typelist,set_value($label,$pref->pref_value), "id=$label class='form-control hide-dropdown-icon select2'");
+                               }else{
+                                       $list =$this->airports_m->getDefns($pref->pref_get_value);
+                                        $typelist[0] = "Select Value";
+                                        foreach($list as $defn){
+                                                $typelist[$defn->vx_aln_data_defnsID] = $defn->aln_data_value;
+                                        }
+                                        echo form_dropdown($label, $typelist,set_value($label,$pref->pref_value), "id=$label class='form-control hide-dropdown-icon select2'");
                                 }
-                               echo form_dropdown($label, $typelist,set_value($label,$pref->pref_value), "id=$label class='form-control hide-dropdown-icon select2'");
                                                    
 			} 
                            echo "</div>";
