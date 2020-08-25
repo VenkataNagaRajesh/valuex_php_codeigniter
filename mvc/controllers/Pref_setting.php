@@ -276,7 +276,7 @@ class Pref_setting extends Admin_Controller {
                                                      
 				
 
-                               if($pref->pref_code=='BAG_TYPE'){
+                               if($pref->pref_code=='TYPE_OF_BAG'){
                                        $typelist[0] = "Select Value";
                                        $typelist[1] = "KG";
                                        $typelist[2] = "PC";
