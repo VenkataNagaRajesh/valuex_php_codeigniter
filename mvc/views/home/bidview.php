@@ -152,16 +152,16 @@
 															</div>
 														</div>
 													</td>
-													<td style="color: black;"><p><?=$results[0]->current_cabin?></p>
+													<td style="color: black;"><p></p>
 														<label class="checkbox-inline">
-															<input type="checkbox" name="current_cabin<?=$results['flight_number']?>" value="" >Not Interested
+															<input type="checkbox" name="ckb" id="ckb" value="" >Not Interested
 														</label>
 													</td>
 													<?php if($bclr[$bslider['ond']]->bag_type=='PC'){ ?>
 													<td style="color: black;" >
-														<div class="price-range col-md-12">	
+														<div class="price-range col-md-12" id="slider" name="slider" disabled="disabled">	
 															<b><?=$bclr[$bslider['ond']]->bag_type . " - " . $bslider['per_min']?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
-															<input id="baggage_slider<?=$bslider['ond']?>" data-slider-id='baggage_slider<?=$bslider['ond']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$bslider['piece'];?>" data-slider-step="1" data-slider-value="<?=$bslider['piece_com_tot'];?>" data-slider-handle="round" min-slider-handle="50"/>
+															<input id="baggage_slider<?=$bslider['ond']?>" data-slider-id='baggage_slider<?=$bslider['ond']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$bslider['piece'];?>" data-slider-step="1" data-slider-value="<?=$bslider['min_price'];?>" data-slider-handle="round" min-slider-handle="50"/>
 															<b> &nbsp;&nbsp;<?=$bslider['piece']?></b>
 														</div>
 													</td>
@@ -169,7 +169,7 @@
 														<td style="color: black;" >
 														<div class="price-range col-md-12">	
 															<b><?=$bclr[$bslider['ond']]->bag_type . " - " . $bslider['per_min']?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
-															<input id="baggage_slider<?=$bslider['ond']?>" data-slider-id='baggage_slider<?=$bslider['ond']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$bslider['per_max'];?>" data-slider-step="1" data-slider-value="<?=$bslider['price'];?>" data-slider-handle="round" min-slider-handle="50"/>
+															<input id="baggage_slider<?=$bslider['ond']?>" data-slider-id='baggage_slider<?=$bslider['ond']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$bslider['per_max'];?>" data-slider-step="1" data-slider-value="<?=$bslider['min_price'];?>" data-slider-handle="round" min-slider-handle="50"/>
 															<b> &nbsp;&nbsp;<?=$bslider['per_max']?></b>
 														</div>
 													</td>
@@ -500,7 +500,16 @@ $('#<?=$mobile_view?>bid_slider_<?=$result->flight_number?>').slider({
 $('#baggage_slider<?=$bslider['ond']?>').slider({
 	tooltip: 'always',
 	formatter: function(value) {
-		return value + ' <?=$bclr[$bslider['ond']]->bag_type?>' + ' = $'+cwtpoints<?=$bslider['ond']?>[value];
+		var price = <?=$bslider['price'] ?>;
+		var total_piece = <?=$bslider['total_piece'] ?>;
+		var bag_type = '<?=$bclr[$bslider['ond']]->bag_type?>';
+		var total;
+		if(bag_type=='PC'){
+			total=price*value*total_piece;
+		}else{
+			total=price*value;
+		}
+		return value + ' <?=$bclr[$bslider['ond']]->bag_type?>' + ' = $'+total;
 	}
 });
 $("#baggage_slider<?=$bslider['ond']?>").on("slide", function(slideEvt) {
@@ -628,12 +637,19 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 		<?php if(in_array(2,$active_products) && count($baggage) > 0) { 
 		  foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
 		  var bg_val = $("#baggage_slider<?=$bslider['ond']?>").slider('getValue');
-		  var price =<?=$bslider['price'] ?>;
-		//   console.log(price+'price');
-		//   console.log(bg_val+'bg_val');
+		var price = <?=$bslider['price'] ?>;
+		var total_piece = <?=$bslider['total_piece'] ?>;
+		var bag_type = '<?=$bclr[$bslider['ond']]->bag_type?>';
+		var total;
+		if(bag_type=='PC'){
+			total=price*bg_val*total_piece;
+		}else{
+			total=price*bg_val;
+		}
+		
 
 		  if ( bg_val) {
-		  	tot_avg = tot_avg + cwtpoints<?=$bslider['ond']?>[bg_val]*price;
+		  	tot_avg = tot_avg + total;
 			//   console.log(tot_avg+'tot_avg');
 		   }
 		<?php } } ?>

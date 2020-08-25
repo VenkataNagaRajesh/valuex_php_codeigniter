@@ -197,13 +197,14 @@ class Bidding extends MY_Controller {
 					
 					$total_piece=$per_max/$piece;
 					$final = $per_min*$per_total;
-					$piece_com_tot=$total_piece*($price+$per_total);
+					$piece_com_tot=$total_piece*$per_total;
 
 					$tr[$res->ond]['per_min']=$per_min;
 					$tr[$res->ond]['piece']=$piece;
 					$tr[$res->ond]['per_max']=$per_max;
 					$tr[$res->ond]['price']=$price;
 					$tr[$res->ond]['total_weight']=$total_weight;
+					$tr[$res->ond]['total_piece']=$total_piece;
 					$tr[$res->ond]['per_total']=$per_total;
 					$tr[$res->ond]['piece_com_tot']=$piece_com_tot;
 				}
