@@ -419,6 +419,7 @@ $sWhere $sOrder $sLimit";
 					$i++;
 					echo "<br>\n<br>CURRENT CARRIER NOT A PARTNER - NEW OND CREATAED $i  - NO SILDER ======";
 					$ond = $this->createOND($ond,"NP", $paxId); //NOT A PARTNER
+				
 					continue;
 
 				} else {
