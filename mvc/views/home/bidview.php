@@ -84,8 +84,11 @@
                                                		<label class="checkbox-inline<?=($result->fclr == null)?"bid-visible":""?>">
 														<input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid 
 													</label>	
-												   <?php } ?>													
-                                              </div>                                                											
+												   <?php } ?>
+													<label class="radio-inline">
+														<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="" >No Bid
+													</label>
+                                              </div>
 											</td>
 											<td>
 												<?php if($result->fclr != null){													 
@@ -107,50 +110,73 @@
 										</tr>
 										<?php $n++; } ?>
 										<?php $n = 1; if(count($baggage) > 0){ ?>
-										<tr>
-											<td colspan=3 style="color: black;"><b> Baggage offer</b> </td>
-										</tr>
-										<?php foreach($baggage as $bg => $row){ ?>
-										<?php $bslider = $baggage[$bg]['pax'];?>
-										<tr>
-											<td>
-												<p><?=$n++ ?> . <?php echo $bslider->from_city; ?> To <?php echo $bslider->to_city; ?> </p>
-											</td>
-											<td><p>Upgrade To</p></td>
-											<td></td>
-										</tr>
-										<tr>
-											<td style="color: black;">
-												<div style="text-align:left" class="bid-info">
-													<div class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $bslider->from_city; ?> <span class="time-bid"><?=date('H:i A',$bslider->dep_date+$bslider->dept_time);?></span></p>
-														<ul>
-															<li><?php echo date('d M Y',$bslider->dep_date);; ?></li>
-															<li style="color:<?=$mail_header_color?>"><?php echo $bslider->flight_number;?></li>
-														</ul>
-														<small><?php echo $bslider->from_airport; ?></small>
-													</div>
-													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
-													<div style="text-align:left" class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $bslider->to_city; ?><span class="time-bid"><?=date('H:i A',$bslider->arrival_date+$bslider->arrival_time);?></span></p>
-														<ul>
-															<li><?php echo date('d M Y',$bslider->arrival_date);; ?></li>
-															<li style="color:<?=$mail_header_color?>"><?php echo $bslider->flight_number;?></li>
-														</ul>
-														<small><?php echo $bslider->to_airport; ?></small>
-													</div>
-												</div>
-											</td>
-											<td style="color: black;"> <?=$results[0]->current_cabin?> </td>
-											<td style="color: black;" >
-												<div class="price-range col-md-12">	
-													<b><?=$bclr[$bslider->ond]->bag_type . " - " . $bclr[$bslider->ond]->min_unit?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
-													<input id="baggage_slider<?=$bslider->ond?>" data-slider-id='baggage_slider<?=$bslider->ond?>Slider' type="text" data-slider-min="<?=$bclr[$bslider->ond]->min_unit?>" data-slider-max="<?=$bclr[$bslider->ond]->max_capacity;?>" data-slider-step="1" data-slider-value="<?=$bclr[$bslider->ond]->min_price;?>" data-slider-handle="round" min-slider-handle="50"/>
-													<b> &nbsp;&nbsp;<?=$bclr[$bslider->ond]->max_capacity?></b>
-												</div>
-											</td>
-										</tr>
-										 <?php } ?>
+											<tr>
+												<td colspan=3 style="color: black;"><b> Baggage offer</b> </td>
+											</tr>
+											<?php
+										
+											?>
+											<?php foreach($baggage as $bg => $row){ 
+													
+												?>
+												<?php $bslider = $row['pax'];
+												// var_dump($bslider);
+												// die();
+												?>
+												<tr>
+													<td>
+														<p><?=$n++ ?> . <?php echo $bslider['from_city_name']; ?> To <?php echo $bslider['to_city_name']; ?> </p>
+													</td>
+													<td><p>Booked Cabin</p></td>
+													<td></td>
+												</tr>
+												<tr>
+													<td style="color: black;">
+														<div style="text-align:left" class="bid-info">
+															<div class="col-md-5">
+																<p style="color:<?=$mail_header_color?>"><?php echo $bslider['from_city_name']; ?> <span class="time-bid"><?=date('H:i A',$bslider['dep_date']+$bslider['dept_time']);?></span></p>
+																<ul>
+																	<li><?php echo date('d M Y',$bslider['dep_date']); ?></li>
+																	<li style="color:<?=$mail_header_color?>"><?php echo $bslider['flight_number'];?></li>
+																</ul>
+																<small><?php echo $bslider['from_airport']; ?></small>
+															</div>
+															<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
+															<div style="text-align:left" class="col-md-5">
+																<p style="color:<?=$mail_header_color?>"><?php echo $bslider['to_city_name']; ?><span class="time-bid"><?=date('H:i A',$bslider['arrival_date']+$bslider['arrival_time']);?></span></p>
+																<ul>
+																	<li><?php echo date('d M Y',$bslider['arrival_date']); ?></li>
+																	<li style="color:<?=$mail_header_color?>"><?php echo $bslider['flight_number'];?></li>
+																</ul>
+																<small><?php echo $bslider['to_airport']; ?></small>
+															</div>
+														</div>
+													</td>
+													<td style="color: black;"><p></p>
+														<label class="checkbox-inline">
+															<input type="checkbox" name="ckb" id="ckb" value="" >Not Interested
+														</label>
+													</td>
+													<?php if($bclr[$bslider['ond']]->bag_type=='PC'){ ?>
+													<td style="color: black;" >
+														<div class="price-range col-md-12" id="slider" name="slider" disabled="disabled">	
+															<b><?=$bclr[$bslider['ond']]->bag_type . " - " . $bslider['per_min']?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
+															<input id="baggage_slider<?=$bslider['ond']?>" data-slider-id='baggage_slider<?=$bslider['ond']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$bslider['piece'];?>" data-slider-step="1" data-slider-value="<?=$bslider['min_price'];?>" data-slider-handle="round" min-slider-handle="50"/>
+															<b> &nbsp;&nbsp;<?=$bslider['piece']?></b>
+														</div>
+													</td>
+													<?php } else{ ?>
+														<td style="color: black;" >
+														<div class="price-range col-md-12">	
+															<b><?=$bclr[$bslider['ond']]->bag_type . " - " . $bslider['per_min']?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
+															<input id="baggage_slider<?=$bslider['ond']?>" data-slider-id='baggage_slider<?=$bslider['ond']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$bslider['per_max'];?>" data-slider-step="1" data-slider-value="<?=$bslider['min_price'];?>" data-slider-handle="round" min-slider-handle="50"/>
+															<b> &nbsp;&nbsp;<?=$bslider['per_max']?></b>
+														</div>
+													</td>
+
+												<?php } ?>
+												</tr>
+											<?php } ?>
 										 <?php } ?>
 									</tbody>
 								</table>
@@ -270,19 +296,19 @@
 						<div class="side-image">
 							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb3.jpg'); ?>" alt="img1">
 						</div>-->
-						<?php// foreach($images as $img){ ?>
-							<!--<div class="side-image">
-							<img class="img-responsive img-thumbnail" src="<?php echo base_url('uploads/images/'.$img->image); ?>" alt="img1">
-						</div>-->
-						<?php //} ?>
-						<div class="side-image">
-						</div>
+					
+						<div class="side-image"></div>
 					</div>
 					<div class="col-sm-12 hidden-xs hidden-md hidden-lg">
 						<marquee>
 						 <div class="side-image">
                          </div>
 						 </marquee>
+					</div>
+					<div class="col-md-2">
+						<h2 class="baggage-title"><span>Baggage</span></h2>
+						<div class="bg-title-border"></div>
+						<img src="<?php echo base_url('assets/home/images/baggage.jpg'); ?>"  class="img-responsive" />
 					</div>
 				</div>
                 <div id="payment" class="">
@@ -387,6 +413,7 @@ var mile_proportion = <?=$mile_proportion?>;
 <?php foreach($cwtdata as $ond => $cwtpoints){ ?>
 var cwtpoints<?=$ond?> = [];
 <?php foreach($cwtpoints as $cwt){ ?>
+	
 	cwtpoints<?=$ond?>[<?=$cwt['cum_wt']?>] = <?=$cwt['price_per_kg']?>;
 <?php } ?>
 <?php } ?>
@@ -424,8 +451,8 @@ $(document).ready(function () {
     mileSliderUpdate(); 
 	<?php if(in_array(2,$active_products) && count($baggage) > 0){ foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
 		
-	$('#baggage_slider<?=$bslider->ond?>Slider .slider-selection').css({"background":"#f952be"});
-    $('#baggage_slider<?=$bslider->ond?>Slider .slider-handle').css({"background":"#f952be"});
+	$('#baggage_slider<?=$bslider['ond']?>Slider .slider-selection').css({"background":"#f952be"});
+    $('#baggage_slider<?=$bslider['ond']?>Slider .slider-handle').css({"background":"#f952be"});
 	<?php } } ?>
 });
 
@@ -470,19 +497,28 @@ $('#<?=$mobile_view?>bid_slider_<?=$result->flight_number?>').slider({
 
 //baggage slider jquery
 <?php if(in_array(2,$active_products) && count($baggage)>0){ foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
-$('#baggage_slider<?=$bslider->ond?>').slider({
+$('#baggage_slider<?=$bslider['ond']?>').slider({
 	tooltip: 'always',
 	formatter: function(value) {
-		return value + ' <?=$bclr[$bslider->ond]->bag_type?>' + ' = $'+cwtpoints<?=$bslider->ond?>[value];
+		var price = <?=$bslider['price'] ?>;
+		var total_piece = <?=$bslider['total_piece'] ?>;
+		var bag_type = '<?=$bclr[$bslider['ond']]->bag_type?>';
+		var total;
+		if(bag_type=='PC'){
+			total=price*value*total_piece;
+		}else{
+			total=price*value;
+		}
+		return value + ' <?=$bclr[$bslider['ond']]->bag_type?>' + ' = $'+total;
 	}
 });
-$("#baggage_slider<?=$bslider->ond?>").on("slide", function(slideEvt) {
+$("#baggage_slider<?=$bslider['ond']?>").on("slide", function(slideEvt) {
 	var tot_avg = getTotal().toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 	$("#tot").text(numformat(tot_avg));
 	$("#bidtot").text(numformat(tot_avg));	 
     mileSliderUpdate();	
 });
-$("#baggage_slider<?=$bslider->ond?>").on("click", function(slideEvt) { 
+$("#baggage_slider<?=$bslider['ond']?>").on("click", function(slideEvt) { 
 	var tot_avg = getTotal();
 	$("#tot").text(numformat(tot_avg));
 	$("#bidtot").text(numformat(tot_avg));	 
@@ -504,7 +540,7 @@ $('#miles').slider({
 		var bg_val = 0;
 		<?php if(in_array(2,$active_products) && count($baggage)>0) { ?>
 		  <?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
-		  var bg_val = bg_val + cwtpoints<?=$bslider->ond?>[$("#baggage_slider<?=$bslider->ond?>").slider('getValue')];
+		  var bg_val = bg_val + cwtpoints<?=$bslider['ond']?>[$("#baggage_slider<?=$bslider['ond']?>").slider('getValue')];
 		  <?php } ?>
 		   var up_pay_cash = (bid_amount - bg_val) - Math.round(dollar/2);;
 		   var bg_pay_cash = (bg_val) - Math.round(dollar/2);;
@@ -600,9 +636,21 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 		<?php } } ?>
 		<?php if(in_array(2,$active_products) && count($baggage) > 0) { 
 		  foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
-		  var bg_val = $("#baggage_slider<?=$bslider->ond?>").slider('getValue');
+		  var bg_val = $("#baggage_slider<?=$bslider['ond']?>").slider('getValue');
+		var price = <?=$bslider['price'] ?>;
+		var total_piece = <?=$bslider['total_piece'] ?>;
+		var bag_type = '<?=$bclr[$bslider['ond']]->bag_type?>';
+		var total;
+		if(bag_type=='PC'){
+			total=price*bg_val*total_piece;
+		}else{
+			total=price*bg_val;
+		}
+		
+
 		  if ( bg_val) {
-		  	tot_avg = tot_avg + cwtpoints<?=$bslider->ond?>[bg_val];
+		  	tot_avg = tot_avg + total;
+			//   console.log(tot_avg+'tot_avg');
 		   }
 		<?php } } ?>
       return tot_avg; 
@@ -672,7 +720,7 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 				<?php if(in_array(2,$active_products) && count($baggage)>0){ ?>
 					var bg_tot_value = 0;
 				<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
-					bg_tot_value = bg_tot_value + cwtpoints<?=$bslider->ond?>[$("#baggage_slider<?=$bslider->ond?>").slider('getValue')];
+					bg_tot_value = bg_tot_value + cwtpoints<?=$bslider['ond']?>[$("#baggage_slider<?=$bslider['ond']?>").slider('getValue')];
 				<?php } ?>
 					var up_miles = $("#miles").slider('getValue')/2;
 					var up_tot_bid = tot_bid - bg_tot_value;
@@ -720,13 +768,13 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 			  <?php if(in_array(2,$active_products)&& count($baggage)>0){ ?>
 			       if(status != ''){
 					<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
-						var bg_weight = $("#baggage_slider<?=$bslider->ond?>").slider('getValue');
-						var bg_value = cwtpoints<?=$bslider->ond?>[bg_weight];
+						var bg_weight = $("#baggage_slider<?=$bslider['ond']?>").slider('getValue');
+						var bg_value = cwtpoints<?=$bslider['ond']?>[bg_weight];
 						$.ajax({
 						async: false,
 						type: 'POST',
 						url: "<?=base_url('homes/bidding/saveBaggageData')?>",          
-						data: {"ond":<?=$bslider->ond?>,"orderID":orderID,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"tot_miles":bg_miles,"tot_bid":bg_tot_bid},
+						data: {"ond":<?=$bslider['ond']?>,"orderID":orderID,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"tot_miles":bg_miles,"tot_bid":bg_tot_bid},
 						dataType: "html",			
 						success: function(data) {
 							var info = jQuery.parseJSON(data);              		

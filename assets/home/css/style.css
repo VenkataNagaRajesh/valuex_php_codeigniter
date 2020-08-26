@@ -979,6 +979,26 @@ input[type=number]::-webkit-outer-spin-button {
     padding: 6px 18px;
 	margin-right:6px;
 }
+.baggage-title {
+    font-size:16px;
+    margin: 10px 0;
+    text-align: center;
+	position: relative;
+    z-index: 1;
+}
+.baggage-title:before {
+    border-top: 2px solid #999;
+    content:"";
+    margin: 0 auto; 
+    position: absolute; 
+    top: 50%; left: 0; right: 0; bottom: 0;
+    width: 95%;
+    z-index: -1;
+}
+.baggage-title span { 
+    background: #fff; 
+    padding: 0 15px; 
+}
 @media (min-width: 768px) and (max-width: 1000px) {
 	.bid-tab .tab-content .pass-info .bid-info {
 		display: flex;

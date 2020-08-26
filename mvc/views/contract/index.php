@@ -89,8 +89,11 @@
                         <td data-title="<?=$this->lang->line('action')?>" rowspan="<?=count($contract->products)?>">
                             <?php
                                echo btn_edit('contract/edit/'.$contract->contractID, $this->lang->line('edit'));
+							  //echo btn_view('contract/view/#myModal', $this->lang->line('view'));
+							  echo '<a href="#myModal" data-target="#myModal" data-toggle="modal" class="btn btn-success btn-xs mrg"><i class="fa fa-eye" data-placement="top" data-toggle="tooltip" data-original-title="View"></i></a>';
                                echo btn_delete('contract/delete/'.$contract->contractID, $this->lang->line('delete'));
                             ?>
+							
                         </td>
                         <?php } ?>
                     </tr>
@@ -110,6 +113,28 @@
               </table>
             </div>
           </div>
+		  <div class="row">
+			  <!-- The Modal -->
+			  <div class="modal fade" id="myModal" role="dialog" >
+				<div class="modal-dialog">
+				  <div class="modal-content">			  
+					<!-- Modal Header -->
+					<div class="modal-header">
+					  <h4 class="modal-title text-center">Airline Contract View</h4>
+					  <button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>				
+					<!-- Modal body -->
+					<div class="modal-body">
+					  Airline Contract View data.....
+					</div>				
+					<!-- Modal footer -->
+					<div class="modal-footer">
+					  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					</div>					
+				  </div>
+				</div>
+			  </div>
+		  </div>
        </div>
    </div>
 </div>
