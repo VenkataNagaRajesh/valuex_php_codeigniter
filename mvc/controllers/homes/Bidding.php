@@ -32,9 +32,9 @@ class Bidding extends MY_Controller {
     public function index() { 
 		$this->load->library('user_agent');
 		if ($this->agent->is_mobile()){
-           $this->data['mobile_view'] ="mb_";
         } else {
 		   $this->data['mobile_view'] = "";
+           $this->data['mobile_view'] ="mb_";
 		}
       //$this->session->set_userdata('pnr_ref','AS0414');
       //$this->session->set_userdata('validation_check',1);	 
