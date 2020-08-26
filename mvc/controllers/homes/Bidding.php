@@ -135,7 +135,7 @@ class Bidding extends MY_Controller {
 				$this->data['piece'] = $this->preference_m->get_preference_value_bycode('PIECE','24',$airline->airlineID);
 				$pnr_ref=$this->session->userdata('pnr_ref');
 				// var_dump($pnr_ref);
-				$test="SELECT v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM vx_offer_info v LEFT JOIN vx_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN bg_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN vx_daily_tkt_pax_feed_raw vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref'";
+				$test="SELECT v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed_raw vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref'";
 				$rquery = $this->install_m->run_query($test);
 				// var_dump($rquery);
 				$mr=[];
@@ -183,7 +183,7 @@ class Bidding extends MY_Controller {
 				}
 				// var_dump($tr);
 				// die();
-				$sum_query="SELECT sum(vxx.min_price) as min_price,sum(vxx.max_capacity) as max_capacity,v.ond FROM vx_offer_info v LEFT JOIN vx_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN bg_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref' group by v.ond";
+				$sum_query="SELECT sum(vxx.min_price) as min_price,sum(vxx.max_capacity) as max_capacity,v.ond FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref' group by v.ond";
 				$sum_res = $this->install_m->run_query($sum_query);
 				foreach($sum_res as $res){
 					$per_min=$this->data['baggage_min_val'];
