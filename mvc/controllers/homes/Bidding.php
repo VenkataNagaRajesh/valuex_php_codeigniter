@@ -243,7 +243,7 @@ class Bidding extends MY_Controller {
 	}
 
 	public function getAirportName($id){
-		$query = "SELECT aln_data_value FROM `vx_data_defns` WHERE vx_aln_data_defnsID='$id'";
+		$query = "SELECT aln_data_value FROM `VX_data_defns` WHERE VX_aln_data_defnsID='$id'";
 		$airport = $this->install_m->run_query($query);
 		$data = $airport[0]->aln_data_value;
 		
@@ -252,14 +252,14 @@ class Bidding extends MY_Controller {
 	}
 	
 	public function getCityName($id){
-		$query1 = "SELECT parentID FROM `vx_data_defns` WHERE vx_aln_data_defnsID='$id'";
+		$query1 = "SELECT parentID FROM `VX_data_defns` WHERE VX_aln_data_defnsID='$id'";
 		$result = $this->install_m->run_query($query1);
 		
 		$parent_id = $result[0]->parentID;
 		// var_dump($parent_id);
 		// die();
 		
-		$query2 = "SELECT aln_data_value FROM `vx_data_defns` WHERE vx_aln_data_defnsID='$parent_id'
+		$query2 = "SELECT aln_data_value FROM `VX_data_defns` WHERE VX_aln_data_defnsID='$parent_id'
 		";
 		$result1 = $this->install_m->run_query($query2);
 		$city = $result1[0]->aln_data_value;

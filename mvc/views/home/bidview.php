@@ -159,18 +159,22 @@
 													</td>
 													<?php if($bclr[$bslider['ond']]->bag_type=='PC'){ ?>
 													<td style="color: black;" >
-														<div class="price-range col-md-12" id="slider" name="slider" disabled="disabled">	
+													<div id="slider">
+														<div class="price-range col-md-12">	
 															<b><?=$bclr[$bslider['ond']]->bag_type . " - " . $bslider['per_min']?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
 															<input id="baggage_slider<?=$bslider['ond']?>" data-slider-id='baggage_slider<?=$bslider['ond']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$bslider['piece'];?>" data-slider-step="1" data-slider-value="<?=$bslider['min_price'];?>" data-slider-handle="round" min-slider-handle="50"/>
 															<b> &nbsp;&nbsp;<?=$bslider['piece']?></b>
 														</div>
+													</div>
 													</td>
 													<?php } else{ ?>
 														<td style="color: black;" >
+														<div id="slider">
 														<div class="price-range col-md-12">	
 															<b><?=$bclr[$bslider['ond']]->bag_type . " - " . $bslider['per_min']?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
 															<input id="baggage_slider<?=$bslider['ond']?>" data-slider-id='baggage_slider<?=$bslider['ond']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$bslider['per_max'];?>" data-slider-step="1" data-slider-value="<?=$bslider['min_price'];?>" data-slider-handle="round" min-slider-handle="50"/>
 															<b> &nbsp;&nbsp;<?=$bslider['per_max']?></b>
+														</div>
 														</div>
 													</td>
 
@@ -502,14 +506,15 @@ $('#baggage_slider<?=$bslider['ond']?>').slider({
 	formatter: function(value) {
 		var price = <?=$bslider['price'] ?>;
 		var total_piece = <?=$bslider['total_piece'] ?>;
+		var per_total = <?=$bslider['per_total'] ?>;
 		var bag_type = '<?=$bclr[$bslider['ond']]->bag_type?>';
 		var total;
 		if(bag_type=='PC'){
-			total=price*value*total_piece;
+			total=price+per_total*total_piece*value;
 		}else{
-			total=price*value;
+			total=price+per_total*value;
 		}
-		return value + ' <?=$bclr[$bslider['ond']]->bag_type?>' + ' = $'+total;
+		return value + ' <?=$bclr[$bslider['ond']]->bag_type?>' + ' = $'+total.toFixed(2);
 	}
 });
 $("#baggage_slider<?=$bslider['ond']?>").on("slide", function(slideEvt) {
@@ -639,21 +644,22 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 		  var bg_val = $("#baggage_slider<?=$bslider['ond']?>").slider('getValue');
 		var price = <?=$bslider['price'] ?>;
 		var total_piece = <?=$bslider['total_piece'] ?>;
+		var per_total = <?=$bslider['per_total'] ?>;
 		var bag_type = '<?=$bclr[$bslider['ond']]->bag_type?>';
 		var total;
 		if(bag_type=='PC'){
-			total=price*bg_val*total_piece;
+			total=price+per_total*total_piece*bg_val;
 		}else{
-			total=price*bg_val;
+			total=price+per_total*bg_val;
 		}
 		
 
 		  if ( bg_val) {
-		  	tot_avg = tot_avg + total;
+		  	tot_avg = tot_avg + total
 			//   console.log(tot_avg+'tot_avg');
 		   }
 		<?php } } ?>
-      return tot_avg; 
+      return tot_avg.toFixed(2);
  }
 
  function changeColors(id){
