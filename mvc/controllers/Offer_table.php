@@ -447,7 +447,7 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
 					INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code) 
 					INNER JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13 and tcab.alias = tdef.level)
                                         INNER JOIN VX_offer_info pe on ( pe.dtpf_id = pf.dtpf_id ) 
-                                         INNER JOIN UP_fare_control_range fclr on (pe.fclr_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type)
+                                         INNER JOIN UP_fare_control_range fclr on (pe.dtpf_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type)
                                           LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
                                           ".$mainsetWhere."
                      ) as MainSet 

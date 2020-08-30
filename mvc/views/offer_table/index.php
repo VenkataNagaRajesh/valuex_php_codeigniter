@@ -415,6 +415,6 @@ $("#dep_from_date").datepicker({
       }
   }); 
 
-$( ".select2" ).select2();
+$( "select2" ).select2();
 
  </script>

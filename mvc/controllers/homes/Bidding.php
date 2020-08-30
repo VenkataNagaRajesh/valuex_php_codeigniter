@@ -265,9 +265,9 @@ class Bidding extends MY_Controller {
 		$city = $result1[0]->aln_data_value;
 		return $city;
 	}
-	public function saveBidData(){		
+	public function saveBidData(){				
 		if($this->input->post('offer_id')){ 		
-		  if($this->input->post('bid_action') == 1){
+		  if($this->input->post('bid_action') == 0){
             if($this->input->post('type') == 'resubmit'){
                $this->saveBiddingHistory($this->input->post('offer_id'));
             }           
