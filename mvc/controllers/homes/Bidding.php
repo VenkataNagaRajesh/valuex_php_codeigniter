@@ -276,7 +276,7 @@ class Bidding extends MY_Controller {
 			$data["cash_percentage"] = round((($data['cash']/ $this->input->post("tot_bid"))*100),2);
 			$data['offer_id'] = $this->input->post('offer_id');			
 			$data['bid_value'] = $this->input->post("bid_value");			
-			$data['fclr_id'] = $this->input->post("fclr_id");
+			// $data['fclr_id'] = $this->input->post("fclr_id");
 			$data['upgrade_type'] = $this->input->post("upgrade_type");
 			$data['flight_number'] = $this->input->post("flight_number");	
 			$data['bid_submit_date'] = time();
@@ -412,9 +412,9 @@ class Bidding extends MY_Controller {
 			$data["cash_percentage"] = round((($data['cash']/ $this->input->post("tot_bid"))*100),2);
 			$data['offer_id'] = $this->input->post('offer_id');			
 			$data['weight'] = $this->input->post("weight");			
-			$data['bclr_id'] = $this->input->post("bclr_id");
-			$data['baggage_value'] = $this->input->post("baggage_value");
-			$data['submit_date'] = time();
+			// $data['flight_number'] = $this->input->post($bslider['flight_number']);
+			$data['bid_value'] = $this->input->post("baggage_value");
+			$data['bid_submit_date'] = time();
 			$data['active'] = 1;
 			$data['orderID'] = $this->input->post('orderID');
 			$data['productID'] = 2;
