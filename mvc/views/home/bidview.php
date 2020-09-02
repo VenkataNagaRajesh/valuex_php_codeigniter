@@ -746,6 +746,8 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 				var upgrade = $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>]:checked').val().split('|');
 				var upgrade_type = upgrade[0];	
 				var fclr_id = upgrade[1];
+				var dtpfext_id=<?=$result->dtpfext_id?>;
+				var product_id=<?=$result->product_id?>;
 				//var bid_action = $('input[type=radio][name=bid_action_<?=$result->flight_number?>]:checked').val();
 				if($('input[type=checkbox][name=<?=$mobile_view?>bid_action_<?=$result->flight_number?>]').prop("checked") == false){
 					var bid_action = 1;
@@ -756,7 +758,7 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 				  async: false,
 				  type: 'POST',
 				  url: "<?=base_url('homes/bidding/saveBidData')?>",          
-				  data: {"orderID":orderID,"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,"fclr_id":fclr_id,'bid_action':bid_action,"tot_cash":up_pay_cash,"tot_miles":up_miles,"tot_bid":up_tot_bid,"type":"submit"},
+				  data: {"orderID":orderID,"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,"product_id":product_id,'bid_action':bid_action,"tot_cash":up_pay_cash,"dtpfext_id":dtpfext_id,"tot_miles":up_miles,"tot_bid":up_tot_bid,"type":"submit"},
 				  dataType: "html",			
 				  success: function(data) {
 					var info = jQuery.parseJSON(data);              		
@@ -779,7 +781,7 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 						$.ajax({
 						async: false,
 						type: 'POST',
-						url: "<?=base_url('homes/bidding/saveBaggageData')?>",          
+						url: "<?=base_url('homes/bidding/saveBidData')?>",       
 						data: {"ond":<?=$bslider['ond']?>,"orderID":orderID,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"tot_miles":bg_miles,"tot_bid":bg_tot_bid},
 						dataType: "html",			
 						success: function(data) {

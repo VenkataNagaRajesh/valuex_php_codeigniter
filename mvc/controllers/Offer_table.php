@@ -425,29 +425,36 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                    $mainsetWhere =" WHERE bid.bid_submit_date >= ".strtotime($this->input->get('bid_from_date'))." AND bid.bid_submit_date <= ".strtotime($this->input->get('bid_to_date')); 
                }else{
                    $mainsetWhere = "";
+                   
+               }
+               if($mainsetWhere){
+                $mainsetWhere .= " and bid.upgrade_type=tcab.vx_aln_data_defnsID ";
+               }else{
+                $mainsetWhere = " where bid.upgrade_type=tcab.vx_aln_data_defnsID "; 
                }
               // $mainsetWhere = "";
 
 
 $sQuery = " select  SQL_CALC_FOUND_ROWS  
-                        MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
+                        MainSet.offer_id,  MainSet.upgrade_type,MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
                         MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status,
 			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code
 
                 FROM ( 
-                                select distinct oref.offer_id, oref.create_date as offer_date ,bid_value, bid_avg,bid_markup_val,
+                                select distinct oref.offer_id,oref.create_date as offer_date ,bid_value, bid_avg,bid_markup_val,
                                 tdef.cabin as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank
                                 from  
-                                        VX_offer oref 
-                                        INNER JOIN UP_bid bid on (bid.offer_id = oref.offer_id) 
-                                        INNER JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref 
+                                        UP_bid bid 
+                                        
+                                        LEFT JOIN VX_offer_info iref on (bid.dtpfext_id = iref.dtpfext_id) 
+                                        LEFT JOIN VX_offer oref on (bid.offer_id = oref.offer_id) 
+                                        LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref 
                                                         and pf.flight_number = bid.flight_number) 
 
-					INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code) 
-					INNER JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13 and tcab.alias = tdef.level)
-                                        INNER JOIN VX_offer_info pe on ( pe.dtpf_id = pf.dtpf_id ) 
-                                         INNER JOIN UP_fare_control_range fclr on (pe.dtpf_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type)
+					LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code) 
+					LEFT JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13 and tcab.alias = tdef.level)
+                                        LEFT JOIN VX_offer_info pe on ( pe.dtpf_id = pf.dtpf_id ) 
                                           LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
                                           ".$mainsetWhere."
                      ) as MainSet 
