@@ -315,7 +315,7 @@ class Airports_m extends MY_Model
 
 		$this->db->select('cdef.level,cdef.cabin');
 		$this->db->from('VX_airline_cabin_def cdef');
-		$this->db->join('VX_data_defns aca', 'aca.VX_data_defnsID = ' . $defId . ' and aca.alias = cdef.level and aca.aln_data_typeID = ' . $type, 'INNER');
+		$this->db->join('VX_data_defns aca', 'aca.VX_aln_data_defnsID = ' . $defId . ' and aca.alias = cdef.level and aca.aln_data_typeID = ' . $type, 'INNER');
 		$this->db->where('cdef.carrier', $carrier);
 		$this->db->limit(1);
 		$query = $this->db->get();
