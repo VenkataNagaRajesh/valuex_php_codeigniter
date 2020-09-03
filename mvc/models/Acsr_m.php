@@ -63,24 +63,29 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, acsr.
                 $current_year =  date("Y");
                 $prv_year = $current_year - 1;
                  $current_yr_date = strtotime($date_format.'-'.$current_year);
-                 $old_yr_date = strtotime($date_format.'-'.$prv_year);
-
-			if(!empty($array['from_city']) && !empty($array['to_city'])) {
-			     $query .= " AND   (FIND_IN_SET(".$array['from_city'].", orig_level)) AND  (FIND_IN_SET(".$array['to_city'].",dest_level)) ";
-			}
+				 $old_yr_date = strtotime($date_format.'-'.$prv_year);
+				 
+			// if(!empty($array['from_city']) && !empty($array['to_city'])) {
+				
+			// 	 $query .= " AND   (FIND_IN_SET(".$array['from_city'].", orig_level)) AND  (FIND_IN_SET(".$array['to_city'].",dest_level)) ";
+			// 	
+			// }
 			
                        if(!empty($array['from_cabin']) && !empty($array['to_cabin']) ){
 				$query .= " AND upgrade_from_cabin_type = " . $array['from_cabin'] . " AND upgrade_to_cabin_type = ".$array['to_cabin'];
+				
 			}
                          
 			$query .= " AND ((flight_dep_date_start <= ".$current_yr_date." AND flight_dep_date_end >= " . $current_yr_date . ") OR ( flight_dep_date_start <= ".$old_yr_date." AND flight_dep_date_end >= "  . $old_yr_date.")) ";
 		
-
+			
 		}
 		if($param == 0 ) {
 			$query .= ' order by acsr_id desc';
-                         $result = $this->install_m->run_query($query);
-                        return $result;
+						 $result = $this->install_m->run_query($query);
+	
+						return $result;
+						
                 } else{
                         return $query;
                 }
