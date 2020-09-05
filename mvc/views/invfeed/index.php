@@ -102,7 +102,7 @@
                     <tr>
 			
 			 <th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/># </th>
-                        <th class="col-lg-1"><?=$this->lang->line('airline_code')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('carrier_code')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('orig_airport')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('dest_airport')?></th>

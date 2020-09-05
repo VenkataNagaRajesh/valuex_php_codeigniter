@@ -17,6 +17,7 @@ $lang['file_browse'] = 'File Browse';
 $lang['download_format'] = 'INV Feed Download Format';
 $lang['flight_number']='Flight Number';
 $lang['airline_code'] = 'Airline  Code';
+$lang['carrier_code'] = 'Carrier Code';
 $lang['cabin'] = 'Cabin';
 $lang['orig_airport'] = 'origin Airport';
 $lang['dest_airport'] = 'Dest Airport';
