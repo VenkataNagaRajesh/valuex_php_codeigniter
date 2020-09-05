@@ -26,6 +26,6 @@ $lang['client_phone'] ='Phone';
 $lang['client_domain'] ='Domain';
 $lang['client_username'] ='Username';
 $lang['client_password'] ='Password';
-$lang['expire_message'] ='Expire';
+$lang['expire_message'] ='Expired';
 $lang['create_client'] ='Client';
 

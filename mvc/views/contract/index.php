@@ -44,7 +44,7 @@
 						<th class="col-lg-1"><?=$this->lang->line('start_date')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('end_date')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('no_users')?></th>
-                        <th class="col-lg-1">Expired</th>
+                        <th class="col-lg-1"><?=$this->lang->line('expire_message')?></th>
 						<th class="col-lg-1 noExport"><?=$this->lang->line('contract_active')?></th>
                         <?php if(permissionChecker('contract_edit') || permissionChecker('contract_delete')) { ?>
                          <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
