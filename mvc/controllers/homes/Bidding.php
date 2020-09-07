@@ -135,7 +135,7 @@ class Bidding extends MY_Controller {
 				$this->data['piece'] = $this->preference_m->get_preference_value_bycode('PIECE','24',$airline->airlineID);
 				$pnr_ref=$this->session->userdata('pnr_ref');
 				// var_dump($pnr_ref);
-				$test="SELECT v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed_raw vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref'";
+				$test="SELECT v.dtpfext_id,v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed_raw vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref'";
 				$rquery = $this->install_m->run_query($test);
 				// var_dump($rquery);
 				$mr=[];
@@ -144,6 +144,7 @@ class Bidding extends MY_Controller {
 					$mr[$rq->ond][$rq->dtpf_id]['from_city']=$rq->from_city;
 					$mr[$rq->ond][$rq->dtpf_id]['to_city']=$rq->to_city;
 					$mr[$rq->ond][$rq->dtpf_id]['dtpf_id']=$rq->dtpf_id;
+					$mr[$rq->ond][$rq->dtpf_id]['dtpfext_id']=$rq->dtpfext_id;
 					$mr[$rq->ond][$rq->dtpf_id]['pnr_ref']=$rq->pnr_ref;
 					$mr[$rq->ond][$rq->dtpf_id]['ond']=$rq->ond;
 					$mr[$rq->ond][$rq->dtpf_id]['rule_id']=$rq->rule_id;
@@ -170,6 +171,7 @@ class Bidding extends MY_Controller {
 					$tr[$key1]['from_city_name']=$this->getCityName($value1['first_one']['from_city']);
 					$tr[$key1]['to_city_name']=$this->getCityName($value1['last_one']['to_city']);
 					$tr[$key1]['dtpf_id']=$value1['first_one']['dtpf_id'];
+					$tr[$key1]['dtpfext_id']=$value1['first_one']['dtpfext_id'];
 					$tr[$key1]['to_city']=$value1['last_one']['to_city'];
 					$tr[$key1]['ond']=$value1['last_one']['ond'];
 					$tr[$key1]['pnr_ref']=$value1['last_one']['pnr_ref'];
@@ -209,7 +211,7 @@ class Bidding extends MY_Controller {
 					$tr[$res->ond]['total_piece']=$total_piece;
 					$tr[$res->ond]['per_total']=$per_total;
 					$tr[$res->ond]['piece_com_tot']=$piece_com_tot;
-					$tr[$res->ond]['dtpfext_id']=$dtpfext_id;
+					// $tr[$res->ond]['dtpfext_id']=$dtpfext_id;
 				}
 
 				// var_dump($tr);
@@ -274,22 +276,35 @@ class Bidding extends MY_Controller {
             if($this->input->post('type') == 'resubmit'){
                $this->saveBiddingHistory($this->input->post('offer_id'));
 			}          
-			$data['cash'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
-			$data['miles'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
-			$data["cash_percentage"] = round((($data['cash']/ $this->input->post("tot_bid"))*100),2);
-			$data['offer_id'] = $this->input->post('offer_id');			
-			$data['bid_value'] = $this->input->post("bid_value");	
-			$data['dtpfext_id'] = $this->input->post("dtpfext_id");
-			$data['productID'] = $this->input->post("product_id");
-			if($data['productID'] == 1){
+			
+			
+			if($this->input->post("product_id") == 1){
 				$data['upgrade_type'] = $this->input->post("upgrade_type");
+				$data['cash'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
+				$data['miles'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
+				$data["cash_percentage"] = round((($data['cash']/ $this->input->post("tot_bid"))*100),2);
+				$data['offer_id'] = $this->input->post('offer_id');			
+				$data['bid_value'] = $this->input->post("bid_value");	
+				$data['dtpfext_id'] = $this->input->post("dtpfext_id");
+				$data['flight_number'] = $this->input->post("flight_number");	
+				$data['bid_submit_date'] = time();
+				$data['active'] = 1;
+				$data['orderID'] = $this->input->post('orderID');
+				$data['productID'] = 1;
 			}else{
 				$data['weight'] = $this->input->post("weight");	
+				$data['cash'] = ($this->input->post("baggage_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
+				$data['bid_submit_date'] = time();
+				$data['active'] = 1;
+				$data['miles'] = ($this->input->post("baggage_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
+				$data["cash_percentage"] = round((($data['cash']/ $this->input->post("tot_bid"))*100),2);
+				$data['offer_id'] = $this->input->post('offer_id');			
+				$data['bid_value'] = $this->input->post("baggage_value");	
+				$data['dtpfext_id'] = $this->input->post("dtpfext_id");
+				$data['flight_number'] = $this->input->post("flight_number");
+				$data['orderID'] = $this->input->post('orderID');
+				$data['productID'] = 2;
 			}
-			$data['flight_number'] = $this->input->post("flight_number");	
-			$data['bid_submit_date'] = time();
-			$data['active'] = 1;
-			$data['orderID'] = $this->input->post('orderID');
             $id = $this->bid_m->save_bid_data($data);			
           if($id){
               if($this->input->post('type') == 'resubmit'){

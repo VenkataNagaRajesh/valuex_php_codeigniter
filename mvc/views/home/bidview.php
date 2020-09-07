@@ -782,7 +782,7 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 						async: false,
 						type: 'POST',
 						url: "<?=base_url('homes/bidding/saveBidData')?>",       
-						data: {"ond":<?=$bslider['ond']?>,"orderID":orderID,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"tot_miles":bg_miles,"tot_bid":bg_tot_bid},
+						data: {"ond":<?=$bslider['ond']?>,"orderID":orderID,"dtpfext_id":dtpfext_id,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"tot_miles":bg_miles,"tot_bid":bg_tot_bid},
 						dataType: "html",			
 						success: function(data) {
 							var info = jQuery.parseJSON(data);              		

@@ -65,11 +65,11 @@ LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, acsr.
                  $current_yr_date = strtotime($date_format.'-'.$current_year);
 				 $old_yr_date = strtotime($date_format.'-'.$prv_year);
 				 
-			// if(!empty($array['from_city']) && !empty($array['to_city'])) {
+			if(!empty($array['from_city']) && !empty($array['to_city'])) {
 				
-			// 	 $query .= " AND   (FIND_IN_SET(".$array['from_city'].", orig_level)) AND  (FIND_IN_SET(".$array['to_city'].",dest_level)) ";
-			// 	
-			// }
+				 $query .= " AND   (FIND_IN_SET(".$array['from_city'].", orig_level)) AND  (FIND_IN_SET(".$array['to_city'].",dest_level)) ";
+				
+			}
 			
                        if(!empty($array['from_cabin']) && !empty($array['to_cabin']) ){
 				$query .= " AND upgrade_from_cabin_type = " . $array['from_cabin'] . " AND upgrade_to_cabin_type = ".$array['to_cabin'];
