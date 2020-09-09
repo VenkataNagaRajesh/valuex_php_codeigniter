@@ -115,7 +115,7 @@ class bid_m extends MY_Model {
   public function save_bid_data($data){
 	  $this->db->select('*')->from('UP_bid');
 	  $this->db->where('offer_id',$data['offer_id']);
-	  $this->db->where('flight_number',$data['flight_number']);
+	  $this->db->where('dtpfext_id',$data['dtpfext_id']);
 	  $query = $this->db->get();
 	  $bid_data = $query->row();
 	  if(empty($bid_data)){

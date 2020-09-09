@@ -155,6 +155,7 @@ class Bidding extends MY_Controller {
 					$mr[$rq->ond][$rq->dtpf_id]['dept_time']=$rq->dept_time;
 					$mr[$rq->ond][$rq->dtpf_id]['arrival_time']=$rq->arrival_time;
 				}
+				
 				foreach($mr as $key => $value){
 					$yy[$key]['first_one']=reset($value);
 					$yy[$key]['last_one']=end($value);
@@ -278,7 +279,7 @@ class Bidding extends MY_Controller {
 			}          
 			
 			
-			if($this->input->post("product_id") == 1){
+			if($this->input->post("upgrade_type") >= 1 ){
 				$data['upgrade_type'] = $this->input->post("upgrade_type");
 				$data['cash'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
 				$data['miles'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
