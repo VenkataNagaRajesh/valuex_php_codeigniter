@@ -182,7 +182,7 @@ class Report extends Admin_Controller {
 			$this->data['current_to_date'] = date('Y-m-t', strtotime($to_query_date));	
 			//print_r($this->data['current_from_date']); 		
 			//print_r($this->data['current_to_date']); exit; 		
-			$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$this->data['current_from_date'],$this->data['current_to_date'],$this->data['type'],$bid_accepted,$bid_rejected);					
+			$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$this->data['from_date'],$this->data['to_date'],$this->data['type'],$bid_accepted,$bid_rejected);					
 			foreach($this->data['report'] as $feed){
 					$feed->p_count = count(explode('<br>',$feed->p_list));
 					$feed->dep_date = date('Y-m-d',$feed->flight_date);
@@ -229,7 +229,7 @@ class Report extends Admin_Controller {
 						}
 					}
 				    if(count($accepted_list) > 0){
-					  $ldf_value = (array_sum(array_column($accepted_list,'p_count'))/array_sum($tot_cap))*100;
+					  $ldf_value = (array_sum(array_column('p_count'))/array_sum($tot_cap))*100;
 					}
 					$this->data[$cab_name]['accept_revenue'] = array_sum(array_column($accepted_list,'bid_value'));
 					$this->data[$cab_name]['passengers'] = array_sum(array_column($this->data[$cab_name]['report'],'p_count'));
