@@ -67,7 +67,7 @@
 				<p>Passengers :  <b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="margin-left: 120px;cursor:pointer;"><?=$$cab_name['passengers']?></b><i class="fa fa-caret-<?=$icon?> pull-right"  onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
 				<p>AVG Bid : <b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="margin-left: 120px;cursor:pointer;"><?="$".round($$cab_name['avg_bid'])?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
 				<p>Rejected Revenue : <b onclick="rejectReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="margin-left: 75px;cursor:pointer;"><?="$".$$cab_name['reject_revenue']?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="rejectReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
-				<p>LDF where Bid Rejected :<b style="margin-left: 43px;"> <?=$$cab_name['ldf']?>%</b></p>
+				<?php if(count($accepted_list) > 0 && $this->data['type']==1){ ?><p>LDF where Bid Rejected :<b style="margin-left: 43px;"> <?=$$cab_name['ldf']?>%</b></p> <?php } ?>
 			</div><?php  } $i++; } ?>
 		</div>
 		<div class="col-md-5"  style="background-color: #7f7575;">
