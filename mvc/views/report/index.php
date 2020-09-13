@@ -37,6 +37,8 @@
 	   </form>
 	</div>
 	<div class="col-md-12" style="background: #fff;margin: 20px 0;margin-top: 15px;border: solid 1px #999">
+	<?php if(count($current_report) > 0 || count($report) > 0){ ?><div style="color:#f26522"><h3><strong><bold>Upgrade Report &nbsp;<?php echo $this->data['from_date']; ?>&nbsp; to &nbsp;<?php echo $this->data['to_date']; ?></bold></strong></h3></div>
+	<?php } ?>
 	  <div class="row" style="background-color: #7f7575;color:#ffff">		
 		<div class="col-md-3" style="text-align:center;">
 		  <h3><b>Upgrades</b></h3>
