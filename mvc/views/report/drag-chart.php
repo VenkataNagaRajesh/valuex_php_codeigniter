@@ -1,5 +1,5 @@
 <div class="off-elg" style="margin-bottom:320px;">
-	<h2 class="title-tool-bar">Report</h2>
+	<h2 class="title-tool-bar">Upgrade Report</h2>
     <div class="col-md-12" > 
         <div class="col-md-6">
            <br/><!-- Just so that JSFiddle's Result label doesn't overlap the Chart -->
