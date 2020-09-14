@@ -125,7 +125,7 @@
 							<th class="col-lg-1">#</th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_date')?></th>
-							<th class="col-lg-1">Carrier</th>
+							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
@@ -134,12 +134,13 @@
 							<th class="col-lg-1"><?=$this->lang->line('bid_cabin')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('bid_amount')?></th>
 							 <th class="col-lg-1"><?php echo "Submit Date";?></th>
-							<th class="col-lg-1">Pax Details</th>
+                             <th class="col-lg-1"><?=$this->lang->line('pax_details')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('avg_p')?></th>
-							<th class="col-lg-1">Rank</th>
+							<th class="col-lg-1"><?=$this->lang->line('rank')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('cash')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('miles')?></th>
+                            <th class="col-lg-1"><?=$this->lang->line('product_type')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_status')?></th>
 							<th class="col-lg-1 noExport"><?=$this->lang->line('details')?></th>
 						</tr>
@@ -287,7 +288,8 @@ $("#dep_from_date").datepicker({
 		 {"data": "bid_avg" },
 		{"data": "rank" },
                 {"data": "cash" },
-		{"data": "miles" },
+        {"data": "miles" },
+        {"data": "name" },
 		{"data": "offer_status" },
 		{"data": "action" }
 

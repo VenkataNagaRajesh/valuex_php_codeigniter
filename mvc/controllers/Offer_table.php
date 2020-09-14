@@ -294,7 +294,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 
 
-            $aColumns = array('MainSet.offer_id','MainSet.offer_id','MainSet.offer_date', 'SubSet.carrier','MainSet.flight_number', 'SubSet.flight_date' , 'SubSet.from_city', 'SubSet.to_city', 'SubSet.from_cabin','MainSet.to_cabin', 'MainSet.bid_value','MainSet.bid_submit_date','SubSet.p_list','SubSet.fqtv','MainSet.pnr_ref','1','MainSet.bid_avg','MainSet.rank','MainSet.cash', 'MainSet.miles','MainSet.offer_status','SubSet.from_city_name', 'SubSet.to_city_name');
+            $aColumns = array('MainSet.offer_id','MainSet.offer_date','MainSet.name', 'SubSet.carrier','MainSet.flight_number', 'SubSet.flight_date' , 'SubSet.from_city', 'SubSet.to_city', 'SubSet.from_cabin','MainSet.to_cabin', 'MainSet.bid_value','MainSet.bid_submit_date','SubSet.p_list','SubSet.fqtv','MainSet.pnr_ref','1','MainSet.bid_avg','MainSet.rank','MainSet.cash', 'MainSet.miles','MainSet.offer_status','SubSet.from_city_name', 'SubSet.to_city_name');
 
                 $sLimit = "";
 
@@ -442,18 +442,19 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
 
 $sQuery = " select  SQL_CALC_FOUND_ROWS  
-                        MainSet.offer_id, MainSet.dtpf_id,  MainSet.upgrade_type,MainSet.offer_date, MainSet.flight_date , SubSet.carrier , MainSet.flight_number , 
+                        MainSet.offer_id, MainSet.dtpf_id,  MainSet.upgrade_type,MainSet.offer_date, MainSet.name,MainSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
                         MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status,
 			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code, MainSet.product_id, MainSet.bid_id
 
                 FROM ( 
-                                select bid.bid_id, pf.dtpf_id,  oref.offer_id,oref.create_date as offer_date ,bid_value, bid_avg,bid_markup_val,
+                                select bid.bid_id, pf.dtpf_id,  oref.offer_id,oref.create_date as offer_date , prq.name as name,bid_value, bid_avg,bid_markup_val,
                                 tdef.cabin as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, pe.product_id, pf.dep_date as flight_date
                                 from  
                                         UP_bid bid 
                                         
-                                        LEFT JOIN VX_offer_info pe on (bid.dtpfext_id = pe.dtpfext_id) 
+                                        LEFT JOIN VX_offer_info pe on (bid.dtpfext_id = pe.dtpfext_id)
+                                        LEFT JOIN VX_products prq on (pe.product_id = prq.productID) 
                                         LEFT JOIN VX_offer oref on (bid.offer_id = oref.offer_id) 
                                         LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and pf.dtpf_id = pe.dtpf_id )
 					LEFT JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = bid.upgrade_type AND tcab.aln_data_typeID = 13 )
@@ -522,8 +523,8 @@ $sOrder $sLimit";
                 }
 
            if(isset($_REQUEST['export'])){
-		  $columns = array("id","Offer Date","Carrier","Flight Number","Flight Date","Board Point","Off Point","Current cabin","Bid Cabin","Bid Amount","Submit Date","PAX Names","PNR Reference","Number In Party","Average Fare","Markup Value","Rank","cash","miles","offer status");
-		  $rows = array("id","offer_date","carrier","flight_number","flight_date","from_city","to_city","from_cabin","to_cabin","bid_value","bid_submit_date","pp_list","pnr_ref","p_count","bid_avg","bid_markup_val","rank","cash","miles","offer_status");
+		  $columns = array("id","Offer Date","Product Type","Carrier","Flight Number","Flight Date","Board Point","Off Point","Current cabin","Bid Cabin","Bid Amount","Submit Date","PAX Names","PNR Reference","Number In Party","Average Fare","Markup Value","Rank","cash","miles","offer status");
+		  $rows = array("id","offer_date","name","carrier","flight_number","flight_date","from_city","to_city","from_cabin","to_cabin","bid_value","bid_submit_date","pp_list","pnr_ref","p_count","bid_avg","bid_markup_val","rank","cash","miles","offer_status");
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );
