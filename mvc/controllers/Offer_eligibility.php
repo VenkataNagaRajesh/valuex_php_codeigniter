@@ -18,6 +18,7 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model("fclr_m");
 		$this->load->model("season_m");
 		$this->load->model("airports_m");
+		$this->load->model("product_m");
 		$this->load->model("user_m");
 		$this->load->model("contract_m");
 		$language = $this->session->userdata('lang');
@@ -53,7 +54,13 @@ class Offer_eligibility extends Admin_Controller {
 		} else {
 		    $this->data['off_point'] = 0;
 		}
-
+	
+		if(!empty($this->input->post('name'))){	
+			$this->data['name'] = $this->input->post('name');
+		} else {
+		    $this->data['name'] = 0;
+		}
+		
                if(!empty($this->input->post('flight_number'))){       
                  $this->data['flight_number'] = $this->input->post('flight_number');
                 } 
@@ -99,6 +106,7 @@ class Offer_eligibility extends Admin_Controller {
 		$this->data['city'] = $this->rafeed_m->getCodesByType('5');
 		//$this->data['carriers'] = $this->rafeed_m->getCodesByType('12');
 		$this->data['airport'] = $this->rafeed_m->getCodesByType('1');
+		$this->data['product_name'] = $this->product_m->productName();
 		$this->data['cabin'] = $this->rafeed_m->getCodesByType('13');
 		$this->data['flights'] = $this->rafeed_m->getNamesByType('16');
 		$this->data['status'] = $this->rafeed_m->getNamesByType('20');
@@ -205,8 +213,13 @@ class Offer_eligibility extends Admin_Controller {
                         if(!empty($this->input->get('offPoint'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'off_point = '.$this->input->get('offPoint');
-                        }
-
+						}
+						// var_dump($this->input->get('name'));
+						// die();
+						if(!empty($this->input->get('name'))){
+							$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+							$sWhere .= 'productID = '.$this->input->get('name');
+					}
 
 			if(!empty($this->input->get('flightNbr'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';

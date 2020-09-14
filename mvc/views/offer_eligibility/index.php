@@ -21,6 +21,12 @@
 							ksort($airport);
 							echo form_dropdown("off_point", $airport,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
+                    <div class="col-sm-12">
+						<?php
+							$product_name['0'] = 'Product Type';
+                            ksort($product_name);
+							echo form_dropdown("name", $product_name,set_value("name",$name), "id='name' class='form-control hide-dropdown-icon select2'");    ?>
+					</div>
 				</div>
 
 
@@ -244,6 +250,7 @@ $('#to_cabin').val('<?=$to_cabin?>').trigger('change');
 		           {"name": "frequency","value": $("#frequency").val()},
 			       {"name": "booking_status","value": $("#booking_status").val()},
 			       {"name": "season","value": $("#season").val()},
+                   {"name": "name","value": $("#name").val()},
                    {"name": "carrier","value": $("#carrier").val()},
                   
                    ) //pushing custom parameters
@@ -285,7 +292,7 @@ $('#to_cabin').val('<?=$to_cabin?>').trigger('change');
                            $.ajax({
                                 url: "<?php echo base_url('offer_eligibility/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"fromCabin": $("#from_cabin").val(),"toCabin":$("#to_cabin").val(),"frequency":$("#frequency").val(),"booking_status": $("#booking_status").val(),"season":$("#season").val(),"carrier":$("#carrier").val()},
+                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"name":$("#name").val(),"offPoint":$("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"fromCabin": $("#from_cabin").val(),"toCabin":$("#to_cabin").val(),"frequency":$("#frequency").val(),"booking_status": $("#booking_status").val(),"season":$("#season").val(),"carrier":$("#carrier").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -311,7 +318,7 @@ $('#to_cabin').val('<?=$to_cabin?>').trigger('change');
 	  $.ajax({
         url: "<?php echo base_url('offer_eligibility/server_processing'); ?>?page=all&&export=1",
         type: 'get',
-        data: {"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"fromCabin": $("#from_cabin").val(),"toCabin":$("#to_cabin").val(),"frequency":$("#frequency").val(),"booking_status": $("#booking_status").val(),"season":$("#season").val(),"carrier":$("#carrier").val()},
+        data: {"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"fromCabin": $("#from_cabin").val(),"toCabin":$("#to_cabin").val(),"frequency":$("#frequency").val(),"booking_status": $("#booking_status").val(),"season":$("#season").val(),"name":$("#name").val(),"carrier":$("#carrier").val()},
         dataType: 'json'
         }).done(function(data){
 		   var $a = $("<a>");

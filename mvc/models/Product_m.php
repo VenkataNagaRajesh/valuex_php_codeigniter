@@ -45,5 +45,19 @@ class product_m extends MY_Model {
 	public function delete_product($id){
 		parent::delete($id);
 	}
+
+	function productName()
+	{
+		$this->db->select('productID,name');
+		$this->db->from('VX_products');
+		// $this->db->where('aln_data_typeID', $type);
+		// $this->db->where('code !=', NULL);
+		$query = $this->db->get();
+		$result = $query->result();
+		foreach ($result as $k) {
+			$arr[$k->productID] = $k->name;
+		}
+		return $arr;
+	}
 }
 
