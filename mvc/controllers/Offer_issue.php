@@ -417,7 +417,7 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 $sQuery = " 
  select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , 
-                        SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.passenger_list, SubSet.from_cabin,
+                        SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.passenger_list,SubSet.product_id, SubSet.from_cabin,
                           MainSet.cash, MainSet.miles,  SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number, SubSet.from_city_name, SubSet.to_city_name
 
                 FROM (  select distinct oref.offer_id, oref.create_date as offer_date , oref.pnr_ref,oref.cash_percentage, oref.cash, oref.miles from  VX_offer oref  
@@ -425,7 +425,7 @@ $sQuery = "
                         INNER JOIN (
                                         select  flight_number,
                                                 group_concat(distinct dep_date) as flight_date  ,
-                                                pnr_ref,group_concat(first_name, ' ' , last_name SEPARATOR '<br>' ) as passenger_list ,  from_city as from_city_code, to_city as to_city_code, 
+                                                pnr_ref,group_concat(distinct first_name, ' ' , last_name SEPARATOR '<br>' ) as passenger_list ,  from_city as from_city_code, to_city as to_city_code, 
                                                 group_concat(distinct cdef.desc) as from_cabin  , fc.aln_data_value as from_city_name, fc.code as from_city, tc.code as to_city, tc.aln_data_value as to_city_name,
                                                 car.code as carrier , pf1.carrier_code,prq.product_id as product_id
                                          from VX_daily_tkt_pax_feed pf1 LEFT JOIN VX_offer_info prq on (pf1.dtpf_id = prq.dtpf_id)
