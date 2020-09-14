@@ -17,7 +17,8 @@ class Offer_table extends Admin_Controller {
 		$this->load->model("user_m");
 		$this->load->library('email');
 		$this->load->model('invfeed_m');
-		$this->load->model("reset_m");
+                $this->load->model("reset_m");
+                $this->load->model("product_m");
 		$this->load->model("airline_m");
 		$this->load->model('acsr_m');
 		$this->load->model("airports_m");
@@ -76,7 +77,11 @@ class Offer_table extends Admin_Controller {
                 } else {
                   $this->data['from_cabin'] = 0;
                 }
-
+                if(!empty($this->input->post('name'))){	
+			$this->data['name'] = $this->input->post('name');
+		} else {
+		    $this->data['name'] = 0;
+		}
 
 
                 if(!empty($this->input->post('to_cabin'))){
@@ -126,7 +131,7 @@ class Offer_table extends Admin_Controller {
                 $this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
 		$this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
 		$this->data['status'] =  $this->airports_m->getDefnsListByType('20');
-
+                $this->data['product_name'] = $this->product_m->productName();
 		$this->data["subview"] = "offer_table/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -355,6 +360,12 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'off_point = '.$this->input->get('offPoint');
                         }
+                        // var_dump($this->input->get('name'));
+						// die();
+						if(!empty($this->input->get('name'))){
+							$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+							$sWhere .= 'product_id = '.$this->input->get('name');
+					}
 
 			if(!empty($this->input->get('flightNbr'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
