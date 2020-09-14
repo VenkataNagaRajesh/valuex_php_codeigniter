@@ -18,7 +18,8 @@ class Offer_issue extends Admin_Controller {
 		$this->load->library('email');
 		$this->load->model('invfeed_m');
 		$this->load->model("reset_m");
-		$this->load->model('acsr_m');
+                $this->load->model('acsr_m');
+                $this->load->model("product_m");
 		$this->load->model("airports_m");
 		$this->load->model("bid_m");
 		$this->load->model('preference_m');
@@ -95,10 +96,15 @@ class Offer_issue extends Admin_Controller {
                    	$this->data['carriers'] = $this->airline_m->getAirlinesData();
                 }
 
-
+                if(!empty($this->input->post('name'))){	
+			$this->data['name'] = $this->input->post('name');
+		} else {
+		    $this->data['name'] = 0;
+		}
 
 		$this->data['airports'] = $this->airports_m->getDefnsCodesListByType('1');
                 $this->data['cabins'] =  $this->airports_m->getDefnsCodesListByType('13');
+                $this->data['product_name'] = $this->product_m->productName();
 //		 $this->data['carrier'] =  $this->airports_m->getDefnsCodesListByType('12');
 
 		  if($this->input->post('carrier')){
@@ -364,6 +370,12 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
                                 $sWhere .= 'SubSet.flight_number >= '.$this->input->get('flightNbr');
 
                         }
+                         // var_dump($this->input->get('name'));
+						// die();
+						if(!empty($this->input->get('name'))){
+							$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+							$sWhere .= 'product_id = '.$this->input->get('name');
+					}
 
 
                         if(!empty($this->input->get('flightNbrEnd'))){
@@ -415,8 +427,8 @@ $sQuery = "
                                                 group_concat(distinct dep_date) as flight_date  ,
                                                 pnr_ref,group_concat(first_name, ' ' , last_name SEPARATOR '<br>' ) as passenger_list ,  from_city as from_city_code, to_city as to_city_code, 
                                                 group_concat(distinct cdef.desc) as from_cabin  , fc.aln_data_value as from_city_name, fc.code as from_city, tc.code as to_city, tc.aln_data_value as to_city_name,
-                                                car.code as carrier , pf1.carrier_code
-                                         from VX_daily_tkt_pax_feed pf1 
+                                                car.code as carrier , pf1.carrier_code,prq.product_id as product_id
+                                         from VX_daily_tkt_pax_feed pf1 LEFT JOIN VX_offer_info prq on (pf1.dtpf_id = prq.dtpf_id)
                                         LEFT JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = pf1.ptc AND ptc.aln_data_typeID = 18)
                                         LEFT JOIN VX_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
                                         LEFT JOIN VX_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
