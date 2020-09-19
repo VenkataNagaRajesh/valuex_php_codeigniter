@@ -4458,7 +4458,7 @@ box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 	margin-bottom:15px;
 }
 .off-elg .form-horizontal .form-group .btn-danger{
-	margin:0px 0px 0 15px;
+	margin:0px;
 }
 .off-elg .off-elg-filter-box{
 	background:#fff;
@@ -4845,4 +4845,33 @@ width: 100%;
 }
 .tooltip-inner {
     max-width: 100% !important;
+}
+.report-box h3{
+	text-align: center;
+    font-size: 16px;
+	background: #ddd;
+    padding: 6px 0;
+	border-right: solid 1px #f5f5f5;
+}
+.report-box .report-cabin-header{
+	font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+    background: #999;
+    color: #fff;
+    padding: 5px 0;
+}
+.report-box .report-data  p span{
+	display: inline-block;
+    width: 73%;
+    font-weight: bold;
+}
+.report-box .report-data  p b{
+	font-size:12px;
+}
+.report-box .report-data  p i{
+	font-size: 26px;
+    cursor: pointer;
+    top: -2px;
+    position: relative;
 }

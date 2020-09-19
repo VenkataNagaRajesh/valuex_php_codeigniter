@@ -36,22 +36,22 @@
 		  </div>
 	   </form>
 	</div>
-	<div class="col-md-12" style="background: #fff;margin: 20px 0;margin-top: 15px;border: solid 1px #999">
-	  <div class="row" style="background-color: #7f7575;color:#ffff">		
-		<div class="col-md-3" style="text-align:center;">
+	<div class="col-md-12 report-box">
+	  <div class="row">		
+		<div class="col-md-3" style="padding:0;">
 		  <h3><b>Upgrades</b></h3>
 		</div>
-		<div class="col-md-5" style="text-align:center;">
+		<div class="col-md-4" style="padding:0;">
 		  <h3><b>Revenue</b></h3>
 		</div>
-		<div class="col-md-4" style="text-align:center;">
+		<div class="col-md-5" style="padding:0;">
 		  <h3><b>Acceptance Rate</b></h3>
 		</div>
 	  </div>
 	 <div class="row">
 	<?php if(count($current_report) > 0 || count($report) > 0){
 		 $colors = array('#E7823A','#546BC1','#6dad92','#e65b82','#65d8d8','#babd0b'); ?>		
-		<div class="col-md-3">
+		<div class="col-md-3" style="border-right:solid 1px #ddd;">
 			<!--<h4> Total Revenue : $<?=$total_accept_revenue?></h4> -->				
 			<?php $i = 1;foreach($upgrade_cabins as $cab){
 			$cabs = explode('-',$cab['name']);
@@ -61,16 +61,16 @@
 					$icon = 'up'; $color = "#0c9e0c";
 				} else {
 				$icon = 'down'; $color = "#ea2708"; } ?>
-			<div>
+			<div class="report-data">
 				<h4 class="report-cabin-header"><?=$$cab_name['title']?></h4>
-				<p>Revenue : <b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="margin-left: 120px;cursor:pointer;"><?="$".round($$cab_name['accept_revenue'])?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i>		</p>
-				<p>Passengers :  <b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="margin-left: 120px;cursor:pointer;"><?=$$cab_name['passengers']?></b><i class="fa fa-caret-<?=$icon?> pull-right"  onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
-				<p>AVG Bid : <b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="margin-left: 120px;cursor:pointer;"><?="$".round($$cab_name['avg_bid'])?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
-				<p>Rejected Revenue : <b onclick="rejectReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="margin-left: 75px;cursor:pointer;"><?="$".$$cab_name['reject_revenue']?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="rejectReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="font-size:31px;color:<?=$color?>;cursor:pointer;margin-top:-10px;" aria-hidden="true"></i></p>
-				<p>LDF where Bid Rejected :<b style="margin-left: 43px;"> <?=$$cab_name['ldf']?>%</b></p>
+				<p><span>Revenue :</span><b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)"><?="$".round($$cab_name['accept_revenue'])?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="color:<?=$color?>;" aria-hidden="true"></i></p>
+				<p><span>Passengers : </span> <b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" ><?=$$cab_name['passengers']?></b><i class="fa fa-caret-<?=$icon?> pull-right"  onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="color:<?=$color?>;" aria-hidden="true"></i></p>
+				<p><span>AVG Bid : </span><b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" ><?="$".round($$cab_name['avg_bid'])?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="color:<?=$color?>;" aria-hidden="true"></i></p>
+				<p><span>Rejected Revenue :</span> <b onclick="rejectReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)"><?="$".$$cab_name['reject_revenue']?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="rejectReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="color:<?=$color?>;" aria-hidden="true"></i></p>
+				<p><span>LDF where Bid Rejected :</span><b> <?=$$cab_name['ldf']?>%</b></p>
 			</div><?php  } $i++; } ?>
 		</div>
-		<div class="col-md-5"  style="background-color: #7f7575;">
+		<div class="col-md-4">
 		    <div class="revenue-box">
 				<div class="upgrade-revenue-price-box">$<?=$total_accept_revenue?> </div>
 				<div class="upgrade-revenue-box">Upgrade Revenue</div>
@@ -82,8 +82,8 @@
 				<button class="btn btn-danger" style="float: right;" onclick="yearlyReport(2)">Previous Year</button>
 			</div>
 		</div>
-		<div class="col-md-4">			
-			<div style="margin-top: 45px">
+		<div class="col-md-5" style="border-left:solid 1px #ddd;text-align:center;">			
+			<div>
 			<?php $i = 1; foreach($upgrade_cabins as $cab){
 			$cabs = explode('-',$cab['name']);
 			$cab_name = strtolower($cabs[0].$cabs[1]);
