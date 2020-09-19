@@ -4739,7 +4739,7 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 .rafeed  .form-group .form-control{
 	margin-bottom:10px;
 }
-/* Jquery DataTable Custom width for column*/
+/* Jquery DataTable Custom width for columns*/
 table{
   margin: 0 auto;
   width: 100%;
@@ -4868,10 +4868,16 @@ width: 100%;
 }
 .report-box .report-data  p b{
 	font-size:12px;
+	cursor:pointer;
 }
 .report-box .report-data  p i{
 	font-size: 26px;
     cursor: pointer;
     top: -2px;
     position: relative;
+}
+.upgrade-revenue-price-box{
+    font-size: 3em;
+    margin: 20px 0 9px;
+    font-weight: bold;
 }
