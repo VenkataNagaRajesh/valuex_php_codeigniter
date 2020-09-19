@@ -26,6 +26,12 @@
 							ksort($airports);
 							echo form_dropdown("off_point", $airports,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");     ?>
 					</div>
+                    <div class="col-sm-12">
+						<?php
+							$product_name['0'] = 'Product Type';
+                            ksort($product_name);
+							echo form_dropdown("name", $product_name,set_value("name",$name), "id='name' class='form-control hide-dropdown-icon select2'");    ?>
+					</div>
 				</div>
 				<div class="col-md-3 select-form">
 					<div class="col-sm-12">
@@ -82,6 +88,7 @@
 						<tr>
 							<th class="col-lg-1">#</th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
+                            <th class="col-lg-1"><?=$this->lang->line('product_type')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('passenger_list')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('origin')?></th>
@@ -89,8 +96,8 @@
 							<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
-							<th class="col-lg-1 noExport">Offer Status</th>
-							<th class="col-lg-1 noExport">Bid Info</th>
+                            <th class="col-lg-1"><?=$this->lang->line('offer_status')?></th>
+                            <th class="col-lg-1"><?=$this->lang->line('bid_info')?></th>
 						</tr>
 					 </thead>
 					 <tbody>                          
@@ -142,6 +149,7 @@ $("#dep_from_date").datepicker({
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#flight_number").val()},
 		  {"name": "flightNbrEnd","value": $("#end_flight_number").val()},
+          {"name": "name","value": $("#name").val()},
                    {"name": "boardPoint","value": $("#boarding_point").val()},
                    {"name": "offPoint","value": $("#off_point").val()},
 		    {"name": "depStartDate","value": $("#dep_from_date").val()},
@@ -169,7 +177,9 @@ $("#dep_from_date").datepicker({
                 return data;
             },
 
-      "columns": [ {"data": "sno" },{"data": "offer_id" },
+      "columns": [ {"data": "sno" },
+                   {"data": "offer_id" },
+                   {"data": "name" },
 				   {"data": "passenger_list" },
 				   {"data": "pnr_ref"},
 				   {"data": "source_point" },
@@ -193,7 +203,7 @@ $("#dep_from_date").datepicker({
                            $.ajax({
                                 url: "<?php echo base_url('offer_issue/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"pnr_ref":$("#pnr_ref").val(),"carrier":$("#carrier").val(),"fromCabin": $("#from_cabin").val(),"toCabin":$("#to_cabin").val()},
+                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"name": $("#name").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"pnr_ref":$("#pnr_ref").val(),"carrier":$("#carrier").val(),"fromCabin": $("#from_cabin").val(),"toCabin":$("#to_cabin").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -217,7 +227,7 @@ $("#dep_from_date").datepicker({
 	  $.ajax({
            url: "<?php echo base_url('offer_issue/server_processing'); ?>?page=all&&export=1",
            type: 'get',
-           data: {"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"pnr_ref":$("#pnr_ref").val(),"carrier":$("#carrier").val(),"fromCabin": $("#from_cabin").val(),"toCabin":$("#to_cabin").val()},
+           data: {"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"pnr_ref":$("#pnr_ref").val(),"carrier":$("#carrier").val(),"name": $("#name").val(),"fromCabin": $("#from_cabin").val(),"toCabin":$("#to_cabin").val()},
            dataType: 'json'
        }).done(function(data){
 		var $a = $("<a>");

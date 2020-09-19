@@ -16,6 +16,12 @@
 							ksort($airports);
 							echo form_dropdown("off_point", $airports,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
+                    <div class="col-sm-12">
+						<?php
+							$product_name['0'] = 'Product Type';
+                            ksort($product_name);
+							echo form_dropdown("name", $product_name,set_value("name",$name), "id='name' class='form-control hide-dropdown-icon select2'");    ?>
+					</div>
 				</div>
 
 
@@ -119,7 +125,7 @@
 							<th class="col-lg-1">#</th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_date')?></th>
-							<th class="col-lg-1">Carrier</th>
+							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
@@ -128,12 +134,13 @@
 							<th class="col-lg-1"><?=$this->lang->line('bid_cabin')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('bid_amount')?></th>
 							 <th class="col-lg-1"><?php echo "Submit Date";?></th>
-							<th class="col-lg-1">Pax Details</th>
+                             <th class="col-lg-1"><?=$this->lang->line('pax_details')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('avg_p')?></th>
-							<th class="col-lg-1">Rank</th>
+							<th class="col-lg-1"><?=$this->lang->line('rank')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('cash')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('miles')?></th>
+                            <th class="col-lg-1"><?=$this->lang->line('product_type')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_status')?></th>
 							<th class="col-lg-1 noExport"><?=$this->lang->line('details')?></th>
 						</tr>
@@ -238,6 +245,7 @@ $("#dep_from_date").datepicker({
 		           {"name": "fromCabin","value": $("#from_cabin").val()},
                    {"name": "toCabin","value": $("#to_cabin").val()},
 		           {"name": "offer_id","value": $("#offer_id").val()},
+                   {"name": "name","value": $("#name").val()},
 		           {"name": "pnr_ref","value": $("#pnr_ref").val()},
 				 {"name": "carrier","value": $("#carrier").val()},
 		           {"name": "offer_status","value": $("#offer_status").val()},
@@ -280,7 +288,8 @@ $("#dep_from_date").datepicker({
 		 {"data": "bid_avg" },
 		{"data": "rank" },
                 {"data": "cash" },
-		{"data": "miles" },
+        {"data": "miles" },
+        {"data": "name" },
 		{"data": "offer_status" },
 		{"data": "action" }
 
@@ -298,7 +307,7 @@ $("#dep_from_date").datepicker({
                            $.ajax({
                                 url: "<?php echo base_url('offer_table/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint": $("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"fromCabin": $("#from_cabin").val(),"toCabin": $("#to_cabin").val(),"offer_id": $("#offer_id").val(),"pnr_ref": $("#pnr_ref").val(),"offer_status":$("#offer_status").val()},
+                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint": $("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"fromCabin": $("#from_cabin").val(),"toCabin": $("#to_cabin").val(),"offer_id": $("#offer_id").val(),"pnr_ref": $("#pnr_ref").val(),"name": $("#name").val(),"offer_status":$("#offer_status").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -333,7 +342,7 @@ $("#dep_from_date").datepicker({
 	   $.ajax({
              url: "<?php echo base_url('offer_table/server_processing'); ?>?page=all&&export=1",
              type: 'get',
-             data: {"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint": $("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"fromCabin": $("#from_cabin").val(),"toCabin": $("#to_cabin").val(),"offer_id": $("#offer_id").val(),"pnr_ref": $("#pnr_ref").val(),"offer_status":$("#offer_status").val()},
+             data: {"flightNbr":$("#flight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint": $("#off_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"fromCabin": $("#from_cabin").val(),"toCabin": $("#to_cabin").val(),"offer_id": $("#offer_id").val(),"pnr_ref": $("#pnr_ref").val(),"name": $("#name").val(),"offer_status":$("#offer_status").val()},
              dataType: 'json'
          }).done(function(data){
 			var $a = $("<a>");
@@ -415,6 +424,6 @@ $("#dep_from_date").datepicker({
       }
   }); 
 
-$( ".select2" ).select2();
+$( "select2" ).select2();
 
  </script>

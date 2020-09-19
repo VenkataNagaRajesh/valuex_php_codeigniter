@@ -38,4 +38,13 @@ class Partner_m extends MY_Model {
 		$query = $this->db->get();
 		return $query->result();
 	}
+
+	public function getAllPartnerCarriers($carriers){
+		$this->db->select('p.carrierID, p.partner_carrierID,dd.code')->from('VX_partner p');
+		$this->db->join('VX_data_defns dd','dd.vx_aln_data_defnsID = p.partner_carrierID','LEFT');
+		$this->db->where_in('p.carrierID',$carriers);
+		$this->db->group_by('p.partner_carrierID');
+		$query = $this->db->get();
+		return $query->result();
+	}
 }

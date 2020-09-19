@@ -182,7 +182,7 @@ class Report extends Admin_Controller {
 			$this->data['current_to_date'] = date('Y-m-t', strtotime($to_query_date));	
 			//print_r($this->data['current_from_date']); 		
 			//print_r($this->data['current_to_date']); exit; 		
-			$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$this->data['current_from_date'],$this->data['current_to_date'],$this->data['type'],$bid_accepted,$bid_rejected);					
+			$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$this->data['from_date'],$this->data['to_date'],$this->data['type'],$bid_accepted,$bid_rejected);					
 			foreach($this->data['report'] as $feed){
 					$feed->p_count = count(explode('<br>',$feed->p_list));
 					$feed->dep_date = date('Y-m-d',$feed->flight_date);
@@ -228,7 +228,7 @@ class Report extends Admin_Controller {
 							$tot_cap[$unique_key] = $seats_data->seat_capacity;
 						}
 					}
-				    if(count($accepted_list) > 0){
+				    if(count($accepted_list) > 0 && $this->data['type']==1){
 					  $ldf_value = (array_sum(array_column($accepted_list,'p_count'))/array_sum($tot_cap))*100;
 					}
 					$this->data[$cab_name]['accept_revenue'] = array_sum(array_column($accepted_list,'bid_value'));
@@ -240,7 +240,9 @@ class Report extends Admin_Controller {
 					$this->data[$cab_name]['to_cabin_id'] = $cab['to_cabin_id'];
 					$this->data[$cab_name]['tot_seat_capacity'] = array_sum($tot_cap);
 					$this->data[$cab_name]['tot_passengers_boarded'] = array_sum(array_column($accepted_list,'p_count'));
+					if(count($accepted_list) > 0 && $this->data['type']==1){
 					$this->data[$cab_name]['ldf'] = round($ldf_value);
+					}
 					$this->data['total_accept_revenue'] +=  $this->data[$cab_name]['accept_revenue'];
 					//echo $cab_name;
 					//print_r($this->data[$cab_name]);
@@ -397,7 +399,7 @@ class Report extends Admin_Controller {
 					$tot_cap[$unique_key] = $seats_data->seat_capacity;
 				}
 			}
-			if(count($accepted_list) > 0){
+			if(count($accepted_list) > 0 && $this->data['type']==1){
 			  $ldf_value = (array_sum(array_column($accepted_list,'p_count'))/array_sum($tot_cap))*100;
 			}
 		
@@ -410,7 +412,9 @@ class Report extends Admin_Controller {
 			$this->data[$cab_name]['to_cabin_id'] = $cab['to_cabin_id'];
 			$this->data[$cab_name]['tot_seat_capacity'] = array_sum($tot_cap);
 			$this->data[$cab_name]['tot_passengers_boarded'] = array_sum(array_column($accepted_list,'p_count'));
+			if($this->data['type']==1){
 			$this->data[$cab_name]['ldf'] = round($ldf_value);
+			}
 			$this->data['total_accept_revenue'] +=  $this->data[$cab_name]['accept_revenue'];
 		}
 		//print_r($this->data); exit;

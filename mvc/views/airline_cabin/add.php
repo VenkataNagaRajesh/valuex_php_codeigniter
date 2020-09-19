@@ -111,20 +111,14 @@
                             <?=$this->lang->line("images")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
-			<input type="file"  name="images[]" id="images" multiple>
-			 <div id="images-to-upload">
-
-                    	</div>
+							<input type="file"  name="images[]" id="images" multiple>
+							<div id="images-to-upload"></div>
 
                         </div>
                         <span class="col-sm-4 control-label">
                             <?php echo form_error('images[]'); ?>
                         </span>
-
                     </div>
-
-
-
 
 	<?php
                         if(form_error('video'))

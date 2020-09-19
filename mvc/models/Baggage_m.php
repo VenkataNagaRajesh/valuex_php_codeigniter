@@ -41,17 +41,16 @@ class Baggage_m extends MY_Model {
         }
 
         public function save_baggage_data($data){
-                $this->db->select('*')->from('BG_baggage');
+                $this->db->select('*')->from('UP_bid');
                 $this->db->where('offer_id',$data['offer_id']);
-                $this->db->where('bclr_id',$data['bclr_id']);
                 $query = $this->db->get();
                 $baggage_data = $query->row();
-                if(empty($baggage_data)){
-                 $this->db->insert("BG_baggage",$data);
+                if($baggage_data>=0){
+                 $this->db->insert("UP_bid",$data);
                  $id = $this->db->insert_id();
                 } else {
-                      $this->db->where('baggageID',$baggage_data->baggageID);
-                      $this->db->update('BG_baggage',$data);
+                      $this->db->where('bid_id',$baggage_data->bid_id);
+                      $this->db->update('UP_bid',$data);
               $id = $bid_data->bid_id;		
                 }
                 return $id;

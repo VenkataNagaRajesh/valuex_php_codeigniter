@@ -1,5 +1,5 @@
 <div class="off-elg">
-	<h2 class="title-tool-bar">Report</h2>
+	<h2 class="title-tool-bar">Upgrade Report</h2>
 	<div class="col-md-12 off-elg-filter-box">
 	   <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
 	     <div class="form-group"><br>	   		
@@ -36,15 +36,17 @@
 		  </div>
 	   </form>
 	</div>
-	<div class="col-md-12 report-box">
-	  <div class="row">		
-		<div class="col-md-3" style="padding:0;">
+<div class="col-md-12 report-box">
+	<?php if(count($current_report) > 0 || count($report) > 0){ ?><div style="color:#f26522"><h3><strong><bold>Upgrade Report &nbsp;<?php echo $this->data['from_date']; ?>&nbsp; to &nbsp;<?php echo $this->data['to_date']; ?></bold></strong></h3></div>
+	<?php } ?>
+	 <div class="row">		
+		<div class="col-md-3">
 		  <h3><b>Upgrades</b></h3>
 		</div>
 		<div class="col-md-4" style="padding:0;">
 		  <h3><b>Revenue</b></h3>
 		</div>
-		<div class="col-md-5" style="padding:0;">
+		<div class="col-md-5">
 		  <h3><b>Acceptance Rate</b></h3>
 		</div>
 	  </div>
@@ -102,7 +104,7 @@
 		</div>
 		</div>
 	  <?php } else { ?>
-		  <div style="height:500px;"> <h3 style="text-align: center;">No Report Data</h3></div>
+		  <div style="height:500px;" class="col-md-12"> <h3 style="text-align: center;">No Report Data</h3></div>
 	 <?php } ?>	
 	 </div>
 	<form id="reportform" action="<?=base_url('offer_table')?>" style="display:none;" method="post" target='_blank'>
