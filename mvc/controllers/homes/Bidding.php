@@ -279,7 +279,7 @@ class Bidding extends MY_Controller {
 			}          
 			
 			
-			if($this->input->post("upgrade_type") >= 1 ){
+			if(count($this->input->post("upgrade_type")) >= 1 ){
 				$data['upgrade_type'] = $this->input->post("upgrade_type");
 				$data['cash'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
 				$data['miles'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
@@ -302,7 +302,7 @@ class Bidding extends MY_Controller {
 				$data['offer_id'] = $this->input->post('offer_id');			
 				$data['bid_value'] = $this->input->post("baggage_value");	
 				$data['dtpfext_id'] = $this->input->post("dtpfext_id");
-				$data['flight_number'] = $this->input->post("flight_number");
+				// $data['flight_number'] = $this->input->post("flight_number");
 				$data['orderID'] = $this->input->post('orderID');
 				$data['productID'] = 2;
 			}

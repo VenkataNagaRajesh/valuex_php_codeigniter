@@ -1,5 +1,5 @@
 <div class="off-elg">
-	<h2 class="title-tool-bar">Report</h2>
+	<h2 class="title-tool-bar">Bagage Report</h2>
 	<div class="col-md-12 off-elg-filter-box">
 	   <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
 	     <div class="form-group"><br>	   		
@@ -39,7 +39,7 @@
 	<div class="col-md-12" style="background: #fff;margin: 20px 0;margin-top: 15px;border: solid 1px #999">
 	  <div class="row" style="background-color: #7f7575;color:#ffff">		
 		<div class="col-md-3" style="text-align:center;">
-		  <h3><b>Upgrades</b></h3>
+		  <h3><b>Bagage</b></h3>
 		</div>
 		<div class="col-md-5" style="text-align:center;">
 		  <h3><b>Revenue</b></h3>
@@ -73,7 +73,7 @@
 		<div class="col-md-5"  style="background-color: #7f7575;">
 		    <div class="revenue-box">
 				<div class="upgrade-revenue-price-box">$<?=$total_accept_revenue?> </div>
-				<div class="upgrade-revenue-box">Upgrade Revenue</div>
+				<div class="upgrade-revenue-box">Bagage Revenue</div>
 			</div>
 			<div id="revenuechart" style="height: 250px; width: 100%;margin-top: 9px" ></div>					
 			<div id="revenuemonthlychart" style="height: 250px; width: 100%;margin-top: 9px"></div>
