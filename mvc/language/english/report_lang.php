@@ -1,5 +1,5 @@
 <?php
 
-$lang['panel_title'] = "Report";
+$lang['panel_title'] = "Upgrade Report";
 
 $lang['report_action'] = 'Action';
