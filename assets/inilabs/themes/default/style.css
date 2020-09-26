@@ -4739,7 +4739,7 @@ div.simpleTree-mainContainer.countHidden span.simpleTree-childCountBadge {
 .rafeed  .form-group .form-control{
 	margin-bottom:10px;
 }
-/* Jquery DataTable Custom width for columns*/
+/* Jquery DataTable Custom width for columns style*/
 table{
   margin: 0 auto;
   width: 100%;
@@ -4881,4 +4881,7 @@ width: 100%;
     font-size: 3em;
     margin: 20px 0 9px;
     font-weight: bold;
+}
+.select2-container.form-control{
+	margin-bottom:10px !important;
 }
