@@ -10,29 +10,39 @@
 			   }				
 			   echo form_dropdown("filter_airlineID", $list,set_value("filter_airlineID",$airlineID), "id='filter_airlineID' class='form-control hide-dropdown-icon select2'"); ?>	
 			</div>
-		    <div class="col-md-2">
-			<?php $ylist = array("0" => "Select From Year"); 
-			    $current_year = date('Y');              
-               for($i=0;$i<10;$i++){
-				 $ylist[$current_year-$i] = $current_year-$i;	
-			   }				
-			   echo form_dropdown("filter_year_from", $ylist,set_value("filter_year_from",$year), "id='filter_year_from' class='form-control hide-dropdown-icon select2'"); ?>	 
+			<div class="col-md-4">
+				<fieldset>
+					<legend>To Date</legend>
+					<div class="col-md-6">
+					<?php $ylist = array("0" => "Select From Year"); 
+						$current_year = date('Y');              
+					   for($i=0;$i<10;$i++){
+						 $ylist[$current_year-$i] = $current_year-$i;	
+					   }				
+					   echo form_dropdown("filter_year_from", $ylist,set_value("filter_year_from",$year), "id='filter_year_from' class='form-control hide-dropdown-icon select2'"); ?>	 
+					</div>
+					<div class="col-md-6">
+						<select name="filter_from_month" id="filter_from_month" class="form-control hide-dropdown-icon select2">				
+						</select>
+					</div>
+				</fieldset>
 			</div>
-			<div class="col-md-2">
-				<select name="filter_from_month" id="filter_from_month" class="form-control hide-dropdown-icon select2">				
-				</select>
-			</div>
-		    <div class="col-md-2">
-			<?php $ylist = array("0" => "Select To Year"); 
-			    $current_year = date('Y');              
-               for($i=0;$i<10;$i++){
-				 $ylist[$current_year-$i] = $current_year-$i;	
-			   }				
-			   echo form_dropdown("filter_year_to", $ylist,set_value("filter_year_to",$year), "id='filter_year_to' class='form-control hide-dropdown-icon select2'"); ?>	 
-			</div>
-			<div class="col-md-2">
-				<select name="filter_to_month" id="filter_to_month" class="form-control hide-dropdown-icon select2" >  				
-				</select>
+			<div class="col-md-4">
+				<fieldset>
+					<legend>To Date</legend>
+					<div class="col-md-6">
+					<?php $ylist = array("0" => "Select To Year"); 
+						$current_year = date('Y');              
+					   for($i=0;$i<10;$i++){
+						 $ylist[$current_year-$i] = $current_year-$i;	
+					   }				
+					   echo form_dropdown("filter_year_to", $ylist,set_value("filter_year_to",$year), "id='filter_year_to' class='form-control hide-dropdown-icon select2'"); ?>	 
+					</div>
+					<div class="col-md-6">
+						<select name="filter_to_month" id="filter_to_month" class="form-control hide-dropdown-icon select2" >  				
+						</select>
+					</div>
+				</fieldset>
 			</div>
 			<div class="col-md-2">
 			<?php $types = array("1" => "Departure Report","2" =>"Sales Report"); 			   				
