@@ -12,7 +12,7 @@
 			</div>
 			<div class="col-md-4">
 				<fieldset>
-					<legend>To Date</legend>
+					<legend>From Date</legend>
 					<div class="col-md-6">
 					<?php $ylist = array("0" => "Select From Year"); 
 						$current_year = date('Y');              
