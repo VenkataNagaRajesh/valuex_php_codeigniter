@@ -10,7 +10,7 @@ class Bgreport extends Admin_Controller {
 		$this->load->model('airline_m');
 		$this->load->model('invfeed_m');
 		$language = $this->session->userdata('lang');
-		$this->lang->load('bgreport', $language);			
+		$this->lang->load('report', $language);			
 	}
 
 	public function index() {
@@ -179,35 +179,33 @@ class Bgreport extends Admin_Controller {
 			$from_query_date = '01-'.date('m').'-'.$this->data['year'];
 			$to_query_date = '01-'.$this->data['to_month'].'-'.$this->data['year'];
 			$this->data['current_from_date'] = date('Y-m-01', strtotime($from_query_date));			
-			$this->data['current_to_date'] = date('Y-m-t', strtotime($to_query_date));	
+			$this->data['current_to_date'] = date('Y-m-t', strtotime($to_query_date)); 
 			//print_r($this->data['current_from_date']); 		
 			//print_r($this->data['current_to_date']); exit; 		
-			$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$this->data['current_from_date'],$this->data['current_to_date'],$this->data['type'],$bid_accepted,$bid_rejected);					
+			$this->data['report'] = $this->report_m->get_report1($this->data['airlineID'],$this->data['current_from_date'],$this->data['current_to_date'],$this->data['type'],$bid_accepted,$bid_rejected);
+			// echo  "<pre>".  print_r($this->data['report'],.1)		. "</pre>";		
 			foreach($this->data['report'] as $feed){
+					$products[] = $feed->productID;
+					
+					
 					$feed->p_count = count(explode('<br>',$feed->p_list));
 					$feed->dep_date = date('Y-m-d',$feed->flight_date);
 					if ($feed->booking_status == $bid_accepted) {
 					$this->data['current'][date('M',$feed->$filter_date)] +=  $feed->bid_value;
 					}
 			}		
-			
-			foreach($this->data['upgrade_cabins'] as $cab){			
-				$cabs = explode('-',$cab['name']);
-				$cab_name = strtolower($cabs[0].$cabs[1]);
-				$this->data[$cab_name]['report'] = array_filter($this->data['report'],function ($item) use ($cabs) {
-					if ($item->from_cabin == $cabs[0] and $item->to_cabin == $cabs[1]) {
-						return true;
-					}
-					return false;
-				});
-				if(count($this->data[$cab_name]['report']) > 0){			 
-					$accepted_list = array_filter($this->data[$cab_name]['report'],function ($item) use ($bid_accepted) {
+	
+			foreach($products as $product){			
+				
+				if(count($product['report']) > 0){			 
+					$accepted_list = array_filter($product['report'],function ($item) use ($bid_accepted) {
+						
 						if ($item->booking_status == $bid_accepted) {
 							return true;
 						}
 						return false;
 					});
-					$rejected_list = array_filter($this->data[$cab_name]['report'],function ($item) use ($bid_rejected) {
+					$rejected_list = array_filter($product['report'],function ($item) use ($bid_rejected) {
 						if ($item->booking_status == $bid_rejected) {
 							return true;
 						}
@@ -223,7 +221,7 @@ class Bgreport extends Admin_Controller {
 							$inv['departure_date'] = $accept->flight_date;
 							$inv['origin_airport'] = $accept->from_city_code;
 							$inv['dest_airport'] = $accept->to_city_code;
-							$inv['cabin'] = $accept->upgrade_type;
+							// $inv['cabin'] = $accept->upgrade_type;
 							$seats_data = $this->invfeed_m->getEmptyCabinSeats($inv);
 							$tot_cap[$unique_key] = $seats_data->seat_capacity;
 						}
@@ -231,16 +229,16 @@ class Bgreport extends Admin_Controller {
 				    if(count($accepted_list) > 0){
 					  $ldf_value = (array_sum(array_column($accepted_list,'p_count'))/array_sum($tot_cap))*100;
 					}
-					$this->data[$cab_name]['accept_revenue'] = array_sum(array_column($accepted_list,'bid_value'));
-					$this->data[$cab_name]['passengers'] = array_sum(array_column($this->data[$cab_name]['report'],'p_count'));
-					$this->data[$cab_name]['avg_bid'] = $this->data[$cab_name]['accept_revenue'] / $this->data[$cab_name]['passengers'];
-					$this->data[$cab_name]['reject_revenue'] = array_sum(array_column($rejected_list,'bid_value'));
-					$this->data[$cab_name]['title'] = $cab['from_cabin'].' To '.$cab['to_cabin'];
-					$this->data[$cab_name]['from_cabin_id'] = $cab['from_cabin_id'];
-					$this->data[$cab_name]['to_cabin_id'] = $cab['to_cabin_id'];
-					$this->data[$cab_name]['tot_seat_capacity'] = array_sum($tot_cap);
-					$this->data[$cab_name]['tot_passengers_boarded'] = array_sum(array_column($accepted_list,'p_count'));
-					$this->data[$cab_name]['ldf'] = round($ldf_value);
+					$this->data[$product]['accept_revenue'] = array_sum(array_column($accepted_list,'bid_value'));
+					$this->data[$product]['passengers'] = array_sum(array_column($this->data[$cab_name]['report'],'p_count'));
+					$this->data[$product]['avg_bid'] = $this->data[$cab_name]['accept_revenue'] / $this->data[$cab_name]['passengers'];
+					$this->data[$product]['reject_revenue'] = array_sum(array_column($rejected_list,'bid_value'));
+					$this->data[$product]['title'] = $cab['from_cabin'].' To '.$cab['to_cabin'];
+					$this->data[$product]['from_cabin_id'] = $cab['from_cabin_id'];
+					// $this->data[$cab]['to_cabin_id'] = $cab['to_cabin_id'];
+					// $this->data[$product]['tot_seat_capacity'] = array_sum($tot_cap);
+					$this->data[$product]['tot_passengers_boarded'] = array_sum(array_column($accepted_list,'p_count'));
+					$this->data[$product]['ldf'] = round($ldf_value);
 					$this->data['total_accept_revenue'] +=  $this->data[$cab_name]['accept_revenue'];
 					//echo $cab_name;
 					//print_r($this->data[$cab_name]);

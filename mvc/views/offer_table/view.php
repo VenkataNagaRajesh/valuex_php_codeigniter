@@ -1,12 +1,13 @@
 <div class="box">
   <div class="box-header" style="width:100%;">
+  </div>
         <h3 class="box-title"><?=$this->lang->line('panel_title')?></h3>       
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><?=$this->lang->line('menu_dashboard')?></a></li>
 			<li><a href="<?=base_url("$return/index")?>"><?="Back"?></a></li>
             <li class="active"><?=$this->lang->line('panel_title')?> <?="view"?></li>
         </ol>
-  </div><!-- /.box-header -->
+  <!-- /.box-header -->
   <div class="off-dtl-page">
 	<div class="col-md-8">
 		<div class="title-bar">
@@ -97,6 +98,7 @@
 		</div>
 	</div>
 	<div class="col-md-12">
+	<h4>Upgrade Details</h4>
 		<div class="table-responsive">
 			<table class="table-hover">
 				<thead>
@@ -118,6 +120,7 @@
 				<tbody>
 
 				<?php foreach ($ofr as $data ) {
+					if($data->productID==1){
 					  $inv = array();
 			                        $inv['flight_nbr'] = $data->flight_number;
                         			$inv['airline_id'] = $data->carrier_code;
@@ -157,7 +160,68 @@
 							}?>
 					</tr>
 			<?php }?>
+			<?php }?>
 				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="col-md-12">
+	<h4>Bagage Details</h4>
+		<div class="table-responsive">
+		
+			<table class="table-hover">
+				<thead>
+					<tr>
+						<th>Flight</th>
+						<th>Date</th>
+						<th>Origin</th>
+						<th>Desti</th>
+						<th>Booked C/R</th>
+						<th>Offer Price</th>
+						<th>Weight</th>
+						<th>Accept / Reject</th>
+					</tr>
+				</thead>
+				<tbody>
+
+				<?php foreach ($ofr as $data ) {
+					if($data->productID==2){
+					  $inv = array();
+			                        $inv['flight_nbr'] = $data->flight_number;
+                        			$inv['airline_id'] = $data->carrier_code;
+                        			$inv['departure_date'] = $data->flight_date;
+						$inv['origin_airport'] = $data->from_city_code;
+						$inv['dest_airport'] = $data->to_city_code;
+						$inv['cabin'] = $data->to_cabin_code;
+									$seats_data = $this->invfeed_m->getSoldWeight($inv);
+                        			$empty_seats = $seats_data->empty_seats - $seats_data->sold_seats;
+				?>
+
+					<tr>
+			
+						<td><?=$data->carrier.$data->flight?></td>
+						<td><?php echo date('d/m/Y',$data->flight_date)?></td>
+						<td><?php echo $data->from_city;?></td>
+						<td><?php echo $data->to_city;?></td>
+						<td><?php echo $data->from_cabin;?></td>
+						<td><?php echo $data->bid_value;?></td>
+						<td><?php echo $data->weight;?></td>
+						<td>
+						<?php
+							if ($data->offer_status == 'Bid Received' ) { 
+						?>
+				<a href="<?php echo base_url('offer_table/processbid1/'.$data->offer_id.'/'.$data->flight_number.'/accept'); ?>" onclick="<?php if( $empty_seats < $p_cnt) {?> alert('Insufficient seats'); return false; <?php } ?> ; var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"><i class="fa fa-check-circle" aria-hidden="true"></i> </a>
+
+					<a href="<?php echo base_url('offer_table/processbid1/'.$data->offer_id.'/'.$data->flight_number.'/reject'); ?>"  onclick="var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"  ><i class="fa fa-times-circle-o" aria-hidden="true"></i></a></td>
+
+							<?php } else {
+								echo $data->offer_status;
+								
+							}?>
+					</tr>
+			<?php }?>
+			<?php } ?>
+				</tbody>			
 			</table>
 		</div>
 	</div>

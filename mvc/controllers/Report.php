@@ -34,10 +34,15 @@ class Report extends Admin_Controller {
 	    } else {
 			$this->data['airlineID'] = 0;
 		}
-		if($this->input->post('filter_year')){
-			$this->data['year'] = $this->input->post('filter_year');
+		if($this->input->post('filter_year_from')){
+			$this->data['from_year'] = $this->input->post('filter_year_from');
 		} else {
-			$this->data['year'] = date('Y');
+			$this->data['from_year'] = date('Y');
+		}
+		if($this->input->post('filter_year_to')){
+			$this->data['to_year'] = $this->input->post('filter_year_to');
+		} else {
+			$this->data['to_year'] = date('Y');
 		}
 		if($this->input->post('filter_from_month')){
 			$this->data['from_month'] = $this->input->post('filter_from_month');
@@ -54,8 +59,8 @@ class Report extends Admin_Controller {
 		} else {
 			$this->data['type'] = 1;
 		}
-		$this->data['from_date'] = '01'.'-'.$this->data['from_month']."-".$this->data['year'];
-		$this->data['to_date'] = date("t-m-Y", strtotime($this->data['year'].'-'.$this->data['to_month'].'-01'));		 
+		$this->data['from_date'] = '01'.'-'.$this->data['from_month']."-".$this->data['from_year'];
+		$this->data['to_date'] = date("t-m-Y", strtotime($this->data['to_year'].'-'.$this->data['to_month'].'-01'));		 
 		
 		  if($roleID != 1){
 			$this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
@@ -173,11 +178,11 @@ class Report extends Admin_Controller {
 		}
 
 		/* To get Current Month Report data */
-		if($this->data['to_month'] >= date('m') && $this->data['year'] == date('Y')){
+		if($this->data['to_month'] >= date('m') && $this->data['from_year'] == date('Y')){
 			$this->data['current_from_date'] = date('Y-m-d', strtotime('first day of this month'));
 			$this->data['current_to_date'] = date('Y-m-d', strtotime('last day of this month'));
-			$from_query_date = '01-'.date('m').'-'.$this->data['year'];
-			$to_query_date = '01-'.$this->data['to_month'].'-'.$this->data['year'];
+			$from_query_date = '01-'.date('m').'-'.$this->data['from_year'];
+			$to_query_date = '01-'.$this->data['to_month'].'-'.$this->data['to_year'];
 			$this->data['current_from_date'] = date('Y-m-01', strtotime($from_query_date));			
 			$this->data['current_to_date'] = date('Y-m-t', strtotime($to_query_date));	
 			//print_r($this->data['current_from_date']); 		
@@ -277,10 +282,15 @@ class Report extends Admin_Controller {
 	    } else {
 			$this->data['airlineID'] = 0;
 		}
-		if($this->input->post('filter_year')){
-			$this->data['year'] = $this->input->post('filter_year');
+		if($this->input->post('filter_year_from')){
+			$this->data['from_year'] = $this->input->post('filter_year_from');
 		} else {
-			$this->data['year'] = date('Y');
+			$this->data['from_year'] = date('Y');
+		}
+		if($this->input->post('filter_year_to')){
+			$this->data['to_year'] = $this->input->post('filter_year_to');
+		} else {
+			$this->data['to_year'] = date('Y');
 		}
 		if($this->input->post('filter_from_month')){
 			$this->data['from_month'] = $this->input->post('filter_from_month');
@@ -297,8 +307,8 @@ class Report extends Admin_Controller {
 		} else {
 			$this->data['type'] = 1;
 		}
-		$this->data['from_date'] = '01'.'-'.$this->data['from_month']."-".$this->data['year'];
-		$this->data['to_date'] = date("t-m-Y", strtotime($this->data['year'].'-'.$this->data['to_month'].'-01'));		 
+		$this->data['from_date'] = '01'.'-'.$this->data['from_month']."-".$this->data['from_year'];
+		$this->data['to_date'] = date("t-m-Y", strtotime($this->data['to_year'].'-'.$this->data['to_month'].'-01'));		 
 		
 		  if($roleID != 1){
 			$this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   

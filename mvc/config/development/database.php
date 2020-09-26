@@ -49,9 +49,9 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'valuex';
-$db['default']['password'] = 'valuex';
-$db['default']['database'] = 'valuex';
+$db['default']['username'] = 'swekenco_valuex';
+$db['default']['password'] = 'Valuex-1!';
+$db['default']['database'] = 'swekenco_valuex';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = FALSE;
