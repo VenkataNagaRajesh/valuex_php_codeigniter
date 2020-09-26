@@ -10,7 +10,7 @@ class Bgreport extends Admin_Controller {
 		$this->load->model('airline_m');
 		$this->load->model('invfeed_m');
 		$language = $this->session->userdata('lang');
-		$this->lang->load('report', $language);			
+		$this->lang->load('bgreport', $language);			
 	}
 
 	public function index() {
