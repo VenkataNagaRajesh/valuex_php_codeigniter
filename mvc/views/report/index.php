@@ -11,16 +11,24 @@
 			   echo form_dropdown("filter_airlineID", $list,set_value("filter_airlineID",$airlineID), "id='filter_airlineID' class='form-control hide-dropdown-icon select2'"); ?>	
 			</div>
 		    <div class="col-md-2">
-			<?php $ylist = array("0" => "Select Year"); 
+			<?php $ylist = array("0" => "Select From Year"); 
 			    $current_year = date('Y');              
                for($i=0;$i<10;$i++){
 				 $ylist[$current_year-$i] = $current_year-$i;	
 			   }				
-			   echo form_dropdown("filter_year", $ylist,set_value("filter_year",$year), "id='filter_year' class='form-control hide-dropdown-icon select2'"); ?>	 
+			   echo form_dropdown("filter_year_from", $ylist,set_value("filter_year_from",$year), "id='filter_year_from' class='form-control hide-dropdown-icon select2'"); ?>	 
 			</div>
 			<div class="col-md-2">
 				<select name="filter_from_month" id="filter_from_month" class="form-control hide-dropdown-icon select2">				
 				</select>
+			</div>
+		    <div class="col-md-2">
+			<?php $ylist = array("0" => "Select To Year"); 
+			    $current_year = date('Y');              
+               for($i=0;$i<10;$i++){
+				 $ylist[$current_year-$i] = $current_year-$i;	
+			   }				
+			   echo form_dropdown("filter_year_to", $ylist,set_value("filter_year_to",$year), "id='filter_year_to' class='form-control hide-dropdown-icon select2'"); ?>	 
 			</div>
 			<div class="col-md-2">
 				<select name="filter_to_month" id="filter_to_month" class="form-control hide-dropdown-icon select2" >  				
@@ -30,14 +38,14 @@
 			<?php $types = array("1" => "Departure Report","2" =>"Sales Report"); 			   				
 			   echo form_dropdown("filter_type", $types,set_value("filter_type",$type), "id='filter_type' class='form-control hide-dropdown-icon select2'"); ?>	 
 			</div>	
-			<div class="col-md-2">
+			<div class="col-md-2 pull-right">
 				<button type="submit" class="form-control btn btn-danger">Report</button>				
 			</div>
 		  </div>
 	   </form>
 	</div>
 <div class="col-md-12 report-box">
-	<?php if(count($current_report) > 0 || count($report) > 0){ ?><div style="color:#f26522"><h3><strong><bold>Upgrade Report &nbsp;<?php echo $this->data['from_date']; ?>&nbsp; to &nbsp;<?php echo $this->data['to_date']; ?></bold></strong></h3></div>
+	<?php if(count($current_report) > 0 || count($report) > 0){ ?><div style="color:#f26522"><h3><strong><bold>Upgrade <?=$types[$type]?> for carrier <?=$list[$airlineID]?> from &nbsp;<?php echo $this->data['from_date']; ?>&nbsp; to &nbsp;<?php echo $this->data['to_date']; ?></bold></strong></h3></div>
 	<?php } ?>
 	 <div class="row">		
 		<div class="col-md-3">
@@ -65,16 +73,16 @@
 				$icon = 'down'; $color = "#ea2708"; } ?>
 			<div class="report-data">
 				<h4 class="report-cabin-header"><?=$$cab_name['title']?></h4>
-				<p><span>Revenue :</span><b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)"><?="$".round($$cab_name['accept_revenue'])?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="color:<?=$color?>;" aria-hidden="true"></i></p>
-				<p><span>Passengers : </span> <b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" ><?=$$cab_name['passengers']?></b><i class="fa fa-caret-<?=$icon?> pull-right"  onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="color:<?=$color?>;" aria-hidden="true"></i></p>
-				<p><span>AVG Bid : </span><b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" ><?="$".round($$cab_name['avg_bid'])?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="color:<?=$color?>;" aria-hidden="true"></i></p>
-				<p><span>Rejected Revenue :</span> <b onclick="rejectReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)"><?="$".$$cab_name['reject_revenue']?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="rejectReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="color:<?=$color?>;" aria-hidden="true"></i></p>
+				<p><span>Revenue :</span><b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)"><?="$".number_format(round($$cab_name['accept_revenue']))?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="color:<?=$color?>;" aria-hidden="true"></i></p>
+				<p><span>Passengers : </span> <b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" ><?=number_format($$cab_name['passengers'])?></b><i class="fa fa-caret-<?=$icon?> pull-right"  onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="color:<?=$color?>;" aria-hidden="true"></i></p>
+				<p><span>AVG Bid : </span><b onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" ><?="$".number_format(round($$cab_name['avg_bid']))?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="progressReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="color:<?=$color?>;" aria-hidden="true"></i></p>
+				<p><span>Rejected Revenue :</span> <b onclick="rejectReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)"><?="$".number_format($$cab_name['reject_revenue'])?></b><i class="fa fa-caret-<?=$icon?> pull-right" onclick="rejectReport(<?=$$cab_name['from_cabin_id']?>,<?=$$cab_name['to_cabin_id']?>)" style="color:<?=$color?>;" aria-hidden="true"></i></p>
 				<p><span>LDF where Bid Rejected :</span><b> <?=$$cab_name['ldf']?>%</b></p>
 			</div><?php  } $i++; } ?>
 		</div>
 		<div class="col-md-7">
 		    <div class="revenue-box">
-				<div class="upgrade-revenue-price-box">$<?=$total_accept_revenue?> </div>
+				<div class="upgrade-revenue-price-box">$<?=number_format($total_accept_revenue)?> </div>
 				<div class="upgrade-revenue-box" style="font-size:18px;">Upgrade Revenue</div>
 			</div>
 			<div id="revenuechart" style="height: 250px; width: 100%;margin-top: 9px" ></div>					
@@ -126,7 +134,8 @@
 <script type="text/javascript" src="<?php echo base_url('assets/inilabs/jquery.redirect.js'); ?>"></script>
 <script>
 $(document).ready(function(){
-	$('#filter_year').val(<?=$year?>).trigger('change');	
+	$('#filter_year_from').val(<?=$from_year?>).trigger('change');	
+	$('#filter_year_to').val(<?=$to_year?>).trigger('change');	
 	$('#filter_from_month').val(<?=$from_month?>).trigger('change');	
 	$('#filter_to_month').val(<?=$to_month?>).trigger('change');	
 	$('#filter_type').val(<?=$type?>).trigger('change');	
@@ -181,7 +190,33 @@ function rejectReport(from_cabin,to_cabin) {
 
 $('.select2').select2();
 
-$('#filter_year').change(function(){
+$('#filter_year_from').change(function(){
+	var year = <?=date('Y')?>;
+	if(year == $(this).val()){		
+		end_month = new Date().getMonth();
+	} else {
+    	end_month = 11;
+	}
+	end_month = 11;
+	var html = '',value=0;
+	var from_selected = '';
+	var to_selected = '';
+	var from_html = "<option value='0'>From Month</option>";
+	var to_html = "<option value='0'>To Month</option>";
+	for(var i=0;i<=end_month;i++){
+		value = i+1;
+		from_selected = (<?=$from_month?>==value)?'selected':'';
+		to_selected = (<?=$to_month?>==value)?'selected':'';		
+		from_html += '<option value="'+value+'" '+from_selected+' >'+new Date($(this).val(),i).toLocaleString("default", { month: "long" })+'</option>';
+		to_html += '<option value="'+value+'" '+to_selected+'>'+new Date($(this).val(),i).toLocaleString("default", { month: "long" })+'</option>';
+	}	
+	
+	
+	$('#filter_from_month').html(from_html);
+	$('#filter_to_month').html(to_html);	
+});
+
+$('#filter_year_to').change(function(){
 	var year = <?=date('Y')?>;
 	if(year == $(this).val()){		
 		end_month = new Date().getMonth();
@@ -394,7 +429,7 @@ var revenueMonthlyChartOptions = {
    function monthlyReport(e){
 	   $('#carrier').val(<?=$airlineID?>);
 	   $('#month').val(e.dataPoint.label);
-	   $('#year').val($("#filter_year").val());
+	   $('#year').val($("#filter_year_from").val());
 	   $('#type').val( '<?=$type?>');
 	   $('#offer_status').val(<?=$bid_accepted?>);
 	   $('#from_cabin').val('');
