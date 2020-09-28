@@ -89,6 +89,15 @@ class Offer_table extends Admin_Controller {
                 } else {
                   $this->data['to_cabin'] = 0;
                 }
+
+                if(!empty($this->input->post('product_id'))){
+                   $this->data['product_id'] = $this->input->post('product_id');
+			if (  $this->data['product_id'] == 2 ) {
+                  		$this->data['to_cabin'] = 0;
+			}
+                } else {
+                  $this->data['product_id'] = 0;
+                }
             
            // To apply dashboard reports filters     
           if(!empty($this->input->post('type'))){
@@ -576,6 +585,10 @@ function processbid1() {
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'SubSet.carrier_code = '.  $this->input->get('carrier');
                         }
+                         if(!empty($this->input->get('product_id'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                               	$sWhere .= '  MainSet.product_id = '.  $this->input->get('product_id');
+			 }
 
                 $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
@@ -601,7 +614,7 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
 
                 FROM ( 
                                 select bid.bid_id, pf.dtpf_id,  oref.offer_id,oref.create_date as offer_date , prq.name as name,bid_value, bid_avg,bid_markup_val,
-                                tdef.cabin as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, pe.product_id, pf.dep_date as flight_date
+                                tdef.cabin as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, pe.product_id, pf.dep_date as flight_date, bid.productID
                                 from  
                                         UP_bid bid 
                                         
@@ -627,11 +640,11 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
                                                  car.code as carrier, pf1.carrier_code, pf1.dtpf_id
                                         
                                         from VX_daily_tkt_pax_feed pf1 
-                                        LEFT JOIN VX_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
-                                        LEFT JOIN VX_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
-					LEFT JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf1.carrier_code)
-                                        LEFT JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 and cab.alias = fdef.level)
-                                        LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
+                                        INNER JOIN VX_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
+                                        INNER JOIN VX_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
+					INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf1.carrier_code)
+                                        INNER JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 and cab.alias = fdef.level)
+                                       INNER JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
                                         group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
                    ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.dtpf_id = SubSet.dtpf_id) 
  $sWhere 

@@ -14,6 +14,7 @@ class Report extends Admin_Controller {
 	}
 
 	public function index() {
+		$product_id = 1 ; //UPGRADE
 		$this->data['headerassets'] = array(
 			'css' => array(
 					'assets/select2/css/select2.css',
@@ -187,7 +188,8 @@ class Report extends Admin_Controller {
 			$this->data['current_to_date'] = date('Y-m-t', strtotime($to_query_date));	
 			//print_r($this->data['current_from_date']); 		
 			//print_r($this->data['current_to_date']); exit; 		
-			$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$this->data['from_date'],$this->data['to_date'],$this->data['type'],$bid_accepted,$bid_rejected);					
+			#$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$this->data['from_date'],$this->data['to_date'],$this->data['type'],$bid_accepted,$bid_rejected, $product_id);					
+			$this->data['report'] = $this->reportdata_m->get_report($this->data['airlineID'],$this->data['from_date'],$this->data['to_date'],$this->data['type'],$product_id);					
 			foreach($this->data['report'] as $feed){
 					$feed->p_count = count(explode('<br>',$feed->p_list));
 					$feed->dep_date = date('Y-m-d',$feed->flight_date);
@@ -345,8 +347,10 @@ class Report extends Admin_Controller {
 		$bid_accepted =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
 		$bid_rejected =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
 
-		$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$this->data['from_date'],$this->data['to_date'],$this->data['type'],$bid_accepted,$bid_rejected);
-		$this->data['previous_report'] = $this->report_m->get_report($this->data['airlineID'],date('Y-m-d', strtotime('-1 year', strtotime($this->data['from_date']))),date('Y-m-d', strtotime('-1 year', strtotime($this->data['to_date']))),$this->data['type'],$bid_accepted,$bid_rejected);
+		#$this->data['report'] = $this->report_m->get_report($this->data['airlineID'],$this->data['from_date'],$this->data['to_date'],$this->data['type'],$bid_accepted,$bid_rejected, $product_id);
+		$this->data['report'] = $this->reportdata_m->get_report($this->data['airlineID'],$this->data['from_date'],$this->data['to_date'],$this->data['type'], $product_id);
+		#$this->data['previous_report'] = $this->report_m->get_report($this->data['airlineID'],date('Y-m-d', strtotime('-1 year', strtotime($this->data['from_date']))),date('Y-m-d', strtotime('-1 year', strtotime($this->data['to_date']))),$this->data['type'],$bid_accepted,$bid_rejected, $product_id);
+		$this->data['previous_report'] = $this->reportdata_m->get_report($this->data['airlineID'],date('Y-m-d', strtotime('-1 year', strtotime($this->data['from_date']))),date('Y-m-d', strtotime('-1 year', strtotime($this->data['to_date']))),$this->data['type'], $product_id);
 		
 		$this->data['bid_accepted'] = $bid_accepted;
 		$this->data['bid_rejected'] = $bid_rejected;

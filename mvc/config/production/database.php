@@ -49,7 +49,7 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = '';
+$db['default']['username'] = 'swekenco_valuex';
 $db['default']['password'] = 'Valuex-1!';
 $db['default']['database'] = 'swekenco_valuex';
 $db['default']['dbdriver'] = 'mysqli';

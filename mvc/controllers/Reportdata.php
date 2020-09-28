@@ -6,8 +6,9 @@
         parent::__construct(); 
         $this->load->model('report_m');
         $this->load->model('reportdata_m');
-		$this->load->model('user_m');
-		$this->load->model('airline_m');  
+        $this->load->model('contract_m');
+	$this->load->model('user_m');
+	$this->load->model('airline_m');  
         $this->load->model('rafeed_m'); 
         $this->load->model('invfeed_m'); 
     }
@@ -15,7 +16,11 @@
     public function index() {
         $carriers = $this->report_m->getPaxCarriers();       
        foreach($carriers as $car){
-          $reportdata = $this->reportdata_m->getReportdata(array("carrier"=>$car->vx_aln_data_defnsID));
+	$products = $this->contract_m->getAirlineProducts($car->vx_aln_data_defnsID);
+	foreach($products as $product) {
+	  $product_id = $product->productID;
+		
+          $reportdata = $this->reportdata_m->getReportdata(array("carrier"=>$car->vx_aln_data_defnsID, $product_id));
 
           if($reportdata){
             $latest_dep_report = end(array_filter($reportdata,function ($item) {
@@ -38,10 +43,10 @@
             $ddiff = date_diff(date_create($dfrom_date),date_create($to_date));
             if($ddiff->format("%a")){
                 $dfrom_date = date('Y-m-d', strtotime('+1 day', strtotime($dfrom_date)));
-                $dep_report = $this->reportdata_m->get_report($car->vx_aln_data_defnsID,$dfrom_date,$to_date,1);              
+                $dep_report = $this->reportdata_m->get_report($car->vx_aln_data_defnsID,$dfrom_date,$to_date,1, $product_id);              
                 /* Inserting Departure Report data */ 
                 if(count($dep_report) > 0){                             
-                    $this->addReport($car->vx_aln_data_defnsID,$dep_report,1); 
+                    $this->addReport($car->vx_aln_data_defnsID,$dep_report,1, $product_id); 
                 }
             };
             
@@ -51,33 +56,34 @@
             $sdiff = date_diff(date_create($sfrom_date),date_create($to_date));
             if($sdiff->format("%a")){
                 $from_date = date('Y-m-d', strtotime('+1 day', strtotime($sfrom_date)));
-                $sale_report = $this->reportdata_m->get_report($car->vx_aln_data_defnsID,$sfrom_date,$to_date,1);              
+                $sale_report = $this->reportdata_m->get_report($car->vx_aln_data_defnsID,$sfrom_date,$to_date,1, $product_id);              
                 /* Inserting Sales Report data */ 
                 if(count($sale_report) > 0){                             
-                    $this->addReport($car->vx_aln_data_defnsID,$sale_report,1); 
+                    $this->addReport($car->vx_aln_data_defnsID,$sale_report,1, $product_id); 
                 }
             };            
 
           } else {
               $date = date("Y-n-j", strtotime("last day of previous month"));                           
-              $dep_report = $this->reportdata_m->get_report($car->vx_aln_data_defnsID,null,$date,1);
-              $sale_report = $this->reportdata_m->get_report($car->vx_aln_data_defnsID,null,$date,2);
+              $dep_report = $this->reportdata_m->get_report($car->vx_aln_data_defnsID,null,$date,1, $product_id);
+              $sale_report = $this->reportdata_m->get_report($car->vx_aln_data_defnsID,null,$date,2, $product_id);
              
               /* Inserting Departure Report data */ 
               if(count($dep_report) > 0){                             
-                $this->addReport($car->vx_aln_data_defnsID,$dep_report,1); 
+                $this->addReport($car->vx_aln_data_defnsID,$dep_report,1, $product_id); 
               }
 
               /* Inserting Sales Report data  */
               if(count($sale_report) > 0){                            
-                $this->addReport($car->vx_aln_data_defnsID,$sale_report,2); 
+                $this->addReport($car->vx_aln_data_defnsID,$sale_report,2, $product_id); 
               }        
              
           }        
-       }       
+       	 }       
+	}
     }
 
-    function addReport($carrier,$report_list,$type){
+    function addReport($carrier,$report_list,$type, $product_id){
 
         $bid_accepted =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
         $bid_rejected =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
@@ -105,6 +111,7 @@
         foreach($cabins as $cabkey => $cablist){
             $data['carrier'] = $carrier;
             $data['type'] = $type;
+            $data['product_id'] = $product_id;
             $data['year'] = explode('-',$cabkey)[0];
             $data['month'] = date_parse(explode('-',$cabkey)[1])['month'];
             $data['from_cabin'] = explode('-',$cabkey)[2];
@@ -146,9 +153,10 @@
              $data['reject_revenue'] = array_sum(array_column($rejected_list,'bid_value'));
              $data['passenger_count'] = array_sum(array_column($cablist,'p_count')); 
              $data['tot_seat_capacity'] = array_sum($tot_cap);
-			 $data['tot_passengers_boarded'] = array_sum(array_column($accepted_list,'p_count'));
-			 $data['ldf'] = round($ldf_value);                
+		$data['tot_passengers_boarded'] = array_sum(array_column($accepted_list,'p_count'));
+		$data['ldf'] = round($ldf_value);                
              $data['modify_date'] = time();
+             $data['product_id'] = $product_id; 
             // $this->mydebug->debug("report data inserted for carrier".$carrier.", Month :".$data['month'].", Year :".$data['year']);
              if($dataID){
                 $this->reportdata_m->update_reportdata($dataID,$data);
