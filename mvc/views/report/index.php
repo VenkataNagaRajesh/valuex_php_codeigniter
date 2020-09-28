@@ -125,6 +125,7 @@
 		<input type="hidden" name="offer_status" id="offer_status" value="">
 		<input type="hidden" name="month" id="month" value="">
 		<input type="hidden" name="year" id="year" value="">
+		<input type="hidden" name="product_id" id="product_id" value="">
 		<input type="submit" value="Submit">
 	</form>	
 </div>
@@ -155,6 +156,7 @@ function yearlyReport(type){
 	   $('#year').val();
 	   $('#type').val('<?=$type?>');
 	   $('#offer_status').val(<?=$bid_accepted?>);
+	   $('#product_id').val(<?=$product_id?>);
 	   $('#from_cabin').val('');
 	   $('#to_cabin').val('');
 	   $('#from_date').val(from_date);
@@ -170,6 +172,7 @@ function progressReport(from_cabin,to_cabin) {
 		$('#to_date').val('<?=$to_date?>');
 		$('#type').val( '<?=$type?>');
 		$('#offer_status').val(<?=$bid_accepted?>);
+		$('#product_id').val(<?=$product_id?>);
 		$('#month').val('');
 		$('#year').val('');
 	 $("#reportform").submit();	
@@ -181,6 +184,7 @@ function rejectReport(from_cabin,to_cabin) {
 		$('#to_cabin').val(to_cabin);
 		$('#from_date').val('<?=$from_date?>');
 		$('#to_date').val('<?=$to_date?>');
+		$('#product_id').val(<?=$product_id?>);
 		$('#type').val( '<?=$type?>');
 		$('#offer_status').val(<?=$bid_rejected?>);
 		$('#month').val('');
@@ -313,6 +317,7 @@ function visitorsChartDrilldownHandler(e) {
 		$('#to_cabin').val(e.dataPoint.to_cabin);
 		$('#from_date').val('<?=$from_date?>');
 		$('#to_date').val('<?=$to_date?>');
+		$('#product_id').val(<?=$product_id?>);
 		$('#type').val( '<?=$type?>');
 		$('#offer_status').val(<?=$bid_accepted?>);
 		$('#month').val('');
@@ -328,6 +333,7 @@ function getReport(from_cabin,to_cabin,status){
 		'to_cabin': to_cabin,
 		'from_date':'<?=$from_date?>',
 		'to_date':'<?=$to_date?>',
+		'product_id':'(<?=$product_id?>',
 		'type': '<?=$type?>',
 		'offer_status':status
 	});
@@ -433,6 +439,7 @@ var revenueMonthlyChartOptions = {
 	   $('#type').val( '<?=$type?>');
 	   $('#offer_status').val(<?=$bid_accepted?>);
 	   $('#from_cabin').val('');
+	   $('#product_id').val(<?=$product_id?>);
 	   $('#to_cabin').val('');
 	   $('#from_date').val('');
 	   $('#to_date').val('');
