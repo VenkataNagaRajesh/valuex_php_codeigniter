@@ -259,7 +259,8 @@ class Report extends Admin_Controller {
 				}
 			} //exit;
 	    }		
-        $this->data["subview"] = "report/index";
+        	$this->data["product_id"] = $product_id;
+        	$this->data["subview"] = "report/index";
 		$this->load->view('_layout_main', $this->data); 
 	}
 	
