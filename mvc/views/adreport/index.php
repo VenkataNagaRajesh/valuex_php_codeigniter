@@ -48,7 +48,18 @@ $dataPoints = array(
 				<div id="chartContainer" style="height: 370px; width: 100%;"></div>
 
 
-				</div>    
+				</div>  
+
+				<div class="col-md-2">
+				
+				<?php 
+				$total = $bidsrecevied;
+
+				?>
+				<div class="upgrade-revenue-price-box">$<?=number_format($total)?> </div>
+
+
+				</div>  
 			</div>
 		</div>
 		</div>
@@ -68,11 +79,20 @@ $dataPoints = array(
 			<div>
 				<div class="col-md-3">
 				
-				<?php $total_bids = $bidsaccept+$bidsrecevied; ?>
+				<?php $total_bids = $bidsaccept+$bidsrecevied; $icon = 'up'; $color = "#0c9e0c";?>
 				
-				<div class="upgrade-revenue-price-box"><?=number_format($total_bids)?> </div>
+				<div class="upgrade-revenue-price-box" ><?=number_format($total_bids)?> </div>
 				
 				</div>    
+			</div>
+			<div class="col-md-7">
+				</div>
+				<div class="col-md-2">
+				<?php 
+				$total = $bidsaccept;
+				?>
+				<div class="upgrade-revenue-price-box"><?=number_format($total)?> </div>
+				</div>  
 			</div>
 		</div>
 		</div>

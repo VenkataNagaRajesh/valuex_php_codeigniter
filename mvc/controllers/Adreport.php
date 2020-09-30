@@ -30,14 +30,14 @@ class Adreport extends Admin_Controller {
 		
         
         
-		$sQuery = "SELECT b.alias,b.create_date FROM VX_offer_info a LEFT JOIN VX_data_defns b ON (b.vx_aln_data_defnsID = a.booking_status) WHERE b.alias='bid_accepted'";
+		$sQuery = "SELECT b.alias,b.create_date FROM VX_offer_info a LEFT JOIN VX_data_defns b ON (b.vx_aln_data_defnsID = a.booking_status) LEFT JOIN UP_bid c ON(c.offer_id = a.dtpfext_id)  WHERE b.alias='bid_accepted'";
              $rResult = $this->install_m->run_query($sQuery);
              
         $bidcount = [];
         $bidcount = $rResult;
         $bidsaccept = count($bidcount);
 
-        $ssQuery = "SELECT b.alias,b.create_date FROM VX_offer_info a LEFT JOIN VX_data_defns b ON (b.vx_aln_data_defnsID = a.booking_status) WHERE b.alias='bid_received'";
+        $ssQuery = "SELECT b.alias,b.create_date,c.cash,c.bid_value FROM VX_offer_info a LEFT JOIN VX_data_defns b ON (b.VX_aln_data_defnsID = a.booking_status) LEFT JOIN UP_bid c ON(c.offer_id = a.dtpfext_id) WHERE b.alias='bid_received'";
              $rrResult = $this->install_m->run_query($ssQuery);
              
         $bidrec = [];
