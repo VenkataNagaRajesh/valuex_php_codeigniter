@@ -108,6 +108,7 @@ class season_m extends MY_Model {
 		 $this->db->limit(1);
 		
                 $query = $this->db->get();
+		#echo "<br>" . $this->db->last_query();
                 $arr = $query->row();
 		if( $arr->VX_aln_seasonID ) {
 			return $arr->VX_aln_seasonID;

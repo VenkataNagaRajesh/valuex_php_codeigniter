@@ -3,32 +3,9 @@
 	<div class="col-md-12 off-elg-filter-box">
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">	
 			<div class="form-group"><br><br>
-				<div class="col-md-2 select-form">
-					<div class="col-sm-12">
-						<?php
-							$airports['0'] = 'Select Boarding Point';
-							ksort($airports);
-							echo form_dropdown("boarding_point", $airports,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
-					</div>
-					 <div class="col-sm-12">
-						<?php
-							$airports['0'] = 'Select Off Point';
-							ksort($airports);
-							echo form_dropdown("off_point", $airports,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
-					</div>
-                    <div class="col-sm-12">
-						<?php
-							$product_name['0'] = 'Product Type';
-                            ksort($product_name);
-							echo form_dropdown("name", $product_name,set_value("name",$name), "id='name' class='form-control hide-dropdown-icon select2'");    ?>
-					</div>
-				</div>
 
 
                                    <div class="col-md-2 select-form">
-                                        <div class="col-sm-12">
-                                                <input type="text" class="form-control" placeholder="OfferID" id="offer_id" name="offer_id" value="<?=set_value('offer_id')?>" >
-                                        </div>
                                          <div class="col-sm-12">
                                                 <?php
 
@@ -41,6 +18,15 @@
 
                                                         echo form_dropdown("carrier", $airlinelist,set_value("carrier",$car), "id='carrier' class='form-control hide-dropdown-icon select2'");     ?>
                                         </div>
+                                        <div class="col-sm-12">
+                                                <input type="text" class="form-control" placeholder="OfferID" id="offer_id" name="offer_id" value="<?=set_value('offer_id')?>" >
+                                        </div>
+                    <div class="col-sm-12">
+						<?php
+							$product_name['0'] = 'Product Type';
+                            ksort($product_name);
+							echo form_dropdown("name", $product_name,set_value("name",$name), "id='name' class='form-control hide-dropdown-icon select2'");    ?>
+					</div>
                                 </div>
 
 
@@ -68,6 +54,20 @@
 							$cabins['0'] = 'Select To cabin';
 							ksort($cabins);
 							echo form_dropdown("to_cabin", $cabins,set_value("to_cabin",$to_cabin), "id='to_cabin' class='form-control hide-dropdown-icon select2'");   */ ?>
+					</div>
+				</div>
+				<div class="col-md-2 select-form">
+					<div class="col-sm-12">
+						<?php
+							$airports['0'] = 'Select Boarding Point';
+							ksort($airports);
+							echo form_dropdown("boarding_point", $airports,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
+					</div>
+					 <div class="col-sm-12">
+						<?php
+							$airports['0'] = 'Select Off Point';
+							ksort($airports);
+							echo form_dropdown("off_point", $airports,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
 				</div>
 				<div class="col-md-2 select-form">

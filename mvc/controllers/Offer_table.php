@@ -603,37 +603,49 @@ function processbid1() {
                    $mainsetWhere = "";
                    
                }
+                         if(!empty($this->input->get('product_id'))){
+                                $mainsetWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                               	$mainsetWhere .= '  pe.product_id = bid.productID  AND  bid.productID = '.  $this->input->get('product_id');
+			 }
+
               // $mainsetWhere = "";
 
 
 $sQuery = " select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.dtpf_id,  MainSet.upgrade_type,MainSet.offer_date, MainSet.name,MainSet.flight_date , SubSet.carrier , MainSet.flight_number , 
-                        SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
+                        SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, MainSet.from_cabin,
                         MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status,
 			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code, MainSet.product_id, MainSet.bid_id
 
                 FROM ( 
                                 select bid.bid_id, pf.dtpf_id,  oref.offer_id,oref.create_date as offer_date , prq.name as name,bid_value, bid_avg,bid_markup_val,
-                                tdef.cabin as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, pe.product_id, pf.dep_date as flight_date, bid.productID
+                                tcab.code as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, pe.product_id, pf.dep_date as flight_date, bid.productID, fcab.code as from_cabin
                                 from  
                                         UP_bid bid 
                                         
-                                        LEFT JOIN VX_offer_info pe on (bid.dtpfext_id = pe.dtpfext_id)
-                                        LEFT JOIN VX_products prq on (pe.product_id = prq.productID) 
-                                        LEFT JOIN VX_offer oref on (bid.offer_id = oref.offer_id) 
-                                        LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and pf.dtpf_id = pe.dtpf_id )
-					LEFT JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = bid.upgrade_type AND tcab.aln_data_typeID = 13 )
-					LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code AND  tcab.alias = tdef.level ) 
-                                        LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
+                                        INNER JOIN VX_offer_info pe on (bid.dtpfext_id = pe.dtpfext_id)
+                                        INNER JOIN VX_products prq on (pe.product_id = prq.productID) 
+                                        INNER JOIN VX_offer oref on (bid.offer_id = oref.offer_id) ";
+if ( $product_id ==  1 ) {
+$sQuery .= " INNER JOIN UP_fare_control_range fclr on (pe.rule_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type AND pe.product_id = 1) ";
+} elseif ( $product_id ==  2 ) {
+	$sQuery .= " INNER JOIN BG_baggage_control_rule bclr on (pe.rule_id = bclr.fclr_id AND  pe.product_id = 2) ";
+}
+	$sQuery .= "
+                                        INNER JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and pf.dtpf_id = pe.dtpf_id )
+					LEFT JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = bid.upgrade_type AND tcab.aln_data_typeID = 13 AND pe.product_id = 1 )
+					INNER JOIN VX_data_defns fcab on (fcab.vx_aln_data_defnsID = pf.cabin AND fcab.aln_data_typeID = 13 )
+					LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code AND  tcab.alias = tdef.level AND  pe.product_id = 1  ) 
+                                        INNER JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
                                           ".$mainsetWhere."
                      ) as MainSet 
 
                         
-                       LEFT  JOIN (
+                       INNER  JOIN (
                                         select  flight_number,group_concat(distinct first_name, ' ' , last_name , ' fqtv: ' , fqtv SEPARATOR '<br>'  ) as p_list ,group_concat(distinct fqtv) as fqtv,
                                                 group_concat(distinct dep_date) as flight_date  ,
                                                 pnr_ref, 
-                                                group_concat(distinct fdef.cabin) as from_cabin  , fc.code as from_city, 
+                                                cab.code  as from_cabin  , fc.code as from_city, 
 						tc.code as to_city, from_city as boarding_point , to_city as off_point, 
 						fc.aln_data_value as from_city_name, tc.aln_data_value as to_city_name,
 						 group_concat(distinct pf1.cabin) as from_cabin_id, 

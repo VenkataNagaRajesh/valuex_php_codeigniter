@@ -51,7 +51,7 @@ class Reportdata_m extends MY_Model {
 
               FROM ( 
                               select distinct bid.bid_id, pe.dtpfext_id, pe.dtpf_id,oref.offer_id, oref.create_date as offer_date ,bid_value, bid_avg,bid_markup_val,
-                              tdef.cabin as to_cabin,tcab.vx_aln_data_defnsID as to_cabin_id, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank
+                              tdef.cabin as to_cabin, tcab.vx_aln_data_defnsID as to_cabin_id, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, fcab.code as from_cabin
                               from  
                                       VX_offer oref 
                                       INNER JOIN UP_bid bid on (bid.offer_id = oref.offer_id) 
@@ -69,13 +69,14 @@ class Reportdata_m extends MY_Model {
 
 		$query .= " ) INNER JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code) 
                              INNER JOIN VX_offer_info pe on ( pe.dtpf_id = pf.dtpf_id  and bid.dtpfext_id = pe.dtpfext_id ) ";
+       		$query .= " INNER JOIN VX_data_defns fcab on (fcab.vx_aln_data_defnsID = pf.cabin AND fcab.aln_data_typeID = 13)";
 		switch ($product_id) {
 			case 1:
-                               $query .=  "  INNER JOIN UP_fare_control_range fclr on (pe.rule_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type AND pe.product_id = 1) ";
+                               $query .=  "  LEFT JOIN UP_fare_control_range fclr on (pe.rule_id = fclr.fclr_id AND fclr.to_cabin = bid.upgrade_type AND pe.product_id = 1) ";
         			$query .= " INNER JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = upgrade_type AND tcab.aln_data_typeID = 13 and tcab.alias = tdef.level)";
 			break;
 			case 2:
-                               $query .= " INNER JOIN BG_baggage_control_rule bclr on (pe.rule_id = bclr.bclr_id AND pe.product_id = 2)";
+                               $query .= " LEFT JOIN BG_baggage_control_rule bclr on (pe.rule_id = bclr.bclr_id AND pe.product_id = 2)";
         			$query .= " INNER JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = pf.cabin AND tcab.aln_data_typeID = 13 and tcab.alias = tdef.level)";
 			break;
 		}
@@ -87,7 +88,7 @@ class Reportdata_m extends MY_Model {
                                       select  pf1.dtpf_id, flight_number,group_concat(distinct first_name, ' ' , last_name , ' fqtv: ' , fqtv SEPARATOR '<br>'  ) as p_list ,group_concat(distinct fqtv) as fqtv,
                                               group_concat(distinct dep_date) as flight_date  ,
                                               pnr_ref,pf1.from_city as from_city_code,pf1.to_city as to_city_code,  
-                                              group_concat(distinct fdef.cabin) as from_cabin  , fc.code as from_city, 
+                                              cab.code as from_cabin  , fc.code as from_city, 
           tc.code as to_city, from_city as boarding_point , to_city as off_point, 
           fc.aln_data_value as from_city_name, tc.aln_data_value as to_city_name,
            group_concat(distinct pf1.cabin) as from_cabin_id, 
@@ -125,7 +126,7 @@ class Reportdata_m extends MY_Model {
                  $query .= " ) WHERE SubSet.carrier_code = ".$airlineID;
                  $query .= " AND SubSet.dtpf_id = MainSet.dtpf_id AND  (MainSet.booking_status =".$bid_accepted." OR MainSet.booking_status =".$bid_rejected.")".$order;
                 
-         #print_r($query); echo "<br>"; echo "<br>"; exit;
+         //print_r($query); echo "<br>"; echo "<br>"; exit;
           $result =   $this->db->query($query);
           return $result->result();
   }

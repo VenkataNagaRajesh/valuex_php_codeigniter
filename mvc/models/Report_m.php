@@ -56,7 +56,7 @@ class Report_m extends MY_Model {
                    ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number ) ";
                    $query .= " WHERE SubSet.carrier_code = ".$airlineID;
                    $query .= " AND (MainSet.booking_status =".$bid_accepted." OR MainSet.booking_status =".$bid_rejected.")";
-             //print_r($query)     ; exit;
+             //print_r($query)   ; exit;
             $result =   $this->db->query($query);
             return $result->result();
     }

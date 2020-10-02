@@ -990,7 +990,7 @@ public function process_fclr_matching_report() {
 
 		}
 
-	redirect(base_url("paxfeed/index"));	
+	#redirect(base_url("paxfeed/index"));	
 }
 
 }
