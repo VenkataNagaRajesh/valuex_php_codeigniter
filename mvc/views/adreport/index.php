@@ -59,7 +59,7 @@
 			<div>
 				<div class="col-md-3">
 				<div style="margin-bottom: 4em;" id="progress-<?=$bid_accepted?>"  class="pie-title-center" data-percent="<?=number_format(round($bid_average))?>" style="height: 180px; width: 100%;">
-					<b><a onclick="progressReport(<?=$bid_accepted?>?>,<?=$bid_received?>)">
+					<b><a onclick="progressReport()">
 					<span style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="<?=number_format($bid_accepted)?>" class="pie-value"></span>
 					</a>
 					<p>Accepted Bids</p>
@@ -72,7 +72,12 @@
 				</div>  
 
 				<div class="col-md-2">
-				<div class="upgrade-revenue-price-box">$<?=number_format($bid_revenue)?> </div>
+				<div class="upgrade-revenue-price-box">
+					<b><a onclick="progressReport('<?=$bid_accepted_status?>')">$<?=number_format($bid_revenue)?>
+					<span style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="<?=number_format($bid_revenue)?>" class="pie-value"></span>
+					</a>
+					</b>
+				</div>
 
 
 				</div>  
@@ -95,9 +100,15 @@
 			<div>
 				<div class="col-md-3">
 				
-				<?php $total_bids = $bid_received; $icon = 'up'; $color = "#0c9e0c";?>
+				<?php $icon = 'up'; $color = "#0c9e0c";?>
 				
-				<div class="upgrade-revenue-price-box" ><?=number_format($total_bids)?> </div>
+				<div class="upgrade-revenue-price-box" >
+					<b><a onclick="progressReport()">
+					<span style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="<?=number_format($bid_received)?>" class="pie-value"></span>
+					<?=number_format($bid_received)?> 
+					</a>
+					</b>
+				</div>
 				
 				</div>    
 			</div>
@@ -108,15 +119,26 @@
 			</div>    
 			<div>
 				<div class="col-md-2">
-				<?php 
-				$total = $bid_accepted;
-				?>
-				<div class="upgrade-revenue-price-box"><?=number_format($total)?> </div>
+				<div class="upgrade-revenue-price-box">
+					<b><a onclick="progressReport('<?=$bid_accepted_status?>')">
+					<span style="cursor:pointer;" data-toggle="tooltip" data-placement="bottom" title="<?=number_format($bid_accepted)?>" class="pie-value"></span>
+					<?=number_format($bid_accepted)?> 
+					</a>
+					</b>
+				</div>
 				</div>  
 			</div>
 		</div>
 		</div>
 	 </div>
+	<form id="reportform" action="<?=base_url('offer_table')?>" style="display:none;" method="post" target='_blank'>
+		<input type="hidden" name="flight_from_dep_date" id="flight_from_dep_date" value="">
+		<input type="hidden" name="flight_to_dep_date" id="flight_to_dep_date" value="">
+		<input type="hidden" name="carrier" id="carrier" value="">
+		<input type="hidden" name="offer_status" id="offer_status" value="">
+		<input type="hidden" name="product_id" id="product_id" value="">
+		<input type="submit" value="Submit">
+	</form>	
 </div>
 
 <script src="<?=base_url('assets/chartjs/canvasjs.min.js')?>"></script>
@@ -198,5 +220,14 @@ $('#filter_year_to').change(function(){
 	
 	$('#filter_to_month').html(to_html);	
 });
+
+function progressReport(booking_status = 0) {	
+		$('#carrier').val('<?=$airlineID?>');
+		$('#flight_from_dep_date').val('<?=$from_date?>');
+		$('#flight_to_dep_date').val('<?=$to_date?>');
+		$('#offer_status').val(booking_status);
+		$('#product_id').val(<?=$product_id?>);
+	 	$("#reportform").submit();	
+}
 </script>
 

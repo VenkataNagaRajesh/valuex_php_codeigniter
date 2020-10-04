@@ -117,6 +117,12 @@ class Offer_table extends Admin_Controller {
             $this->data['boarding_point'] = 0;
             $this->data['off_point'] = 0;
          }
+          if(($this->input->post('flight_from_dep_date'))){
+               $this->data['flight_from_dep_date'] =$this->input->post('flight_from_dep_date');
+		}
+          if(($this->input->post('flight_to_dep_date'))){
+               $this->data['flight_to_dep_date'] =$this->input->post('flight_to_dep_date');
+		}
 
 
 	$userID = $this->session->userdata('loginuserID');
@@ -597,16 +603,27 @@ function processbid1() {
                         $sWhere .= 'SubSet.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                
                 }
 
-               if(!empty($this->input->get('bid_from_date')) && !empty($this->input->get("bid_to_date"))){
-                   $mainsetWhere =" WHERE bid.bid_submit_date >= ".strtotime($this->input->get('bid_from_date'))." AND bid.bid_submit_date <= ".strtotime($this->input->get('bid_to_date')); 
-               }else{
-                   $mainsetWhere = "";
-                   
+               $mainsetWhere = "";
+               if(!empty($this->input->get('bid_from_date'))){
+                   $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
+                   $mainsetWhere .= "  bid.bid_submit_date >= ".strtotime($this->input->get('bid_from_date'));
                }
-                         if(!empty($this->input->get('product_id'))){
-                                $mainsetWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                               	$mainsetWhere .= '  pe.product_id = bid.productID  AND  bid.productID = '.  $this->input->get('product_id');
-			 }
+               if(!empty($this->input->get("bid_to_date"))){
+                   $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
+                   $mainsetWhere .= "  bid.bid_submit_date <= ".strtotime($this->input->get('bid_to_date')); 
+               }
+               if(!empty($this->input->get('flight_from_dep_date'))){
+                   $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
+                   $mainsetWhere .= "  pf.dep_date > " . $this->input->get('flight_from_dep_date');
+               }
+               if(!empty($this->input->get("flight_to_dep_date"))){
+                   $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
+                   $mainsetWhere .= "  pf.dep_date <= ".$this->input->get('flight_to_dep_date'); 
+               }
+               if(!empty($this->input->get('product_id'))){
+                   $mainsetWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $mainsetWhere .= '  pe.product_id = bid.productID  AND  bid.productID = '.  $this->input->get('product_id');
+	       }
 
               // $mainsetWhere = "";
 

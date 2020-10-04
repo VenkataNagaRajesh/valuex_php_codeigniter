@@ -85,6 +85,8 @@ class Adreport extends Admin_Controller {
              	$rResult = $this->install_m->run_query($sQuery);
 		$bid_accepted = $rResult[0]->total_bids;
 		$bid_revenue = $rResult[0]->total_revenue;
+		$from_date = time();
+	
 
 		//Received/Total Builds
 		$sQuery = "SELECT count(*) as cnt from UP_bid bid INNER JOIN VX_offer_info oi ON ( oi.dtpfext_id = bid.dtpfext_id) ";
@@ -95,9 +97,9 @@ class Adreport extends Admin_Controller {
 		}
 		#$sQuery .= " AND  oi.booking_status = $bid_accepted_status "; 
 		if ( $this->data['to_date'] ) {
-			$sQuery .= " AND  pf.dep_date > " . time() .  " AND pf.dep_date <= " . $this->data['to_date'] ; 
+			$sQuery .= " AND  pf.dep_date > " . $from_date .  " AND pf.dep_date <= " . $this->data['to_date'] ; 
 		} else {
-			$sQuery .= " AND  pf.dep_date > " . time(); 
+			$sQuery .= " AND  pf.dep_date > " .  $from_date; 
 		}
 		if ( $this->data['airlineID'] ) {
 			$sQuery .= " AND  pf.carrier_code = " .  $this->data['airlineID'];
@@ -115,9 +117,9 @@ class Adreport extends Admin_Controller {
 			$sQuery .= " AND bid.productID =  ". $this->data['product_id']; 
 		}
 		if ( $this->data['to_date'] ) {
-			$sQuery .= " AND  pf.dep_date > " . time() .  " AND pf.dep_date <= " . $this->data['to_date'] ; 
+			$sQuery .= " AND  pf.dep_date > " . $from_date .  " AND pf.dep_date <= " . $this->data['to_date'] ; 
 		} else {
-			$sQuery .= " AND  pf.dep_date > " . time(); 
+			$sQuery .= " AND  pf.dep_date > " . $from_date; 
 		}
 		if ( $this->data['airlineID'] ) {
 			$sQuery .= " AND  pf.carrier_code = " .  $this->data['airlineID'];
@@ -135,9 +137,9 @@ class Adreport extends Admin_Controller {
 		}
 		$sQuery .= " AND  oi.booking_status = $bid_accepted_status "; 
 		if ( $this->data['to_date'] ) {
-			$sQuery .= " AND  pf.dep_date > " . time() .  " AND pf.dep_date <= " . $this->data['to_date'] ; 
+			$sQuery .= " AND  pf.dep_date > " . $from_date .  " AND pf.dep_date <= " . $this->data['to_date'] ; 
 		} else {
-			$sQuery .= " AND  pf.dep_date > " . time(); 
+			$sQuery .= " AND  pf.dep_date > " . $from_date; 
 		}
 		if ( $this->data['airlineID'] ) {
 			$sQuery .= " AND  pf.carrier_code = " .  $this->data['airlineID'];
@@ -147,8 +149,9 @@ class Adreport extends Admin_Controller {
 		$bid_revenue_data = json_decode(json_encode($rResult), true);
 	
 		$this->data['bid_details'] = $bid_details;
-		$this->data['date'] = $date;
+		$this->data['bid_accepted_status'] = $bid_accepted_status;
 		$this->data['bid_accepted'] = $bid_accepted;
+		$this->data['from_date'] = $from_date;
 		$this->data['bid_received'] = $bid_received; 
 		$this->data['bid_average'] = $bid_average;     
 		$this->data['bid_revenue'] = $bid_revenue;     

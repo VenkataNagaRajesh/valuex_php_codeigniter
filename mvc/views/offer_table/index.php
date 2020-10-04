@@ -252,6 +252,8 @@ $("#dep_from_date").datepicker({
 		   {"name": "offer_status","value": $("#offer_status").val()},
                    {"name":"bid_from_date","value":"<?=$bid_from_date?>"},
                    {"name":"bid_to_date","value":"<?=$bid_to_date?>"},
+                   {"name":"flight_from_dep_date","value":"<?=$flight_from_dep_date?>"},
+                   {"name":"flight_to_dep_date","value":"<?=$flight_to_dep_date?>"},
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
