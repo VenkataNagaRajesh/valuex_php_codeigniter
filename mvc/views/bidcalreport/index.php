@@ -1,14 +1,70 @@
 <?php 
 ?> 
 <style>
-.bidnormal {
-	background: #008000;
+.off-elg .ui-datepicker-calendar thead{
+	background: #333366;
+    color: #fff;
+    font-family: calibri;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 8px;
+}
+.off-elg .ui-datepicker-header{
+	background:none;
+	border:none;
+}
+.off-elg .ui-datepicker-title{
+	text-align:left;
+	margin:0 12px;
+}
+.off-elg #calendar1 .ui-datepicker-month{
+	font-weight: bold;
+    font-size: 22px;
+    color: #336699;
+    font-family: calibri;
+}
+.off-elg #calendar1 .ui-datepicker-year{
+	font-weight: normal;
+    font-size: 22px;
+    color: #336699;
+    font-family: calibri;
+}
+.off-elg #calendar2 .ui-datepicker-month ,.off-elg #calendar3 .ui-datepicker-month{
+	font-weight: bold;
+    font-size: 14px;
+    font-family: calibri;
+}
+.off-elg #calendar2 .ui-datepicker-year ,.off-elg #calendar3 .ui-datepicker-year{
+	font-weight: bold;
+    font-size:14px;
+    font-family: calibri;
+}
+.bidnormal p{
+	background: #008000 !important;
+	margin-top:-39px;
+    position: relative;
+    line-height: 16px;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 0;
+    margin-bottom: 0;
+    text-align: center;
+    font-family: calibri;
 }
 .bidnormal a {
 	color: white !important;
 }
-.bidwarning {
-	background: #FFFF00;
+.bidwarning p{
+	margin-top:-39px;
+	background: #FFFF00 !important;
+    position: relative;
+    line-height: 16px;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 3px 0;
+    margin-bottom: 0;
+    text-align: center;
+    font-family: calibri;
 }
 .bidwarning a {
 	color: black !important;
@@ -20,18 +76,18 @@
 	color: black !important;
 }
 #calendar1 .ui-datepicker {
-    width: 722px;
+    width: auto;
 }
-
 #calendar1 .ui-datepicker tr td a {
-    width: 100px;
-    height: 60px;
-    font-size: 17px;
-    font-weight: 500;
+    font-size: 16px;
+	width: auto;
+    height: 75px;
+    border: solid 1px #ddd;
+    font-weight: bold;
     text-align: left;
-	
+    font-family: calibri;
+	color:#000;
 }
-
 #calendar1 .ui-datepicker tr td a p {
     background: yellow;
     margin-top: 16px;
@@ -39,7 +95,13 @@
     text-align: center;
     padding: 4px 0;
 }
-
+#calendar2 .ui-datepicker ,#calendar3 .ui-datepicker{
+	width: auto;
+	margin-bottom:19px;
+}
+#calendar2 tbody , #calendar3 tbody{
+	line-height:21px;
+}
 </style>
 
 <div class="off-elg">
@@ -85,27 +147,21 @@
 	</div>
 <div class="col-md-12 report-box">
 	 <div class="row">		
-		<div class="col-md-8">
+		<div class="col-md-7 col-md-offset-1">
 		  <h3><strong><b>Advanced Bid <?=$products[$product_id]?> Report for <?= $airlineID ? $list[$airlineID] : " all Carriers" ;?> <?=$this->data['to_date'] ?  "upto &nbsp;" . date('m-d-Y', $this->data['to_date']) : "" ; ?></b></strong></h3>
 		</div>
-		<div class="col-md-3" style="padding:0;">
+		<div class="col-md-3">
 		  <h3><b>Future Months</b></h3>
 		</div>
 	  </div>
 	 <div class="row">
-	 	<div class="col-md-11" style="border-left:solid 1px #ddd;text-align:center;">			
-			<div>
-				<div class="col-md-9">
-					<div id="calendar1" class="cal-box"></div>
-				</div> 
-
-				<div class="col-md-3">
-					<div id="calendar2" class="cal-box"></div>
-					<br>
-					<div id="calendar3" class="cal-box"></div>
-				</div>  
-			</div>
-		</div>
+		<div class="col-md-7 col-md-offset-1">
+			<div id="calendar1" class="cal-box"></div>
+		</div> 
+		<div class="col-md-3">
+			<div id="calendar2" class="cal-box"></div>
+			<div id="calendar3" class="cal-box"></div>
+		</div>  
 	</div>
  </div>
 	<form id="reportform" action="<?=base_url('offer_table')?>" style="display:none;" method="post" target='_blank'>
