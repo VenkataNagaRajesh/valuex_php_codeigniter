@@ -1,35 +1,23 @@
 
 <div class="box">
-    <div class="box-header" style="width:100%;">
+    <div class="box-header" >
         <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
 		<ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active"><?=$this->lang->line('menu_airline')?></li>
         </ol>
     </div><!-- /.box-header -->
-	<!-- <h5 class="page-header">     
-		 <a href="<?php echo base_url('airline/addFlights') ?>" data-toggle="tooltip" data-title="Add Flights" data-placement="left" class="btn btn-danger">
-             <i class="fa fa-plus"></i>
-            <?=$this->lang->line('add_flights')?>
-         </a>
-	 </h5>-->
+	 <?php if(permissionChecker('airline_add')) {   ?>
+         <h5 class="page-header">
+             <a href="<?php echo base_url('airline/add') ?>" data-toggle="tooltip" data-title="Add Airline" data-placement="left" class="btn btn-danger">
+                 <i class="fa fa-plus"></i> 
+             </a>
+         </h5>
+     <?php } ?>
     <!-- form start -->
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">              
-              <h5 class="page-hdr">                        
-					<?php if(permissionChecker('airline_upload')) { ?>
-                  <a href="<?php echo base_url('airline/upload') ?>" class="btn btn-danger">
-                      <i class="fa fa-upload"></i>
-                      <?=$this->lang->line('upload_airline')?>
-                  </a>
-				  &nbsp;&nbsp;
-				  <a href="<?php echo base_url('airline/downloadFormat') ?>" class="btn btn-danger">
-                      <i class="fa fa-upload"></i>
-                      <?=$this->lang->line('download_format')?>
-                  </a>				  
-				  <?php } ?>
-              </h5>
 			<!--<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 
 			   <div class="col-sm-2">			   

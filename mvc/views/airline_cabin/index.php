@@ -92,6 +92,7 @@
                                 <th class="col-lg-1"><?=$this->lang->line('airline_name')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_aircraft')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_cabin')?></th>
+                                <th class="col-lg-1"><?=$this->lang->line('airline_cabin_seat_capacity')?></th>
                                                 <th class="col-lg-1"><?php echo "Images Count"?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('airline_video')?></th>
                                 <?php if(permissionChecker('airline_cabin_edit')) { ?>
@@ -171,6 +172,7 @@ $('#airline_cabin').val('<?=$classID;?>').trigger('change');
 		   {"data": "airline_code"},
 		  {"data": "aircraft_name"},
 		  {"data": "airline_cabin"},
+		  {"data": "cabin_seat_capacity"},
 		  {"data": "img_cnt"},
 		  {"data": "video_links" },
 		  {"data": "active"},

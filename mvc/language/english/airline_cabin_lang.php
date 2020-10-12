@@ -1,16 +1,17 @@
 <?php
 
 /* List Language  */
-$lang['panel_title'] = "Cabin Gallery";
+$lang['panel_title'] = "Aircraft Configuraiton";
 $lang['add_title'] = "Add Cabin Gallery";
 $lang['edit_airline_cabin'] = 'Edit Cabin Gallery';
-$lang['add_airline_cabin'] = 'Add Cabin Gallery';
-$lang['update_airline_cabin'] = 'Update Cabin Gallery';
+$lang['add_airline_cabin'] = 'Add Cabin';
+$lang['update_airline_cabin'] = 'Update Cabin';
 $lang['slno'] = "#";
 $lang['name'] = "Name ";
 $lang['airline_name'] = 'Airlines Name';
 $lang['airline_class'] = "Airline Class";
 $lang['airline_cabin'] = "Airline Cabin";
+$lang['airline_cabin_seat_capacity'] = "Seating Capcacity";
 $lang['airline_photo'] = 'Photo';
 $lang['airline_aircraft'] = 'Aircraft';
 $lang['airline_video'] = 'Video Link';
