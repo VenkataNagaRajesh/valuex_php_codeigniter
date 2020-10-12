@@ -11,11 +11,19 @@
 }
 .off-elg .ui-datepicker-header{
 	background:none;
-	border:none;
+	border: solid 1px #ddd;
+    border-bottom: none;
+    border-radius: 0;
 }
 .off-elg .ui-datepicker-title{
 	text-align:left;
 	margin:0 12px;
+}
+.off-elg .ui-datepicker tr td a {
+	border:none;
+}
+.off-elg .ui-datepicker tr td{
+	border:solid 1px #ddd;
 }
 .off-elg #calendar1 .ui-datepicker-month{
 	font-weight: bold;
@@ -77,12 +85,17 @@
 }
 #calendar1 .ui-datepicker {
     width: auto;
+	padding: 0;
+	border:none;
+}
+#calendar1 .ui-datepicker tr td{
+    border: solid 1px #ddd;
 }
 #calendar1 .ui-datepicker tr td a {
     font-size: 16px;
-	width: auto;
+	width: 75px;
     height: 75px;
-    border: solid 1px #ddd;
+    border: none;
     font-weight: bold;
     text-align: left;
     font-family: calibri;
@@ -97,10 +110,12 @@
 }
 #calendar2 .ui-datepicker ,#calendar3 .ui-datepicker{
 	width: auto;
-	margin-bottom:19px;
+	margin-bottom:16px;
+	padding: 0;
+    border: none;
 }
 #calendar2 tbody , #calendar3 tbody{
-	line-height:21px;
+	line-height:23px;
 }
 </style>
 
