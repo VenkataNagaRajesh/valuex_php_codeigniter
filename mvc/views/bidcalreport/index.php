@@ -148,7 +148,7 @@
 <div class="col-md-12 report-box">
 	 <div class="row">		
 		<div class="col-md-7 col-md-offset-1">
-		  <h3><strong><b>Advanced Bid <?=$products[$product_id]?> Report for <?= $airlineID ? $list[$airlineID] : " all Carriers" ;?> <?=$this->data['to_date'] ?  "upto &nbsp;" . date('m-d-Y', $this->data['to_date']) : "" ; ?></b></strong></h3>
+		  <h3><strong><b>Bid Calendar <?=$products[$product_id]?> Report for <?= $airlineID ? $list[$airlineID] : " all Carriers" ;?> <?=$this->data['to_date'] ?  "upto &nbsp;" . date('m-d-Y', $this->data['to_date']) : "" ; ?></b></strong></h3>
 		</div>
 		<div class="col-md-3">
 		  <h3><b>Future Months</b></h3>
