@@ -89,6 +89,7 @@ class Menu extends Admin_Controller {
 				$this->data["subview"] = "menu/add";
 				$this->load->view('_layout_main', $this->data);
 			} else {
+                                $_POST['icon'] = strtolower($this->input->post('icon'));
 				$this->menu_m->insert_menu(array_filter($this->input->post()));
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("menu/index"));
@@ -125,6 +126,7 @@ class Menu extends Admin_Controller {
 					} else {
                         $postData = $this->input->post();
                         $postData['status'] = (int) $postData['status'];
+                        $postData['icon'] = strtolower($postData['icon']);
 //                        dd($postData);
 						$this->menu_m->update_menu($postData, $id);
 						$this->session->set_flashdata('success', $this->lang->line('menu_success'));
