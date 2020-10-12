@@ -55,10 +55,18 @@
                             <?=$this->lang->line("airline_aircraft")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
+                        <?php
+			        foreach($aircrafts as $aircraft){
+                                $aircraftList[$aircraft->vx_aln_data_defnsID] = $aircraft->aln_data_value;
+                                }
+                          	$default_aircraftID = 0;
+				if ( $airline->aircraft_id) {
+					$default_aircraftID = $airline->aircraft_id;
+				}
 
-                         <select  name="airline_aircraft"  id="airline_aircraft" class="form-control select2" >
-                                <option value="0">Select Aircraft</option>
-                                </select>
+				ksort($aircraftList);
+                        echo form_dropdown("airline_aircraft", $aircraftList, set_value("airline_aircraft",$default_aircraftID), "id='airline_aircraft' class='form-control select2'");
+                        ?>
 
                         </div>
                         <span class="col-sm-4 control-label">
@@ -92,6 +100,24 @@
                             <?php echo form_error('airline_cabin'); ?>
                         </span>
 
+                    </div>
+		                    <?php
+                        if(form_error('cabin_seat_capactity'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="cabin_seat_capactity" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_cabin_seat_capactity")?> <span class="text-red">*</span>
+			</label>
+
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id=cabin_seat_capactity" name="cabin_seat_capactity" value="<?=set_value('cabin_seat_capactity', $airline->cabin_seat_capactity)?>" >
+                        </div>
+                        <span class="col-sm-4 control-label">
+
+                            <?php echo form_error('cabin_seat_capactity'); ?>
+                        </span>
                     </div>
 
          <?php
@@ -131,8 +157,6 @@
                             <?php echo form_error('images[]'); ?>
                         </span>
 		</div>
-
-
 
 
 		                    <?php
@@ -175,19 +199,6 @@
 <script type="text/javascript">
 
 $( ".select2" ).select2();
-$('#airline_code').change(function(event) {    
-        $('#airline_aircraft').val(null).trigger('change');
-  var airline_id = $(this).val();                 
-$.ajax({     async: false,            
-             type: 'POST',            
-             url: "<?=base_url('airline_cabin/getAircraftTypes')?>",            
-             data: "id=" + airline_id,            
-             dataType: "html",                                  
-             success: function(data) {               
-             $('#airline_aircraft').html(data); }        
-      });       
-});
-
 
  $(document).ready(function(){
 

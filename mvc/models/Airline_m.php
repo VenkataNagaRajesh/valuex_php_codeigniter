@@ -181,7 +181,7 @@ class Airline_m extends MY_Model {
 	}
 
 
-	public function getAirCraftTypesList($airlineID){
+	public function getAirCraftTypesByAirline($airlineID){
 		$this->db->select('ac.aircraftID , dd.aln_data_value')->from('VX_airline_aircraft ac');
 		 $this->db->join('VX_data_defns dd','dd.vx_aln_data_defnsID = ac.aircraftID','LEFT');
 		$this->db->where('ac.airlineID',$airlineID);
@@ -190,6 +190,15 @@ class Airline_m extends MY_Model {
 		return $result;
 
 	}
+
+	public function getAirCraftTypesList(){
+		$this->db->select('dd.vx_aln_data_defnsID , dd.aln_data_value')->from('VX_data_defns dd');
+		$this->db->where('aln_data_typeID',21);
+		$query = $this->db->get();
+		$result = $query->result();
+		return $result;
+	}
+
 	
 	public function getAirlineLogo($id){
 		$query = $this->db->get_where('VX_airline',array('airlineID'=>$id));

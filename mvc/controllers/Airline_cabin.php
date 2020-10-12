@@ -165,6 +165,7 @@ class Airline_cabin extends Admin_Controller {
 
 		
 		 $this->data['airlinecabins'] = $this->rafeed_m->getCodesByType('13');
+		 $this->data['aircrafts'] = $this->airline_m->getAirCraftTypesList();
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
@@ -176,6 +177,7 @@ class Airline_cabin extends Admin_Controller {
 				$array["airline_code"] = $this->input->post("airline_code");
 				$array['aircraft_id'] = $this->input->post("airline_aircraft");
 				$array["airline_cabin"] = $this->input->post("airline_cabin");
+				$array["cabin_seat_capacity"] = $this->input->post("cabin_seat_capacity");
 
 				$exist_id = $this->airline_cabin_m->checkAirlineCabin($array);
 				if ( $exist_id > 0 ) {
@@ -240,6 +242,7 @@ class Airline_cabin extends Admin_Controller {
 
 
 		   $this->data['airlinecabins'] = $this->rafeed_m->getCodesByType('13');
+		 $this->data['aircrafts'] = $this->airline_m->getAirCraftTypesList();
 
 
 		 $id = htmlentities(escapeString($this->uri->segment(3)));
@@ -258,6 +261,7 @@ class Airline_cabin extends Admin_Controller {
 			    $array["airline_code"] = $this->input->post("airline_code");
 			     $array['aircraft_id'] = $this->input->post("airline_aircraft");
 			    $array["airline_cabin"] =  $this->input->post("airline_cabin");
+				$array["cabin_seat_capacity"] = $this->input->post("cabin_seat_capacity");
 				$exist_id = $this->airline_cabin_m->checkAirlineCabin($array);
 				if ( $exist_id == $id || !$exist_id ) {
                             		$array["modify_date"] = time();
@@ -453,7 +457,7 @@ class Airline_cabin extends Admin_Controller {
 
   function server_processing(){
 
-	    $aColumns =  array('ac.aln_data_value','airline_cabin','video_links','cr.aln_data_value','ac.code','acl.aln_data_value');
+	    $aColumns =  array('ac.aln_data_value','airline_cabin','video_links','cr.aln_data_value','ac.code','acl.aln_data_value', 'cabin_seat_capacity');
                 $sLimit = "";
 
                         if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
@@ -538,7 +542,7 @@ class Airline_cabin extends Admin_Controller {
 
 
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , ac.aln_data_value as a_code, 
-        cdef.cabin as airline_cabin, video_links, cm.active , cr.aln_data_value as aircraft_name
+        cdef.cabin as airline_cabin, video_links, cm.active , cr.aln_data_value as aircraft_name, cabin_seat_capacity
         from VX_airline_cabin_map cm 
         LEFT JOIN VX_data_defns ac on (ac.vx_aln_data_defnsID = cm.airline_code) 
 	INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = cm.airline_code)
@@ -603,8 +607,8 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , 
 
                 }
                if(isset($_REQUEST['export'])){
-				  $columns = array('#','Airline Name','Aircraft','Cabin','Image Count','Video Links');
-				  $rows = array("cabin_map_id","airline_code","aircraft_name","airline_cabin","img_cnt","videos");
+				  $columns = array('#','Airline Name','Aircraft','Cabin','Seat Capacity', 'Image Count','Video Links');
+				  $rows = array("cabin_map_id","airline_code","aircraft_name","airline_cabin","cabin_seat_capacity","img_cnt","videos");
 				  $this->exportall($output['aaData'],$columns,$rows);		
 				} else {	
 				  echo json_encode( $output );

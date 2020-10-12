@@ -54,6 +54,7 @@
                         </div>                       
                     </div>
 					
+
                     <?php 
                         if(form_error('flights')) 
                             echo "<div class='form-group has-error' >";

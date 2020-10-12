@@ -164,7 +164,7 @@ class Definition_data extends Admin_Controller
 				'assets/fselect/fSelect.js',
 			)
 		);
-		$this->data['types'] = $this->airports_m->getDefdataTypes(null, array(1, 2, 3, 4, 5, 6, 12, 25));
+		$this->data['types'] = $this->airports_m->getDefdataTypes(null, array(1, 2, 3, 4, 5, 6, 12, 25,26));
 		if ($_POST) {
 			$rules = $this->addrules();
 			$this->form_validation->set_rules($rules);
