@@ -4,8 +4,8 @@
 $lang['panel_title'] = "Aircraft Configuraiton";
 $lang['add_title'] = "Add Cabin Gallery";
 $lang['edit_airline_cabin'] = 'Edit Cabin Gallery';
-$lang['add_airline_cabin'] = 'Add Cabin Gallery';
-$lang['update_airline_cabin'] = 'Update Cabin Gallery';
+$lang['add_airline_cabin'] = 'Add Cabin';
+$lang['update_airline_cabin'] = 'Update Cabin';
 $lang['slno'] = "#";
 $lang['name'] = "Name ";
 $lang['airline_name'] = 'Airlines Name';

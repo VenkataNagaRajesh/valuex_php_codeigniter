@@ -106,19 +106,19 @@
                     </div>
 
                     <?php 
-                        if(form_error('cabin_seat_capactity')) 
+                        if(form_error('cabin_seat_capacity')) 
                             echo "<div class='form-group has-error' >";
                         else     
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="cabin_seat_capactity" class="col-sm-2 control-label">
-                            <?=$this->lang->line("airline_cabin_seat_capactity")?>
+                        <label for="cabin_seat_capacity" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_cabin_seat_capacity")?>
                         </label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="cabin_seat_capactity" name="cabin_seat_capactity" value="<?=set_value('cabin_seat_capactity')?>" >
+                            <input type="text" class="form-control" id="cabin_seat_capacity" name="cabin_seat_capacity" value="<?=set_value('cabin_seat_capacity')?>" >
                         </div>
                         <span class="col-sm-4 control-label">
-                            <?php echo form_error('cabin_seat_capactity'); ?>
+                            <?php echo form_error('cabin_seat_capacity'); ?>
                         </span>
                     </div>
 
