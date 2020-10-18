@@ -713,44 +713,64 @@ $sWhere $sOrder $sLimit";
 							echo ("<br>ONGRP : $ond_grp  DTPF=".$dtpfId);
 					$bclrIds = Array();
 					$ext = array();
+					$blrId = 0;
 					if ( $ond_grp != 'NP') {
 						$pax = $this->paxfeed_m->get_single_paxfeed(Array("dtpf_id" => $dtpfId));
+						//First give precedence for partner based BCLR rules defined by current carrier 
 						foreach($bclr_rules[$pax->carrier_code] as $bclr_rule) {
-							#echo ("<br>ONGRP GEN: $ond_grp: DTPF=$dtpfId, BCLR= ". print_r($bclr_rule,1));
-							#echo ("<br>ONGRP GEN: $ond_grp: DTPF=$dtpfId" );
-							$bId = $this->getMatchedBclrForPax($pax, $bclr_rule);
-							if ( $bId ) {
-								$bclrIds[] = $bId;
+							if ( $bclr_rule->partner_carrierID ) {
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER DEFINED RULES FOR PAX ID $dtpfId FOR  PARTNER CARRIER ID: " . $bclr_rule->partner_carrierID);
+								$blrId = $this->getMatchedBclrForPax($pax, $bclr_rule,1);//Check Partner Matched BCLR rules
 							}
-							#echo ("<br>ONGRP GEN: $ond_grp: BID=$bId" );
-							#if ($bclrId) break;
+							if ( $blrId ) {
+								$bclrIds[] = $blrId;
+							}
 						}
-						if ( count($bclrIds) > 1 ) {
-							echo ("<br>OFFER GEN: PROCESS BAGGAGE : MATCHED MORE THAN ONE BCLRID ".  print_r($bclrIds,1) . " FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
-							$bclrId = $this->findBestMatchBclrRule($bclrIds, $bclr_rules);
-						} else {
-							$bclrId = $bclrIds[0];
-						}
-						if ( $bclrId) {
 
-							echo ("<br>OFFER GEN: PROCESS BAGGAGE : BEST MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
-							$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
-							if ( $bclr_rules[$bclrId]['partner_carrierID'] ) {
-								$pax1 = $this->paxfeed_m->get_single_paxfeed(Array("dtpf_id" => $dtpfId));
-								if ( $pax1->carrier_code == $bclr_rules[$bclrId]['partner_carrierID'] )
-									if ( $bclr_rules[$bclrId]['allowance']) {
-									$ext['ond'] = $ond_grp;
-								} else {
-									$ext['ond'] = 'BL'; //PARTNER  BLOCK LIST
-								}
+						if ( count($bclrIds)) {
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER DEFINED BCLR RULES FOR PAX ID $dtpfId FOR  PARTNER CARRIER ID: " . $bclr_rule->partner_carrierID . ", BCRL RULE = " . print_r($bclrIds,1));
+							//Rules might be matched but check block or white listed !
+							if ( count($bclrIds) > 1) {
+								$bclrId = $this->findBestMatchBclrRule($bclrIds, $bclr_rules);
 							} else {
+								$bclrId = $bclrIds[0];
+							}
+							if ( $bclr_rules[$bclrId]['allowance']) {
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER DEFINED BCLR RULES FOR PAX ID $dtpfId FOR  PARTNER CARRIER ID: " . $bclr_rule->partner_carrierID . ", BCRL RULE WHITELISTED= "  . $bclrId);
 								$ext['ond'] = $ond_grp;
+							} else {
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER DEFINED BCLR RULES FOR PAX ID $dtpfId FOR  PARTNER CARRIER ID: " . $bclr_rule->partner_carrierID . ", BCRL RULE BLOCKED= "  . $bclrId);
+								$ext['ond'] = 'BL'; //PARTNER  BLOCK LIST
 							}
 						} else {
-							$bclrId = 0;
-							$ext['ond'] = 'NBCLR'; //NO BC LR MATCHED
-							$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE :  NO BCLR MATCHED  FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
-							echo ("<br>OFFER GEN: PROCESS BAGGAGE : NO BCLR ID $bclrId MATCHED FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+							//If no partner specific  rules  matched , consider current carrier rules 
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER RULES NOT MATCHED, CHECKEING DEFAULT  BCLR RULES FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierID);
+							foreach($bclr_rules[$pax->carrier_code] as $bclr_rule) {
+								if ( !$bclr_rule->partner_carrierID ) {
+									$blrId = $this->getMatchedBclrForPax($pax, $bclr_rule,0);//Check SELF BCLR rules
+								}
+								if ( $blrId ) {
+									$bclrIds[] = $blrId;
+								}
+							}
+
+							if ( count($bclrIds) > 1 ) {
+								echo ("<br>OFFER GEN: PROCESS BAGGAGE : MATCHED MORE THAN ONE BCLRID ".  print_r($bclrIds,1) . " FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+								$bclrId = $this->findBestMatchBclrRule($bclrIds, $bclr_rules);
+							} else {
+								$bclrId = $bclrIds[0];
+							}
+							if ( $bclrId) {
+
+								echo ("<br>OFFER GEN: PROCESS BAGGAGE : BEST MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+								$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+								$ext['ond'] = $ond_grp;
+							} else {
+								$bclrId = 0;
+								$ext['ond'] = 'NBCLR'; //NO BC LR MATCHED
+								$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE :  NO BCLR MATCHED  FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+								echo ("<br>OFFER GEN: PROCESS BAGGAGE : NO BCLR ID $bclrId MATCHED FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+							}
 						}
 					} else {
 						$bclrId = 0;
@@ -809,14 +829,13 @@ $sWhere $sOrder $sLimit";
 		return $thebest;
 	}
 
-	function getMatchedBclrForPax($pax, $bclr) {
+	function getMatchedBclrForPax($pax, $bclr, $checkPartner = 0) {
         	#$bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $bclrId));
 		$bclrId = $bclr->bclr_id;
 		$carrierId = $bclr->carrierID;
 		$min_price = $bclr->min_price;
 		$max_price = $bclr->max_price;
 		$max_capacity = $bclr->max_capacity;
-		$nCarrerID = $bclr->carrierID;
 		$cabin = $bclr->from_cabin;
 		$frequency = $bclr->frequency;
 		$dep_time_start = $bclr->dep_time_start;
@@ -828,6 +847,14 @@ $sWhere $sOrder $sLimit";
 		$origin_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($bclr->origin_content, $bclr->origin_level);
 		$dest_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($bclr->dest_content, $bclr->dest_level);
 		
+		$checkCarrierId = $pax->carrier_code;
+		if ( $checkPartner ) {
+			if ( $bclr->partner_carrierID ) {
+				$checkCarrierId = $bclr->partner_carrierID;
+			} else {
+				return 0;
+			}
+		}
 		//echo "<br>start_date=" . $start_date;
 		#print_r($pax);
 		
@@ -842,7 +869,7 @@ $sWhere $sOrder $sLimit";
 		echo "<br>MATCHEND +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
 		
 		$matched = 0;
-		if ($bclr->carrierID == $pax->carrier_code ) {
+		if ($bclr->carrierID == $checkCarrierId ) { 
 			echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED CARRIER CODE - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
 			$matched++ ;
 		} else {
