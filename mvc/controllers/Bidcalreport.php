@@ -82,7 +82,7 @@ class BidcalReport extends Admin_Controller {
 		
 		$bid_accepted_status =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
 		$bid_rejected_status =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
-		$from_date = time();
+		#$from_date = time();
 
 		$this->data['products'] = $this->product_m->productName();
         
@@ -96,9 +96,9 @@ class BidcalReport extends Admin_Controller {
 		}
 		$sQuery .= " AND  oi.booking_status = $bid_accepted_status "; 
 		if ( $this->data['to_date'] ) {
-			$sQuery .= " AND  pf.dep_date > " . $from_date .  " AND pf.dep_date <= " . $this->data['to_date'] ; 
+			$sQuery .= " AND  pf.dep_date > " . $this->data['from_date'] .  " AND pf.dep_date <= " . $this->data['to_date'] ; 
 		} else {
-			$sQuery .= " AND  pf.dep_date > " . $from_date; 
+			$sQuery .= " AND  pf.dep_date > " . $this->data['from_date']; 
 		}
 		if ( $this->data['airlineID'] ) {
 			$sQuery .= " AND  pf.carrier_code = " .  $this->data['airlineID'];

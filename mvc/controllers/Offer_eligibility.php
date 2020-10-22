@@ -668,6 +668,8 @@ $sWhere $sOrder $sLimit";
 		}
 			echo "<br>OND PARTNERS=<pre>" . print_r($bg_ond_partners,1) . "</pre>";
 		
+		$air_distances = Array();
+		$air_distances = $this->airports_m->getAirDistances();
 
 		$pax_ond = Array();
 		foreach ($bg_pax_data as $pax_pnr_single ) {
@@ -677,6 +679,11 @@ $sWhere $sOrder $sLimit";
 			$pax_cnt = 0;
 			foreach ($single_adult_full_pax as $s_pax ) {
 			    $pnr = $s_pax->pnr_ref;
+				$range= $s_pax->from_city . "-" . $s_pax->to_city;
+				if  (!isset($air_distances[$range])) {
+					$air_distances[$range] = $this->distCalc($s_pax->from_city, $s_pax->to_city);
+				}
+			    $pax_list[$pnr][$pax_cnt]['distance'] =  $air_distances[$range];
 			    $pax_list[$pnr][$pax_cnt]['from_city'] =  $s_pax->from_city;
 			    $pax_list[$pnr][$pax_cnt]['to_city'] =  $s_pax->to_city;
 			    $pax_list[$pnr][$pax_cnt]['total_dep_date'] =  $s_pax->dep_date + $s_pax->dept_time;
@@ -1143,5 +1150,28 @@ $sWhere $sOrder $sLimit";
 	public function offdtlpage() {		
 		$this->data["subview"] = "offer_eligibility/offdtlpage";
 		$this->load->view('_layout_main', $this->data);
+	}
+
+	function distCalc($fromAirport, $toAirport) {
+		//$from = "EGLL";
+		//$to = "KJFK";
+		$fromAirportCode = $this->airports_m->getAirportICAOCode($fromAirport);
+		$toAirportCode = $this->airports_m->getAirportICAOCode($toAirport);
+		$distance = $this->getAirportsDistance($fromAirportCode,$toAirportCode);
+		$this->airports_m->insertAirDistance($fromAirport,$toAirport,$distance);
+		echo "DISTANCE BETWEEN $fromAirportCode - $toAirportCode in KM  = " . $distance;
+		return $distance;
+	}
+
+	public function getAirportsDistance($from = '', $to = '') {
+		$ditance = 0;
+		if ( $from && $to ) {
+			$url = "https://www.greatcirclemapper.net/en/great-circle-mapper.html?route=$from-$to&aircraft=&speed=";
+			$data = file_get_contents($url);
+			if ( preg_match("/<td>(.*) nm, (.*) km<\/td>/", $data, $matches) ){
+				$distance = $matches[2];
+			}
+		}
+		return $distance;
 	}
 }

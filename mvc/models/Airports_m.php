@@ -322,4 +322,49 @@ class Airports_m extends MY_Model
 		$name = $query->row();
 		return $name;
 	}
+
+	function getAirportICAOCode($defId)
+	{
+
+		$this->db->select('alias');
+		$this->db->from('VX_data_defns');
+		$this->db->where('vx_aln_data_defnsID', $defId);
+		$this->db->limit(1);
+		$query = $this->db->get();
+		$name = $query->row();
+		return $name->alias;
+	}
+
+	function insertAirDistance($fromAirport,$toAirport,$distance)
+	{
+		$array = array(
+			'from_airport' => $fromAirport,
+			'to_airport' => $toAirport,
+			'distance' => $distance
+		);
+		$this->db->insert('VX_airport_distance', $array);
+		// $this->mydebug->debug($data);
+		$this->mydebug->debug($this->db->last_query());
+		if ($this->db->affected_rows() > 0) {
+			return $this->db->insert_id();
+		} else {
+			return FALSE;
+		}
+	}
+
+	function getAirDistances($from_city = 0, $to_city = 0) {
+		$sQuery = "SELECT CONCAT_WS('-', from_airport, to_airport) as airports, distance" ;
+		$sQuery .= " FROM `VX_airport_distance` ";
+		if ($from_city ) {
+			$sQuery .= " AND `from_airport` = $from_city";
+		}
+		if ($to_city ) {
+			$sQuery .= " AND `to_airport` = $to_city";
+		}
+		//$result = $this->install_m->run_query($sQuery);
+		$result = $this->db->query($sQuery);
+		//print_r($this->db->last_query());
+                return  array_column($result->result_array(), 'distance', 'airports');
+	}
+
 }
