@@ -118,7 +118,12 @@ class Signin extends Admin_Controller {
 				$this->data["subview"] = "signin/cpassword";
 				$this->load->view('_layout_main', $this->data);
 			} else {
-				redirect(base_url('signin/cpassword'));
+				if($this->signin_m->change_password() == TRUE) {
+					redirect(base_url('dashboard'));
+				} else {
+					$this->data["subview"] = "signin/cpassword";
+					$this->load->view('_layout_main', $this->data);
+				}
 			}
 		} else {
 			$this->data["subview"] = "signin/cpassword";
