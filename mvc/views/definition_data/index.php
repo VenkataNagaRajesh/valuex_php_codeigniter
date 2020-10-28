@@ -45,6 +45,7 @@
 						<th class="col-lg-2"><?=$this->lang->line('defdata_value')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('defdata_parent')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('defdata_code')?></th>				
+						<th class="col-lg-1"><?=$this->lang->line('defdata_alias')?></th>				
 						<th class="col-lg-1 noExport"><?=$this->lang->line('defdata_active')?></th>
                         <?php if(permissionChecker('definition_data_edit') || permissionChecker('definition_data_delete')) { ?>
                         <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
@@ -98,6 +99,7 @@
 				  {"data": "aln_data_value" },
 				  {"data": "parent" },
 				  {"data": "code" },                 			  
+				  {"data": "alias" },                 			  
                   {"data": "active"},
                   {"data": "action"}
 				  ],			     

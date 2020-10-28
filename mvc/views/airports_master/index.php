@@ -73,7 +73,8 @@
 						<th class="col-lg-1"><?=$this->lang->line('master_country')?></th>-->
 						<th class="col-lg-1"><?=$this->lang->line('master_countrycode')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('master_region')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('master_area')?></th>						
+						<th class="col-lg-1"><?=$this->lang->line('master_area')?></th>					
+						<th class="col-lg-1"><?=$this->lang->line('master_alias')?></th>
 						<th class="col-lg-1 noExport"><?=$this->lang->line('master_active')?></th>
                         <?php if(permissionChecker('airports_master_edit') || permissionChecker('airports_master_delete')) { ?>
                         <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
@@ -128,6 +129,7 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
 				  {"data": "countrycode" },
 				  {"data": "region" },
                   {"data": "area"},                  				  
+                  {"data": "alias"},                  				  
                   {"data": "active"},
                   {"data": "action"}
 				  ],			     
@@ -180,7 +182,7 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
                  }                
             ] ,
      "autoWidth": false,
-    "columnDefs": [ {"targets": 0,"width": "1%"},{"targets": 1,"width": "1%"},{"targets": 2,"width": "1%"},{"targets": 3,"width": "1%"},{"targets": 4,"width": "1%"},{"targets": 5,"width": "1%"},{"targets": 6,"width": "1%"},{"targets": 7,"width": "1%"}]		
+    "columnDefs": [ {"targets": 0,"width": "1%"},{"targets": 1,"width": "1%"},{"targets": 2,"width": "1%"},{"targets": 3,"width": "1%"},{"targets": 4,"width": "1%"},{"targets": 5,"width": "1%"},{"targets": 6,"width": "1%"},{"targets": 7,"width": "1%"},{"targets": 8,"width": "1%"}]		
     }); 
   
     

@@ -209,7 +209,7 @@ class Airports_master extends Admin_Controller {
 			   if(move_uploaded_file($file, APPPATH."/uploads/".$_FILES['file']['name'])){		
 				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
 				$Reader = new SpreadsheetReader($file); 
-				$header = array_map('strtolower',array('S.No','Airport Name','Airport Code','City Name','City Code','Country Code','Country','Region','Area'));
+				$header = array_map('strtolower',array('S.No','Airport Name','Airport Code','City Name','City Code','Country Code','Country','Region','Area','ICAO Code'));
 				 $header = array_map('strtolower', $header);
 				//print_r(count($header)); exit;
 				$Sheets = $Reader -> Sheets();
@@ -237,18 +237,20 @@ class Airports_master extends Admin_Controller {
 							$country_key = array_search('country',$import_header);
 							$region_key = array_search ('region', $import_header);
 							$area_key = array_search('area',$import_header);				 						
+							$icao_key = array_search('icao code',$import_header);				 						
 							$Row = array_map('trim', $Row);	
 							$airport = $Row[$airport_key];							
 							$country = $Row[$country_key];
 							$countrycode = $Row[$countrycode_key];
+							$icaocode = $Row[$icao_key];
 							$citycode = $Row[$citycode_key];
 							$region = $Row[$region_key];	                              					 
 							$area = $Row[$area_key];
 							$city = $Row[$city_key];
 							unset($validate);
 							 $validate = array('airport'=> $airport,'airportcode' => $Row[$airportcode_key],'citycode' => $Row[$citycode_key],'countrycode' => $Row[$countrycode_key],'area' => $area,'region' => $region);					        								 
-							  $res = $this->airports_m->checkAirport($airport);							 
-						 if($res){
+							  $airport_row = $this->airports_m->checkAirport($airport);							 
+						 if(!$airport_row){
                             $val_status = $this->validateAirport($validate);                            
 						  if($val_status){								
 							  $countryID = 0;							
@@ -316,7 +318,7 @@ class Airports_master extends Admin_Controller {
                                 				unset($ctobj);								
 							  }	 							  
 							 
-						     $data['airportID'] = $this->airports_m->addAirport($airport, $data['cityID'],$Row[$airportcode_key]);
+						     $data['airportID'] = $this->airports_m->addAirport($airport, $data['cityID'],$Row[$airportcode_key], $Row[$icao_key]);
                              
 							if ($data['airportID']) {
 							    $parentSet  = $this->marketzone_m->getParentsofAirport($data['airportID']);
@@ -393,6 +395,11 @@ class Airports_master extends Admin_Controller {
 					     
 							 }				  
 							} else {
+								if ($airport_row->vx_aln_data_defnsID != $Row[$icao_key]) {
+									$dtarray = Array('alias' => $Row[$icao_key]);
+							  		$this->airports_m->update_definition_data($dtarray, $airport_row->vx_aln_data_defnsID);							 
+								}
+								//Let u update 
 								$this->mydebug->airports_log("Airport :".$airport." already  existed");		 
 							}
 					    					
@@ -456,7 +463,7 @@ class Airports_master extends Admin_Controller {
 		$userID = $this->session->userdata('loginuserID');
 		$roleID = $this->session->userdata('roleID');	  
 		
-	    $aColumns = array('m.vx_amdID','ma.code','mct.code','mc.code','mr.aln_data_value','mar.aln_data_value','ma.code','ma.active');
+	    $aColumns = array('m.vx_amdID','ma.code','mct.code','mc.code','mr.aln_data_value','mar.aln_data_value','ma.code', 'ma.alias','ma.active');
 	
 		$sLimit = "";
 		
@@ -535,7 +542,7 @@ class Airports_master extends Admin_Controller {
               $sWhere .= 'm.stateID = '.$this->input->get('stateID');		 
 	        } */			
 			
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.vx_amdID,ma.aln_data_value airport,ma.code airportcode,mct.aln_data_value city,mct.code citycode,mc.aln_data_value country,mc.code countrycode,mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active from VX_master_data m left join VX_data_defns ma ON ma.vx_aln_data_defnsID = m.airportID left join VX_data_defns mct ON mct.vx_aln_data_defnsID = m.cityID left join VX_data_defns mc ON mc.vx_aln_data_defnsID = m.countryID left join VX_data_defns mr ON mr.vx_aln_data_defnsID = m.regionID left join VX_data_defns mar ON mar.vx_aln_data_defnsID = m.areaID	
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.vx_amdID,ma.aln_data_value airport,ma.code airportcode,mct.aln_data_value city,mct.code citycode,mc.aln_data_value country,mc.code countrycode,ma.alias, mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active from VX_master_data m left join VX_data_defns ma ON ma.vx_aln_data_defnsID = m.airportID left join VX_data_defns mct ON mct.vx_aln_data_defnsID = m.cityID left join VX_data_defns mc ON mc.vx_aln_data_defnsID = m.countryID left join VX_data_defns mr ON mr.vx_aln_data_defnsID = m.regionID left join VX_data_defns mar ON mar.vx_aln_data_defnsID = m.areaID	
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

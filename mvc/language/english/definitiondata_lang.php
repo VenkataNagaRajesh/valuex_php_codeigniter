@@ -14,6 +14,7 @@ $lang['defdata_type'] = 'Type';
 $lang['defdata_value'] = 'Name';
 $lang['defdata_parent'] ='Parent';
 $lang['defdata_code']='Code';
+$lang['defdata_alias']='Alias/Code';
 $lang['defdata_active']='Active';
 $lang['defdata_country'] = 'Country';
 $lang['defdata_state'] ='State';

@@ -43,15 +43,11 @@ class Airports_m extends MY_Model
 
 	public function checkAirport($data)
 	{
-		$this->db->select('count(*)')->from('VX_data_defns');
+		$this->db->select('*')->from('VX_data_defns');
 		$this->db->where(array('aln_data_value' => $data, 'aln_data_typeID' => 1));
 		$query = $this->db->get();
 		// print_r($this->db->last_query()); exit;  	  
-		if ($query->row('count(*)') > 0) {
-			return 0;
-		} else {
-			return 1;
-		}
+		return $query->row();
 	}
 
 	public function checkAirportCode($code)
@@ -62,11 +58,12 @@ class Airports_m extends MY_Model
 		return $query->row('count');
 	}
 
-	public function addAirport($airport, $parent, $code)
+	public function addAirport($airport, $parent, $code, $alias = '')
 	{
 		$array = array(
 			'aln_data_value' => $airport,
 			'code' => $code,
+			'alias' => $alias,
 			'aln_data_typeID' => 1,
 			'create_date' => time(),
 			'modify_date' => time(),
@@ -95,7 +92,7 @@ class Airports_m extends MY_Model
 
 	public function getDefns($type = null, $parent = null)
 	{
-		$this->db->select('vx_aln_data_defnsID,aln_data_typeID,aln_data_value,code')->from('VX_data_defns');
+		$this->db->select('vx_aln_data_defnsID,aln_data_typeID,aln_data_value,code, alias')->from('VX_data_defns');
 		if ($type != null) {
 			$this->db->where('aln_data_typeID', $type);
 		} else {

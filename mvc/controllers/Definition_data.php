@@ -414,8 +414,8 @@ class Definition_data extends Admin_Controller
 		}
 
 		if (isset($_REQUEST['export'])) {
-			$columns = array('#', 'Type', 'Name', 'Parent', 'Code');
-			$rows = array('vx_aln_data_defnsID', 'datatype', 'aln_data_value', 'parent', 'code');
+			$columns = array('#', 'Type', 'Name', 'Parent', 'Code', 'ICAO Code');
+			$rows = array('vx_aln_data_defnsID', 'datatype', 'aln_data_value', 'parent', 'code', 'alias');
 			$this->exportall($output['aaData'], $columns, $rows);
 		} else {
 			echo json_encode($output);
