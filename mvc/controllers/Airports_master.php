@@ -229,20 +229,22 @@ class Airports_master extends Admin_Controller {
 					 }				  
 					} else {
 					   if($flag == 1){  //exit; 						   						
-					   		 $airport_key = array_search ('airport name', $import_header);	
-                          	 $airportcode_key = array_search ('airport code', $import_header);
-                             $city_key = array_search ('city name', $import_header);
-                             $citycode_key = array_search ('city code', $import_header);
-                             $countrycode_key = array_search ('country code', $import_header);
-							 $country_key = array_search('country',$import_header);
-							 $region_key = array_search ('region', $import_header);
-							 $area_key = array_search('area',$import_header);				 						
-							  $Row = array_map('trim', $Row);	
-							 $airport = $Row[$airport_key];							
-							 $country = $Row[$country_key];
-							 $region = $Row[$region_key];	                              					 
-							 $area = $Row[$area_key];
-							 $city = $Row[$city_key];
+							$airport_key = array_search ('airport name', $import_header);	
+							$airportcode_key = array_search ('airport code', $import_header);
+							$city_key = array_search ('city name', $import_header);
+							$citycode_key = array_search ('city code', $import_header);
+							$countrycode_key = array_search ('country code', $import_header);
+							$country_key = array_search('country',$import_header);
+							$region_key = array_search ('region', $import_header);
+							$area_key = array_search('area',$import_header);				 						
+							$Row = array_map('trim', $Row);	
+							$airport = $Row[$airport_key];							
+							$country = $Row[$country_key];
+							$countrycode = $Row[$countrycode_key];
+							$citycode = $Row[$citycode_key];
+							$region = $Row[$region_key];	                              					 
+							$area = $Row[$area_key];
+							$city = $Row[$city_key];
 							unset($validate);
 							 $validate = array('airport'=> $airport,'airportcode' => $Row[$airportcode_key],'citycode' => $Row[$citycode_key],'countrycode' => $Row[$countrycode_key],'area' => $area,'region' => $region);					        								 
 							  $res = $this->airports_m->checkAirport($airport);							 
@@ -254,10 +256,10 @@ class Airports_master extends Admin_Controller {
 							  $areaID = 0;
 							  $cityID = 0;
 							   foreach($defnData as $aln_data){ //Total Execution Time: 0.45060066779455 Mins
-								 if($aln_data->aln_data_typeID == 2 && $aln_data->code == $countrycode_key){
+								 if($aln_data->aln_data_typeID == 2 && $aln_data->code == $countrycode){
 								 	$countryID = $aln_data->vx_aln_data_defnsID;
 								 }
-								 if($aln_data->aln_data_typeID == 3 && $aln_data->code == $citycode_key){
+								 if($aln_data->aln_data_typeID == 3 && $aln_data->code == $citycode){
 								 	$cityID = $aln_data->vx_aln_data_defnsID;
 								 }
 								 if($aln_data->aln_data_typeID == 4 && $aln_data->aln_data_value == $region){
@@ -272,45 +274,46 @@ class Airports_master extends Admin_Controller {
 							  	$data['areaID'] = $areaID;								
 							  } else {
 							  	$data['areaID'] =  $this->airports_m->checkData($area,5,null);
-                                $aobj->vx_aln_data_defnsID = $data['areaID'];
-                                $aobj->aln_data_typeID = 5;
-                                $aobj->aln_data_value = $area;	
-                                $defnData[] = $aobj;
+								$aobj->vx_aln_data_defnsID = $data['areaID'];
+								$aobj->aln_data_typeID = 5;
+								$aobj->aln_data_value = $area;	
+								$defnData[] = $aobj;
 								unset($aobj);
 							  } 
             
 			                   if(!empty($regionID)){
 							  	$data['regionID'] = $regionID;
 							  } else {
-							  	$data['regionID'] =  $this->airports_m->checkData($region,4,$data['areaID']);
-                                $robj->vx_aln_data_defnsID = $data['regionID'];
-                                $robj->aln_data_typeID = 4;
-                                $robj->aln_data_value = $region;	
-                                 $defnData[] = $robj;	
-                                 unset($robj);								 
+							  	//$data['regionID'] =  $this->airports_m->checkData($region,4,$data['areaID']);
+							  	$data['regionID'] =  $this->airports_m->checkData($region,4);
+								$robj->vx_aln_data_defnsID = $data['regionID'];
+								$robj->aln_data_typeID = 4;
+								$robj->aln_data_value = $region;	
+								$defnData[] = $robj;	
+								unset($robj);								 
 							  }							  
 							                           							  
 							  if(!empty($countryID)){
 							  	$data['countryID'] = $countryID;
 							  } else {								 
-							  	$data['countryID'] =  $this->airports_m->checkData($country,2,$data['regionID'] ,$Row[$countrycode_key]);
-                                $cobj->vx_aln_data_defnsID = $data['countryID'];
-                                $cobj->aln_data_typeID = 2;
-                                $cobj->aln_data_value = $country;
-                                $defnData[] = $cobj;
+							  	$data['countryID'] =  $this->airports_m->checkData($country,2,null ,$Row[$countrycode_key]);
+								$cobj->vx_aln_data_defnsID = $data['countryID'];
+								$cobj->aln_data_typeID = 2;
+								$cobj->aln_data_value = $country;
+								$defnData[] = $cobj;
 								unset($cobj);
 							  }							  
 							 
 
-                              if(!empty($cityID)){
+                              				  if(!empty($cityID)){
 							  	$data['cityID'] = $cityID;
 							  } else {
 							  	$data['cityID'] =  $this->airports_m->checkData($city,3,$data['countryID'],$Row[$citycode_key]);
-                                $ctobj->vx_aln_data_defnsID = $data['cityID'];
-                                $ctobj->aln_data_typeID = 3;
-                                $ctobj->aln_data_value = $city;	
-                                $defnData[] = $ctobj;	
-                                unset($ctobj);								
+								$ctobj->vx_aln_data_defnsID = $data['cityID'];
+								$ctobj->aln_data_typeID = 3;
+								$ctobj->aln_data_value = $city;	
+								$defnData[] = $ctobj;	
+                                				unset($ctobj);								
 							  }	 							  
 							 
 						     $data['airportID'] = $this->airports_m->addAirport($airport, $data['cityID'],$Row[$airportcode_key]);
