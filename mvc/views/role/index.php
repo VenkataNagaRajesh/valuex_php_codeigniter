@@ -28,6 +28,9 @@
                                 <th class="col-lg-2"><?=$this->lang->line('slno')?></th>
                                 <th class="col-lg-4"><?=$this->lang->line('role_role')?></th>
                                 <th class="col-lg-4"><?=$this->lang->line('role_usertype')?></th>
+                                <?php if($showUserType) { ?>
+                                	<th class="col-lg-4"><?=$this->lang->line('role_carrier')?></th>
+                                <?php } ?>
                                 <?php if(permissionChecker('role_edit') || permissionChecker('role_delete')) { ?>
                                 <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
@@ -47,6 +50,11 @@
                                     <td data-title="<?=$this->lang->line('role_role')?>">
                                         <?php echo $role->role; ?>
                                     </td>
+                                <?php if($showUserType) { ?>
+                                    <td data-title="<?=$this->lang->line('role_role')?>">
+                                        <?php echo $role->code; ?>
+                                    </td>
+                                <?php } ?>
                                     <?php if(permissionChecker('role_edit') || permissionChecker('role_delete')) { ?>
                                     <td data-title="<?=$this->lang->line('action')?>">
                                         <?php

@@ -17,6 +17,7 @@
                 <form class="form-horizontal" role="form" method="post">
 
                     <?php 
+			if ( $showUserType ) {
                         if(form_error('usertypeID')) 
                             echo "<div class='form-group has-error' >";
                         else     
@@ -41,6 +42,7 @@
                     </div>
 
                     <?php 
+			}
                         if(form_error('role')) 
                             echo "<div class='form-group has-error' >";
                         else     
