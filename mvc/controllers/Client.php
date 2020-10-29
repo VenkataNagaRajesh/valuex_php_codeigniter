@@ -790,7 +790,7 @@ class Client extends Admin_Controller {
 				}
 				$sWhere = substr_replace( $sWhere, "", -3 );
 				$sWhere .= ')';
-				$sHaving = " HAVING airline_name LIKE '%".$_GET['sSearch']."%'";
+				#$sHaving = " HAVING airline_name LIKE '%".$_GET['sSearch']."%'";
 			}
 			
 			/* Individual column filtering */
