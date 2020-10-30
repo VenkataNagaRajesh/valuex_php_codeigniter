@@ -178,7 +178,7 @@ class User extends Admin_Controller {
 		}
 		foreach($this->data['users'] as $user){
 			if($user->roleID == 1){
-		       $user->airlinelist = '';
+		       $user->airlinelist = Array();
 			} else {
 			    $airlinelist = $this->user_m->getUserAirlines($user->userID);	
 			}

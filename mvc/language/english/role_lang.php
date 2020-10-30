@@ -6,7 +6,7 @@ $lang['add_title'] = "Add Role";
 $lang['slno'] = "#";
 $lang['role_role'] = "Role";
 $lang['role_carrier'] = "Carrier";
-$lang['role_usertype'] = "Usertype";
+$lang['role_usertype'] = "User Type";
 $lang['action'] = "Action";
 
 $lang['edit'] = 'Edit';

@@ -26,8 +26,8 @@
                         <thead>
                             <tr>
                                 <th class="col-lg-2"><?=$this->lang->line('slno')?></th>
-                                <th class="col-lg-4"><?=$this->lang->line('role_role')?></th>
                                 <th class="col-lg-4"><?=$this->lang->line('role_usertype')?></th>
+                                <th class="col-lg-4"><?=$this->lang->line('role_role')?></th>
                                 <?php if($showUserType) { ?>
                                 	<th class="col-lg-4"><?=$this->lang->line('role_carrier')?></th>
                                 <?php } ?>
