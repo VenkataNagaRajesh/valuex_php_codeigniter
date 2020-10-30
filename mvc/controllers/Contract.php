@@ -464,8 +464,20 @@ class Contract extends Admin_Controller {
 		   if($this->data['contract']){
 			   $this->data['contract']->products = $this->contract_m->getProductsByContract($this->data['contract']->contractID); 
 			   foreach($this->data['contract']->products as $product){
+				if ( $product ) {
+					$flg = 0;
+					foreach($this->data['products'] as $pd) {
+						if ($pd->productID == $product->productID) {
+							$flg = 1;
+							break;
+						}
+					}
+					if ( !$flg){
+						$this->data['products'][] =  $this->product_m->get_single_product(Array("productID" => $product->productID));
+					}
+				}
 			       	$product->start_date = date_format(date_create($product->start_date),'d-m-Y');
-					$product->end_date = date_format(date_create($product->end_date),'d-m-Y');
+				$product->end_date = date_format(date_create($product->end_date),'d-m-Y');
 			   }
 			   $this->data['users'] = $this->user_m->getClientByAirline($this->data['contract']->airlineID,6);					   
 			if($_POST){  
