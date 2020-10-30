@@ -25,13 +25,10 @@ class Role extends Admin_Controller {
 	public function index() {
 		$usertype = $this->session->userdata("usertype");
 		$this->data['usertypes'] = $this->usertype_m->get_usertype();
-		$usertypeID = null;
-		if($this->session->userdata('usertypeID') != 1){
-			$usertypeID = $this->session->userdata('usertypeID');
-		}
+		$usertypeID = $this->session->userdata('usertypeID');
 		$userrole = $this->session->userdata("role");
 		$this->data['showUserType'] = 0;
-		if ( $usertype == 'Valuex') {
+		if ( $usertypeID == 1) {
 			$this->data['showUserType'] = 1;
 		}
 		$this->data['roles'] = $this->role_m->get_roleinfo($usertypeID, $this->data['showUserType']);		
@@ -68,10 +65,12 @@ class Role extends Admin_Controller {
 		$usertype = $this->session->userdata("usertype");
 		$userrole = $this->session->userdata("role");
 		$this->data['showUserType'] = 0;
-		if ( $usertype == 'Valuex' ) {
+		$usertypeId = $this->input->post("usertypeID");
+		if ( $usertypeId == 1) {
 			$this->data['showUserType'] = 1;
 		}
 		$login_airline = $this->session->userdata("login_user_airlineID");
+		$carrier_id = 0;
 		if ( $login_airline[0] ){
 			$carrier_id = $login_airline[0];
 			
@@ -88,7 +87,7 @@ class Role extends Admin_Controller {
 				$this->load->view('_layout_main', $this->data);			
 			} else {
 				if ( $this->data['showUserType'] && $this->input->post("usertypeID") ) {
-					$usretypeId = $this->input->post("usertypeID");
+					$usertypeId = $this->input->post("usertypeID");
 				} else {
 					$usertypeId = $this->session->userdata("usertypeID");
 				}
@@ -118,7 +117,8 @@ class Role extends Admin_Controller {
 		$usertype = $this->session->userdata("usertype");
 		$userrole = $this->session->userdata("role");
 		$this->data['showUserType'] = 0;
-		if ( $usertype == 'Valuex') {
+		$usertypeId = $this->input->post("usertypeID");
+		if ( $usertypeId == 1) {
 			$this->data['showUserType'] = 1;
 		}
 		$login_airline = $this->session->userdata("login_user_airlineID");
