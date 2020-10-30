@@ -53,7 +53,7 @@ class role_m extends MY_Model {
 		if($usertypeID && !$showUserType){
 			$this->db->where("((r.usertypeID = $usertypeID AND carrier_id = 0)  OR  r.carrier_id = $carrier_id)");
 		} elseif ($usertypeID){
-			$this->db->where("((r.usertypeID = $usertypeID AND carrier_id = 0)");
+			$this->db->where("(r.usertypeID = $usertypeID)");
 		}
 		$query = $this->db->get();
 		return $query->result();

@@ -475,7 +475,7 @@ class Client extends Admin_Controller {
 				} else {
 					$isClientAdmin = $this->client_m->isClientAdminUserExists($this->input->post('airlineID'));
 					if ( $isClientAdmin != $id ) {
-						$this->session->set_flashdata('error', "Only One Client admin per carrier is allowed!");
+						$this->session->set_flashdata('error', "$isClientAdmin != $id Only One Client admin per carrier is allowed!");
 						$this->data["subview"] = "client/edit";
 						$this->load->view('_layout_main', $this->data);
 						return;
