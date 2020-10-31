@@ -157,7 +157,7 @@ class Admin_Controller extends MY_Controller {
 			}
 		}
 		
-		if($this->session->userdata('usertypeID') != 1){
+		if(($this->session->userdata('usertypeID') == 1 && $this->session->userdata('roleID') != 1) || $this->session->userdata('usertypeID') != 1){
 			$this->load->model('airports_m');
 			$this->data['loginairlines'] = $this->airports_m->getDefinitionList($this->session->userdata('login_user_airlineID'));
 			if($this->session->userdata('default_airline')){
