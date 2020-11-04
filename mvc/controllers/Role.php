@@ -31,7 +31,7 @@ class Role extends Admin_Controller {
 		if ( $usertypeID == 1) {
 			$this->data['showUserType'] = 1;
 		}
-		$this->data['roles'] = $this->role_m->get_roleinfo(null, $this->data['showUserType']);		
+		$this->data['roles'] = $this->role_m->get_roleinfo($usertypeID, $this->data['showUserType']);		
 		$this->data["subview"] = "role/index";
 		$this->load->view('_layout_main', $this->data);		
 	}

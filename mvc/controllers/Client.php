@@ -452,7 +452,7 @@ class Client extends Admin_Controller {
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		$usertype = 2;
 		$userID = $this->session->userdata('loginuserID');
-		$this->data['roles'] = $this->role_m->get_roleinfo($usertype);
+		$this->data['roles'] = $this->role_m->get_roleinfo($usertype,0,1);
 		if($this->session->userdata('usertypeID') == 1 && $this->session->userdata('roleID') == 1){
 			$this->data['airlinelist'] = $this->airline_m->getAirlinesData();
 		} else {
@@ -474,7 +474,7 @@ class Client extends Admin_Controller {
 					$this->load->view('_layout_main', $this->data);
 				} else {
 					$isClientAdmin = $this->client_m->isClientAdminUserExists($this->input->post('airlineID'));
-					if ( $isClientAdmin != $id ) {
+					if ( $isClientAdmin  && $isClientAdmin != $id ) {
 						$this->session->set_flashdata('error', "$isClientAdmin != $id Only One Client admin per carrier is allowed!");
 						$this->data["subview"] = "client/edit";
 						$this->load->view('_layout_main', $this->data);
