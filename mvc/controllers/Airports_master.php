@@ -195,9 +195,10 @@ class Airports_master extends Admin_Controller {
 	}
 
 	public function upload(){
+
 	 if($_FILES){
 		 if (empty($_FILES['file']['name'])) {
-            $this->session->set_flashdata('error',"Please select File");			
+            		$this->session->set_flashdata('error',"Please select File");			
 			$this->data["subview"] = "airports_master/upload";
 			$this->load->view('_layout_main', $this->data);
 		 } else {
@@ -206,505 +207,512 @@ class Airports_master extends Admin_Controller {
           	
 		try {	
 		   $file = $_FILES['file']['tmp_name'];          
-			   if(move_uploaded_file($file, APPPATH."/uploads/".$_FILES['file']['name'])){		
-				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
-				$Reader = new SpreadsheetReader($file); 
-				$header = array_map('strtolower',array('S.No','Airport Name','Airport Code','City Name','City Code','Country Code','Country','Region','Area','ICAO Code'));
-				 $header = array_map('strtolower', $header);
-				//print_r(count($header)); exit;
-				$Sheets = $Reader -> Sheets();
-				$defnData = $this->airports_m->getDefns();
-					
-			    foreach ($Sheets as $Index => $Name){                 					
-				   $Reader -> ChangeSheet($Index);
-				   $i = 0;
-                 //$time_start = microtime(true); 					   
-				  foreach ($Reader as $Row){ 
-					if($i == 0){ // header checking						
-					  $flag = 0 ;	
-                       $Row = array_map('trim', $Row);					  
-                     $import_header = array_map('strtolower', $Row);
-                    if(count(array_diff($header,$import_header)) == 0){
-						 $flag = 1;
-					 }				  
-					} else {
-					   if($flag == 1){  //exit; 						   						
-							$airport_key = array_search ('airport name', $import_header);	
-							$airportcode_key = array_search ('airport code', $import_header);
-							$city_key = array_search ('city name', $import_header);
-							$citycode_key = array_search ('city code', $import_header);
-							$countrycode_key = array_search ('country code', $import_header);
-							$country_key = array_search('country',$import_header);
-							$region_key = array_search ('region', $import_header);
-							$area_key = array_search('area',$import_header);				 						
-							$icao_key = array_search('icao code',$import_header);				 						
-							$Row = array_map('trim', $Row);	
-							$airport = $Row[$airport_key];							
-							$country = $Row[$country_key];
-							$countrycode = $Row[$countrycode_key];
-							$icaocode = $Row[$icao_key];
-							$citycode = $Row[$citycode_key];
-							$region = $Row[$region_key];	                              					 
-							$area = $Row[$area_key];
-							$city = $Row[$city_key];
-							unset($validate);
-							 $validate = array('airport'=> $airport,'airportcode' => $Row[$airportcode_key],'citycode' => $Row[$citycode_key],'countrycode' => $Row[$countrycode_key],'area' => $area,'region' => $region);					        								 
-							  $airport_row = $this->airports_m->checkAirport($airport);							 
-						 if(!$airport_row){
-                            $val_status = $this->validateAirport($validate);                            
-						  if($val_status){								
+		   if(move_uploaded_file($file, APPPATH."/uploads/".$_FILES['file']['name'])){		
+			$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
+			$Reader = new SpreadsheetReader($file); 
+			$header = array_map('strtolower',array('S.No','Airport Name','Airport Code','City Name','City Code','Country Code','Country','Region','Area','ICAO Code'));
+			 $header = array_map('strtolower', $header);
+			//print_r(count($header)); exit;
+			$Sheets = $Reader -> Sheets();
+			$defnData = $this->airports_m->getDefns();
+			$newDefData = Array();
+		   	foreach($defnData as $aln_data){ //Total Execution Time: 0.45060066779455 Mins
+				if ( $aln_data->aln_data_typeID != '' && $aln_data->code != '' ) {
+					if ( $aln_data->aln_data_typeID == 1 || $aln_data->aln_data_typeID == 2 || $aln_data->aln_data_typeID == 3 ) {
+
+			 			$newDefData[$aln_data->aln_data_typeID][$aln_data->code] =  $aln_data->vx_aln_data_defnsID;
+					} else if ( $aln_data->aln_data_typeID == 4 || $aln_data->aln_data_typeID == 5 ) {
+			 			$newDefData[$aln_data->aln_data_typeID][$aln_data->aln_data_value] =  $aln_data->vx_aln_data_defnsID;
+					}
+				}
+			}
+				
+		    foreach ($Sheets as $Index => $Name){                 					
+			   $Reader -> ChangeSheet($Index);
+			   $i = 0;
+	 //$time_start = microtime(true); 					   
+			  foreach ($Reader as $Row){ 
+				if($i == 0){ // header checking						
+					$flag = 0 ;	
+					$Row = array_map('trim', $Row);					  
+					$import_header = array_map('strtolower', $Row);
+					if(count(array_diff($header,$import_header)) == 0){
+						$flag = 1;
+					}				  
+				} else {
+					if($flag == 1){  //exit;
+						$airport_key = array_search ('airport name', $import_header);	
+						$airportcode_key = array_search ('airport code', $import_header);
+						$city_key = array_search ('city name', $import_header);
+						$citycode_key = array_search ('city code', $import_header);
+						$countrycode_key = array_search ('country code', $import_header);
+						$country_key = array_search('country',$import_header);
+						$region_key = array_search ('region', $import_header);
+						$area_key = array_search('area',$import_header);				 						
+						$icao_key = array_search('icao code',$import_header);				 						
+						$Row = array_map('trim', $Row);	
+						$airport = $Row[$airport_key];							
+						$country = $Row[$country_key];
+						$countrycode = $Row[$countrycode_key];
+						$icaocode = $Row[$icao_key];
+						$citycode = $Row[$citycode_key];
+						$region = $Row[$region_key];	                              					 
+						$area = $Row[$area_key];
+						$city = $Row[$city_key];
+						unset($validate);
+						$validate = array('airport'=> $airport,'airportcode' => $Row[$airportcode_key],'citycode' => $Row[$citycode_key],'countrycode' => $Row[$countrycode_key],'area' => $area,'region' => $region);					        								 
+		    				$val_status = $this->validateAirport($validate);   //Input data valid 
+					  	if($val_status){								
+							$airport_row = $this->airports_m->checkAirport($airport);//Check Airport record exists
+					 	if(!$airport_row){ //Airport Does not exists
+
 							  $countryID = 0;							
 							  $regionID = 0;
 							  $areaID = 0;
 							  $cityID = 0;
-							   foreach($defnData as $aln_data){ //Total Execution Time: 0.45060066779455 Mins
-								 if($aln_data->aln_data_typeID == 2 && $aln_data->code == $countrycode){
-								 	$countryID = $aln_data->vx_aln_data_defnsID;
-								 }
-								 if($aln_data->aln_data_typeID == 3 && $aln_data->code == $citycode){
-								 	$cityID = $aln_data->vx_aln_data_defnsID;
-								 }
-								 if($aln_data->aln_data_typeID == 4 && $aln_data->aln_data_value == $region){
-								 	$regionID = $aln_data->vx_aln_data_defnsID;
-								 }
-								 if($aln_data->aln_data_typeID == 5 && $aln_data->aln_data_value == $area){	
-								 	$areaID = $aln_data->vx_aln_data_defnsID;
-								 }
-							  } 
-							  
-							    if(!empty($areaID)){
-							  	$data['areaID'] = $areaID;								
+								if ($newDefData[2][$aln_data->code] ==  $countrycode ) {
+										$countryID = $newDefData[2][$aln_data->code];
+								}
+								if ($newDefData[3][$aln_data->code] ==  $citycode ) {
+										$cityID = $newDefData[3][$aln_data->code];
+								}
+								if ($newDefData[4][$aln_data->aln_data_value] ==  $region ) {
+										$regionID = $newDefData[4][$aln_data->code];
+								}
+								if ($newDefData[5][$aln_data->aln_data_value] ==  $area ) {
+										$areaID = $newDefData[5][$aln_data->code];
+								}
+							  if(!empty($areaID)){
+								$data['areaID'] = $areaID;
 							  } else {
-							  	$data['areaID'] =  $this->airports_m->checkData($area,5,null);
-								$aobj->vx_aln_data_defnsID = $data['areaID'];
-								$aobj->aln_data_typeID = 5;
-								$aobj->aln_data_value = $area;	
-								$defnData[] = $aobj;
-								unset($aobj);
+								$data['areaID'] =  $this->airports_m->checkData($area,5,null);
+								$newDefData[5][$area] =  $data['areaID'];
 							  } 
-            
-			                   if(!empty($regionID)){
-							  	$data['regionID'] = $regionID;
-							  } else {
-							  	//$data['regionID'] =  $this->airports_m->checkData($region,4,$data['areaID']);
-							  	$data['regionID'] =  $this->airports_m->checkData($region,4);
-								$robj->vx_aln_data_defnsID = $data['regionID'];
-								$robj->aln_data_typeID = 4;
-								$robj->aln_data_value = $region;	
-								$defnData[] = $robj;	
-								unset($robj);								 
-							  }							  
-							                           							  
-							  if(!empty($countryID)){
-							  	$data['countryID'] = $countryID;
-							  } else {								 
-							  	$data['countryID'] =  $this->airports_m->checkData($country,2,null ,$Row[$countrycode_key]);
-								$cobj->vx_aln_data_defnsID = $data['countryID'];
-								$cobj->aln_data_typeID = 2;
-								$cobj->aln_data_value = $country;
-								$defnData[] = $cobj;
-								unset($cobj);
+	    
+					   		if(!empty($regionID)){
+								$data['regionID'] = $regionID;
+						  	} else {
+								//$data['regionID'] =  $this->airports_m->checkData($region,4,$data['areaID']);
+								$data['regionID'] =  $this->airports_m->checkData($region,4);
+								$newDefData[4][$region] =  $data['regionID'];
+						  	}							  
+							if(!empty($countryID)){
+								$data['countryID'] = $countryID;
+							} else {								 
+								$data['countryID'] =  $this->airports_m->checkData($country,2,null ,$Row[$countrycode_key]);
+								$newDefData[2][$Row[$countrycode_key]] =  $data['countryID'];
 							  }							  
 							 
 
-                              				  if(!empty($cityID)){
-							  	$data['cityID'] = $cityID;
+							  if(!empty($cityID)){
+								$data['cityID'] = $cityID;
 							  } else {
-							  	$data['cityID'] =  $this->airports_m->checkData($city,3,$data['countryID'],$Row[$citycode_key]);
-								$ctobj->vx_aln_data_defnsID = $data['cityID'];
-								$ctobj->aln_data_typeID = 3;
-								$ctobj->aln_data_value = $city;	
-								$defnData[] = $ctobj;	
-                                				unset($ctobj);								
+								$data['cityID'] =  $this->airports_m->checkData($city,3,$data['countryID'],$Row[$citycode_key]);
+								$newDefData[3][$Row[$citycode_key]] =  $data['cityID'];
 							  }	 							  
 							 
-						     $data['airportID'] = $this->airports_m->addAirport($airport, $data['cityID'],$Row[$airportcode_key], $Row[$icao_key]);
-                             
+						     	$data['airportID'] = $this->airports_m->addAirport($airport, $data['cityID'],$Row[$airportcode_key], $Row[$icao_key]);
+								$newDefData[1][$Row[$airportcode_key]] =  $data['airportID'];
+			     
 							if ($data['airportID']) {
 							    $parentSet  = $this->marketzone_m->getParentsofAirport($data['airportID']);
 							    $marketzones = $this->marketzone_m->get_marketzones();
-								foreach($marketzones as $marketzone) {
+							    foreach($marketzones as $marketzone) {
 
 								    if(!is_null($marketzone->amz_level_name)) {
-				                                        $levellist = explode(',',$marketzone->amz_level_name);
-                                				    }else {
-                                        					$levellist = [];
-                                				    }
+									$levellist = explode(',',$marketzone->amz_level_name);
+								    }else {
+									$levellist = [];
+								    }
 								  
-                                                                    if(!is_null($marketzone->amz_incl_name)) {
-                                                                        $incllist = explode(',',$marketzone->amz_incl_name);
-                                                                    }else {
-                                                                                $incllist = [];
-                                                                    }
+								    if(!is_null($marketzone->amz_incl_name)) {
+									$incllist = explode(',',$marketzone->amz_incl_name);
+								    }else {
+									$incllist = [];
+								    }
 
-																										   if(!is_null($marketzone->amz_excl_name)) {
-                                                                        $excllist = explode(',',$marketzone->amz_excl_name);
-                                                                    }else {
-                                                                                $excllist = [];
-                                                                    }
+								    if(!is_null($marketzone->amz_excl_name)) {
+									$excllist = explode(',',$marketzone->amz_excl_name);
+								    }else {
+									$excllist = [];
+								    }
 		
-
-
-								if ( !empty($levellist) || !empty($incllist)){ 
-
+								    if ( !empty($levellist) || !empty($incllist)){ 
 									if(!empty(array_intersect($parentSet,$levellist)) || 
 										!empty(array_intersect($parentSet,$incllist))) {
 										 $newentry['airport_id'] = $data['airportID'];
-                                                                               $newentry['market_id'] = $marketzone->market_id;
-                                                                            $this->market_airport_map_m->insert_marketairport_mapid($newentry);
+									       $newentry['market_id'] = $marketzone->market_id;
+									    $this->market_airport_map_m->insert_marketairport_mapid($newentry);
 
 
-								}
 									}
+								    }
 								}
 								
 								//Updating seasons maping data
-							    $seasons = $this->season_m->get_seasons();
-								foreach($seasons as $season){
-								   $origlist = explode(',',$season->ams_orig_level_value);
-								   $distlist = explode(',',$season->ams_dest_level_value);
-								   if(!empty($origlist)){
-								     if(!empty(array_intersect($parentSet,$origlist))){
-									   $oarray["seasonID"] = $season->VX_aln_seasonID;
-									   $oarray["orig_airportID"] = $data['airportID']; 
-									   $this->season_airport_map_m->insert_origseason_airport_mapid($oarray); 
-								     }
-								   }
+								    $seasons = $this->season_m->get_seasons();
+									foreach($seasons as $season){
+									   $origlist = explode(',',$season->ams_orig_level_value);
+									   $distlist = explode(',',$season->ams_dest_level_value);
+									   if(!empty($origlist)){
+									     if(!empty(array_intersect($parentSet,$origlist))){
+										   $oarray["seasonID"] = $season->VX_aln_seasonID;
+										   $oarray["orig_airportID"] = $data['airportID']; 
+										   $this->season_airport_map_m->insert_origseason_airport_mapid($oarray); 
+									     }
+									   }
 								   
-								   if(!empty($distlist)){
-								     if(!empty(array_intersect($parentSet,$distlist))){
-									    $darray["seasonID"] = $season->VX_aln_seasonID;
-                                        $darray["dest_airportID"] = $data['airportID'];
-                                        $this->season_airport_map_m->insert_destseason_airport_mapid($darray); 
-								     }
-								   }
-								   
-								}
+									   if(!empty($distlist)){
+									     if(!empty(array_intersect($parentSet,$distlist))){
+										    $darray["seasonID"] = $season->VX_aln_seasonID;
+										$darray["dest_airportID"] = $data['airportID'];
+										$this->season_airport_map_m->insert_destseason_airport_mapid($darray); 
+									     }
+									   }
+									   
+									}
 								
-							 }
-								
+						 	}
+							
+						  $data['lat'] = $latitude;
+						  $data['lng'] = $longitude;						 
+						  $data['create_date'] = time();
+						  $data['modify_date'] = time();
+						  $data['create_userID'] = $this->session->userdata('loginuserID');
+						  $data['modify_userID'] = $this->session->userdata('loginuserID'); 			
+						  $this->airports_m->addMasterData($data);	
+					          //Updating seasons maping data
+						} else {
 
-                              $data['lat'] = $latitude;
-                              $data['lng'] = $longitude;							  
-							  $data['create_date'] = time();
-							  $data['modify_date'] = time();
-							  $data['create_userID'] = $this->session->userdata('loginuserID');
-							  $data['modify_userID'] = $this->session->userdata('loginuserID'); 			
-                              $this->airports_m->addMasterData($data);	
-                       //Updating seasons maping data
-					     
-							 }				  
-							} else {
-								if ($airport_row->vx_aln_data_defnsID != $Row[$icao_key]) {
-									$dtarray = Array('alias' => $Row[$icao_key]);
-							  		$this->airports_m->update_definition_data($dtarray, $airport_row->vx_aln_data_defnsID);							 
-								}
-								//Let u update 
-								$this->mydebug->airports_log("Airport :".$airport." already  existed");		 
+							//We have airport ID already added ,  check if added in aiport master data 
+							$airport_id = $airport_row->vx_aln_data_defnsID;
+							$airport_master = $this->airports_m->getAirportMasterDataByAiportId($airport_id);
+							if ( !$airport_master ) {
+								$airport_data_def = $this->airports_m->getAirportDataDefData($airport_id);
+								//we need to add to master 
+								  $data['airportID'] =  $airport_data_def->airportID;
+								  $data['countryID'] = $airport_data_def->countryID;
+								  $data['cityID'] = $airport_data_def->cityID;
+								  $data['regionID'] = $airport_data_def->regionID;
+								  $data['areaID'] = $airport_data_def->areaID;
+
+								  $data['lat'] = $latitude;
+								  $data['lng'] = $longitude;						 
+								  $data['create_date'] = time();
+								  $data['modify_date'] = time();
+								  $data['create_userID'] = $this->session->userdata('loginuserID');
+								  $data['modify_userID'] = $this->session->userdata('loginuserID'); 			
+								  $this->airports_m->addMasterData($data);	
 							}
-					    					
-					   } else {
-						   print_r("mismatch"); 
-					   }
-					 }
-				   $i++;					   
-				  } 
-                  /* $time_end = microtime(true);
-                $execution_time = ($time_end - $time_start)/60;
-                
-                   echo '<b>Total Execution Time:</b> '.$execution_time.' Mins';
-				  
-                      exit;	 */			   
-				} 
-				
-			  } 				 
+
+							if ($airport_row->vx_aln_data_defnsID != $Row[$icao_key]) {
+								$dtarray = Array('alias' => $Row[$icao_key]);
+								$this->airports_m->update_definition_data($dtarray, $airport_row->vx_aln_data_defnsID);							 
+							}
+
+							//Let u update 
+							$this->mydebug->airports_log("Airport :".$airport." already  existed");		 
+						}
+					 } 
+									
+				   } else {
+					print_r("Header Fields mismatch -" .  print_r(array_diff($header,$import_header),1)); 
+				   }
+				 }
+			   $i++;					   
+			  } 
+			} 
+			
+		  } 				 
 			} catch (Exception $E)	{
 				echo $E -> getMessage();
 			}
-		    if(file_exists($file)) {
-		    	unlink($file);					
-		    }			
+			    if(file_exists($file)) {
+				unlink($file);					
+			    }			
 			 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-		     redirect(base_url("airports_master/index")); 	
-		 }	
-	 } else {
-			$this->data["subview"] = "airports_master/upload";
-			$this->load->view('_layout_main', $this->data); 
-      }
-    }
-
-    function validateAirport($validate){
-        $validateAirportCode = $this->airports_m->checkAirportCode($validate['airportcode']);		
-		if(strlen($validate['airportcode']) != 3 || ctype_alpha($validate['airportcode']) != 1){
-			$this->mydebug->airports_log("Airport Code must be alphabets and length 3 ".$validate['airport'].'-'.$validate['airportcode']);
-			return FALSE;
-		} else if($validateAirportCode != 0){
-			$this->mydebug->airports_log("Airport Code must be UNIQUE ".$validate['airport'].'-'.$validate['airportcode']);
-			return FALSE;
-		} else if(strlen($validate['citycode']) != 3 || ctype_alpha($validate['citycode']) != 1){
-			$this->mydebug->airports_log("City Code must be alphabets and length 3 ".$validate['airport'].'-'.$validate['citycode']);
-			return FALSE;
-		} else if(strlen($validate['countrycode']) != 2 || ctype_alpha($validate['countrycode']) != 1){
-			$this->mydebug->airports_log("Countrycode Code must be alphabets and length 2 ".$validate['airport'].'-'.$validate['countrycode']);
-			return FALSE;
-		} else if(strlen($validate['area']) != 1 || !is_numeric($validate['area'])){
-			$this->mydebug->airports_log("Area must be numeric and length 1 ".$validate['airport'].'-'.$validate['area']);
-			return FALSE;
-		} else if(strlen($validate['region']) > 99 || !ctype_alpha($validate['region'])){
-			$this->mydebug->airports_log("region must be alphabets and length <= 99 ".$validate['airport'].'-'.$validate['region']);			
-			return FALSE;
-		} else {			
-			return TRUE;
-		} 
-		
-	}	
-
-    function server_processing(){		
-		$userID = $this->session->userdata('loginuserID');
-		$roleID = $this->session->userdata('roleID');	  
-		
-	    $aColumns = array('m.vx_amdID','ma.code','mct.code','mc.code','mr.aln_data_value','mar.aln_data_value','ma.code', 'ma.alias','ma.active');
-	
-		$sLimit = "";
-		
-			if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
-			{		
-			  $sLimit = "LIMIT ".$_GET['iDisplayStart'].",".$_GET['iDisplayLength'];
-			}
-			if ( isset( $_GET['iSortCol_0'] ) )
-			{
-				$sOrder = "ORDER BY  ";
-				for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ) ; $i++ )
-				{
-					if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
-					{
-						if($_GET['iSortCol_0'] == 8){
-							$sOrder .= " (s.order_no*-1) DESC ,";
-						} else {
-						 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
-							".$_GET['sSortDir_'.$i] .", ";
-						}
-					}
-				}				
-				  $sOrder = substr_replace( $sOrder, "", -2 );
-				
-				if ( $sOrder == "ORDER BY" )
-				{
-					$sOrder = "";
-				}
-			}
-			$sWhere = "";
-			if ( $_GET['sSearch'] != "" )
-			{
-				$sWhere = "WHERE (";
-				for ( $i=0 ; $i<count($aColumns) ; $i++ )
-				{
-					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch']."%' OR ";
-				}
-				$sWhere = substr_replace( $sWhere, "", -3 );
-				$sWhere .= ')';
-			}
-			
-			/* Individual column filtering */
-			for ( $i=0 ; $i<count($aColumns) ; $i++ )
-			{
-				if ( $_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )
-				{
-					if ( $sWhere == "" )
-					{
-						$sWhere = "WHERE ";
-					}
-					else
-					{
-						$sWhere .= " AND ";
-					}
-					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
-				}
-			}
-			if($this->input->get('areaID') > 0 ){
-		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'm.areaID = '.$this->input->get('areaID');		 
-	        }
-			if($this->input->get('regionID') > 0){
-		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'm.regionID = '.$this->input->get('regionID');		 
-	        }
-			if($this->input->get('countryID') > 0){
-		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'm.countryID = '.$this->input->get('countryID');		 
-	        }
-            if(isset($_GET['active']) && $this->input->get('active') != 2){ 
-		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'm.active = '.$this->input->get('active');		 
-	        }			
-			/* if($this->input->get('stateID') > 0){
-		      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-              $sWhere .= 'm.stateID = '.$this->input->get('stateID');		 
-	        } */			
-			
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.vx_amdID,ma.aln_data_value airport,ma.code airportcode,mct.aln_data_value city,mct.code citycode,mc.aln_data_value country,mc.code countrycode,ma.alias, mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active from VX_master_data m left join VX_data_defns ma ON ma.vx_aln_data_defnsID = m.airportID left join VX_data_defns mct ON mct.vx_aln_data_defnsID = m.cityID left join VX_data_defns mc ON mc.vx_aln_data_defnsID = m.countryID left join VX_data_defns mr ON mr.vx_aln_data_defnsID = m.regionID left join VX_data_defns mar ON mar.vx_aln_data_defnsID = m.areaID	
-		$sWhere			
-		$sOrder
-		$sLimit	"; 
-	
-	$rResult = $this->install_m->run_query($sQuery);
-	$sQuery = "SELECT FOUND_ROWS() as total";
-	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
-		
-		$output = array(
-		"sEcho" => intval($_GET['sEcho']),
-		"iTotalRecords" => $rResultFilterTotal,
-		"iTotalDisplayRecords" => $rResultFilterTotal,
-		"aaData" => array()
-	  );
-	  $i=1;
-
-	$rownum = 1 + $_GET['iDisplayStart'];
-
-	  foreach($rResult as $airport){		 	
-
-		 $airport->chkbox = "<input type='checkbox'  class='deleteRow' value='".$airport->vx_amdID."'  /> ".$rownum ;
-                                $rownum++;
-
-		  if(permissionChecker('airports_master_edit')){ 			
-			//$airport->action = btn_edit('airports_master/edit/'.$airport->vx_amdID, $this->lang->line('edit'));
-		  }
-		  if(permissionChecker('airports_master_delete')){
-		   //$airport->action .= btn_delete('airports_master/delete/'.$airport->vx_amdID, $this->lang->line('delete'));			 
-		  }
-		  if(permissionChecker('airports_master_view') ) {
-		    $airport->action .= btn_view('airports_master/view/'.$airport->vx_amdID, $this->lang->line('view'));
-		  }
-			$status = $airport->active;
-			$airport->active = "<div class='onoffswitch-small' id='".$airport->vx_amdID."'>";
-            $airport->active .= "<input type='checkbox' id='myonoffswitch".$airport->vx_amdID."' class='onoffswitch-small-checkbox' name='paypal_demo'";
-			if($status){
-			   $airport->active .= " checked >";
-			} else {
-			   $airport->active .= ">";
-			}	
-			
-			$airport->active .= "<label for='myonoffswitch".$airport->vx_amdID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";         
-            $airport->temp_id = $i;
-			$output['aaData'][] = $airport;
-            $i++;			
-		}
-		if(isset($_REQUEST['export'])){
-		  $columns = array('#','Name','Code','City','City Code','Country','Country Code','Region','Area');
-		  $rows = array("temp_id","airport","code","city","citycode","country","countrycode","region","area");
-		  $this->exportall($output['aaData'],$columns,$rows);		
-		} else {	
-		  echo json_encode( $output );
+			 redirect(base_url("airports_master/index")); 	
+		 
+	 	}	
+		} else {
+				$this->data["subview"] = "airports_master/upload";
+				$this->load->view('_layout_main', $this->data); 
 		}
 	}
+
+function validateAirport($validate){
+#$validateAirportCode = $this->airports_m->checkAirportCode($validate['airportcode']);		
+	if(strlen($validate['airportcode']) != 3 || ctype_alpha($validate['airportcode']) != 1){
+		$this->mydebug->airports_log("Airport Code must be alphabets and length 3 ".$validate['airport'].'-'.$validate['airportcode']);
+		return FALSE;
+	/*} else if($validateAirportCode != 0){
+		$this->mydebug->airports_log("Airport Code must be UNIQUE ".$validate['airport'].'-'.$validate['airportcode']);
+		return FALSE;
+*/
+	} else if(strlen($validate['citycode']) != 3 || ctype_alpha($validate['citycode']) != 1){
+		$this->mydebug->airports_log("City Code must be alphabets and length 3 ".$validate['airport'].'-'.$validate['citycode']);
+		return FALSE;
+	} else if(strlen($validate['countrycode']) != 2 || ctype_alpha($validate['countrycode']) != 1){
+		$this->mydebug->airports_log("Countrycode Code must be alphabets and length 2 ".$validate['airport'].'-'.$validate['countrycode']);
+		return FALSE;
+	} else if(strlen($validate['area']) != 1 || !is_numeric($validate['area'])){
+		$this->mydebug->airports_log("Area must be numeric and length 1 ".$validate['airport'].'-'.$validate['area']);
+		return FALSE;
+	} else if(strlen($validate['region']) > 99 || !ctype_alpha($validate['region'])){
+		$this->mydebug->airports_log("region must be alphabets and length <= 99 ".$validate['airport'].'-'.$validate['region']);			
+		return FALSE;
+	} else {			
+		return TRUE;
+	} 
 	
-    function active() {
-		if(permissionChecker('airports_master_edit')) {
-			$id = $this->input->post('id');
-			$status = $this->input->post('status');
-			if($id != '' && $status != '') {
-				$data['modify_userID'] = $this->session->userdata('loginuserID');
-				$data['modify_date'] = time();
-				if($status == 'chacked') {
-					$data['active'] = 1 ;
-					$this->airports_m->update_master_data($data, $id);
-					echo 'Success';
-				} elseif($status == 'unchacked') {
-					$data['active'] = 0 ;
-					$this->airports_m->update_master_data($data, $id);
-					echo 'Success';
-				} else {
-					echo "Error";
+}	
+
+function server_processing(){		
+	$userID = $this->session->userdata('loginuserID');
+	$roleID = $this->session->userdata('roleID');	  
+	
+    $aColumns = array('m.vx_amdID','ma.code','mct.code','mc.code','mr.aln_data_value','mar.aln_data_value','ma.code', 'ma.alias','ma.active');
+
+	$sLimit = "";
+	
+		if ( isset( $_GET['iDisplayStart'] ) && $_GET['iDisplayLength'] != '-1' )
+		{		
+		  $sLimit = "LIMIT ".$_GET['iDisplayStart'].",".$_GET['iDisplayLength'];
+		}
+		if ( isset( $_GET['iSortCol_0'] ) )
+		{
+			$sOrder = "ORDER BY  ";
+			for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ) ; $i++ )
+			{
+				if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
+				{
+					if($_GET['iSortCol_0'] == 8){
+						$sOrder .= " (s.order_no*-1) DESC ,";
+					} else {
+					 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
+						".$_GET['sSortDir_'.$i] .", ";
+					}
 				}
+			}				
+			  $sOrder = substr_replace( $sOrder, "", -2 );
+			
+			if ( $sOrder == "ORDER BY" )
+			{
+				$sOrder = "";
+			}
+		}
+		$sWhere = "";
+		if ( $_GET['sSearch'] != "" )
+		{
+			$sWhere = "WHERE (";
+			for ( $i=0 ; $i<count($aColumns) ; $i++ )
+			{
+				$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch']."%' OR ";
+			}
+			$sWhere = substr_replace( $sWhere, "", -3 );
+			$sWhere .= ')';
+		}
+		
+		/* Individual column filtering */
+		for ( $i=0 ; $i<count($aColumns) ; $i++ )
+		{
+			if ( $_GET['bSearchable_'.$i] == "true" && $_GET['sSearch_'.$i] != '' )
+			{
+				if ( $sWhere == "" )
+				{
+					$sWhere = "WHERE ";
+				}
+				else
+				{
+					$sWhere .= " AND ";
+				}
+				$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
+			}
+		}
+		if($this->input->get('areaID') > 0 ){
+	      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+      $sWhere .= 'm.areaID = '.$this->input->get('areaID');		 
+	}
+		if($this->input->get('regionID') > 0){
+	      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+      $sWhere .= 'm.regionID = '.$this->input->get('regionID');		 
+	}
+		if($this->input->get('countryID') > 0){
+	      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+      $sWhere .= 'm.countryID = '.$this->input->get('countryID');		 
+	}
+    if(isset($_GET['active']) && $this->input->get('active') != 2){ 
+	      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+      $sWhere .= 'm.active = '.$this->input->get('active');		 
+	}			
+		/* if($this->input->get('stateID') > 0){
+	      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+      $sWhere .= 'm.stateID = '.$this->input->get('stateID');		 
+	} */			
+		
+	$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.vx_amdID,ma.aln_data_value airport,ma.code airportcode,mct.aln_data_value city,mct.code citycode,mc.aln_data_value country,mc.code countrycode,ma.alias, mr.aln_data_value region,mar.aln_data_value area,ma.code,m.active from VX_master_data m left join VX_data_defns ma ON ma.vx_aln_data_defnsID = m.airportID left join VX_data_defns mct ON mct.vx_aln_data_defnsID = m.cityID left join VX_data_defns mc ON mc.vx_aln_data_defnsID = m.countryID left join VX_data_defns mr ON mr.vx_aln_data_defnsID = m.regionID left join VX_data_defns mar ON mar.vx_aln_data_defnsID = m.areaID	
+	$sWhere			
+	$sOrder
+	$sLimit	"; 
+
+$rResult = $this->install_m->run_query($sQuery);
+$sQuery = "SELECT FOUND_ROWS() as total";
+$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
+	
+	$output = array(
+	"sEcho" => intval($_GET['sEcho']),
+	"iTotalRecords" => $rResultFilterTotal,
+	"iTotalDisplayRecords" => $rResultFilterTotal,
+	"aaData" => array()
+  );
+  $i=1;
+
+$rownum = 1 + $_GET['iDisplayStart'];
+
+  foreach($rResult as $airport){		 	
+
+	 $airport->chkbox = "<input type='checkbox'  class='deleteRow' value='".$airport->vx_amdID."'  /> ".$rownum ;
+			$rownum++;
+
+	  if(permissionChecker('airports_master_edit')){ 			
+		//$airport->action = btn_edit('airports_master/edit/'.$airport->vx_amdID, $this->lang->line('edit'));
+	  }
+	  if(permissionChecker('airports_master_delete')){
+	   //$airport->action .= btn_delete('airports_master/delete/'.$airport->vx_amdID, $this->lang->line('delete'));			 
+	  }
+	  if(permissionChecker('airports_master_view') ) {
+	    $airport->action .= btn_view('airports_master/view/'.$airport->vx_amdID, $this->lang->line('view'));
+	  }
+		$status = $airport->active;
+		$airport->active = "<div class='onoffswitch-small' id='".$airport->vx_amdID."'>";
+    $airport->active .= "<input type='checkbox' id='myonoffswitch".$airport->vx_amdID."' class='onoffswitch-small-checkbox' name='paypal_demo'";
+		if($status){
+		   $airport->active .= " checked >";
+		} else {
+		   $airport->active .= ">";
+		}	
+		
+		$airport->active .= "<label for='myonoffswitch".$airport->vx_amdID."' class='onoffswitch-small-label'><span class='onoffswitch-small-inner'></span> <span class='onoffswitch-small-switch'></span> </label></div>";         
+    $airport->temp_id = $i;
+		$output['aaData'][] = $airport;
+    $i++;			
+	}
+	if(isset($_REQUEST['export'])){
+	  $columns = array('#','Name','Code','City','City Code','Country','Country Code','Region','Area');
+	  $rows = array("temp_id","airport","code","city","citycode","country","countrycode","region","area");
+	  $this->exportall($output['aaData'],$columns,$rows);		
+	} else {	
+	  echo json_encode( $output );
+	}
+}
+
+function active() {
+	if(permissionChecker('airports_master_edit')) {
+		$id = $this->input->post('id');
+		$status = $this->input->post('status');
+		if($id != '' && $status != '') {
+			$data['modify_userID'] = $this->session->userdata('loginuserID');
+			$data['modify_date'] = time();
+			if($status == 'chacked') {
+				$data['active'] = 1 ;
+				$this->airports_m->update_master_data($data, $id);
+				echo 'Success';
+			} elseif($status == 'unchacked') {
+				$data['active'] = 0 ;
+				$this->airports_m->update_master_data($data, $id);
+				echo 'Success';
 			} else {
 				echo "Error";
 			}
 		} else {
 			echo "Error";
 		}
+	} else {
+		echo "Error";
 	}
-	
-	function downloadFormat(){
-		$this->load->helper('download');
-        $filename = APPPATH.'downloads/airport_master.xlsx'; 
-		force_download($filename, null);		
-	}
+}
+
+function downloadFormat(){
+	$this->load->helper('download');
+$filename = APPPATH.'downloads/airport_master.xlsx'; 
+	force_download($filename, null);		
+}
 
 /*function testadd(){
 $data['airportID']='499';
 
-                                                           $parentSet  = $this->marketzone_m->getParentsofAirport($data['airportID']);
+						   $parentSet  = $this->marketzone_m->getParentsofAirport($data['airportID']);
 
-                                                            $marketzones = $this->marketzone_m->get_marketzones();
-                                                                foreach($marketzones as $marketzone) {
-								
-                                                                    if(!is_null($marketzone->amz_level_name)) {
-                                                                        $levellist = explode(',',$marketzone->amz_level_name);
-                                                                    }else {
-                                                                                $levellist = [];
-                                                                    }
+						    $marketzones = $this->marketzone_m->get_marketzones();
+							foreach($marketzones as $marketzone) {
+							
+							    if(!is_null($marketzone->amz_level_name)) {
+								$levellist = explode(',',$marketzone->amz_level_name);
+							    }else {
+									$levellist = [];
+							    }
 
-                                                                    if(!is_null($marketzone->amz_incl_name)) {
-                                                                        $incllist = explode(',',$marketzone->amz_incl_name);
-                                                                    }else {
-                                                                                $incllist = [];
-                                                                    }
+							    if(!is_null($marketzone->amz_incl_name)) {
+								$incllist = explode(',',$marketzone->amz_incl_name);
+							    }else {
+									$incllist = [];
+							    }
 
 
-                                                                    if(!is_null($marketzone->amz_excl_name)) {
-                                                                        $excllist = explode(',',$marketzone->amz_excl_name);
-                                                                    }else {
-                                                                                $excllist = [];
-                                                                    }
+							    if(!is_null($marketzone->amz_excl_name)) {
+								$excllist = explode(',',$marketzone->amz_excl_name);
+							    }else {
+									$excllist = [];
+							    }
 
-                                                                  if ( !empty($levellist) && !empty($incllist)){
-                                                                  if(!empty(array_intersect($parentSet,$levellist))) {
-                                                                        if(!empty(array_intersect($parentSet,$incllist))){
-                                                                                if(empty(array_intersect($parentSet,$excllist))){
-                                                                                          $newentry['airport_id'] = $data['airportID'];
-                                                                                $newentry['market_id'] = $marketzone->market_id;
-                                                                                $this->market_airport_map_m->insert_marketairport_mapid($newentry);
-                                                                                }
-                                                                        } else {
-                                                                                if(empty(array_intersect($parentSet,$excllist))){
-                                                                                    $newentry['airport_id'] = $data['airportID'];
-                                                                                $newentry['market_id'] = $marketzone->market_id;
-                                                                                $this->market_airport_map_m->insert_marketairport_mapid($newentry);
+							  if ( !empty($levellist) && !empty($incllist)){
+							  if(!empty(array_intersect($parentSet,$levellist))) {
+								if(!empty(array_intersect($parentSet,$incllist))){
+									if(empty(array_intersect($parentSet,$excllist))){
+										  $newentry['airport_id'] = $data['airportID'];
+									$newentry['market_id'] = $marketzone->market_id;
+									$this->market_airport_map_m->insert_marketairport_mapid($newentry);
+									}
+								} else {
+									if(empty(array_intersect($parentSet,$excllist))){
+									    $newentry['airport_id'] = $data['airportID'];
+									$newentry['market_id'] = $marketzone->market_id;
+									$this->market_airport_map_m->insert_marketairport_mapid($newentry);
 
-                                                                                }
-                                                                        }
-                                                                  }
-                                                                 } else if (empty($incllist) && !empty($levellist) ) {
-                                                                        if(!empty(array_intersect($parentSet,$levellist))){
-                                                                                if(empty(array_intersect($parentSet,$excllist))){
-                                                                                        $newentry['airport_id'] = $data['airportID'];
-                                                                                $newentry['market_id'] = $marketzone->market_id;
-                                                                                $this->market_airport_map_m->insert_marketairport_mapid($newentry);
-                                                                                 }
-                                                                         }
-                                                                }
-                                                                }
+									}
+								}
+							  }
+							 } else if (empty($incllist) && !empty($levellist) ) {
+								if(!empty(array_intersect($parentSet,$levellist))){
+									if(empty(array_intersect($parentSet,$excllist))){
+										$newentry['airport_id'] = $data['airportID'];
+									$newentry['market_id'] = $marketzone->market_id;
+									$this->market_airport_map_m->insert_marketairport_mapid($newentry);
+									 }
+								 }
+							}
+							}
 
 
 
 }*/
-	
-	
+
+
 
 public function delete_master_bulk_records(){
 $data_ids = $_REQUEST['data_ids'];
 $data_id_array = explode(",", $data_ids);
 if(!empty($data_id_array)) {
-    foreach($data_id_array as $id) {
-	 $this->data['airport'] = $this->airports_m->get_airportmaster($id);
-                        if($this->data['airport']) {
-                                $data['active'] = 0 ;
-                                $this->airports_m->update_master_data($data, $id);
-                        }
-    }
+foreach($data_id_array as $id) {
+ $this->data['airport'] = $this->airports_m->get_airportmaster($id);
+		if($this->data['airport']) {
+			$data['active'] = 0 ;
+			$this->airports_m->update_master_data($data, $id);
+		}
+}
 }
 }
 
-   
+
 }
 

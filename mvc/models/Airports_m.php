@@ -83,6 +83,7 @@ class Airports_m extends MY_Model
 	public function addMasterData($data)
 	{
 		$this->db->insert('VX_master_data', $data);
+		//echo $this->db->last_query();exit;
 		if ($this->db->affected_rows() > 0) {
 			return $this->db->insert_id();
 		} else {
@@ -177,6 +178,20 @@ class Airports_m extends MY_Model
 		$this->db->join('VX_data_defns mar', 'mar.vx_aln_data_defnsID = m.areaID', 'LEFT');
 		$this->db->join('VX_user u', 'u.userID = m.modify_userID', 'LEFT');
 		$this->db->where('m.vx_amdID', $id);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function getAirportMasterDataByAiportId($id)
+	{
+		$this->db->select('m.*,ma.aln_data_value airport,ma.vx_aln_data_defnsID as airport_id,mc.vx_aln_data_defnsID as country_id,  mc.aln_data_value country, mr.vx_aln_data_defnsID as regin_id, ms.vx_aln_data_defnsID as city_id, mar.vx_aln_data_defnsID as area_id,mr.aln_data_value region,mar.aln_data_value area,ma.code,u.name modify_by,m.modify_date')->from('VX_master_data m');
+		$this->db->join('VX_data_defns ma', 'ma.vx_aln_data_defnsID = m.airportID', 'LEFT');
+		$this->db->join('VX_data_defns ms', 'ms.vx_aln_data_defnsID = m.cityID ', 'LEFT');
+		$this->db->join('VX_data_defns mc', 'mc.vx_aln_data_defnsID = m.countryID', 'LEFT');
+		$this->db->join('VX_data_defns mr', 'mr.vx_aln_data_defnsID = m.regionID', 'LEFT');
+		$this->db->join('VX_data_defns mar', 'mar.vx_aln_data_defnsID = m.areaID', 'LEFT');
+		$this->db->join('VX_user u', 'u.userID = m.modify_userID', 'LEFT');
+		$this->db->where('m.airportID', $id);
 		$query = $this->db->get();
 		return $query->row();
 	}
@@ -362,6 +377,19 @@ class Airports_m extends MY_Model
 		$result = $this->db->query($sQuery);
 		//print_r($this->db->last_query());
                 return  array_column($result->result_array(), 'distance', 'airports');
+	}
+
+	public function getAirportDataDefData($id)
+	{
+		$this->db->select('ma.aln_data_value airport,ma.vx_aln_data_defnsID as airportID, ms.vx_aln_data_defnsID as cityID, mc.vx_aln_data_defnsID as countryID, mr.vx_aln_data_defnsID as regionID, mar.vx_aln_data_defnsID as areaID,  mc.aln_data_value country,mr.aln_data_value region,mar.aln_data_value area,ma.code')->from('VX_data_defns ma');
+		$this->db->join('VX_data_defns ms', 'ms.vx_aln_data_defnsID = ma.parentID ', 'LEFT');
+		$this->db->join('VX_data_defns mc', 'mc.vx_aln_data_defnsID = ms.parentID', 'LEFT');
+		$this->db->join('VX_data_defns mr', 'mr.vx_aln_data_defnsID = mc.parentID', 'LEFT');
+		$this->db->join('VX_data_defns mar', 'mar.vx_aln_data_defnsID = mr.parentID', 'LEFT');
+		$this->db->where('ma.vx_aln_data_defnsID', $id);
+		$query = $this->db->get();
+		//	echo $this->db->last_query();
+		return $query->row();
 	}
 
 }
