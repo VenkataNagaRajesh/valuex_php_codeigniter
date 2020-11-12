@@ -139,6 +139,8 @@ class Invfeed extends Admin_Controller {
                                                  $flag = 1;
                                          } else {
 							$this->mydebug->invfeed_log("Header mismatch" , 1);
+						 $this->session->set_flashdata('error', "Header mismatch, upload failed!");
+					     redirect(base_url("invfeed/index")); 	
 							break;
 					}
                                         } else {
