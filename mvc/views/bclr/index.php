@@ -161,12 +161,6 @@
 		</form>
 	</div>
 	<div class="col-md-12 table-responsive">
-		<div class="auto-gen col-md-12" style="margin: 10px 0 20px;">
-		<a href="<?php echo base_url('bclr/generatedata') ?>">
-			<i class="fa fa-upload"></i>
-			<?=$this->lang->line('generate_bclr')?>
-		 </a>
-		</div>
 		<form class="form-horizontal" action="#">
 			<div class="col-md-12">
 				<div class="form-group">                
@@ -524,20 +518,6 @@
         }
     });
 
-    $('#from_cabin').change(function(){
-        var carrier = $(this).val();    
-        $.ajax({ 
-            async: false,            
-            type: 'POST',            
-            url: "<?=base_url('bclr/getCabinsCarrier')?>",            
-            data: {"carrierID":carrier},           
-            dataType: "html",                                  
-            success: function(data) {                         
-                $('#from_cabin').html(data);             
-            }        
-        });
-    });
-
     $('#flt_carrierID').change(function(){
         var carrier = $(this).val();    
         $.ajax({ 
@@ -790,15 +770,15 @@ function savebclr() {
           success: function(data) {
                     var bclrinfo = jQuery.parseJSON(data);
                     var status = bclrinfo['status'];
-			        newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
+			newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
                     if (status.includes('success')) {
                         alert(status);
-				        form_reset();
+		        form_reset();
                         $("#bclrtable").dataTable().fnDestroy();
                         loaddatatable();
                     } else if (status == 'duplicate'){
-				        alert('Duplicate Entry');
-			        } else {                                
+			alert('Duplicate Entry');
+		    } else {                                
                         alert($(status).text());
                         $.each(bclrinfo['errors'], function(key, value) {
                             if(value != ''){                                         

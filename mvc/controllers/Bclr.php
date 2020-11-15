@@ -30,37 +30,37 @@ class Bclr extends Admin_Controller
             array(
                 'field' => 'carrierID',
                 'label' => $this->lang->line("carrier"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|required|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'from_cabin[]',
                 'label' => $this->lang->line("from_cabin"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'partner_carrierID',
                 'label' => $this->lang->line("partner_carrier"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'allowance',
                 'label' => $this->lang->line("allowance"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'aircraft_type',
                 'label' => $this->lang->line("aircraft_type"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'flight_num_range',
                 'label' => $this->lang->line("flight_number_range"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valFlightrange'
+                'rules' => 'trim|max_length[200]|xss_clean|callback_valFlightrange'
             ),
             array(
                 'field' => 'origin_level',
                 'label' => $this->lang->line("origin_level"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|required|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'origin_content[]',
@@ -70,7 +70,7 @@ class Bclr extends Admin_Controller
             array(
                 'field' => 'dest_level',
                 'label' => $this->lang->line("dest_level"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|required|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'dest_content[]',
@@ -95,7 +95,7 @@ class Bclr extends Admin_Controller
             array(
                 'field' => 'rule_auth_carrier',
                 'label' => $this->lang->line("rule_auth"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'dep_time_start',
@@ -365,8 +365,7 @@ class Bclr extends Admin_Controller
     function valFlightrange($post_string)
     {
         if (empty($post_string)) {
-            $this->form_validation->set_message("valFlightrange", "%s is required");
-            return FALSE;
+            return TRUE;
         } else if (preg_match('/(\d+)-(\d+)/', trim($post_string), $matches)) {
             return TRUE;
         } else {
@@ -477,9 +476,9 @@ class Bclr extends Admin_Controller
                     'dest_content' => form_error('dest_content[]'),
                     'effective_date' => form_error('effective_date'),
                     'discontinue_date' => form_error('discontinue_date'),
-                    'frequency' => form_error('frequency'),
+                    #'frequency' => form_error('frequency'),
                     'bag_type' => form_error('bag_type'),
-                    'rule_auth_carrier' => form_error('rule_auth_carrier'),
+                    #'rule_auth_carrier' => form_error('rule_auth_carrier'),
                     'dep_time_start' => form_error('dep_time_start'),
                     'dep_time_end' => form_error('dep_time_end'),
                     'min_unit' => form_error('min_unit'),
