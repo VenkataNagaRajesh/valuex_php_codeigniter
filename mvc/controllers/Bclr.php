@@ -410,7 +410,7 @@ class Bclr extends Admin_Controller
         $aircrafts = $this->airline_m->getAirCraftTypesList($carrierID);
         echo "<option value='0'> Select Aircraft </option>";
         foreach ($aircrafts as $aircraft) {
-            echo "<option value='" . $aircraft->aircraftID . "'>" . $aircraft->aln_data_value . "</option>";
+            echo "<option value='" . $aircraft->vx_aln_data_defnsID . "'>" . $aircraft->aln_data_value . "</option>";
         }
     }
 

@@ -50,7 +50,7 @@ class Bclr_m extends MY_Model {
 
 	  function update_bclr($data, $id = NULL) {
                 parent::update($data, $id);
-            //print_r($this->db->last_query());
+     //       print_r($this->db->last_query());exit;
                 return $id;
         }
 
