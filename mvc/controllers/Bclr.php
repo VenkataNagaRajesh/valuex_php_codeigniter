@@ -408,7 +408,7 @@ class Bclr extends Admin_Controller
     {
         $carrierID = $this->input->post('carrierID');
         $aircrafts = $this->airline_m->getAirCraftTypesList($carrierID);
-        //echo "<option value='0'> Select Aircraft </option>";
+        echo "<option value='0'> Select Aircraft </option>";
         foreach ($aircrafts as $aircraft) {
             echo "<option value='" . $aircraft->aircraftID . "'>" . $aircraft->aln_data_value . "</option>";
         }
@@ -492,7 +492,7 @@ class Bclr extends Admin_Controller
                 $array['partner_carrierID'] = $this->input->post('partner_carrierID');
                 $array['season_id'] = $this->input->post('season');
                 $array['allowance'] = $this->input->post('allowance');
-                $array['aircraft_typeID'] = $this->input->post('aircraft_type');
+                $array['aircraft_typeID'] = (int)$this->input->post('aircraft_type');
                 $array['flight_num_range'] = trim($this->input->post('flight_num_range'));
                 $array['origin_level'] = $this->input->post('origin_level');
                 $array['origin_content'] =  implode(',', $this->input->post('origin_content'));

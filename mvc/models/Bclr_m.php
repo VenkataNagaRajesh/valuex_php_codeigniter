@@ -44,6 +44,7 @@ class Bclr_m extends MY_Model {
 
         function insert_bclr($array) {
                 $error = parent::insert($array);
+            //print_r($this->db->last_query());
                 return TRUE;
         }
 
