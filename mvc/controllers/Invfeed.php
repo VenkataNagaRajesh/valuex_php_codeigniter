@@ -229,32 +229,42 @@ class Invfeed extends Admin_Controller {
 							} else {
 
                                                          //$invfeed['sold_seats'] =   $invfeedraw['sold_seats'];
-							$inv_feed_id = $this->invfeed_m->checkInvFeed($invfeed);
-						if($inv_feed_id) {
-							// if inv feed feed exist make it inactive
-							$invfeed['active'] = 1;
-							$update['active'] = 0;
-							$update['modify_date'] = time();
-							$update['modify_userID'] = $this->session->userdata('loginuserID');
-							$this->invfeed_m->update_entries($update,$invfeed);
-						  }
+							$inv_feed_old = $this->invfeed_m->checkInvFeed($invfeed);
+							$insert = 0;
+							if($inv_feed_old) { //we have exact match
+								//Check any new update for that record , then deactive old record
+								if( $inv_feed_old->seat_capacity != $invfeed['seat_capacity'] || $inv_feed_old->empty_seats != $invfeed['empty_seats'] || $inv_feed_old->sold_weight != $invfeed['sold_weight']  ){ 
+								// if inv feed feed exist make it inactive
+									$invfeed['active'] = 1;
+									$invfeed['invfeed_id'] = $inv_feed_old->invfeed_id;
+									$update['active'] = 0;
+									$update['modify_date'] = time();
+									$update['modify_userID'] = $this->session->userdata('loginuserID');
+									$this->invfeed_m->update_entries($update,$invfeed);
+									$insert = 1;
+								}
+						  	} else {
+								$insert = 1;
+							}
+							if ( $insert ) {
 
-							// insert new entry
-							$invfeed['invfeedraw_id'] = $invfeed_raw_id;	
-                                                           $invfeed['create_date'] = time();
-                                                          $invfeed['modify_date'] = time();
-                                                          $invfeed['create_userID'] = $this->session->userdata('loginuserID');
-                                                          $invfeed['modify_userID'] = $this->session->userdata('loginuserID');
-						//	print_r($rafeed);exit;
+								// insert new entry
+								$invfeed['invfeedraw_id'] = $invfeed_raw_id;	
+								   $invfeed['create_date'] = time();
+								  $invfeed['modify_date'] = time();
+								  $invfeed['create_userID'] = $this->session->userdata('loginuserID');
+								  $invfeed['modify_userID'] = $this->session->userdata('loginuserID');
+								//	print_r($rafeed);exit;
 
-		                                           $insert_id = $this->invfeed_m->insert_invfeed($invfeed);
-							if($insert_id) {
-							 	$this->mydebug->invfeed_log("Inserted data for row " . $column, 0);
-							} else{ 
-								$this->mydebug->invfeed_log("Not created record, check data " . $column, 0);
+								   $insert_id = $this->invfeed_m->insert_invfeed($invfeed);
+								if($insert_id) {
+									$this->mydebug->invfeed_log("Inserted data for row " . $column, 0);
+								} else{ 
+									$this->mydebug->invfeed_log("Not created record, check data " . $column, 0);
+								}
 							}
 
-						}
+							}
 						}
 					   	 } 						
 					   } else {
@@ -398,6 +408,8 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','cdef
                         $sWhere .= 'inv.airline_id IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';                
                 }
 
+		$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+		$sWhere .= 'inv.active = 1'; 
 			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
 			invfeed_id, flight_nbr, departure_date, do.code as origin_airport, 
