@@ -170,7 +170,7 @@
 
                                     if(count($roles)) {
                                         foreach ($roles as $key => $role) {                                           
-                                            $rarray[$role->roleID] = $role->role;                                          
+                                            $rarray[$role->roleID] = $role->usertype . " - " . $role->role;                                          
                                         }
                                     }
                                     echo form_dropdown("roleID", $rarray,

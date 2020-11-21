@@ -299,7 +299,8 @@ class Client extends Admin_Controller {
                 )
         	);
 		$usertypeID = 2;
-		$this->data['roles'] = $this->role_m->get_role();
+		#$this->data['roles'] = $this->role_m->get_role();
+		$this->data['roles'] = $this->role_m->get_roleinfo($usertypeID,1,1);
         	$this->data['airlinelist'] = $this->airline_m->getAirlinesData();		
 		if($_POST) {
 			$rules = $this->rules();
@@ -358,7 +359,7 @@ class Client extends Admin_Controller {
 			   )
 	   );
 	   $usertype = 2;        
-	   $this->data['roles'] = $this->role_m->get_roleinfo($usertype);
+	   $this->data['roles'] = $this->role_m->get_roleinfo($usertype,1,1);
 	   $userID = $this->session->userdata('loginuserID');
 	   if($this->session->userdata('usertypeID') == 1 && $this->session->userdata('roleID') == 1){
 		$this->data['airlinelist'] = $this->airline_m->getAirlinesData();

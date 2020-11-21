@@ -74,7 +74,6 @@ class Contract_m extends MY_Model {
 	public function update_contract_product($id,$data){
 		$this->db->where('contract_productID',$id);
 		$this->db->update('VX_contract_products',$data);
-		//print_r($this->db->last_query()); exit;
 		return true;
 	}
 

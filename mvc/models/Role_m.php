@@ -55,11 +55,13 @@ class role_m extends MY_Model {
 		} else {
 			if($usertypeID && !$showUserType){
 				$this->db->where("((r.usertypeID = $usertypeID AND carrier_id = 0)  OR  r.carrier_id = $carrier_id)");
-			} elseif ($usertypeID){
+			} elseif ($usertypeID && $usertypeID != 1){
 				$this->db->where("(r.usertypeID = $usertypeID)");
 			}
 		}
 		$query = $this->db->get();
+ //            echo $this->db->last_query(); exit;
+
 		return $query->result();
 	}
 }
