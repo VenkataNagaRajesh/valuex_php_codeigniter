@@ -154,6 +154,7 @@
                     <input type="hidden" class="form-control" id="bclr_id" name="bclr_id"   value="" >
 					<div class="col-md-4 col-sm-3">
 						<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savebclr();">Add BCLR</a>
+						<a href="#" type="button"  id='check_rafeed_match' class="btn btn-danger" onclick="matchRafeed();">CHECK RAFEED MATCH</a>
 						<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
 					</div>                     
                 </div>                				
@@ -792,6 +793,43 @@ function savebclr() {
     });
 }
 
+function matchRafeed(bclr_id = 0) {
+
+  if ( bclr_id ) {
+   var formdata = '"bclr_id":"' + bclr_id + '"'; 
+  } else {
+   var formdata = $('#bclr_add_form').serialize();
+  }
+    $.ajax({
+          async: false,
+          type: 'POST',
+          url: "<?=base_url('bclr/checkRABGFeedMatchForBclrID')?>", 
+          data: formdata,                   
+          dataType: "html",
+          success: function(data) {
+                    var bclrinfo = jQuery.parseJSON(data);
+                    var status = bclrinfo['status'];
+			newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
+                    if (status.includes('success')) {
+                        alert(status);
+		        form_reset();
+                        $("#bclrtable").dataTable().fnDestroy();
+                        loaddatatable();
+                    } else if (status == 'duplicate'){
+			alert('Duplicate Entry');
+		    } else {                                
+                        alert($(status).text());
+                        $.each(bclrinfo['errors'], function(key, value) {
+                            if(value != ''){                                         
+                            $('#' + key).parent().addClass('has-error'); 
+                            } else {
+                                $('#' + key).parent().removeClass('has-error');   
+                            }                                              
+                        });                             
+                    }
+          }
+    });
+}
 
 function editbclr(bclr_id) {
 
