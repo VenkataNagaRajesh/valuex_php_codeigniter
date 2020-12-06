@@ -1372,6 +1372,18 @@ class Bclr extends Admin_Controller
 	$origin_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($arrBclrData->origin_content, $arrBclrData->origin_level);
 	$dest_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($arrBclrData->dest_content, $arrBclrData->dest_level);
 
+	$dep_start_date = $arrBclrData->effective_date + $dep_time_start;
+	$dep_end_date = $arrBclrData->discontinue_date + $dep_time_end;
+	$oneyearsecs = 366*24*60*60;
+	$start_date = $dep_start_date - $oneyearsecs;
+	$end_date = $dep_end_date - $oneyearsecs;
+	
+
+/*
+	echo "CUR-DEP-DATE=" .  date("Y-m-d H:i:s" ,$dep_start_date);
+	echo "<br>CUR-END-DATE=" .  date("Y-m-d H:i:s" ,$dep_end_date);
+	$start_date = date("Y-m-d H:i:s" ,$dep_start_date - $oneyearsecs);
+	$end_date = date("Y-m-d H:i:s" ,$dep_end_date - $oneyearsecs);
         $start_date_m = date("m-d", $arrBclrData->effective_date);
         $get_previous_year = date("Y", $arrBclrData->effective_date);
         $start_date = ($get_previous_year -1) . "-". $start_date_m; // 2019-01-05
@@ -1388,6 +1400,7 @@ class Bclr extends Admin_Controller
         if ( $dep_time_end ) {
             $end_date .= " ".  gmdate('H:i:s', $dep_time_end);
         }
+*/
         
             $sQuery = '';
 
@@ -1457,15 +1470,17 @@ class Bclr extends Admin_Controller
  	}
 
         if ( $start_date && $end_date ) {
-            $sQuery .= " AND  departure_date BETWEEN UNIX_TIMESTAMP('$start_date') and UNIX_TIMESTAMP('$end_date')  ";
+            #$sQuery .= " AND  departure_date BETWEEN UNIX_TIMESTAMP('$start_date') and UNIX_TIMESTAMP('$end_date')  ";
+            $sQuery .= " AND  departure_date BETWEEN $start_date and $end_date  ";
         } else if ( $start_date ) {
-            $sQuery .= " AND  departure_date > UNIX_TIMESTAMP('$start_date') ";
+            #$sQuery .= " AND  departure_date > UNIX_TIMESTAMP('$start_date') ";
+            $sQuery .= " AND  departure_date > $start_date) ";
         }
 
         if ( $matchCheck && ($start_date || $end_date)  ) {
                $mQuery = $sQuery . " GROUP BY  departure_date, flight_number ) as ftable  ";
-       	  echo "<br>PREVIOUS MATCH + FLIGHT DEPARTURE DATE RANGE  ($start_date -  $end_date )   Matched Records = " . $this->install_m->run_query($mQuery)[0]->total_flight_count;
- 	}
+       	  echo "<br>PREVIOUS MATCH + FLIGHT DEPARTURE DATE RANGE  (" . date("m-d-Y H:i",$start_date) . " - " .   date("m-d-Y H:i",$end_date). " )   Matched Records = " . $this->install_m->run_query($mQuery)[0]->total_flight_count;
+	}
 
         if ( $cabin ) {
             if (is_array($cabin)) {
@@ -1497,7 +1512,7 @@ class Bclr extends Admin_Controller
 	if ( $total_flight_count ) {
                 $sQuery .= " GROUP BY  departure_date, flight_number ) as ftable  ";
 	}
-       #echo "<br>$sQuery ";
+       echo "<br>$sQuery ";
        $matched = $this->install_m->run_query($sQuery)[0];
         if ( $matchCheck ) {
        	  echo "<br>TOTAL Matched Records = " . $matched->total_flight_count;
