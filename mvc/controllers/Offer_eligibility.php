@@ -845,8 +845,8 @@ $sWhere $sOrder $sLimit";
 		$max_capacity = $bclr->max_capacity;
 		$cabin = $bclr->from_cabin;
 		$frequency = $bclr->frequency;
-		$dep_time_start = $bclr->dep_time_start;
-		$dep_time_end = $bclr->dep_time_end;
+		$dept_time_start = $bclr->dept_time_start;
+		$dept_time_end = $bclr->dept_time_end;
 		$flight_number = $bclr->flight_num_range;
 		$flight_num_range = explode("-", $flight_number);
 		$start_flight_range = $flight_num_range[0];
@@ -869,8 +869,12 @@ $sWhere $sOrder $sLimit";
 		echo "<br><br>MATCHSTART ==========================================================================================";
 		echo "<pre>SINGLE PAX  = " . print_r($pax,1). "</pre>";
 		echo "<pre>SINGLE BCLR  = " . print_r($bclr,1). "</pre>";
-	echo "<br>DEPART MATCH=" . date("d M Y H:i:s", $pax->dep_date+$pax->dep_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dep_time_start)) ."  , " . date("d M Y H:i:s",$pax->dep_date+$pax->dep_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dep_time_end);
-	echo "<br>ARRIVA MATCH=" . date("d M Y H:i:s", $pax->arrival_date+$pax->arrival_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dep_time_start)) ."  , " . date("d M Y H:i:s",$pax->arrival_date+$pax->arrival_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dep_time_end);
+		echo "<br>PAX=" .  $pax->dep_date . " + " . $pax->dept_time;
+		echo "<br>PAXT=" .  $pax->dep_date + $pax->dept_time;
+		echo "<br>BCLR=" . $bclr->effective_date . " + " . $bclr->dept_time_start;
+		echo "<br>BCLRT=" . $bclr->effective_date  +  $bclr->dept_time_start;
+	echo "<br>DEPART MATCH=" . date("d M Y H:i:s", $pax->dep_date + $pax->dept_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dept_time_start)) ."  , " . date("d M Y H:i:s",$pax->dep_date+$pax->dept_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dept_time_end);
+	echo "<br>ARRIVA MATCH=" . date("d M Y H:i:s", $pax->arrival_date+$pax->arrival_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dept_time_start)) ."  , " . date("d M Y H:i:s",$pax->arrival_date+$pax->arrival_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dept_time_end);
 		echo "<br>ORGIN LIST=" .implode(',',$origin_list_p);
 		echo "<br>DEST LIST=" .implode(',',$dest_list_p);
 		echo "<br>MATCHEND +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
@@ -920,8 +924,8 @@ $sWhere $sOrder $sLimit";
 				$matched++;
 		}
 		
-		if( $bclr->effective_date + $bclr->dep_time_start > 0 ) {
-			if ( $pax->dep_date + $pax->dep_time >= ($bclr->effective_date + $bclr->dep_time_start)   && ($pax->dep_date + $pax->dep_time) <= ($bclr->discontinue_date + $bclr->dep_time_end))  {
+		if( $bclr->effective_date + $bclr->dept_time_start > 0 ) {
+			if ( $pax->dep_date + $pax->dept_time >= ($bclr->effective_date + $bclr->dept_time_start)   && ($pax->dep_date + $pax->dept_time) <= ($bclr->discontinue_date + $bclr->dept_time_end))  {
 				$matched++ ;
 				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED DEPARTURE DATE RANGE  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
 			} else {
@@ -932,8 +936,8 @@ $sWhere $sOrder $sLimit";
 				$matched++;
 		}
 		
-		if( $bclr->effective_date + $bclr->dep_time_start > 0 ) {
-			if ( $pax->arrival_date + $pax->arrival_time >= ($bclr->effective_date + $bclr->dep_time_start)   && ($pax->arrival_date + $pax->arrival_time) <= ($bclr->discontinue_date + $bclr->dep_time_end)) {
+		if( $bclr->effective_date + $bclr->dept_time_start > 0 ) {
+			if ( $pax->arrival_date + $pax->arrival_time >= ($bclr->effective_date + $bclr->dept_time_start)   && ($pax->arrival_date + $pax->arrival_time) <= ($bclr->discontinue_date + $bclr->dept_time_end)) {
 				$matched++ ;
 				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED ARRIVAL DATE RANGE  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
 			} else {
@@ -1027,7 +1031,7 @@ $sWhere $sOrder $sLimit";
 		$array['flight_number'] = $feed->flight_number;
 		$array['dep_date'] = $feed->dep_date;
 		$array['carrier'] = $feed->carrier_code;
-		//$array['dep_time'] = $feed->dep_time;*/
+		//$array['dept_time'] = $feed->dept_time;*/
 		//$rules = $this->eligibility_exclusion_m->apply_exclusion_rules($array);
 			
 			$upgrade = array();
