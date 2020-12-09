@@ -180,7 +180,7 @@ class Bclr_m extends MY_Model {
 
         function get_bclr_by_all_carriers($carriers= Array())
         {
-		$query = " SELECT * FROM BG_baggage_control_rule  WHERE carrierID IN (" . implode(",", $carriers) . " )ORDER BY carrierID ";
+		$query = " SELECT * FROM BG_baggage_control_rule  WHERE carrierID IN (" . implode(",", $carriers) . " ) AND active = 1 ORDER BY carrierID ";
 		$result = $this->install_m->run_query($query);
 		$bcresult = Array();
 		foreach($result as $bclr){
