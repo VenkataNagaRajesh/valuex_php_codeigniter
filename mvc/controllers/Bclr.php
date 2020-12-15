@@ -1146,7 +1146,6 @@ class Bclr extends Admin_Controller
         $id = htmlentities(escapeString($this->uri->segment(3)));
         if ($_POST) {
             $bclr_id = $this->input->post("bclr_id");
-            $rules = $this->rules();
 
                 $array['carrierID'] = $this->input->post('carrierID');
                 #$array['from_cabin'] = implode(',', $this->input->post('from_cabin'));
@@ -1186,7 +1185,7 @@ class Bclr extends Admin_Controller
                         return array_search($x, $freq);
                     }, $arr));
                 }
-        	$objCWTData = $this->getCWTHistorialData($array,0,1);
+        	$objCWTData = $this->getCWTHistorialData((object)$array,0,1);
 	} elseif ($id) {
 
         	$bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));
@@ -1432,14 +1431,12 @@ class Bclr extends Admin_Controller
         if ( $nCarrerID ) {
             $sQuery .= " AND carrier = " . $nCarrerID . " ";
         }
-       echo "<br>$sQuery ";
 
         if ( $matchCheck) {
        	  echo "<br>BAGGAGE RAFEED RECORDS MATCHING RESULTS ..";
  	}
 
         if ( $matchCheck && $nCarrerID ) {
-               #$mQuery = $sQuery . " GROUP BY  departure_date, flight_number ) as ftable  ";
        	  echo "<br>Carrier ($nCarrerID) Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
  	}
 
@@ -1451,7 +1448,6 @@ class Bclr extends Admin_Controller
             }
         }
         if ( $matchCheck && $origin_list_p && $dest_list_p  ) {
-               #$mQuery = $sQuery . " GROUP BY  departure_date, flight_number ) as ftable  ";
        	  echo "<br>PREVIOUS MATCH + ORIGIN LIST (" .  (is_array($origin_list_p) ? implode(',',$origin_list_p) : $origin_list_p) .") Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
  	}
 
@@ -1465,7 +1461,6 @@ class Bclr extends Admin_Controller
         }
 
         if ( $matchCheck && $origin_list_p && $dest_list_p  ) {
-               #$mQuery = $sQuery . " GROUP BY  departure_date, flight_number ) as ftable  ";
        	  echo "<br>PREVIOUS MATCH + ORIGIN LIST (" .   (is_array($origin_list_p) ? implode(',',$origin_list_p) : $origin_list_p) .") AND DESTINATION  (" .  (is_array($dest_list_p) ? implode(',',$dest_list_p): $dest_list_p) .") Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
  	}
 
@@ -1476,20 +1471,16 @@ class Bclr extends Admin_Controller
         }
 
         if ( $matchCheck && ($start_flight_range || $end_flight_range)  ) {
-               #$mQuery = $sQuery . " GROUP BY  departure_date, flight_number ) as ftable  ";
        	  echo "<br>PREVIOUS MATCH + FLIGHT RANGE  ($start_flight_range and $end_flight_range)   Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
  	}
 
         if ( $start_date && $end_date ) {
-            #$sQuery .= " AND  departure_date BETWEEN UNIX_TIMESTAMP('$start_date') and UNIX_TIMESTAMP('$end_date')  ";
             $sQuery .= " AND  departure_date BETWEEN $start_date and $end_date  ";
         } else if ( $start_date ) {
-            #$sQuery .= " AND  departure_date > UNIX_TIMESTAMP('$start_date') ";
             $sQuery .= " AND  departure_date > $start_date) ";
         }
 
         if ( $matchCheck && ($start_date || $end_date)  ) {
-               #$mQuery = $sQuery . " GROUP BY  departure_date, flight_number ) as ftable  ";
        	  echo "<br>PREVIOUS MATCH + FLIGHT DEPARTURE DATE RANGE  (" . date("m-d-Y H:i",$start_date) . " - " .   date("m-d-Y H:i",$end_date). " )   Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
 	}
 
@@ -1504,7 +1495,6 @@ class Bclr extends Admin_Controller
         }
 
         if ( $matchCheck && ($cabin)  ) {
-               #$mQuery = $sQuery . " GROUP BY  departure_date, flight_number ) as ftable  ";
        	  echo "<br>PREVIOUS MATCH + FLIGHT CABIN  (" . (is_array($cabin) ? implode(',',$cabin): $cabin) . ") Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
  	}
 
@@ -1517,19 +1507,19 @@ class Bclr extends Admin_Controller
         }
 
         if ( $matchCheck && ($frequency)  ) {
-               #$mQuery = $sQuery . " GROUP BY  departure_date, flight_number ) as ftable  ";
        	  echo "<br>PREVIOUS MATCH + FLIGHT FREQUENCY  (" . (is_array($frequency) ? implode(',',$frequency): $frequency) . ") Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
  	}
 	if ( $total_flight_count ) {
                 $sQuery .= " GROUP BY  departure_date, flight_number ) as ftable  ";
 	}
-       echo "<br>$sQuery ";
+       #echo "<br>$sQuery ";
        $matched = $this->install_m->run_query($sQuery)[0];
         if ( $matchCheck ) {
        	  echo "<br>TOTAL Matched Records = " . $matched->total_flight_count;
  	}
        return $matched ;
     }
+
     /* Prathyusha commented not required
     function dragchart(){
 		$this->data["subview"] = "bclr/editcwtgraph";

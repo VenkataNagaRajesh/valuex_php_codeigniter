@@ -778,6 +778,10 @@ function savebclr() {
 			newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
                     if (status.includes('success')) {
                         alert(status);
+			    var isHidden = $( "#bclrAdd" ).is( ":hidden" );
+			    if( isHidden == false ) {
+				    $( "#bclr_add_btn" ).trigger( "click" );
+			    }       
 		        form_reset();
                         $("#bclrtable").dataTable().fnDestroy();
                         loaddatatable();
@@ -799,11 +803,7 @@ function savebclr() {
 
 function matchRafeed(bclr_id = 0) {
 
-  if ( bclr_id ) {
-   var formdata = '"bclr_id":"' + bclr_id + '"'; 
-  } else {
    var formdata = $('#bclr_add_form').serialize();
-  }
     $.ajax({
           async: false,
           type: 'POST',
@@ -811,16 +811,12 @@ function matchRafeed(bclr_id = 0) {
           data: formdata,                   
           dataType: "html",
           success: function(data) {
+			alert(data);
                     var bclrinfo = jQuery.parseJSON(data);
                     var status = bclrinfo['status'];
 			newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
                     if (status.includes('success')) {
                         alert(status);
-		        form_reset();
-                        $("#bclrtable").dataTable().fnDestroy();
-                        loaddatatable();
-                    } else if (status == 'duplicate'){
-			alert('Duplicate Entry');
 		    } else {                                
                         alert($(status).text());
                         $.each(bclrinfo['errors'], function(key, value) {
