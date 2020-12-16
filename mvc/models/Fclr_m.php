@@ -112,7 +112,7 @@ function Stand_Deviation($arr)
 		 $this->db->where('fc.active','1');
 		
                 $query = $this->db->get();
-		//print_r($this->db->last_query());
+//		print_r($this->db->last_query());
                 $result = $query->result();
 		return $result;
 	}

@@ -196,11 +196,8 @@
 			<th class="col-lg-1">Operating Carrier</th>
             <th class="col-lg-1">Marketing Carrier</th>
 			
-			
-		 <th class="col-lg-1 noExport" style="display:none;"><?=$this->lang->line('active')?></th>
-
 	<?php if(permissionChecker('paxfeed_delete')){?>
-                                <th class="col-lg-1 noExport" style="display:none;"><?=$this->lang->line('action')?></th>
+                                <th class="col-lg-1 noExport" ><?=$this->lang->line('action')?></th>
 						<?php }?>
                     </tr>
                  </thead>
@@ -233,8 +230,8 @@
 				   {"name": "end_date","value": $("#end_date").val()},
 				   {"name": "frequency","value": $("#frequency").val()},
 				   {"name": "pf_id","value": $("#pf_id").val()},
-                   {"name": "carrierCode","value": $("#carrier_code").val()},
-                   ) //pushing custom parameters
+				   {"name": "carrierCode","value": $("#carrier_code").val()},
+				   ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
                     "type": "GET",
@@ -283,7 +280,8 @@
 					{"data": "is_fclr_processed"},
                                     {"data": "fclr_data" },
                                     {"data": "operating_carrier" },
-                                    {"data": "marketing_carrier" }
+                                    {"data": "marketing_carrier" },
+				  {"data": "action"}
                                    
 				/*{"data": "active"},
 				  {"data": "action"}*/

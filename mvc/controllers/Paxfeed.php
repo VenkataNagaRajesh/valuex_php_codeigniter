@@ -826,6 +826,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','mark
 
 		  if(permissionChecker('paxfeed_delete')){
 		   $feed->action .= btn_delete('paxfeed/delete/'.$feed->dtpf_id, $this->lang->line('delete'));			 
+                   $feed->action .=  '<a target="_blank" href="' . base_url('paxfeed/process_fclr_matching_report/' . $feed->dtpf_id) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="CHECK FCLR MATCH"><i class="fa fa-check"></i></a>';
 		  }
 			$status = $feed->active;
 			$feed->active = "<div class='onoffswitch-small' id='".$feed->dtpf_id."'>";
@@ -907,14 +908,28 @@ if(!empty($data_id_array)) {
 }
 }
 
-public function process_fclr_matching_report() {
+	public function process_fclr_matching_report() {
+		$paxfeed_id = htmlentities(escapeString($this->uri->segment(3)));
 
-				$sQuery = " SELECT * FROM VX_daily_tkt_pax_feed pf where fclr_data = 0 order by dtpf_id";
+		$sQuery = " SELECT * FROM VX_daily_tkt_pax_feed pf where fclr_data = 0 ";
+		if ( $paxfeed_id ) {
+			$sQuery .= " AND dtpf_id = $paxfeed_id";
+		}
+		$sQuery .= " order by dtpf_id";
 				
                 $rResult = $this->install_m->run_query($sQuery);
 
+		if ( $paxfeed_id ) {
+			echo "<br>PAXFEED ID  = " . $paxfeed_id;
+			if ( $rResult ) {
+				echo "<br>PROCESSNIG PAX FEED ";
+			} else {
+				echo "<br>SEEMS FCLR MATCHED ALREADY, NOTHING TO PROCESS..";
+			}
+		}
+
 		foreach ($rResult as $feed ) {
-			 $this->paxfeed_m->update_paxfeed(array('is_fclr_processed' => '1'), $feed->dtpf_id);
+			$this->paxfeed_m->update_paxfeed(array('is_fclr_processed' => '1'), $feed->dtpf_id);
 			$upgrade = array();
                         $upgrade['boarding_point'] = $feed->from_city;
                         $upgrade['off_point'] = $feed->to_city;
@@ -925,32 +940,57 @@ public function process_fclr_matching_report() {
                         $day = ($day_of_week)?$day_of_week:7;
 
                         $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
+			
                         $upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
 
+			if ( $paxfeed_id ) {
+				if ($upgrade['season_id'] ) {
+					echo "<br>MATCHED SEASONID FOR GIVEN PAX FEED  = " . $upgrade['season_id'];
+				} else {
+					echo "<br>SEASON NOT MATCHED FOR GIVEN PAX ID";
+				}
+			}
 
-                         $upgrade['from_cabin'] = $feed->cabin;
+
+                        $upgrade['from_cabin'] = $feed->cabin;
                         $data = array();
                         if($upgrade['season_id'] > 0) {
+				if ( $paxfeed_id) {
+					echo "<br>CHECKING WITH SEASON ID = " .  $paxfeed_id;
+				}
                                 $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
                         }
-			
+			if ( $paxfeed_id  && $data) {
+				echo "<br>MATCHED CABIN DATA FOR SEASON = " . print_r($data,1);
+			}
+
 			 if((count($data) == 0 && $upgrade['season_id'] > 0) || $upgrade['season_id'] == 0) {
+				if ( $paxfeed_id) {
+					echo "<br>CHECKING WITH FREQUENCY = " .  $p_freq; 
+				}
                                 $upgrade['season_id'] = 0;
-                                 $upgrade['frequency'] = $p_freq;
+                                $upgrade['frequency'] = $p_freq;
                                 $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+				if ( $paxfeed_id ) {
+					if (  $data) {
+						echo "<br>MATCHED CABIN DATA WITH FREQUENCY = " . print_r($data,1);
+					} else {
+						echo "<br>CABIN DATA NOT MATCHED WITH FREQUENCY";
+					}
+				}
 
                           }
 
 			if(count($data) > 0 ) {
 				$fclr_data = implode(',',array_column($data,'fclr_id'));
 				$this->paxfeed_m->update_paxfeed(array('fclr_data' => $fclr_data), $feed->dtpf_id);
+				if ( $paxfeed_id ) {
+					echo "<br>UPDATAING  PAX MATCH STATUS  " . $fclr_data;
+				}
 			}
-
-
 		}
-
-	#redirect(base_url("paxfeed/index"));	
+		if ( !$paxfeed_id ) {
+			redirect(base_url("paxfeed/index"));	
+		}
+	}
 }
-
-}
-
