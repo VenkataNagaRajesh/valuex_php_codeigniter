@@ -369,6 +369,8 @@ echo "MISED,$cDocumentType";
 											$this->mydebug->rafeed_log("Document type missed in file - ". $column, 0);
 											break;
 										}
+										$this->mydebug->rafeed_log("ROW=".print_r($Row,1), 0);
+										$this->mydebug->rafeed_log("Doctument Type records.. ". $cDocumentType, 0);
 										switch (strtolower($cDocumentType)) {
 											case 'd': // baggage rafeed
 												$strRedirector = "baggage";
@@ -512,6 +514,8 @@ echo "MISED,$cDocumentType";
 											$this->mydebug->rafeed_log("Document type missed in file - ". $column, 0);
 											break;
 										}
+										$this->mydebug->rafeed_log("ROW=".print_r($Row,1), 0);
+										$this->mydebug->rafeed_log("Doctument Type records.. ". $cDocumentType, 0);
 										switch (strtolower($cDocumentType)) {
 											case 'd': // baggage rafeed
 												$strRedirector = "baggage";
@@ -961,7 +965,7 @@ echo "MISED,$cDocumentType";
 		}
 
 		$date_key = array_search('flight date', $import_header);
-		$arrBaggageRaFeed['departure_date'] =  strtotime(str_replace('/','-',$Row[$date_key]));
+		$rafeed['departure_date'] =  strtotime(str_replace('/','-',$Row[$date_key]));
 /*
 		$dt = explode("-",str_replace('/', '-', $Row[array_search('flight date', $import_header)]));
 		$rafeed['departure_date'] = date("Y-m-d", mktime(0, 0, 0, $dt[0], $dt[1], $dt[2]));
@@ -1064,7 +1068,7 @@ echo "MISED,$cDocumentType";
 				return;
 			}
 		} else {
-			$this->mydebug->rafeed_log("Duplicate Entry", 1);
+			$this->mydebug->rafeed_log("UPGRADE - Duplicate Entry", 1);
 			return;
 		}
 	}
