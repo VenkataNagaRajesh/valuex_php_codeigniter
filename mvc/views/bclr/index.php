@@ -811,23 +811,9 @@ function matchRafeed(bclr_id = 0) {
           data: formdata,                   
           dataType: "html",
           success: function(data) {
-			alert(data);
-                    var bclrinfo = jQuery.parseJSON(data);
-                    var status = bclrinfo['status'];
-			newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
-                    if (status.includes('success')) {
-                        alert(status);
-		    } else {                                
-                        alert($(status).text());
-                        $.each(bclrinfo['errors'], function(key, value) {
-                            if(value != ''){                                         
-                            $('#' + key).parent().addClass('has-error'); 
-                            } else {
-                                $('#' + key).parent().removeClass('has-error');   
-                            }                                              
-                        });                             
+			newstatus = data.replace(/\s?(<br\s?\/?>)\s?/g, "\r\n");
+                        alert(newstatus);
                     }
-          }
     });
 }
 

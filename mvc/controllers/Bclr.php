@@ -1185,11 +1185,17 @@ class Bclr extends Admin_Controller
                         return array_search($x, $freq);
                     }, $arr));
                 }
+		ob_start();
         	$objCWTData = $this->getCWTHistorialData((object)$array,0,1);
+		$msg2 = ob_get_contents();
+		ob_end_clean ();
 	} elseif ($id) {
 
         	$bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));
+		ob_start();
         	$objCWTData = $this->getCWTHistorialData($bclr,0,1);
+		$msg2 = ob_get_contents();
+		ob_end_clean ();
 	}
 	if ( is_object($objCWTData )) {
 		$no_of_passengers = $objCWTData->no_of_passingers;
@@ -1197,10 +1203,10 @@ class Bclr extends Admin_Controller
 			$msg  = "Warning!, No data matched with selected BC Rules#$id in Baggage RA Feed";
 		}
 	}
-	if ($msg ) {
-		$json['status'] = "success : $msg";
+	if ($msg || $msg2 ) {
+		$json['status'] = "success : $msg<br>$msg2";
 	} else {
-		$json['status'] = 'success';
+		$json['status'] = "success<br>$msg2";
 	}
 	if ( $_POST ) {
 		$this->output->set_content_type('application/json');
