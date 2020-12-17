@@ -16,10 +16,10 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-	<div class="col-sm-12">
+		<div class="nav-tabs-custom" style="display:flex;margin-bottom:0;">
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
-		<div class="col-sm-12">
+		<div class="col-md-12">
                            <div class="col-sm-2">
                <?php 
 			$marketzones['0'] = ' Origin Market';
@@ -58,7 +58,7 @@
                 </div>
 </div></div>
 <div class='form-group'>
-<div class='col-sm-12'>
+<div class='col-md-12'>
   <div class="col-sm-2">
                            <?php
 				$hrs['-1'] = ' Departure Start Hrs';
@@ -183,9 +183,8 @@
 
 
                          </form>
+						 </div>
 
-</div>
-<br> <br>
 				<div class="col-md-12">
 					<div id="hide-table">
                     <table id="ruleslist" class="table table-striped table-bordered table-hover dataTable no-footer">
@@ -328,7 +327,7 @@ $('#to_cabin').val('<?=$tocabin?>').trigger('change');
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', orientation: 'landscape', pageSize: 'LEGAL',exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('acsr/server_processing'); ?>?page=all&&export=1",

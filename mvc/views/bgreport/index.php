@@ -1,5 +1,10 @@
 <div class="off-elg">
-	<h2 class="title-tool-bar">Baggage Report</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:100%;"><i class="fa icon-template"></i> Baggage Report
+		<ol class="breadcrumb pull-right">
+            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
+            <li class="active">Baggage Report</li>
+        </ol>
+	</h2>
 	<div class="col-md-12 off-elg-filter-box">
 	   <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
 	     <div class="form-group"><br>	   		
@@ -48,13 +53,13 @@
 			<?php $types = array("1" => "Departure Report","2" =>"Sales Report"); 			   				
 			   echo form_dropdown("filter_type", $types,set_value("filter_type",$type), "id='filter_type' class='form-control hide-dropdown-icon select2'"); ?>	 
 			</div>	
-			<div class="col-md-2 pull-right">
+			<div class="col-md-2 pull-right"><br>
 				<button type="submit" class="form-control btn btn-danger">Report</button>				
 			</div>
 		  </div>
 	   </form>
 	</div>
-<div class="col-md-12 report-box">
+<div class="col-md-12 report-box" style="padding:0 15px;">
 	<?php if(count($current_report) > 0 || count($report) > 0){ ?><div style="color:#f26522"><h3><strong><bold>Baggage <?=$types[$type]?> for carrier <?=$list[$airlineID]?> from &nbsp;<?php echo $this->data['from_date']; ?>&nbsp; to &nbsp;<?php echo $this->data['to_date']; ?></bold></strong></h3></div>
 	<?php } ?>
 	 <div class="row">		
@@ -122,7 +127,7 @@
 		</div>
 		</div>
 	  <?php } else { ?>
-		  <div style="height:500px;" class="col-md-12"> <h3 style="text-align: center;">No Report Data</h3></div>
+		  <div style="height:500px;padding:0 15px;" class="col-md-12"> <h3 style="text-align: center;">No Report Data</h3></div>
 	 <?php } ?>	
 	 </div>
 	<form id="reportform" action="<?=base_url('offer_table')?>" style="display:none;" method="post" target='_blank'>

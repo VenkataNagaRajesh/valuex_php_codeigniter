@@ -20,7 +20,8 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-md-12">
+			<div class="nav-tabs-custom">
 			<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 
 			   <div class="col-sm-2">			   
@@ -31,10 +32,11 @@
 				   echo form_dropdown("filter_airline", $list,set_value("filter_airline",$filter_airline), "id='filter_airline' class='form-control select2'");    ?>
                 </div>                 	    
                 <div class="col-sm-2">
-                  <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter" data-toggle="tooltip" data-title="Filter"><i class="fa fa-filter"></i></button>
                 </div>	             				
 			  </div>
 			 </form>
+			 </div>
 				<div id="hide-table">
                     <table id="mailtemplate" class="table table-striped table-bordered table-hover dataTable no-footer">
                         <thead>

@@ -4,6 +4,7 @@
 $lang['panel_title'] = "BCLR";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
+$lang['menu_bclr'] = "Baggage Control Rule";
 $lang['active'] = 'Status';
 $lang['bclr_status'] = 'Status';
 $lang['carrier'] = 'Carrier';

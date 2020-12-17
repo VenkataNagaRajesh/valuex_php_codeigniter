@@ -20,19 +20,14 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">			
-			  <div class="nav-tabs-custom">
-               <ul class="nav nav-tabs">
+            <div class="col-md-12">			
+			  <div class="nav-tabs-custom" style="display:flex;margin-bottom:0;">
+               <!--<ul class="nav nav-tabs">
                   <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
-               </ul>
-
-	<br/> 
-
-
-                    
-<div class="col-md-12">
-       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
-                      <div class='form-group'>
+               </ul>-->                
+	<div class="col-md-12">
+       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 15px;">
+                      <div class='form-group' style="display:flex;align-items:center;">
                            <div class="col-sm-2">
                <?php 
 
@@ -69,7 +64,7 @@
                          </form>
 
 		</div>
-
+ </div>
                 <div class="col-md-12">
                         <div class="tab-content table-responsive" id="hide-table">
                                 <table id="cabindeftable" class="table table-bordered dataTable no-footer">
@@ -97,8 +92,7 @@
                                 </table>
                          </div>
                  </div>
-
-            </div>
+         
 		  </div>
         </div>
     </div>
@@ -173,7 +167,7 @@
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export'} },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },{ text: 'ExportAll', exportOptions: { columns: ':visible' },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },{ text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('airline_cabin_def/server_processing'); ?>?page=all&&export=1",

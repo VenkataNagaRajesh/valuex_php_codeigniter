@@ -1,11 +1,11 @@
 
 <div class="box">
     <div class="box-header" style="width:100%;">
-        <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
+        <h3 class="box-title"><i class="fa fa-star"></i> <?=$this->lang->line('panel_title')?></h3>
 
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li class="active"><?=$this->lang->line('menu_usertype')?></li>
+            <li class="active">FeedBack</li>
         </ol>
     </div><!-- /.box-header -->
 	
@@ -18,7 +18,7 @@
 			<div class="col-md-12">
 				<h5 class="page-header"><p>Average Rating : <?=round($avg_rating)?></p></h5>
 			</div>
-            <div class="col-sm-12">
+            <div class="col-md-12">
                 <div id="hide-table">
                     <table id="feedbacktab" class="table table-striped table-bordered table-hover dataTable no-footer">
                         <thead>
@@ -63,7 +63,7 @@
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('feedback/server_processing'); ?>?page=all&&export=1",

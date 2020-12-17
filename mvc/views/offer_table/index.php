@@ -1,8 +1,13 @@
 <div class="off-elg">
-	<h2 class="title-tool-bar">Bid Details</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:100%;"><i class="fa icon-template"></i> Bid Details
+		<ol class="breadcrumb pull-right">
+            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
+            <li class="active"><?=$this->lang->line('menu_bid')?></li>
+        </ol>
+	</h2>
 	<div class="col-md-12 off-elg-filter-box">
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">	
-			<div class="form-group"><br><br>
+			<div class="form-group"><br>
 
 
                                    <div class="col-md-2 select-form">
@@ -108,9 +113,9 @@
 
 
 			
-				 <div class="col-md-12">
+				 <div class="col-md-12" style="padding:0 15px;">
                                        <button type="submit" class="btn btn-danger pull-right" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
-                                       <button type="button" class="btn btn-danger pull-right" onclick="downloadBidData()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
+                                       <button type="button" style="margin-right: 15px;" class="btn btn-danger pull-right" onclick="downloadBidData()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
 
 				</div>
 			</div>
@@ -305,7 +310,7 @@ $("#dep_from_date").datepicker({
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'pdf', orientation: 'landscape', pageSize: 'LEGAL',exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } } ,
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('offer_table/server_processing'); ?>?page=all&&export=1",

@@ -21,15 +21,14 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">			
+            <div class="col-md-12" style="padding:0;">			
 			  <div class="nav-tabs-custom">
-               <ul class="nav nav-tabs">
+               <!--<ul class="nav nav-tabs">
                   <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
-               </ul>
-
-	<br/>    
+               </ul>-->
+   
 <div class="col-md-12">	
-       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 15px;">
                       <div class='form-group'>
                            <div class="col-sm-3 col-md-2">
                <?php $airlinelist['0'] = " Carriers";
@@ -68,8 +67,8 @@
                           </div>
                          </form>
 		</div>
-		
-		<div class="col-md-12">
+		 </div>
+		<div class="col-md-12" style="padding:0;">
 	       <div class="tab-content">
                 <div id="all" class="tab-pane active">
                   <div id="hide-table">
@@ -101,7 +100,6 @@
                 </div>
               </div>
             </div>
-		  </div>
         </div>
     </div>
 </div>
@@ -200,7 +198,7 @@ $('#airline_cabin').val('<?=$cabinID?>').trigger('change');
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('airline_cabin_class/server_processing'); ?>?page=all&&export=1",

@@ -1,6 +1,6 @@
 
 <div class="box">
-    <div class="box-header">
+    <div class="box-header" style="width:96%;">
         <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
@@ -20,14 +20,11 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">			
+            <div class="col-md-12" style="padding:0;">			
 			  <div class="nav-tabs-custom">
-               <ul class="nav nav-tabs">
+               <!--<ul class="nav nav-tabs">
                   <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
-               </ul>
-
-	<br/> 
-
+               </ul>-->
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 10px;">
                       <div class='form-group'>
                            <div class="col-sm-2">
@@ -81,8 +78,8 @@
 				
                           </div>
                          </form>
-                         <br/> 
-                <div class="col-md-12" style="padding:0;"><br/> 
+   
+                <div class="col-md-12" style="padding:0;">
                         <div class="tab-content table-responsive" id="hide-table">
                                 <table id="cabintable" class="table table-bordered dataTable no-footer">
                                   <thead>
@@ -208,7 +205,7 @@ $('#airline_cabin').val('<?=$classID;?>').trigger('change');
 	            { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export'} },
-				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },{ text: 'ExportAll', exportOptions: { columns: ':visible' },
+				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)",orthogonal: 'export' } },{ text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('airline_cabin/server_processing'); ?>?page=all&&export=1",

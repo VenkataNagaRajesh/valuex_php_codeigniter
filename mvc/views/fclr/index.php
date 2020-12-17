@@ -1,6 +1,11 @@
 <div class="fclr-bar">
 <?php  if(permissionChecker('fclr_add')) {  ?>
- 	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Fare Control Range</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:95%;margin-right:8px;"><i class="fa fa-sun-o"></i> Fare Control Range
+		<ol class="breadcrumb pull-right">
+            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
+            <li class="active"><?=$this->lang->line('menu_fclr')?></li>
+        </ol>
+	</h2>
 	<p class="card-header" data-toggle="collapse" data-target="#fclrAdd"><button style="margin:1px 0;" type="button" class="btn btn-danger pull-right" data-placement="left" title="Add FCLR" data-toggle="tooltip" id='fclr_add_btn' ><i class="fa fa-plus"></i></button></p>
  <?php } ?>
 	<div class="col-md-12 fclr-table-add collapse" id="fclrAdd">
@@ -100,7 +105,7 @@
 		</form>
 	</div>
 	<div class="col-md-12 table-responsive">
-		<div class="auto-gen col-md-12" style="margin: 10px 0 20px;">
+		<div class="auto-gen col-md-6" style="margin: 10px 0 20px;">
 		<a href="<?php echo base_url('fclr/generatedata') ?>">
 			<i class="fa fa-upload"></i>
 			<?=$this->lang->line('generate_fclr')?>
@@ -417,7 +422,7 @@ function loaddatatable() {
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 
 				{ extend: 'pdf', orientation: 'landscape', pageSize: 'LEGAL',exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('fclr/server_processing'); ?>?page=all&&export=1",

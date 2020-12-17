@@ -10,13 +10,12 @@
     <!-- form start -->
   <div class="box-body">
     <div class="row">
-       <div class="col-sm-12" style="padding:0;">			
+       <div class="col-md-12" style="padding:0">			
 	     <div class="nav-tabs-custom">
-          <ul class="nav nav-tabs">
+          <!--<ul class="nav nav-tabs">
              <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
-          </ul>
-		<div class="col-md-12">
-		   <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+          </ul>-->
+		   <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 15px;">
 			  <div class='form-group'>
 				<div class="col-sm-3 col-md-2">
 				 <?php $slist = array("0" => "Season");               
@@ -46,31 +45,28 @@
 				</div>			
 			  </div>
 			</form>	
-		</div>
-		<div class="col-md-12">
-			<div class="tab-content">
-			  <div id="all" class="tab-pane active">
-				<div id="hide-table">
-				 <table id="satable" class="table table-striped table-bordered table-hover dataTable no-footer">
-				  <thead>
-				   <tr>
-					 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
-					 <th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>
-					 <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
-					 <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>
-					 <th class="col-lg-1"><?=$this->lang->line('country')?></th>				
-					 <th class="col-lg-1"><?=$this->lang->line('region')?></th>	
-					 <th class="col-lg-1"><?=$this->lang->line('area')?></th>	
-				   </tr>
-				  </thead>
-				   <tbody>
-				   </tbody>
-				  </table>
-				</div>
-			   </div>
-			 </div>
 		 </div>
-       </div>
+		<div class="tab-content">
+		 <div id="all" class="tab-pane active">
+			<div id="hide-table">
+			 <table id="satable" class="table table-striped table-bordered table-hover dataTable no-footer">
+			  <thead>
+			   <tr>
+				 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+				 <th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>
+				 <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
+				 <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>
+				 <th class="col-lg-1"><?=$this->lang->line('country')?></th>				
+				 <th class="col-lg-1"><?=$this->lang->line('region')?></th>	
+				 <th class="col-lg-1"><?=$this->lang->line('area')?></th>	
+			   </tr>
+			  </thead>
+			   <tbody>
+			   </tbody>
+			  </table>
+			</div>
+		  </div>
+		</div>   
 	  </div>
      </div>
     </div>
@@ -122,7 +118,7 @@
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('season_airport/server_processing'); ?>?page=all&&export=1",

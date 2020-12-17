@@ -11,14 +11,12 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">			
+            <div class="col-md-12" style="padding:0;">			
 			  <div class="nav-tabs-custom">
-               <ul class="nav nav-tabs">
+               <!--<ul class="nav nav-tabs">
                   <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
-               </ul>
-
-	<br/> <br/>
-       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+               </ul>-->
+       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 15px;">
                       <div class='form-group'>
                            <div class="col-sm-3 col-md-2">
                <?php $marketlist = array("0" => "Marketzone");
@@ -84,10 +82,8 @@
 				  <button type="button" class="btn btn-danger" onclick="downloadMarketAirport()" data-title="Download" data-toggle="tooltip" data-placement="top" style="padding: 6px 12px;"><i class="fa fa-download"></i></button>
                 </div>
                           </div>
-                         </form>
-
-		
-		
+             </form>
+			 </div>
 	       <div class="tab-content">
                 <div id="all" class="tab-pane active">
                   <div id="hide-table">
@@ -112,7 +108,6 @@
 				  </div>
                 </div>
               </div>
-            </div>
 		  </div>
         </div>
     </div>
@@ -169,7 +164,7 @@
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('market_airport/server_processing'); ?>?page=all&&export=1",

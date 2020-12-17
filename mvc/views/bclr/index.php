@@ -1,7 +1,11 @@
 <div class="fclr-bar">
 <?php  if(permissionChecker('bclr_add')) {  ?>
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;border-radius: 2px;
-    border:solid 1px #999;padding: 6px 5px;">Baggage Control Rule</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;"><i class="fa fa-sun-o"></i> Baggage Control Rule
+		<ol class="breadcrumb pull-right">
+            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
+            <li class="active"><?=$this->lang->line('menu_bclr')?></li>
+        </ol>
+	</h2>
 	<p class="card-header" data-toggle="collapse" data-target="#bclrAdd"><button style="margin:1px 0;" type="button" class="btn btn-danger pull-right" data-placement="left" title="Add BCLR" data-toggle="tooltip" id='bclr_add_btn' ><i class="fa fa-plus"></i></button></p>
  <?php } ?>
 	<div class="col-md-12 fclr-table-add collapse" id="bclrAdd">
@@ -161,7 +165,7 @@
 		</form>
 	</div>
 	<div class="col-md-12 table-responsive">
-		<div class="auto-gen col-md-12" style="margin: 10px 0 20px;">
+		<div class="auto-gen col-md-12" style="padding:0 15px;">
 		<a href="<?php echo base_url('bclr/generatedata') ?>">
 			<i class="fa fa-upload"></i>
 			<?=$this->lang->line('generate_bclr')?>
@@ -239,11 +243,7 @@
                         </div>
                         <div class="col-md-12">
                             <input type="number" class="form-control" name="flt_max_capacity" id="flt_max_capacity" placeholder="Max Capacity" value="<?=set_value('flt_max_capacity',$flt_max_capacity)?>" />                       
-                        </div>
-                        <div class="col-md-12">
-                            <select  name="flt_from_cabin[]"  id="flt_from_cabin" placeholder="From Cabin" class="form-control select2" multiple="multiple">
-                            </select>
-			</div>						
+                        </div>                     						
 		</div>
 		<div class="col-md-2 col-sm-3 select-form">
                         <div class="col-md-12">
@@ -256,12 +256,13 @@
                             ?>
                         </div>
                         <div class="col-md-12">
-                            <select  name="flt_origin_content[]"  id="flt_origin_content" placeholder="Origin Content" class="form-control select2" multiple="multiple">
+                            <select  name="flt_origin_content[]"  id="flt_origin_content" placeholder="Origin Content" class="form-control select2" multiple="multiple" style="margin-bottom:0;">
                             </select>                            
-                        </div>						
-                        <div class="col-md-12">
-                            <a href="#" type="button"  id='btn_txt' class="btn btn-danger form-control" onclick="$('#bclrtable').dataTable().fnDestroy();;loaddatatable();">Filter</a>
                         </div>
+						 <div class="col-md-12">
+                            <select  name="flt_from_cabin[]"  id="flt_from_cabin" placeholder="From Cabin" class="form-control select2" multiple="multiple">
+                            </select>
+						</div>	
 					</div>
 					<div class="col-md-2 col-sm-3 select-form">
                         <div class="col-md-12">
@@ -274,11 +275,12 @@
                             ?>
 						</div>
 						<div class="col-md-12">
-                            <select  name="flt_dest_content[]"  id="flt_dest_content" placeholder="Destination Content" class="form-control select2" multiple="multiple">
+                            <select  name="flt_dest_content[]"  id="flt_dest_content" placeholder="Destination Content" class="form-control select2" multiple="multiple" style="margin-bottom:0;">
                             </select>
 			</div>						
                         <div class="col-md-12">
-							<a type="button" class="btn btn-danger form-control" onclick="downloadBCLR()">Download</a>
+							<a type="button" class="btn btn-danger" onclick="downloadBCLR()" data-toggle="tooltip" data-title="Download" style="margin-right:10px;"><i class="fa fa-download"></i></a>
+							<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#bclrtable').dataTable().fnDestroy();;loaddatatable();" data-toggle="tooltip" data-title="Filter"><i class="fa fa-filter"></i></a>
                         </div>
 					</div>								                            
 				</div>	
@@ -666,7 +668,7 @@ function loaddatatable() {
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 
 				{ extend: 'pdf', orientation: 'landscape', pageSize: 'LEGAL',exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('bclr/server_processing'); ?>?page=all&&export=1",

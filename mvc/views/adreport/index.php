@@ -1,7 +1,12 @@
 <?php 
 ?> 
 <div class="off-elg">
-	<h2 class="title-tool-bar">Advanced Bids Report</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:100%;"><i class="fa fa-clipboard"></i> Advanced Bids Report
+		<ol class="breadcrumb pull-right">
+            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
+            <li class="active">Advanced Bids Report</li>
+        </ol>
+	</h2>
 	<div class="col-md-12 off-elg-filter-box">
 	   <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
 	     <div class="form-group"><br>	   		
@@ -41,7 +46,7 @@
 		  </div>
 	   </form>
 	</div>
-<div class="col-md-12 report-box">
+<div class="col-md-12 report-box" style="padding:0 15px;">
 	<div style="color:#f26522"><h3><strong><bold>Advanced Bid <?=$products[$product_id]?> Report for <?= $airlineID ? $list[$airlineID] : " all Carriers" ;?> <?=$this->data['to_date'] ?  "upto &nbsp;" . date('m-d-Y', $this->data['to_date']) : "" ; ?></bold></strong></h3></div>
 	 <div class="row">		
 		<div class="col-md-3">

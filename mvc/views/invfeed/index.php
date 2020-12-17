@@ -10,7 +10,7 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">              
+            <div class="col-md-12">              
               <h5 class="page-header">                        
 		<?php if(permissionChecker('invfeed_upload')) { ?>
                   <a href="<?php echo base_url('invfeed/upload') ?>" class="btn btn-danger">
@@ -27,7 +27,8 @@
                                  <?php } ?>
 
 
-              </h5>
+              </h5><br>
+			  <div class="nav-tabs-custom" style="margin-bottom:0;">
 			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0;">		   
 			<div class='form-group'>			 
 
@@ -90,12 +91,13 @@
                 </div>
 
 
-                <div class="col-md-3 col-sm-6"><br>
-			 <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
-                       	 <button type="button" class="btn btn-danger" onclick="downloadINVFeed()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
+                <div class="col-sm-12" style="margin-top:10px;text-align:right;">
+					<button type="submit" style="margin-right:10px;" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
+                    <button type="button" class="btn btn-danger pull-right" onclick="downloadINVFeed()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
                 </div>	             				
 			  </div>
-			 </form>			
+			 </form>
+			</div>
             <div id="hide-table">
                <table id="invfeedtable" class="table table-bordered dataTable no-footer">
                  <thead>
@@ -228,7 +230,7 @@ $('#cabin').val('<?=$cabin?>').trigger('change');
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('invfeed/server_processing'); ?>?page=all&&export=1",

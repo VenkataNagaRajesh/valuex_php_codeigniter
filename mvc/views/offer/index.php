@@ -1,7 +1,12 @@
 <div class="off-elg">
-	<h2 class="title-tool-bar">Offer Details</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:100%;"><i class="fa fa-sun-o"></i> Offer Details
+		<ol class="breadcrumb pull-right">
+            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
+            <li class="active"><?=$this->lang->line('menu_offer')?></li>
+        </ol>
+	</h2>
 	<div class="col-md-12 off-elg-filter-box">
-		<div class="auto-gen">
+		<div class="auto-gen" style="padding:0 15px;">
 			<a href="<?php echo base_url('offer_issue/run_offer_issue') ?>">
 				 <i class="fa fa-upload"></i>
 				 <?=$this->lang->line('offer_issue')?>
@@ -73,9 +78,9 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-12">
+				<div class="col-md-12" style="padding:0 15px;">
 					<button type="submit" class="btn btn-danger pull-right" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
-					<button type="button" class="btn btn-danger pull-right" onclick="downloadOfferData()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
+					<button type="button" style="margin-right: 15px;" class="btn btn-danger pull-right" onclick="downloadOfferData()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
 				</div>
 			</div>
 		</form>
@@ -198,7 +203,7 @@ $("#dep_from_date").datepicker({
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('offer_issue/server_processing'); ?>?page=all&&export=1",
