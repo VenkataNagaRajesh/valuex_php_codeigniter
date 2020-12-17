@@ -169,9 +169,9 @@
                                     $rarray[0] = 'Select Role';
 
                                     if(count($roles)) {
-                                        foreach ($roles as $key => $role) {                                           
-                                            $rarray[$role->roleID] = $role->role;                                          
-                                        }
+					foreach ($roles as $role) {
+					    $rarray[$role->roleID] = $role->usertype.' - '.$role->role;
+					}
                                     }
                                     echo form_dropdown("roleID", $rarray,
                                         set_value("roleID"), "id='roleID' class='form-control hide-dropdown-icon'"

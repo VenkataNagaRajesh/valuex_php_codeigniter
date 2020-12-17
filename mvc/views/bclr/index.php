@@ -154,10 +154,11 @@
                     </div> 
                     <div class="col-md-2 col-sm-3">
                         <input type="number" class="form-control" name="max_price" id="max_price" placeholder="Max Price" value="<?=set_value('max_price')?>" />                       
+		<input type="hidden" class="form-control" id="bclr_id" name="bclr_id"   value="" >
 					</div>
-                    <input type="hidden" class="form-control" id="bclr_id" name="bclr_id"   value="" >
 					<div class="col-md-4 col-sm-3">
 						<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savebclr();">Add BCLR</a>
+						<a href="#" type="button"  id='check_rafeed_match' class="btn btn-danger" onclick="matchRafeed();">CHECK RAFEED MATCH</a>
 						<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
 					</div>                     
                 </div>                				
@@ -214,6 +215,9 @@
                         <div class="col-md-12">
                             <input type="number" class="form-control" name="flt_max_price" id="flt_max_price" placeholder="Max Price" value="<?=set_value('flt_max_price',$flt_max_price)?>" />                       
                         </div>                        
+                        <div class="col-md-12">
+                        <input type="text" class="form-control" name="flt_bclr_id" id="flt_bclr_id" placeholder="BCLR ID" value="<?=set_value('flt_bclr_id', $flt_bclr_id)?>" />                       
+					</div>
 					</div>
 					<div class="col-md-2 col-sm-3 select-form">
                         <div class="col-md-12">
@@ -526,20 +530,6 @@
         }
     });
 
-    $('#from_cabin').change(function(){
-        var carrier = $(this).val();    
-        $.ajax({ 
-            async: false,            
-            type: 'POST',            
-            url: "<?=base_url('bclr/getCabinsCarrier')?>",            
-            data: {"carrierID":carrier},           
-            dataType: "html",                                  
-            success: function(data) {                         
-                $('#from_cabin').html(data);             
-            }        
-        });
-    });
-
     $('#flt_carrierID').change(function(){
         var carrier = $(this).val();    
         $.ajax({ 
@@ -594,6 +584,7 @@ function loaddatatable() {
                    {"name": "min_price","value": $("#flt_min_price").val()},		                           
                    {"name": "max_price","value": $("#flt_max_price").val()},		                           
                    {"name": "min_unit","value": $("#flt_min_unit").val()},		                           
+                   {"name": "bclr_id","value": $("#flt_bclr_id").val()},		                           
                    {"name": "max_capacity","value": $("#flt_max_capacity").val()},		                           
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
@@ -673,7 +664,7 @@ function loaddatatable() {
                            $.ajax({
                                 url: "<?php echo base_url('bclr/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"carrierID": $("#flt_carrierID").val(),"partner_carrierID": $("#flt_partner_carrierID").val(),"allowance": $("#flt_allowance").val(),"frequency": $("#flt_frequency").val(),"effective_date": $("#flt_effective_date").val(),"discontinue_date": $("#flt_discontinue_date").val(),"origin_level": $("#flt_origin_level").val(),"origin_content": $("#flt_origin_content").val(),"dest_level": $("#flt_dest_level").val(),"dest_content": $("#flt_dest_content").val(),"rule_auth": $("#flt_rule_auth_carrier").val(),"bag_type": $("#flt_bag_type").val(),"min_price": $("#flt_min_price").val(),"max_price": $("#flt_max_price").val(),"min_unit": $("#flt_min_unit").val(),"max_capacity": $("#flt_max_capacity").val()},
+                                data: {sSearch: $("input[type=search]").val(),"carrierID": $("#flt_carrierID").val(),"partner_carrierID": $("#flt_partner_carrierID").val(),"allowance": $("#flt_allowance").val(),"frequency": $("#flt_frequency").val(),"effective_date": $("#flt_effective_date").val(),"discontinue_date": $("#flt_discontinue_date").val(),"origin_level": $("#flt_origin_level").val(),"origin_content": $("#flt_origin_content").val(),"dest_level": $("#flt_dest_level").val(),"dest_content": $("#flt_dest_content").val(),"rule_auth": $("#flt_rule_auth_carrier").val(),"bag_type": $("#flt_bag_type").val(),"min_price": $("#flt_min_price").val(),"max_price": $("#flt_max_price").val(),"min_unit": $("#flt_min_unit").val(),"max_capacity": $("#flt_max_capacity").val(),"bclr_id": $("#flt_bclr_id").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -696,7 +687,7 @@ function downloadBCLR(){
 	$.ajax({
        url: "<?php echo base_url('bclr/server_processing'); ?>?page=all&&export=1",
        type: 'get',
-       data: {sSearch: $("input[type=search]").val(),"carrierID": $("#flt_carrierID").val(),"partner_carrierID": $("#flt_partner_carrierID").val(),"allowance": $("#flt_allowance").val(),"frequency": $("#flt_frequency").val(),"effective_date": $("#flt_effective_date").val(),"discontinue_date": $("#flt_discontinue_date").val(),"origin_level": $("#flt_origin_level").val(),"origin_content": $("#flt_origin_content").val(),"dest_level": $("#flt_dest_level").val(),"dest_content": $("#flt_dest_content").val(),"rule_auth": $("#flt_rule_auth_carrier").val(),"bag_type": $("#flt_bag_type").val(),"min_price": $("#flt_min_price").val(),"max_price": $("#flt_max_price").val(),"min_unit": $("#flt_min_unit").val(),"max_capacity": $("#flt_max_capacity").val()}, "from_cabin": $("#flt_from_cabin").val(),
+       data: {sSearch: $("input[type=search]").val(),"carrierID": $("#flt_carrierID").val(),"partner_carrierID": $("#flt_partner_carrierID").val(),"allowance": $("#flt_allowance").val(),"frequency": $("#flt_frequency").val(),"effective_date": $("#flt_effective_date").val(),"discontinue_date": $("#flt_discontinue_date").val(),"origin_level": $("#flt_origin_level").val(),"origin_content": $("#flt_origin_content").val(),"dest_level": $("#flt_dest_level").val(),"dest_content": $("#flt_dest_content").val(),"rule_auth": $("#flt_rule_auth_carrier").val(),"bag_type": $("#flt_bag_type").val(),"min_price": $("#flt_min_price").val(),"max_price": $("#flt_max_price").val(),"min_unit": $("#flt_min_unit").val(),"max_capacity": $("#flt_max_capacity").val()}, "bclr_id": $("#flt_bclr_id").val(), "from_cabin": $("#flt_from_cabin").val(),
        dataType: 'json'
        }).done(function(data){
 			var $a = $("<a>");
@@ -792,15 +783,19 @@ function savebclr() {
           success: function(data) {
                     var bclrinfo = jQuery.parseJSON(data);
                     var status = bclrinfo['status'];
-			        newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
+			newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
                     if (status.includes('success')) {
                         alert(status);
-				        form_reset();
+			    var isHidden = $( "#bclrAdd" ).is( ":hidden" );
+			    if( isHidden == false ) {
+				    $( "#bclr_add_btn" ).trigger( "click" );
+			    }       
+		        form_reset();
                         $("#bclrtable").dataTable().fnDestroy();
                         loaddatatable();
                     } else if (status == 'duplicate'){
-				        alert('Duplicate Entry');
-			        } else {                                
+			alert('Duplicate Entry');
+		    } else {                                
                         alert($(status).text());
                         $.each(bclrinfo['errors'], function(key, value) {
                             if(value != ''){                                         
@@ -814,6 +809,21 @@ function savebclr() {
     });
 }
 
+function matchRafeed(bclr_id = 0) {
+
+   var formdata = $('#bclr_add_form').serialize();
+    $.ajax({
+          async: false,
+          type: 'POST',
+          url: "<?=base_url('bclr/checkRABGFeedMatchForBclrID')?>", 
+          data: formdata,                   
+          dataType: "html",
+          success: function(data) {
+			newstatus = data.replace(/\s?(<br\s?\/?>)\s?/g, "\r\n");
+                        alert(newstatus);
+                    }
+    });
+}
 
 function editbclr(bclr_id) {
 

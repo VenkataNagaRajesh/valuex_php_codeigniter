@@ -22,20 +22,13 @@ class Invfeed_m extends MY_Model {
 	}
 
 	function checkInvFeed($array){
-		$this->db->select('invfeed_id');
+		$this->db->select('*');
 		$this->db->from('VX_daily_inv_feed');
 		$this->db->where($array);
 		$this->db->where('active','1');
 		$this->db->limit(1);
 		$query = $this->db->get();
-                $check = $query->row();	
-		if($check->invfeed_id) {
-		    return $check->invfeed_id;
-		} else {
-		  return 0;
-		}
-			
-
+                return $query->row();	
 	}
 
 

@@ -10,7 +10,8 @@ class Product extends Admin_Controller {
 	}
 
 	public function index() {
-		$this->data["products"] = $this->product_m->get_products();
+		$dt = Array('active' => 1);
+		$this->data["products"] = $this->product_m->get_products($dt, TRUE);
 		//print_r($this->data["products"]); exit;		
 		$this->data["subview"] = "product/index";
 		$this->load->view('_layout_main', $this->data);		
@@ -61,7 +62,8 @@ class Product extends Admin_Controller {
 	public function edit() {		
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) { 
-			$this->data['product'] = $this->product_m->get_products($id);
+			$dt = Array("productID" => $id);
+			$this->data['product'] = $this->product_m->get_single_product($dt);
 			//print_r($this->data['product']); exit;
 			if($this->data['product']) { 
 				if($_POST) {
@@ -103,9 +105,11 @@ class Product extends Admin_Controller {
 	public function delete() {		
 		$id = htmlentities(escapeString($this->uri->segment(3)));
 		if((int)$id) {
-			$this->data['product'] = $this->role_m->get_role($id);
+			$dt = Array("productID" => $id);
+			$this->data['product'] = $this->product_m->get_single_product($dt);
 			if($this->data['product']) {				
-					$this->product_m->delete_product($id);
+					$dt = Array("active" => 0);
+					$this->product_m->update_product($dt,$id);
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url("product/index"));				
 			} else {

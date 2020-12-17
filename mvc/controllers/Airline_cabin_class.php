@@ -273,11 +273,11 @@ class Airline_cabin_class extends Admin_Controller {
                         $status = $this->input->post('status');
                         if($id != '' && $status != '') {
                                 if((int)$id) {
-                                        if($status == 'chacked') {
-                                                $this->airline_cabin_m->update_airline_cabin(array('active' => 1), $id);
+                                        if($status == 'checked') {
+                                                $this->airline_cabin_class_m->update_airline_cabin_class(array('active' => 1), $id);
                                                 echo 'Success';
-                                        } elseif($status == 'unchacked') {
-                                                $this->airline_cabin_m->update_airline_cabin(array('active' => 0), $id);
+                                        } elseif($status == 'unchecked') {
+                                                $this->airline_cabin_class_m->update_airline_cabin_class(array('active' => 0), $id);
                                                 echo 'Success';
                                         } else {
                                                 echo "Error";
@@ -440,7 +440,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cm.map_id, airline_class,  ac.code as car
 			$status = $list->active;
 			
                         $list->active = "<div class='onoffswitch-small' id='".$list->map_id."'>";
-            $list->active .= "<input type='checkbox' id='myonoffswitch".$list->map_id."' class='onoffswitch-small-checkbox' name='paypal_demo'";
+            		$list->active .= "<input type='checkbox' id='myonoffswitch".$list->map_id."' class='onoffswitch-small-checkbox' name='paypal_demo'";
                         if($status){
                            $list->active .= "checked='checked' >";
                         } else {

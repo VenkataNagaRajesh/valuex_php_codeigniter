@@ -668,6 +668,8 @@ $sWhere $sOrder $sLimit";
 		}
 			echo "<br>OND PARTNERS=<pre>" . print_r($bg_ond_partners,1) . "</pre>";
 		
+		$air_distances = Array();
+		$air_distances = $this->airports_m->getAirDistances();
 
 		$pax_ond = Array();
 		foreach ($bg_pax_data as $pax_pnr_single ) {
@@ -677,6 +679,11 @@ $sWhere $sOrder $sLimit";
 			$pax_cnt = 0;
 			foreach ($single_adult_full_pax as $s_pax ) {
 			    $pnr = $s_pax->pnr_ref;
+				$range= $s_pax->from_city . "-" . $s_pax->to_city;
+				if  (!isset($air_distances[$range])) {
+					$air_distances[$range] = $this->distCalc($s_pax->from_city, $s_pax->to_city);
+				}
+			    $pax_list[$pnr][$pax_cnt]['distance'] =  $air_distances[$range];
 			    $pax_list[$pnr][$pax_cnt]['from_city'] =  $s_pax->from_city;
 			    $pax_list[$pnr][$pax_cnt]['to_city'] =  $s_pax->to_city;
 			    $pax_list[$pnr][$pax_cnt]['total_dep_date'] =  $s_pax->dep_date + $s_pax->dept_time;
@@ -713,44 +720,64 @@ $sWhere $sOrder $sLimit";
 							echo ("<br>ONGRP : $ond_grp  DTPF=".$dtpfId);
 					$bclrIds = Array();
 					$ext = array();
+					$blrId = 0;
 					if ( $ond_grp != 'NP') {
 						$pax = $this->paxfeed_m->get_single_paxfeed(Array("dtpf_id" => $dtpfId));
+						//First give precedence for partner based BCLR rules defined by current carrier 
 						foreach($bclr_rules[$pax->carrier_code] as $bclr_rule) {
-							#echo ("<br>ONGRP GEN: $ond_grp: DTPF=$dtpfId, BCLR= ". print_r($bclr_rule,1));
-							#echo ("<br>ONGRP GEN: $ond_grp: DTPF=$dtpfId" );
-							$bId = $this->getMatchedBclrForPax($pax, $bclr_rule);
-							if ( $bId ) {
-								$bclrIds[] = $bId;
+							if ( $bclr_rule->partner_carrierID ) {
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER DEFINED RULES FOR PAX ID $dtpfId FOR  PARTNER CARRIER ID: " . $bclr_rule->partner_carrierID);
+								$blrId = $this->getMatchedBclrForPax($pax, $bclr_rule,1);//Check Partner Matched BCLR rules
 							}
-							#echo ("<br>ONGRP GEN: $ond_grp: BID=$bId" );
-							#if ($bclrId) break;
+							if ( $blrId ) {
+								$bclrIds[] = $blrId;
+							}
 						}
-						if ( count($bclrIds) > 1 ) {
-							echo ("<br>OFFER GEN: PROCESS BAGGAGE : MATCHED MORE THAN ONE BCLRID ".  print_r($bclrIds,1) . " FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
-							$bclrId = $this->findBestMatchBclrRule($bclrIds, $bclr_rules);
-						} else {
-							$bclrId = $bclrIds[0];
-						}
-						if ( $bclrId) {
 
-							echo ("<br>OFFER GEN: PROCESS BAGGAGE : BEST MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
-							$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
-							if ( $bclr_rules[$bclrId]['partner_carrierID'] ) {
-								$pax1 = $this->paxfeed_m->get_single_paxfeed(Array("dtpf_id" => $dtpfId));
-								if ( $pax1->carrier_code == $bclr_rules[$bclrId]['partner_carrierID'] )
-									if ( $bclr_rules[$bclrId]['allowance']) {
-									$ext['ond'] = $ond_grp;
-								} else {
-									$ext['ond'] = 'BL'; //PARTNER  BLOCK LIST
-								}
+						if ( count($bclrIds)) {
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER DEFINED BCLR RULES FOR PAX ID $dtpfId FOR  PARTNER CARRIER ID: " . $bclr_rule->partner_carrierID . ", BCRL RULE = " . print_r($bclrIds,1));
+							//Rules might be matched but check block or white listed !
+							if ( count($bclrIds) > 1) {
+								$bclrId = $this->findBestMatchBclrRule($bclrIds, $bclr_rules);
 							} else {
+								$bclrId = $bclrIds[0];
+							}
+							if ( $bclr_rules[$bclrId]['allowance']) {
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER DEFINED BCLR RULES FOR PAX ID $dtpfId FOR  PARTNER CARRIER ID: " . $bclr_rule->partner_carrierID . ", BCRL RULE WHITELISTED= "  . $bclrId);
 								$ext['ond'] = $ond_grp;
+							} else {
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER DEFINED BCLR RULES FOR PAX ID $dtpfId FOR  PARTNER CARRIER ID: " . $bclr_rule->partner_carrierID . ", BCRL RULE BLOCKED= "  . $bclrId);
+								$ext['ond'] = 'BL'; //PARTNER  BLOCK LIST
 							}
 						} else {
-							$bclrId = 0;
-							$ext['ond'] = 'NBCLR'; //NO BC LR MATCHED
-							$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE :  NO BCLR MATCHED  FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
-							echo ("<br>OFFER GEN: PROCESS BAGGAGE : NO BCLR ID $bclrId MATCHED FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+							//If no partner specific  rules  matched , consider current carrier rules 
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER RULES NOT MATCHED, CHECKEING DEFAULT  BCLR RULES FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierID);
+							foreach($bclr_rules[$pax->carrier_code] as $bclr_rule) {
+								if ( !$bclr_rule->partner_carrierID ) {
+									$blrId = $this->getMatchedBclrForPax($pax, $bclr_rule,0);//Check SELF BCLR rules
+								}
+								if ( $blrId ) {
+									$bclrIds[] = $blrId;
+								}
+							}
+
+							if ( count($bclrIds) > 1 ) {
+								echo ("<br>OFFER GEN: PROCESS BAGGAGE : MATCHED MORE THAN ONE BCLRID ".  print_r($bclrIds,1) . " FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+								$bclrId = $this->findBestMatchBclrRule($bclrIds, $bclr_rules);
+							} else {
+								$bclrId = $bclrIds[0];
+							}
+							if ( $bclrId) {
+
+								echo ("<br>OFFER GEN: PROCESS BAGGAGE : BEST MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+								$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : MATCHED BCLR ID $bclrId FOUND FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+								$ext['ond'] = $ond_grp;
+							} else {
+								$bclrId = 0;
+								$ext['ond'] = 'NBCLR'; //NO BC LR MATCHED
+								$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE :  NO BCLR MATCHED  FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+								echo ("<br>OFFER GEN: PROCESS BAGGAGE : NO BCLR ID $bclrId MATCHED FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
+							}
 						}
 					} else {
 						$bclrId = 0;
@@ -809,18 +836,17 @@ $sWhere $sOrder $sLimit";
 		return $thebest;
 	}
 
-	function getMatchedBclrForPax($pax, $bclr) {
+	function getMatchedBclrForPax($pax, $bclr, $checkPartner = 0) {
         	#$bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $bclrId));
 		$bclrId = $bclr->bclr_id;
 		$carrierId = $bclr->carrierID;
 		$min_price = $bclr->min_price;
 		$max_price = $bclr->max_price;
 		$max_capacity = $bclr->max_capacity;
-		$nCarrerID = $bclr->carrierID;
 		$cabin = $bclr->from_cabin;
 		$frequency = $bclr->frequency;
-		$dep_time_start = $bclr->dep_time_start;
-		$dep_time_end = $bclr->dep_time_end;
+		$dept_time_start = $bclr->dept_time_start;
+		$dept_time_end = $bclr->dept_time_end;
 		$flight_number = $bclr->flight_num_range;
 		$flight_num_range = explode("-", $flight_number);
 		$start_flight_range = $flight_num_range[0];
@@ -828,6 +854,14 @@ $sWhere $sOrder $sLimit";
 		$origin_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($bclr->origin_content, $bclr->origin_level);
 		$dest_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($bclr->dest_content, $bclr->dest_level);
 		
+		$checkCarrierId = $pax->carrier_code;
+		if ( $checkPartner ) {
+			if ( $bclr->partner_carrierID ) {
+				$checkCarrierId = $bclr->partner_carrierID;
+			} else {
+				return 0;
+			}
+		}
 		//echo "<br>start_date=" . $start_date;
 		#print_r($pax);
 		
@@ -835,14 +869,18 @@ $sWhere $sOrder $sLimit";
 		echo "<br><br>MATCHSTART ==========================================================================================";
 		echo "<pre>SINGLE PAX  = " . print_r($pax,1). "</pre>";
 		echo "<pre>SINGLE BCLR  = " . print_r($bclr,1). "</pre>";
-	echo "<br>DEPART MATCH=" . date("d M Y H:i:s", $pax->dep_date+$pax->dep_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dep_time_start)) ."  , " . date("d M Y H:i:s",$pax->dep_date+$pax->dep_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dep_time_end);
-	echo "<br>ARRIVA MATCH=" . date("d M Y H:i:s", $pax->arrival_date+$pax->arrival_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dep_time_start)) ."  , " . date("d M Y H:i:s",$pax->arrival_date+$pax->arrival_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dep_time_end);
+		echo "<br>PAX=" .  $pax->dep_date . " + " . $pax->dept_time;
+		echo "<br>PAXT=" .  $pax->dep_date + $pax->dept_time;
+		echo "<br>BCLR=" . $bclr->effective_date . " + " . $bclr->dept_time_start;
+		echo "<br>BCLRT=" . $bclr->effective_date  +  $bclr->dept_time_start;
+	echo "<br>DEPART MATCH=" . date("d M Y H:i:s", $pax->dep_date + $pax->dept_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dept_time_start)) ."  , " . date("d M Y H:i:s",$pax->dep_date+$pax->dept_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dept_time_end);
+	echo "<br>ARRIVA MATCH=" . date("d M Y H:i:s", $pax->arrival_date+$pax->arrival_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dept_time_start)) ."  , " . date("d M Y H:i:s",$pax->arrival_date+$pax->arrival_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dept_time_end);
 		echo "<br>ORGIN LIST=" .implode(',',$origin_list_p);
 		echo "<br>DEST LIST=" .implode(',',$dest_list_p);
 		echo "<br>MATCHEND +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
 		
 		$matched = 0;
-		if ($bclr->carrierID == $pax->carrier_code ) {
+		if ($bclr->carrierID == $checkCarrierId ) { 
 			echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED CARRIER CODE - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
 			$matched++ ;
 		} else {
@@ -886,8 +924,8 @@ $sWhere $sOrder $sLimit";
 				$matched++;
 		}
 		
-		if( $bclr->effective_date + $bclr->dep_time_start > 0 ) {
-			if ( $pax->dep_date + $pax->dep_time >= ($bclr->effective_date + $bclr->dep_time_start)   && ($pax->dep_date + $pax->dep_time) <= ($bclr->discontinue_date + $bclr->dep_time_end))  {
+		if( $bclr->effective_date + $bclr->dept_time_start > 0 ) {
+			if ( $pax->dep_date + $pax->dept_time >= ($bclr->effective_date + $bclr->dept_time_start)   && ($pax->dep_date + $pax->dept_time) <= ($bclr->discontinue_date + $bclr->dept_time_end))  {
 				$matched++ ;
 				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED DEPARTURE DATE RANGE  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
 			} else {
@@ -898,8 +936,8 @@ $sWhere $sOrder $sLimit";
 				$matched++;
 		}
 		
-		if( $bclr->effective_date + $bclr->dep_time_start > 0 ) {
-			if ( $pax->arrival_date + $pax->arrival_time >= ($bclr->effective_date + $bclr->dep_time_start)   && ($pax->arrival_date + $pax->arrival_time) <= ($bclr->discontinue_date + $bclr->dep_time_end)) {
+		if( $bclr->effective_date + $bclr->dept_time_start > 0 ) {
+			if ( $pax->arrival_date + $pax->arrival_time >= ($bclr->effective_date + $bclr->dept_time_start)   && ($pax->arrival_date + $pax->arrival_time) <= ($bclr->discontinue_date + $bclr->dept_time_end)) {
 				$matched++ ;
 				echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED ARRIVAL DATE RANGE  - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
 			} else {
@@ -993,7 +1031,7 @@ $sWhere $sOrder $sLimit";
 		$array['flight_number'] = $feed->flight_number;
 		$array['dep_date'] = $feed->dep_date;
 		$array['carrier'] = $feed->carrier_code;
-		//$array['dep_time'] = $feed->dep_time;*/
+		//$array['dept_time'] = $feed->dept_time;*/
 		//$rules = $this->eligibility_exclusion_m->apply_exclusion_rules($array);
 			
 			$upgrade = array();
@@ -1116,5 +1154,28 @@ $sWhere $sOrder $sLimit";
 	public function offdtlpage() {		
 		$this->data["subview"] = "offer_eligibility/offdtlpage";
 		$this->load->view('_layout_main', $this->data);
+	}
+
+	function distCalc($fromAirport, $toAirport) {
+		//$from = "EGLL";
+		//$to = "KJFK";
+		$fromAirportCode = $this->airports_m->getAirportICAOCode($fromAirport);
+		$toAirportCode = $this->airports_m->getAirportICAOCode($toAirport);
+		$distance = $this->getAirportsDistance($fromAirportCode,$toAirportCode);
+		$this->airports_m->insertAirDistance($fromAirport,$toAirport,$distance);
+		echo "DISTANCE BETWEEN $fromAirportCode - $toAirportCode in KM  = " . $distance;
+		return $distance;
+	}
+
+	public function getAirportsDistance($from = '', $to = '') {
+		$ditance = 0;
+		if ( $from && $to ) {
+			$url = "https://www.greatcirclemapper.net/en/great-circle-mapper.html?route=$from-$to&aircraft=&speed=";
+			$data = file_get_contents($url);
+			if ( preg_match("/<td>(.*) nm, (.*) km<\/td>/", $data, $matches) ){
+				$distance = $matches[2];
+			}
+		}
+		return $distance;
 	}
 }

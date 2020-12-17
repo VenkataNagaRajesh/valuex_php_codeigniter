@@ -168,7 +168,7 @@
 <div class="col-md-12 report-box">
 	 <div class="row">		
 		<div class="col-md-7 col-md-offset-1">
-		  <h3><strong><b>Bid Calendar <?=$products[$product_id]?> Report for <?= $airlineID ? $list[$airlineID] : " all Carriers" ;?> <?=$this->data['to_date'] ?  "upto &nbsp;" . date('m-d-Y', $this->data['to_date']) : "" ; ?></b></strong></h3>
+		  <h3><strong><b>Bid Calendar <?=$products[$product_id]?> Report for <?= $airlineID ? $list[$airlineID] : " all Carriers" ;?> <?=$this->data['to_date'] ?  " &nbsp;" . date('M - Y', $this->data['to_date']) : "" ; ?></b></strong></h3>
 		</div>
 		<div class="col-md-3">
 		  <h3><b>Future Months</b></h3>
@@ -256,7 +256,7 @@ function progressReport(from_date, to_date) {
 		$('#carrier').val('<?=$airlineID?>');
 		$('#flight_from_dep_date').val(from_date);
 		$('#flight_to_dep_date').val(to_date);
-		//$('#offer_status').val(booking_status);
+		$('#offer_status').val(1988);//Accpeted builds
 		$('#product_id').val('<?=$product_id?>');
 	 	$("#reportform").submit();	
 }
@@ -303,8 +303,18 @@ function bidcalender1 (bidlist = '[]', bid_average, bid_avg_rev_percent = 10)
 		stepMonths: 0,
 		defaultDate: new Date(datecal, 0, 1),			
 		onSelect: function (date) {
+
+			var d = new Date(date);
+			//var d = date;
+			 var year = d.getUTCFullYear();
+			 var month = d.getUTCMonth();
+			 var day = d.getUTCDate();
+
+			 var startHour =Date.UTC(year,month,day+1,0,0,0,0);
+			 var endHour = startHour + 86400000-1;
 		    //defined your own method here
-			progressReport('<?=$from_date?>','<?=$to_date?>');
+			//progressReport('<?=$from_date?>','<?=$to_date?>');
+			progressReport(startHour/1000, endHour/1000);
 		},
 		beforeShowDay: function( date ) {					
 			var highlight = eventDates[date];

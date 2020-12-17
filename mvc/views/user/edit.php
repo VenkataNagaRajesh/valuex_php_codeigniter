@@ -230,7 +230,7 @@
                                         $array[0] = $this->lang->line('user_select_role');								   
                                         if(count($roles)) {
                                             foreach ($roles as $key => $role) {                                              
-                                                    $array[$role->roleID] = $role->role;                                            
+                                                    $array[$role->roleID] = $role->usertype . " - " . $role->role;
                                             }
                                         }
                                         echo form_dropdown("roleID", $array, 

@@ -148,7 +148,6 @@ class Paxfeed extends Admin_Controller {
 		$this->mydebug->paxfeed_log("Processing the excel file " . $_FILES['file']['name'] , 0);
           foreach ($Sheets as $Index => $Name){
 			  $Reader -> ChangeSheet($Index);
-			  
               $i = 0;
                //$time_start = microtime(true);
 		$column = 0;                   
@@ -166,9 +165,11 @@ class Paxfeed extends Admin_Controller {
                         if(count(array_diff($header,$import_header)) == 0){
                              $flag = 1;
 				$this->mydebug->paxfeed_log("Header Matched for file  " . $_FILES['file']['name'] , 0);
-				
+					
                          } else {
-					$this->mydebug->paxfeed_log("Header mismatch" , 1);
+				$this->mydebug->paxfeed_log("Header mismatch" , 1);
+				 $this->session->set_flashdata('error', "Header mismatch, upload failed");
+				 redirect(base_url("paxfeed/index")); 	
 					break;
 			 }
                         } else {
@@ -209,27 +210,12 @@ class Paxfeed extends Admin_Controller {
                                                 continue;
                                         }
 
-					/*
-					if (!ctype_alpha($paxfeedraw['first_name'])){
-					 $this->mydebug->paxfeed_log( $paxfeedraw['first_name'] . " First name should contain alphabets only in row " .$column  , 1);
-                                                continue;
-
-					}*/
-
-
                                       $paxfeedraw['last_name'] = trim($Row[array_search('last name',$import_header)]);
 
 					if ( strlen($paxfeedraw['last_name']) >= 99  ) {
                                               $this->mydebug->paxfeed_log("Last name should be of length 99 characters in row " . $column , 1);
                                                 continue;
                                         }
-					/*
-
-						 if (!ctype_alpha($paxfeedraw['last_name'])){
-                                         $this->mydebug->paxfeed_log("Last name should contain alphabets only in row " .$column  , 1);
-                                                continue;
-
-										}*/
 										
 					$paxfeedraw['operating_carrier'] = trim($Row[array_search('operating carrier',$import_header)]);
 					
@@ -282,7 +268,6 @@ class Paxfeed extends Admin_Controller {
 
                                       $paxfeedraw['carrier_code'] =  $Row[array_search('carrier code',$import_header)];
 
-				//if ( strlen($paxfeedraw['carrier_code']) != 2 || !ctype_alpha($paxfeedraw['carrier_code'])) {
 					if ( strlen($paxfeedraw['carrier_code']) != 2){
                                               $this->mydebug->paxfeed_log("Carrier code should be 2 alphabets in row " . $column , 1);
                                                 continue;
@@ -462,12 +447,6 @@ class Paxfeed extends Admin_Controller {
                                                 continue;
                                         }
 
-
-                                        //        $this->mydebug->paxfeed_log("Multi Pax entry, invalid data for row " . $column , 1);
-					//	$this->mydebug->paxfeed_log("Multi Pax entry ". print_r($paxfeedraw) , 1);
-					//	$this->mydebug->paxfeed_log("Multi Pax entry ". print_r($pnr_exist) , 1);
-					//	 $this->mydebug->paxfeed_log("Multi Pax entry ". print_r($cabin_new_entry) , 1);
-					//	$this->mydebug->paxfeed_log("Multi Pax entry ". print_r($cabin_old_entry) , 1);
                                         }
 
 					
@@ -527,19 +506,6 @@ class Paxfeed extends Admin_Controller {
 					 $paxfeed['booking_city'] = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['booking_city'],'3');
                                          $paxfeed['office_id'] = $paxfeedraw['office_id'];
                                          $paxfeed['channel'] = $paxfeedraw['channel'];
-				/*
-					 if ($paxfeedraw['tier_markup'] == 1 ){
-						$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T1_MARKUP','7');
-					 } else if($paxfeedraw['tier_markup'] == 2){
-
-						$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T2_MARKUP','7');
-					 } else if ($paxfeedraw['tier_markup'] == 3){
-						$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T3_MARKUP','7');
-					 } else if ($paxfeedraw['tier_markup'] == 4){
-						$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T4_MARKUP','7');
-					 }else {
-						$paxfeed['tier_markup'] = 0;
-					  }*/
 				if ( $paxfeedraw["tier_markup"] ) {
 				$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T'.$paxfeedraw["tier_markup"].'_MARKUP','24',$paxfeed['carrier_code'] );
 				} else {
@@ -548,7 +514,6 @@ class Paxfeed extends Admin_Controller {
 
 				$paxfeed['tier'] = $paxfeedraw["tier_markup"];
 
-				//$paxfeed['rbd_markup'] = $this->preference_m->get_preference_value_bycode('RBD_'.$cabin->cabin_code,'7');
 				if($cabin->rbd_markup) {
 				  $paxfeed['rbd_markup'] = $cabin->rbd_markup;
 				} else {
@@ -607,12 +572,6 @@ class Paxfeed extends Admin_Controller {
 
 				   $i++;					   
 				  }
-                  /* $time_end = microtime(true);
-                $execution_time = ($time_end - $time_start)/60;
-                
-                   echo '<b>Total Execution Time:</b> '.$execution_time.' Mins';
-				  
-                      exit;	 */			   
 				} 
 				
 			  } 				 
@@ -625,7 +584,7 @@ class Paxfeed extends Admin_Controller {
 
 			 $this->paxfeed_m->process_tiermarkup(array_unique($pax_insert_list));
 			 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-		     redirect(base_url("paxfeed/index")); 	
+		     	 redirect(base_url("paxfeed/index")); 	
 		 }	
 	 } else {
 			$this->data["subview"] = "paxfeed/upload";
@@ -867,6 +826,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','mark
 
 		  if(permissionChecker('paxfeed_delete')){
 		   $feed->action .= btn_delete('paxfeed/delete/'.$feed->dtpf_id, $this->lang->line('delete'));			 
+                   $feed->action .=  '<a target="_blank" href="' . base_url('paxfeed/process_fclr_matching_report/' . $feed->dtpf_id) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="CHECK FCLR MATCH"><i class="fa fa-check"></i></a>';
 		  }
 			$status = $feed->active;
 			$feed->active = "<div class='onoffswitch-small' id='".$feed->dtpf_id."'>";
@@ -948,14 +908,28 @@ if(!empty($data_id_array)) {
 }
 }
 
-public function process_fclr_matching_report() {
+	public function process_fclr_matching_report() {
+		$paxfeed_id = htmlentities(escapeString($this->uri->segment(3)));
 
-				$sQuery = " SELECT * FROM VX_daily_tkt_pax_feed pf where fclr_data = 0 order by dtpf_id";
+		$sQuery = " SELECT * FROM VX_daily_tkt_pax_feed pf where fclr_data = 0 ";
+		if ( $paxfeed_id ) {
+			$sQuery .= " AND dtpf_id = $paxfeed_id";
+		}
+		$sQuery .= " order by dtpf_id";
 				
                 $rResult = $this->install_m->run_query($sQuery);
 
+		if ( $paxfeed_id ) {
+			echo "<br>PAXFEED ID  = " . $paxfeed_id;
+			if ( $rResult ) {
+				echo "<br>PROCESSNIG PAX FEED ";
+			} else {
+				echo "<br>SEEMS FCLR MATCHED ALREADY, NOTHING TO PROCESS..";
+			}
+		}
+
 		foreach ($rResult as $feed ) {
-			 $this->paxfeed_m->update_paxfeed(array('is_fclr_processed' => '1'), $feed->dtpf_id);
+			$this->paxfeed_m->update_paxfeed(array('is_fclr_processed' => '1'), $feed->dtpf_id);
 			$upgrade = array();
                         $upgrade['boarding_point'] = $feed->from_city;
                         $upgrade['off_point'] = $feed->to_city;
@@ -966,32 +940,57 @@ public function process_fclr_matching_report() {
                         $day = ($day_of_week)?$day_of_week:7;
 
                         $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
+			
                         $upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
 
+			if ( $paxfeed_id ) {
+				if ($upgrade['season_id'] ) {
+					echo "<br>MATCHED SEASONID FOR GIVEN PAX FEED  = " . $upgrade['season_id'];
+				} else {
+					echo "<br>SEASON NOT MATCHED FOR GIVEN PAX ID";
+				}
+			}
 
-                         $upgrade['from_cabin'] = $feed->cabin;
+
+                        $upgrade['from_cabin'] = $feed->cabin;
                         $data = array();
                         if($upgrade['season_id'] > 0) {
+				if ( $paxfeed_id) {
+					echo "<br>CHECKING WITH SEASON ID = " .  $paxfeed_id;
+				}
                                 $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
                         }
-			
+			if ( $paxfeed_id  && $data) {
+				echo "<br>MATCHED CABIN DATA FOR SEASON = " . print_r($data,1);
+			}
+
 			 if((count($data) == 0 && $upgrade['season_id'] > 0) || $upgrade['season_id'] == 0) {
+				if ( $paxfeed_id) {
+					echo "<br>CHECKING WITH FREQUENCY = " .  $p_freq; 
+				}
                                 $upgrade['season_id'] = 0;
-                                 $upgrade['frequency'] = $p_freq;
+                                $upgrade['frequency'] = $p_freq;
                                 $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+				if ( $paxfeed_id ) {
+					if (  $data) {
+						echo "<br>MATCHED CABIN DATA WITH FREQUENCY = " . print_r($data,1);
+					} else {
+						echo "<br>CABIN DATA NOT MATCHED WITH FREQUENCY";
+					}
+				}
 
                           }
 
 			if(count($data) > 0 ) {
 				$fclr_data = implode(',',array_column($data,'fclr_id'));
 				$this->paxfeed_m->update_paxfeed(array('fclr_data' => $fclr_data), $feed->dtpf_id);
+				if ( $paxfeed_id ) {
+					echo "<br>UPDATAING  PAX MATCH STATUS  " . $fclr_data;
+				}
 			}
-
-
 		}
-
-	#redirect(base_url("paxfeed/index"));	
+		if ( !$paxfeed_id ) {
+			redirect(base_url("paxfeed/index"));	
+		}
+	}
 }
-
-}
-

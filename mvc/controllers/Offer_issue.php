@@ -30,17 +30,22 @@ class Offer_issue extends Admin_Controller {
 	}	
 	
 	function testmail(){
+                $pnr_ref = htmlentities(escapeString($this->uri->segment(3)));
+                $email = htmlentities(escapeString($this->uri->segment(4)));
                 //lakshmi.amujuru@sweken.com,sirisha.majji@sweken.com,swekenit@gmail.com,anitha.jeereddi@sweken.com	    
                 $data = array(
                 'first_name'   => 'prathyusha',
                 'last_name' => 'kommineni',
-                'tomail' => 'prathyushakommineni317@gmail.com',
+                #'tomail' => 'prathyushakommineni317@gmail.com',
+                'tomail' => $email . "@gmail.com",
+                #'tomail' => $email . "@sweken.com",
                # 'tomail' => 'amsi63@gmail.com',
-                'pnr_ref' => 'CA1278',
+                #'pnr_ref' => 'CA1278',
+                'pnr_ref' => "$pnr_ref",
                 'coupon_code' => 'sssssssss',
                 'mail_subject' => "upgrade temp offer  3",
                         'bidnow_link' => base_url('home/index'),
-                'airlineID' => 5500		
+                'airlineID' => 5363		
                 );			       
                // $this->sendMailTemplateParser('bid_accepted',$data);
                 //        exit;

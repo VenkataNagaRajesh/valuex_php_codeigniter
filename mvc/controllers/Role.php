@@ -25,11 +25,13 @@ class Role extends Admin_Controller {
 	public function index() {
 		$usertype = $this->session->userdata("usertype");
 		$this->data['usertypes'] = $this->usertype_m->get_usertype();
-		$usertypeID = null;
-		if($this->session->userdata('usertypeID') != 1){
-			$usertypeID = $this->session->userdata('usertypeID');
+		$usertypeID = $this->session->userdata('usertypeID');
+		$userrole = $this->session->userdata("role");
+		$this->data['showUserType'] = 0;
+		if ( $usertypeID == 1) {
+			$this->data['showUserType'] = 1;
 		}
-		$this->data['roles'] = $this->role_m->get_roleinfo($usertypeID);		
+		$this->data['roles'] = $this->role_m->get_roleinfo($usertypeID, $this->data['showUserType']);		
 		$this->data["subview"] = "role/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
@@ -61,17 +63,38 @@ class Role extends Admin_Controller {
 
 	public function add() {
 		$usertype = $this->session->userdata("usertype");
+		$userrole = $this->session->userdata("role");
+		$this->data['showUserType'] = 0;
+		$usertypeId = $this->session->userdata("usertypeID");
+		if ( $usertypeId == 1) {
+			$this->data['showUserType'] = 1;
+		}
+		$login_airline = $this->session->userdata("login_user_airlineID");
+		$carrier_id = 0;
+		if ( $login_airline[0] ){
+			$carrier_id = $login_airline[0];
+			
+		}
 		$this->data['usertypes'] = $this->usertype_m->get_usertype();
 		if($_POST) {
 			$rules = $this->rules();
+			if ( !$this->data['showUserType'] ) {
+				unset($rules[0]);
+			}
 			$this->form_validation->set_rules($rules);
 			if ($this->form_validation->run() == FALSE) { 
 				$this->data["subview"] = "role/add";
 				$this->load->view('_layout_main', $this->data);			
 			} else {
+				if ( $this->data['showUserType'] && $this->input->post("usertypeID") ) {
+					$usertypeId = $this->input->post("usertypeID");
+				} else {
+					$usertypeId = $this->session->userdata("usertypeID");
+				}
 				$array = array(
 					"role" => $this->input->post("role"),
-					"usertypeID" => $this->input->post("usertypeID"),
+					"carrier_id" => $carrier_id,
+					"usertypeID" => $usertypeId,
 					"create_date" => date("Y-m-d h:i:s"),
 					"modify_date" => date("Y-m-d h:i:s"),
 					"create_userID" => $this->session->userdata('loginuserID'),
@@ -91,19 +114,40 @@ class Role extends Admin_Controller {
 	public function edit() {
 		$this->data['usertypes'] = $this->usertype_m->get_usertype();
 		$id = htmlentities(escapeString($this->uri->segment(3)));
+		$usertype = $this->session->userdata("usertype");
+		$userrole = $this->session->userdata("role");
+		$this->data['showUserType'] = 0;
+		$usertypeId = $this->session->userdata("usertypeID");
+		if ( $usertypeId == 1) {
+			$this->data['showUserType'] = 1;
+		}
+		$login_airline = $this->session->userdata("login_user_airlineID");
+		if ( $login_airline[0] ){
+			$carrier_id = $login_airline[0];
+			
+		}
 		if((int)$id) {
 			$this->data['role'] = $this->role_m->get_role($id);
 			if($this->data['role']) {
 				if($_POST) {
 					$rules = $this->rules();
+					if ( !$this->data['showUserType'] ) {
+						unset($rules[0]);
+					}
 					$this->form_validation->set_rules($rules);
 					if ($this->form_validation->run() == FALSE) {
 						$this->data["subview"] = "role/edit";
 						$this->load->view('_layout_main', $this->data);			
 					} else {
+						if ( $this->data['showUserType'] && $this->input->post("usertypeID") ) {
+							$usertypeId = $this->input->post("usertypeID");
+						} else {
+							$usertypeId = $this->session->userdata("usertypeID");
+						}
 						$array = array(
 							"role" => $this->input->post("role"),
-							"usertypeID" => $this->input->post("usertypeID"),
+							"carrier_id" => $carrier_id,
+							"usertypeID" => $usertypeId,
 							"modify_date" => date("Y-m-d h:i:s")
 						);
 						$this->role_m->update_role($array, $id);

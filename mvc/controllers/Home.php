@@ -225,7 +225,8 @@ class Home extends MY_Controller {
 		$message =  $this->load->view('home/temp1',$this->data);
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 		$this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);		
-		$this->email->to('lakshmi.amujuru@sweken.com');
+		#$this->email->to('lakshmi.amujuru@sweken.com');
+		$this->email->to('vamsi63@gmail.com');
 		$this->email->subject("Upgrade Cabin Offer");
 		$this->email->message($message);
 		$this->email->send();

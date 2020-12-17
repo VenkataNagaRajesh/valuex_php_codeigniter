@@ -277,6 +277,7 @@ class Rafeed extends Admin_Controller
 			redirect(base_url("rafeed/index"));
 		}
 	}
+
 	public function view()
 	{
 		$id = htmlentities(escapeString($this->uri->segment(3)));
@@ -295,6 +296,126 @@ class Rafeed extends Admin_Controller
 		}
 	}
 
+	public function upload2()
+	{
+
+		if ($_FILES) {
+			if (empty($_FILES['file']['name'])) {
+				$this->session->set_flashdata('error', "Please select File");
+				$this->data["subview"] = "rafeed/upload";
+				$this->load->view('_layout_main', $this->data);
+			} else {
+
+				require_once APPPATH . 'libraries/Excel/oleread.inc';
+				require_once APPPATH . 'libraries/PHPExcel/Exception.php';
+				require_once APPPATH . 'libraries/PHPExcel/Reader/Exception.php';
+				#require_once (APPPATH . 'libraries/PHPExcel.php');
+				require_once APPPATH . 'libraries/Excel/reader.php';
+				date_default_timezone_set('Asia/Kolkata');
+
+				$status = "success";
+				$message = $this->lang->line('menu_success');
+
+				// set execution time to unlimited
+				ini_set('max_execution_time', '0');
+
+				try {
+					$file = $_FILES['file']['tmp_name'];
+					if (move_uploaded_file($file, APPPATH . "/uploads/" . $_FILES['file']['name'])) {
+
+						$file =  APPPATH . "/uploads/" . $_FILES['file']['name'];
+						// ExcelFile($filename, $encoding);
+						$data = new Spreadsheet_Excel_Reader();
+
+
+						$data->read($file);
+						// Set output Encoding.
+						$data->setOutputEncoding('CP1251');
+
+						$this->mydebug->rafeed_log("Processing the excel file " . $_FILES['file']['name'], 0);
+
+							$this->mydebug->rafeed_log(" ****  -- Sheet processing ****", 0);
+						$Row= Array();
+						$flag = 0;
+						for ($i = 1; $i <= $data->sheets[0]['numRows']; $i++) {
+							$Row=Array();
+							for ($j = 1; $j <= $data->sheets[0]['numCols']; $j++) {
+								$Row[] = $data->sheets[0]['cells'][$i][$j];
+							}
+
+							if ($i == 1 ) {
+								//columns in file
+								$import_header = array_map('strtolower', $Row);
+								$arraysAreEqual = (sort(array_map('strtolower', $Row)) == sort(array_map('strtolower', $this->arrHeader)));
+									if (!$arraysAreEqual) {
+										$status = "failed";
+										$this->mydebug->rafeed_log("Received Columns = ". print_r($import_header,1), 0);
+
+										$this->mydebug->rafeed_log("Columns mis match, expected columns = ". print_r($import_header,1), 0);
+										break;
+									} else {
+										$this->mydebug->rafeed_log("Header matched for " . $_FILES['file']['name'], 0);
+										$this->mydebug->rafeed_log("Processing records.. ", 0);
+										$flag = 1;
+									}
+
+								} else {
+									if ($flag == 1) {
+										$cDocumentType = strtolower($Row[array_search('document type', $import_header)]);
+echo "MISED,$cDocumentType";
+
+										if (is_null($cDocumentType)) {
+											$status = "failed";
+											$this->mydebug->rafeed_log("Document type missed in file - ". $column, 0);
+											break;
+										}
+										$this->mydebug->rafeed_log("ROW=".print_r($Row,1), 0);
+										$this->mydebug->rafeed_log("Doctument Type records.. ". $cDocumentType, 0);
+										switch (strtolower($cDocumentType)) {
+											case 'd': // baggage rafeed
+												$strRedirector = "baggage";
+												$this->baggageUpload($Row, $import_header, $column);
+												break;
+
+											case 't': // ticketing rafeed
+												$this->ticketUpgradeUpload($Row, $import_header, $column);
+												break;
+
+											default:
+												$status = "failed";
+												$this->mydebug->rafeed_log("Document type ($cDocumentType) missed in file - " . $column, 0);
+										}
+									} else {
+										$status = "failed";
+										$this->mydebug->rafeed_log("Header mismatch", 1);
+										//print_r("mismatch");
+										break;
+									}
+								}
+								$column++;
+						}
+						$this->mydebug->rafeed_log("RA FEED Upload complete1!", 1);
+					}
+				} catch (Exception $E) {
+					echo $E->getMessage();
+				}
+				if (file_exists($file)) {
+					unlink($file);
+				}
+				$this->session->set_flashdata($status, $message);
+
+				if ($strRedirector == "index") {
+				#	redirect(base_url("rafeed/index"));
+				} else if ($strRedirector == "baggage") {
+				#	redirect(base_url("rafeed/baggage"));
+				}
+			}
+		} else {
+			$this->data["subview"] = "rafeed/upload";
+			$this->load->view('_layout_main', $this->data);
+		}
+	}
+
 	public function upload()
 	{
 
@@ -306,7 +427,11 @@ class Rafeed extends Admin_Controller
 			} else {
 
 				require(APPPATH . 'libraries/spreadsheet/php-excel-reader/Spreadsheet_Excel_Reader.php');
+				#require(APPPATH . 'libraries/spreadsheet/php-excel-reader/excel_reader2.php');
+				require(APPPATH . 'libraries/PHPExcel/Shared/Date.php');
 				require(APPPATH . 'libraries/spreadsheet/SpreadsheetReader.php');
+				#date_default_timezone_set('Asia/Kolkata');
+				date_default_timezone_set('Asia/Kolkata');
 
 				$status = "success";
 				$message = $this->lang->line('menu_success');
@@ -389,6 +514,8 @@ class Rafeed extends Admin_Controller
 											$this->mydebug->rafeed_log("Document type missed in file - ". $column, 0);
 											break;
 										}
+										$this->mydebug->rafeed_log("ROW=".print_r($Row,1), 0);
+										$this->mydebug->rafeed_log("Doctument Type records.. ". $cDocumentType, 0);
 										switch (strtolower($cDocumentType)) {
 											case 'd': // baggage rafeed
 												$strRedirector = "baggage";
@@ -440,6 +567,8 @@ class Rafeed extends Admin_Controller
 	public function baggageUpload($Row = array(), $import_header = array(), $column = 1)
 	{
 		// check columns count
+
+#echo "<br>ROW=" .  print_r($Row);
 
 		if (count($Row) != 30) {
 			$this->mydebug->rafeed_log("Baggage: Columns Count Missmatch" . $column, 1);
@@ -531,14 +660,15 @@ class Rafeed extends Admin_Controller
 		}
 
 		//depature date
-		$dt = explode("-",str_replace('/', '-', $Row[array_search('flight date', $import_header)]));
-		$arrBaggageRaFeed['departure_date'] = date("Y-m-d", mktime(0, 0, 0, $dt[0], $dt[1], $dt[2]));
+		$date_key = array_search('flight date', $import_header);
+		$arrBaggageRaFeed['departure_date'] =  strtotime(str_replace('/','-',$Row[$date_key]));
 
-		if (!preg_match("/(([0-9]{4}-[0-9]{2})-([0-9]{2}))/", $arrBaggageRaFeed['departure_date'], $matches)) {
+		/*if (!preg_match("/(([0-9]{4}-[0-9]{2})-([0-9]{2}))/", $arrBaggageRaFeed['departure_date'], $matches)) {
 			$this->mydebug->rafeed_log("flight date formate missing - " . $arrBaggageRaFeed['departure_date'] . " - " . $column, 1);
 			return;
 		}
 		$arrBaggageRaFeed['departure_date'] = strtotime($arrBaggageRaFeed['departure_date']);
+*/
 
 		//$rafeed['departure_date'] = strtotime(str_replace('-', '/', $Row[array_search('flight date', $import_header)]));
 		$day_of_week = date('w', $arrBaggageRaFeed['departure_date']);
@@ -834,6 +964,9 @@ class Rafeed extends Admin_Controller
 			return;
 		}
 
+		$date_key = array_search('flight date', $import_header);
+		$rafeed['departure_date'] =  strtotime(str_replace('/','-',$Row[$date_key]));
+/*
 		$dt = explode("-",str_replace('/', '-', $Row[array_search('flight date', $import_header)]));
 		$rafeed['departure_date'] = date("Y-m-d", mktime(0, 0, 0, $dt[0], $dt[1], $dt[2]));
 
@@ -845,6 +978,7 @@ class Rafeed extends Admin_Controller
 		$rafeed['departure_date'] = strtotime($rafeed['departure_date']);
 
 		//$rafeed['departure_date'] = strtotime(str_replace('-', '/', $Row[array_search('flight date', $import_header)]));
+*/
 		$day_of_week = date('w', $rafeed['departure_date']);
 		$day = ($day_of_week) ? $day_of_week : 7;
 		$rafeed['day_of_week'] = $this->airports_m->getDefIdByTypeAndCode($day, '14');
@@ -934,7 +1068,7 @@ class Rafeed extends Admin_Controller
 				return;
 			}
 		} else {
-			$this->mydebug->rafeed_log("Duplicate Entry", 1);
+			$this->mydebug->rafeed_log("UPGRADE - Duplicate Entry", 1);
 			return;
 		}
 	}
@@ -1124,7 +1258,7 @@ class Rafeed extends Admin_Controller
 			$feed->cbox = "<input type='checkbox'  class='deleteRow' value='" . $feed->rafeed_id . "'  /> " . $rownum;
 			$rownum++;
 
-			$feed->departure_date = date('d/m/Y', $feed->departure_date);
+			$feed->departure_date = date('d/m/Y H:i', $feed->departure_date);
 
 			if (permissionChecker('rafeed_delete')) {
 				$feed->action .= btn_delete('rafeed/delete/' . $feed->rafeed_id, $this->lang->line('delete'));
@@ -1336,7 +1470,7 @@ class Rafeed extends Admin_Controller
 			$feed->cbox = "<input type='checkbox'  class='deleteRow' value='" . $feed->rafeed_id . "'  /> " . $rownum;
 			$rownum++;
 
-			$feed->departure_date = date('d/m/Y', $feed->departure_date);
+			$feed->departure_date = date('d/m/Y H:i', $feed->departure_date);
 
 			if (permissionChecker('rafeed_delete')) {
 				$feed->action .= btn_delete('rafeed/delete/' . $feed->rafeed_id, $this->lang->line('delete'));

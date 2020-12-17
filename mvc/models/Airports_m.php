@@ -43,15 +43,11 @@ class Airports_m extends MY_Model
 
 	public function checkAirport($data)
 	{
-		$this->db->select('count(*)')->from('VX_data_defns');
+		$this->db->select('*')->from('VX_data_defns');
 		$this->db->where(array('aln_data_value' => $data, 'aln_data_typeID' => 1));
 		$query = $this->db->get();
 		// print_r($this->db->last_query()); exit;  	  
-		if ($query->row('count(*)') > 0) {
-			return 0;
-		} else {
-			return 1;
-		}
+		return $query->row();
 	}
 
 	public function checkAirportCode($code)
@@ -62,11 +58,12 @@ class Airports_m extends MY_Model
 		return $query->row('count');
 	}
 
-	public function addAirport($airport, $parent, $code)
+	public function addAirport($airport, $parent, $code, $alias = '')
 	{
 		$array = array(
 			'aln_data_value' => $airport,
 			'code' => $code,
+			'alias' => $alias,
 			'aln_data_typeID' => 1,
 			'create_date' => time(),
 			'modify_date' => time(),
@@ -86,6 +83,7 @@ class Airports_m extends MY_Model
 	public function addMasterData($data)
 	{
 		$this->db->insert('VX_master_data', $data);
+		//echo $this->db->last_query();exit;
 		if ($this->db->affected_rows() > 0) {
 			return $this->db->insert_id();
 		} else {
@@ -95,7 +93,7 @@ class Airports_m extends MY_Model
 
 	public function getDefns($type = null, $parent = null)
 	{
-		$this->db->select('vx_aln_data_defnsID,aln_data_typeID,aln_data_value,code')->from('VX_data_defns');
+		$this->db->select('vx_aln_data_defnsID,aln_data_typeID,aln_data_value,code, alias')->from('VX_data_defns');
 		if ($type != null) {
 			$this->db->where('aln_data_typeID', $type);
 		} else {
@@ -180,6 +178,20 @@ class Airports_m extends MY_Model
 		$this->db->join('VX_data_defns mar', 'mar.vx_aln_data_defnsID = m.areaID', 'LEFT');
 		$this->db->join('VX_user u', 'u.userID = m.modify_userID', 'LEFT');
 		$this->db->where('m.vx_amdID', $id);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function getAirportMasterDataByAiportId($id)
+	{
+		$this->db->select('m.*,ma.aln_data_value airport,ma.vx_aln_data_defnsID as airport_id,mc.vx_aln_data_defnsID as country_id,  mc.aln_data_value country, mr.vx_aln_data_defnsID as regin_id, ms.vx_aln_data_defnsID as city_id, mar.vx_aln_data_defnsID as area_id,mr.aln_data_value region,mar.aln_data_value area,ma.code,u.name modify_by,m.modify_date')->from('VX_master_data m');
+		$this->db->join('VX_data_defns ma', 'ma.vx_aln_data_defnsID = m.airportID', 'LEFT');
+		$this->db->join('VX_data_defns ms', 'ms.vx_aln_data_defnsID = m.cityID ', 'LEFT');
+		$this->db->join('VX_data_defns mc', 'mc.vx_aln_data_defnsID = m.countryID', 'LEFT');
+		$this->db->join('VX_data_defns mr', 'mr.vx_aln_data_defnsID = m.regionID', 'LEFT');
+		$this->db->join('VX_data_defns mar', 'mar.vx_aln_data_defnsID = m.areaID', 'LEFT');
+		$this->db->join('VX_user u', 'u.userID = m.modify_userID', 'LEFT');
+		$this->db->where('m.airportID', $id);
 		$query = $this->db->get();
 		return $query->row();
 	}
@@ -322,4 +334,62 @@ class Airports_m extends MY_Model
 		$name = $query->row();
 		return $name;
 	}
+
+	function getAirportICAOCode($defId)
+	{
+
+		$this->db->select('alias');
+		$this->db->from('VX_data_defns');
+		$this->db->where('vx_aln_data_defnsID', $defId);
+		$this->db->limit(1);
+		$query = $this->db->get();
+		$name = $query->row();
+		return $name->alias;
+	}
+
+	function insertAirDistance($fromAirport,$toAirport,$distance)
+	{
+		$array = array(
+			'from_airport' => $fromAirport,
+			'to_airport' => $toAirport,
+			'distance' => $distance
+		);
+		$this->db->insert('VX_airport_distance', $array);
+		// $this->mydebug->debug($data);
+		$this->mydebug->debug($this->db->last_query());
+		if ($this->db->affected_rows() > 0) {
+			return $this->db->insert_id();
+		} else {
+			return FALSE;
+		}
+	}
+
+	function getAirDistances($from_city = 0, $to_city = 0) {
+		$sQuery = "SELECT CONCAT_WS('-', from_airport, to_airport) as airports, distance" ;
+		$sQuery .= " FROM `VX_airport_distance` ";
+		if ($from_city ) {
+			$sQuery .= " AND `from_airport` = $from_city";
+		}
+		if ($to_city ) {
+			$sQuery .= " AND `to_airport` = $to_city";
+		}
+		//$result = $this->install_m->run_query($sQuery);
+		$result = $this->db->query($sQuery);
+		//print_r($this->db->last_query());
+                return  array_column($result->result_array(), 'distance', 'airports');
+	}
+
+	public function getAirportDataDefData($id)
+	{
+		$this->db->select('ma.aln_data_value airport,ma.vx_aln_data_defnsID as airportID, ms.vx_aln_data_defnsID as cityID, mc.vx_aln_data_defnsID as countryID, mr.vx_aln_data_defnsID as regionID, mar.vx_aln_data_defnsID as areaID,  mc.aln_data_value country,mr.aln_data_value region,mar.aln_data_value area,ma.code')->from('VX_data_defns ma');
+		$this->db->join('VX_data_defns ms', 'ms.vx_aln_data_defnsID = ma.parentID ', 'LEFT');
+		$this->db->join('VX_data_defns mc', 'mc.vx_aln_data_defnsID = ms.parentID', 'LEFT');
+		$this->db->join('VX_data_defns mr', 'mr.vx_aln_data_defnsID = mc.parentID', 'LEFT');
+		$this->db->join('VX_data_defns mar', 'mar.vx_aln_data_defnsID = mr.parentID', 'LEFT');
+		$this->db->where('ma.vx_aln_data_defnsID', $id);
+		$query = $this->db->get();
+		//	echo $this->db->last_query();
+		return $query->row();
+	}
+
 }

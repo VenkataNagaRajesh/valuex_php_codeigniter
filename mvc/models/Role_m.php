@@ -40,13 +40,28 @@ class role_m extends MY_Model {
 		parent::delete($id);
 	}
 	
-	public function get_roleinfo($usertypeID =null){
-		$this->db->select('r.*,ut.usertype')->from('VX_role r');
+	public function get_roleinfo($usertypeID =null, $showUserType = 0, $strict = 0){
+		$this->db->select('r.*,ut.usertype, df.*')->from('VX_role r');
 		$this->db->join('VX_usertype ut','ut.usertypeID = r.usertypeID','LEFT');
-		if($usertypeID){
-			$this->db->where('r.usertypeID',$usertypeID);
+		$this->db->join('VX_data_defns df','df.vx_aln_data_defnsID = r.carrier_id','LEFT');
+		$login_airline = $this->session->userdata("login_user_airlineID");
+		if ( $login_airline[0] ){
+			$carrier_id = $login_airline[0];
+		} else {
+			$carrier_id = 0;
+		}
+		if ( $strict ) {
+			$this->db->where("(r.usertypeID = $usertypeID)");
+		} else {
+			if($usertypeID && !$showUserType){
+				$this->db->where("((r.usertypeID = $usertypeID AND carrier_id = 0)  OR  r.carrier_id = $carrier_id)");
+			} elseif ($usertypeID && $usertypeID != 1){
+				$this->db->where("(r.usertypeID = $usertypeID)");
+			}
 		}
 		$query = $this->db->get();
+ //            echo $this->db->last_query(); exit;
+
 		return $query->result();
 	}
 }

@@ -25,6 +25,7 @@ $lang['master_state']='State';
 $lang['master_region']='Region';
 $lang['master_area']='Area';
 $lang['master_code']='Airport Code';
+$lang['master_alias']='ICAO Code';
 $lang['master_active'] = 'Active';
 $lang['airport_information'] = 'Airport Information';
 $lang['master_latitude'] = 'Latitude';

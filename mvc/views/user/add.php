@@ -213,7 +213,7 @@
                                         if(count($roles)) {
                                             foreach ($roles as $key => $role) {
                                                // if(!in_array($usertype->roleID, $blockuser)) {
-                                                    $array[$role->roleID] = $role->role;
+                                                    $array[$role->roleID] = $role->usertype . " - " . $role->role;
                                               //  }
                                             }
                                         }

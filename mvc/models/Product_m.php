@@ -12,8 +12,11 @@ class product_m extends MY_Model {
 	}
 
 	function get_products($array=NULL, $signal=FALSE) {
-		$query = parent::get($array, $signal);
-		return $query;   
+		if ( !$array) {
+			$array = Array("active" => 1);
+		}
+            	$query = $this->db->get_where('VX_products',$array);
+		return $query->result();   
 	}
 
 	function get_single_product($array=NULL) {

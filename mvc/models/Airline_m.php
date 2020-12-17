@@ -191,9 +191,16 @@ class Airline_m extends MY_Model {
 
 	}
 
-	public function getAirCraftTypesList(){
+	public function getAirCraftTypesList($carrierID  = 0  ){
+		$this->db->distinct();
 		$this->db->select('dd.vx_aln_data_defnsID , dd.aln_data_value')->from('VX_data_defns dd');
-		$this->db->where('aln_data_typeID',21);
+		if ( $carrierID ) {
+        		$this->db->join('VX_airline_cabin_map m','m.aircraft_id = dd.vx_aln_data_defnsID');		
+		}
+		$this->db->where('dd.aln_data_typeID',21);
+		if ( $carrierID ) {
+			$this->db->where('m.airline_code',$carrierID);
+		}
 		$query = $this->db->get();
 		$result = $query->result();
 		return $result;

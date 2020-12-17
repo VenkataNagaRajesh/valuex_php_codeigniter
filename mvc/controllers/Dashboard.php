@@ -54,7 +54,7 @@ class Dashboard extends Admin_Controller {
 		$allmenu 	= pluck($this->menu_m->get_order_by_menu(), 'icon', 'link');
 		$allmenulang = pluck($this->menu_m->get_order_by_menu(), 'menuName', 'link');		
 		//$invoices	= $this->invoice_m->get_invoice();	
-        $airports = $this->airports_m->TotalAirports();
+        	$airports = $this->airports_m->TotalAirports();
 		$clients = $this->client_m->clientTotalCount(); 
 		$users = $this->user_m->userTotalCount();
 		$acsr = $this->acsr_m->acsrTotalCount();
@@ -86,27 +86,27 @@ class Dashboard extends Admin_Controller {
 			
 			$deshboardTopWidgetUserTypeOrder = $this->session->userdata('master_permission_set');
 		
-		if(permissionChecker('dashboardwidget_airports')){	
-		   $this->data['dashboardWidget']['airports_master'] 	= $airports;
+		if(permissionChecker('dashboardwidget_airports_master')|| permissionChecker('airports_master')){	
+		   	$this->data['dashboardWidget']['airports_master'] 	= $airports;
 		}
-		if(permissionChecker('dashboardwidget_marketzone')){
+		if(permissionChecker('dashboardwidget_marketzone')|| permissionChecker('marketzone')){
 			$this->data['dashboardWidget']['marketzone']= $marketzones;
 		}	
-		if(permissionChecker('dashboardwidget_season')){
+		if(permissionChecker('dashboardwidget_season')|| permissionChecker('season')){
 			$this->data['dashboardWidget']['season'] = $seasons;	
 		}
-		if(permissionChecker('dashboardwidget_clients')){
+		if(permissionChecker('dashboardwidget_clients')|| permissionChecker('client')){
 			$this->data['dashboardWidget']['client'] = $clients;
 		}
-		if(permissionChecker('dashboardwidget_users')){
+		if(permissionChecker('dashboardwidget_users')|| permissionChecker('user')){
 			$this->data['dashboardWidget']['user'] = $users;
 		}
-		if(permissionChecker('dashboardwidget_acsr')){
+		if(permissionChecker('dashboardwidget_acsr')|| permissionChecker('acsr')){
 			$this->data['dashboardWidget']['acsr']  = $acsr;
 		}
-		if(permissionChecker('dashboardwidget_eerule')){	
+		if(permissionChecker('dashboardwidget_eerule')|| permissionChecker('eerule')){	
 			$this->data['dashboardWidget']['eligibility_exclusion'] = $eerule;
-        }							
+        	}							
 			$this->data['dashboardWidget']['allmenu'] = $allmenu;	
 			$this->data['dashboardWidget']['allmenulang'] = $allmenulang;
 		

@@ -248,10 +248,10 @@ $('#airline_cabin').val('<?=$cabinID?>').trigger('change');
   var id = 0;
  $('#carriermaptable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
       if($(this).prop('checked')) {
-          status = 'chacked';
+          status = 'checked';
           id = $(this).parent().attr("id");
       } else {
-          status = 'unchacked';
+          status = 'unchecked';
           id = $(this).parent().attr("id");
       }
 

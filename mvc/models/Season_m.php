@@ -70,11 +70,29 @@ class season_m extends MY_Model {
 	}
 
 	function getSeasonForDateANDAirlineID($date , $carrierID,$orig_id, $dest_id ) {
+
+		if($year%4 == 0 && $year%100 != 0) {
+		    $leapYear = 1;
+		} elseif($year%400 == 0) {
+		    $leapYear = 1;                          
+		} else {
+		    $leapYear = 0;
+		}
+		if ($leapYear) {
+			$utime = 366*24*60*60;
+		} else {
+			$utime = 365*24*60*60;
+		}
+/*
 		$date_format =  date('d-m', $date); 
 		$current_year =  date("Y");
 		$prv_year = $current_year - 1;
 		 $current_yr_date = strtotime($date_format.'-'.$current_year);
 		 $old_yr_date = strtotime($date_format.'-'.$prv_year);
+*/
+		$current_yr_date = $date;
+		$old_yr_date = $date - $utime;
+
 		$this->db->select('VX_aln_seasonID')->from('VX_season ss');
 		$this->db->join('VX_season_airport_origin_map om','om.seasonID = ss.VX_aln_seasonID','LEFT');
 		$this->db->join('VX_season_airport_dest_map dm','dm.seasonID = ss.VX_aln_seasonID','LEFT');
@@ -108,7 +126,7 @@ class season_m extends MY_Model {
 		 $this->db->limit(1);
 		
                 $query = $this->db->get();
-		#echo "<br>" . $this->db->last_query();
+	#	echo "<br>" . $this->db->last_query();
                 $arr = $query->row();
 		if( $arr->VX_aln_seasonID ) {
 			return $arr->VX_aln_seasonID;

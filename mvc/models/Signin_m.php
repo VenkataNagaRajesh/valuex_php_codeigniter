@@ -225,7 +225,7 @@ class signin_m extends MY_Model {
 
 	function change_password() {
 
-		$tables = array('user' => 'user');
+		$tables = array('VX_user' => 'VX_user');
 
 		$username = $this->session->userdata("username");
 		$old_password = $this->hash($this->input->post('old_password'));

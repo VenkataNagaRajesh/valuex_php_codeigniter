@@ -390,9 +390,9 @@ class Contract extends Admin_Controller {
 				$data['ext_no'] = $this->input->post('ext_no'); 
 				$data['mobile_number'] = $this->input->post('mobile_number');              
 				$data['active'] = $this->input->post('active');
-                $data['create_date'] = time();
-                $data['modify_date'] = time();
-                $data['create_userID'] = $this->session->userdata('loginuserID');
+				$data['create_date'] = time();
+				$data['modify_date'] = time();
+				$data['create_userID'] = $this->session->userdata('loginuserID');
 				$data['modify_userID'] = $this->session->userdata('loginuserID');
 				$data['create_client'] = $userID;               
 				$this->contract_m->insert_contract($data);
@@ -464,8 +464,20 @@ class Contract extends Admin_Controller {
 		   if($this->data['contract']){
 			   $this->data['contract']->products = $this->contract_m->getProductsByContract($this->data['contract']->contractID); 
 			   foreach($this->data['contract']->products as $product){
+				if ( $product ) {
+					$flg = 0;
+					foreach($this->data['products'] as $pd) {
+						if ($pd->productID == $product->productID) {
+							$flg = 1;
+							break;
+						}
+					}
+					if ( !$flg){
+						$this->data['products'][] =  $this->product_m->get_single_product(Array("productID" => $product->productID));
+					}
+				}
 			       	$product->start_date = date_format(date_create($product->start_date),'d-m-Y');
-					$product->end_date = date_format(date_create($product->end_date),'d-m-Y');
+				$product->end_date = date_format(date_create($product->end_date),'d-m-Y');
 			   }
 			   $this->data['users'] = $this->user_m->getClientByAirline($this->data['contract']->airlineID,6);					   
 			if($_POST){  
@@ -508,6 +520,22 @@ class Contract extends Admin_Controller {
 					    $this->contract_m->insert_contract_product($link);	
 					}
 					$i++;
+							  //add product to user
+					foreach($this->data['users'] as $user) {
+					$userID = $user->userID;
+
+		 	   		 $user_products = $this->user_m->getProductsByUser($userID);	
+					$product = Array();
+					 if($userID && ! in_array($this->input->post('pmod'.$i.'-productID'), explode(',',$user_products))){
+						$product["userID"] = $userID;
+						$product["create_date"] = time();
+						$product["modify_date"] = time();
+						$product["create_userID"] = $this->session->userdata('loginuserID');
+						$product["modify_userID"] = $this->session->userdata('loginuserID');					
+						$product['productID'] = $this->input->post('pmod'.$i.'-productID');
+						$this->user_m->insert_user_product($product);					
+					 }
+					}
 					} 
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url("contract/index"));

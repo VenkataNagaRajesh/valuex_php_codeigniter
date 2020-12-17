@@ -385,7 +385,7 @@
                     },
                     action: function(e, dt, node, config) {
                         $.ajax({
-                            url: "<?php echo base_url('rafeed/server_processing'); ?>?page=all&&export=1",
+                            url: "<?php echo base_url('rafeed/server_processing_baggage'); ?>?page=all&&export=1",
                             type: 'get',
                             data: {
                                 sSearch: $("input[type=search]").val(),

@@ -54,7 +54,7 @@ $arrayColor = array(
     'txt-bg-colr9',
         'txt-bg-colr10',
         'bg-pink-light',
-        'bg-teal-light',
+        'txt-bg-colr10',
     'bg-pink-light'
 );
 
@@ -77,15 +77,21 @@ foreach($dashboardWidget as $key => $value){
         $widget[$key] = !is_object($value)?$value:$value->count;
     }
 } 
+#echo "<pre>WIDGE=" . print_r($dashboardWidget,1) . "</pre>";
 $userArray[$this->session->userdata('roleID')] = $widget;
+#echo "<pre>USERARR=" . print_r($userArray,1) . "</pre>";
 $generateBoxArray = array();
 $counter = 0;
 $getActiveUserID = $this->session->userdata('roleID');
 $getAllSessionDatas = $this->session->userdata('master_permission_set');
 
+#echo "<pre>PERMS=" . print_r($getAllSessionDatas,1) . "</pre>";exit;
 foreach ($getAllSessionDatas as $getAllSessionDataKey => $getAllSessionData) {
     if($getAllSessionData == 'yes') {     
-        if(isset($userArray[$getActiveUserID][$getAllSessionDataKey])) {
+        if(isset($userArray[$getActiveUserID][$getAllSessionDataKey]) || (isset($userArray[$getActiveUserID][str_replace('dashboardwidget_','',$getAllSessionDataKey)]))) {
+        if(isset($userArray[$getActiveUserID][str_replace('dashboardwidget_','',$getAllSessionDataKey)])) {
+			$getAllSessionDataKey = str_replace('dashboardwidget_','',$getAllSessionDataKey);
+	}
 				
            /*  if($counter == 4) {
               break;
@@ -93,7 +99,8 @@ foreach ($getAllSessionDatas as $getAllSessionDataKey => $getAllSessionData) {
 
             $generateBoxArray[$getAllSessionDataKey] = array(
                 'icon' => $dashboardWidget['allmenu'][$getAllSessionDataKey]?$dashboardWidget['allmenu'][$getAllSessionDataKey]:$dashboardWidget[$getAllSessionDataKey]->icon,
-                'color' => $arrayColor[$counter],
+                //'color' => $arrayColor[rand(0,count($arrayColor))],
+                'color' => $arrayColor[rand(0,count($arrayColor))],
                 'link' => $dashboardWidget[$getAllSessionDataKey]->link?$dashboardWidget[$getAllSessionDataKey]->link:$getAllSessionDataKey,
                 'count' => $userArray[$getActiveUserID][$getAllSessionDataKey],
                 'menu' => $dashboardWidget['allmenulang'][$getAllSessionDataKey]?$dashboardWidget['allmenulang'][$getAllSessionDataKey]:$dashboardWidget[$getAllSessionDataKey]->menu,
@@ -103,6 +110,7 @@ foreach ($getAllSessionDatas as $getAllSessionDataKey => $getAllSessionData) {
     }
 }
 
+#echo "<pre>" . print_r($generateBoxArray,1) . "</pre>";exit;
 //print_r($generateBoxArray); exit;
 ?>
 <div id="notice-warning" style="display:none;" class="col-md-12">

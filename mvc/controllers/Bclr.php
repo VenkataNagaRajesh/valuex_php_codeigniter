@@ -30,37 +30,37 @@ class Bclr extends Admin_Controller
             array(
                 'field' => 'carrierID',
                 'label' => $this->lang->line("carrier"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|required|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'from_cabin[]',
                 'label' => $this->lang->line("from_cabin"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'partner_carrierID',
                 'label' => $this->lang->line("partner_carrier"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'allowance',
                 'label' => $this->lang->line("allowance"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'aircraft_type',
                 'label' => $this->lang->line("aircraft_type"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'flight_num_range',
                 'label' => $this->lang->line("flight_number_range"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valFlightrange'
+                'rules' => 'trim|max_length[200]|xss_clean|callback_valFlightrange'
             ),
             array(
                 'field' => 'origin_level',
                 'label' => $this->lang->line("origin_level"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|required|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'origin_content[]',
@@ -70,7 +70,7 @@ class Bclr extends Admin_Controller
             array(
                 'field' => 'dest_level',
                 'label' => $this->lang->line("dest_level"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|required|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'dest_content[]',
@@ -95,7 +95,7 @@ class Bclr extends Admin_Controller
             array(
                 'field' => 'rule_auth_carrier',
                 'label' => $this->lang->line("rule_auth"),
-                'rules' => 'trim|required|max_length[200]|xss_clean|callback_validateLevel'
+                'rules' => 'trim|max_length[200]|xss_clean'
             ),
             array(
                 'field' => 'dep_time_start',
@@ -365,8 +365,7 @@ class Bclr extends Admin_Controller
     function valFlightrange($post_string)
     {
         if (empty($post_string)) {
-            $this->form_validation->set_message("valFlightrange", "%s is required");
-            return FALSE;
+            return TRUE;
         } else if (preg_match('/(\d+)-(\d+)/', trim($post_string), $matches)) {
             return TRUE;
         } else {
@@ -409,9 +408,9 @@ class Bclr extends Admin_Controller
     {
         $carrierID = $this->input->post('carrierID');
         $aircrafts = $this->airline_m->getAirCraftTypesList($carrierID);
-        //echo "<option value='0'> Select Aircraft </option>";
+        echo "<option value='0'> Select Aircraft </option>";
         foreach ($aircrafts as $aircraft) {
-            echo "<option value='" . $aircraft->aircraftID . "'>" . $aircraft->aln_data_value . "</option>";
+            echo "<option value='" . $aircraft->vx_aln_data_defnsID . "'>" . $aircraft->aln_data_value . "</option>";
         }
     }
 
@@ -477,9 +476,9 @@ class Bclr extends Admin_Controller
                     'dest_content' => form_error('dest_content[]'),
                     'effective_date' => form_error('effective_date'),
                     'discontinue_date' => form_error('discontinue_date'),
-                    'frequency' => form_error('frequency'),
+                    #'frequency' => form_error('frequency'),
                     'bag_type' => form_error('bag_type'),
-                    'rule_auth_carrier' => form_error('rule_auth_carrier'),
+                    #'rule_auth_carrier' => form_error('rule_auth_carrier'),
                     'dep_time_start' => form_error('dep_time_start'),
                     'dep_time_end' => form_error('dep_time_end'),
                     'min_unit' => form_error('min_unit'),
@@ -493,7 +492,7 @@ class Bclr extends Admin_Controller
                 $array['partner_carrierID'] = $this->input->post('partner_carrierID');
                 $array['season_id'] = $this->input->post('season');
                 $array['allowance'] = $this->input->post('allowance');
-                $array['aircraft_typeID'] = $this->input->post('aircraft_type');
+                $array['aircraft_typeID'] = (int)$this->input->post('aircraft_type');
                 $array['flight_num_range'] = trim($this->input->post('flight_num_range'));
                 $array['origin_level'] = $this->input->post('origin_level');
                 $array['origin_content'] =  implode(',', $this->input->post('origin_content'));
@@ -596,6 +595,7 @@ class Bclr extends Admin_Controller
     public function index()
     {
 
+		$bclr_id = htmlentities(escapeString($this->uri->segment(3)));
         $this->data['headerassets'] = array(
             'css' => array(
                 'assets/select2/css/select2.css',
@@ -609,6 +609,10 @@ class Bclr extends Admin_Controller
                 'assets/timepicker/timepicker.js'
             )
         );
+
+	if($bclr_id > 0 || $this->input->post('flt_bclr_id')){
+	  $this->data['flt_bclr_id'] = $bclr_id;
+	}
 
         $userID = $this->session->userdata('loginuserID');
         $roleID = $this->session->userdata('roleID');
@@ -861,6 +865,11 @@ class Bclr extends Admin_Controller
             }
         }
 
+	 if(!empty($this->input->get('bclr_id'))){
+		$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+            	$sWhere .= 'MainSet.bclr_id  = '.$this->input->get('bclr_id');
+
+	}
 
         $roleID = $this->session->userdata('roleID');
         $userID = $this->session->userdata('loginuserID');
@@ -960,6 +969,8 @@ class Bclr extends Admin_Controller
 
             if (permissionChecker('bclr_view')) {
                 $feed->action .=  '<a target="_blank" href="' . base_url('bclr/showcwtgraph/' . $feed->bclr_id) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="CWT graph"><i class="fa fa-eye"></i></a>';
+                $feed->action .=  '<a target="_blank" href="' . base_url('bclr/checkRABGFeedMatchForBclrID/' . $feed->bclr_id) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="CHECK RAFEED MATCH"><i class="fa fa-check"></i></a>';
+                #$feed->action .=  '<a target="_blank" href="#" onclick="matchRafeed('. $feed->bclr_id . '); return false;" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="CHECK RAFEED MATCH"><i class="fa fa-eye"></i></a>';
             }
 
             if (permissionChecker('bclr_delete')) {
@@ -1130,6 +1141,79 @@ class Bclr extends Admin_Controller
         return TRUE;
     }
 
+    public function checkRABGFeedMatchForBclrID() {
+		$json = Array();
+        $id = htmlentities(escapeString($this->uri->segment(3)));
+        if ($_POST) {
+            $bclr_id = $this->input->post("bclr_id");
+
+                $array['carrierID'] = $this->input->post('carrierID');
+                #$array['from_cabin'] = implode(',', $this->input->post('from_cabin'));
+                $array['partner_carrierID'] = $this->input->post('partner_carrierID');
+                $array['season_id'] = $this->input->post('season');
+                $array['allowance'] = $this->input->post('allowance');
+                $array['aircraft_typeID'] = (int)$this->input->post('aircraft_type');
+                $array['flight_num_range'] = trim($this->input->post('flight_num_range'));
+                $array['origin_level'] = $this->input->post('origin_level');
+                $array['origin_content'] =  implode(',', $this->input->post('origin_content'));
+                $array['from_cabin'] =  implode(',', $this->input->post('from_cabin'));
+                $array['dest_level'] = $this->input->post('dest_level');
+                $array['dest_content'] =  implode(',', $this->input->post('dest_content'));
+               
+                $array['effective_date'] = strtotime($this->input->post('effective_date'));
+                // echo  $array['effective_date'] ;
+                $array['discontinue_date'] = strtotime($this->input->post('discontinue_date'));
+                // echo  $array['discontinue_date'] ;die();
+                //  $array['frequency'] = $this->input->post('frequency');
+                $array['bag_type'] = $this->input->post('bag_type');
+                $array['rule_auth'] = $this->input->post('rule_auth_carrier');
+                $array['dep_time_start'] = $this->convertTimeToSeconds($this->input->post('dep_time_start'));
+                $array['dep_time_end'] = $this->convertTimeToSeconds($this->input->post('dep_time_end'));
+                $array['min_unit'] = $this->input->post('min_unit');
+                $array['max_capacity'] = $this->input->post('max_capacity');
+                $array['min_price'] = $this->input->post('min_price');
+                $array['max_price'] = $this->input->post('max_price');
+
+                $freq = $this->airports_m->getDefnsCodesListByType('14');
+                $frstr = $this->input->post("frequency") ? $this->input->post("frequency") : 0;
+                if ($frstr === '*') {
+                    $frstr = '1234567';
+                }
+                if ($frstr != '0') {
+                    $arr = str_split($frstr);
+                    $array["frequency"]  = implode(',', array_map(function ($x) use ($freq) {
+                        return array_search($x, $freq);
+                    }, $arr));
+                }
+		ob_start();
+        	$objCWTData = $this->getCWTHistorialData((object)$array,0,1);
+		$msg2 = ob_get_contents();
+		ob_end_clean ();
+	} elseif ($id) {
+
+        	$bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));
+		ob_start();
+        	$objCWTData = $this->getCWTHistorialData($bclr,0,1);
+		$msg2 = ob_get_contents();
+		ob_end_clean ();
+	}
+	if ( is_object($objCWTData )) {
+		$no_of_passengers = $objCWTData->no_of_passingers;
+		if ( !$no_of_passengers ) {
+			$msg  = "Warning!, No data matched with selected BC Rules#$id in Baggage RA Feed";
+		}
+	}
+	if ($msg || $msg2 ) {
+		$json['status'] = "success : $msg<br>$msg2";
+	} else {
+		$json['status'] = "success<br>$msg2";
+	}
+	if ( $_POST ) {
+		$this->output->set_content_type('application/json');
+		$this->output->set_output(json_encode($json));
+	}
+    }
+
     public function generateCWTBCLR($id, $action_status="")
     {
         $bclr = $this->bclr_m->get_single_bclr(array('bclr_id' => $id));
@@ -1286,7 +1370,7 @@ class Bclr extends Admin_Controller
     
         }
 
-    private function getCWTHistorialData($arrBclrData = array(), $total_flight_count = 0)
+    private function getCWTHistorialData($arrBclrData = array(), $total_flight_count = 0, $matchCheck = 0)
     {
         $nCarrerID = $arrBclrData->carrierID;
         $cabin = $arrBclrData->from_cabin;
@@ -1300,6 +1384,18 @@ class Bclr extends Admin_Controller
 	$origin_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($arrBclrData->origin_content, $arrBclrData->origin_level);
 	$dest_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($arrBclrData->dest_content, $arrBclrData->dest_level);
 
+	$dep_start_date = $arrBclrData->effective_date + $dep_time_start;
+	$dep_end_date = $arrBclrData->discontinue_date + $dep_time_end;
+	$oneyearsecs = 366*24*60*60;
+	$start_date = $dep_start_date - $oneyearsecs;
+	$end_date = $dep_end_date - $oneyearsecs;
+	
+
+/*
+	echo "CUR-DEP-DATE=" .  date("Y-m-d H:i:s" ,$dep_start_date);
+	echo "<br>CUR-END-DATE=" .  date("Y-m-d H:i:s" ,$dep_end_date);
+	$start_date = date("Y-m-d H:i:s" ,$dep_start_date - $oneyearsecs);
+	$end_date = date("Y-m-d H:i:s" ,$dep_end_date - $oneyearsecs);
         $start_date_m = date("m-d", $arrBclrData->effective_date);
         $get_previous_year = date("Y", $arrBclrData->effective_date);
         $start_date = ($get_previous_year -1) . "-". $start_date_m; // 2019-01-05
@@ -1316,11 +1412,15 @@ class Bclr extends Admin_Controller
         if ( $dep_time_end ) {
             $end_date .= " ".  gmdate('H:i:s', $dep_time_end);
         }
+*/
         
             $sQuery = '';
 
 	if ( $total_flight_count ) {
         	$sQuery .= " SELECT COUNT(*) as total_flight_count FROM ( SELECT count(*) ";
+	} elseif ($matchCheck ) {
+		#$total_flight_count = 1;
+        	$sQuery .= " SELECT COUNT(*) as total_flight_count   ";
 	} else {
         $sQuery .= " SELECT
                 count(id) as no_of_passingers, 
@@ -1333,9 +1433,19 @@ class Bclr extends Admin_Controller
         $sQuery .= " from BG_ra_feed where id is NOT NULL ";
         
 
+
         if ( $nCarrerID ) {
             $sQuery .= " AND carrier = " . $nCarrerID . " ";
         }
+
+        if ( $matchCheck) {
+       	  echo "<br>BAGGAGE RAFEED RECORDS MATCHING RESULTS ..";
+ 	}
+
+        if ( $matchCheck && $nCarrerID ) {
+       	  echo "<br>Carrier ($nCarrerID) Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
+ 	}
+
         if ( $origin_list_p ) {
             if (is_array($origin_list_p)) {
                 $sQuery .= " AND boarding_point IN (" . implode(',',$origin_list_p) . ")";
@@ -1343,6 +1453,11 @@ class Bclr extends Admin_Controller
                 $sQuery .= " AND boarding_point = " . $origin_list_p . " ";
             }
         }
+        if ( $matchCheck && $origin_list_p && $dest_list_p  ) {
+       	  echo "<br>PREVIOUS MATCH + ORIGIN LIST (" .  (is_array($origin_list_p) ? implode(',',$origin_list_p) : $origin_list_p) .") Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
+ 	}
+
+
         if ( $dest_list_p ) {
             if (is_array($dest_list_p)) {
                 $sQuery .= " AND off_point IN (" . implode(',',$dest_list_p) . ")";
@@ -1350,16 +1465,30 @@ class Bclr extends Admin_Controller
                 $sQuery .= " AND off_point = " . $dest_list_p . " ";
             }
         }
+
+        if ( $matchCheck && $origin_list_p && $dest_list_p  ) {
+       	  echo "<br>PREVIOUS MATCH + ORIGIN LIST (" .   (is_array($origin_list_p) ? implode(',',$origin_list_p) : $origin_list_p) .") AND DESTINATION  (" .  (is_array($dest_list_p) ? implode(',',$dest_list_p): $dest_list_p) .") Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
+ 	}
+
         if ( $start_flight_range && $end_flight_range ) {
             $sQuery .= " AND  flight_number between $start_flight_range and $end_flight_range ";
         } else if ( $start_flight_range ) {
             $sQuery .= " AND  flight_number = " . $start_flight_range;
         }
+
+        if ( $matchCheck && ($start_flight_range || $end_flight_range)  ) {
+       	  echo "<br>PREVIOUS MATCH + FLIGHT RANGE  ($start_flight_range and $end_flight_range)   Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
+ 	}
+
         if ( $start_date && $end_date ) {
-            $sQuery .= " AND  departure_date BETWEEN UNIX_TIMESTAMP('$start_date') and UNIX_TIMESTAMP('$end_date')  ";
+            $sQuery .= " AND  departure_date BETWEEN $start_date and $end_date  ";
         } else if ( $start_date ) {
-            $sQuery .= " AND  departure_date > UNIX_TIMESTAMP('$start_date') ";
+            $sQuery .= " AND  departure_date > $start_date) ";
         }
+
+        if ( $matchCheck && ($start_date || $end_date)  ) {
+       	  echo "<br>PREVIOUS MATCH + FLIGHT DEPARTURE DATE RANGE  (" . date("m-d-Y H:i",$start_date) . " - " .   date("m-d-Y H:i",$end_date). " )   Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
+	}
 
         if ( $cabin ) {
             if (is_array($cabin)) {
@@ -1370,6 +1499,11 @@ class Bclr extends Admin_Controller
                 $sQuery .= "AND cabin = '".$cabin."' ";
             }
         }
+
+        if ( $matchCheck && ($cabin)  ) {
+       	  echo "<br>PREVIOUS MATCH + FLIGHT CABIN  (" . (is_array($cabin) ? implode(',',$cabin): $cabin) . ") Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
+ 	}
+
         if ( $frequency ) {
             if (is_array($frequency)) {
                 $sQuery .= "AND day_of_week IN (" . implode(',',$frequency) . ")";
@@ -1377,12 +1511,21 @@ class Bclr extends Admin_Controller
                 $sQuery .= "AND day_of_week IN  (" . $frequency . ") ";
             }
         }
+
+        if ( $matchCheck && ($frequency)  ) {
+       	  echo "<br>PREVIOUS MATCH + FLIGHT FREQUENCY  (" . (is_array($frequency) ? implode(',',$frequency): $frequency) . ") Matched Records = " . $this->install_m->run_query($sQuery)[0]->total_flight_count;
+ 	}
 	if ( $total_flight_count ) {
                 $sQuery .= " GROUP BY  departure_date, flight_number ) as ftable  ";
 	}
-    	#echo "<br>$sQuery ";
-       return $rResult = $this->install_m->run_query($sQuery)[0];
+       #echo "<br>$sQuery ";
+       $matched = $this->install_m->run_query($sQuery)[0];
+        if ( $matchCheck ) {
+       	  echo "<br>TOTAL Matched Records = " . $matched->total_flight_count;
+ 	}
+       return $matched ;
     }
+
     /* Prathyusha commented not required
     function dragchart(){
 		$this->data["subview"] = "bclr/editcwtgraph";

@@ -679,8 +679,6 @@ $sQuery .= " INNER JOIN UP_fare_control_range fclr on (pe.rule_id = fclr.fclr_id
  $sWhere 
 $sOrder $sLimit";
 
-#echo $sQuery;exit;
-
 
 /*$sQuery = "   select ofr.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name SEPARATOR '<br>')  as list from VX_aln_offer_ref ofr  LEFT JOIN  VX_daily_tkt_pax_feed pf on (pf.pnr_ref = ofr.pnr_ref)  group by ofr.pnr_ref";
 */
