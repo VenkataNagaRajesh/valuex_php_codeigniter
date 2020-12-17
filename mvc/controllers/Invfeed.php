@@ -209,10 +209,7 @@ class Invfeed extends Admin_Controller {
                                                          $invfeed['origin_airport'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['origin_airport'],'1');
 							 $invfeed['dest_airport'] = $this->airports_m->getDefIdByTypeAndCode($invfeedraw['dest_airport'],'1');
                                                          $invfeed['cabin'] = $this->airline_cabin_def_m->getCabinIDForCarrierANDCabin($invfeed['airline_id'],$invfeedraw['cabin']);
-                                                         $invfeed['empty_seats'] = $invfeedraw['empty_seats'] ;
                                                          $invfeed['aircraft_typeID'] = $invfeedraw['aircraft_typeID'] ;
-                                                         $invfeed['seat_capacity'] = $invfeedraw['seat_capacity'] ;
-                                                         $invfeed['sold_weight'] = $invfeedraw['sold_weight'] ;
 
                                                         $insert_flag = 1;
                                                         foreach ($invfeed as $k=>$v) {
@@ -230,17 +227,24 @@ class Invfeed extends Admin_Controller {
 
                                                          //$invfeed['sold_seats'] =   $invfeedraw['sold_seats'];
 							$inv_feed_old = $this->invfeed_m->checkInvFeed($invfeed);
+                                                        $invfeed['seat_capacity'] = $invfeedraw['seat_capacity'] ;
+                                                        $invfeed['sold_weight'] = $invfeedraw['sold_weight'] ;
+                                                        $invfeed['empty_seats'] = $invfeedraw['empty_seats'] ;
 							$insert = 0;
+print_r($inv_feed);
+							echo "INV OLD ID=". $inv_feed_old;
+print_r($inv_feed_old);
 							if($inv_feed_old) { //we have exact match
 								//Check any new update for that record , then deactive old record
 								if( $inv_feed_old->seat_capacity != $invfeed['seat_capacity'] || $inv_feed_old->empty_seats != $invfeed['empty_seats'] || $inv_feed_old->sold_weight != $invfeed['sold_weight']  ){ 
 								// if inv feed feed exist make it inactive
-									$invfeed['active'] = 1;
-									$invfeed['invfeed_id'] = $inv_feed_old->invfeed_id;
+									$inv = Array();
+									$inv['active'] = 1;
+									$inv['invfeed_id'] = $inv_feed_old->invfeed_id;
 									$update['active'] = 0;
 									$update['modify_date'] = time();
 									$update['modify_userID'] = $this->session->userdata('loginuserID');
-									$this->invfeed_m->update_entries($update,$invfeed);
+									$this->invfeed_m->update_entries($update,$inv);
 									$insert = 1;
 								}
 						  	} else {
@@ -291,7 +295,7 @@ class Invfeed extends Admin_Controller {
 		    	unlink($file);					
 		    }			
 			 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-		     redirect(base_url("invfeed/index")); 	
+		     #redirect(base_url("invfeed/index")); 	
 		 }	
 	 } else {
 			$this->data["subview"] = "invfeed/upload";
