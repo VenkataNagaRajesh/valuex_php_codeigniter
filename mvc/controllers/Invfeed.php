@@ -295,7 +295,7 @@ print_r($inv_feed_old);
 		    	unlink($file);					
 		    }			
 			 $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-		     #redirect(base_url("invfeed/index")); 	
+		     redirect(base_url("invfeed/index")); 	
 		 }	
 	 } else {
 			$this->data["subview"] = "invfeed/upload";
