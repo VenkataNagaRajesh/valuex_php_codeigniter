@@ -10,7 +10,7 @@
     <!-- form start --> 
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">              
+            <div class="col-md-12">              
               <h5 class="page-header">                        
 		<?php if(permissionChecker('paxfeed_upload')) { ?>
                   <a href="<?php echo base_url('paxfeed/upload') ?>" class="btn btn-danger">
@@ -32,7 +32,8 @@
                         </a>
 
 
-              </h5>
+              </h5><br>
+			  <div class="nav-tabs-custom pax" style="display:flex;margin-bottom:0;">
 			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0">		   
 			<div class='form-group'>			 
 
@@ -151,15 +152,15 @@
 
 
 
-                <div class="col-md-3 col-sm-6">
+                <div class="col-sm-12" style="text-align:right;">
 		   <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
                     <button type="button" class="btn btn-danger" onclick="downloadPAXFeed()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
 
                 </div>	             				
 			  </div>
 			 </form>			
-
-<div class="col-md-12" style="padding:0;">
+			</div>
+		<div class="col-md-12" style="padding:0;">
                         <div class="tab-content table-responsive" id="hide-table">
                <table id="paxfeedtable" class="table table-bordered dataTable no-footer">
                  <thead>
@@ -316,7 +317,7 @@
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf',orientation: 'landscape', pageSize: 'LEGAL',customize: function (doc) { doc.defaultStyle.fontSize = 7;  doc.styles.tableHeader.fontSize = 7;  },  exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('paxfeed/server_processing'); ?>?page=all&&export=1",

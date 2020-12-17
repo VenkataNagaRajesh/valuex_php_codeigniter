@@ -17,7 +17,8 @@
     </h5>
 	<div class="box-body">
       <div class="row">
-         <div class="col-sm-12"> 
+         <div class="" style="padding-left:0;"> 
+		 <div class="nav-tabs-custom">
      <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>
                 <div class="col-sm-2 col-xs-6">			   
@@ -33,9 +34,10 @@
                 </div>
             </div>				
 	 </form>
+	 </div>
     <!-- form start -->
     
-            <div class="col-sm-12">              		 				
+            <div class="">              		 				
             <div id="hide-table">
                <table id="defdata" class="table table-bordered dataTable no-footer">
                  <thead>
@@ -134,7 +136,7 @@
                     order: 'applied',page : 'all'}
           		},
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-				{ text: 'ExportAll', exportOptions: { columns: ':visible' },
+				{ text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('definition_data/server_processing'); ?>?page=all&&export=1",

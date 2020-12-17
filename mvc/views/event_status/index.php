@@ -20,12 +20,12 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">			
+            <div class="col-md-12">			
 			  <div class="nav-tabs-custom">
-               <ul class="nav nav-tabs">
+               <!--<ul class="nav nav-tabs">
                   <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
-               </ul><br>
-			<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+               </ul>-->
+			<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding: 0 15px;">
                       <div class='form-group'>
                            <div class="col-sm-2">
                <?php $booking_status['0'] = "Event Name";
@@ -60,7 +60,7 @@
                 </div>
                           </div>
                          </form>
-
+			</div>
 		
 		
 	       <div class="tab-content">
@@ -92,7 +92,6 @@
 				  </div>
                 </div>
               </div>
-            </div>
 		  </div>
         </div>
     </div>

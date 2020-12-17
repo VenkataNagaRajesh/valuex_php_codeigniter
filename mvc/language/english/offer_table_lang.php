@@ -4,6 +4,7 @@
 $lang['panel_title'] = "Bid Details";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
+$lang['menu_bid'] = "Bid Details";
 $lang['active'] = 'Status';
 $lang['offer_information'] = 'Offer Information';
 $lang['details'] = 'View Details';

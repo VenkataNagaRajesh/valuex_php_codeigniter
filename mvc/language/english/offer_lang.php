@@ -4,6 +4,7 @@
 $lang['panel_title'] = "Offer Issue Management";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
+$lang['menu_offer'] = "Offer Details";
 $lang['active'] = 'Status';
 $lang['offer_information'] = 'Offer Issue Information';
 

@@ -6,6 +6,7 @@ $lang['add_title'] = "Add a marketzone";
 $lang['slno'] = "#";
 $lang['market_id'] = 'Marketzone ID';
 $lang['market_name'] = "Marketzone Name";
+$lang['menu_market_zone'] = "Marketzones";
 $lang['level_type'] = "Level type";
 $lang['airline_id'] = 'Airline Code';
 $lang['amz_level_value'] = "Level value";

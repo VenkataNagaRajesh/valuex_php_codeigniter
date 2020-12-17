@@ -10,7 +10,7 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">              
+            <div class="col-md-12">              
               <h5 class="page-header">                        
 					<?php if(permissionChecker('airports_master_upload')) { ?>
                   <a href="<?php echo base_url('airports_master/upload') ?>" class="btn btn-danger">
@@ -22,7 +22,8 @@
                      <?=$this->lang->line('download_airport_format')?>
                   </a>&nbsp;&nbsp;
 			    <?php } ?>
-              </h5>
+              </h5><br>
+			  <div class="nav-tabs-custom" style="margin-bottom:0;">
 			  <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>
                 <div class="col-sm-2">			   
@@ -59,7 +60,8 @@
 				  <button type="button" class="btn btn-danger" onclick="downloadMasterData()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
                 </div>	             				
 			  </div>
-			 </form>		 
+			 </form>	
+			</div>
             <div id="hide-table">
                <table id="master" class="table table-bordered dataTable no-footer">
                  <thead>
@@ -163,7 +165,7 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel',exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('airports_master/server_processing'); ?>?page=all&&export=1",

@@ -1,8 +1,6 @@
-
 <div class="box">
     <div class="box-header">
-        <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>
-
+        <h3 class="box-title"><i class="fa fa-user"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active"><?=$this->lang->line('menu_partner')?></li>
@@ -18,74 +16,73 @@
          </h5>
      <?php } ?>
     <!-- form start -->
-    <br/>
     <div class="box-body">
-        <div class="row">        
-            <div class="col-md-12">
-                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
-                        <div class='form-group'>
-                            <div class="col-sm-2 col-xs-6">			   
-                            <?php $list1 = array("0" => "Carrier");               
-                                    foreach($myairlines as $airline){
-                                    $list1[$airline->vx_aln_data_defnsID] = $airline->code;	
-                                    }				
-                            echo form_dropdown("carrierID", $list1,set_value("carrierID",$carrierID), "id='carrierID' class='form-control hide-dropdown-icon select2'");    ?>
-                            </div>
-                            <div class="col-sm-2 col-xs-6">			   
-                            <?php  $list2 = array("0" => "Partner Carrier");               
-                                    foreach($airlines as $airline){
-                                    $list2[$airline->vx_aln_data_defnsID] = $airline->code;	
-                                    }				
-                                    echo form_dropdown("partner_carrierID", $list2,set_value("partner_carrierID",$partner_carrierID), "id='partner_carrierID' class='form-control hide-dropdown-icon select2'");    ?>
-                            </div>
-                            <div class="col-sm-2 col-xs-6">	
-                                <?php $origin_level_list[0]="Origin Level";
-                                 foreach($types as $type){
-                                  $origin_level_list[$type->vx_aln_data_typeID] = $type->alias;
-                                 }
-                                echo form_dropdown("origin_level", $origin_level_list, set_value("origin_level"), "id='origin_level' class='form-control select2'");
-                                ?>
-                            </div>
-                            <div class="col-sm-2 col-xs-6">
-				                <select  name="origin_content[]"  placeholder="Origin Content" id="origin_content" class="form-control select2" multiple="multiple">
-				                </select> 
-                            </div>
-                            <div class="col-sm-2 col-xs-6">	
-                            <?php $dest_level_list[0]="Destination Level";
-                                 foreach($types as $type){
-                                  $dest_level_list[$type->vx_aln_data_typeID] = $type->alias;
-                                 }
-                                echo form_dropdown("dest_level", $dest_level_list, set_value("dest_level"), "id='dest_level' class='form-control select2'");
-                            ?>
-                            </div> 
-                            <div class="col-sm-2 col-xs-6">
-				                <select  name="dest_content[]"  placeholder="Destination Content" id="dest_content" class="form-control select2" multiple="multiple">
-				                </select> 
-                            </div> 
-                        </div>
-                        <div class='form-group'>
-                            <div class="col-sm-2 col-xs-6">
-                                <div class="input-group" style="margin-bottom: 0">
-                                    <input type="text" class="form-control hasDatepicker" placeholder="Start Date"  id="start_date" name="start_date" value="<?=set_value('start_date',$start_date)?>" >
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                </div>
-                            </div>
-                            <div class="col-sm-2 col-xs-6">
-                                <div class="input-group" style="margin-bottom: 0">
-                                    <input type="text" class="form-control hasDatepicker" placeholder="End Date" id="end_date" name="end_date" value="<?=set_value('end_date',$end_date)?>" >
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                </div>
-                            </div>
-                            <div class="col-sm-2 col-xs-6">
-                                <button type="submit" class="form-control btn btn-danger" name="filter" id="filter">Filter</button>
-                            </div>
-                            <div class="col-sm-2">
-                            <a href="#" type="button"  class="btn btn-danger" onclick="downloadPartners()" data-title="Download" data-toggle="tooltip" data-placement="top" style="padding: 6px 12px;"><i class="fa fa-download"></i></a>
-                            </div>                                                     
-                        </div>				
-                </form>
-            </div>
-            <div class="col-sm-12 off-elg-table">
+        <div class="row">
+			<div class="nav-tabs-custom" style="display:flex;margin-bottom:0;">
+				<div class="col-md-12">
+					<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
+							<div class='form-group'>
+								<div class="col-sm-2 col-xs-6">			   
+								<?php $list1 = array("0" => "Carrier");               
+										foreach($myairlines as $airline){
+										$list1[$airline->vx_aln_data_defnsID] = $airline->code;	
+										}				
+								echo form_dropdown("carrierID", $list1,set_value("carrierID",$carrierID), "id='carrierID' class='form-control hide-dropdown-icon select2'");    ?>
+								</div>
+								<div class="col-sm-2 col-xs-6">			   
+								<?php  $list2 = array("0" => "Partner Carrier");               
+										foreach($airlines as $airline){
+										$list2[$airline->vx_aln_data_defnsID] = $airline->code;	
+										}				
+										echo form_dropdown("partner_carrierID", $list2,set_value("partner_carrierID",$partner_carrierID), "id='partner_carrierID' class='form-control hide-dropdown-icon select2'");    ?>
+								</div>
+								<div class="col-sm-2 col-xs-6">	
+									<?php $origin_level_list[0]="Origin Level";
+									 foreach($types as $type){
+									  $origin_level_list[$type->vx_aln_data_typeID] = $type->alias;
+									 }
+									echo form_dropdown("origin_level", $origin_level_list, set_value("origin_level"), "id='origin_level' class='form-control select2'");
+									?>
+								</div>
+								<div class="col-sm-2 col-xs-6">
+									<select  name="origin_content[]"  placeholder="Origin Content" id="origin_content" class="form-control select2" multiple="multiple">
+									</select> 
+								</div>
+								<div class="col-sm-2 col-xs-6">	
+								<?php $dest_level_list[0]="Destination Level";
+									 foreach($types as $type){
+									  $dest_level_list[$type->vx_aln_data_typeID] = $type->alias;
+									 }
+									echo form_dropdown("dest_level", $dest_level_list, set_value("dest_level"), "id='dest_level' class='form-control select2'");
+								?>
+								</div> 
+								<div class="col-sm-2 col-xs-6">
+									<select  name="dest_content[]"  placeholder="Destination Content" id="dest_content" class="form-control select2" multiple="multiple">
+									</select> 
+								</div> 
+							</div>
+							<div class='form-group'>
+								<div class="col-sm-2 col-xs-6">
+									<div class="input-group" style="margin-bottom: 0">
+										<input type="text" class="form-control hasDatepicker" placeholder="Start Date"  id="start_date" name="start_date" value="<?=set_value('start_date',$start_date)?>" >
+										<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+									</div>
+								</div>
+								<div class="col-sm-2 col-xs-6">
+									<div class="input-group" style="margin-bottom: 0">
+										<input type="text" class="form-control hasDatepicker" placeholder="End Date" id="end_date" name="end_date" value="<?=set_value('end_date',$end_date)?>" >
+										<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+									</div>
+								</div>
+								<div class="col-sm-2">
+								<button type="submit" class="btn btn-danger" data-toggle="tooltip" data-title="Filter" name="filter" id="filter"><i class="fa fa-filter"></i></button>
+								<a href="#" type="button"  class="btn btn-danger" onclick="downloadPartners()" data-title="Download" data-toggle="tooltip" data-placement="top" style="padding: 6px 12px;"><i class="fa fa-download"></i></a>
+								</div>                                                     
+							</div>				
+					</form>
+				</div>
+			</div>
+            <div class="col-md-12 off-elg-table">
                 <div id="hide-table">
                      <table id="partnertable" class="table table-striped table-bordered table-hover dataTable no-footer">
                         <thead>
@@ -224,7 +221,7 @@ $(document).ready(function() {
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                             var submitData = {sSearch: $("input[type=search]").val(),"carrierID": $("#carrierID").val(),"partner_carrierID":$("#partner_carrierID").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"origin_content":$("#origin_content").val(),"origin_level":$("#origin_level").val(),"dest_level":$("#dest_level"),"dest_content":$("#dest_content")};
                            $.ajax({

@@ -9,7 +9,7 @@
     <!-- form start -->
     <div class="box-body rafeed">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-md-12">
                 <h5 class="page-header">
                     <?php if (permissionChecker('rafeed_upload')) { ?>
                         <a href="<?php echo base_url('rafeed/upload') ?>" class="btn btn-danger">
@@ -24,7 +24,8 @@
                         </a>
                     <?php } ?>
 
-                </h5>
+                </h5><br>
+				<div class="nav-tabs-custom" style="display:flex;margin-bottom:0;">
                 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                     <div class='form-group'>
 
@@ -117,12 +118,13 @@
 
                         </div>
 
-                        <div class="col-sm-3">
-                            <button type="submit" class="btn btn-danger" name="filter" id="filter">Filter</button>
-                            <button type="button" class="btn btn-danger" onclick="downloadRAFeed()">Download</button>
+                        <div class="col-sm-12" style="text-align:right;">
+                            <button type="submit" class="btn btn-danger" name="filter" id="filter" data-toggle="tooltip" data-title="Filter"><i class="fa fa-filter"></i></button>
+                            <button type="button" data-toggle="tooltip" data-title="Download" class="btn btn-danger" onclick="downloadRAFeed()"><i class="fa fa-download"></i></button>
                         </div>
                     </div>
                 </form>
+				</div>
                 <div class="col-md-12" style="padding:0;">
                     <div class="tab-content table-responsive" id="hide-table">
                         <table id="rafeedtable" class="table table-bordered dataTable no-footer">
@@ -377,7 +379,7 @@
                     }
                 },
                 {
-                    text: 'ExportAll',
+                    text: 'Export All',
                     exportOptions: {
                         columns: ':visible'
                     },

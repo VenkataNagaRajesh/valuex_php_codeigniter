@@ -1,5 +1,10 @@
 <div class="mzones">
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:86%;margin-right:8px;">Market Zones</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:86%;margin-right:8px;"><i class="fa fa-map-marker"></i> Market Zones
+		<ol class="breadcrumb pull-right">
+            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
+            <li class="active"><?=$this->lang->line('menu_market_zone')?></li>
+        </ol>
+	</h2>
 	<span data-toggle="collapse" data-target="#treeview"><button type="button" class="btn btn-danger pull-right mbl-tree-btn" style="margin:0;"><i class="fa fa-tree"></i> Tree View</button></span>
 	<div class="col-md-12 collapse" id="treeview">
 		<div class="col-md-8 col-md-offset-2 tree-box">
@@ -320,7 +325,7 @@ function loaddatatable() {
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('marketzone/server_processing'); ?>?page=all&&export=1",

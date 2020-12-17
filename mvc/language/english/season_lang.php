@@ -12,6 +12,7 @@ $lang['view'] = 'View';
 
 $lang['add_season'] = 'Add Season';
 $lang['update_season'] = 'Update Season';
+$lang['menu_season'] = 'Seasons';
 
 $lang['season_name'] = "Name";
 $lang['orig_level'] = "Origin Level";

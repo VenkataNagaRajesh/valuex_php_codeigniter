@@ -120,7 +120,12 @@
 </style>
 
 <div class="off-elg">
-	<h2 class="title-tool-bar">Bid Calendar Report</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:100%;"><i class="fa fa-calendar"></i> Bid Calendar Report
+		<ol class="breadcrumb pull-right">
+            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
+            <li class="active">Bid Calendar Report</li>
+        </ol>
+	</h2>
 	<div class="col-md-12 off-elg-filter-box">
 	   <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
 	     <div class="form-group"><br>	   		

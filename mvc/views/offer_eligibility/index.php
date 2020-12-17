@@ -1,11 +1,17 @@
 <div class="off-elg">
-	<h2 class="title-tool-bar">Offer Eligibility</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:100%;"><i class="fa fa-sun-o"></i> Offer Eligibility
+		<ol class="breadcrumb pull-right">
+            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
+            <li class="active"><?=$this->lang->line('menu_oelg')?></li>
+        </ol>
+	</h2>
 	<div class="col-md-12 off-elg-filter-box">
- <a href="<?php echo base_url('offer_eligibility/generatedata') ?>" class="btn btn-danger">
+	<div class="col-lg-12">
+		<a href="<?php echo base_url('offer_eligibility/generatedata') ?>" class="btn btn-danger">
                                 <i class="fa fa-upload"></i>
                                 <?=$this->lang->line('generate_offer_eligibility')?>
                         </a>
-
+	</div>
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class="form-group">
 				<div class="col-md-2 select-form">
@@ -287,7 +293,7 @@ $('#to_cabin').val('<?=$to_cabin?>').trigger('change');
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf',orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('offer_eligibility/server_processing'); ?>?page=all&&export=1",

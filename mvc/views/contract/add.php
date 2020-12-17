@@ -1,4 +1,3 @@
-
 <div class="box">
     <div class="box-header" style="width:100%;">
         <h3 class="box-title"><i class="fa icon-role"></i> <?=$this->lang->line('panel_title')?></h3>       
@@ -398,7 +397,7 @@
                                  ); 
                         ?>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4 col-md-offset-3">
                             <div class="pull-right">
                                 <input type="submit" class="btn btn-success" value="<?=$this->lang->line("add_contract")?>" >
                             </div>

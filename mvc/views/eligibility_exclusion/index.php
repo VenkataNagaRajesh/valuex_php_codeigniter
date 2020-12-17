@@ -1,5 +1,10 @@
 <div class="eer">
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Eligibility Exclusion Rules</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;"><i class="fa icon-template nav-icon"></i> Eligibility Exclusion Rules
+		<ol class="breadcrumb pull-right">
+            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
+            <li class="active"><?=$this->lang->line('menu_eex')?></li>
+        </ol>
+	</h2>
 	<p class="card-header" data-toggle="collapse" data-target="#eerAdd"><button type="button" id = 'rule_add_btn' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Rule" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="table-responsive col-md-12 collapse" id="eerAdd">
 		<div class="col-md-12"><h2>Rule Criteria</h2></div>
@@ -253,11 +258,11 @@
 			</div>
 		</form>
 	</div>
-	<div class="col-sm-12 off-filter-form">
+	<div class="col-md-12 off-filter-form">
 
 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
-		<div class="col-sm-12">
+		<div class="col-md-12">
                            <div class="col-sm-2">
                <?php 
                         $carriers[0] = ' Carrier';
@@ -294,7 +299,6 @@
                 </div>
 </div></div>
 <div class='form-group'>
-<div class='col-sm-12'>
   <div class="col-sm-2">
                            <?php
 				$hrs['-1'] = ' Departure Start Hrs';
@@ -365,9 +369,8 @@
                                    echo form_dropdown("sto_class", $class_list,set_value("sto_class",$toclass), "id='sto_class' class='form-control hide-dropdown-icon select2'");   */ ?>
 
                 </div>
-</div></div>
+</div>
 <div class='form-group'>
-<div class="col-sm-12">
 
 
                           <div class="col-md-2">
@@ -395,7 +398,6 @@
 
                 </div>
 
-</div>
                           </div>
 
 
@@ -600,7 +602,7 @@ function loaddatatable() {
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf',orientation: 'landscape', pageSize: 'LEGAL', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'ExportAll', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: ':visible' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('eligibility_exclusion/server_processing'); ?>?page=all&&export=1",

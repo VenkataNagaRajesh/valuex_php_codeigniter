@@ -3,6 +3,7 @@
 /* List Language  */
 $lang['panel_title'] = "Eligibility Exclusion Rules";
 $lang['add_title'] = "Add Rule";
+$lang['menu_eex'] = "Eligibility Exclusion Rules";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
 

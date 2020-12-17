@@ -4,6 +4,7 @@
 $lang['panel_title'] = "Offer Eligibility";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
+$lang['menu_oelg'] = "Offer Eligibility";
 $lang['active'] = 'Status';
 
 $lang['offer_issue'] = 'Offer Issue';

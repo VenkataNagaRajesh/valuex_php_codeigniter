@@ -1,5 +1,10 @@
 <div class="seasons">
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;">Seasons</h2>
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;"><i class="fa fa-calendar"></i> Seasons
+		<ol class="breadcrumb pull-right">
+            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
+            <li class="active"><?=$this->lang->line('menu_season')?></li>
+        </ol>
+	</h2>
 	 <p class="card-header" data-toggle="collapse" data-target="#seasonAdd"><button type="button" id = 'add_season_button' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Season" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="col-md-12 season-add-box collapse" id="seasonAdd">
 		<form class="form-horizontal" action="#" id="season_form">
@@ -183,8 +188,8 @@
                				
 			</div>
 		</form>
-
-			<div id="hide-table">
+</div>
+			<div id="hide-table" class="col-md-12" style="padding:0;">
 				<table id="seasonslist" class="table table-bordered dataTable no-footer" style="width:100%;">
 					<thead>
 						<tr>
@@ -214,7 +219,6 @@
 					   </tbody>
 				   </table>
 			  </div>
-	</div>
 	<div class="col-md-12 cal-table">
 		<div class="col-md-8" style="padding:0;">
 			<div id="calendar1" class="cal-box"></div>
@@ -831,7 +835,7 @@ function loaddatatable(){
 			{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 			{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 			{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-			{ text: 'ExportAll', exportOptions: { columns: ':visible' },
+			{ text: 'Export All', exportOptions: { columns: ':visible' },
 					action: function(e, dt, node, config) {
 						$.ajax({
 							url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
