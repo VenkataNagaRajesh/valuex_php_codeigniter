@@ -1,5 +1,5 @@
 <div class="mzones">
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:86%;margin-right:8px;"><i class="fa fa-map-marker"></i> Market Zones
+	<h2 class="title-tool-bar" style="color:#fff;float:left;width:86%;margin-right:6px;"><i class="fa fa-map-marker"></i> Market Zones
 		<ol class="breadcrumb pull-right">
             <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
             <li class="active"><?=$this->lang->line('menu_market_zone')?></li>
@@ -9,15 +9,15 @@
 	<div class="col-md-12 collapse" id="treeview">
 		<div class="col-md-8 col-md-offset-2 tree-box">
 			<div class="srch-buttons">
-				<div class="col-md-4">
-					<a href="#" type="button" class="btn btn-default">Market Zone</a>
+				<div class="col-md-4" style="padding-left:0;">
+					<a href="#" type="button" class="btn btn-default btn-block">Market Zone</a>
 				</div>
-				<div class="col-md-8">
+				<div class="col-md-8" style="padding-right:0;">
 				  <div class="input-group">
 					 <input type="text" class="form-control" id="example" placeholder="Search">
 
 					<div class="input-group-btn">
-					  <button class="btn btn-danger" id='mysearch' type="submit">
+					  <button class="btn btn-danger" id='mysearch' type="submit" style="box-shadow:none;">
 						<i class="glyphicon glyphicon-search"></i>
 					  </button>
 					</div>
@@ -31,7 +31,7 @@
 	</div>
 	<span class="card-header" data-toggle="collapse" data-target="#mzonesAdd"><button type="button" id = 'add_zone_button' class="btn btn-danger" style="margin:1px 0;position:absolute;" data-placement="left" title="Add Market Zone" data-toggle="tooltip"><i class="fa fa-plus"></i></button></span>
 	<div class="col-md-12 collapse" id="mzonesAdd">
-		<form class="form-horizontal" role="form" method="post" id='add_zone' enctype="multipart/form-data">
+		<form class="form-horizontal" role="form" method="post" id='add_zone' enctype="multipart/form-data" style="padding:0 !important;">
 		<div class="col-md-12">
 			<div class="mzone-config col-md-12">
 				<div class="col-md-12 zone-info1">
@@ -118,7 +118,7 @@
 					<div class="col-md-12">
 					<input type="hidden" class="form-control" id="market_id" name="market_id"   value="" >
 					</div>
-					<div class="col-md-12">
+					<div class="col-md-12" style="padding:0 15px;">
 					<br>
 					<input type="text" class="form-control" id="desc" name="desc" placeholder='description'  value="<?=set_value('market_name')?>" >
 						<span class="pull-right">
@@ -131,10 +131,9 @@
 		</div>
 	</form>
 	</div>
-	<div class="col-md-12" style="padding:0;">
-		<div class="mzones-list-bar">
-
-		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="margin-bottom:-1em;">
+	<div class="col-md-12">
+		<div class="mzones-list-bar mzone-filter">
+		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="margin-bottom:-1em;padding:0 !important;">
 				<div class="title-bar">
 					<div class="col-md-2" id='reconfigure'>
 
@@ -149,8 +148,7 @@
 
                    </div>
 				</div>
-				<div class="col-md-12" style="padding:0;">
-					<div class="mzone-filter col-md-12 col-sm-12">
+				<div class="col-md-12">
 						<div class="col-md-2 col-sm-3">
 							<?php echo form_dropdown("sairline_id", $airlinelist,set_value("sairline_id",$sairline_id), "id='sairline_id' class='form-control hide-dropdown-icon select2'");?>
 						</div>
@@ -195,15 +193,15 @@
                                                         <select  name="samz_excl_value[]"  id="samz_excl_value" class="form-control select2" multiple="multiple">
                                                         </select>
                                                 </div>
+						<div class="col-md-8 text-right">
+							<div class="bttn-cl">
+														   <a href="#" type="button"  id='filter_button' class="btn btn-danger" onclick="$('#tztable').dataTable().fnDestroy();loaddatatable();" style="padding: 6px 12px;"data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></a>
 
-						<div class="bttn-cl">
-                                                       <a href="#" type="button"  id='filter_button' class="btn btn-danger" onclick="$('#tztable').dataTable().fnDestroy();loaddatatable();" style="padding: 6px 12px;"data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></a>
-
+							</div>
+							<div class="bttn-cl">
+								<a href="#" type="button"  class="btn btn-danger" onclick="downloadZone()" data-title="Download" data-toggle="tooltip" data-placement="top" style="padding: 6px 12px;"><i class="fa fa-download"></i></a>
+							</div>
 						</div>
-						<div class="bttn-cl">
-							<a href="#" type="button"  class="btn btn-danger" onclick="downloadZone()" data-title="Download" data-toggle="tooltip" data-placement="top" style="padding: 6px 12px;"><i class="fa fa-download"></i></a>
-						</div>
-					</div>
 				</div>
 			</form>
 		</div>

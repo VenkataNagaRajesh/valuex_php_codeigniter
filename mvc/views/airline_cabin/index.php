@@ -25,7 +25,7 @@
                <!--<ul class="nav nav-tabs">
                   <li class="active"><a data-toggle="tab" href="#all" aria-expanded="true"><?=$this->lang->line("panel_title")?></a></li>       
                </ul>-->
-       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 10px;">
+       <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 15px;">
                       <div class='form-group'>
                            <div class="col-sm-2">
                <?php 
@@ -71,7 +71,7 @@
                  </div>
 
 
-                <div class="col-sm-4">
+                <div class="col-sm-6 text-right">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
 				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabins()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>			   
                 </div>

@@ -28,7 +28,20 @@
 				<div class="nav-tabs-custom" style="display:flex;margin-bottom:0;">
                 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                     <div class='form-group'>
+						 <div class="col-sm-2">
+                            <?php
 
+
+                            foreach ($airlines as $airline) {
+                                $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                            }
+
+                            $airlinelist['0'] = ' Carrier';
+                            ksort($airlinelist);
+
+                            echo form_dropdown("airline_code", $airlinelist, set_value("airline_code", $airline_code), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
+
+                        </div>
                         <div class="col-sm-2">
                             <?php
                             $country['0'] = ' Booking Country';
@@ -66,25 +79,7 @@
 
                             echo form_dropdown("off_point", $airport, set_value("off_point", $off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
 
-                        </div>
-
-
-                        <div class="col-sm-2">
-                            <?php
-
-
-                            foreach ($airlines as $airline) {
-                                $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
-                            }
-
-                            $airlinelist['0'] = ' Carrier';
-                            ksort($airlinelist);
-
-                            echo form_dropdown("airline_code", $airlinelist, set_value("airline_code", $airline_code), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
-
-                        </div>
-
-
+                        </div>                   
                         <div class="col-sm-2">
 
                             <select name="class" id='class' class="form-control select2">
@@ -130,7 +125,7 @@
 
 
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-4 text-right">
                             <button type="submit" class="btn btn-danger" data-toggle="tooltip" data-title="Filter" name="filter" id="filter"><i class="fa fa-filter"></i></button>
                             <button type="button" data-toggle="tooltip" data-title="Download" class="btn btn-danger" onclick="downloadRAFeed()"><i class="fa fa-download"></i></button>
                         </div>

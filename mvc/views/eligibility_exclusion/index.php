@@ -392,7 +392,7 @@
 
                                   
 
-                <div class="col-md-3 col-sm-6">
+                <div class="col-md-8 text-right col-sm-6">
 		<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#ruleslist').dataTable().fnDestroy();;loaddatatable();" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></a>
 		<a type="button" class="btn btn-danger" onclick="downloadEligibilityExc()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></a>
 

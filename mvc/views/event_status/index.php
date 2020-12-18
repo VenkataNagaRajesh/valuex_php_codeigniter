@@ -54,10 +54,11 @@
 
                  </div>
 
-
+				<div class="col-md-6 text-right">
                 <div class="bttn-cl">
                   <button type="submit" class="form-control btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
                 </div>
+				</div>
                           </div>
                          </form>
 			</div>

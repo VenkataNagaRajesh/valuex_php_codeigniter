@@ -34,8 +34,24 @@
 
               </h5><br>
 			  <div class="nav-tabs-custom pax" style="display:flex;margin-bottom:0;">
-			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0">		   
-			<div class='form-group'>			 
+			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
+			<div class='form-group'>
+				<div class="col-sm-2">
+               <?php
+	foreach($airlines as $airline){
+                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+         }
+          $roleID = $this->session->userdata('roleID');
+
+                 $airlinelist[0]= 'Carrier';
+                  ksort($airlinelist);
+
+
+
+       echo form_dropdown("carrier_code", $airlinelist,set_value("carrier_code",$carrier_code), "id='carrier_code' class='form-control hide-dropdown-icon select2'");    ?>
+
+
+                </div>
 
 			 <div class="col-sm-2">
                <?php
@@ -75,25 +91,6 @@
                                    echo form_dropdown("to_city", $airports,set_value("to_city",$to_city), "id='to_city' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
-
-
-<div class="col-sm-2">
-               <?php
-	foreach($airlines as $airline){
-                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
-         }
-          $roleID = $this->session->userdata('roleID');
-
-                 $airlinelist[0]= 'Carrier';
-                  ksort($airlinelist);
-
-
-
-       echo form_dropdown("carrier_code", $airlinelist,set_value("carrier_code",$carrier_code), "id='carrier_code' class='form-control hide-dropdown-icon select2'");    ?>
-
-
-                </div>
-
  <div class="col-sm-2">
  <input type="text" class="form-control" placeholder='frequency' id="frequency" name="frequency" value="<?=set_value('frequency')?>" >
 

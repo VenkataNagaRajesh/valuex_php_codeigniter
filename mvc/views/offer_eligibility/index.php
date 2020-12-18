@@ -6,7 +6,7 @@
         </ol>
 	</h2>
 	<div class="col-md-12 off-elg-filter-box">
-	<div class="col-lg-12">
+	<div class="col-md-12">
 		<a href="<?php echo base_url('offer_eligibility/generatedata') ?>" class="btn btn-danger">
                                 <i class="fa fa-upload"></i>
                                 <?=$this->lang->line('generate_offer_eligibility')?>
@@ -14,30 +14,9 @@
 	</div>
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class="form-group">
-				<div class="col-md-2 select-form">
-					<div class="col-sm-12">
-						<?php
-						$airport['0'] = 'Boarding Point';
-						ksort($airport);
-						echo form_dropdown("boarding_point", $airport,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
-					</div>
-					<div class="col-sm-12">
-						<?php
-							$airport['0'] = 'Off Point';
-							ksort($airport);
-							echo form_dropdown("off_point", $airport,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
-					</div>
-                    <div class="col-sm-12">
-						<?php
-							$product_name['0'] = 'Product Type';
-                            ksort($product_name);
-							echo form_dropdown("name", $product_name,set_value("name",$name), "id='name' class='form-control hide-dropdown-icon select2'");    ?>
-					</div>
-				</div>
+				
 
-
-
-<div class="col-md-2 select-form">
+	<div class="col-md-2 select-form">
                                         <div class="col-sm-12">
                                         <?php
                 foreach($carriers as $airline){
@@ -56,9 +35,20 @@
                                                         echo form_dropdown("booking_status", $status,set_value("booking_status"), "id='booking_status' class='form-control hide-dropdown-icon select2'");    ?>
                                         </div>
                                 </div>
-
-
-
+				<div class="col-md-2 select-form">
+					<div class="col-sm-12">
+						<?php
+						$airport['0'] = 'Boarding Point';
+						ksort($airport);
+						echo form_dropdown("boarding_point", $airport,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");    ?>
+					</div>
+					<div class="col-sm-12">
+						<?php
+							$airport['0'] = 'Off Point';
+							ksort($airport);
+							echo form_dropdown("off_point", $airport,set_value("off_point",$off_point), "id='off_point' class='form-control hide-dropdown-icon select2'");    ?>
+					</div>
+				</div>
 				<div class="col-md-2 select-form">
 					<div class="col-sm-12">
 
@@ -125,7 +115,13 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-3">
+				<div class="col-sm-2">
+						<?php
+							$product_name['0'] = 'Product Type';
+                            ksort($product_name);
+							echo form_dropdown("name", $product_name,set_value("name",$name), "id='name' class='form-control hide-dropdown-icon select2'");    ?>
+				</div>
+				<div class="col-sm-10 text-right">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
 				   <button type="button" class="btn btn-danger" onclick="downloadOfferEligibility()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
                 </div>	             				

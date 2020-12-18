@@ -6,7 +6,7 @@
         </ol>
 	</h2>
 	<div class="col-md-12 off-elg-filter-box">
-		<div class="auto-gen" style="padding:0 15px;">
+		<div class="auto-gen">
 			<a href="<?php echo base_url('offer_issue/run_offer_issue') ?>">
 				 <i class="fa fa-upload"></i>
 				 <?=$this->lang->line('offer_issue')?>
@@ -15,15 +15,21 @@
 				 <i class="fa fa-upload"></i>
 				 <?php echo "AUTO ACSR"?>
 			</a>
-		</div><br>
+		</div>
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">	
 			<div class="form-group">
 				<div class="col-md-3 select-form">
 					<div class="col-sm-12">
 						<?php
-							$airports['0'] = 'Boarding Point';
-							ksort($airports);
-							echo form_dropdown("boarding_point", $airports,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");   ?>
+
+				 foreach($carriers as $airline){
+                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+         }
+
+                 $airlinelist[0]= 'Carrier';
+                  ksort($airlinelist);
+
+							echo form_dropdown("carrier", $airlinelist,set_value("carrier",$car), "id='carrier' class='form-control hide-dropdown-icon select2'");     ?>
 					</div>
 					 <div class="col-sm-12">
 						<?php
@@ -45,15 +51,9 @@
 					</div>
 					<div class="col-sm-12">
 						<?php
-
-				 foreach($carriers as $airline){
-                 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
-         }
-
-                 $airlinelist[0]= 'Carrier';
-                  ksort($airlinelist);
-
-							echo form_dropdown("carrier", $airlinelist,set_value("carrier",$car), "id='carrier' class='form-control hide-dropdown-icon select2'");     ?>
+							$airports['0'] = 'Boarding Point';
+							ksort($airports);
+							echo form_dropdown("boarding_point", $airports,set_value("boarding_point",$boarding_point), "id='boarding_point' class='form-control hide-dropdown-icon select2'");   ?>
 					</div>
 				</div>
 				<div class="col-md-3 select-form">
@@ -80,7 +80,7 @@
 				</div>
 				<div class="col-md-12" style="padding:0 15px;">
 					<button type="submit" class="btn btn-danger pull-right" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
-					<button type="button" style="margin-right: 15px;" class="btn btn-danger pull-right" onclick="downloadOfferData()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
+					<button type="button" style="margin-right: 5px;" class="btn btn-danger pull-right" onclick="downloadOfferData()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
 				</div>
 			</div>
 		</form>

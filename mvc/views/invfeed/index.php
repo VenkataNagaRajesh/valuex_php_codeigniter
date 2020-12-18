@@ -29,9 +29,22 @@
 
               </h5><br>
 			  <div class="nav-tabs-custom" style="margin-bottom:0;">
-			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0;">		   
+			 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 
+			
+			<div class="col-sm-2">
+               <?php
 
+	foreach($airlines as $airline){
+                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                                         }
+
+                        $airlinelist['0'] = ' Carrier';
+                        ksort($airlinelist);
+
+                                   echo form_dropdown("airline_code", $airlinelist,set_value("airline_code",$airline_code), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
+
+                </div>
 			 <div class="col-sm-2">
                <?php
                         $airports['0'] = ' Origin Airport';
@@ -50,22 +63,6 @@
                                    echo form_dropdown("dest_airport", $airports,set_value("dest_airport",$dest_airport), "id='dest_airport' class='form-control hide-dropdown-icon select2'");    ?>
 
                 </div>
-
- <div class="col-sm-2">
-               <?php
-
-	foreach($airlines as $airline){
-                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
-                                                         }
-
-                        $airlinelist['0'] = ' Carrier';
-                        ksort($airlinelist);
-
-                                   echo form_dropdown("airline_code", $airlinelist,set_value("airline_code",$airline_code), "id='airline_code' class='form-control hide-dropdown-icon select2'");    ?>
-
-                </div>
-
-
     <div class="col-sm-2">
 <select  name="cabin"  id='cabin' class="form-control select2">
                                 <option value=0>Cabin</option>
