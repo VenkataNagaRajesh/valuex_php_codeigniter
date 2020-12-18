@@ -645,7 +645,7 @@ class Admin_Controller extends MY_Controller {
 			$config['smtp_port']='26';
 			$config['smtp_timeout']='30';
 			$config['smtp_user']='info@sweken.com';
-			$config['smtp_pass']='Infoinfo-9!';
+			$config['smtp_pass']='Infoinfo-1!';
 			$config['charset']='utf-8';
 			$config['newline']="\r\n";
 			$config['wordwrap'] = TRUE;
