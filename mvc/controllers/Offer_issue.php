@@ -50,6 +50,7 @@ class Offer_issue extends Admin_Controller {
                // $this->sendMailTemplateParser('bid_accepted',$data);
                 //        exit;
                 //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);
+print_r($data);
                 $this->upgradeOfferMail($data);		 
 	}
 	
@@ -1134,6 +1135,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                  $maildata['openbrowser_link'] =base_url('home/index');
                  $maildata['not_intrested_link'] =base_url('home/index');
                  
+print_r($maildata);
                 //$this->sendMailTemplateParser('upgrade_offer',$maildata);
                 $this->sendMailTemplateParser($template,$maildata);
 	}		
