@@ -332,7 +332,7 @@ class Mailandsmstemplate extends Admin_Controller {
               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 			  $sWhere .= 'a.vx_aln_data_defnsID IN ('.implode(',',$this->session->userdata('login_user_airlineID')).')';		
             }
-            if(!empty($this->input->get('filter_airline'))){  
+            if($this->input->get('filter_airline') != ''){  
               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 			  $sWhere .= 'm.airlineID = '.$this->input->get('filter_airline');		
             }		
@@ -342,7 +342,6 @@ class Mailandsmstemplate extends Admin_Controller {
 		$sWhere       	
 		$sOrder		
 		$sLimit	"; 
-	//print_r($sQuery); exit;
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
 	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
@@ -358,6 +357,9 @@ class Mailandsmstemplate extends Admin_Controller {
 		  if(permissionChecker('mailandsmstemplate_edit')){ 			
 			$template->action .= btn_edit('mailandsmstemplate/edit/'.$template->mailandsmstemplateID, $this->lang->line('edit'));			
 		  }
+			if ( !$template->airline_code) {
+				$template->airline_code = "Any Carrier";
+			}
 		  if(permissionChecker('mailandsmstemplate_view')){ 			
 			$template->action .= btn_view('mailandsmstemplate/view/'.$template->mailandsmstemplateID, $this->lang->line('view'));			
 		  }
