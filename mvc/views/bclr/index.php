@@ -29,7 +29,7 @@
                     <div class="col-md-2 col-sm-3">
                         <select  name="from_cabin[]"  id="from_cabin" placeholder="From Cabin Content" class="form-control select2" multiple="multiple">
 				        </select>
-			<span> <input type="checkbox" id="cabin_checkbox_level">Select All</span>
+			<span> <input type="checkbox" id="cabin_checkbox_level"> Select All</span>
                     </div>
 					<div class="col-md-2 col-sm-3">
                         <select  name="partner_carrierID"  id="partner_carrierID" class="form-control select2">
@@ -66,7 +66,7 @@
 					<div class="col-md-2 col-sm-3">
                         <select  name="origin_content[]"  id="origin_content" placeholder="Origin Content" class="form-control select2" multiple="multiple">
 				        </select> 
-                        <span> <input type="checkbox" id="origin_checkbox_level" >Select All</span>
+                        <span> <input type="checkbox" id="origin_checkbox_level" > Select All</span>
 					</div>
 					<div class="col-md-2 col-sm-3">
                     <?php                         
@@ -81,7 +81,7 @@
 					<div class="col-md-2 col-sm-3">
                         <select  name="dest_content[]"  id="dest_content" placeholder="Destination Content" class="form-control select2" multiple="multiple">
 				        </select>
-                         <span> <input type="checkbox" id="dest_checkbox_level" >Select All</span>         
+                         <span> <input type="checkbox" id="dest_checkbox_level" > Select All</span>         
         			</div>				
 					<div class="col-md-2 col-sm-3">
                         <div class="input-group">
@@ -155,13 +155,13 @@
                     <div class="col-md-2 col-sm-3">
                         <input type="number" class="form-control" name="max_price" id="max_price" placeholder="Max Price" value="<?=set_value('max_price')?>" />                       
 		<input type="hidden" class="form-control" id="bclr_id" name="bclr_id"   value="" >
-					</div>
-					<div class="col-md-4 col-sm-3">
+					</div>                    
+                </div>  
+				<div class="col-md-12 col-sm-3 text-right">
 						<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savebclr();">Add BCLR</a>
 						<a href="#" type="button"  id='check_rafeed_match' class="btn btn-danger" onclick="matchRafeed();">CHECK RAFEED MATCH</a>
 						<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
-					</div>                     
-                </div>                				
+				</div> 	
 			</div>
 		</form>
 	</div>
@@ -215,9 +215,6 @@
                         <div class="col-md-12">
                             <input type="number" class="form-control" name="flt_max_price" id="flt_max_price" placeholder="Max Price" value="<?=set_value('flt_max_price',$flt_max_price)?>" />                       
                         </div>                        
-                        <div class="col-md-12">
-                        <input type="text" class="form-control" name="flt_bclr_id" id="flt_bclr_id" placeholder="BCLR ID" value="<?=set_value('flt_bclr_id', $flt_bclr_id)?>" />                       
-					</div>
 					</div>
 					<div class="col-md-2 col-sm-3 select-form">
                         <div class="col-md-12">
@@ -281,8 +278,11 @@
 						<div class="col-md-12">
                             <select  name="flt_dest_content[]"  id="flt_dest_content" placeholder="Destination Content" class="form-control select2" multiple="multiple" style="margin-bottom:0;">
                             </select>
-			</div>						
-                        <div class="col-md-12">
+						</div>		
+						<div class="col-md-12">
+							<input type="text" class="form-control" name="flt_bclr_id" id="flt_bclr_id" placeholder="BCLR ID" value="<?=set_value('flt_bclr_id', $flt_bclr_id)?>" />                       
+						</div>
+                        <div class="col-md-12 text-right">
 							<a type="button" class="btn btn-danger" onclick="downloadBCLR()" data-toggle="tooltip" data-title="Download" style="margin-right:10px;"><i class="fa fa-download"></i></a>
 							<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#bclrtable').dataTable().fnDestroy();;loaddatatable();" data-toggle="tooltip" data-title="Filter"><i class="fa fa-filter"></i></a>
                         </div>

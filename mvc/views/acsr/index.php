@@ -20,16 +20,22 @@
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                       <div class='form-group'>
 		<div class="col-md-12">
-                           <div class="col-sm-2">
-               <?php 
-			$marketzones['0'] = ' Origin Market';
-			ksort($marketzones);
+		 <div class="col-sm-2">
 
-                                   echo form_dropdown("orig_market_id", $marketzones,set_value("orig_market_id",$origmarketID), "id='orig_market_id' class='form-control hide-dropdown-icon select2'");    ?>
+        <?php
 
-                </div>
+                                         foreach($carriers as $airline){
+                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                                         }
 
-<div class="col-sm-2">
+                        $airlinelist['0'] = ' Carrier';
+                        ksort($airlinelist);
+
+
+
+                                                        echo form_dropdown("carrier", $airlinelist,set_value("carrier",$carrier), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
+		</div>
+		<div class="col-sm-2">
                <?php $marketzones['0'] = ' Destination Market';
 			ksort($marketzones);
                                    echo form_dropdown("dest_market_id", $marketzones,set_value("dest_market_id",$destmarketID), "id='dest_market_id' class='form-control hide-dropdown-icon select2'");    ?>
@@ -130,27 +136,20 @@
 </div></div>
 
 <div class='form-group'>
-<div class="col-sm-12">
+<div class="col-md-12">
 
 		 <div class="col-sm-2">
   <input type="text" class="form-control" placeholder="Frequency" id="day" name="day" value="<?=set_value('day')?>" >
 
                  </div>
- <div class="col-sm-2">
+				                            <div class="col-sm-2">
+               <?php 
+			$marketzones['0'] = ' Origin Market';
+			ksort($marketzones);
 
-        <?php
+                                   echo form_dropdown("orig_market_id", $marketzones,set_value("orig_market_id",$origmarketID), "id='orig_market_id' class='form-control hide-dropdown-icon select2'");    ?>
 
-                                         foreach($carriers as $airline){
-                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
-                                                         }
-
-                        $airlinelist['0'] = ' Carrier';
-                        ksort($airlinelist);
-
-
-
-                                                        echo form_dropdown("carrier", $airlinelist,set_value("carrier",$carrier), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
-</div>
+                </div>
 
           <div class="col-sm-2">
 
@@ -173,7 +172,7 @@
                                                         ?>
                         </div>-->
                                   
-                <div class="col-md-3 col-sm-4">
+                <div class="col-md-6 text-right col-sm-4">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
 				  <button type="button" class="btn btn-danger" onclick="downloadACSR()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
                 </div>

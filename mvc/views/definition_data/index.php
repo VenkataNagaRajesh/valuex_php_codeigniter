@@ -1,5 +1,5 @@
 
-<div class="box">
+<div class="box def">
     <div class="box-header">
         <h3 class="box-title"><i class="fa <?=$icon?>"></i> <?=$this->lang->line('panel_title')?></h3>
         <ol class="breadcrumb">
@@ -28,7 +28,7 @@
 						}				
 				   echo form_dropdown("aln_data_typeID", $typelist,set_value("aln_data_typeID",$aln_data_typeID), "id='aln_data_typeID' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>	
-				<div class="col-sm-2 col-xs-6">
+				<div class="col-sm-10 text-right col-xs-6">
 				    <div class="bttn-cl"><button type="submit" class="form-control btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button></div>
 				    <div class="bttn-cl"><button type="button" class="form-control btn btn-danger" name="download" onclick="downloadData()"  id="download"data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button></div>
                 </div>

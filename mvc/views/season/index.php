@@ -135,14 +135,7 @@
 	   
 	   <div class="col-md-12 season-table">	
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form">		   
-			<div class='form-group'>			 
-				<div class="col-sm-3 col-md-2">			   
-				<?php $slist = array("0" => " Season");               
-				   foreach($seasonslist as $season){
-					  $slist[$season->VX_aln_seasonID] = $season->season_name;
-					}							
-				   echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
-				</div>
+			<div class='form-group'>
 				<div class="col-sm-3 col-md-2">			   
 				 <!-- <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>-->
 				  <?php $alist = array("0" => "Carrier");               
@@ -150,6 +143,13 @@
 					  $alist[$air->vx_aln_data_defnsID] = $air->code;
 					}				
 				  echo form_dropdown("filter_airline", $alist,set_value("filter_airline",$filter_airline), "id='filter_airline' class='form-control hide-dropdown-icon select2'");    ?>
+				</div>
+				<div class="col-sm-3 col-md-2">			   
+				<?php $slist = array("0" => " Season");               
+				   foreach($seasonslist as $season){
+					  $slist[$season->VX_aln_seasonID] = $season->season_name;
+					}							
+				   echo form_dropdown("seasonID", $slist,set_value("seasonID",$seasonID), "id='seasonID' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
 				<div class="col-sm-3 col-md-2">			   
 				  <?php $olist = array("0" => " Origin Level");               
@@ -177,15 +177,16 @@
 					<?php $activestatus[1]="Active";	$activestatus[0]="In Active";				
 				  echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
-				<div class="bttn-cl">
-                                	<button type="button" class=" form-control btn btn-danger" name="filter" id="filter"  onclick="$('#seasonslist').dataTable().fnDestroy();;loaddatatable();" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
-				 
-				 <!-- <button data-toggle="collapse" data-target="#seasonList" type="button" class="form-control btn btn-danger"><i class="fa fa-table"></i> View</button>-->
-				</div>
-				<div class="bttn-cl">
-                               	 <button type="button" class="form-control btn btn-danger" name="filter" onclick="downloadSeason()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
-				</div>
-               				
+				<div class="col-md-10 text-right">
+					<div class="bttn-cl">
+										<button type="button" class=" form-control btn btn-danger" name="filter" id="filter"  onclick="$('#seasonslist').dataTable().fnDestroy();;loaddatatable();" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
+					 
+					 <!-- <button data-toggle="collapse" data-target="#seasonList" type="button" class="form-control btn btn-danger"><i class="fa fa-table"></i> View</button>-->
+					</div>
+					<div class="bttn-cl">
+									 <button type="button" class="form-control btn btn-danger" name="filter" onclick="downloadSeason()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
+					</div>
+               	</div>	
 			</div>
 		</form>
 </div>

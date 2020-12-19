@@ -19,7 +19,7 @@
         <div class="row">
 			<div class="nav-tabs-custom" style="display:flex;margin-bottom:0;">
 				<div class="col-md-12">              
-					<form class="form-horizontal contr" role="form" method="post" enctype="multipart/form-data">		   
+					<form class="form-horizontal contr" role="form" method="post" enctype="multipart/form-data" style="padding:0 15px;">		   
 					 <div class='form-group'>			 
 					   <div class="col-sm-2">			   
 						 <?php $airlinelist = array("0" => "Select Carrier");               
@@ -28,8 +28,8 @@
 									 }							
 						   echo form_dropdown("airlineID", $airlinelist,set_value("airlineID",$airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'");    ?>
 						</div>                 	    
-						<div class="col-sm-1">
-						  <button data-title="Filter" data-toggle="tooltip" type="submit" class="form-control btn btn-danger" name="filter" id="filter"><i class="fa fa-filter"></i></button>
+						<div class="col-sm-11 text-right">
+						  <button data-title="Filter" data-toggle="tooltip" type="submit" class="btn btn-danger" name="filter" id="filter"><i class="fa fa-filter"></i></button>
 						</div>	             				
 					  </div>
 					 </form>

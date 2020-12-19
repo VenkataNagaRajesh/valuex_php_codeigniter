@@ -60,7 +60,7 @@
                  </div>
 
 
-                <div class="col-sm-3 col-md-3">
+                <div class="col-sm-3 col-md-6 text-right">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
 				  <button type="button" class="btn btn-danger" name="filter" onclick="downloadCabinmap()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
                 </div>

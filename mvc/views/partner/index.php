@@ -74,7 +74,7 @@
 										<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 									</div>
 								</div>
-								<div class="col-sm-2">
+								<div class="col-sm-8 text-right">
 								<button type="submit" class="btn btn-danger" data-toggle="tooltip" data-title="Filter" name="filter" id="filter"><i class="fa fa-filter"></i></button>
 								<a href="#" type="button"  class="btn btn-danger" onclick="downloadPartners()" data-title="Download" data-toggle="tooltip" data-placement="top" style="padding: 6px 12px;"><i class="fa fa-download"></i></a>
 								</div>                                                     
