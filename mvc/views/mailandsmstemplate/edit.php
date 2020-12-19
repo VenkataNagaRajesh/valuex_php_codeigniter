@@ -80,6 +80,7 @@
                            </label>
                            <div class="col-sm-4">
                                <?php                                                                   
+					$carrier[0] = "All Carriers (Default)";
                                   foreach ($airlines as $airline) {
                                     $carrier[$airline->vx_aln_data_defnsID] = $airline->code;
                                   }                                                  
