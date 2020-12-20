@@ -34,24 +34,38 @@ class Offer_issue extends Admin_Controller {
                 $email = htmlentities(escapeString($this->uri->segment(4)));
                 //lakshmi.amujuru@sweken.com,sirisha.majji@sweken.com,swekenit@gmail.com,anitha.jeereddi@sweken.com	    
                 $data = array(
-                'first_name'   => 'prathyusha',
-                'last_name' => 'kommineni',
-                #'tomail' => 'prathyushakommineni317@gmail.com',
                 'tomail' => $email . "@gmail.com",
-                #'tomail' => $email . "@sweken.com",
-               # 'tomail' => 'amsi63@gmail.com',
-                #'pnr_ref' => 'CA1278',
                 'pnr_ref' => "$pnr_ref",
-                'coupon_code' => 'sssssssss',
-                'mail_subject' => "upgrade temp offer  3",
-                        'bidnow_link' => base_url('home/index'),
-                'airlineID' => 5363		
+                'coupon_code' => '34535',
                 );			       
                // $this->sendMailTemplateParser('bid_accepted',$data);
                 //        exit;
                 //  $this->sendMailTemplateParser('home/bidsuccess-temp',$data);
-print_r($data);
                 $this->upgradeOfferMail($data);		 
+	}
+
+	function sendoffer(){
+                $pnr_ref = htmlentities(escapeString($this->uri->segment(3)));
+                $email = htmlentities(escapeString($this->uri->segment(4)));
+                $mailto =  $email . "@gmail.com";
+		$this->run_offer_issue($pnr_ref, $mailto);
+	}
+
+        public function tplview() {
+		$dir = "mvc/views/offer-email-temps/";
+                $tpl = htmlentities(escapeString($this->uri->segment(3)));
+		if ( $tpl) {
+			$content = file_get_contents("$dir/$tpl");
+			echo $content;
+		} else {
+
+			// Sort in ascending order - this is default
+			$a = scandir($dir);
+			foreach ($a as $file) {
+				echo "<br>";
+				echo "<a href='tplview/$file'>$file</a>";
+			}
+		}
 	}
 	
 
@@ -129,7 +143,7 @@ print_r($data);
 
 	}
 
-	public function run_offer_issue() {
+	public function run_offer_issue($pnr = '', $mailto = '') {
         $this->data['headerassets'] = array(
                 'css' => array(
                         'assets/select2/css/select2.css',
@@ -145,15 +159,26 @@ print_r($data);
 	
 		$days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
 
-		 $current_time = time();
+		$current_time = time();
 	        $tstamp = $current_time + ($days * 86400);
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
 /*		$sQuery = " select group_concat(distinct pfe.dtpfext_id) as pf_list , group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names , booking_status, pnr_ref , flight_number, carrier_code, from_city,to_city,dep_date, dep_time, arrival_time, fci.aln_data_value as from_city_name , tci.aln_data_value as to_city_name, group_concat(distinct pfe.fclr_id)  as fclr_list ,group_concat(pax_contact_email) as email_list , cab.aln_data_value as cabin from VX_aln_dtpf_ext pfe LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN vx_aln_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  cab on (cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13) where  dd.alias = 'new'  group by tpf.pnr_ref, flight_number, carrier_code, from_city, to_city ,dep_date,booking_status, from_city_name, to_city_name, dep_time, arrival_time, cabin";*/
-		$sQuery = " select tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND tpf.is_up_offer_processed = 1 and tpf.active = 1  AND dd.alias = 'new'  group by tpf.pnr_ref ,  booking_status,tpf.carrier_code";
+		$sQuery = " select tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND tpf.is_up_offer_processed = 1 and tpf.active = 1  ";
+		if ($pnr) {
+			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
+		} else {
+			$sQuery .= " AND dd.alias = 'new' ";
+		}
+		$sQuery .= " group by tpf.pnr_ref ,  booking_status,tpf.carrier_code";
+		if ($mailto ) {
+			echo "<br>$sQuery";
+
+		}
 
 		$rResult = $this->install_m->run_query($sQuery);
+		$booking_status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 
 	 	foreach($rResult as $offer) {
 
@@ -166,7 +191,7 @@ print_r($data);
 			//echo $coupon_code;exit;
 			$array = array();
 			//$array['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
-			$array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+			$array['booking_status'] = $booking_status;
 			$array["modify_date"] = time();
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
 
@@ -177,7 +202,7 @@ print_r($data);
 	
 			$ref['pnr_ref'] = $offer->pnr_ref;
 			$ref['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
-			$ref['offer_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+			$ref['offer_status'] = $booking_status; 
 			$ref["create_date"] = time();
                         $ref["modify_date"] = time();
                         $ref["create_userID"] = $this->session->userdata('loginuserID');
@@ -187,26 +212,25 @@ print_r($data);
 			
 			// update tracker about change in status
 			$tracker = array();
-				$tracker['booking_status_from'] = $offer->booking_status;
-				$tracker['booking_status_to'] = $array['booking_status'];
-				$tracker['comment'] = 'Sent Offer Email';
-			        $tracker["create_date"] = time();
-                                $tracker["modify_date"] = time();
-                                $tracker["create_userID"] = $this->session->userdata('loginuserID');
-                                $tracker["modify_userID"] = $this->session->userdata('loginuserID');
-			//	var_dump($p_list);exit;
+			$tracker['booking_status_from'] = $offer->booking_status;
+			$tracker['booking_status_to'] = $array['booking_status'];
+			$tracker['comment'] = 'Sent Offer Email';
+			$tracker["create_date"] = time();
+			$tracker["modify_date"] = time();
+			$tracker["create_userID"] = $this->session->userdata('loginuserID');
+			$tracker["modify_userID"] = $this->session->userdata('loginuserID');
+		//	var_dump($p_list);exit;
 
-				foreach($p_list as $id) {
-					$tracker['dtpfext_id'] = $id;
-                                	$this->offer_issue_m->insert_dtpf_tracker($tracker);
-				}
-				
-
-				 // send email
-				 $message = '
-	<html>
-	<body>
-	<div style="max-width: 800px; margin: 0; padding: 30px 0;">
+			foreach($p_list as $id) {
+				$tracker['dtpfext_id'] = $id;
+				$this->offer_issue_m->insert_dtpf_tracker($tracker);
+			}
+			
+			 // send email
+			 $message = '
+<html>
+<body>
+<div style="max-width: 800px; margin: 0; padding: 30px 0;">
 	<table width="80%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
 <td width="5%"></td>
@@ -230,51 +254,28 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 </html>
 ';
 
+		       $data = array(
+			'first_name'   => $namelist[0],
+			'last_name' => '',
+			'tomail' => $mailto ? $mailto : $emails_list[0],
+			'pnr_ref' => $offer->pnr_ref,
+			'coupon_code' => $coupon_code, 		
+			'mail_subject' => "Congratulations! You got great deal ! Grab it.."	,
+			'airlineID' => $offer->carrier_code		
+			); 	
 
-			/*  $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-			// $this->email->from('testsweken321@gmail.com', 'ADMIN');
-			 $this->email->to($emails_list[0]);
-			 $this->email->subject("Upgrade Cabin Offer");
-			$this->email->message($message);
-			$this->email->send(); */
-			
-	
-       $data = array(
-        'first_name'   => $namelist[0],
-        'last_name' => '',
-		'tomail' => $emails_list[0],
-		'pnr_ref' => $offer->pnr_ref,
-        'coupon_code' => $coupon_code, 		
-		'mail_subject' => "Upgrade Cabin Offer"	,
-        'airlineID' => $offer->carrier_code		
-        ); 	
-
-       
-	  /* $filename1 = base_url().'assets/home/images/emir.png';
-	  $filename2 = base_url()."assets/home/images/temp1-bnr.jpg";
-	  $filename3 = base_url().'assets/home/images/temp1-hdr-bg.jpg';
-	  
-	  $this->email->attach($filename1);
-      $cid1 = $this->email->attachment_cid($filename1);
-	  $this->email->attach($filename2);
-      $cid2 = $this->email->attachment_cid($filename2);	  
-      $this->email->attach($filename3);
-      $cid3 = $this->email->attachment_cid($filename3); */
-	  
-	    
-		/* $data['logo_cid'] = $cid1;
-        $data['temp_cid'] = $cid2;
-        $data['bgr_file']  = $cid3; */
-		
-          //$this->sendMailTemplateParser('home/upgrade_offer_temp',$data);
-       		
-	  //$this->sendMailTemplateParser('home/testtemplate',$data);	
-	    $this->upgradeOfferMail($data);
+		if ($mailto ) {
+			echo "<br>SENDING OFFFER=" . print_r($data,1);
+		}
+	    		$this->upgradeOfferMail($data);
 
 		}	
-		
 
-		redirect(base_url("offer_issue/index"));
+		if ($mailto ) {
+			echo "<br>Offer Sent Successfully!";
+		} else {
+			redirect(base_url("offer_issue/index"));
+		}
 	}
 
 
@@ -1061,23 +1062,23 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 					$result->tocabins[] = array('cabin_name' => $c);
 				}
 			if($result->fclr != null && !empty($result->tocabins)){			
-				$info['dep_date'] = date('D d M Y',$result->dep_date);
-                                $info['dep_time'] = date('H:i',$result->dept_time);
-                                $info['arrival_date'] = date('D d M Y',$result->arrival_date);
-				$info['arrival_time'] = date('H:i',$result->darrival_time);
-				$info['carrier_code'] = $result->carrier_code;
-				$info['carrier_name'] = $result->carrier_name;
-				$info['flight_number'] = $result->flight_number;
-				$info['from_city_code'] = $result->from_city_code;
-				$info['from_city'] = $result->from_city;
-				$info['to_city_code'] = $result->to_city_code;
-				$info['to_city'] = $result->to_city;
-				$info['seat_no'] = $result->seat_no;
-				$info['current_cabin'] = $result->current_cabin;
-                                $info['cabins'] = $result->tocabins;
-                                $info['time_diff'] = $result->time_diff;
-				$offerdata[] = $info;
-                    }
+				$paxdata['dep_date'] = date('D d M Y',$result->dep_date);
+                                $paxdata['dep_time'] = date('H:i',$result->dept_time);
+                                $paxdata['arrival_date'] = date('D d M Y',$result->arrival_date);
+				$paxdata['arrival_time'] = date('H:i',$result->darrival_time);
+				$paxdata['carrier_code'] = $result->carrier_code;
+				$paxdata['carrier_name'] = $result->carrier_name;
+				$paxdata['flight_number'] = $result->flight_number;
+				$paxdata['from_city_code'] = $result->from_city_code;
+				$paxdata['from_city'] = $result->from_city;
+				$paxdata['to_city_code'] = $result->to_city_code;
+				$paxdata['to_city'] = $result->to_city;
+				$paxdata['seat_no'] = $result->seat_no;
+				$paxdata['current_cabin'] = $result->current_cabin;
+                                $paxdata['cabins'] = $result->tocabins;
+                                $paxdata['time_diff'] = $result->time_diff;
+				$offerdata[] = $paxdata;
+                    	}
 		    if ( $result->bclr ) {
 			$bclr_offer  = 1;
 		    }
@@ -1086,33 +1087,62 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 		    }
 		    
                     $maildata['carrier_name'] = $result->carrier_name;
+				break;
                 }
 
 		if ( $bclr_offer && $fclr_offer ) {
+			echo "<br>UPGRADE & BAGGAGE COMBO OFFER";
                         $template = "upgrade_baggage_offer";    
+                        $maildata['mail_subject'] .= " Upgrade & Baggage offer";    
 		} elseif( $fclr_offer) {
+			echo "<br>UPGRADE OFFER";
                         $template = "upgrade_offer";    
+                        $maildata['mail_subject'] .= " Upgrade offer";    
 		} elseif( $bclr_offer) {
+			echo "<br>BAGGAGE OFFER";
                         $template = "baggage_offer";    
+                        $maildata['mail_subject'] .= " Baggage offer";    
 		}
+		echo "<br>TEMPLATE= " .$template;
+
                 if(count($results)>0){
                   $maildata['highest_upgrade_class'] = $results[0]->tocabins[0]['cabin_name'];
                 }
 		//print_r($results); exit();
 
                 $primary_client = $this->user_m->getClientByAirline($maildata['airlineID'],6)[0];	   
-		 $pax_names = $this->bid_m->getPaxNames($pnr_ref);
-                 $maildata['offer_data'] = $offerdata;
-                 //$maildata['fb_icon'] = base_url('assets/mail-temps/facebook.png');		
-                 //$maildata['tag_img'] = base_url('assets/mail-temps/tag.png');		
-                 //$maildata['twitter_icon'] = base_url('assets/mail-temps/twitter.png');	
-                 //$maildata['pinterest_icon'] = base_url('assets/mail-temps/pinterest.png');	
-                 //$maildata['openbrowser_img'] = base_url('assets/mail-temps/openBrowser.png');
+		$pax_names = $this->bid_m->getPaxNames($pnr_ref);
+                $maildata['offer_data'] = $offerdata;
+                #$maildata = array_merge($maildata, $paxdata);
+
+		if ( $fclr_offer) {
+                 $maildata['up_tpl_bnr'] = base_url('assets/mail-temps/up_temp1_images/header.jpg');
+                 $maildata['up_tpl_bnrtop'] = base_url('assets/mail-temps/up_temp1_images/bannerTop.png');	
+                 $maildata['up_tpl_bnrbottom'] = base_url('assets/mail-temps/up_temp1_images/bannerBottom.png');
+                 #$maildata['up_tpl_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
+                 #$maildata['up_tpl_contact_img'] = base_url('assets/mail-temps/bg_temp2_images/contactUs.png');	
+		}
+
+		if( $bclr_offer) {
+                 #$maildata['bg_tpl_bnr'] = base_url('assets/mail-temps/bg_temp1_images/header.jpg');
+                 $maildata['bg_tpl_bnr'] = base_url('assets/mail-temps/up_bg_temp1_images/bag.png');	
+                 #$maildata['bg_tpl_bnr'] = base_url('assets/mail-temps/bg_temp1_images/header.jpg');
+                 $maildata['bg_tpl_bnrtop'] = base_url('assets/mail-temps/bg_temp1_images/bannerTop.png');	
+                 $maildata['bg_tpl_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
+                 #$maildata['bg_tpl_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
+                 #$maildata['bg_tpl_contact_img'] = base_url('assets/mail-temps/bg_temp2_images/contactUs.png');	
+		}
+                 $maildata['fb_icon'] = base_url('assets/mail-temps/facebook.png');		
+                 $maildata['tag_img'] = base_url('assets/mail-temps/tag.png');		
+                 $maildata['twitter_icon'] = base_url('assets/mail-temps/twitter.png');	
+                 $maildata['pinterest_icon'] = base_url('assets/mail-temps/pinterest.png');	
+                 $maildata['openbrowser_img'] = base_url('assets/mail-temps/openBrowser.png');
                  //$maildata['bg_tpl1_bnr'] = base_url('assets/mail-temps/bg_temp1_images/header.jpg');
                  //$maildata['bg_tpl1_bnrtop'] = base_url('assets/mail-temps/bg_temp1_images/bannerTop.png');	
                  //$maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
                  //$maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
                  //$maildata['bg_tpl2_contact_img'] = base_url('assets/mail-temps/bg_temp2_images/contactUs.png');	
+/*
                  $maildata['bg_tpl2_twitter_icon'] = base_url('assets/mail-temps/bg_temp2_images/whiteTweet.png');	
                  $maildata['bg_tpl2_fb_icon'] = base_url('assets/mail-temps/bg_temp2_images/whitebook.png');	
                  $maildata['bg_tpl2_white_cam'] = base_url('assets/mail-temps/bg_temp2_images/whiteCam.png');	
@@ -1124,21 +1154,41 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                  $maildata['upbg_tpl2_bag_img'] = base_url('assets/mail-temps/up_bg_temp2_images/bag.jpg');	
                  $maildata['upbg_tpl3_bigimg'] = base_url('assets/mail-temps/up_bg_temp3_images/bigImg.jpg');
                  $maildata['upbg_tpl1_bnr'] = base_url('assets/mail-temps/up_bg_temp1_images/bg.jpg');
+*/
                  $maildata['domain'] = $primary_client->domain;
                  $maildata['primary_phone'] = $primary_client->phone;
                  $maildata['primary_mail'] = $primary_client->email;
-                 $maildata['fb_link'] ="facebook.com";
-                 $maildata['twitter_link'] ="twitter.com";
-                 $maildata['pinterest_link'] ="pinterest.com";
-                 $maildata['unsubscribe_link'] =base_url('home/index');
-                 $maildata['forward_friend_link'] =base_url('home/index');
-                 $maildata['openbrowser_link'] =base_url('home/index');
-                 $maildata['not_intrested_link'] =base_url('home/index');
+                 $maildata['fb_link'] = "https://facebook.com";
+                 $maildata['twitter_link'] = "https://twitter.com";
+                 $maildata['pinterest_link'] = "https://pinterest.com";
+                 $maildata['unsubscribe_link'] = base_url('home/index');
+                 $maildata['forward_friend_link'] = base_url('home/index');
+                 $maildata['openbrowser_link'] = base_url('home/index');
+                 $maildata['not_intrested_link'] = base_url('home/index');
                  
-print_r($maildata);
+		   $maildata['base_url'] = base_url(); 
+		   $maildata['bidnow_link'] = base_url('homes/bidding?pnr_ref='.$pnr_ref);
+		   $template_images = $this->airline_m->getImagesByType($maildata['airlineID']);
+		   foreach($template_images as $img){
+			   $maildata[$img->type] = base_url('uploads/images/'.$img->image);
+		   } 
+                   $airline_info = $this->bid_m->getAirlineLogoByPNR($pnr_ref);
+		   $maildata['mail_header_color'] = $airline_info->mail_header_color;
+		   if(empty($maildata['mail_header_color'])){
+			 $maildata['mail_header_color'] = '#333';  
+		   }
+		   
+		   if(isset($maildata['bid_value'])){
+			   $maildata['bid_value'] = number_format($maildata['bid_value']);
+		   }
+
+		   /* $data['upgrade_offer_mail_template1'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
+		   $data['upgrade_offer_mail_template3'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
+		    $data['upgrade_offer_mail_template2'] = $data['base_url'] .'assets/home/images/temp2-bnr.jpg';
+		    $data['logo'] =$data['base_url'] .'assets/home/images/emir.png';  
+            	    $data['airline_logo'] = $data['base_url'] .'assets/home/images/temp2-logo.jpg';  */           
                 //$this->sendMailTemplateParser('upgrade_offer',$maildata);
                 $this->sendMailTemplateParser($template,$maildata);
 	}		
-		
 
 }
