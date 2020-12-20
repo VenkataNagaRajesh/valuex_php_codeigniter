@@ -357,6 +357,12 @@ class Mailandsmstemplate extends Admin_Controller {
 		  if(permissionChecker('mailandsmstemplate_edit')){ 			
 			$template->action .= btn_edit('mailandsmstemplate/edit/'.$template->mailandsmstemplateID, $this->lang->line('edit'));			
 		  }
+		  if(permissionChecker('mailandsmstemplate_edit') && $template->airlineID){ 			
+			$template->action .= btn_edit('airline/gallery/'.$template->airlineID, $this->lang->line('edit_gallery'));			
+		  }
+		  if(permissionChecker('mailandsmstemplate_edit') && $template->airlineID){ 			
+			$template->action .= btn_edit('airline/view/'.$template->airlineID, $this->lang->line('view_gallery'));			
+		  }
 			if ( !$template->airline_code) {
 				$template->airline_code = "Any Carrier";
 			}

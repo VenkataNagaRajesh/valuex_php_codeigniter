@@ -3,6 +3,8 @@
 /* List Language  */
 $lang['panel_title'] = "Aircraft Configuraiton";
 $lang['add_title'] = "Add Cabin Gallery";
+$lang['edit_gallery'] = "Add template Photos";
+$lang['view_gallery'] = "View template Photos";
 $lang['edit_airline_cabin'] = 'Edit Cabin Gallery';
 $lang['add_airline_cabin'] = 'Add Cabin';
 $lang['update_airline_cabin'] = 'Update Cabin';

@@ -3,6 +3,8 @@
 /* List Language  */
 $lang['panel_title'] = "Mail Template";
 $lang['add_title'] = "Add a template";
+$lang['edit_gallery'] = "Add template Photos";
+$lang['view_gallery'] = "View template Photos";
 $lang['slno'] = "#";
 $lang['mailandsmstemplate_name'] = "Name";
 $lang['mailandsmstemplate_user'] = "User";

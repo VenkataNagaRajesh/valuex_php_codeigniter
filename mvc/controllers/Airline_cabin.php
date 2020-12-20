@@ -541,7 +541,7 @@ class Airline_cabin extends Admin_Controller {
 
 
 
-$sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , ac.aln_data_value as a_code, 
+$sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , ac.aln_data_value as a_code, cm.airline_code as carrierID,
         cdef.cabin as airline_cabin, video_links, cm.active , cr.aln_data_value as aircraft_name, cabin_seat_capacity
         from VX_airline_cabin_map cm 
         LEFT JOIN VX_data_defns ac on (ac.vx_aln_data_defnsID = cm.airline_code) 
@@ -581,6 +581,15 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , 
 			if (permissionChecker('airline_cabin_delete') ) {                                        				
 			 $list->action .= btn_delete('airline_cabin/delete/'.$list->cabin_map_id, $this->lang->line('delete'));
 
+			}
+                        if(permissionChecker('airline_cabin_edit') ) {
+				$list->action .= btn_edit('airline/edit/'.$list->carrierID, $this->lang->line('edit'));
+			}
+                        if(permissionChecker('airline_cabin_edit') ) {
+				$list->action .= btn_edit('airline/gallery/'.$list->carrierID, $this->lang->line('edit_gallery'));
+			}
+			if (permissionChecker('airline_cabin_view') ) {
+			       $list->action .= btn_view('airline/view/'.$list->carrierID, $this->lang->line('view_gallery'));	
 			}
 
 			$status = $list->active;
