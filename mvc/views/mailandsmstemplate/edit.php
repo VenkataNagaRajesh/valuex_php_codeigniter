@@ -93,21 +93,21 @@
                        </div>
 
                        <?php
-                           if(form_error('template_typeID'))
+                           if(form_error('template_path'))
                                echo "<div class='form-group has-error' >";
                            else
                                echo "<div class='form-group' >";
                        ?>
-                           <label for="template_typeID" class="col-sm-1 control-label">
-                               <?="Template Type"?>
+                           <label for="template_path" class="col-sm-1 control-label">
+                               <?="Template Path"?>
                            </label>
                            <div class="col-sm-4">
                                <?php                                                                   
-                                echo form_dropdown("template_typeID", $template_types, set_value("template_typeID",$mailtemplate->template_typeID), "id='template_typeID' class='form-control'");
+                                echo form_dropdown("template_path", $template_types, set_value("template_path",$mailtemplate->template_path), "id='template_path' class='form-control'");
                                ?>
                            </div>
                            <span class="col-sm-4 control-label">
-                               <?php echo form_error('template_typeID'); ?>
+                               <?php echo form_error('template_path'); ?>
                            </span>
                        </div>
                       

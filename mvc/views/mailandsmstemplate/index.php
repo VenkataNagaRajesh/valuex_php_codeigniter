@@ -45,7 +45,7 @@
                                 <th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_name')?></th>
 								<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_airline')?></th>
                                 <th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_category')?></th>
-                                <th class="col-sm-2"><?="Template Type"?></th>
+                                <th class="col-sm-2"><?="Template Path"?></th>
 								<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_default')?></th>
 								<!--<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_template')?></th>-->
                                 <?php if(permissionChecker('mailandsmstemplate_edit') || permissionChecker('mailandsmstemplate_delete') || permissionChecker('mailandsmstemplate_view')) {
@@ -132,7 +132,7 @@ $(document).ready(function() {
                   {"data": "name" },
 				  {"data": "airline_code" },
 				  {"data": "category"},				
-				  {"data": "template_type"},				
+				  {"data": "template_path"},				
 				  {"data": "default"},
                   {"data": "action"}
 				  ],			     

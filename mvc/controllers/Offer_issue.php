@@ -1114,29 +1114,31 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 		$pax_names = $this->bid_m->getPaxNames($pnr_ref);
                 $maildata['offer_data'] = $offerdata;
                 #$maildata = array_merge($maildata, $paxdata);
+		$dir = "assets/mail-temps";
+		$tpl_path = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID'])->template_path;
 
 		if ( $fclr_offer) {
-                 $maildata['up_tpl_bnr'] = base_url('assets/mail-temps/up_temp1_images/header.jpg');
-                 $maildata['up_tpl_bnrtop'] = base_url('assets/mail-temps/up_temp1_images/bannerTop.png');	
-                 $maildata['up_tpl_bnrbottom'] = base_url('assets/mail-temps/up_temp1_images/bannerBottom.png');
-                 #$maildata['up_tpl_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
-                 #$maildata['up_tpl_contact_img'] = base_url('assets/mail-temps/bg_temp2_images/contactUs.png');	
+                 $maildata['up_tpl_bnr'] = base_url("$dir/$tpl_path/header.jpg");
+                 $maildata['up_tpl_bnrtop'] = base_url("$dir/$tpl_path/bannerTop.png");	
+                 $maildata['up_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");
+                 #$maildata['up_tpl_bnrbottom'] = base_url("assets/mail-temps/bg_temp1_images/bannerBottom.png");	
+                 #$maildata['up_tpl_contact_img'] = base_url("assets/mail-temps/bg_temp2_images/contactUs.png");	
 		}
 
 		if( $bclr_offer) {
-                 #$maildata['bg_tpl_bnr'] = base_url('assets/mail-temps/bg_temp1_images/header.jpg');
-                 $maildata['bg_tpl_bnr'] = base_url('assets/mail-temps/up_bg_temp1_images/bag.png');	
-                 #$maildata['bg_tpl_bnr'] = base_url('assets/mail-temps/bg_temp1_images/header.jpg');
-                 $maildata['bg_tpl_bnrtop'] = base_url('assets/mail-temps/bg_temp1_images/bannerTop.png');	
-                 $maildata['bg_tpl_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
-                 #$maildata['bg_tpl_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
-                 #$maildata['bg_tpl_contact_img'] = base_url('assets/mail-temps/bg_temp2_images/contactUs.png');	
+                 #$maildata['bg_tpl_bnr'] = base_url("assets/mail-temps/bg_temp1_images/header.jpg');
+                 $maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/bag.png");	
+                 #$maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/header.jpg");
+                 $maildata['bg_tpl_bnrtop'] = base_url("$dir/$tpl_path/bannerTop.png");	
+                 $maildata['bg_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");	
+                 #$maildata['bg_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");	
+                 #$maildata['bg_tpl_contact_img'] = base_url("$dir/$tpl_path/contactUs.png");	
 		}
-                 $maildata['fb_icon'] = base_url('assets/mail-temps/facebook.png');		
-                 $maildata['tag_img'] = base_url('assets/mail-temps/tag.png');		
-                 $maildata['twitter_icon'] = base_url('assets/mail-temps/twitter.png');	
-                 $maildata['pinterest_icon'] = base_url('assets/mail-temps/pinterest.png');	
-                 $maildata['openbrowser_img'] = base_url('assets/mail-temps/openBrowser.png');
+                 $maildata['fb_icon'] = base_url("$dir/facebook.png");		
+                 $maildata['tag_img'] = base_url("$dir/tag.png");		
+                 $maildata['twitter_icon'] = base_url("$dir/twitter.png");	
+                 $maildata['pinterest_icon'] = base_url("$dir/pinterest.png");	
+                 $maildata['openbrowser_img'] = base_url("$dir/openBrowser.png");
                  //$maildata['bg_tpl1_bnr'] = base_url('assets/mail-temps/bg_temp1_images/header.jpg');
                  //$maildata['bg_tpl1_bnrtop'] = base_url('assets/mail-temps/bg_temp1_images/bannerTop.png');	
                  //$maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	

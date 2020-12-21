@@ -89,7 +89,17 @@ class Mailandsmstemplate extends Admin_Controller {
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		}
-		$this->data['template_types'] =  $this->airports_m->getDefnsListByType(25);
+		#$this->data['template_types'] =  $this->airports_m->getDefnsListByType(25);
+		$dir = "assets/mail-temps";
+
+		// Sort in ascending order - this is default
+		$a =  scandir($dir,1);
+		foreach($a as $d) {
+			if ( $d == '.' || $d == '..') continue;
+			if ( is_dir("$dir/$d") ) {
+				$this->data['template_types'][$d] =  $d;
+			}
+		}
 		if($_POST) { 	
 				$rules = $this->rules();
 				$this->form_validation->set_rules($rules);
@@ -107,7 +117,7 @@ class Mailandsmstemplate extends Admin_Controller {
 						'create_date' => time(),
 						'modify_userID' => $this->session->userdata('loginuserID'),
 						'modify_date' => time(),
-						'template_typeID' => $this->input->post('template_typeID')
+						'template_path' => $this->input->post('template_path')
 					);
 					$this->mailandsmstemplate_m->insert_mailandsmstemplate($array);
 					$id =  $this->db->insert_id();
@@ -157,7 +167,17 @@ class Mailandsmstemplate extends Admin_Controller {
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		}
-		$this->data['template_types'] =  $this->airports_m->getDefnsListByType(25);
+		#$this->data['template_types'] =  $this->airports_m->getDefnsListByType(25);
+		$dir = "assets/mail-temps";
+
+		// Sort in ascending order - this is default
+		$a =  scandir($dir,1);
+		foreach($a as $d) {
+			if ( $d == '.' || $d == '..') continue;
+			if ( is_dir("$dir/$d") ) {
+				$this->data['template_types'][$d] =  $d;
+			}
+		}
 		if((int)$id) { 
 			$this->data['mailtemplate'] = $this->mailandsmstemplate_m->get_mailandsmstemplate($id);
 			if($this->data['mailtemplate']) {			
@@ -177,7 +197,7 @@ class Mailandsmstemplate extends Admin_Controller {
 								'template' => $this->input->post('email_template',FALSE),				
 								'modify_userID' => $this->session->userdata('loginuserID'),
 								'modify_date' => time(),
-								'template_typeID' => $this->input->post('template_typeID')
+								'template_path' => $this->input->post('template_path')
 							);							 
                             
 							$this->mailandsmstemplate_m->update_mailandsmstemplate($array, $id);
@@ -338,7 +358,7 @@ class Mailandsmstemplate extends Admin_Controller {
             }		
 
 		   
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.*,tt.aln_data_value template_type,cat.name category,a.aln_data_value airline_name,a.code airline_code FROM VX_mailandsmstemplate m LEFT JOIN VX_mailandsmscategory cat ON cat.catID = m.catID LEFT JOIN VX_data_defns a ON a.vx_aln_data_defnsID = m.airlineID LEFT JOIN VX_data_defns tt ON (tt.vx_aln_data_defnsID = m.template_typeID)
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.*,tt.aln_data_value template_type,cat.name category,a.aln_data_value airline_name,a.code airline_code FROM VX_mailandsmstemplate m LEFT JOIN VX_mailandsmscategory cat ON cat.catID = m.catID LEFT JOIN VX_data_defns a ON a.vx_aln_data_defnsID = m.airlineID LEFT JOIN VX_data_defns tt ON (tt.vx_aln_data_defnsID = m.template_path)
 		$sWhere       	
 		$sOrder		
 		$sLimit	"; 

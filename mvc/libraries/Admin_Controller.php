@@ -605,7 +605,6 @@ class Admin_Controller extends MY_Controller {
 		   $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['airlineID'])->template;
 		   $tpl = str_replace(array('<!--{','}-->'),array('{','}'),$tpl);		   
 		   $message = $this->parser->parse_string($tpl, $data,true);
-echo $message;
 		  //$this->mydebug->debug($tpl); exit;
 		  
 		  // $template="home/temp-2";		
