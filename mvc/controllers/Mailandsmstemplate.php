@@ -89,7 +89,17 @@ class Mailandsmstemplate extends Admin_Controller {
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		}
-		$this->data['template_types'] =  $this->airports_m->getDefnsListByType(25);
+		#$this->data['template_types'] =  $this->airports_m->getDefnsListByType(25);
+		$dir = "assets/mail-temps";
+
+		// Sort in ascending order - this is default
+		$a =  scandir($dir,1);
+		foreach($a as $d) {
+			if ( $d == '.' || $d == '..') continue;
+			if ( is_dir("$dir/$d") ) {
+				$this->data['template_types'][$d] =  $d;
+			}
+		}
 		if($_POST) { 	
 				$rules = $this->rules();
 				$this->form_validation->set_rules($rules);
@@ -107,7 +117,7 @@ class Mailandsmstemplate extends Admin_Controller {
 						'create_date' => time(),
 						'modify_userID' => $this->session->userdata('loginuserID'),
 						'modify_date' => time(),
-						'template_typeID' => $this->input->post('template_typeID')
+						'template_path' => $this->input->post('template_path')
 					);
 					$this->mailandsmstemplate_m->insert_mailandsmstemplate($array);
 					$id =  $this->db->insert_id();
@@ -157,7 +167,17 @@ class Mailandsmstemplate extends Admin_Controller {
 		} else {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		}
-		$this->data['template_types'] =  $this->airports_m->getDefnsListByType(25);
+		#$this->data['template_types'] =  $this->airports_m->getDefnsListByType(25);
+		$dir = "assets/mail-temps";
+
+		// Sort in ascending order - this is default
+		$a =  scandir($dir,1);
+		foreach($a as $d) {
+			if ( $d == '.' || $d == '..') continue;
+			if ( is_dir("$dir/$d") ) {
+				$this->data['template_types'][$d] =  $d;
+			}
+		}
 		if((int)$id) { 
 			$this->data['mailtemplate'] = $this->mailandsmstemplate_m->get_mailandsmstemplate($id);
 			if($this->data['mailtemplate']) {			
@@ -177,7 +197,7 @@ class Mailandsmstemplate extends Admin_Controller {
 								'template' => $this->input->post('email_template',FALSE),				
 								'modify_userID' => $this->session->userdata('loginuserID'),
 								'modify_date' => time(),
-								'template_typeID' => $this->input->post('template_typeID')
+								'template_path' => $this->input->post('template_path')
 							);							 
                             
 							$this->mailandsmstemplate_m->update_mailandsmstemplate($array, $id);
@@ -332,17 +352,16 @@ class Mailandsmstemplate extends Admin_Controller {
               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 			  $sWhere .= 'a.vx_aln_data_defnsID IN ('.implode(',',$this->session->userdata('login_user_airlineID')).')';		
             }
-            if(!empty($this->input->get('filter_airline'))){  
+            if($this->input->get('filter_airline') != ''){  
               $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 			  $sWhere .= 'm.airlineID = '.$this->input->get('filter_airline');		
             }		
 
 		   
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.*,tt.aln_data_value template_type,cat.name category,a.aln_data_value airline_name,a.code airline_code FROM VX_mailandsmstemplate m LEFT JOIN VX_mailandsmscategory cat ON cat.catID = m.catID LEFT JOIN VX_data_defns a ON a.vx_aln_data_defnsID = m.airlineID LEFT JOIN VX_data_defns tt ON (tt.vx_aln_data_defnsID = m.template_typeID)
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS m.*,tt.aln_data_value template_type,cat.name category,a.aln_data_value airline_name,a.code airline_code FROM VX_mailandsmstemplate m LEFT JOIN VX_mailandsmscategory cat ON cat.catID = m.catID LEFT JOIN VX_data_defns a ON a.vx_aln_data_defnsID = m.airlineID LEFT JOIN VX_data_defns tt ON (tt.vx_aln_data_defnsID = m.template_path)
 		$sWhere       	
 		$sOrder		
 		$sLimit	"; 
-	//print_r($sQuery); exit;
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
 	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
@@ -358,6 +377,15 @@ class Mailandsmstemplate extends Admin_Controller {
 		  if(permissionChecker('mailandsmstemplate_edit')){ 			
 			$template->action .= btn_edit('mailandsmstemplate/edit/'.$template->mailandsmstemplateID, $this->lang->line('edit'));			
 		  }
+		  if(permissionChecker('mailandsmstemplate_edit') && $template->airlineID){ 			
+			$template->action .= btn_edit('airline/gallery/'.$template->airlineID, $this->lang->line('edit_gallery'));			
+		  }
+		  if(permissionChecker('mailandsmstemplate_edit') && $template->airlineID){ 			
+			$template->action .= btn_edit('airline/view/'.$template->airlineID, $this->lang->line('view_gallery'));			
+		  }
+			if ( !$template->airline_code) {
+				$template->airline_code = "Any Carrier";
+			}
 		  if(permissionChecker('mailandsmstemplate_view')){ 			
 			$template->action .= btn_view('mailandsmstemplate/view/'.$template->mailandsmstemplateID, $this->lang->line('view'));			
 		  }

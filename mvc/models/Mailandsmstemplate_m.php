@@ -71,10 +71,13 @@ class Mailandsmstemplate_m extends MY_Model {
 		$this->db->select('t.*')->from('VX_mailandsmstemplate t');
 		$this->db->join('VX_mailandsmscategory c','c.catID = t.catID','LEFT');
 		$this->db->where('c.alias',$cat);
-		$this->db->where('airlineID',$airlineID);
+		$this->db->where("(airlineID = $airlineID or `airlineID` = 0)");
 		$this->db->where('t.default',1);
+		$this->db->order_by('airlineID desc');
+		$this->db->limit(1);
 		$query = $this->db->get();
 		$this->mydebug->debug($this->db->last_query());
+		//echo $this->db->last_query();
 		return $query->row();
 	}
 }

@@ -595,51 +595,27 @@ class Admin_Controller extends MY_Controller {
 	 }	
 	
 	 public function sendMailTemplateParser($template,$data){
-           $this->load->library('parser');
+           	   $this->load->library('parser');
 		   $this->load->library('email');
-		   $data['base_url'] = base_url(); 
-           $data['base_url'] = 'http://valuex.sweken.com/';
-           //$data['bidnow_link'] = base_url('home/index');
-		    $data['bidnow_link'] = base_url('homes/bidding?pnr_ref='.$data['pnr_ref']);
-		   $this->load->model('airline_m');
-           $template_images = $this->airline_m->getImagesByType($data['airlineID']);
-		   foreach($template_images as $img){
-			   $data[$img->type] = base_url('uploads/images/'.$img->image);
-		   } 
-           $airline_info = $this->bid_m->getAirlineLogoByPNR($data['pnr_ref']);
-		   $data['logo'] = $airline_info->logo;
-		   if(!empty($data['logo'])){
-			 $data['logo'] = base_url('uploads/images/'.$data['logo']);  
-		   }else{
-			 $data['logo'] = base_url('assets/home/images/emir.png');  
-		   }
-		   $data['mail_header_color'] = $airline_info->mail_header_color;
-		   if(empty($data['mail_header_color'])){
-			 $data['mail_header_color'] = '#333';  
-		   }
-		   
-		   if(isset($data['bid_value'])){
-			   $data['bid_value'] = number_format($data['bid_value']);
-		   }
 		   /* $data['upgrade_offer_mail_template1'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
 		   $data['upgrade_offer_mail_template3'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
 		    $data['upgrade_offer_mail_template2'] = $data['base_url'] .'assets/home/images/temp2-bnr.jpg';
 		    $data['logo'] =$data['base_url'] .'assets/home/images/emir.png';  
-            $data['airline_logo'] = $data['base_url'] .'assets/home/images/temp2-logo.jpg';  */           
-           $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['airlineID'])->template;
-           $tpl = str_replace(array('<!--{','}-->'),array('{','}'),$tpl);		   
-          $message = $this->parser->parse_string($tpl, $data,true);
+            	    $data['airline_logo'] = $data['base_url'] .'assets/home/images/temp2-logo.jpg';  */           
+		   $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['airlineID'])->template;
+		   $tpl = str_replace(array('<!--{','}-->'),array('{','}'),$tpl);		   
+		   $message = $this->parser->parse_string($tpl, $data,true);
 		  //$this->mydebug->debug($tpl); exit;
 		  
 		  // $template="home/temp-2";		
 		   //$message = $this->parser->parse($template, $data);
-          $message =html_entity_decode($message);
-          $siteinfos = $this->reset_m->get_site();
-		  $this->mydebug->debug($data['tomail'].'----'.$template);		  
-          //print_r($message);
-          if($data['tomail']) {                      
-            $subject = $data['mail_subject'];
-            $email = $data['tomail'];
+		  $message =html_entity_decode($message);
+		  $siteinfos = $this->reset_m->get_site();
+			  $this->mydebug->debug($data['tomail'].'----'.$template);		  
+		  //print_r($message);
+		  if($data['tomail']) {                      
+			$subject = $data['mail_subject'];
+			$email = $data['tomail'];
 			$config['protocol']='smtp';
 			$config['smtp_host']='mail.sweken.com';
 			$config['smtp_port']='26';
@@ -651,43 +627,43 @@ class Admin_Controller extends MY_Controller {
 			$config['wordwrap'] = TRUE;
 			$config['mailtype'] = 'html';
 			$this->email->initialize($config);
-           
-            $this->email->from($siteinfos->email,$siteinfos->sname);
-            $this->email->to($email);
-            $this->email->subject($subject);
-            $this->email->message($message);
-		
-            /* if($this->email->send()) {
-                    $this->mydebug->debug("mail sent successfully");
-            } else {
-                    $this->mydebug->debug($this->lang->line('mail_error'));
-            } */
-			
-			 if($this->email->send()){
-					  $this->mydebug->debug("email_sent Congragulation Email Send Successfully.");
-			 } else {
-					   $this->mydebug->debug("email_sent You have encountered an error ......".$this->email->print_debugger()) ;	  
-			 }
-          }
-     }	
-	 
-	 public function exportall($data,$columns,$rows){
-	  ob_start();		 
-	  $this->load->library("excel");
-	  $object = new PHPExcel();		  
-	  $object->setActiveSheetIndex(0); 
-	  $column = 0;
-	   foreach($columns as $field) {
-		 $object->getActiveSheet()->setCellValueByColumnAndRow($column, 1, $field);
-		 $column++;
-	   }		 
-		$excel_row = 2;		
-		  foreach($data as $row)  {
-			foreach($rows as $key => $value){ 
-			 $row_data = ($row->$value =='NUL')?'':$row->$value;
-			 $object->getActiveSheet()->setCellValueByColumnAndRow($key, $excel_row,$row_data);  
+
+			$this->email->from($siteinfos->email,$siteinfos->sname);
+			$this->email->to($email);
+			$this->email->subject($subject);
+			$this->email->message($message);
+
+			/* if($this->email->send()) {
+			$this->mydebug->debug("mail sent successfully");
+			} else {
+			$this->mydebug->debug($this->lang->line('mail_error'));
+			} */
+
+			if($this->email->send()){
+			  $this->mydebug->debug("email_sent Congragulation Email Send Successfully.");
+			} else {
+			   $this->mydebug->debug("email_sent You have encountered an error ......".$this->email->print_debugger()) ;	  
 			}
-		   $excel_row++;
+		}
+	}	
+
+	public function exportall($data,$columns,$rows){
+		ob_start();		 
+		$this->load->library("excel");
+		$object = new PHPExcel();		  
+		$object->setActiveSheetIndex(0); 
+		$column = 0;
+		foreach($columns as $field) {
+		$object->getActiveSheet()->setCellValueByColumnAndRow($column, 1, $field);
+		$column++;
+		}		 
+		$excel_row = 2;		
+		foreach($data as $row)  {
+		foreach($rows as $key => $value){ 
+		$row_data = ($row->$value =='NUL')?'':$row->$value;
+		$object->getActiveSheet()->setCellValueByColumnAndRow($key, $excel_row,$row_data);  
+		}
+		$excel_row++;
 		  } 
 			
 		  $object_writer = PHPExcel_IOFactory::createWriter($object, 'Excel5');
