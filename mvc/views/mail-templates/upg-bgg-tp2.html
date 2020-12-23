@@ -183,13 +183,13 @@ td[class="spechide"]
 																					<td align="right" valign="top">
 																						<div class="contentEditableContainer contentImageEditable" style="display:inline-block;">
 																							<div class="contentEditable">
-																								<a target='_blank' href="[SHOWEMAIL]" style="color:#A8B0B6;font-size:13px;text-decoration:none;">Open in your browser</a></div>
+																								<a target='_blank' href="{openbrowser_link}" style="color:#A8B0B6;font-size:13px;text-decoration:none;">Open in your browser</a></div>
 																						</div>
 																					</td>
 																					<td align="right" valign="top" width="18">
 																						<div class="contentEditableContainer contentImageEditable" style="display:inline-block;">
 																							<div class="contentEditable">
-																								<a target='_blank' href="[SHOWEMAIL]"><img alt="open in browser image" data-default="placeholder" height="15" src="../../../assets/mail-temps/up-bg-tp2-imgs/openBrowser.png" style="padding-left:10px;" width="15" /></a></div>
+																								<a target='_blank' href="{openbrowser_link}"><img alt="open in browser image" data-default="placeholder" height="15" src="../../../assets/mail-temps/up-bg-tp2-imgs/openBrowser.png" style="padding-left:10px;" width="15" /></a></div>
 																						</div>
 																					</td>
 																				</tr>
@@ -255,7 +255,7 @@ td[class="spechide"]
 																											<div class="contentEditableContainer contentTextEditable">
 																												<div class="contentEditable">
 																													<h2>
-																														Congratulations Danny!!!</h2>
+																														Congratulations {first_name} !!!</h2>
 																												</div>
 																											</div>
 																											<br>
@@ -265,7 +265,7 @@ td[class="spechide"]
 																												</div>
 																												<br>
 																												<div class="contentEditable" style="text-align:center;">
-								<h2 style="font-size: 19px;font-style: italic;position: relative;top: 0;color: #f5f5f5;background: #333;width: auto;padding: 9px 20px;display: inline-block;text-aling:center;">Upgrade to <span style="font-size: 18px;color: #fff;position: relative;text-transform: uppercase;text-shadow: 0px 2px 6px #000;"><b>Business Class</b></span></h2>
+								<h2 style="font-size: 19px;font-style: italic;position: relative;top: 0;color: #f5f5f5;background: #333;width: auto;padding: 9px 20px;display: inline-block;text-aling:center;">Upgrade to <span style="font-size: 18px;color: #fff;position: relative;text-transform: uppercase;text-shadow: 0px 2px 6px #000;"><b>{highest_upgrade_class} Class</b></span></h2>
 							</div>
 																											</div>
 																											
@@ -283,7 +283,7 @@ td[class="spechide"]
 								<tr>
 									<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;font-family:calibri;border-bottom:solid 1px #ddd;padding-bottom:10px;" class="hidden-lg hidden-sm hidden-md">
 										<div style="width:100%;text-align:center;">
-											 <p style="color:#333;"><b>Bangalore - Hyderabad | Tue, 23 May 17, 17:30 hrs</b></p>
+											 <p style="color:#333;"><b>{from_city_code} - {to_city_code} | {dep_date}, {dep_time}</b></p>
 										</div>
 									</div>	
 								</tr>
@@ -293,9 +293,9 @@ td[class="spechide"]
 										<div class="contentEditable">
 											<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;margin-bottom: 20px;font-family:calibri;" class="hidden-lg hidden-sm hidden-md">
 												<div style="width:100%;">
-													<p><b>Duration : </b><span>1h 10m</span></p>
-													<p><b>Flight : </b><span>CA2345</span></p>
-													<p><b>Cabin : </b><span>Economy</span></p>
+													<p><b>Duration : </b><span>{time_diff}</span></p>
+													<p><b>Flight : </b><span>{carrier_code}{flight_number}</span></p>
+													<p><b>Cabin : </b><span>{current_cabin}</span></p>
 												</div>
 											</div>	
 										</div>
@@ -306,11 +306,11 @@ td[class="spechide"]
 											<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;margin-bottom: 20px;font-family:calibri;" class="hidden-lg hidden-sm hidden-md">
 												<div style="width:50%;float:left;">
 													<p><b><i>Departure</i></b></p>
-													<p><b>Bangalore(BLR)</b><br><span>Tue, 23 May 17, 17:30 hrs</span></p>	
+													<p><b>{from_city}({from_city_code})</b><br><span>{dep_date}, {dep_time}</span></p>	
 												</div>
 												<div style="width:50%;float:left">
 													<p><b><i>Arrival</i></b></p>
-													<p><b>Hyderabad Shamshabad (HYD)</b><br><span>Tue, 23 May 17, 18:40 hrs</span></p>
+													<p><b>{to_city} ({to_city_code})</b><br><span>{arrival_date}, {arrival_time}</span></p>
 												</div>
 											</div>	
 										</div>
@@ -330,7 +330,7 @@ td[class="spechide"]
 																										<td align="right" style="padding-bottom:8px;" valign="top">
 																											<div class="contentEditableContainer contentTextEditable">
 																												<div class="contentEditable">
-																													<a target='_blank' href="#" class='link2' style='color:#ffffff;'>Bid Now </a></div>
+																													<a target='_blank' href="{bidnow_link}" class='link2' style='color:#ffffff;'>Bid Now </a></div>
 																											</div>
 																										</td>
 																									</tr>
@@ -524,7 +524,7 @@ td[class="spechide"]
 																									<td align="center" bgcolor="#3E4A7F" height="72" valign="middle" width="100%">
 																										<div class="contentEditableContainer contentFacebookEditable">
 																											<div class="contentEditable" valign="middle">
-																												<a target='_blank' href=""><img alt="facebook link" data-default="placeholder" data-max-width="37" height="37" src="../../../assets/mail-temps/up-bg-tp2-imgs/facebook.png" width="37" data-customIcon="true"/></a></div>
+																												<a target='_blank' href="{fb_link}"><img alt="facebook link" data-default="placeholder" data-max-width="37" height="37" src="../../../assets/mail-temps/up-bg-tp2-imgs/facebook.png" width="37" data-customIcon="true"/></a></div>
 																										</div>
 																									</td>
 																								</tr>
@@ -538,7 +538,7 @@ td[class="spechide"]
 																									<td align="center" bgcolor="#2D3867" height="72" valign="middle" width="72">
 																										<div class="contentEditableContainer contentTwitterEditable">
 																											<div class="contentEditable" valign="middle">
-																												<a target='_blank' href=""><img alt="twitter link" data-default="placeholder" data-max-width="37" height="37" src="../../../assets/mail-temps/up-bg-tp2-imgs/twitter.png" data-customIcon="true" width="37" /></a></div>
+																												<a target='_blank' href="{twitter_link}"><img alt="twitter link" data-default="placeholder" data-max-width="37" height="37" src="../../../assets/mail-temps/up-bg-tp2-imgs/twitter.png" data-customIcon="true" width="37" /></a></div>
 																										</div>
 																									</td>
 																								</tr>
@@ -562,7 +562,7 @@ td[class="spechide"]
 																		<div class="contentEditableContainer contentTextEditable">
 																			<div class="contentEditable">
 																				<p style="color:#333; font-size:13px;line-height: 16px;">
-																					This email was sent to support@crenva.com when you signed up on [CLIENTS.WEBSITE] Please add us to your contacts to ensure the newsletters land in your inbox.</p>
+																					This email was sent to {primary_mail} when you signed up on [CLIENTS.WEBSITE] Please add us to your contacts to ensure the newsletters land in your inbox.</p>
 																			</div>
 																		</div>
 																	</td>
@@ -575,7 +575,7 @@ td[class="spechide"]
 																	<td align='middle'>
 																	  <div class="contentEditableContainer contentTextEditable">
 																		<div class="contentEditable">
-																		  <p><a href="#">Help Center | I'm Not Intrested</a></p>
+																		  <p><a href="{not_intrested_link}">Help Center | I'm Not Intrested</a></p>
 																		</div>
 																	  </div>
 																	</td>
@@ -593,7 +593,7 @@ td[class="spechide"]
 																		<div class="contentEditableContainer contentTextEditable">
 																			<div class="contentEditable">
 																				<p style="color:#333; font-weight:bold;font-size:13px;line-height: 30px;">
-																					Crenva Airlines</p>
+																					{carrier_name}</p>
 																			</div>
 																		</div>
 																		<!--<div class="contentEditableContainer contentTextEditable">
@@ -605,14 +605,14 @@ td[class="spechide"]
 																	<td>
 																		<div class="contentEditableContainer contentTextEditable">
 																			<div class="contentEditable">
-																				<a target='_blank' href="[FORWARD]" style="line-height: 20px;color:#333; font-size:13px;">Forward to a friend</a>
+																				<a target='_blank' href="{forward_friend_link}" style="line-height: 20px;color:#333; font-size:13px;">Forward to a friend</a>
 																			</div>
 																		</div>
 																	</td>
 																	<td>
 																		<div class="contentEditableContainer contentTextEditable">
 																			<div class="contentEditable">
-																				<a target='_blank' href="[UNSUBSCRIBE]" style="line-height: 20px;color:#333; font-size:13px;">Unsubscribe</a></div>
+																				<a target='_blank' href="{unsubscribe_link}" style="line-height: 20px;color:#333; font-size:13px;">Unsubscribe</a></div>
 																		</div>
 																	</td>
 																</tr>
@@ -646,789 +646,6 @@ td[class="spechide"]
     </tr>
   </tbody>
 </table>
-
-<!--Default Zone
-
-      <div class="customZone" data-type="image">
-          <div class='movableContent'>
-          	<table width="560" border="0" cellspacing="0" cellpadding="0"><tr><td height='25'></td></tr></table>
-                      <table width="560" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                        <tr>
-                          <td width='269' style='border:1px solid #dddddd;' class='bgItem'>
-                            <table width="269" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                              <tr><td height='9' colspan='3'></td></tr>
-
-                              <tr>
-                                <td width='9'></td>
-                                <td width='251'>
-                                  <div class='contentEditableContainer contentImageEditable'>
-                                    <div class='contentEditable'>
-                                      <img src="../../../assets/mail-temps/up-bg-tp2-imgs/leftImg.png" alt='product image' data-default="placeholder" data-max-width="251" width='251' height='142' >
-                                    </div>
-                                  </div>
-                                </td>
-                                <td width='9'></td>
-                              </tr>
-
-                              <tr><td height='9' colspan='3'></td></tr>
-                            </table>
-                          </td>
-
-                          <td width='18'></td>
-                          
-                          <td width='269' style='border:1px solid #dddddd;' class='bgItem'>
-                            <table width="269" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                              <tr><td height='9' colspan='3'></td></tr>
-
-                              <tr>
-                                <td width='9'></td>
-                                <td width='251'>
-                                  <div class='contentEditableContainer contentImageEditable'>
-                                    <div class='contentEditable'>
-                                      <img src="../../../assets/mail-temps/up-bg-tp2-imgs/rightImg.png" alt='product image' data-default="placeholder" data-max-width="251" width='251' height='142' >
-                                    </div>
-                                  </div>
-                                </td>
-                                <td width='9'></td>
-                              </tr>
-
-                              <tr><td height='9' colspan='3'></td></tr>
-                            </table>
-                          </td>
-                        </tr>
-                        
-                      </table>
-                    </div>
-      </div>
-      
-      <div class="customZone" data-type="text">
-          <div class='movableContent'>
-          	<table width="560" border="0" cellspacing="0" cellpadding="0"><tr><td height='25'></td></tr></table>
-                      <table width="558" border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem' style='border:1px solid #dddddd'>
-                      	
-                        <tr><td colspan='3' height='16'></td></tr>
-                        <tr>
-                          <td width='16'></td>
-                          <td>
-                              <table width="526" border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem'>
-                                <tr>
-                                  <td align='left' valign='top'>
-                                    <div class="contentEditableContainer contentTextEditable" >
-                             <div class="contentEditable" >
-                                    <h2>Cinnamon Roll</h2>
-                                    </div>
-                            </div>
-                                  </td>
-                                </tr>
-                                <tr><td height='13'></td></tr>
-                                <tr>
-                                  <td align='left' valign='top'>
-                                    <div class="contentEditableContainer contentTextEditable" >
-                             <div class="contentEditable" >
-                                    <p >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                                    </div>
-                            </div>
-                                  </td>
-                                </tr>
-                                <tr><td height='20'></td></tr>
-                                <tr>
-                                  <td align='right' valign='top' style='padding-bottom:8px;'>
-                                    <div class="contentEditableContainer contentTextEditable" >
-                             <div class="contentEditable" >
-                                    <a target='_blank' href="#" class='link2' style='color:#ffffff;'>Find out more →</a>
-                                    </div>
-                            </div>
-                                  </td>
-                                </tr>
-                              </table>
-
-                          </td>
-                          <td width='16'></td>
-                        </tr>
-                        <tr><td colspan='3' height='16'></td></tr>
-                      </table>
-                    </div>
-      </div>
-      
-      <div class="customZone" data-type="imageText">
-          <div class='movableContent'>
-          <table width="560" border="0" cellspacing="0" cellpadding="0"><tr><td height='25'></td></tr></table>
-                      <table width="560" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                      	
-                        <tr>
-                          <td width='175' valign='top'>
-                                <table width="175" border="0" cellspacing="0" cellpadding="0" align="left" valign='top' bgcolor='#52619E'>
-                                  <tr><td colspan='3' height='18'></td></tr>
-
-                                  <tr>
-                                    <td width='18'></td>
-
-                                    <td width='139'>
-                                      <div class='contentEditableContainer contentTextEditable'>
-                              <div class='contentEditable'>
-                                      <h1 style='color:#ffffff;font-size:21px;font-weight:normal;'>50% Off</h1>
-                                      </div>
-                            </div>
-                                    </td>
-
-                                    <td width='18'></td>
-                                  </tr>
-
-                                  <tr><td colspan='3' height='15'></td></tr>
-
-                                  <tr>
-                                    <td width='18'></td>
-
-                                    <td width='139'>
-                                      <div class='contentEditableContainer contentTextEditable'>
-                              <div class='contentEditable'>
-                                      <p style='color:#C0CAED;'>Lorem Ipsum is simply dummy text of the printing.</p>
-                                      </div>
-                            </div>
-                                    </td>
-
-                                    <td width='18'></td>
-                                  </tr>
-
-                                  <tr><td colspan='3' height='18'></td></tr>
-
-                                  <tr><td colspan='3' height='18' bgcolor='#2D3867'></td></tr>
-
-                                  <tr>
-                                    <td width='18' bgcolor='#2D3867'></td>
-                                    <td width='139' bgcolor='#2D3867'>
-                                      <div class='contentEditableContainer contentTextEditable'>
-                              <div class='contentEditable'>
-                                      <a target='_blank' href='#' style='color:#C0CAED;font-size:13px;text-decoration:none;'>Find out more →</a>
-                                      </div>
-                            </div>
-                                    </td>
-                                    <td width='18' bgcolor='#2D3867'></td>
-                                  </tr>
-
-                                  <tr><td colspan='3' height='18' bgcolor='#2D3867'></td></tr>
-                                </table>
-                          </td>
-
-                          <td width='18'></td>
-                          
-                          <td width='365' style='border:1px solid #dddddd;' class='bgItem' valign='top'>
-                            <table width="365" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                              <tr><td height='15' colspan='3'></td></tr>
-
-                              <tr>
-                                <td width='20'></td>
-                                <td width='325'>
-                                      <table width="327" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                                        <tr>
-                                          <td>
-                                            <div class='contentEditableContainer contentTextEditable'>
-                                    <div class='contentEditable'>
-                                            <h2>Sesame Snaps</h2>
-                                            </div>
-                                  </div>
-                                          </td>
-                                        </tr>
-                                        <tr><td height='13'></td></tr>
-                                        <tr>
-                                          <td>
-                                            <div class='contentEditableContainer contentTextEditable'>
-                                    <div class='contentEditable'>
-                                            <p >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has conquered the planet earth.</p>
-                                            </div>
-                                  </div>
-                                          </td>
-                                        </tr>
-                                        <tr><td height='16'></td></tr>
-                                        <tr>
-                                          <td>
-                                            <div class='contentEditableContainer contentTextEditable'>
-                                    <div class='contentEditable'>
-                                            <a target='_blank' href="#" class='link3'>Read more</a>
-                                            </div>
-                                  </div>
-                                          </td>
-                                        </tr>
-                                      </table>
-                                </td>
-                                <td width='20'></td>
-                              </tr>
-
-                              <tr><td height='15' colspan='3'></td></tr>
-                            </table>
-                          </td>
-                        </tr>
-                        
-                      </table>
-                    </div>
-      </div>
-      
-      <div class="customZone" data-type="Textimage">
-          <div class='movableContent'>
-          	<table width="560" border="0" cellspacing="0" cellpadding="0"><tr><td height='25'></td></tr></table>
-                      <table width="560" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                      	
-                        <tr>
-                          <td width='365' valign='top' style='border:1px solid #dddddd;' class='bgItem' valign='top'>
-                            <table width="365" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                              <tr><td height='15' colspan='3'></td></tr>
-
-                              <tr>
-                                <td width='20'></td>
-                                <td width='325'>
-                                      <table width="327" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                                        <tr>
-                                          <td>
-                                            <div class='contentEditableContainer contentTextEditable'>
-                                    <div class='contentEditable'>
-                                            <h2>Sesame Snaps</h2>
-                                            </div>
-                                  </div>
-                                          </td>
-                                        </tr>
-                                        <tr><td height='13'></td></tr>
-                                        <tr>
-                                          <td>
-                                            <div class='contentEditableContainer contentTextEditable'>
-                                    <div class='contentEditable'>
-                                            <p >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has conquered the planet earth.</p>
-                                            </div>
-                                  </div>
-                                          </td>
-                                        </tr>
-                                        <tr><td height='16'></td></tr>
-                                        <tr>
-                                          <td>
-                                            <div class='contentEditableContainer contentTextEditable'>
-                                    <div class='contentEditable'>
-                                            <a target='_blank' href="#" class='link3'>Read more</a>
-                                            </div>
-                                  </div>
-                                          </td>
-                                        </tr>
-                                      </table>
-                                </td>
-                                <td width='20'></td>
-                              </tr>
-
-                              <tr><td height='15' colspan='3'></td></tr>
-                            </table>
-                            
-                          </td>
-
-                          <td width='18'></td>
-                          
-                          <td width='175' >
-                            
-                                <table width="175" border="0" cellspacing="0" cellpadding="0" align="left" valign='top' bgcolor='#52619E'>
-                                  <tr><td colspan='3' height='18'></td></tr>
-
-                                  <tr>
-                                    <td width='18'></td>
-
-                                    <td width='139'>
-                                      <div class='contentEditableContainer contentTextEditable'>
-                              <div class='contentEditable'>
-                                      <h1 style='color:#ffffff;font-size:21px;font-weight:normal;'>50% Off</h1>
-                                      </div>
-                            </div>
-                                    </td>
-
-                                    <td width='18'></td>
-                                  </tr>
-
-                                  <tr><td colspan='3' height='15'></td></tr>
-
-                                  <tr>
-                                    <td width='18'></td>
-
-                                    <td width='139'>
-                                      <div class='contentEditableContainer contentTextEditable'>
-                              <div class='contentEditable'>
-                                      <p style='color:#C0CAED;'>Lorem Ipsum is simply dummy text of the printing.</p>
-                                      </div>
-                            </div>
-                                    </td>
-
-                                    <td width='18'></td>
-                                  </tr>
-
-                                  <tr><td colspan='3' height='18'></td></tr>
-
-                                  <tr><td colspan='3' height='18' bgcolor='#2D3867'></td></tr>
-
-                                  <tr>
-                                    <td width='18' bgcolor='#2D3867'></td>
-                                    <td width='139' bgcolor='#2D3867'>
-                                      <div class='contentEditableContainer contentTextEditable'>
-                              <div class='contentEditable'>
-                                      <a target='_blank' href='#' style='color:#C0CAED;font-size:13px;text-decoration:none;'>Find out more →</a>
-                                      </div>
-                            </div>
-                                    </td>
-                                    <td width='18' bgcolor='#2D3867'></td>
-                                  </tr>
-
-                                  <tr><td colspan='3' height='18' bgcolor='#2D3867'></td></tr>
-                                </table>
-
-                          </td>
-                        </tr>
-                        
-                      </table>
-                    </div>
-      </div>
-
-      <div class="customZone" data-type="textText">
-          <div class='movableContent'>
-          <table width="560" border="0" cellspacing="0" cellpadding="0"><tr><td height='25'></td></tr></table>
-                      <table width="560" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                      	
-                        <tr>
-                          <td width='316' style='border:1px solid #dddddd;' class='bgItem' valign='top'>
-                            <table width="316" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                              <tr><td height='15' colspan='3'></td></tr>
-
-                              <tr>
-                                <td width='20'></td>
-                                <td width='276'>
-                                      <table width="276" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                                        <tr>
-                                          <td>
-                                            <div class='contentEditableContainer contentTextEditable'>
-                                    <div class='contentEditable'>
-                                            <h2>Sesame Snaps</h2>
-                                            </div>
-                                  </div>
-                                          </td>
-                                        </tr>
-                                        <tr><td height='13'></td></tr>
-                                        <tr>
-                                          <td>
-                                            <div class='contentEditableContainer contentTextEditable'>
-                                    <div class='contentEditable'>
-                                            <p >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has conquered the planet earth.</p>
-                                            </div>
-                                  </div>
-                                          </td>
-                                        </tr>
-                                        <tr><td height='16'></td></tr>
-                                        <tr>
-                                          <td>
-                                            <div class='contentEditableContainer contentTextEditable'>
-                                    <div class='contentEditable'>
-                                            <a target='_blank' href="#" class='link3'>Read more</a>
-                                            </div>
-                                  </div>
-                                          </td>
-                                        </tr>
-                                      </table>
-                                </td>
-                                <td width='20'></td>
-                              </tr>
-
-                              <tr><td height='15' colspan='3'></td></tr>
-                            </table>
-                          </td>
-
-                          <td width='18'></td>
-                          
-                          <td width='224' style='border:1px solid #dddddd;' class='bgItem' valign='top'>
-                            <table width="224" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                              <tr><td height='15' colspan='3'></td></tr>
-
-                              <tr>
-                                <td width='20'></td>
-                                <td width='180'>
-                                      <table width="180" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                                        <tr>
-                                          <td>
-                                            <div class='contentEditableContainer contentTextEditable'>
-                                    <div class='contentEditable'>
-                                            <h2>Sesame Snaps</h2>
-                                            </div>
-                                  </div>
-                                          </td>
-                                        </tr>
-                                        <tr><td height='13'></td></tr>
-                                        <tr>
-                                          <td>
-                                            <div class='contentEditableContainer contentTextEditable'>
-                                    <div class='contentEditable'>
-                                            <p >Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has conquered the planet earth.</p>
-                                            </div>
-                                  </div>
-                                          </td>
-                                        </tr>
-                                        <tr><td height='16'></td></tr>
-                                        <tr>
-                                          <td>
-                                            <div class='contentEditableContainer contentTextEditable'>
-                                    <div class='contentEditable'>
-                                            <a target='_blank' href="#" class='link3'>Read more</a>
-                                            </div>
-                                  </div>
-                                          </td>
-                                        </tr>
-                                      </table>
-                                </td>
-                                <td width='20'></td>
-                              </tr>
-
-                              <tr><td height='15' colspan='3'></td></tr>
-                            </table>
-                          </td>
-                        </tr>
-                        
-                      </table>
-                    </div>
-      </div>
-
-      <div class="customZone" data-type="qrcode">
-          <div class="movableContent">
-                      <div >
-            <table width="560" border="0" cellspacing="0" cellpadding="0"><tr><td height='25'></td></tr></table>
-                        <table width="560" border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem' style='border:1px solid #dddddd;'>
-                        		
-                            <tr><td height='15' colspan='4'></td></tr>
-
-                            <tr>
-                              <td width='20'></td>
-                              <td valign='top' valign="top" width="75" style='padding:0 20px;'>
-                                  <div class="contentQrcodeEditable contentEditableContainer">
-                                      <div class="contentEditable">
-                                          <img src="/applications/Mail_Interface/3_3/modules/User_Interface/core/v31_campaigns/../../../assets/mail-temps/up-bg-tp2-imgs/neweditor/default/qr_code.png" width="75" height="75">
-                                      </div>
-                                  </div>
-                              </td>
-                              <td valign='top' valign="top" style="padding:0 20px 0 20px;">
-                                <div class="contentTextEditable contentEditableContainer">
-                                  <div class="contentEditable">
-                                    <p>Etiam bibendum nunc in lacus bibendum porta. Vestibulum nec nulla et eros ornare condimentum. Proin facilisis, dui in mollis blandit. Sed non dui magna, quis tincidunt enim. Morbi vehicula pharetra lacinia. Cras tincidunt, justo at fermentum feugiat, eros orci accumsan dolor, eu ultricies eros dolor quis sapien.</p>
-                                    <p style='text-align:right;margin:0;f'><a target='_blank' href='#' class='link3'>Read more</a></p>
-                                    
-                                  </div>
-                                </div>
-                              </td>
-                              <td width='20'></td>
-                            </tr>
-                            <tr><td height='15' colspan='4'></td></tr>
-
-                        </table>
-                      </div>
-                    </div>
-      </div>
-      
-      <div class="customZone" data-type="gmap">
-          <div class="movableContent">
-              <div >
-              <table width="560" border="0" cellspacing="0" cellpadding="0"><tr><td height='25'></td></tr></table>
-                 <table width="560" border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem' style='border:1px solid #dddddd;'>
-                 			
-                      <tr><td height='15' colspan='4'></td></tr>
-                      <tr>
-                        <td width='20'></td>
-                          <td valign='top' style='padding:0 20px;'>
-                              <div class="contentEditableContainer contentGmapEditable">
-                                  <div class="contentEditable">
-                                      <img src="/applications/Mail_Interface/3_3/modules/User_Interface/core/v31_campaigns/../../../assets/mail-temps/up-bg-tp2-imgs/neweditor/default/gmap_example.png" width="175" data-default="placeholder">
-                                  </div>
-                              </div>
-                          </td>
-                          <td valign='top' style="padding:0 20px 0 20px;">
-                              <div class="contentEditableContainer contentTextEditable">
-                                  <div class="contentEditable">
-                                      <h2 >This is a subtitle</h2>
-                                      <p >Etiam bibendum nunc in lacus bibendum porta. Vestibulum nec nulla et eros ornare condimentum. Proin facilisis, dui in mollis blandit. Sed non dui magna, quis tincidunt enim. Morbi vehicula pharetra lacinia. Cras tincidunt, justo at fermentum feugiat, eros orci accumsan dolor, eu ultricies eros dolor quis sapien.</p>
-                                      <p style='text-align:right;margin:0;'><a target='_blank' href="#" class='link3'>Read more</a></p>
-                                      
-                                  </div>
-                              </div>
-                          </td>
-                          <td width='20'></td>
-                      </tr>
-                      <tr><td height='15' colspan='4'></td></tr>
-                  </table>
-              </div>
-          </div>
-      </div>
-
-      <div class="customZone" data-type="social">
-          <div class="movableContent">
-              <div >
-              <table width="560" border="0" cellspacing="0" cellpadding="0"><tr><td height='25'></td></tr></table>
-                  <table width="560" border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem' style='border:1px solid #dddddd;'>
-                  		
-                      <tr><td height='15' colspan='4'></td></tr>
-                      <tr>
-                          <td valign='top' colspan="4" style='padding:0 20px;'>
-                              <div class="contentTextEditable contentEditableContainer">
-                                  <div class="contentEditable">
-                                      <h2 >This is a subtitle</h2>
-                                  </div>
-                              </div>
-                          </td>
-                      </tr>
-                      <tr><td height='15' colspan='4'></td></tr>
-                      <tr>
-                          <td width='62' valign='top' valign="top" width="62" style='padding:0 0 0 20px;'>
-                              <div class="contentEditableContainer contentTwitterEditable">
-                                  <div class="contentEditable">
-                                      <img src="/applications/Mail_Interface/3_3/modules/User_Interface/core/v31_campaigns/../../../assets/mail-temps/up-bg-tp2-imgs/neweditor/default/icon_twitter.png" width="42" height="42" data-customIcon="true" data-max-width='42' data-noText="false">
-                                  </div>
-                              </div>
-                          </td>
-                          <td width='216' valign='top' >
-                              <div class="contentEditableContainer contentTextEditable">
-                                  <div class="contentEditable">
-                                      <p>Follow us on twitter to stay up to date with company news and other information.</p>
-                                  </div>
-                              </div>
-                          </td>
-                          <td width='62' valign='top' valign="top" width="62">
-                              <div class="contentEditableContainer contentFacebookEditable">
-                                  <div class="contentEditable">
-                                      <img src="/applications/Mail_Interface/3_3/modules/User_Interface/core/v31_campaigns/../../../assets/mail-temps/up-bg-tp2-imgs/neweditor/default/icon_facebook.png" width="42" height="42"  data-customIcon="true" data-max-width='42' data-noText="false">
-                                  </div>
-                              </div>
-                          </td>
-                          <td width='216' valign='top' style='padding:0 20px 0 0;'>
-                              <div class="contentEditableContainer contentTextEditable">
-                                  <div class="contentEditable">
-                                      <p>Like us on Facebook to keep up with our news, updates and other discussions.</p>
-                                  </div>
-                              </div>
-                          </td>
-                      </tr>
-                      <tr><td height='15' colspan='4'></td></tr>
-                  </table>
-              </div>
-          </div>
-      </div>
-
-      <div class="customZone" data-type="twitter">
-          <div class="movableContent">
-              <div '>
-              <table width="560" border="0" cellspacing="0" cellpadding="0"><tr><td height='25'></td></tr></table>
-                  <table width="560" border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem' style='border:1px solid #dddddd;'>
-                  		
-                      <tr><td height='15' colspan='4'></td></tr>
-                      <tr>
-                          <td width='20'></td>
-                          <td valign='top' valign="top" width="62" style='padding:0 0 0 20px;'>
-                              <div class="contentEditableContainer contentTwitterEditable">
-                                  <div class="contentEditable">
-                                      <img src="/applications/Mail_Interface/3_3/modules/User_Interface/core/v31_campaigns/../../../assets/mail-temps/up-bg-tp2-imgs/neweditor/default/icon_twitter.png" width="42" height="42" data-customIcon="true" data-max-width='42' data-noText="false">
-                                  </div>
-                              </div>
-                          </td>
-                          <td valign='top' style='padding:0 20px 0 0;'>
-                              <div class="contentEditableContainer contentTextEditable">
-                                  <div class="contentEditable">
-                                      <p>Follow us on twitter to stay up to date with company news and other information.</p>
-                                  </div>
-                              </div>
-                          </td>
-                          <td width='20'></td>
-                      </tr>
-                      <tr><td height='15' colspan='4'></td></tr>
-                  </table>
-              </div>
-          </div>
-      </div>
-      
-      <div class="customZone" data-type="facebook">
-          <div class="movableContent">
-              <div >
-              <table width="560" border="0" cellspacing="0" cellpadding="0"><tr><td height='25'></td></tr></table>
-                  <table width="560" border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem' style='border:1px solid #dddddd;'>
-                  		
-                      <tr><td height='15' colspan='4'></td></tr>
-                      <tr>
-                        <td width='20'></td>
-                          <td valign='top' valign="top" width="62" style='padding:0 0 0 20px;'>
-                              <div class="contentEditableContainer contentFacebookEditable">
-                                  <div class="contentEditable">
-                                      <img src="/applications/Mail_Interface/3_3/modules/User_Interface/core/v31_campaigns/../../../assets/mail-temps/up-bg-tp2-imgs/neweditor/default/icon_facebook.png" width="42" height="42" data-customIcon="true" data-max-width='42' data-noText="false">
-                                  </div>
-                              </div>
-                          </td>
-                          <td valign='top' style='padding:0 20px 0 0;'>
-                              <div class="contentEditableContainer contentTextEditable">
-                                  <div class="contentEditable">
-                                      <p>"Like us on Facebook to keep up with our news, updates and other discussions.</p>
-                                  </div>
-                              </div>
-                          </td>
-                          <td width='20'></td>
-                      </tr>
-                      <tr><td height='15' colspan='4'></td></tr>
-                  </table>
-              </div>
-          </div>
-      </div>
-
-      <div class="customZone" data-type="line">
-          <div class='movableContent'>
-          	<table width="560" border="0" cellspacing="0" cellpadding="0"><tr><td height='25'></td></tr></table>
-                      <table width="560" border="0" cellspacing="0" cellpadding="0"><tr><td height='1' bgcolor='#F6F6F6'></td></tr></table>
-                    </div>
-      </div>
-
-
-      <div class="customZone" data-type="colums1v2"><div class='movableContent'>
-                          <table width="560" border="0" cellspacing="0" cellpadding="0" align="center" >
-                            <tr><td height="25">&nbsp;</td></tr>
-                            <tr>
-                              <td align="left" valign="top">
-                                <table width='100%'  border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem' style='border:1px solid #dddddd' >
-                                  <tr><td colspan='3' height='15'>&nbsp;</td></tr>
-                                  <tr>
-                                    <td width='25'>&nbsp;</td>
-                                    <td class="newcontent">
-                                  
-                                    </td>
-                                    <td width='25'>&nbsp;</td>
-                                  </tr>
-                                  <tr><td colspan='3' height='25'>&nbsp;</td></tr>
-                                </table>
-                              </td>
-                            </tr>
-                          </table>
-                    </div>
-      </div>
-
-      <div class="customZone" data-type="colums2v2"><div class='movableContent'>
-                      <table width="560" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                        <tr><td height="25" colspan='3'>&nbsp;</td></tr>
-                        <tr>
-                          <td width='275'  valign='top' >
-                            <table width='100%' border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem' style='border:1px solid #dddddd' >
-                              <tr><td colspan='3' height='15'>&nbsp;</td></tr>
-                              <tr>
-                                <td width='25'>&nbsp;</td>
-                                <td class="newcontent">
-                              
-                                </td>
-                                <td width='25'>&nbsp;</td>
-                              </tr>
-                              <tr><td colspan='3' height='25'>&nbsp;</td></tr>
-                            </table>
-                          </td>
-
-                          <td width='10'>&nbsp;</td>
-                          
-                          <td width='275' valign='top' >
-                            <table width='100%' border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem' style='border:1px solid #dddddd' >
-                              <tr><td colspan='3' height='15'>&nbsp;</td></tr>
-                              <tr>
-                                <td width='25'>&nbsp;</td>
-                                <td class="newcontent">
-                              
-                                </td>
-                                <td width='25'>&nbsp;</td>
-                              </tr>
-                              <tr><td colspan='3' height='25'>&nbsp;</td></tr>
-                            </table>
-                          </td>
-                        </tr>
-                        
-                      </table>
-                    </div>
-      </div>
-
-      <div class="customZone" data-type="colums3v2"><div class='movableContent'>
-                      <table width="560" border="0" cellspacing="0" cellpadding="0" align="center" valign='top'>
-                        <tr><td height="25" colspan='5'>&nbsp;</td></tr>
-                        <tr>
-                          <td width='182'  valign='top' >
-                            <table width='100%' border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem' style='border:1px solid #dddddd' >
-                              <tr><td colspan='3' height='15'>&nbsp;</td></tr>
-                              <tr>
-                                <td width='25'>&nbsp;</td>
-                                <td class="newcontent">
-                              
-                                </td>
-                                <td width='25'>&nbsp;</td>
-                              </tr>
-                              <tr><td colspan='3' height='25'>&nbsp;</td></tr>
-                            </table>
-                          </td>
-
-                          <td width='7'>&nbsp;</td>
-                          
-                          <td width='182'  valign='top' >
-                            <table width='100%' border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem' style='border:1px solid #dddddd' >
-                              <tr><td colspan='3' height='15'>&nbsp;</td></tr>
-                              <tr>
-                                <td width='25'>&nbsp;</td>
-                                <td class="newcontent">
-                              
-                                </td>
-                                <td width='25'>&nbsp;</td>
-                              </tr>
-                              <tr><td colspan='3' height='25'>&nbsp;</td></tr>
-                            </table>
-                          </td>
-
-                          <td width='7'>&nbsp;</td>
-                          
-                          <td width='182'  valign='top' >
-                            <table width='100%' border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem' style='border:1px solid #dddddd' >
-                              <tr><td colspan='3' height='15'>&nbsp;</td></tr>
-                              <tr>
-                                <td width='25'>&nbsp;</td>
-                                <td class="newcontent">
-                              
-                                </td>
-                                <td width='25'>&nbsp;</td>
-                              </tr>
-                              <tr><td colspan='3' height='25'>&nbsp;</td></tr>
-                            </table>
-                          </td>
-                        </tr>
-                        
-                      </table>
-                    </div>
-      </div>
-
-      <div class="customZone" data-type="textv2">
-        <table  border="0" cellspacing="0" cellpadding="0" align="center" valign='top' class='bgItem'>
-                                <tr>
-                                  <td align='left' valign='top'>
-                                    <div class="contentEditableContainer contentTextEditable" >
-                             <div class="contentEditable" >
-                                    <h2>Cinnamon Roll</h2>
-                                    </div>
-                            </div>
-                                  </td>
-                                </tr>
-                                <tr><td height='13'></td></tr>
-                                <tr>
-                                  <td align='left' valign='top'>
-                                    <div class="contentEditableContainer contentTextEditable" >
-                             <div class="contentEditable" >
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                                    </div>
-                            </div>
-                                  </td>
-                                </tr>
-                                <tr><td height='20'></td></tr>
-                                <tr>
-                                  <td align='right' valign='top' style='padding-bottom:8px;'>
-                                    <div class="contentEditableContainer contentTextEditable" >
-                             <div class="contentEditable" >
-                                    <a target='_blank' href="#" style='padding:8px;background:#52619E;font-size:13px;color:#ffffff;text-decoration:none;font-weight:bold;'>Find out more →</a>
-                                    </div>
-                            </div>
-                                  </td>
-                                </tr>
-                              </table>
-      </div>
-
-
-
-    <!--Default Zone End-->
 
 </body>
 </html>
