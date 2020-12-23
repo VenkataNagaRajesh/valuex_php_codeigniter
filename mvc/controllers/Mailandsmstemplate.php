@@ -90,13 +90,14 @@ class Mailandsmstemplate extends Admin_Controller {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		}
 		#$this->data['template_types'] =  $this->airports_m->getDefnsListByType(25);
-		$dir = "assets/mail-temps";
+		#$dir = "assets/mail-temps";
+		$dir = "mvc/views/mail-templates";
 
 		// Sort in ascending order - this is default
 		$a =  scandir($dir,1);
 		foreach($a as $d) {
 			if ( $d == '.' || $d == '..') continue;
-			if ( is_dir("$dir/$d") ) {
+			if ( is_file("$dir/$d") ) {
 				$this->data['template_types'][$d] =  $d;
 			}
 		}
@@ -168,13 +169,14 @@ class Mailandsmstemplate extends Admin_Controller {
           $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		}
 		#$this->data['template_types'] =  $this->airports_m->getDefnsListByType(25);
-		$dir = "assets/mail-temps";
+		#$dir = "assets/mail-temps";
+		$dir = "mvc/views/mail-templates";
 
 		// Sort in ascending order - this is default
 		$a =  scandir($dir,1);
 		foreach($a as $d) {
 			if ( $d == '.' || $d == '..') continue;
-			if ( is_dir("$dir/$d") ) {
+			if ( is_file("$dir/$d") ) {
 				$this->data['template_types'][$d] =  $d;
 			}
 		}

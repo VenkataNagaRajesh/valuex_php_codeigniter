@@ -603,6 +603,23 @@ class Admin_Controller extends MY_Controller {
 		    $data['logo'] =$data['base_url'] .'assets/home/images/emir.png';  
             	    $data['airline_logo'] = $data['base_url'] .'assets/home/images/temp2-logo.jpg';  */           
 		   $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['airlineID'])->template;
+		   if ( empty($tpl) ) {
+		   	$tpl_file = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['airlineID'])->template_path;
+			$dir = "mvc/views/mail-templates";
+			$tpl_path = "$dir/$tpl_file";
+		        if (is_file($tpl_path)){
+				$tpl = file_get_contents($tpl_path);
+			} else {
+				$this->mydebug->debug("Template file  - $tpl_path - missing!");
+			}
+
+		   }
+
+		   if  (empty($tpl)) {
+			$this->mydebug->debug("Mail Template is empty, can't send offer email!");
+			return;
+		   }
+
 		   $tpl = str_replace(array('<!--{','}-->'),array('{','}'),$tpl);		   
 		   $message = $this->parser->parse_string($tpl, $data,true);
 		  //$this->mydebug->debug($tpl); exit;
