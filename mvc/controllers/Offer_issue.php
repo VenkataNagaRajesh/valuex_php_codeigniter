@@ -1115,8 +1115,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                 $maildata['offer_data'] = $offerdata;
                 #$maildata = array_merge($maildata, $paxdata);
 		$dir = "assets/mail-temps";
-		$tpl_path = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID'])->template_path;
-
+		#$tpl_path = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID'])->template_path;
+/*
 		if ( $fclr_offer) {
                  $maildata['up_tpl_bnr'] = base_url("$dir/$tpl_path/header.jpg");
                  $maildata['up_tpl_bnrtop'] = base_url("$dir/$tpl_path/bannerTop.png");	
@@ -1139,6 +1139,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                  $maildata['twitter_icon'] = base_url("$dir/twitter.png");	
                  $maildata['pinterest_icon'] = base_url("$dir/pinterest.png");	
                  $maildata['openbrowser_img'] = base_url("$dir/openBrowser.png");
+*/
                  //$maildata['bg_tpl1_bnr'] = base_url('assets/mail-temps/bg_temp1_images/header.jpg');
                  //$maildata['bg_tpl1_bnrtop'] = base_url('assets/mail-temps/bg_temp1_images/bannerTop.png');	
                  //$maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
