@@ -341,6 +341,9 @@ function loaddatatable() {
       "bProcessing": true,
 	"stateSave": true,
       "bServerSide": true,
+	  "initComplete": function (settings, json) {  
+		$("#fclrtable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+	  },
       "sAjaxSource": "<?php echo base_url('fclr/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#sflight_number").val()},

@@ -191,6 +191,9 @@
         $('#rafeedtable').DataTable({
             "bProcessing": true,
             "bServerSide": true,
+			"initComplete": function (settings, json) {  
+				$("#rafeedtable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+			},
             "sAjaxSource": "<?php echo base_url('rafeed/server_processing_baggage'); ?>",
             "fnServerData": function(sSource, aoData, fnCallback, oSettings) {
                 aoData.push({

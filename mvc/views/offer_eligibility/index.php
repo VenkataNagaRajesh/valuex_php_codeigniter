@@ -239,6 +239,9 @@ $('#to_cabin').val('<?=$to_cabin?>').trigger('change');
     $('#eligibilitytable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+	  "initComplete": function (settings, json) {  
+		$("#eligibilitytable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+	  },
       "sAjaxSource": "<?php echo base_url('offer_eligibility/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#flight_number").val()},

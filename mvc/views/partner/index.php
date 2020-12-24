@@ -185,6 +185,9 @@ $(document).ready(function() {
     $('#partnertable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+	  "initComplete": function (settings, json) {  
+		$("#partnertable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+	  },
       "sAjaxSource": "<?php echo base_url('partner/server_processing'); ?>",  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "carrierID","value": $("#carrierID").val()},

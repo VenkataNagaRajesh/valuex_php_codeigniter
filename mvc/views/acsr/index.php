@@ -264,6 +264,9 @@ $('#to_cabin').val('<?=$tocabin?>').trigger('change');
       "bProcessing": true,
       "bServerSide": true,
 	"stateSave": true,
+	"initComplete": function (settings, json) {  
+		$("#ruleslist").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+	  },
       "sAjaxSource": "<?php echo base_url('acsr/server_processing'); ?>",   
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "origID","value": $("#orig_market_id").val()},

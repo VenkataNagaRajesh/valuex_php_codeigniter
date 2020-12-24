@@ -239,6 +239,9 @@ $("#dep_from_date").datepicker({
       "bProcessing": true,
       "bServerSide": true,
 	 "stateSave": true,
+	 "initComplete": function (settings, json) {  
+		$("#offertable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+	  },
       "sAjaxSource": "<?php echo base_url('offer_table/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#flight_number").val()},

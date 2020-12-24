@@ -77,6 +77,9 @@
     $('#clienttable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+	  "initComplete": function (settings, json) {  
+		$("#clienttable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+	  },
       "sAjaxSource": "<?php echo base_url('client/server_processing'); ?>",
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "airlineID","value": $("#airlineID").val()},

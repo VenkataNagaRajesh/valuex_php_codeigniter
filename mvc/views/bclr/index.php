@@ -166,7 +166,7 @@
 		</form>
 	</div>
 	<div class="col-md-12 table-responsive">
-		<div class="auto-gen col-md-12" style="padding:0 15px;">
+		<div class="auto-gen col-md-12">
 		<a href="<?php echo base_url('bclr/generatedata') ?>">
 			<i class="fa fa-upload"></i>
 			<?=$this->lang->line('generate_bclr')?>
@@ -565,7 +565,9 @@ function loaddatatable() {
       "bProcessing": true,
 	  "stateSave": true,
       "bServerSide": true,
-      "scrollX": true,
+	  "initComplete": function (settings, json) {  
+		$("#bclrtable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+	  },
       "sAjaxSource": "<?php echo base_url('bclr/server_processing'); ?>",
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "carrierID","value": $("#flt_carrierID").val()},

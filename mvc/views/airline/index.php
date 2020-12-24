@@ -17,7 +17,7 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-12">              
+            <div class="col-md-12">              
 			<!--<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>			 
 			   <div class="col-sm-2">			   
@@ -69,6 +69,9 @@
     $('#airlinetable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
+	  "initComplete": function (settings, json) {  
+		$("#airlinetable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+	  },
       "sAjaxSource": "<?php echo base_url('airline/server_processing'); ?>",
       "columns": [{"data": "id" },
                   {"data": "aln_data_value" },

@@ -7,7 +7,7 @@
 	</h2>
 	 <p class="card-header" data-toggle="collapse" data-target="#seasonAdd"><button type="button" id = 'add_season_button' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Season" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="col-md-12 season-add-box collapse" id="seasonAdd">
-		<form class="form-horizontal" action="#" id="season_form">
+		<form class="form-horizontal" action="#" id="season_form" style="padding:0 15px;">
 			<div class="form-group">
 				<div class="row">
 					<div class="col-md-3 col-sm-3 select-form">
@@ -134,7 +134,7 @@
        </div>
 	   
 	   <div class="col-md-12 season-table">	
-		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form">		   
+		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form" style="padding:0 15px;">		   
 			<div class='form-group'>
 				<div class="col-sm-3 col-md-2">			   
 				 <!-- <input type="text" name="airlinecode" id="airlinecode" placeholder="Carrier code_name" class="form-control" value="<?=set_value('airlinecode',$airlinecode)?>"/>-->
@@ -766,6 +766,9 @@ function loaddatatable(){
 	$('#seasonslist').DataTable( {
 	"bProcessing": true,
 	"bServerSide": true,
+	"initComplete": function (settings, json) {  
+		$("#seasonslist").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+	},
 	"sAjaxSource": "<?php echo base_url('season/server_processing'); ?>", 
 	"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) { 
 	aoData.push(

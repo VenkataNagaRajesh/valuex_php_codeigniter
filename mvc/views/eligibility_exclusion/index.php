@@ -518,6 +518,9 @@ function loaddatatable() {
       "bProcessing": true,
       "bServerSide": true,
       "stateSave": true,
+	  "initComplete": function (settings, json) {  
+		$("#ruleslist").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+	  },
       "sAjaxSource": "<?php echo base_url('eligibility_exclusion/server_processing'); ?>",   
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "scarrier","value": $("#scarrier").val()},

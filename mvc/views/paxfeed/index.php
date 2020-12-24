@@ -215,6 +215,9 @@
       "bProcessing": true,
       "bServerSide": true,
       "stateSave": true,
+	  "initComplete": function (settings, json) {  
+		$("#paxfeedtable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+	  },
       "sAjaxSource": "<?php echo base_url('paxfeed/server_processing'); ?>",
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "bookingCountry","value": $("#booking_country").val()},

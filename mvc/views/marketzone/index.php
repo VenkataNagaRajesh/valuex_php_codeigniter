@@ -254,6 +254,9 @@ function loaddatatable() {
       "bProcessing": true,
       "bServerSide": true,
 	"stateSave": true,
+	"initComplete": function (settings, json) {  
+		$("#tztable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
+	},
       "sAjaxSource": "<?php echo base_url('marketzone/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "marketID","value": $("#smarket_id").val()},
