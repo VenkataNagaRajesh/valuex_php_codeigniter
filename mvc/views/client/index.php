@@ -18,17 +18,17 @@
 		 <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 				<div class='form-group' style="margin:15px 0;">
 					<div class="col-sm-4 col-md-3">			   
-					 <?php $status = array("InActive","Active","Status");               
-											
-					   echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
-					</div>
-					<div class="col-sm-4 col-md-3">			   
 					 <?php $list = array("0" => "Select Carrier");               
 							foreach($airlines as $airline){
 							  $list[$airline->vx_aln_data_defnsID] = $airline->code;	
 							}				
 					   echo form_dropdown("airlineID", $list,set_value("airlineID",$airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>	
+					<div class="col-sm-4 col-md-3">			   
+					 <?php $status = array("InActive","Active","Status");               
+											
+					   echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
+					</div>
 					<div class="col-sm-4 col-md-6 text-right">
 						<button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
 										<button type="button" class="btn btn-danger" name="download" onclick="downloadClients()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
