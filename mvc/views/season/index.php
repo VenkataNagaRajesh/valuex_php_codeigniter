@@ -16,6 +16,16 @@
 						</div>
 						<div class="col-md-12">
 							<?php
+								 foreach($seasons as $season){
+									$gseasonlist[$season->vx_aln_data_defnsID] = $season->aln_data_value;
+								  }							
+								$gseasonlist[0]=$this->lang->line("season_select_season");
+								ksort($gseasonlist);
+
+								echo form_dropdown("global_seasonID", $gseasonlist,set_value("global_seasonID",$global_seasonID), "id='global_seasonID' class='form-control hide-dropdown-icon select2'"); ?>
+						</div>
+						<div class="col-md-12">
+							<?php
 								 foreach($airlines as $airline){
 									$airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
 								  }							
@@ -53,6 +63,12 @@
 								<input type="checkbox" id="orig_all" title="Select All" data-toggle="tooltip" data-placement="top">
 							</div>
 						</div>
+						<div class="col-md-12">
+							<div class="input-group">
+							<label class="control-label col-md-3">Color</label>
+								<input type="text" class="form-control" id="season_color" name="season_color" value="<?=set_value('season_color')?>" >
+							</div>
+						</div>
 					</div>
 					<div class="col-md-3 col-sm-3 select-form">
 						<div class="col-md-12">
@@ -86,14 +102,6 @@
 								<input type="text" class="form-control" id="ams_season_end_date" name="ams_season_end_date" placeholder="Enter Dep To date" value="<?=set_value('ams_season_end_date')?>" >
 								<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-3 col-sm-3">
-						<label class="control-label col-md-3">Color</label>
-						<div class="col-md-9">
-							<input type="text" class="form-control" id="season_color" name="season_color" value="<?=set_value('season_color')?>" >
 						</div>
 					</div>
 					<div class="col-md-4 col-sm-4">
@@ -145,7 +153,7 @@
 				  echo form_dropdown("filter_airline", $alist,set_value("filter_airline",$filter_airline), "id='filter_airline' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
 				<div class="col-sm-3 col-md-2">			   
-				<?php $slist = array("0" => " Season");               
+				<?php $slist = array("0" => " Season Name");               
 				   foreach($seasonslist as $season){
 					  $slist[$season->VX_aln_seasonID] = $season->season_name;
 					}							
@@ -173,11 +181,15 @@
 				  <select name="destValues[]" id="destValues" class="form-control select2 col-md-10" multiple="multiple">
 				  </select>
                 </div>
+				<div class="col-sm-3 col-md-2">			  
+				<?php 
+				   echo form_dropdown("filter_global_seasonID", $gseasonlist,set_value("filter_global_seasonID",$seasonID), "id='filter_global_seasonID' class='form-control hide-dropdown-icon select2'");    ?>
+				</div>
 				<div class="col-sm-3 col-md-2">
 					<?php $activestatus[1]="Active";	$activestatus[0]="In Active";				
 				  echo form_dropdown("active", $activestatus,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
-				<div class="col-md-10 text-right">
+				<div class="col-md-8 text-right">
 					<div class="bttn-cl">
 										<button type="button" class=" form-control btn btn-danger" name="filter" id="filter"  onclick="$('#seasonslist').dataTable().fnDestroy();;loaddatatable();" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
 					 
@@ -199,6 +211,7 @@
 							  <input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#
                             </th>
 							<th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('season_select_season')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('orig_level_value')?></th>
@@ -470,7 +483,7 @@ function downloadSeason(){
 	$.ajax({
 		url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
 		type: 'get',
-		data: {"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val(),"origValues": $("#origValues").val(),"destValues": $("#destValues").val()},
+		data: {"seasonID": $("#seasonID").val(),"season": $("#global_seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val(),"origValues": $("#origValues").val(),"destValues": $("#destValues").val()},
 		dataType: 'json'
 	}).done(function(data){
 	var $a = $("<a>");
@@ -661,6 +674,7 @@ function form_reset(){
 	$("#orig_all").removeAttr("checked");
 	$("#dest_all").removeAttr("checked");
 	$("#ams_orig_levelID").removeAttr("selected");
+	$("#global_seasonID").removeAttr("global_seasonID");
 	$('#ams_orig_levelID').trigger('change');	   
 	$("#ams_dest_levelID").removeAttr("selected");
 	$('#ams_dest_levelID').trigger('change');
@@ -674,6 +688,7 @@ function saveseason() {
 		url: "<?=base_url('season/save')?>",          
 		data: {"airlineID" :$('#airlineID').val(),
 			"season_name":$('#season_name').val(),
+			"global_seasonID":$('#global_seasonID').val(),
 			"ams_orig_levelID":$('#ams_orig_levelID').val(),
 			"ams_orig_level_value":$('#ams_orig_level_value').val(),
 			"ams_dest_levelID":$('#ams_dest_levelID').val(),
@@ -736,6 +751,8 @@ function editseason(season_id) {
 				$('#airlineID').val(seasoninfo['airlineID']);
 				$('#airlineID').trigger('change');
 				$('#season_name').val(seasoninfo['season_name']);
+				$('#global_seasonID').val(seasoninfo['global_seasonID']);
+				$('#global_seasonID').trigger('change');
 				$('#season_color').val(seasoninfo['season_color']);
 				$('#ams_orig_levelID').val(seasoninfo['ams_orig_levelID']);
 				$('#ams_orig_levelID').trigger('change');
@@ -773,6 +790,7 @@ function loaddatatable(){
 	"fnServerData": function ( sSource, aoData, fnCallback, oSettings ) { 
 	aoData.push(
 	{"name": "seasonID","value": $("#seasonID").val()},
+	{"name": "global_seasonID","value": $("#global_seasonID").val()},
 	{"name": "origID","value": $("#origID").val()},
 	{"name": "active","value": $("#active").val()},	  
 	{"name": "destID","value": $("#destID").val()},
@@ -790,6 +808,7 @@ function loaddatatable(){
 			} ); },	  
 	"columns": [{"data": "chkbox" },
 				{"data": "season_name" },
+				{"data": "global_season" },
 				// {"data": "airline_name" },
 				{"data": "airline_code" },
 				{"data": "orig_level" },
@@ -844,7 +863,7 @@ function loaddatatable(){
 						$.ajax({
 							url: "<?php echo base_url('season/server_processing'); ?>?page=all&&export=1",
 							type: 'get',
-							data: {sSearch: $("input[type=search]").val(),"seasonID": $("#seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val(),"origValues": $("#origValues").val(),"destValues": $("#destValues").val()},
+							data: {sSearch: $("input[type=search]").val(),"seasonID": $("#seasonID").val(),"filter_global_seasonID": $("#filter_global_seasonID").val(),"origID": $("#origID").val(),"active": $("#active").val(),"destID": $("#destID").val(),"airlinecode": $("#airlinecode").val(),"origValues": $("#origValues").val(),"destValues": $("#destValues").val()},
 							dataType: 'json'
 						}).done(function(data){
 					var $a = $("<a>");

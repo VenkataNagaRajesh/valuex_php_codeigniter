@@ -3,10 +3,12 @@
 /* List Language  */
 $lang['panel_title'] = "Seasons";
 $lang['add_title'] = "Add Season";
+$lang['season_select_season'] = "Global Season";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
 
 $lang['edit'] = 'Edit';
+$lang['season_seasonID'] = 'Season';
 $lang['delete'] = 'Delete';
 $lang['view'] = 'View';
 

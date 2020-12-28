@@ -433,7 +433,7 @@ class Bclr extends Admin_Controller
         $seasons = $this->season_m->get_seasons_for_airline($carrierID);
         echo "<option value='0'> Season </option>";
         foreach ($seasons as $season) {
-            echo "<option value='" . $season->VX_aln_seasonID . "'>" . $season->season_name . "</option>";
+            echo "<option value='" . $season->VX_aln_seasonID . "'>" . $season->season_name . " - " . $season->global_season  . "</option>";
         }
     }
 
@@ -1384,11 +1384,22 @@ class Bclr extends Admin_Controller
 	$origin_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($arrBclrData->origin_content, $arrBclrData->origin_level);
 	$dest_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($arrBclrData->dest_content, $arrBclrData->dest_level);
 
-	$dep_start_date = $arrBclrData->effective_date + $dep_time_start;
-	$dep_end_date = $arrBclrData->discontinue_date + $dep_time_end;
-	$oneyearsecs = 366*24*60*60;
-	$start_date = $dep_start_date - $oneyearsecs;
-	$end_date = $dep_end_date - $oneyearsecs;
+ 	if ( $arrBclrData->season_id > 0) {
+		$season = $this->season_m->get_single_season(Array("VX_aln_seasonID" => $arrBclrData->season_id));
+		if ( $season->VX_aln_seasonID ) {
+			$start_date = $season->ams_season_start_date;
+			$end_date = $season->ams_season_end_date;
+		}
+	}
+
+	if (!($start_date & $end_date)) {
+		
+		$dep_start_date = $arrBclrData->effective_date + $dep_time_start;
+		$dep_end_date = $arrBclrData->discontinue_date + $dep_time_end;
+		$oneyearsecs = 366*24*60*60;
+		$start_date = $dep_start_date - $oneyearsecs;
+		$end_date = $dep_end_date - $oneyearsecs;
+	}
 	
 
 /*

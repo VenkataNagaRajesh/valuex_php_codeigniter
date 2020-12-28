@@ -29,6 +29,33 @@
                         </span>
                     </div>
 
+                    <?php 
+                        if(form_error('airlineID')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="airlineID" class="col-sm-2 control-label">
+                            <?=$this->lang->line("airline_product")?>
+                        </label>
+                        <div class="col-sm-6">                          				 
+                              <?php 
+                                  $airlines[0]=$this->lang->line("select_airline");					
+							      foreach($airlinelist as $airline){	
+                                      $airlines[$airline->vx_aln_data_defnsID] = $airline->code;							
+								   // echo '<option value="'.$airline->vx_aln_data_defnsID.'">'.$airline->code.'</option>';
+                                  } 
+                                  
+                                 echo form_dropdown("airlineID", $airlines,
+                                  set_value("airlineID",$defdata->airlineID), "id='airlineID' class='form-control hide-dropdown-icon'"
+                                 ); 
+							  ?>  
+                    </div>
+                            <span class="control-label">
+                                <?php echo form_error('airlineID'); ?>
+                            </span>                         
+                    </div>
+
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
                             <input type="submit" class="btn btn-danger" value="<?=$this->lang->line("update_defdata")?>" >
