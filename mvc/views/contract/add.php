@@ -13,25 +13,7 @@
             <div class="col-sm-9">
                 <form class="form-horizontal" role="form" method="post">
                 <div class="form-group">
-                <div class="col-md-6">
-                <?php 
-                        if(form_error('name')) 
-                            echo "<div class='form-group has-error' >";
-                        else     
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="contract_name" class="col-sm-4 control-label">
-                            <?=$this->lang->line("contract_name")?><span class="text-red">*</span>
-                        </label>
-                        <div class="col-sm-8">                        				 
-                           <input type="text" class="form-control" placeholder="Enter Name" id="name" name="name" value="<?=set_value('name')?>" > 
-                           <span class="control-label">
-                                <?php echo form_error('name'); ?>
-                            </span>							 
-                        </div>                     
-                    </div>
-                    </div>
-                    <div class="col-md-6">
+				                    <div class="col-md-6">
                     <?php 
                         if(form_error('airlineID')) 
                             echo "<div class='form-group has-error' >";
@@ -57,6 +39,24 @@
                                 <?php echo form_error('airlineID'); ?>
                             </span>                         
                         </div>                      
+                    </div>
+                    </div>	
+                <div class="col-md-6">
+                <?php 
+                        if(form_error('name')) 
+                            echo "<div class='form-group has-error' >";
+                        else     
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="contract_name" class="col-sm-4 control-label">
+                            <?=$this->lang->line("contract_name")?><span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">                        				 
+                           <input type="text" class="form-control" placeholder="Enter Name" id="name" name="name" value="<?=set_value('name')?>" > 
+                           <span class="control-label">
+                                <?php echo form_error('name'); ?>
+                            </span>							 
+                        </div>                     
                     </div>
                     </div>
                 </div>

@@ -46,13 +46,14 @@
                         <thead>
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+								 <th class="col-lg-2">Carrier</th>	
                                 <th class="col-lg-1 noExport"><?=$this->lang->line('client_photo')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_name')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_email')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('client_phone')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('client_domain')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('client_products')?></th>
-                                <th class="col-lg-2"><?=$this->lang->line('client_airline')?></th>
+                              
                                 <th class="col-lg-2"><?=$this->lang->line('client_role')?></th>
                                 <th class="col-lg-2"><?=$this->lang->line('client_usertype')?></th>                                
                                 <?php if(permissionChecker('client_edit')) { ?>
@@ -92,13 +93,13 @@
                     "success": fnCallback
 			 } ); },	  
 	  "columns": [{"data": "sno" },
+				  {"data": "airline_code"},	
                   {"data": "image" },
 				  {"data": "name" },
 				  {"data": "email" },
 				  {"data": "phone" },
 				  {"data": "domain" },
 				  {"data": "product_name" },
-                  {"data": "airline_code"},
                   {"data" : "role"},
                   {"data" : "usertype"},
 				  {"data": "active"},

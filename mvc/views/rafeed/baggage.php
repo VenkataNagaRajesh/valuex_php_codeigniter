@@ -127,6 +127,7 @@
                             <thead>
                                 <tr>
                                     <th class="col-lg-1"><input class="filter" title="Select All" type="checkbox" id="bulkDelete" />#</th>
+									<th class="col-lg-1"><?php echo "Carrier Code"; ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('airline_code') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('coupon_number') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('weight') ?></th>
@@ -142,9 +143,8 @@
                                     <th class="col-lg-1"><?= $this->lang->line('departure_date') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('day_of_week') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('operating_airline_code') ?></th>
-                                    <th class="col-lg-1"><?= $this->lang->line('marketing_airline_code') ?></th>
-                                    <th class="col-lg-1"><?php echo "Carrier Code"; ?></th>
-                                    <th class="col-lg-1"><?= $this->lang->line('flight_number') ?></th>
+                                    <th class="col-lg-1"><?= $this->lang->line('marketing_airline_code') ?></th> 
+									<th class="col-lg-1"><?= $this->lang->line('flight_number') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('office_id') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('channel') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('pax_type') ?></th>
@@ -246,6 +246,9 @@
             "columns": [{
                     "data": "cbox"
                 },
+				{
+                    "data": "carrier_code"
+                },
                 {
                     "data": "airline_code"
                 },
@@ -293,9 +296,6 @@
                 },
                 {
                     "data": "marketing_airline_code"
-                },
-                {
-                    "data": "carrier_code"
                 },
                 {
                     "data": "flight_number"

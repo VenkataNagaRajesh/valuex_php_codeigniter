@@ -211,9 +211,9 @@
 			<table id="tztable" class="table table-bordered dataTable no-footer">
 			  <thead>
 				   <tr>				      
-						<th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/> #
-						<th><?=$this->lang->line('market_name')?></th>
+						<th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/> #</th>
 						<th><?php echo "Carrier Code";?></th>
+						<th><?=$this->lang->line('market_name')?></th>
 						<th><?=$this->lang->line('level_type')?></th>
 						<th><?=$this->lang->line('amz_level_value')?></th>
 						<th><?=$this->lang->line('amz_incl_type')?></th>
@@ -286,8 +286,8 @@ function loaddatatable() {
             },
 
       "columns": [{"data": "cbox" },
+		{"data": "airline_name"},
 		  {"data": "market_name"},
-		  {"data": "airline_name"},
                   {"data": "lname" },
 				  {"data": "levelname" },
 				  {"data": "iname" },

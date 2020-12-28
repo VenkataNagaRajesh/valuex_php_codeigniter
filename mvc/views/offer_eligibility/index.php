@@ -135,6 +135,7 @@
 					<thead>
 						<tr>
 							<th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('pax_id')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('rule_id')?></th>
@@ -145,7 +146,6 @@
 							<th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
 							<th class="col-lg-1">PNR Ref</th>
 							<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('from_cabin')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('to_cabin')?></th>
@@ -268,6 +268,7 @@ $('#to_cabin').val('<?=$to_cabin?>').trigger('change');
                          } ); }, 
 
       "columns": [ {"data": "sno" },
+		   {"data": "carrier_code" },
 		   {"data": "offer_id" },
 		   {"data": "dtpf_id" },
 		   {"data": "rule_id" },
@@ -278,7 +279,6 @@ $('#to_cabin').val('<?=$to_cabin?>').trigger('change');
 	       {"data": "dest_point" },
 		   {"data": "pnr_ref" },
 		   {"data": "departure_date" },
-		   {"data": "carrier_code" },
 		   {"data": "flight_number" },
 		   {"data": "from_cabin" },
 		   {"data": "to_cabin" },

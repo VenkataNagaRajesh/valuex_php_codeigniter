@@ -13,6 +13,33 @@
         <div class="row">
             <div class="col-sm-8">
                 <form class="form-horizontal" role="form" method="post">
+				   <?php
+                        if(form_error('carrier_code'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group'>";
+                    ?>
+                        <label for="carrier_code" class="col-sm-3 control-label">
+                            <?=$this->lang->line('carrier_code')?>
+                        </label>
+                        <div class="col-sm-5">
+
+		 <?php
+                                         foreach($carriers as $airline){
+                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                                         }
+
+                        $airlinelist['0'] = ' Carrier';
+                        ksort($airlinelist);
+
+                          echo form_dropdown("carrier_code", $airlinelist,set_value("carrier_code",$rule->carrier_code), "id='carrier_code' class='form-control hide-dropdown-icon select2'");
+                                                   ?>
+
+                        </div>
+                        <span class="col-sm-4 control-label">
+                            <?php echo form_error('carrier_code'); ?>
+                        </span>
+                    </div>
 
 		 <?php
                         $aln_datatypes['0'] = "Origin Level";
@@ -102,39 +129,7 @@
                         </span>
                     </div>
 
-
-
-
-            <?php
-                        if(form_error('carrier_code'))
-                            echo "<div class='form-group has-error' >";
-                        else
-                            echo "<div class='form-group'>";
-                    ?>
-                        <label for="carrier_code" class="col-sm-3 control-label">
-                            <?=$this->lang->line('carrier_code')?>
-                        </label>
-                        <div class="col-sm-5">
-
-		 <?php
-                                         foreach($carriers as $airline){
-                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
-                                                         }
-
-                        $airlinelist['0'] = ' Carrier';
-                        ksort($airlinelist);
-
-                          echo form_dropdown("carrier_code", $airlinelist,set_value("carrier_code",$rule->carrier_code), "id='carrier_code' class='form-control hide-dropdown-icon select2'");
-                                                   ?>
-
-                        </div>
-                        <span class="col-sm-4 control-label">
-                            <?php echo form_error('carrier_code'); ?>
-                        </span>
-                    </div>
-
-
-
+      
                               <?php
                         if(form_error('flight_nbr_start'))
                             echo "<div class='form-group has-error' >";

@@ -92,14 +92,14 @@
 					 <thead>
 						<tr>
 							<th class="col-lg-1">#</th>
+							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
                             <th class="col-lg-1"><?=$this->lang->line('product_type')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('passenger_list')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('origin')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('destination')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>							
 							<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
                             <th class="col-lg-1"><?=$this->lang->line('offer_status')?></th>
                             <th class="col-lg-1"><?=$this->lang->line('bid_info')?></th>
@@ -183,14 +183,14 @@ $("#dep_from_date").datepicker({
             },
 
       "columns": [ {"data": "sno" },
+				   {"data": "carrier" },
                    {"data": "offer_id" },
                    {"data": "name" },
 				   {"data": "passenger_list" },
 				   {"data": "pnr_ref"},
 				   {"data": "source_point" },
                    {"data": "dest_point" },
-                   {"data": "departure_date" },
-                   {"data": "carrier" },
+                   {"data": "departure_date" },                 
                    {"data": "flight_number" },
                    {"data": "booking_status" },
 		           {"data": "bid_info" }
