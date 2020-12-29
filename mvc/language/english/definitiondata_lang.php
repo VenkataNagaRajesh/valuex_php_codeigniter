@@ -2,6 +2,8 @@
 
 /* List Language  */
 $lang['panel_title'] = "Data Definitions";
+$lang['airline_product'] = "Airline Carrier";
+$lang['select_airline'] = "Carrier";
 $lang['add_title'] = "Add";
 $lang['slno'] = "#";
 $lang['action'] = "Action";

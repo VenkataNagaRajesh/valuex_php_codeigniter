@@ -28,6 +28,11 @@ class Season extends Admin_Controller {
 				'rules' => 'trim|required|max_length[200]|xss_clean|callback_valOrigLevel'
 			),
 			array(
+				'field' => 'global_seasonID',
+				'label' => $this->lang->line("season_seasonID"),
+				'rules' => 'trim|required|max_length[200]|xss_clean|callback_valGlobalSeasonID'
+			),
+			array(
 				'field' => 'airlineID',
 				'label' => $this->lang->line("season_airline"),
 				'rules' => 'trim|required|max_length[200]|xss_clean|callback_valAirline'
@@ -105,6 +110,14 @@ class Season extends Admin_Controller {
 	   }
 	}
 	
+	function valGlobalSeasonID($post_string){		
+	  if($post_string == '0'){
+		 $this->form_validation->set_message("global_seasonID", "%s is required");
+		  return FALSE;
+	   }else{
+		  return TRUE;
+	   }
+	}
 	function valOrigLevel($post_string){		
 	  if($post_string == '0'){
 		 $this->form_validation->set_message("valOrigLevel", "%s is required");
@@ -188,7 +201,7 @@ class Season extends Admin_Controller {
         } else {
           $this->data['airlinecode'] = "";
         } */
-		if(!empty($this->input->post('filter_airline'))){
+	if(!empty($this->input->post('filter_airline'))){
           $this->data['filter_airline'] = $this->input->post('filter_airline');
         } else {
 		  if($this->session->userdata('default_airline')){
@@ -211,6 +224,7 @@ class Season extends Admin_Controller {
 		}else{
 		   $this->data['seasonslist'] = $this->season_m->get_seasons_where(); 
 		}  
+		   $this->data['seasons'] = $this->season_m->get_global_seasons(); 
 		   foreach($this->data['seasonslist'] as $season){
 			  $season->origin_values = $this->season_m->getSeasonValues($season->ams_orig_levelID,explode(',',$season->ams_orig_level_value));
 			 $season->dest_values = $this->season_m->getSeasonValues($season->ams_dest_levelID,explode(',',$season->ams_dest_level_value));
@@ -346,12 +360,14 @@ class Season extends Admin_Controller {
 				'ams_dest_level_value' => form_error('ams_dest_level_value[]'),
 				'ams_season_start_date' => form_error('ams_season_start_date'),
 				'ams_season_end_date' => form_error('ams_season_end_date'),
+				'global_seasonID' => form_error('global_seasonID'),
 				'season_color' => form_error('season_color'),
 				'is_return_inclusive' => form_error('is_return_inclusive')
                 );				
 			} else {				
 				$array["season_name"] = $this->input->post("season_name");
 				$array["airlineID"] = $this->input->post("airlineID");
+				$array["global_seasonID"] = $this->input->post("global_seasonID");
 				$array["ams_orig_levelID"] = $this->input->post("ams_orig_levelID");
 				$array["ams_orig_level_value"] = implode(',',$this->input->post("ams_orig_level_value"));
 				$array["ams_dest_levelID"] = $this->input->post("ams_dest_levelID");
@@ -444,6 +460,7 @@ class Season extends Admin_Controller {
 					} else {
 						$array["season_name"] = $this->input->post("season_name");
 						$array["airlineID"] = $this->input->post("airlineID");
+						$array["global_seasonID"] = $this->input->post("global_seasonID");
 						$array["ams_orig_levelID"] = $this->input->post("ams_orig_levelID");
 						$array["ams_orig_level_value"] = implode(',',$this->input->post("ams_orig_level_value"));
 						$array["ams_dest_levelID"] = $this->input->post("ams_dest_levelID");
@@ -732,7 +749,7 @@ class Season extends Admin_Controller {
            $sWhere .= "s.ams_dest_level_value like '%".$this->input->get('destValues')."%'";		 
 	     }		 
 		
-		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level from VX_season s LEFT JOIN VX_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN VX_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_dest_levelID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = s.airlineID  
+		$sQuery = "SELECT SQL_CALC_FOUND_ROWS s.*,ds.aln_data_value as global_season,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level from VX_season s LEFT JOIN VX_data_types dt1 ON dt1.vx_aln_data_typeID = s.ams_orig_levelID LEFT JOIN VX_data_types dt2 ON dt2.vx_aln_data_typeID = s.ams_dest_levelID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = s.airlineID  LEFT JOIN VX_data_defns ds ON ds.vx_aln_data_defnsID = s.global_seasonID
 		$sWhere			
 		$sOrder
 		$sLimit	"; 

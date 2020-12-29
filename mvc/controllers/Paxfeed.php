@@ -929,7 +929,6 @@ if(!empty($data_id_array)) {
 		}
 
 		foreach ($rResult as $feed ) {
-			$this->paxfeed_m->update_paxfeed(array('is_fclr_processed' => '1'), $feed->dtpf_id);
 			$upgrade = array();
                         $upgrade['boarding_point'] = $feed->from_city;
                         $upgrade['off_point'] = $feed->to_city;
@@ -988,6 +987,7 @@ if(!empty($data_id_array)) {
 					echo "<br>UPDATAING  PAX MATCH STATUS  " . $fclr_data;
 				}
 			}
+			$this->paxfeed_m->update_paxfeed(array('is_fclr_processed' => '1'), $feed->dtpf_id);
 		}
 		if ( !$paxfeed_id ) {
 			redirect(base_url("paxfeed/index"));	

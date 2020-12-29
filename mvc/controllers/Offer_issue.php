@@ -51,6 +51,22 @@ class Offer_issue extends Admin_Controller {
 		$this->run_offer_issue($pnr_ref, $mailto);
 	}
 
+        public function tplviewnew() {
+		$dir = "mvc/views/mail-templates/";
+                $tpl = htmlentities(escapeString($this->uri->segment(3)));
+		if ( $tpl) {
+			$content = file_get_contents("$dir/$tpl");
+			echo $content;
+		} else {
+
+			// Sort in ascending order - this is default
+			$a = scandir($dir);
+			foreach ($a as $file) {
+				echo "<br>";
+				echo "<a href='tplviewnew/$file'>$file</a>";
+			}
+		}
+	}
         public function tplview() {
 		$dir = "mvc/views/offer-email-temps/";
                 $tpl = htmlentities(escapeString($this->uri->segment(3)));

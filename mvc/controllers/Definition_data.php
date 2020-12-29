@@ -164,7 +164,13 @@ class Definition_data extends Admin_Controller
 				'assets/fselect/fSelect.js',
 			)
 		);
-		$this->data['types'] = $this->airports_m->getDefdataTypes(null, array(1, 2, 3, 4, 5, 6, 12, 25,26));
+		$this->data['types'] = $this->airports_m->getDefdataTypes(null, array(1, 2, 3, 4, 5, 6, 12, 25,26,27));
+		$roleID = $this->session->userdata('roleID');
+		if($roleID != 1){
+			$this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	   
+		  } else {
+			  $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
+		  }
 		if ($_POST) {
 			$rules = $this->addrules();
 			$this->form_validation->set_rules($rules);
@@ -182,6 +188,7 @@ class Definition_data extends Admin_Controller
 					"aln_data_value" => $this->input->post("aln_data_value"),
 					"parentID" => $parent,
 					"code" => $this->input->post('code'),
+					"airlineID" => $this->input->post('airlineID'),
 					"create_date" => time(),
 					"modify_date" => time(),
 					"create_userID" => $this->session->userdata('loginuserID'),
@@ -211,6 +218,12 @@ class Definition_data extends Admin_Controller
 			)
 		);
 		$id = htmlentities(escapeString($this->uri->segment(3)));
+		$roleID = $this->session->userdata('roleID');
+		if($roleID != 1){
+			$this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	   
+		  } else {
+			  $this->data['airlinelist'] = $this->airline_m->getAirlinesData();
+		  }
 		if ((int) $id) {
 			$this->data['defdata'] = $this->airports_m->get_definition_data($id);
 			if ($this->data['defdata']) {
@@ -223,6 +236,7 @@ class Definition_data extends Admin_Controller
 					} else {
 						$array = array(
 							"aln_data_value" => $this->input->post("aln_data_value"),
+							"airlineID" => $this->input->post('airlineID'),
 							"modify_date" => time(),
 							"modify_userID" => $this->session->userdata('loginuserID')
 						);
