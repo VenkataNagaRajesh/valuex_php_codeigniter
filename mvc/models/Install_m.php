@@ -40,7 +40,7 @@ class Install_m extends CI_Model{
 	
 	public function run_query($query){
 		$q = $this->db->query($query);
-        return $q->result();
+        	return $q->result();
 	}
 }	
 ?>

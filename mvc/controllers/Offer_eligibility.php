@@ -639,7 +639,51 @@ $sWhere $sOrder $sLimit";
 
    }
 
-   function processGenBaggageOffers($carriers) {
+   function processBaggageOfferSingle() {
+
+	$pax_id = htmlentities(escapeString($this->uri->segment(3)));
+	if ( ! $pax_id ) {
+		echo "PAX ID parameter missing ! ";
+		return;
+	}
+	$contracts = $this->contract_m->getActiveContracts();
+	echo "<pre>CONTRACTS=" . print_r($contracts,1). "</pre>";
+   	#$this->processGenBaggageOffers(5500);
+#exit;
+
+	$carriers = Array();
+	foreach($contracts as $contract) {
+		$carriers[] = $contract->airlineID;
+	}
+
+	$parray = Array('dtpf_id' => $pax_id);
+	$pax = $this->paxfeed_m->get_single_paxfeed($parray);
+	if ($pax->pnr_ref){
+   		$this->processGenBaggageOffers($carriers, $pax->pnr_ref);
+	} else {
+		echo "PNR NOT FOUND ! for pax ID : $pax_id, not able to process baggage offer";
+	}
+   }
+
+   function resetOffers() {
+		$pnr = htmlentities(escapeString($this->uri->segment(3)));
+		if ( $pnr ) {
+			$q = "UPDATE VX_daily_tkt_pax_feed set is_up_offer_processed=0, is_bg_offer_processed=0, is_fclr_processed=0,fclr_data=0 ";
+			if ( strtolower($pnr) == 'all') {
+				echo "Resetting all Offers!";
+			} else {
+				echo "Resetting PNR $pnr!";
+				$flg = 1;
+				$q .= " WHERE  pnr_ref = '$pnr'";
+			}
+			$this->db->query($q);
+			echo "Offers Reset complete!";
+		}  else {
+			echo "PNR Parameter mssing !";
+		}
+   }
+
+   function processGenBaggageOffers($carriers, $pnr = 0) {
 	
 		$bclr_rules = $this->bclr_m->get_bclr_by_all_carriers($carriers);
 		#echo "<br>OND BCLR ALLCARR=<pre>" . print_r($bclr_rules,1) . "</pre>";
@@ -660,7 +704,7 @@ $sWhere $sOrder $sLimit";
 		//$id = $this->airline_cabin_class_m->checkCarrierDataByID($id);
 		# GET  PAXA FEED OF PTC TYPE ADT  ADULT , exclude UNN and NON-REV of speicific Class
 		# FILTER 
-		$bg_pax_data = $this->offer_eligibility_m->getBaggagePaxDataForAllCarriers($carriers, $tstamp);
+		$bg_pax_data = $this->offer_eligibility_m->getBaggagePaxDataForAllCarriers($carriers, $tstamp, $pnr);
 		$bg_partners = $this->partner_m->getAllPartnerCarriers($carriers);
 			echo "<br>PARTNERS=<pre>" . print_r($bg_partners,1) . "</pre>";
 		foreach($bg_partners as $partner) {
@@ -670,6 +714,15 @@ $sWhere $sOrder $sLimit";
 		
 		$air_distances = Array();
 		$air_distances = $this->airports_m->getAirDistances();
+
+		if ( count($bg_pax_data) ) {
+			echo "<br> PAXDATA FOUND=<pre>" . print_r($bg_pax_data,1) . "</pre>";
+		} else {
+			echo "<br>  MATCHING PAXDATA NOT FOUND!";
+			if ($pnr) {
+				echo " FOR PNR $pnr";
+			}
+		}
 
 		$pax_ond = Array();
 		foreach ($bg_pax_data as $pax_pnr_single ) {
@@ -710,6 +763,9 @@ $sWhere $sOrder $sLimit";
 		echo "<br>+++++++++++++++++++++++++++++++++++++++++++++";
 		echo "<pre>All PAX OND = " . print_r($pax_ond,1). "</pre>";
 		echo "<br>+++++++++++++++++++++++++++++++++++++++++++++";
+		if ( !count($pax_ond)) {
+			echo "<br> ERROR: NO OND's FOUND , NOTHING TO PROCESS BAGGAGE OFFER, QUITING!";
+		}
 
 		#Determine matching BCLR for all OND  
 
