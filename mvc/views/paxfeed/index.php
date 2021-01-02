@@ -163,14 +163,14 @@
                  <thead>
                     <tr>
 			 <th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
+			  <th class="col-lg-1"><?=$this->lang->line('carrier_code')?></th>
                         <th class="col-lg-2"><?=$this->lang->line('airline_code')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('pax_nbr')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('first_name')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('last_name')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('ptc')?></th>
-			 <th class="col-lg-1"><?=$this->lang->line('fqtv')?></th>
-                         <th class="col-lg-1"><?=$this->lang->line('carrier_code')?></th>
+			 <th class="col-lg-1"><?=$this->lang->line('fqtv')?></th>                    
 			<th class="col-lg-1"><?=$this->lang->line('seg_nbr')?></th>
 			 <th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('dep_date')?></th>
@@ -251,14 +251,14 @@
             },
 
       "columns": [{"data": "chkbox" },
+				  {"data": "carrier_code" },	
                   {"data": "airline_code" },
 				  {"data": "pnr_ref" },
 				  {"data": "pax_nbr"},
                                   {"data": "first_name" },
 				{"data": "last_name"},
                                   {"data": "ptc_code" },
-                                {"data": "fqtv"},
-                                 {"data": "carrier_code" },
+                                {"data": "fqtv"},                              
 				{"data": "seg_nbr" },
 				{"data": "flight_number" },
                                 {"data": "dep_date" },

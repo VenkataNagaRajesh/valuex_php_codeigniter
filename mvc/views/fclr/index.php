@@ -227,9 +227,9 @@
 					<tr>
 
 					  <th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
+					  <th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('off_point')?></th>
-						<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
+						<th class="col-lg-1"><?=$this->lang->line('off_point')?></th>						
 						<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('season')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('start_date')?></th>
@@ -381,9 +381,9 @@ function loaddatatable() {
 
 
       "columns": [ {"data": "chkbox" },
+	    {"data": "carrier_code" },
 		   {"data": "source_point" },
-	           {"data": "dest_point" },
-		   {"data": "carrier_code" },
+	           {"data": "dest_point" },	 
 		   {"data": "flight_number" },
 		   {"data": "season_id" },
 		   {"data": "start_date" },

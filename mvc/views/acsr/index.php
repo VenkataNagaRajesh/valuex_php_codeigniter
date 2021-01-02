@@ -190,11 +190,11 @@
                         <thead>
                             <tr>
                                 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
+								 <th class="col-lg-1"><?=$this->lang->line('carrier_code')?></th>
 				<th class="col-lg-1"><?=$this->lang->line('orig_level_id')?></th>
 				<th class="col-lg-4"><?=$this->lang->line('orig_level_value')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('dest_level_id')?></th>
-				<th class="col-lg-4" ><?=$this->lang->line('dest_level_value')?></th>
-				 <th class="col-lg-1"><?=$this->lang->line('carrier_code')?></th>
+				<th class="col-lg-4" ><?=$this->lang->line('dest_level_value')?></th>			
 			       <th class="col-lg-1"><?=$this->lang->line('flight_dep_date_start')?></th>
                                 <th class="col-lg-1"><?=$this->lang->line('flight_dep_date_end')?></th>
 			      <th class="col-lg-1"><?=$this->lang->line('flight_dep_time_start')?></th>
@@ -301,11 +301,11 @@ $('#to_cabin').val('<?=$tocabin?>').trigger('change');
             },
 
       "columns": [{"data": "id" },
+				   {"data": "carrier" },	
                   {"data": "orig_level" },
                   {"data": "orig_level_value" },
 				  {"data": "dest_level" },
-                  {"data": "dest_level_value" },
-				  {"data": "carrier" },
+                  {"data": "dest_level_value" },			 
                   {"data": "flight_dep_date_start" }, 
                   {"data": "flight_dep_date_end"},
                   {"data": "flight_dep_time_start" },

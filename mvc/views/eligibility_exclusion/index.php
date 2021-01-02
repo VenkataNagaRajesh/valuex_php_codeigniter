@@ -7,10 +7,28 @@
 	</h2>
 	<p class="card-header" data-toggle="collapse" data-target="#eerAdd"><button type="button" id = 'rule_add_btn' class="btn btn-danger pull-right" style="margin:1px 0;" data-placement="left" title="Add Rule" data-toggle="tooltip"><i class="fa fa-plus"></i></button></p>
 	<div class="table-responsive col-md-12 collapse" id="eerAdd">
-		<div class="col-md-12"><h2>Rule Criteria</h2></div>
+		<div class="col-lg-12"><h2 style="border:none;">Rule Criteria</h2></div>
 	<br>	<form class="form-horizontal" id='add_rule_form' action="#">
-			<div class="col-md-12">
+			<div class="col-lg-12">
 				<div class="form-group">
+					<div class="col-md-3 col-sm-3">
+						<?php
+
+					 foreach($carriers as $airline){
+                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
+                                                         }
+
+                        $airlinelist['0'] = ' Carrier';
+                        ksort($airlinelist);
+
+		
+
+
+
+
+							echo form_dropdown("carrier", $airlinelist,set_value("carrier",$default_airlineID), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
+
+					</div>
 					<div class="col-md-3 col-sm-3">
 						<input type="text" placeholder="Enter Name" class="form-control" id="desc" name="desc" value="<?=set_value('desc')?>" >
 					</div>
@@ -34,24 +52,6 @@
                             <select  name="dest_level_value[]"  id="dest_level_value" class="form-control select2" multiple="multiple"></select>
                           </div>
                      </div>
-					<div class="col-md-3 col-sm-3">
-						<?php
-
-					 foreach($carriers as $airline){
-                                     $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
-                                                         }
-
-                        $airlinelist['0'] = ' Carrier';
-                        ksort($airlinelist);
-
-		
-
-
-
-
-							echo form_dropdown("carrier", $airlinelist,set_value("carrier",$default_airlineID), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
-
-					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-md-3 col-sm-3">
@@ -414,12 +414,12 @@
 						 
 				<th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
 							<th class="col-lg-1">Rule#</th>
+							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('desc')?></th>
 							<th class="col-lg-1"><?php echo "Origin Level";?></th>
                             				<th class="col-lg-1"><?php echo "Orig Value";?></th>
 							<th class="col-lg-1"><?php echo "Dest Level";?></th>
-                            				<th class="col-lg-1"><?php echo "Dest Value";?></th>
-							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
+                            				<th class="col-lg-1"><?php echo "Dest Value";?></th>						
 							<th class="col-lg-1"><?=$this->lang->line('flight_efec_date')?></th>
                             				<th class="col-lg-1"><?=$this->lang->line('flight_disc_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_dep_start')?></th>
@@ -557,12 +557,12 @@ function loaddatatable() {
 
       "columns": [{"data": "chkbox" },
 		  {"data": "ruleno" },
+		  {"data": "carrier_code" },
                   {"data": "excl_reason_desc" },
                                   {"data": "orig_level" },
                                   {"data": "orig_level_value" },	
 				{"data": "dest_level" },
                                   {"data": "dest_level_value" },
-				  {"data": "carrier_code" },
                                   {"data": "flight_efec_date" }, 
                   {"data": "flight_disc_date"},
                                   {"data": "flight_dep_start" },

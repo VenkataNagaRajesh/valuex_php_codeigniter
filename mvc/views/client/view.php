@@ -17,11 +17,11 @@
 			<div class="row">				
 				<div class="profile-view-tab"> 
 					 <p><span><?=$this->lang->line("client_id")?> </span>: <?=$client->userID?></p>
+					  <p>Carrier </span>: <?=$client->airlines?></p>
 					 <p><span><?=$this->lang->line("client_name")?> </span>: <?=$client->name?></p>
                      <p><span><?=$this->lang->line("client_domain")?> </span>: <?=$client->domain?></p>
 					 <p><span><?=$this->lang->line("client_email")?> </span>: <?=$client->email?></p>
 					 <p><span><?=$this->lang->line("client_phone")?> </span>: <?=$client->phone?></p>
-					 <p><span><?=$this->lang->line("client_airline")?> </span>: <?=$client->airlines?></p>
 					 <p><span><?=$this->lang->line("client_status")?> </span>: <?=($client->active)?'Enable':'Disable'?></p>
 					 <p><span><?=$this->lang->line("client_username")?> </span>: <?=$client->username?></p>					
 				</div>

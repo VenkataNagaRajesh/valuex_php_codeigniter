@@ -42,8 +42,8 @@
                         <thead>
                             <tr>
                                 <th class="col-sm-2"><?=$this->lang->line('slno')?></th>
-                                <th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_name')?></th>
 								<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_airline')?></th>
+                                <th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_name')?></th>
                                 <th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_category')?></th>
                                 <th class="col-sm-2"><?="Template Path"?></th>
 								<th class="col-sm-2"><?=$this->lang->line('mailandsmstemplate_default')?></th>
@@ -129,8 +129,8 @@ $(document).ready(function() {
                     "success": fnCallback
                          } ); },
       "columns": [{"data": "mailandsmstemplateID" },
-                  {"data": "name" },
-				  {"data": "airline_code" },
+				  {"data": "airline_code" },	
+                  {"data": "name" },			  
 				  {"data": "category"},				
 				  {"data": "template_path"},				
 				  {"data": "default"},

@@ -12,9 +12,6 @@
 				<div class="row">
 					<div class="col-md-3 col-sm-3 select-form">
 						<div class="col-md-12">
-							<input type="text" class="form-control"  placeholder="Enter Season Name" id="season_name" name="season_name" value="<?=set_value('season_name')?>">
-						</div>
-						<div class="col-md-12">
 							<?php
 								 foreach($seasons as $season){
 									$gseasonlist[$season->vx_aln_data_defnsID] = $season->aln_data_value;
@@ -43,6 +40,9 @@
 								ksort($airlinelist);
 
 								echo form_dropdown("airlineID", $airlinelist,set_value("airlineID",$filter_airline), "id='airlineID' class='form-control hide-dropdown-icon select2'"); ?>
+						</div>
+						<div class="col-md-12">
+							<input type="text" class="form-control"  placeholder="Enter Season Name" id="season_name" name="season_name" value="<?=set_value('season_name')?>">
 						</div>
 					</div>
 					<div class="col-md-3 col-sm-3 select-form">
@@ -210,9 +210,10 @@
 						    <th class="col-lg-1">
 							  <input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#
                             </th>
+                            <th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season_select_season')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('season_name')?></th>							
 							<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('orig_level_value')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('dest_level')?></th>
@@ -807,10 +808,10 @@ function loaddatatable(){
 				"success": fnCallback
 			} ); },	  
 	"columns": [{"data": "chkbox" },
+				{"data": "airline_code" },
 				{"data": "season_name" },
 				{"data": "global_season" },
 				// {"data": "airline_name" },
-				{"data": "airline_code" },
 				{"data": "orig_level" },
 				{"data": "orig_level_values" },
 				{"data": "dest_level" }, 

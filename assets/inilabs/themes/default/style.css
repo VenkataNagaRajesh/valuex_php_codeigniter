@@ -4337,7 +4337,8 @@ box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 	color: #ff6633;
 	font-weight: 500;
 	margin-bottom: 10px;
-	border: solid 1px #ccc !important;
+	background: #f5f5f5;
+    padding: 8px;
 }
 .eer .off-filter-form{
 	background: #fff;
@@ -4359,6 +4360,8 @@ box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 	width: 100%;
 	color: #ff6633;
 	font-weight: bold;
+	white-space:nowrap;
+	text-align:center;
 	margin-bottom: 10px;
 	background: #ddd;
 	padding: 5px 15px;

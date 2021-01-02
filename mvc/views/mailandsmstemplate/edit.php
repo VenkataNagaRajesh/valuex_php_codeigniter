@@ -29,7 +29,30 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-12">		
-                <form class="form-horizontal" role="form" method="post">                 
+                <form class="form-horizontal" role="form" method="post"> 
+											   
+					   <?php
+                           if(form_error('airlineID'))
+                               echo "<div class='form-group has-error' >";
+                           else
+                               echo "<div class='form-group' >";
+                       ?>
+                           <label for="email_user" class="col-sm-1 control-label">
+                               <?=$this->lang->line("mailandsmstemplate_airline")?>
+                           </label>
+                           <div class="col-sm-4">
+                               <?php                                                                   
+					$carrier[0] = "All Carriers (Default)";
+                                  foreach ($airlines as $airline) {
+                                    $carrier[$airline->vx_aln_data_defnsID] = $airline->code;
+                                  }                                                  
+                                echo form_dropdown("airlineID", $carrier, set_value("airlineID",$mailtemplate->airlineID), "id='airlineID' class='form-control'");
+                               ?>
+                           </div>
+                           <span class="col-sm-4 control-label">
+                               <?php echo form_error('airlineID'); ?>
+                           </span>
+                       </div>
                        <?php
                            if(form_error('email_name'))
                                echo "<div class='form-group has-error' >";
@@ -66,29 +89,6 @@
                            </div>
                            <span class="col-sm-4 control-label">
                                <?php echo form_error('category'); ?>
-                           </span>
-                       </div>
-					   
-					   <?php
-                           if(form_error('airlineID'))
-                               echo "<div class='form-group has-error' >";
-                           else
-                               echo "<div class='form-group' >";
-                       ?>
-                           <label for="email_user" class="col-sm-1 control-label">
-                               <?=$this->lang->line("mailandsmstemplate_airline")?>
-                           </label>
-                           <div class="col-sm-4">
-                               <?php                                                                   
-					$carrier[0] = "All Carriers (Default)";
-                                  foreach ($airlines as $airline) {
-                                    $carrier[$airline->vx_aln_data_defnsID] = $airline->code;
-                                  }                                                  
-                                echo form_dropdown("airlineID", $carrier, set_value("airlineID",$mailtemplate->airlineID), "id='airlineID' class='form-control'");
-                               ?>
-                           </div>
-                           <span class="col-sm-4 control-label">
-                               <?php echo form_error('airlineID'); ?>
                            </span>
                        </div>
 

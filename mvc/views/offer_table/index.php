@@ -128,9 +128,9 @@
 					 <thead>
 						<tr>	
 							<th class="col-lg-1">#</th>
-							<th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('offer_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('carrier')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('offer_id')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('offer_date')?></th>							
 							<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('flight_date')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('board_point')?></th>
@@ -283,9 +283,9 @@ $("#dep_from_date").datepicker({
 
 
       "columns": [   {"data": "sno" },
+	   {"data": "carrier" },
 		   {"data": "offer_id" },
-		   {"data": "offer_date" },
-		   {"data": "carrier" },
+		   {"data": "offer_date" },		  
 		   {"data": "flight_number" },
 		   {"data": "flight_date"},
 		   {"data": "from_city" },
