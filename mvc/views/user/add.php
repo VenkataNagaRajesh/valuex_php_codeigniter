@@ -14,7 +14,7 @@
     <div class="box-body">
         <div class="row">
             <div class="col-sm-10">
-                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+                <form class="form-horizontal" role="form" method="post" onsubmit ="return verifyPasswdMatch();" enctype="multipart/form-data">
 
                     <?php
                         if(form_error('name'))
@@ -284,6 +284,18 @@
                         </span>
                     </div>
 
+                      <div class='form-group' >
+                        <label for="retype_password" class="col-sm-2 control-label">
+                            <?=$this->lang->line("retype_user_password")?> 
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="retype_password" class="form-control" id="retype_password" name="retype_password" value="<?=set_value('retype_password')?>" >
+                        </div>
+                         <span class="col-sm-4 control-label">
+                            <?php echo form_error('retype_password'); ?>
+                        </span>
+                    </div>
+
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
                             <input type="submit" class="btn btn-danger" value="<?=$this->lang->line("add_user")?>" >
@@ -302,6 +314,23 @@
 </div>
 
 <script type="text/javascript">
+
+function verifyPasswdMatch() {
+	pw1=$('#password').val();
+	pw2=$('#retype_password').val();
+	if (pw1 ){
+		if ( pw2 == '') {
+			alert("Retype Password field empty");
+			return false;
+		}
+		if ( pw1 != pw2) {
+			alert("Password and Retype passwords do not match");
+			return false;
+		}
+	}
+	return true;
+}
+
 $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: "Select airline"});
 				 

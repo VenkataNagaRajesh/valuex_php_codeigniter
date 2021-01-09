@@ -43,7 +43,7 @@
             <div class="col-md-4">
                 <div class="hidden-xs">
                     <!--<b>v</b> <?=config_item('ini_version')?>-->
-                    <a href="<?=base_url()?>">www.valuex.sweken.com</a>
+                    <!--<a href="<?=base_url()?>">www.valuex.sweken.com</a>-->
                 </div>
           	</div>
 			
