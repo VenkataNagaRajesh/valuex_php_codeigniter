@@ -251,7 +251,8 @@ $config['log_path'] = 'mvc/logs/';
 | Note: Leaving it blank will default to 'php'.
 |
 */
-$config['log_file_extension'] = '';
+$config['log_file_extension'] = 'log';
+$config['log_file_pattern'] = 'log-*.log';
 
 /*
 |--------------------------------------------------------------------------

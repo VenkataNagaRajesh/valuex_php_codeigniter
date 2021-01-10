@@ -610,6 +610,7 @@ $sWhere $sOrder $sLimit";
 
    function generatedata() {
 
+	ob_start();
 	# Get Contracts to decide what carrier and what products offers to be generated
 	$contracts = $this->contract_m->getActiveContracts();
 	echo "<pre>CONTRACTS=" . print_r($contracts,1). "</pre>";
@@ -636,7 +637,9 @@ $sWhere $sOrder $sLimit";
 
 	//Process BAGGAGE OFFERS
  	$this->processGenBaggageOffers($carriers);
-
+	$debug = ob_get_contents();
+	$this->mydebug->offer_eligibility_log($debug, 0);
+	ob_end_clean();
 	$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 	redirect(base_url("offer_eligibility/index"));
 

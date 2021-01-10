@@ -5,7 +5,7 @@ class Mydebug {
       public function debug($logs)
         {
 
-         $file=fopen('./logs.txt','a+');
+         $file=fopen('./debug.log','a+');
 
          if (is_array($logs)) {
              $msg = print_r($logs,1);
@@ -19,7 +19,7 @@ class Mydebug {
         {
 
         // $file=fopen('./debug/airports_log.txt','a+');
-		   $file = fopen(APPPATH.'/logs/log-airport.php','a+');
+		   $file = fopen(APPPATH.'/logs/log-airport.log','a+');
 
          if (is_array($logs)) {
              $msg = print_r($logs,1);
@@ -34,7 +34,7 @@ class Mydebug {
         {
 
          //$file=fopen('./debug/airlines_log.txt','a+');
-         $file = fopen(APPPATH.'/logs/log-airline.php','a+');
+         $file = fopen(APPPATH.'/logs/log-airline.log','a+');
          if (is_array($logs)) {
              $msg = print_r($logs,1);
          } else {
@@ -46,7 +46,7 @@ class Mydebug {
 	  public function rafeed_log($logs, $flag = 0)
         {
 
-       	$file = fopen(APPPATH.'/logs/log-rafeed.php','a+');
+       	$file = fopen(APPPATH.'/logs/log-rafeed.log','a+');
          if (is_array($logs)) {
              $msg = print_r($logs,1);
          } else {
@@ -68,7 +68,7 @@ class Mydebug {
 	 public function invfeed_log($logs, $flag = 0)
         {
 
-        $file = fopen(APPPATH.'/logs/log-invfeed.php','a+');
+        $file = fopen(APPPATH.'/logs/log-invfeed.log','a+');
          if (is_array($logs)) {
              $msg = print_r($logs,1);
          } else {
@@ -89,7 +89,7 @@ class Mydebug {
      public function paxfeed_log($logs, $flag = 0)
         {
 
-        $file = fopen(APPPATH.'/logs/log-paxfeed.php','a+');
+        $file = fopen(APPPATH.'/logs/log-paxfeed.log','a+');
          if (is_array($logs)) {
              $msg = print_r($logs,1);
          } else {
@@ -106,8 +106,25 @@ class Mydebug {
          fwrite($file,$tag. " --> ".$msg."\n");
        }
 
+     public function offer_eligibility_log($logs, $flag = 0)
+        {
 
+        $file = fopen(APPPATH.'/logs/log-offer_eligibility-'. date('Y-m-d-H-m-s'). '.log','w');
+        #$file = fopen(APPPATH.'/logs/log-offer_eligibility'. '.log');
+         if (is_array($logs)) {
+             $msg = print_r($logs,1);
+         } else {
+             $msg = $logs;
+         }
 
+        if ($flag == '0' ) {
 
+                $tag = 'INFO - '.date('Y-m-d H:m:s');
+        } else {
+
+                $tag = 'ERROR - '.date('Y-m-d H:m:s');
+        }
+         fwrite($file,$tag. " --> ".$msg."\n");
+       }
 
 }
