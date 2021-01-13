@@ -158,7 +158,7 @@
 			 </form>			
 			</div>
 		<div class="col-md-12" style="padding:0;">
-                        <div class="tab-content table-responsive" id="hide-table">
+                        <div class="tab-content table-responsive px-feed" id="hide-table">
                <table id="paxfeedtable" class="table table-bordered dataTable no-footer">
                  <thead>
                     <tr>
