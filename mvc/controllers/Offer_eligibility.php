@@ -295,6 +295,8 @@ class Offer_eligibility extends Admin_Controller {
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'pf.carrier_code IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
                 }
+                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                $sWhere .= " pext.active = 1 ";
 	
 
 
@@ -338,13 +340,14 @@ $sWhere $sOrder $sLimit";
 		foreach ($rResult as $feed ) {
 			$feed->sno = $rownum;
 			$rownum++;
+                   	$feed->action .=  '<a target="_blank" href="' . base_url('offer_eligibility/processOfferPerPnr/' . $feed->dtpf_id) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="MANUAL OFFER PROCESS PER PNR"><i class="fa fa-check"></i></a>';
 			$boarding_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->boarding_point));
 			$feed->spoint = $feed->source_point;
-            $feed->dpoint = $feed->dest_point;		
+		        $feed->dpoint = $feed->dest_point;		
 			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
-			 $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
+			$dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
-               $feed->bstatus = $feed->booking_status;			  
+               		$feed->bstatus = $feed->booking_status;			  
 			if($feed->booking_status == 'Excluded') {
 				$excl_id = $this->eligibility_exclusion_m->getexclIdForGrpANDCabins($feed->exclusion_id,$feed->from_cabin,$feed->to_cabin);
 				$feed->booking_status = '<a href="'.base_url('eligibility_exclusion/index/'.$excl_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->exclusion_id.'">'.$feed->booking_status.'</a>';
@@ -607,6 +610,7 @@ $sWhere $sOrder $sLimit";
 
    function generatedata() {
 
+	ob_start();
 	# Get Contracts to decide what carrier and what products offers to be generated
 	$contracts = $this->contract_m->getActiveContracts();
 	echo "<pre>CONTRACTS=" . print_r($contracts,1). "</pre>";
@@ -633,13 +637,64 @@ $sWhere $sOrder $sLimit";
 
 	//Process BAGGAGE OFFERS
  	$this->processGenBaggageOffers($carriers);
-
+	$debug = ob_get_contents();
+	$this->mydebug->offer_eligibility_log($debug, 0);
+	ob_end_clean();
 	$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 	redirect(base_url("offer_eligibility/index"));
 
    }
 
-   function processGenBaggageOffers($carriers) {
+   function processOfferPerPnr() {
+
+	$pax_id = htmlentities(escapeString($this->uri->segment(3)));
+	if ( ! $pax_id ) {
+		echo "<br>PAX ID parameter missing ! ";
+		return;
+	}
+	$contracts = $this->contract_m->getActiveContracts();
+	echo "<pre>CONTRACTS=" . print_r($contracts,1). "</pre>";
+   	#$this->processGenBaggageOffers(5500);
+#exit;
+
+	$carriers = Array();
+	foreach($contracts as $contract) {
+		$carriers[] = $contract->airlineID;
+	}
+
+	$parray = Array('dtpf_id' => $pax_id);
+	$pax = $this->paxfeed_m->get_single_paxfeed($parray);
+	if ($pax->pnr_ref){
+		echo "<br>======================== START PROCESSING UPGRADE OFFER ! ======================================";
+   		$this->processGenUpgradeOffers($pax->carrier_code, $pax->pnr_ref);
+		echo "<br>======================== END PROCESSING UPGRADE OFFER ! ======================================";
+		echo "<br><br><br>======================== START PROCESSING BAGGAGE OFFER ! ======================================";
+   		$this->processGenBaggageOffers($carriers, $pax->pnr_ref);
+		echo "<br>======================== END PROCESSING BAGGAGE OFFER ! ======================================";
+	} else {
+		echo "<br>PNR NOT FOUND ! for pax ID : $pax_id, not able to process baggage offer";
+	}
+   }
+
+   function resetOffers() {
+		$pnr = htmlentities(escapeString($this->uri->segment(3)));
+		if ( $pnr ) {
+			$q = "UPDATE VX_daily_tkt_pax_feed set is_up_offer_processed=0, is_bg_offer_processed=0, is_fclr_processed=0,fclr_data=0 ";
+			if ( strtolower($pnr) == 'all') {
+				echo "Resetting all Offers!";
+			} else {
+				echo "Resetting PNR $pnr!";
+				$flg = 1;
+				$q .= " WHERE  pnr_ref = '$pnr'";
+			}
+			$this->db->query($q);
+			echo "Offers Reset complete!";
+		}  else {
+			echo "PNR Parameter mssing !";
+		}
+   }
+
+   function processGenBaggageOffers($carriers, $pnr = 0) {
 	
 		$bclr_rules = $this->bclr_m->get_bclr_by_all_carriers($carriers);
 		#echo "<br>OND BCLR ALLCARR=<pre>" . print_r($bclr_rules,1) . "</pre>";
@@ -660,7 +715,7 @@ $sWhere $sOrder $sLimit";
 		//$id = $this->airline_cabin_class_m->checkCarrierDataByID($id);
 		# GET  PAXA FEED OF PTC TYPE ADT  ADULT , exclude UNN and NON-REV of speicific Class
 		# FILTER 
-		$bg_pax_data = $this->offer_eligibility_m->getBaggagePaxDataForAllCarriers($carriers, $tstamp);
+		$bg_pax_data = $this->offer_eligibility_m->getBaggagePaxDataForAllCarriers($carriers, $tstamp, $pnr);
 		$bg_partners = $this->partner_m->getAllPartnerCarriers($carriers);
 			echo "<br>PARTNERS=<pre>" . print_r($bg_partners,1) . "</pre>";
 		foreach($bg_partners as $partner) {
@@ -670,6 +725,23 @@ $sWhere $sOrder $sLimit";
 		
 		$air_distances = Array();
 		$air_distances = $this->airports_m->getAirDistances();
+
+		if ( count($bg_pax_data) ) {
+			echo "<br> PAXDATA FOUND=<pre>" . print_r($bg_pax_data,1) . "</pre>";
+		} else {
+			echo "<br>  MATCHING PAXDATA NOT FOUND!";
+			if ($pnr) {
+				echo " FOR PNR $pnr";
+			}
+		}
+
+		$alines = $this->airline_m->getAirlinesData();
+		$airline_code_to_carrierId_map = Array();
+		foreach($alines as $aline){
+			$airline_code_to_carrierId_map[$aline->code]= $aline->vx_aln_data_defnsID;
+		}
+
+		#Find Operating carrier for this PNR 
 
 		$pax_ond = Array();
 		foreach ($bg_pax_data as $pax_pnr_single ) {
@@ -710,21 +782,33 @@ $sWhere $sOrder $sLimit";
 		echo "<br>+++++++++++++++++++++++++++++++++++++++++++++";
 		echo "<pre>All PAX OND = " . print_r($pax_ond,1). "</pre>";
 		echo "<br>+++++++++++++++++++++++++++++++++++++++++++++";
+		if ( !count($pax_ond)) {
+			echo "<br> ERROR: NO OND's FOUND , NOTHING TO PROCESS BAGGAGE OFFER, QUITING!";
+		}
 
 		#Determine matching BCLR for all OND  
-
 		foreach($pax_ond as $pnr => $ond) {
 			foreach($ond as $ond_grp => $pax_arr) {
-							echo ("<br>ONGRP GEN: $ond_grp ". print_r($pax_arr,1));
+				echo ("<br>ONGRP GEN: $ond_grp ". print_r($pax_arr,1));
 				foreach($pax_arr as $dtpfId) {
-							echo ("<br>ONGRP : $ond_grp  DTPF=".$dtpfId);
+					echo ("<br>ONGRP : $ond_grp  DTPF=".$dtpfId);
 					$bclrIds = Array();
 					$ext = array();
 					$blrId = 0;
 					if ( $ond_grp != 'NP') {
 						$pax = $this->paxfeed_m->get_single_paxfeed(Array("dtpf_id" => $dtpfId));
+						$op_carrier = $airline_code_to_carrierId_map[$pax->operating_carrier];
+						$mk_carrier = $airline_code_to_carrierId_map[$pax->marketing_carrier];
+						if ( !$op_carrier) {
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : OPERATING CARRIER  MISING  FOR PAX ID :  $dtpfId" );
+						}
+						if ( !$mk_carrier) {
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : MARKETING CARRIER  MISING  FOR PAX ID :  $dtpfId" );
+						}
+						$pax->op_carrier = $op_carrier;
+						$pax->mk_carrier = $mk_carrier;
 						//First give precedence for partner based BCLR rules defined by current carrier 
-						foreach($bclr_rules[$pax->carrier_code] as $bclr_rule) {
+						foreach($bclr_rules[$op_carrier] as $bclr_rule) {
 							if ( $bclr_rule->partner_carrierID ) {
 							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER DEFINED RULES FOR PAX ID $dtpfId FOR  PARTNER CARRIER ID: " . $bclr_rule->partner_carrierID);
 								$blrId = $this->getMatchedBclrForPax($pax, $bclr_rule,1);//Check Partner Matched BCLR rules
@@ -752,7 +836,14 @@ $sWhere $sOrder $sLimit";
 						} else {
 							//If no partner specific  rules  matched , consider current carrier rules 
 							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER RULES NOT MATCHED, CHECKEING DEFAULT  BCLR RULES FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierID);
-							foreach($bclr_rules[$pax->carrier_code] as $bclr_rule) {
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : OPERATING CARRIER :". $op_carrier);
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : MARKETING CARRIER :". $mk_carrier);
+							echo ("<br>OFFER GEN: PROCESS BAGGAGE : FOR OPERTING CARRIER  BCRL RULES COUNT:". count($bclr_rules[$op_carrier]));
+							if ( !count($bclr_rules[$op_carrier])) {
+								echo ("<br>OFFER GEN: PROCESS BAGGAGE :NO BCLR RULES FOR  OPERATING CARRIER!" );
+							}
+				
+							foreach($bclr_rules[$op_carrier] as $bclr_rule) {
 								if ( !$bclr_rule->partner_carrierID ) {
 									$blrId = $this->getMatchedBclrForPax($pax, $bclr_rule,0);//Check SELF BCLR rules
 								}
@@ -785,6 +876,9 @@ $sWhere $sOrder $sLimit";
 						echo ("<br>OFFER GEN: PROCESS BAGGAGE : NOT A PARTNER AND NO SLIDER FOR  PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
 						$this->mydebug->debug("OFFER GEN: PROCESS BAGGAGE : NOT A PARTNER AND NO SLIDER FOR  PAX ID $dtpfId FOR  CARRIER ID: " . $carrierId);
 					}
+					#Deactive old records of any
+					$q = "UPDATE VX_offer_info SET active = 0 WHERE dtpf_id = $dtpfId and product_id = 2 ";	
+					$this->db->query($q);
 					$ext['dtpf_id'] = $dtpfId;
 					$ext['rule_id'] =  $bclrId;
 					$ext['product_id'] = 2;//BAGGAGE PRODUCT
@@ -854,7 +948,7 @@ $sWhere $sOrder $sLimit";
 		$origin_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($bclr->origin_content, $bclr->origin_level);
 		$dest_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($bclr->dest_content, $bclr->dest_level);
 		
-		$checkCarrierId = $pax->carrier_code;
+		$checkCarrierId = $pax->op_carrier;
 		if ( $checkPartner ) {
 			if ( $bclr->partner_carrierID ) {
 				$checkCarrierId = $bclr->partner_carrierID;
@@ -995,7 +1089,7 @@ $sWhere $sOrder $sLimit";
 	}
  	
 
-   function processGenUpgradeOffers($carrierId) {
+   function processGenUpgradeOffers($carrierId, $pnr = 0) {
 
 
 		echo ("<br>OFFER GEN: PRODUCT UPGRADE :  CARRIER ID: " . $carrierId);
@@ -1005,7 +1099,11 @@ $sWhere $sOrder $sLimit";
                 $tstamp = $current_time + ($days * 86400);
 
 
-		$sQuery = " SELECT * FROM VX_daily_tkt_pax_feed  WHERE is_up_offer_processed = 0  AND dep_date >= ".$tstamp." AND carrier_code = $carrierId ORDER by dtpf_id";
+		$sQuery = " SELECT * FROM VX_daily_tkt_pax_feed  WHERE is_up_offer_processed = 0  AND dep_date >= ".$tstamp." AND carrier_code = $carrierId ";
+		if ($pnr) {
+			$sQuery .= " AND pnr_ref = '$pnr' ";
+		}
+		$sQuery .= " ORDER by dtpf_id";
 		echo ("<br>OFFER GEN: PRODUCT UPGRADE :  QUERY PAX DATA FOR CARRIER ID: " . $sQuery);
 		$rResult = $this->install_m->run_query($sQuery);
 		echo ("<br>OFFER GEN: PRODUCT UPGRADE :  PAX DATA FOR CARRIER ID: " . print_r($rResult,1));

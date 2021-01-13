@@ -166,12 +166,6 @@
 		</form>
 	</div>
 	<div class="col-md-12 table-responsive">
-		<div class="auto-gen col-md-12">
-		<a href="<?php echo base_url('bclr/generatedata') ?>">
-			<i class="fa fa-upload"></i>
-			<?=$this->lang->line('generate_bclr')?>
-		 </a>
-		</div>
 		<form class="form-horizontal" action="#">
 			<div class="col-md-12">
 				<div class="form-group">                

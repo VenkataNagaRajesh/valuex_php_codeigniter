@@ -41,7 +41,7 @@ class CILogViewer {
     private $fullLogFilePath = "";
 
     //these are the config keys expected in the config.php
-    const LOG_FILE_PATTERN_CONFIG_KEY = "clv_log_file_pattern";
+    const LOG_FILE_PATTERN_CONFIG_KEY = "log_file_pattern";
     const LOG_FOLDER_PATH_CONFIG_KEY = "clv_log_folder_path";
 
 

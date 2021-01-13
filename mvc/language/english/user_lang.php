@@ -18,6 +18,7 @@ $lang['user_jod'] = "Joining Date";
 $lang['user_usertype'] = "Usertype";
 $lang['user_username'] = "Username";
 $lang['user_password'] = "Password";
+$lang['retype_user_password'] = "Retype Password";
 $lang['user_status'] = "Status";
 $lang['user_designation'] = "Designation";
 $lang['user_designation'] = "Designation";

@@ -105,7 +105,7 @@ class Offer_eligibility_m extends MY_Model {
                 return  $result;
 	}
 
-	function getBaggagePaxDataForAllCarriers($carriers, $timestamp) {
+	function getBaggagePaxDataForAllCarriers($carriers, $timestamp, $pnr = 0) {
 		$sQuery = "SELECT carrier_code, pnr_ref, first_name, last_name FROM ";
 		$sQuery .= " (SELECT DISTINCT dtpf.carrier_code, dtpf.pnr_ref, dtpf.first_name,dtpf.last_name FROM `VX_daily_tkt_pax_feed` `dtpf` ";
 		$sQuery .= " LEFT JOIN `VX_data_defns` `dd` ON `dtpf`.`ptc` = `dd`.`vx_aln_data_defnsID` AND `aln_data_typeID` = 18 ";
@@ -113,9 +113,12 @@ class Offer_eligibility_m extends MY_Model {
 		$sQuery .= " WHERE `is_bg_offer_processed` =0 AND `dd`.`code` = 'ADT' ";
 		$sQuery .= " AND `dd`.`code` != 'UNN' AND `cc`.`is_revenue` = 1 ";
 		$sQuery .= " AND `dtpf`.`carrier_code` IN (" . implode(',',  $carriers) . ") "; 
+		if ($pnr ) {
+			$sQuery .= " AND `pnr_ref` = '$pnr' "; 
+		}
 		$sQuery .= " AND `dep_date` > $timestamp ORDER BY `pnr_ref`) t1 GROUP BY pnr_ref";
 		$result = $this->install_m->run_query($sQuery);
-		//print_r($this->db->last_query());
+		#print_r($this->db->last_query());
                 return  $result;
 	}
 
@@ -141,4 +144,3 @@ class Offer_eligibility_m extends MY_Model {
 
 
 }
-

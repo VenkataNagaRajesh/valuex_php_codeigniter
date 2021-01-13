@@ -269,4 +269,3 @@ class Airline_m extends MY_Model {
 		return TRUE;
 	}
 }
-

@@ -1200,13 +1200,16 @@ class Bclr extends Admin_Controller
 	if ( is_object($objCWTData )) {
 		$no_of_passengers = $objCWTData->no_of_passingers;
 		if ( !$no_of_passengers ) {
-			$msg  = "Warning!, No data matched with selected BC Rules#$id in Baggage RA Feed";
+			$msg  = "Warning!, No data matched with selected BC Rules#$id in Baggage RA Feed -1";
 		}
 	}
 	if ($msg || $msg2 ) {
 		$json['status'] = "success : $msg<br>$msg2";
 	} else {
 		$json['status'] = "success<br>$msg2";
+	}
+	if ( $id) {
+		print_r($json);
 	}
 	if ( $_POST ) {
 		$this->output->set_content_type('application/json');

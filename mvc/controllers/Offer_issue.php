@@ -518,6 +518,7 @@ $sWhere $sOrder $sLimit";
 	$this->load->model('preference_m');
 	
 	$days = $this->preference_m->get_application_preference_value('CONFIRM_WINDOW','7');
+	$ignore_exclusion_rules = $this->preference_m->get_application_preference_value('IGNORE_EXCLUSION_RULES','7');
 
 	$current_time = time();
 	$tstamp = $current_time + ($days * 86400);
@@ -581,28 +582,32 @@ $sWhere $sOrder $sLimit";
 			
 			// apply excl rules herer something might have chnaged....!!!
 
+			if ( $ignore_exclusion_rules ) {
+				$excl_id = 0; //Ignore exclusion rules check
+			} else {
 
-			$excl_arr = array();
-			$excl_arr['from_city'] = $feed->from_city;
-                        $excl_arr['to_city'] = $feed->to_city;
-                        $excl_arr['flight_number'] = $feed->flight_number;
-                        $excl_arr['dep_date'] = $feed->dep_date;
-                        $excl_arr['from_cabin'] = $feed->cabin;
-                        $excl_arr['to_cabin'] = $feed->upgrade_type;
-                        $excl_arr['carrier_code'] = $feed->carrier_code;
-                        $day_of_week = date('w', $feed->dep_date);
-                        $day = ($day_of_week)?$day_of_week:7;
-                        $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
-			$excl_arr['frequency'] = $p_freq;
-			$excl_arr['dept_time'] = $feed->dept_time;
-			$excl_arr['arrival_time'] = $feed->arrival_time;
+				$excl_arr = array();
+				$excl_arr['from_city'] = $feed->from_city;
+				$excl_arr['to_city'] = $feed->to_city;
+				$excl_arr['flight_number'] = $feed->flight_number;
+				$excl_arr['dep_date'] = $feed->dep_date;
+				$excl_arr['from_cabin'] = $feed->cabin;
+				$excl_arr['to_cabin'] = $feed->upgrade_type;
+				$excl_arr['carrier_code'] = $feed->carrier_code;
+				$day_of_week = date('w', $feed->dep_date);
+				$day = ($day_of_week)?$day_of_week:7;
+				$p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
+				$excl_arr['frequency'] = $p_freq;
+				$excl_arr['dept_time'] = $feed->dept_time;
+				$excl_arr['arrival_time'] = $feed->arrival_time;
 
 
-                        if($acsr['season_id'] == 0 ) {
-                                $acsr['frequency'] = $p_freq;
-                        }
+				if($acsr['season_id'] == 0 ) {
+					$acsr['frequency'] = $p_freq;
+				}
 
-			$excl_id = $this->eligibility_exclusion_m->apply_excl_rules_before_acsr($excl_arr);	
+				$excl_id = $this->eligibility_exclusion_m->apply_excl_rules_before_acsr($excl_arr);	
+			}
 
 			if ($excl_id == 0 ) {
 
@@ -999,7 +1004,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 				}
 		} // have partial acsr rules 
 
-		}else {
+		} else {
 
 			//exclude
 			$array = array();
@@ -1044,7 +1049,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 		redirect(base_url("offer_table/index"));
 
 
-		}
+	}
 
     public function upgradeOfferMail($maildata){
 		$pnr_ref = $maildata['pnr_ref'];

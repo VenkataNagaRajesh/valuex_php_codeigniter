@@ -151,6 +151,9 @@
 							<th class="col-lg-1"><?=$this->lang->line('to_cabin')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('day_of_week')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('booking_status')?></th>
+							<?php if(permissionChecker('paxfeed_delete')){?>
+								<th class="col-lg-1 noExport" ><?=$this->lang->line('action')?></th>
+							<?php }?>
 						</tr>
 					 </thead>
 					 <tbody>                          
@@ -283,7 +286,8 @@ $('#to_cabin').val('<?=$to_cabin?>').trigger('change');
 		   {"data": "from_cabin" },
 		   {"data": "to_cabin" },
 		   {"data": "day_of_week" },
-		   {"data": "booking_status" }
+		   {"data": "booking_status" },
+		   {"data": "action" }
 				  ],			     
      dom: 'B<"clear">lfrtip',
     // buttons: [ 'copy', 'csv', 'excel','pdf' ]
