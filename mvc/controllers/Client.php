@@ -176,7 +176,7 @@ class Client extends Admin_Controller {
 
 	function product_validation(){	
 		$userID = htmlentities(escapeString($this->uri->segment(3)));	
-		if(!userID){
+		if(!$userID){
 			$userID = NULL;
 		}	
 		if(count($this->input->post('products')) > 0){ 

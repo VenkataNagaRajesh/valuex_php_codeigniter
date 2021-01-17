@@ -388,7 +388,7 @@
                         <label for="end-date" class="col-sm-2 control-label">
                             <?=$this->lang->line("contract_active")?> <span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-2">
                           <?php 
                              $array[1] = "Active";
                              $array[0] = "Inactive";
@@ -397,6 +397,7 @@
                                  ); 
                         ?>
                         </div>
+                	</div>
                         <div class="col-md-4 col-md-offset-3">
                             <div class="pull-right">
                                 <input type="submit" class="btn btn-success" value="<?=$this->lang->line("add_contract")?>" >
