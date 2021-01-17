@@ -142,7 +142,7 @@ class Offer_eligibility extends Admin_Controller {
 
 
 		
-	    $aColumns = array('pext.dtpf_id', 'dtpfext_id','pext.rule_id', 'vp.name', 'pext.product_id', 'sea.season_name','dbp.code','dop.code','pf.pnr_ref','pf.dep_date','dai.code','pf.flight_number',
+	    $aColumns = array('dtpfext_id', 'pf.carrier_code','pext.rule_id', 'pext.dtpf_id', 'pext.product_id', 'sea.season_name','dbp.code','dop.code','pf.pnr_ref','pf.dep_date','dai.code','pf.flight_number',
 			 'fca.aln_data_value','tca.aln_data_value','dfre.code','fc.average','fc.min','fc.max','fc.slider_start',
 			 'bs.aln_data_value','dbp.aln_data_value','dop.aln_data_value','dai.aln_data_value','fdef.desc',
 			 'tdef.desc','dfre.aln_data_value','pf.pnr_ref', 'pext.ond', 'of.offer_id');
@@ -362,7 +362,11 @@ $sWhere $sOrder $sLimit";
 				$prod_c = 'bclr';
 				$rule_title = 'BCLR ID: ' . $feed->rule_id . ': MIN UNIT - ' . $feed->min_unit . ', MAX CAPACITY - ' . $feed->max_capacity . ', MIN. PRICE - ' . $feed->min_price . ', MAX PRICE - ' . $feed->max_price;
 			}
-			$feed->rule_id = '<div><a target="_new" data-toggle="tooltip" data-container="body" title="'. $rule_title. '"  style="color:blue;" href="'.base_url($prod_c . '/index/'.$feed->rule_id).'"  >'.$feed->rule_id.'</a></div>';
+			if ( $feed->rule_id ) {
+				$feed->rule_id = '<div><a target="_new" data-toggle="tooltip" data-container="body" title="'. $rule_title. '"  style="color:blue;" href="'.base_url($prod_c . '/index/'.$feed->rule_id).'"  >'.$feed->rule_id.'</a></div>';
+			} else {
+				$feed->rule_id = '&nbsp;';
+			}
 			$feed->offer_id = '<a target="_new" style="color:blue;" href="'.base_url('offer_issue/view/'.$feed->offer_id).'"  >'.$feed->offer_id.'</a>';
 			$feed->dtpf_id = '<a target="_new" style="color:blue;" href="'.base_url('paxfeed/index/'.$feed->dtpf_id).'"  >'.$feed->dtpf_id.'</a>';
 
@@ -665,6 +669,8 @@ $sWhere $sOrder $sLimit";
 	$parray = Array('dtpf_id' => $pax_id);
 	$pax = $this->paxfeed_m->get_single_paxfeed($parray);
 	if ($pax->pnr_ref){
+		//Reset processing parameters
+		$this->resetOffers($pax->pnr_ref);
 		echo "<br>======================== START PROCESSING UPGRADE OFFER ! ======================================";
    		$this->processGenUpgradeOffers($pax->carrier_code, $pax->pnr_ref);
 		echo "<br>======================== END PROCESSING UPGRADE OFFER ! ======================================";
@@ -676,8 +682,12 @@ $sWhere $sOrder $sLimit";
 	}
    }
 
-   function resetOffers() {
-		$pnr = htmlentities(escapeString($this->uri->segment(3)));
+   function resetOffers($pnr_arg = 0) {
+		if ($pnr_arg) {
+			$pnr = $pnr_arg;
+		} else {
+			$pnr = htmlentities(escapeString($this->uri->segment(3)));
+		}
 		if ( $pnr ) {
 			$q = "UPDATE VX_daily_tkt_pax_feed set is_up_offer_processed=0, is_bg_offer_processed=0, is_fclr_processed=0,fclr_data=0 ";
 			if ( strtolower($pnr) == 'all') {
@@ -772,7 +782,7 @@ $sWhere $sOrder $sLimit";
 			    $pax_list[$pnr][$pax_cnt]['carrier_code'] =  $s_pax->carrier_code;
 			    $pax_cnt++;
 			}
-			echo "<br><pre>ALL  PAX  = " . print_r($pax_list,1). "</pre>";
+			echo "<br><pre>ALL PAX  = " . print_r($pax_list,1). "</pre>";
 
 			$tmp_ond = $this->calculateOND($pax_list, $bg_ond_partners);
 			if (count($tmp_ond)) {

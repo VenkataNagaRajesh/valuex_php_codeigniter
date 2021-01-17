@@ -110,7 +110,8 @@ class Offer_eligibility_m extends MY_Model {
 		$sQuery .= " (SELECT DISTINCT dtpf.carrier_code, dtpf.pnr_ref, dtpf.first_name,dtpf.last_name FROM `VX_daily_tkt_pax_feed` `dtpf` ";
 		$sQuery .= " LEFT JOIN `VX_data_defns` `dd` ON `dtpf`.`ptc` = `dd`.`vx_aln_data_defnsID` AND `aln_data_typeID` = 18 ";
 		$sQuery .= " LEFT JOIN `VX_airline_cabin_class` `cc` ON `dtpf`.`carrier_code` = `cc`.`carrier` AND `dtpf`.`class` = `cc`.`airline_class` ";
-		$sQuery .= " WHERE `is_bg_offer_processed` =0 AND `dd`.`code` = 'ADT' ";
+		$sQuery .= " WHERE `dd`.`code` = 'ADT'  ";
+		$sQuery .= " AND `is_bg_offer_processed` = 0 ";
 		$sQuery .= " AND `dd`.`code` != 'UNN' AND `cc`.`is_revenue` = 1 ";
 		$sQuery .= " AND `dtpf`.`carrier_code` IN (" . implode(',',  $carriers) . ") "; 
 		if ($pnr ) {
@@ -118,7 +119,7 @@ class Offer_eligibility_m extends MY_Model {
 		}
 		$sQuery .= " AND `dep_date` > $timestamp ORDER BY `pnr_ref`) t1 GROUP BY pnr_ref";
 		$result = $this->install_m->run_query($sQuery);
-		#print_r($this->db->last_query());
+		#print_r($this->db->last_query());exit;
                 return  $result;
 	}
 

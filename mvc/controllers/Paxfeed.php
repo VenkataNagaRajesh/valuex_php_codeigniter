@@ -342,8 +342,12 @@ class Paxfeed extends Admin_Controller {
 
 
                                       $paxfeedraw['office_id'] = $Row[array_search('office-id',$import_header)];
-					if( strlen($paxfeedraw['office_id']) >= 9 ){
-                                                $this->mydebug->paxfeed_log("Office ID should not be more than 9   " . $column , 1);
+					if( strlen($paxfeedraw['office_id']) > 9 ||  strlen($paxfeedraw['office_id']) < 9 ){
+                                                $this->mydebug->paxfeed_log("Office ID should  have 9 alpha numerics characters  " . $column , 1);
+                                                continue;
+
+                                        } else if( ! ctype_alnum ($paxfeedraw['office_id'])){
+                                                $this->mydebug->paxfeed_log("Office ID should  have only alpha numerics characters  " . $column , 1);
                                                 continue;
 
                                         }
