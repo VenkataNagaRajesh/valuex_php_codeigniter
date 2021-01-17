@@ -74,6 +74,21 @@ table tr td[data-title="Email"]{
 		font-size:14px;
 	}
 }
+@media screen and (min-width: 768px) {
+	.sidebar-mini.sidebar-collapse .main-header .logo{
+		top: 6px;
+		background-image: url(../../../../uploads/images/coll-logo.png);
+		background-size: contain;
+		background-repeat: no-repeat;
+		height: 40px;
+		position: relative;
+		left: 3px;
+		padding:0;
+	}
+	.sidebar-mini.sidebar-collapse .main-header .logo img{
+		display:none;
+	}
+}
 a:hover,
 a:active,
 a:focus {
@@ -4937,4 +4952,10 @@ legend{
     line-height: inherit;
     color: #333;
 	border-bottom:none;
+}
+.px-feed tbody td:nth-child(22){
+	text-transform:lowercase;
+}
+.px-feed table tr td a[data-original-title="Delete"]{
+	display:none;
 }
