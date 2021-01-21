@@ -4,6 +4,7 @@
 $lang['panel_title'] = "Products";
 $lang['product_name'] = "Product Name";
 $lang['add_title'] = "Add Product";
+$lang['product_status'] = "Status";
 $lang['slno'] = "#";
 $lang['action'] = "Action";
 

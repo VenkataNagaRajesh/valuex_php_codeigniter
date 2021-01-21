@@ -26,7 +26,8 @@
                         <thead>
                             <tr>
                                 <th class="col-lg-2"><?=$this->lang->line('slno')?></th>
-                                <th class="col-lg-8"><?=$this->lang->line('product_name')?></th>
+                                <th class="col-lg-6"><?=$this->lang->line('product_name')?></th>
+                                <th class="col-lg-2"><?=$this->lang->line('product_status')?></th>
                                 <?php if(permissionChecker('product_edit') || permissionChecker('product_delete')) { ?>
                                 <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                                 <?php } ?>
@@ -42,6 +43,17 @@
                                     <td data-title="<?=$this->lang->line('product_name')?>">
                                         <?php echo $product->name; ?>
                                     </td>
+                                    <?php if(permissionChecker('product_edit')) { ?>
+                                    <td data-title="<?=$this->lang->line('product_status')?>">
+                                      <div class="onoffswitch-small" id="<?=$product->productID?>">
+                                          <input type="checkbox" id="myonoffswitch<?=$product->productID?>" class="onoffswitch-small-checkbox" name="paypal_demo" <?php if($product->status === '1') echo "checked='checked'"; ?>>
+                                          <label for="myonoffswitch<?=$product->productID?>" class="onoffswitch-small-label">
+                                              <span class="onoffswitch-small-inner"></span>
+                                              <span class="onoffswitch-small-switch"></span>
+                                          </label>
+                                      </div>           
+                                    </td>
+                                    <?php } ?>
                                     <?php if(permissionChecker('product_edit') || permissionChecker('product_delete')) { ?>
                                     <td data-title="<?=$this->lang->line('action')?>">
                                         <?php                                          
@@ -60,3 +72,67 @@
         </div>
     </div>
 </div>
+
+<script>
+  var status = '';
+  var id = 0;
+  $('.onoffswitch-small-checkbox').click(function() {
+      if($(this).prop('checked')) {
+          status = 'chacked';
+          id = $(this).parent().attr("id");
+      } else {
+          status = 'unchacked';
+          id = $(this).parent().attr("id");
+      }
+
+      if((status != '' || status != null) && (id !='')) {
+          $.ajax({
+              type: 'POST',
+              url: "<?=base_url('product/active')?>",
+              data: "id=" + id + "&status=" + status,
+              dataType: "html",
+              success: function(data) {
+                  if(data == 'Success') {
+                      toastr["success"]("Success")
+                      toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "500",
+                        "hideDuration": "500",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                      }
+                  } else {
+                      toastr["error"]("Error")
+                      toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "500",
+                        "hideDuration": "500",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                      }
+                  }
+              }
+          });
+      }
+  }); 
+</script>

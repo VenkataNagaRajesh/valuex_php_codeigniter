@@ -32,6 +32,17 @@
                             <?php echo form_error('name'); ?>
                         </span>
                     </div>
+                    <div class='form-group'>
+                        <label for="name" class="col-sm-2 control-label">
+                            <?=$this->lang->line("product_status")?>
+                        </label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="status" name="status" value="<?=set_value('status')?>" >
+                                <option value="1">Active</option>
+                                <option value="0">InActive</option>
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">

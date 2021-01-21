@@ -1,0 +1,1 @@
+alter table VX_products add column status tinyint(1) NOT NULL after name;

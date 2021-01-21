@@ -22,10 +22,25 @@ class Product extends Admin_Controller {
 			array(
 				'field' => 'name', 
 				'label' => $this->lang->line("product_name"), 
-				'rules' => 'trim|required|xss_clean|max_length[60]'
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_validateProduct'
 			)
 		);
 		return $rules;
+	}
+
+	public function validateProduct($name){
+		$id = htmlentities(escapeString($this->uri->segment(3)));
+		if((int)$id) {
+			$product = $this->product_m->get_single_product(array('name'=>$name,'productID !='=>$id));
+		} else {
+			$product = $this->product_m->get_single_product(array('name'=>$name));
+		}
+		if(count($product) > 0){
+			$this->form_validation->set_message('validateProduct','Product with this name already exists!');
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	public function add() {
@@ -39,19 +54,20 @@ class Product extends Admin_Controller {
 			} else {
 				$array = array(
 					"name" => $this->input->post("name"),
+					"status" => $this->input->post("status"),
 					"create_date" => date("Y-m-d h:i:s"),
 					"modify_date" => date("Y-m-d h:i:s"),
 					"create_userID" => $this->session->userdata('loginuserID')					
 				);
-				if (!$this->product_m->checkProductExists($this->input->post("name"))) {
+				#if (!$this->product_m->checkProductExists($this->input->post("name"))) {
 					$this->product_m->insert_product($array);
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url("product/index"));
-				} else {
+				/* } else {
 					$this->session->set_flashdata('error', 'Product with this name already exists!');
 					$this->data["subview"] = "product/add";
 					$this->load->view('_layout_main', $this->data);
-				}
+				} */
 			}
 		} else {
 			$this->data["subview"] = "product/add";
@@ -75,18 +91,19 @@ class Product extends Admin_Controller {
 					} else {
 						$array = array(
 							"name" => $this->input->post("name"),
-							"modify_date" => date("Y-m-d h:i:s")
+							"status" => $this->input->post("status"),
+							"modify_date" => date("Y-m-d h:i:s"),
 						);
 
-						if (!$this->product_m->checkProductExists($this->input->post("name"))) {
+						#if (!$this->product_m->checkProductExists($this->input->post("name"))) {
 							$this->product_m->update_product($array, $id);
 							$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 							redirect(base_url("product/index"));
-						}  else {
+						/* }  else {
 							$this->session->set_flashdata('error', 'Product with this name already exists!');
 							$this->data["subview"] = "product/edit";
 							$this->load->view('_layout_main', $this->data);
-						}
+						} */
 					}
 				} else {
 					$this->data["subview"] = "product/edit";
@@ -117,6 +134,32 @@ class Product extends Admin_Controller {
 			}
 		} else {
 			redirect(base_url("product/index"));
+		}
+	}
+
+	function active() {
+		if(permissionChecker('product_edit')) {
+			$id = $this->input->post('id');
+			$status = $this->input->post('status');
+			if($id != '' && $status != '') {
+				if((int)$id) {
+					if($status == 'chacked') {
+						$this->product_m->update_product(array('status' => 1), $id);
+						echo 'Success';
+					} elseif($status == 'unchacked') {
+						$this->product_m->update_product(array('status' => 0), $id);
+						echo 'Success';
+					} else {
+						echo "Error";
+					}
+				} else {
+					echo "Error";
+				}
+			} else {
+				echo "Error";
+			}
+		} else {
+			echo "Error";
 		}
 	}
 
