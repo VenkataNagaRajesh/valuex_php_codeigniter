@@ -17,6 +17,13 @@
           </ul>-->
 		   <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 15px;">
 			  <div class='form-group'>
+			  	<div class="col-sm-3 col-md-2">
+			  		<?php $alist = array("0" => "All Carrier");               
+				    foreach($airlines as $air){
+					  $alist[$air->vx_aln_data_defnsID] = $air->code;
+					}				
+				  	echo form_dropdown("filter_airline", $alist,set_value("filter_airline",$filter_airline), "id='filter_airline' class='form-control hide-dropdown-icon select2'");    ?>
+				</div>
 				<div class="col-sm-3 col-md-2">
 				 <?php $slist = array("0" => "Season");               
 						   foreach($seasonslist as $key => $season){
@@ -39,7 +46,7 @@
 					 echo form_dropdown("airportID", $list,set_value("airportID",$airportID), "id='airportID' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
 				
-				<div class="col-sm-3 col-md-6 text-right">
+				<div class="col-sm-3 col-md-4 text-right">
 				  <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
 				  <button type="button" class="btn btn-danger" onclick="downloadSeasonAirport()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
 				</div>			
@@ -74,7 +81,7 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-
+  $('#filter_airline').trigger('change');
   $( ".select2" ).select2();
 
     $('#satable').DataTable( {
@@ -83,7 +90,8 @@
 	"stateSave": true,
       "sAjaxSource": "<?php echo base_url('season_airport/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
-       aoData.push({"name": "seasonID","value": $("#seasonID").val()},
+       aoData.push({"name": "carrier","value": $("#filter_airline").val()},
+		   		   {"name": "seasonID","value": $("#seasonID").val()},
 	               {"name": "type","value": $("#type").val()},
 		           {"name": "airportID","value": $("#airportID").val()})
                 oSettings.jqXHR = $.ajax( {
@@ -154,6 +162,24 @@
 		$a.remove();
 		 });
    }
+
+   $('#filter_airline').change(function(){
+		var filter_airline = $(this).val();
+		var filter_season = $('#seasonID').val();
+		$.ajax({
+			 async: false,            
+             type: 'POST',            
+             url: "<?=base_url('season_airport/getSeasonsByCarrier')?>",            
+		     data: {
+			   "filter_airline":filter_airline,
+			   "filter_season":filter_season
+				},
+             dataType: "html",                                  
+             success: function(data) {               
+             	$('#seasonID').html(data); 
+			 }        
+      });       
+});
   
    $('#satable tbody').on('mouseover', 'tr', function () {
     $('[data-toggle="tooltip"]').tooltip({

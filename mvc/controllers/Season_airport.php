@@ -7,6 +7,8 @@ class Season_airport extends Admin_Controller {
 		$this->load->model("season_m");
 		$this->load->model("season_airport_map_m");
 		$this->load->model("airports_m");
+		$this->load->model("airline_m");
+		$this->load->model("user_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('season_airport', $language);
 		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"season_airport"))->icon;
@@ -24,10 +26,17 @@ class Season_airport extends Admin_Controller {
                     'assets/fselect/fSelect.js',
             )
       );
+      $roleID = $this->session->userdata('roleID');
           if(!empty($this->input->post('seasonID'))){
             $this->data['seasonID'] = $this->input->post('seasonID');
           } else {
             $this->data['seasonID'] = 0;
+          }
+          
+          if(!empty($this->input->post('filter_airline'))){
+            $this->data['filter_airline'] = $this->input->post('filter_airline');
+          } else {
+            $this->data['filter_airline'] = 0;
           }
           if(!empty($this->input->post('type'))){
           $this->data['type'] = $this->input->post('type');
@@ -38,7 +47,11 @@ class Season_airport extends Admin_Controller {
 		
 		   $this->data['seasonslist'] = $this->season_m->getSeasonsList(); 
 		 
-		 
+                if($roleID != 1){
+                    $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+                } else {
+                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
+                } 
 		$this->data['airports_list'] = $this->airports_m->getDefns('1');
 		$this->data["subview"] = "season_airport/index";
 		$this->load->view('_layout_main', $this->data);
@@ -112,7 +125,11 @@ class Season_airport extends Admin_Controller {
            if(!empty($this->input->get('airportID'))){
            		$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
         		$sWhere .= $col.' = '.$this->input->get('airportID');
-        	}
+                }
+            if(!empty($this->input->get('carrier'))){
+                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                $sWhere .= 's.airlineID = '.$this->input->get('carrier');
+             }
 			
 	   if($this->session->userdata('roleID') != 1){  
                $seasonslist = $this->season_m->getSeasonsList($this->session->userdata('login_user_airlineID'));
@@ -164,6 +181,23 @@ class Season_airport extends Admin_Controller {
 				  echo json_encode( $output );
 			 }
         }
+
+        public function getSeasonsByCarrier(){
+		$airlineID = $this->input->post('filter_airline');		
+		$seasonID = $this->input->post('filter_season');		
+                echo '<option value="0">Select Season</option>';		
+	        if($airlineID){
+		   $seasons = $this->season_m->get_seasons_for_airline($airlineID);		
+			
+			foreach ($seasons as $s) {
+				if($s->VX_aln_seasonID == $seasonID){
+					echo '<option value="'.$s->VX_aln_seasonID.'" selected>'.$s->season_name.'</option>';
+				} else {
+				   echo '<option value="'.$s->VX_aln_seasonID.'" >'.$s->season_name.'</option>';
+				}
+			}
+		}		
+	}
 	
 }
 

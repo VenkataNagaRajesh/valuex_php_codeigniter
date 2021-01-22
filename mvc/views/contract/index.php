@@ -22,7 +22,7 @@
 					<form class="form-horizontal contr" role="form" method="post" enctype="multipart/form-data" style="padding:0 15px;">		   
 					 <div class='form-group'>			 
 					   <div class="col-sm-2">			   
-						 <?php $airlinelist = array("0" => "Select Carrier");               
+						 <?php $airlinelist = array("0" => "All Carriers");               
 						   foreach($airlines as $airline){
 										 $airlinelist[$airline->vx_aln_data_defnsID] = $airline->code;
 									 }							

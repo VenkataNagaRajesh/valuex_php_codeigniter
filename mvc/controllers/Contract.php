@@ -299,15 +299,19 @@ class Contract extends Admin_Controller {
 			)
 		);
 		$roleID = $this->session->userdata('roleID');
+		$where = array();
+		if(!empty($this->input->post('airlineID')) && isset($_POST['airlineID'])){
+			$where['c.airlineID'] = $this->input->post('airlineID');
+		}
 		if($roleID != 1){
 			$this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		  } else {
 			  $this->data['airlines'] = $this->airline_m->getAirlinesData();
 		  }
 		  if($roleID == 1){
-			  $this->data['contracts'] = $this->contract_m->get_contracts();
+			  $this->data['contracts'] = $this->contract_m->get_contracts($where);
 		  } else {
-			$this->data['contracts'] = $this->contract_m->getLoginUserContracts();
+			$this->data['contracts'] = $this->contract_m->getLoginUserContracts($where);
 		  }
 		  foreach($this->data['contracts'] as $contract){
 			  $contract->products = $this->contract_m->getProductsByContract($contract->contractID);			  

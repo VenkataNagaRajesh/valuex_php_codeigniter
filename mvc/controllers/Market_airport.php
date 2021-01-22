@@ -60,7 +60,7 @@ class Market_airport extends Admin_Controller {
                   $this->data['cityID'] = 0;
                 }
 
-		 if($this->session->userdata('roleID') != 1){
+		if($this->session->userdata('roleID') != 1){
                   $this->data['marketzones'] = $this->marketzone_m->get_marketzones(null,$this->session->userdata('login_user_airlineID'));
                 } else {
                   $this->data['marketzones'] = $this->marketzone_m->get_marketzones();
@@ -71,8 +71,13 @@ class Market_airport extends Admin_Controller {
 		$this->data['country_list'] = $this->airports_m->getDefnsCodesListByType('2');
 		$this->data['city_list'] = $this->airports_m->getDefnsCodesListByType('3');
 		$this->data['region_list'] = $this->airports_m->getDefnsListByType('4');
+                $roleID = $this->session->userdata('roleID');
 		
-
+                if($roleID != 1){
+                    $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
+                } else {
+                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
+                }
 		$this->data["subview"] = "market_airport/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -166,6 +171,11 @@ class Market_airport extends Admin_Controller {
                                 $sWhere .= 'm.regionID = '.$this->input->get('regionID');
                         }
 
+                        if(!empty($this->input->get('carrier'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'mz.airline_id = '.$this->input->get('carrier');
+                        }
+
 
                 $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
@@ -220,7 +230,21 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS mam.ma_id,mz.market_id,mz.market_name,ma.
 				}
         }
 	
-
+        public function getMarketzoneByCarrier(){
+		$airlineID = $this->input->post('filter_airline');		
+		$marketzoneID = $this->input->post('filter_marketzone');		
+                echo '<option value="0">Select Marketzone</option>';		
+	        if($airlineID){
+		   $marketzones = $this->marketzone_m->get_marketzones(null,$airlineID);		
+			foreach ($marketzones as $s) {
+				if($s->market_id == $marketzoneID){
+					echo '<option value="'.$s->market_id.'" selected>'.$s->market_name.'</option>';
+				} else {
+				   echo '<option value="'.$s->market_id.'" >'.$s->market_name.'</option>';
+				}
+			}
+		}		
+	}
 
 }
 

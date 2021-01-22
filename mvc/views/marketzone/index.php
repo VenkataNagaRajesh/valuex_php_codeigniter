@@ -134,20 +134,7 @@
 	<div class="col-md-12">
 		<div class="mzones-list-bar mzone-filter">
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="margin-bottom:-1em;padding:0 !important;">
-				<div class="title-bar">
-					<div class="col-md-2" id='reconfigure'>
-
-					 <?php if(permissionChecker('marketzone_reconfigure')) {
-					 if( isset ($reconfigure)) {?>
-                               			 <h2><a href="<?php echo base_url('trigger/marketzone_trigger') ?>" class="btn btn-danger">
-                                    			<i class="fa fa-plus"></i>
-                                    			<?=$this->lang->line('generate_map_table')?>
-                                			</a>
-						  </h2> <span class="pull-right"></span>
-                        <?php } }?>
-
-                   </div>
-				</div>
+				
 				<div class="col-md-12">
 						<div class="col-md-2 col-sm-3">
 							<?php echo form_dropdown("sairline_id", $airlinelist,set_value("sairline_id",$sairline_id), "id='sairline_id' class='form-control hide-dropdown-icon select2'");?>
@@ -200,6 +187,14 @@
 							</div>
 							<div class="bttn-cl">
 								<a href="#" type="button"  class="btn btn-danger" onclick="downloadZone()" data-title="Download" data-toggle="tooltip" data-placement="top" style="padding: 6px 12px;"><i class="fa fa-download"></i></a>
+							</div>
+							<div class="bttn-cl">
+							<?php if(permissionChecker('marketzone_reconfigure')) {
+							if( isset ($reconfigure)) {?>
+								<a href="<?php echo base_url('trigger/marketzone_trigger') ?>" class="btn btn-danger">
+									<i class="fa fa-plus"></i> <?=$this->lang->line('generate_map_table')?>
+								</a>
+							<?php } } ?>
 							</div>
 						</div>
 				</div>

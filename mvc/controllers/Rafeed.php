@@ -1078,14 +1078,11 @@ echo "MISED,$cDocumentType";
 		$userID = $this->session->userdata('loginuserID');
 		$roleID = $this->session->userdata('roleID');
 
-
-
 		$aColumns = array(
 			'rafeed_id', 'airline_code', 'ticket_number', 'coupon_number', 'dc.code', 'dci.code', 'dico.code', 'dici.code', 'dbp.code', 'dop.code', 'prorated_price', 'dcla.code', 'class', 'fare_basis', 'rf.departure_date', 'day_of_week', 'dai.code', 'dam.code', 'dcar.code', 'rf.flight_number', 'office_id', 'channel', 'dpax.code', 'rf.active', 'dfre.aln_data_value', 'dc.aln_data_value', 'dci.aln_data_value', 'dico.aln_data_value',
 			'dici.aln_data_value', 'dai.aln_data_value', 'dam.aln_data_value', 'dcar.aln_data_value', 'dbp.aln_data_value',
 			'dop.aln_data_value', 'def.desc'
 		);
-
 
 		$sLimit = "";
 
@@ -1291,12 +1288,18 @@ echo "MISED,$cDocumentType";
 		$userID = $this->session->userdata('loginuserID');
 		$roleID = $this->session->userdata('roleID');
 
-
-
-		$aColumns = array(
+		/* $aColumns = array(
 			'id', 'airline_code', 'ticket_number', 'coupon_number', 'dc.code', 'dci.code', 'dico.code', 'dici.code', 'dbp.code', 'dop.code', 'prorated_price', 'dcla.code', 'class', 'fare_basis', 'rf.departure_date', 'day_of_week', 'dai.code', 'dam.code', 'dcar.code', 'rf.flight_number', 'office_id', 'channel', 'dpax.code', 'rf.active', 'dfre.aln_data_value', 'dc.aln_data_value', 'dci.aln_data_value', 'dico.aln_data_value',
 			'dici.aln_data_value', 'dai.aln_data_value', 'dam.aln_data_value', 'dcar.aln_data_value', 'dbp.aln_data_value',
 			'dop.aln_data_value', 'def.desc'
+		); */
+
+		/* $aColumns = array(
+			'id', 'carrier_code', 'airline_code', 'coupon_number', 'weight', "rfic", "rfisc", "ssr_code", "boarding_point", "off_point", "prorated_price", "cabin", "class","fare_basis","departure_date", "day_of_week", "operating_airline_code", "marketing_airline_code", "flight_number", "office_id", "channel", "pax_type"
+		); */
+
+		$aColumns = array(
+			'id', 'dcar.code', 'airline_code', 'rf.coupon_number', 'rf.weight', "rfic", "rfisc", "ssr_code", "dbp.code", "dop.code", "prorated_price", "def.cabin", "class","rf.fare_basis","departure_date", "dfre.code", "dai.code", "dam.code", "flight_number", "office_id", "channel", "dpax.code"
 		);
 
 
@@ -1344,7 +1347,7 @@ echo "MISED,$cDocumentType";
 				$sWhere .= $aColumns[$i] . " LIKE '%" . $_GET['sSearch_' . $i] . "%' ";
 			}
 		}
-
+//echo $sWhere; exit;
 		if (!empty($this->input->get('boardPoint'))) {
 			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
 			$sWhere .= 'rf.boarding_point = ' . $this->input->get('boardPoint');
@@ -1450,7 +1453,7 @@ echo "MISED,$cDocumentType";
 		$sWhere			
 		$sOrder
 		$sLimit	";
-
+#echo $sQuery; exit;
 		$rResult = $this->install_m->run_query($sQuery);
 		$sQuery = "SELECT FOUND_ROWS() as total";
 		$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;

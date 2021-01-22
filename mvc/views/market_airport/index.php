@@ -18,6 +18,13 @@
                </ul>-->
        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="padding:0 15px;">
                       <div class='form-group'>
+                      <div class="col-sm-3 col-md-2">
+			  		<?php $alist = array("0" => "All Carrier");               
+				    foreach($airlines as $air){
+					  $alist[$air->vx_aln_data_defnsID] = $air->code;
+					}				
+				  	echo form_dropdown("filter_airline", $alist,set_value("filter_airline",$filter_airline), "id='filter_airline' class='form-control hide-dropdown-icon select2'");    ?>
+				</div>
                            <div class="col-sm-3 col-md-2">
                <?php $marketlist = array("0" => "Marketzone");
                    foreach($marketzones as $marketzone){
@@ -76,8 +83,8 @@
                  </div>
 
 
-
-                <div class="col-sm-3 col-md-2 text-right">
+<br>
+                <div class="col-sm-3 col-md-12 text-right">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter" style="padding: 6px 12px;" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
 				  <button type="button" class="btn btn-danger" onclick="downloadMarketAirport()" data-title="Download" data-toggle="tooltip" data-placement="top" style="padding: 6px 12px;"><i class="fa fa-download"></i></button>
                 </div>
@@ -117,7 +124,7 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-
+  $('#filter_airline').trigger('change');
   $( ".select2" ).select2();
 
     $('#tztable').DataTable( {
@@ -126,7 +133,8 @@
       "stateSave": true,
       "sAjaxSource": "<?php echo base_url('market_airport/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
-       aoData.push({"name": "marketID","value": $("#market_id").val()},
+       aoData.push({"name": "carrier","value": $("#filter_airline").val()},
+       {"name": "marketID","value": $("#market_id").val()},
 		   {"name": "airportID","value": $("#airport_id").val()},
 			{"name": "countryID","value": $("#country_id").val()},
 			{"name": "cityID","value": $("#city_id").val()},
@@ -208,5 +216,23 @@
         html: true
     });
   });
+
+  $('#filter_airline').change(function(){
+		var filter_airline = $(this).val();
+		var filter_marketzone = $('#market_id').val();
+		$.ajax({
+			 async: false,            
+             type: 'POST',            
+             url: "<?=base_url('market_airport/getMarketzoneByCarrier')?>",            
+		     data: {
+			   "filter_airline":filter_airline,
+			   "filter_marketzone":filter_marketzone
+				},
+             dataType: "html",                                  
+             success: function(data) {               
+             	$('#market_id').html(data); 
+			 }        
+      });       
+});
   
 </script>

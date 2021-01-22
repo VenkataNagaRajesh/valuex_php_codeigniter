@@ -17,6 +17,9 @@ class Contract_m extends MY_Model {
 		$this->db->select('c.*,d.code as carrier_code,u.name as client_name')->from('VX_contract c');
 		$this->db->join('VX_user u','u.userID=c.create_client','LEFT');
 		$this->db->join('VX_data_defns d','d.vx_aln_data_defnsID = c.airlineID','LEFT');
+		if($array){
+			$this->db->where($array);
+		}
 		$query = $this->db->get();
 		return $query->result();
 	}
@@ -102,11 +105,14 @@ class Contract_m extends MY_Model {
 		return $query->result();
 	}
 	 
-	public function getLoginUserContracts(){
+	public function getLoginUserContracts($where = array()){
 		$this->db->select('c.*,d.code as carrier_code,u.name as client_name')->from('VX_contract c');
 		$this->db->join('VX_user u','u.userID=c.create_client','LEFT');
 		$this->db->join('VX_data_defns d','d.vx_aln_data_defnsID = c.airlineID','LEFT');
 		$this->db->where_in('c.airlineID',$this->session->userdata('login_user_airlineID'));
+		if($where){
+			$this->db->where($where);
+		}
 		$query = $this->db->get();
 		return $query->result();
 	}

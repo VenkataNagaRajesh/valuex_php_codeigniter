@@ -128,19 +128,6 @@
 			</div>
 		</form>
 	</div>
-		<br></br>
-	   <div id='season_reconfigure'>
-								 
-					 <?php if(permissionChecker('season_reconfigure')) {
-					 if( isset ($reconfigure)) {?>
-                               			<a href="<?php echo base_url('trigger/season_trigger') ?>" class="btn btn-danger">
-                       <i class="fa fa-plus"></i>
-                       <?=$this->lang->line('generate_map_table')?>
-                   </a>
-                        <?php } }?>
-
-       </div>
-	   
 	   <div class="col-md-12 season-table">	
 		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" id="season-form" style="padding:0 15px;">		   
 			<div class='form-group'>
@@ -198,6 +185,15 @@
 					<div class="bttn-cl">
 									 <button type="button" class="form-control btn btn-danger" name="filter" onclick="downloadSeason()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
 					</div>
+					<div class="bttn-cl">
+					<?php if(permissionChecker('season_reconfigure')) {
+					 if( isset ($reconfigure)) {?>
+                               			<a href="<?php echo base_url('trigger/season_trigger') ?>" class="btn btn-danger">
+                       <i class="fa fa-plus"></i>
+                       <?=$this->lang->line('generate_map_table')?>
+                   </a>
+                        <?php } }?>
+					</div>
                	</div>	
 			</div>
 		</form>
@@ -213,7 +209,6 @@
                             <th class="col-lg-1"><?=$this->lang->line('season_airline_code')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('season_select_season')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('season_name')?></th>							
 							<th class="col-lg-1"><?=$this->lang->line('orig_level')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('orig_level_value')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('dest_level')?></th>
@@ -271,6 +266,8 @@ jQuery(document).ready(function() {
 
 $( window ).load(function() {
 	loaddatatable();
+	$('#color_airline_season').val(<?=$filter_airline?>);
+	$('#color_airline_season').trigger('change');
 });
 
 $("#add_season_button").on('click',function(){
@@ -442,20 +439,22 @@ function seasoncalender (seasonlist = '[]')
     }   
 
 	if(season_data.length == 1) {
-		datecal = new Date(season_data[0]['ams_season_start_date']).getFullYear();
+		//datecal = new Date(season_data[0]['ams_season_start_date']).getFullYear();
+		datecal = season_data[0]['ams_season_start_date'].split("-");
 	}
-	
 	jQuery('#calendar1').datepicker({		    
 		// changeMonth: true,
 		// changeYear: true,
-		numberOfMonths: [3,4],  
-		defaultDate: new Date(datecal, 0, 1),			
+		//numberOfMonths: [3,4],
+		numberOfMonths: [ 2, 3 ],
+		//defaultDate: new Date(2020, 00, 01),
+		defaultDate: new Date(datecal[2], datecal[1], datecal[0]),			
 		beforeShowDay: function( date ) {					
 			var highlight = eventDates[date];
 			var color = "";
 			var seasonid = season[highlight];
 			var season_name = name[highlight];					
-				if( highlight ) {                   
+			if( highlight ) {                   
 				return [true,"season"+seasonid,season_name];								
 			} else {
 				return [true, '', ''];

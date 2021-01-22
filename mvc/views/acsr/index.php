@@ -269,7 +269,8 @@ $('#to_cabin').val('<?=$tocabin?>').trigger('change');
 	  },
       "sAjaxSource": "<?php echo base_url('acsr/server_processing'); ?>",   
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
-       aoData.push({"name": "origID","value": $("#orig_market_id").val()},
+       aoData.push({"name": "carrier","value": $("#carrier").val()},
+                   {"name": "origID","value": $("#orig_market_id").val()},
                    {"name": "destID","value": $("#dest_market_id").val()},
 				   {"name": "day","value": $("#day").val()},
 				   {"name": "fromCabin","value": $("#from_cabin").val()},

@@ -782,9 +782,13 @@ function time_dropdown($val) {
 			}
 
                         if(!empty($this->input->get('origID'))){
-                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.orig_market_id = '.$this->input->get('origID');
-                        }
+						}
+						if(!empty($this->input->get('carrier'))){
+							$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+							$sWhere .= 'MainSet.carrierID = '.$this->input->get('carrier');
+						}
                         if(!empty($this->input->get('destID'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.dest_market_id = '.$this->input->get('destID');
@@ -879,7 +883,7 @@ SELECT SQL_CALC_FOUND_ROWS MainSet.acsr_id,
         MainSet.flight_dep_date_start, MainSet.flight_dep_date_end, MainSet.flight_dep_time_start, MainSet.flight_dep_time_end, 
         MainSet.flight_nbr, MainSet.from_cabin, MainSet.to_cabin, SubSet.frequency, MainSet.active,
         MainSet.orig_level, MainSet.dest_level, SubSet.orig_level_value, SubSet.dest_level_value , SubSet.dayslist , MainSet.upgrade_from_cabin_type, MainSet.upgrade_to_cabin_type,MainSet.action_typ,
-        MainSet.flight_nbr_start, MainSet.flight_nbr_end , MainSet.carrier, MainSet.memp, MainSet.min_bid_price
+        MainSet.flight_nbr_start, MainSet.flight_nbr_end , MainSet.carrier, MainSet.memp, MainSet.min_bid_price,MainSet.carrierID
 
 FROM
 (
@@ -887,7 +891,7 @@ FROM
               flight_dep_date_start, flight_dep_date_end, flight_dep_time_start, flight_dep_time_end, CONCAT(flight_nbr_start,'-',flight_nbr_end) 
               as flight_nbr, at.aln_data_value as action_typ, fdef.cabin as from_cabin , tdef.cabin as to_cabin,  acsr.active , 
               acsr.upgrade_from_cabin_type, acsr.upgrade_to_cabin_type  ,acsr.flight_nbr_start, acsr.memp, acsr.min_bid_price,
-              acsr.flight_nbr_end, car.code as carrier
+              acsr.flight_nbr_end, car.code as carrier,car.vx_aln_data_defnsID carrierID
               from UP_auto_confirm_setup_rules acsr 
                LEFT JOIN VX_data_types orig on (orig.vx_aln_data_typeID = acsr.orig_level_id) 
               LEFT JOIN VX_data_types dest on (dest.vx_aln_data_typeID = acsr.dest_level_id) 
