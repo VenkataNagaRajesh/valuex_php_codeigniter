@@ -85,7 +85,6 @@
                 }
             }
         ?>
-
         <script type="text/javascript">
           $(window).load(function() {
             $(".se-pre-con").fadeOut("slow");;

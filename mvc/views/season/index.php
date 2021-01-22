@@ -447,7 +447,7 @@ function seasoncalender (seasonlist = '[]')
 		 //changeYear: true,
 		numberOfMonths: [ 3,4 ],
 		//defaultDate: new Date(2020, 00, 01),
-		defaultDate: new Date(datecal[2], datecal[1]-1, datecal[0]),			
+		defaultDate: new Date(datecal[2], datecal[1]-1, datecal[1]),			
 		beforeShowDay: function( date ) {					
 			var highlight = eventDates[date];
 			var color = "";
