@@ -266,7 +266,6 @@ jQuery(document).ready(function() {
 
 $( window ).load(function() {
 	loaddatatable();
-	$('#color_airline_season').val(<?=$filter_airline?>);
 	$('#color_airline_season').trigger('change');
 });
 
@@ -442,13 +441,13 @@ function seasoncalender (seasonlist = '[]')
 		//datecal = new Date(season_data[0]['ams_season_start_date']).getFullYear();
 		datecal = season_data[0]['ams_season_start_date'].split("-");
 	}
+	console.log(datecal);
 	jQuery('#calendar1').datepicker({		    
-		// changeMonth: true,
-		// changeYear: true,
-		//numberOfMonths: [3,4],
-		numberOfMonths: [ 2, 3 ],
+		 //changeMonth: true,
+		 //changeYear: true,
+		numberOfMonths: [ 3,4 ],
 		//defaultDate: new Date(2020, 00, 01),
-		defaultDate: new Date(datecal[2], datecal[1], datecal[0]),			
+		defaultDate: new Date(datecal[2], datecal[1]-1, datecal[0]),			
 		beforeShowDay: function( date ) {					
 			var highlight = eventDates[date];
 			var color = "";
