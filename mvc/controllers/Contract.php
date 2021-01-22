@@ -57,7 +57,7 @@ class Contract extends Admin_Controller {
 			);
 
 			$i =1; 
-			$products = $this->product_m->get_products();
+			$products = $this->product_m->get_products(array('active'=>1));
 			do{				
 			 $ruleslist = array(	
 				array(
@@ -335,7 +335,7 @@ class Contract extends Admin_Controller {
 		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($this->session->userdata('loginuserID'));	
         }	
         
-         $this->data['products'] = $this->product_m->get_products();
+         $this->data['products'] = $this->product_m->get_products(array('active'=>1));
 		 $this->data['airlineID'] = htmlentities(escapeString($this->uri->segment(3)));
 		
 		if($_POST) { 
@@ -456,7 +456,7 @@ class Contract extends Admin_Controller {
 		   $this->data['airlinelist'] = $this->user_m->getUserAirlines($this->session->userdata('loginuserID'));	
         }	
         
-         $this->data['products'] = $this->product_m->get_products();
+         $this->data['products'] = $this->product_m->get_products(array('active'=>1));
 		 $this->data['contractID'] = htmlentities(escapeString($this->uri->segment(3)));
 		 $this->data['contract'] = $this->contract_m->get_contract($this->data['contractID']);	
 		// print_r($this->data['contract']); exit;	 

@@ -10,19 +10,22 @@ class Product extends Admin_Controller {
 	}
 
 	public function index() {
-		$dt = Array('active' => 1);
-		$this->data["products"] = $this->product_m->get_products($dt, TRUE);
-		//print_r($this->data["products"]); exit;		
+		$this->data["products"] = $this->product_m->get_products();
 		$this->data["subview"] = "product/index";
 		$this->load->view('_layout_main', $this->data);		
 	}
-
+	
 	protected function rules() {
 		$rules = array(
 			array(
 				'field' => 'name', 
 				'label' => $this->lang->line("product_name"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]|callback_validateProduct'
+			),
+			array(
+				'field' => 'status', 
+				'label' => $this->lang->line("product_status"), 
+				'rules' => 'trim|required|xss_clean|max_length[60]|callback_validateStatus'
 			)
 		);
 		return $rules;
@@ -43,6 +46,25 @@ class Product extends Admin_Controller {
 		}
 	}
 
+	public function validateStatus($status){
+		$id = htmlentities(escapeString($this->uri->segment(3)));
+		if($id){
+			if($status == 0){
+				$check_contract = $this->product_m->check_contracts($id);
+				if($check_contract){
+					$this->form_validation->set_message('validateStatus','Sorry This Product has Contracts first update/delete those contracts ');
+					return false;
+				} else {
+					return true;
+				}
+			} else {
+				return true;
+			}
+		} else {
+			return true;
+		}
+	}
+
 	public function add() {
 		
 		if($_POST) {
@@ -54,7 +76,7 @@ class Product extends Admin_Controller {
 			} else {
 				$array = array(
 					"name" => $this->input->post("name"),
-					"status" => $this->input->post("status"),
+					"active" => $this->input->post("status"),
 					"create_date" => date("Y-m-d h:i:s"),
 					"modify_date" => date("Y-m-d h:i:s"),
 					"create_userID" => $this->session->userdata('loginuserID')					
@@ -91,7 +113,7 @@ class Product extends Admin_Controller {
 					} else {
 						$array = array(
 							"name" => $this->input->post("name"),
-							"status" => $this->input->post("status"),
+							"active" => $this->input->post("status"),
 							"modify_date" => date("Y-m-d h:i:s"),
 						);
 
@@ -144,11 +166,16 @@ class Product extends Admin_Controller {
 			if($id != '' && $status != '') {
 				if((int)$id) {
 					if($status == 'chacked') {
-						$this->product_m->update_product(array('status' => 1), $id);
+						$this->product_m->update_product(array('active' => 1), $id);
 						echo 'Success';
 					} elseif($status == 'unchacked') {
-						$this->product_m->update_product(array('status' => 0), $id);
-						echo 'Success';
+						$check_contract = $this->product_m->check_contracts($id);
+						if($check_contract){
+							echo 'Sorry This Product has Contracts first update/delete those contracts ';
+						} else {
+							$this->product_m->update_product(array('active' => 0), $id);
+							echo 'Success';
+						}
 					} else {
 						echo "Error";
 					}

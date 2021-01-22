@@ -12,10 +12,10 @@ class product_m extends MY_Model {
 	}
 
 	function get_products($array=NULL, $signal=FALSE) {
-		if ( !$array) {
+		/* if ($array) {
 			$array = Array("active" => 1);
-		}
-            	$query = $this->db->get_where('VX_products',$array);
+		} */
+        $query = $this->db->get_where('VX_products',$array);
 		return $query->result();   
 	}
 
@@ -49,8 +49,7 @@ class product_m extends MY_Model {
 		parent::delete($id);
 	}
 
-	function productName()
-	{
+	function productName() {
 		$this->db->select('productID,name');
 		$this->db->from('VX_products');
 		// $this->db->where('aln_data_typeID', $type);
@@ -61,6 +60,13 @@ class product_m extends MY_Model {
 			$arr[$k->productID] = $k->name;
 		}
 		return $arr;
+	}
+
+	public function check_contracts($product_id){
+		$this->db->select('*')->from('VX_contract_products');
+		$this->db->where('productID',$product_id);
+		$query = $this->db->get();
+		return  $query->result_array();
 	}
 }
 

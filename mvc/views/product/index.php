@@ -34,11 +34,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($products as $product) { ?>
+                            <?php $i = 1; foreach($products as $product) { ?>
                                   
                                 <tr>
                                     <td data-title="<?=$this->lang->line('slno')?>">
-                                        <?php echo $product->productID; ?>
+                                        <?php //echo $product->productID; ?>
+                                        <?php echo $i; ?>
                                     </td>
                                     <td data-title="<?=$this->lang->line('product_name')?>">
                                         <?php echo $product->name; ?>
@@ -46,7 +47,7 @@
                                     <?php if(permissionChecker('product_edit')) { ?>
                                     <td data-title="<?=$this->lang->line('product_status')?>">
                                       <div class="onoffswitch-small" id="<?=$product->productID?>">
-                                          <input type="checkbox" id="myonoffswitch<?=$product->productID?>" class="onoffswitch-small-checkbox" name="paypal_demo" <?php if($product->status === '1') echo "checked='checked'"; ?>>
+                                          <input type="checkbox" id="myonoffswitch<?=$product->productID?>" class="onoffswitch-small-checkbox" name="paypal_demo"  <?php if($product->active === '1') echo "checked='false'"; ?>>
                                           <label for="myonoffswitch<?=$product->productID?>" class="onoffswitch-small-label">
                                               <span class="onoffswitch-small-inner"></span>
                                               <span class="onoffswitch-small-switch"></span>
@@ -63,7 +64,7 @@
                                     </td>
                                     <?php } ?>
                                 </tr>
-							<?php } ?>
+							<?php $i++; } ?>
                         </tbody>
                     </table>
                 </div>
@@ -77,6 +78,7 @@
   var status = '';
   var id = 0;
   $('.onoffswitch-small-checkbox').click(function() {
+      
       if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");
@@ -84,7 +86,6 @@
           status = 'unchacked';
           id = $(this).parent().attr("id");
       }
-
       if((status != '' || status != null) && (id !='')) {
           $.ajax({
               type: 'POST',
@@ -112,7 +113,8 @@
                         "hideMethod": "fadeOut"
                       }
                   } else {
-                      toastr["error"]("Error")
+                      //toastr["error"]("Error")
+                      toastr["error"](data)
                       toastr.options = {
                         "closeButton": true,
                         "debug": false,
