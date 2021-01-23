@@ -62,12 +62,12 @@
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">                                    
                                         <span class='label label-danger'>
                                             <i class="fa fa-bell"></i>
-                                            <lable class='alert-image'>5</lable>
+                                            <lable class='alert-image'><?=count($this->session->userdata('notify'))?></lable>
                                             <i class="fa fa-caret-down"></i>
                                         </span>
                                     </a>
                                     <ol class="dropdown-menu list-group">
-                                        <?php $i = 1; foreach($_SESSION['notify'] as $ntf){ ?>
+                                        <?php $i = 1; foreach($this->session->userdata('notify') as $ntf){ ?>
                                         <li class="list-group-item"><a href="<?=base_url('contract')?>"><?=$i.'. '.$ntf?></a></li>
                                         <?php $i++; } ?>
                                     </ol>
