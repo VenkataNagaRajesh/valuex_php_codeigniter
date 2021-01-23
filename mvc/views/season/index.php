@@ -64,10 +64,7 @@
 							</div>
 						</div>
 						<div class="col-md-12">
-							<div class="input-group">
-							<label class="control-label col-md-3">Color</label>
-								<input type="text" class="form-control" id="season_color" name="season_color" value="<?=set_value('season_color')?>" >
-							</div>
+								<input type="color" class="form-control" id="season_color" name="season_color" value="<?=set_value('season_color','#ffffff')?>" >
 						</div>
 					</div>
 					<div class="col-md-3 col-sm-3 select-form">
@@ -116,7 +113,7 @@
 							<input type="hidden" class="form-control" id="season_id" name="season_id"   value="" >	
 						</div>
 					</div>
-					<div class="col-md-5 col-sm-5">
+					<div class="col-md-2 col-sm-2">
 						<div class="col-md-12">
 							<p class="pull-right">
 								<a href="#" type="button" class="btn btn-danger" id='btn_txt' onclick="saveseason()">Save</a>
@@ -616,7 +613,7 @@ $("#ams_season_start_date").datepicker({
 });
 $("#ams_season_end_date").datepicker();
 
-$('#season_color').colorpicker({});
+//$('#season_color').colorpicker({});
 
 $( ".select2" ).select2({closeOnSelect:false,
 		         placeholder: " value"});
