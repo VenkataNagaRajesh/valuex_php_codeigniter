@@ -100,15 +100,28 @@ class Admin_Controller extends MY_Controller {
 
 		$permissionset = array();
 		$userdata = $this->session->userdata;
-
-		
-			if(isset($userdata['loginuserID']) && !isset($userdata['get_permission'])) {
+		$loginuserProducts = $this->user_m->loginUserProducts();
+		$expires_products['notify'] = array();
+		if($userdata['usertypeID'] == 2){
+			foreach($loginuserProducts as $product){
+				$OldDate = strtotime($product->end_date);
+				$NewDate = date('M j, Y', $OldDate);
+				$diff = date_diff(date_create($NewDate),date_create(date("M j, Y")));
+				$daysdiff = $diff->format('%a');
+				if($daysdiff <= 15){
+					$expires_products['notify'][] = $product->product_name .' Product Of Contract ('.$product->contract_name.') Expires In '.$daysdiff.' Days';
+				}
+			}
+			$this->session->set_userdata($expires_products);
+		}
+		if(isset($userdata['loginuserID']) && !isset($userdata['get_permission'])) {
 				if(!$this->session->userdata($permission)) {
 					if($userdata['usertypeID'] == 1){
 					  $user_permission = $this->permission_m->get_modules_with_permission($userdata['roleID']);
 					} else { 
 					//	$user_products = $this->user_m->getProductsInfoByUser($userdata['loginuserID'])->products;
-						$user_products = array_column('productID',$this->user_m->loginUserProducts());						
+						
+						$user_products = array_column('productID',$loginuserProducts);						
 						$user_products = implode(',',$user_products);
 						$user_permission = $this->permission_m->get_modules_with_permission($userdata['roleID'],$user_products);
 					}

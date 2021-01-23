@@ -4959,3 +4959,33 @@ legend{
 .px-feed table tr td a[data-original-title="Delete"]{
 	display:none;
 }
+.ntf-menu{
+  list-style: none;
+  font-size: 20px;
+  position: relative;
+  top: -9px;
+  text-align: right;
+}
+.ntf-menu .dropdown-menu{
+  min-width: 308px;
+  top: 27px;
+  left: -36px;
+  text-align: left;
+  padding:0;
+  margin:0;
+}
+.ntf-menu .dropdown-menu .list-group-item a{
+  font-size: 13px;
+  color: #f9810a !important;
+  font-weight: bold;
+  white-space: normal;
+  padding: 0;
+}
+.ntf-menu .dropdown-menu .list-group-item a:hover{
+  background:transparent;
+  color:#333 !important;
+}
+.ntf-menu .dropdown-menu .list-group-item{
+  background: transparent;
+  padding: 8px 20px;
+}

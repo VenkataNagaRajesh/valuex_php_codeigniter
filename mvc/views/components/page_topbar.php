@@ -52,9 +52,29 @@
                         	     echo '<div class="col-sm-12 airline-type">';
                         	     echo form_dropdown("login_airline", $carray,set_value("login_airline",$this->session->userdata('default_airline')), "id='login_airline' class='form-control' "); 
                         	     echo '</div>';  
-                        	 }
+                            }
+                            
                 	    ?>
-                    </div>
+                        </div>
+                        <?php if(isset($_SESSION['notify'])){ ?>
+                            <ul>
+                                <li class="dropdown notifications-menu ntf-menu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">                                    
+                                        <span class='label label-danger'>
+                                            <i class="fa fa-bell"></i>
+                                            <lable class='alert-image'>5</lable>
+                                            <i class="fa fa-caret-down"></i>
+                                        </span>
+                                    </a>
+                                    <ol class="dropdown-menu list-group">
+                                        <?php $i = 1; foreach($_SESSION['notify'] as $ntf){ ?>
+                                        <li class="list-group-item"><a href="<?=base_url('contract')?>"><?=$i.'. '.$ntf?></a></li>
+                                        <?php $i++; } ?>
+                                    </ol>
+                                </li>
+                            </ul>
+                        <?php } ?>
+                    
                          </div>
                         <div class="top-rght">
                             <div class="navbar-right">
