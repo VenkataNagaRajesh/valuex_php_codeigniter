@@ -133,7 +133,7 @@
 	</div>
 	<div class="col-md-12">
 		<div class="mzones-list-bar mzone-filter">
-		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="margin-bottom:-1em;padding:0 !important;">
+		<form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" style="margin-bottom:-1em;padding:15px !important;">
 				
 				<div class="col-md-12">
 						<div class="col-md-2 col-sm-3">

@@ -76,9 +76,7 @@
                     } elseif($assetstype == 'js') {
                       if(count($headerasset)) {
                         foreach ($headerasset as $keyjs => $js) {
-                         if($js != 'assets/datepicker/datepicker.js'){
                           echo '<script type="text/javascript" src="'.base_url($js).'"></script>'."\n";
-                         }
                         }
                       }
                     }

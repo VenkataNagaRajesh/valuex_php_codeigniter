@@ -15,23 +15,21 @@ class CILogViewer {
     private $CI;
 
     private static $levelsIcon = [
-        'INFO'  => 'glyphicon glyphicon-info-sign',
+        'INFO' => 'glyphicon glyphicon-info-sign',
         'ERROR' => 'glyphicon glyphicon-warning-sign',
         'DEBUG' => 'glyphicon glyphicon-exclamation-sign',
-        'ALL'   => 'glyphicon glyphicon-minus',
     ];
 
     private static $levelClasses = [
-        'INFO'  => 'info',
+        'INFO' => 'info',
         'ERROR' => 'danger',
         'DEBUG' => 'warning',
-        'ALL'   => 'muted',
     ];
 
 
-    const LOG_LINE_START_PATTERN = "/((INFO)|(ERROR)|(DEBUG)|(ALL))[\s\-\d:\.\/]+(-->)/";
-    const LOG_DATE_PATTERN = ["/^((ERROR)|(INFO)|(DEBUG)|(ALL))\s\-\s/", "/\s(-->)/"];
-    const LOG_LEVEL_PATTERN = "/^((ERROR)|(INFO)|(DEBUG)|(ALL))/";
+    const LOG_LINE_START_PATTERN = "/((ERROR)|(DEBUG)|(ALL))[\s-\d:]+(-->)/";
+    const LOG_DATE_PATTERN = "/(\d{4,}-[\d-:]{2,})\s([\d:]{2,})/";
+    const LOG_LEVEL_PATTERN = "/^((ERROR)|(DEBUG))/";
 
     //this is the path (folder) on the system where the log files are stored
     private $logFolderPath;
@@ -43,7 +41,7 @@ class CILogViewer {
     private $fullLogFilePath = "";
 
     //these are the config keys expected in the config.php
-    const LOG_FILE_PATTERN_CONFIG_KEY = "clv_log_file_pattern";
+    const LOG_FILE_PATTERN_CONFIG_KEY = "log_file_pattern";
     const LOG_FOLDER_PATH_CONFIG_KEY = "clv_log_folder_path";
 
 
@@ -58,6 +56,8 @@ class CILogViewer {
 
     //this is the name of the view file passed to CI load->view()
     const CI_LOG_VIEW_FILE_PATH = "cilogviewer/logs";
+	// const CI_LOG_VIEW_FILE_PATH = "log_viewer/index";
+
 
     const MAX_LOG_SIZE = 52428800; //50MB
     const MAX_STRING_LENGTH = 300; //300 chars
@@ -66,12 +66,12 @@ class CILogViewer {
      * These are the constants representing the
      * various API commands there are
      */
-    private const API_QUERY_PARAM = "api";
-    private const API_FILE_QUERY_PARAM = "f";
-    private const API_LOG_STYLE_QUERY_PARAM = "sline";
-    private const API_CMD_LIST = "list";
-    private const API_CMD_VIEW = "view";
-    private const API_CMD_DELETE = "delete";
+    const API_QUERY_PARAM = "api";
+    const API_FILE_QUERY_PARAM = "f";
+    const API_LOG_STYLE_QUERY_PARAM = "sline";
+    const API_CMD_LIST = "list";
+    const API_CMD_VIEW = "view";
+    const API_CMD_DELETE = "delete";
 
 
     public function __construct() {
@@ -177,11 +177,12 @@ class CILogViewer {
         else {
             $logs = [];
         }
-
+       // echo CI_LOG_VIEW_FILE_PATH; exit;
         $data['logs'] = $logs;
         $data['files'] =  !empty($files) ? $files : [];
         $data['currentFile'] = !is_null($currentFile) ? basename($currentFile) : "";
-        return $this->CI->load->view(self::CI_LOG_VIEW_FILE_PATH, $data, true);
+       return $this->CI->load->view(self::CI_LOG_VIEW_FILE_PATH, $data, true);
+	   //return $data;
     }
 
 
@@ -296,13 +297,12 @@ class CILogViewer {
                     "class" => self::$levelClasses[$level],
                 ];
 
-                $logMessage = preg_replace(self::LOG_LINE_START_PATTERN, '', $log);
-
-                if(strlen($logMessage) > self::MAX_STRING_LENGTH) {
-                    $data['content'] = substr($logMessage, 0, self::MAX_STRING_LENGTH);
-                    $data["extra"] = substr($logMessage, (self::MAX_STRING_LENGTH + 1));
+                if(strlen($log) > self::MAX_STRING_LENGTH) {
+					//$log = substr();
+                    $data['content'] = substr($log, 0, self::MAX_STRING_LENGTH);
+                    $data["extra"] = substr($log, (self::MAX_STRING_LENGTH + 1));
                 } else {
-                    $data["content"] = $logMessage;
+                    $data["content"] = $log;
                 }
 
                 array_push($superLog, $data);
@@ -319,13 +319,13 @@ class CILogViewer {
                 //using log_message()
                 //they may be sensitive! so we are just skipping this
                 //other we could have just insert them like this
-//               array_push($superLog, [
-//                   "level" => "INFO",
-//                   "date" => "",
-//                   "icon" => self::$levelsIcon["INFO"],
-//                   "class" => self::$levelClasses["INFO"],
-//                   "content" => $log
-//               ]);
+              array_push($superLog, [
+                  "level" => "INFO",
+                  "date" => "",
+                  "icon" => self::$levelsIcon["INFO"],
+                  "class" => self::$levelClasses["INFO"],
+                  "content" => $log
+              ]);
             }
         }
 
@@ -380,7 +380,8 @@ class CILogViewer {
     }
 
     private function getLogDate($logLineStart) {
-        return preg_replace(self::LOG_DATE_PATTERN, '', $logLineStart);
+        preg_match(self::LOG_DATE_PATTERN, $logLineStart, $matches);
+        return $matches[0];
     }
 
     private function getLogLineStart($logLine) {
@@ -483,14 +484,27 @@ class CILogViewer {
      * Delete one or more log file in the logs directory
      * @param filename. It can be all - to delete all log files - or specific for a file
      * */
-    private function deleteFiles($fileName) {
-
+    private function deleteFiles($fileName) {		
         if($fileName == "all") {
-            array_map("unlink", glob($this->fullLogFilePath));
+            //array_map("unlink", glob($this->fullLogFilePath));
         }
         else {
-            unlink($this->logFolderPath . "/" . basename($fileName));
+            //unlink($this->logFolderPath . "/" . basename($fileName));
+        } 
+		/*  if($fileName == "all") {
+		   $files = $this->getFiles();
+		   foreach($files as $file){
+           //file_put_contents($this->fullLogFilePath. "/" .$file, "");
+		   $fh = fopen( $this->fullLogFilePath. "/" .$file, 'w' );
+           fclose($fh);
+		   }
         }
+        else {
+           //file_put_contents($this->fullLogFilePath. "/" .basename($fileName), "");
+		    $fh = fopen( $this->fullLogFilePath. "/" .basename($fileName), 'w' );
+           fclose($fh);
+        } */
+		 
         return;
     }
 
@@ -537,3 +551,6 @@ class CILogViewer {
 
 
 }
+
+
+
