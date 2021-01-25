@@ -101,6 +101,8 @@ class Admin_Controller extends MY_Controller {
 		$permissionset = array();
 		$userdata = $this->session->userdata;
 		$loginuserProducts = $this->user_m->loginUserProducts();
+		#print_r($loginuserProducts); exit;
+		$settings = $this->setting_m->get_setting();
 		$expires_products['notify'] = array();
 		if($userdata['usertypeID'] == 2){
 			foreach($loginuserProducts as $product){
@@ -108,7 +110,7 @@ class Admin_Controller extends MY_Controller {
 				$NewDate = date('M j, Y', $OldDate);
 				$diff = date_diff(date_create($NewDate),date_create(date("M j, Y")));
 				$daysdiff = $diff->format('%a');
-				if($daysdiff <= 15){
+				if($daysdiff <=  $settings->notice_period){
 					$expires_products['notify'][] = $product->product_name .' Product Of Contract ('.$product->contract_name.') Expires In '.$daysdiff.' Days';
 				}
 			}

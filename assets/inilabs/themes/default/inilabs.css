@@ -615,6 +615,53 @@ label {
 }
 /* Close Onoff Small switch */
 
+/* Start Onoff Small switch */
+.avl_onoffswitch_small {
+  position: relative; width: 60px;
+  -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.avl_onoffswitch_small_checkbox {
+  display: none;
+}
+.avl_onoffswitch_small_label {
+  display: block; overflow: hidden; cursor: pointer;
+  border: 2px solid #999999; border-radius: 10px;
+}
+.avl_onoffswitch_small_inner {
+  display: block; width: 200%; margin-left: -100%;
+  transition: margin 0.3s ease-in 0s;
+}
+.avl_onoffswitch_small_inner:before, .avl_onoffswitch_small_inner:after {
+  display: block; float: left; width: 50%; height: 18px; padding: 0; line-height: 18px;
+  font-size: 10px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+  box-sizing: border-box;
+}
+.avl_onoffswitch_small_inner:before {
+  content: "ON";
+  padding-left: 9px;
+  background-color: #34A7C1; color: #FFFFFF;
+}
+.avl_onoffswitch_small_inner:after {
+  content: "OFF";
+  padding-right: 9px;
+  background-color: #EEEEEE; color: #999999;
+  text-align: right;
+}
+.avl_onoffswitch_small_switch {
+  display: block; width: 12px; margin: 3px;
+  background: #FFFFFF;
+  position: absolute; top: 0; bottom: 0;
+  right: 38px;
+  border: 2px solid #999999; border-radius: 10px;
+  transition: all 0.3s ease-in 0s;
+}
+.avl_onoffswitch_small_checkbox:checked + .avl_onoffswitch_small_label .avl_onoffswitch_small_inner {
+  margin-left: 0;
+}
+.avl_onoffswitch_small_checkbox:checked + .avl_onoffswitch_small_label .avl_onoffswitch_small_switch {
+  right: 0px;
+}
+
 .input-group-addon.btn.btn-success > a {
     color: #fff;
 }

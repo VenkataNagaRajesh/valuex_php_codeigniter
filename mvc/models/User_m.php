@@ -214,6 +214,7 @@ class user_m extends MY_Model {
 		 $this->db->where('up.userID',$this->session->userdata('loginuserID'));
 		 $this->db->where('cp.end_date >=',date('Y-m-d'));
 		 $this->db->where('c.active',1);
+		 $this->db->where('cp.status',1);
 		 $query = $this->db->get();
 		 return $query->result();
 	 }

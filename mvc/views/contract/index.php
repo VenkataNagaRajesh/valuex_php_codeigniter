@@ -96,13 +96,13 @@
                         <td><?=$product->no_users?></td>
                         <td style="text-align:left;color:<?=$product->color?>;"><?=$product->expire; ?></td>
                         <td data-title="<?=$this->lang->line('product_status')?>">
-                             <div class="onoffswitch-small" id="<?=$product->contract_productID?>">
-                                  <input type="checkbox" id="myonoffswitch<?=$product->contract_productID?>" class="onoffswitch-small-checkbox" name="product_status" <?php if($product->status === '1') echo "checked='checked'"; ?>>
-                                  <label for="myonoffswitch<?=$product->contract_productID?>" class="onoffswitch-small-label">
-                                      <span class="onoffswitch-small-inner"></span>
-                                      <span class="onoffswitch-small-switch"></span>
-                                  </label>
-                            </div>  
+                            <div class="onoffswitch-small" id="<?=$product->contract_productID?>">
+                                <input type="checkbox" id="avlonoffswitch<?=$product->contract_productID?>" class="avl_onoffswitch_small_checkbox" name="paypal_demo" <?php if($product->status === '1') echo "checked='checked'"; ?>>
+                                <label for="avlonoffswitch<?=$product->contract_productID?>" class="avl_onoffswitch_small_label">
+                                    <span class="avl_onoffswitch_small_inner"></span> 
+                                    <span class="avl_onoffswitch_small_switch"></span> 
+                                </label>
+                            </div>
                         </td>   
                         <td data-title="<?=$this->lang->line('contract_active')?>" rowspan="<?=count($contract->products)?>">
                             <div class="onoffswitch-small" id="<?=$contract->contractID?>">
@@ -134,12 +134,12 @@
                         <td><?=$product->no_users?></td>
                         <td style="text-align:left;color:<?=$product->color?>;"><?=$product->expire;?></td>
                         <td data-title="<?=$this->lang->line('product_status')?>">
-                             <div class="onoffswitch-small" id="<?=$product->contract_productID?>">
-                                  <input type="checkbox" id="myonoffswitch<?=$product->contract_productID?>" class="onoffswitch-small-checkbox" name="active" <?php if($product->status === '1') echo "checked='checked'"; ?>>
-                                  <label for="myonoffswitch<?=$product->contract_productID?>" class="onoffswitch-small-label">
-                                      <span class="onoffswitch-small-inner"></span>
-                                      <span class="onoffswitch-small-switch"></span>
-                                  </label>
+                            <div class="onoffswitch-small" id="<?=$product->contract_productID?>">
+                                <input type="checkbox" id="avlonoffswitch<?=$product->contract_productID?>" class="avl_onoffswitch_small_checkbox" name="paypal_demo" <?php if($product->status === '1') echo "checked='checked'"; ?>>
+                                <label for="avlonoffswitch<?=$product->contract_productID?>" class="avl_onoffswitch_small_label">
+                                    <span class="avl_onoffswitch_small_inner"></span> 
+                                    <span class="avl_onoffswitch_small_switch"></span> 
+                                </label>
                             </div>  
                         </td>
                     </tr>
@@ -185,15 +185,10 @@
           status = 'unchacked';
           id = $(this).parent().attr("id");
       }
-      if($(this).attr('name') == 'product_status'){
-        var dynamic_url = "<?=base_url('contract/product_status')?>";
-      } else {
-        var dynamic_url = "<?=base_url('contract/active')?>";
-      }
       if((status != '' || status != null) && (id !='')) {
           $.ajax({
               type: 'POST',
-              url: dynamic_url,
+              url: "<?=base_url('contract/active')?>",
               data: "id=" + id + "&status=" + status,
               dataType: "html",
               success: function(data) {
@@ -240,7 +235,70 @@
           });
       }
   }); 
-
+  $('.avl_onoffswitch_small_checkbox').click(function() {
+      if($(this).prop('checked')) {
+          status = 'chacked';
+          msg = 'Activate';
+          id = $(this).parent().attr("id");
+      } else {
+          status = 'unchacked';
+          msg = 'De-Activate';
+          id = $(this).parent().attr("id");
+      }
+      var box = confirm('Are You Sure You Want to '+msg+' this Product ?');
+      if(!box){
+          return false;
+      }
+      if((status != '' || status != null) && (id !='')) {
+          $.ajax({
+              type: 'POST',
+              url: "<?=base_url('contract/product_status')?>",
+              data: "id=" + id + "&status=" + status,
+              dataType: "html",
+              success: function(data) {
+                  if(data == 'Success') {
+                      toastr["success"]("Success")
+                      toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "500",
+                        "hideDuration": "500",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                      }
+                  } else {
+                      toastr["error"]("Error")
+                      toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-top-right",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": "500",
+                        "hideDuration": "500",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000",
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                      }
+                  }
+              }
+          });
+      }
+  }); 
   
 </script>
 
