@@ -28,4 +28,5 @@ $lang['client_username'] ='Username';
 $lang['client_password'] ='Password';
 $lang['expire_message'] ='Expired';
 $lang['create_client'] ='Client';
+$lang['product_status'] = 'Status';
 

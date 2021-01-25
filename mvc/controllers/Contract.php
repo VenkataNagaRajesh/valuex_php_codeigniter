@@ -596,6 +596,36 @@ class Contract extends Admin_Controller {
 			echo "Error";
 		}
 	}
+
+	function product_status() {
+		if(permissionChecker('contract_edit')) {
+			$id = $this->input->post('id');
+			$status = $this->input->post('status');
+			if($id != '' && $status != '') {
+				if((int)$id) {
+					$data['modify_userID'] = $this->session->userdata('loginuserID');
+					$data['modify_date'] = time();
+					if($status == 'chacked') {
+						$data['status'] = 1 ;
+						$this->contract_m->update_contract_product($id,$data);
+						echo 'Success';
+					} elseif($status == 'unchacked') {
+						$data['status'] = 0 ;
+						$this->contract_m->update_contract_product($id,$data);
+						echo 'Success';
+					} else {
+						echo "Error";
+					}
+				} else {
+					echo "Error";
+				}
+			} else {
+				echo "Error";
+			}
+		} else {
+			echo "Error";
+		}
+	}
 	
 	function server_processing(){		
 		$userID = $this->session->userdata('loginuserID');

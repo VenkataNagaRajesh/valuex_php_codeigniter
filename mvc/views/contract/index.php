@@ -48,6 +48,7 @@
 						<th class="col-lg-1"><?=$this->lang->line('end_date')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('no_users')?></th>
                         <th class="col-lg-1"><?=$this->lang->line('expire_message')?></th>
+                        <th class="col-lg-1"><?=$this->lang->line('product_status')?></th>
 						<th class="col-lg-1 noExport"><?=$this->lang->line('contract_active')?></th>
                         <?php if(permissionChecker('contract_edit') || permissionChecker('contract_delete')) { ?>
                          <th class="col-lg-1 noExport"><?=$this->lang->line('action')?></th>
@@ -94,6 +95,15 @@
                         <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
                         <td><?=$product->no_users?></td>
                         <td style="text-align:left;color:<?=$product->color?>;"><?=$product->expire; ?></td>
+                        <td data-title="<?=$this->lang->line('product_status')?>">
+                             <div class="onoffswitch-small" id="<?=$product->contract_productID?>">
+                                  <input type="checkbox" id="myonoffswitch<?=$product->contract_productID?>" class="onoffswitch-small-checkbox" name="product_status" <?php if($product->status === '1') echo "checked='checked'"; ?>>
+                                  <label for="myonoffswitch<?=$product->contract_productID?>" class="onoffswitch-small-label">
+                                      <span class="onoffswitch-small-inner"></span>
+                                      <span class="onoffswitch-small-switch"></span>
+                                  </label>
+                            </div>  
+                        </td>   
                         <td data-title="<?=$this->lang->line('contract_active')?>" rowspan="<?=count($contract->products)?>">
                             <div class="onoffswitch-small" id="<?=$contract->contractID?>">
                                   <input type="checkbox" id="myonoffswitch<?=$contract->contractID?>" class="onoffswitch-small-checkbox" name="paypal_demo" <?php if($contract->active === '1') echo "checked='checked'"; ?>>
@@ -102,7 +112,7 @@
                                       <span class="onoffswitch-small-switch"></span>
                                   </label>
                             </div>           
-                        </td>                      
+                        </td>  
                         <?php if(permissionChecker('contract_edit') || permissionChecker('contract_delete')) { ?>
                         <td data-title="<?=$this->lang->line('action')?>" rowspan="<?=count($contract->products)?>">
                             <?php
@@ -123,6 +133,15 @@
                         <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
                         <td><?=$product->no_users?></td>
                         <td style="text-align:left;color:<?=$product->color?>;"><?=$product->expire;?></td>
+                        <td data-title="<?=$this->lang->line('product_status')?>">
+                             <div class="onoffswitch-small" id="<?=$product->contract_productID?>">
+                                  <input type="checkbox" id="myonoffswitch<?=$product->contract_productID?>" class="onoffswitch-small-checkbox" name="active" <?php if($product->status === '1') echo "checked='checked'"; ?>>
+                                  <label for="myonoffswitch<?=$product->contract_productID?>" class="onoffswitch-small-label">
+                                      <span class="onoffswitch-small-inner"></span>
+                                      <span class="onoffswitch-small-switch"></span>
+                                  </label>
+                            </div>  
+                        </td>
                     </tr>
                     <?php } ?>
                      <?php $j++; } //products end
@@ -166,11 +185,15 @@
           status = 'unchacked';
           id = $(this).parent().attr("id");
       }
-
+      if($(this).attr('name') == 'product_status'){
+        var dynamic_url = "<?=base_url('contract/product_status')?>";
+      } else {
+        var dynamic_url = "<?=base_url('contract/active')?>";
+      }
       if((status != '' || status != null) && (id !='')) {
           $.ajax({
               type: 'POST',
-              url: "<?=base_url('contract/active')?>",
+              url: dynamic_url,
               data: "id=" + id + "&status=" + status,
               dataType: "html",
               success: function(data) {
@@ -217,6 +240,8 @@
           });
       }
   }); 
+
+  
 </script>
 
 <script>

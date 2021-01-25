@@ -1,0 +1,1 @@
+alter table vx_contract_products add column status tinyint(1)  NOT NULL DEFAULT '1' after no_users;
