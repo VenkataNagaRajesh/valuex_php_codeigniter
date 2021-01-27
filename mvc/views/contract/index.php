@@ -157,7 +157,7 @@
 				  <div class="modal-content">			  
 					<!-- Modal Header -->
 					<div class="modal-header">
-					  <h4 class="modal-title text-center"> Airline Attachment files</h4>
+					  <h4 class="modal-title text-center"> Contract Attachment files</h4>
 					  <button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>				
 					<!-- Modal body -->
