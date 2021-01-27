@@ -321,20 +321,25 @@
             dataType: "html",
             success: function(data) {
                 var files = jQuery.parseJSON(data);
-                for(var i=0;i<files.length;i++){
-                    html += '<tr>';
-                    html += '<td>'+files[i]['file_name']+'</td>';
-                    html += '<td>';
-                    html += '<a href="<?=base_url('contract/viewdoc/')?>'+files[i]['contract_fileID']+'" class="btn btn-warning btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="View"><i class="fa fa-eye"></i></a>';
-                    html += '</td>';
-                    html += '<td><u><a data-toggle="collapse" data-target="#viewlog'+files[i]['contract_fileID']+'" style="color:blue;">showlog</a></u>';
-                    html += '<div id="viewlog'+files[i]['contract_fileID']+'" class="collapse">'+files[i]['logdata']+'</div>';
-                    html += '</td>';
-                    html += '</tr>';
+                if(files.length == 0){
+                    var html ='<tr><td colspan="3">No Data Available In Table</td></tr>';
                     $('#doc_list').html(html);
-                    $('#doc_table').DataTable();
-                    $('#myModal').modal('show');
+                } else {
+                    for(var i=0;i<files.length;i++){
+                        html += '<tr>';
+                        html += '<td>'+files[i]['file_name']+'</td>';
+                        html += '<td>';
+                        html += '<a href="<?=base_url('contract/viewdoc/')?>'+files[i]['contract_fileID']+'" class="btn btn-warning btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="View"><i class="fa fa-eye"></i></a>';
+                        html += '</td>';
+                        html += '<td><u><a data-toggle="collapse" data-target="#viewlog'+files[i]['contract_fileID']+'" style="color:blue;">showlog</a></u>';
+                        html += '<div id="viewlog'+files[i]['contract_fileID']+'" class="collapse">'+files[i]['logdata']+'</div>';
+                        html += '</td>';
+                        html += '</tr>';
+                        $('#doc_list').html(html);
+                    }
                 }
+                //$('#doc_table').DataTable();
+                $('#myModal').modal('show');
             }
       });
   }

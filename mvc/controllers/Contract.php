@@ -878,6 +878,7 @@ class Contract extends Admin_Controller {
 	public function getContractFiles(){
 		$contractID = $this->input->post('contractID');
 		$files = $this->common_m->get_multi_where('VX_contract_file',array('contractID'=>$contractID));
+		$json = array();
 		foreach($files as $file) {
 			$logdata = $this->contract_m->get_file_log($file['contract_fileID']);
 			$loginfo = '<ul style="text-align: left;">';
