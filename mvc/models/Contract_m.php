@@ -142,6 +142,12 @@ class Contract_m extends MY_Model {
 		return $query->result();
 	}
 
-	
+	function get_file_log($contract_fileID){
+		$this->db->select('l.activity,u.name,l.date')->from('VX_contract_filelog l');
+		$this->db->join('VX_user u','u.userID=l.userID','LEFT');
+		$this->db->where('l.contract_fileID',$contract_fileID);
+		$query = $this->db->get();
+		return $query->result();
+	}
 }
 

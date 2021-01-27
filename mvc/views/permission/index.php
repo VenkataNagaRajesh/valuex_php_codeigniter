@@ -75,6 +75,7 @@
                                             $permissionCheckBox[ $data->name ] = $data->active;
                                             $permissionCheckBoxVal[ $data->name ] = $data->permissionID;
                                         }
+                                 // print_r($permissionTable); exit;
                                       //  exit;
                                        // array_multisort(array_column($permissionTable, 'status'), SORT_DESC, $permissionTable);                                                                           
                                     ?>

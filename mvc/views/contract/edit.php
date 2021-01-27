@@ -11,20 +11,20 @@
     <!-- form start -->
     <div class="box-body">
         <div class="row">
-            <div class="col-sm-9">
-                <form class="form-horizontal" role="form" method="post">
+        <div class="col-sm-12">
+                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
                 <div class="form-group">
-				                    <div class="col-md-6">
+				    <div class="col-md-4">
                     <?php 
                         if(form_error('airlineID')) 
                             echo "<div class='form-group has-error' >";
                         else     
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="airlineID" class="col-sm-3 control-label">
+                        <label for="airlineID" class="col-sm-4 control-label">
                             <?=$this->lang->line("airline_product")?><span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-9">                          				 
+                        <div class="col-sm-8">                          				 
                               <?php 
                                   $airlines[0]=$this->lang->line("select_airline");					
 							      foreach($airlinelist as $airline){	
@@ -41,8 +41,8 @@
                             </span>                         
                         </div>                      
                     </div>
-                    </div>
-                <div class="col-md-6">
+                    </div>	
+                <div class="col-md-4">
                 <?php 
                         if(form_error('name')) 
                             echo "<div class='form-group has-error' >";
@@ -53,16 +53,14 @@
                             <?=$this->lang->line("contract_name")?><span class="text-red">*</span>
                         </label>
                         <div class="col-sm-8">                        				 
-                           <input type="text" class="form-control"  id="name" name="name" value="<?=set_value('name',$contract->name)?>" > 
+                           <input type="text" class="form-control" placeholder="Enter Name" id="name" name="name" value="<?=set_value('name',$contract->name)?>" > 
                            <span class="control-label">
                                 <?php echo form_error('name'); ?>
                             </span>							 
                         </div>                     
                     </div>
                     </div>
-                </div>
-                <div class="form-group">
-                <div class="col-md-6">
+                    <div class="col-md-4">
                 <?php 
                         if(form_error('email_id')) 
                             echo "<div class='form-group has-error' >";
@@ -73,34 +71,34 @@
                             Email <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-8">                        				 
-                           <input type="text" class="form-control"  id="email_id" name="email_id" value="<?=set_value('email_id',$contract->email_id)?>" > 
+                           <input type="text" class="form-control" placeholder="Enter Email id" id="email_id" name="email_id" value="<?=set_value('email_id',$contract->email_id)?>" > 
                            <span class="control-label">
                                 <?php echo form_error('email_id'); ?>
                             </span>							 
                         </div>                     
                     </div>
                     </div>
-                    <div class="col-md-6">
+                </div>
+                <div class="form-group">
+                    <div class="col-md-4">
                     <?php 
                         if(form_error('designation')) 
                             echo "<div class='form-group has-error' >";
                         else     
                             echo "<div class='form-group' >";
                     ?>
-                        <label for="designation" class="col-sm-3 control-label">
+                        <label for="designation" class="col-sm-4 control-label">
                         Designation<span class="text-red">*</span>
                         </label>
-                        <div class="col-sm-9">                          				 
-                        <input type="text" class="form-control"  id="designation" name="designation" value="<?=set_value('designation',$contract->designation)?>" > 
+                        <div class="col-sm-8">                          				 
+                        <input type="text" class="form-control" placeholder="Enter Desigination" id="designation" name="designation" value="<?=set_value('designation',$contract->designation)?>" > 
                             <span class="control-label">
                                 <?php echo form_error('designation'); ?>
                             </span>                         
                         </div>                      
                     </div>
                     </div>
-                </div>
-                <div class="form-group">
-                <div class="col-md-6">
+                    <div class="col-md-4">
                 <?php 
                         if(form_error('telephone')) 
                             echo "<div class='form-group has-error' >";
@@ -111,35 +109,14 @@
                         Telephone<span class="text-red">*</span>
                         </label>
                         <div class="col-sm-8">                        				 
-                           <input type="text" class="form-control"  id="telephone" name="telephone" value="<?=set_value('telephone',$contract->telephone)?>" > 
+                           <input type="number" class="form-control" placeholder="Enter Telephone" id="telephone" name="telephone" value="<?=set_value('telephone',$contract->telephone)?>" > 
                            <span class="control-label">
                                 <?php echo form_error('telephone'); ?>
                             </span>							 
                         </div>                     
                     </div>
                     </div>
-                    <div class="col-md-6">
-                    <?php 
-                        if(form_error('ext_no')) 
-                            echo "<div class='form-group has-error' >";
-                        else     
-                            echo "<div class='form-group' >";
-                    ?>
-                        <label for="ext_no" class="col-sm-3 control-label">
-                            Extension Number<span class="text-red">*</span>
-                        </label>
-                        <div class="col-sm-9">       
-                        <input type="text" class="form-control"  id="ext_no" name="ext_no" value="<?=set_value('ext_no',$contract->ext_no)?>" >                    				 
-                               
-                            <span class="control-label">
-                                <?php echo form_error('ext_no'); ?>
-                            </span>                         
-                        </div>                      
-                    </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                <div class="col-md-6">
+                    <div class="col-md-4">
                 <?php 
                         if(form_error('mobile_number')) 
                             echo "<div class='form-group has-error' >";
@@ -150,28 +127,230 @@
                            Mobile Number<span class="text-red">*</span>
                         </label>
                         <div class="col-sm-8">                        				 
-                           <input type="text" class="form-control"  id="mobile_number" name="mobile_number" value="<?=set_value('mobile_number',$contract->mobile_number)?>" > 
+                           <input type="number" class="form-control" placeholder="Enter Mobile Number" id="mobile_number" name="mobile_number" value="<?=set_value('mobile_number',$contract->mobile_number)?>" > 
                            <span class="control-label">
                                 <?php echo form_error('mobile_number'); ?>
                             </span>							 
                         </div>                     
                     </div>
                     </div>
-                    <div class="col-md-6">
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-4">                   
+                        <?php
+                            if(form_error('poc_username'))
+                                echo "<div class='form-group has-error' >";
+                            else
+                                echo "<div class='form-group' >";
+                        ?>
+                            <label for="poc_username" class="col-sm-4 control-label">
+                                <?=$this->lang->line("client_username")?> <span class="text-red">*</span>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="poc_username" name="poc_username" value="<?=set_value('poc_username',$contract->mobile_number)?>" >
+                                <span class="control-label">
+                                    <?php echo form_error('poc_username'); ?>
+                                </span>
+                            </div>                         
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <?php
+                            if(form_error('poc_password'))
+                                echo "<div class='form-group has-error' >";
+                            else
+                                echo "<div class='form-group' >";
+                        ?>
+                            <label for="poc_password" class="col-sm-4 control-label">
+                                <?=$this->lang->line("client_password")?> <span class="text-red">*</span>
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="password" class="form-control" id="poc_password" name="poc_password" value="<?=set_value('poc_password')?>" >
+                                <span class="control-label">
+                                <?php echo form_error('poc_password'); ?>
+                                </span>
+                            </div>                         
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                     <?php 
-                        if(form_error('airlineID')) 
+                        if(form_error('ext_no')) 
                             echo "<div class='form-group has-error' >";
                         else     
                             echo "<div class='form-group' >";
                     ?>
-                        
-                        
-                        <div class="col-sm-9">                          				 
-                                                    
+                        <label for="ext_no" class="col-sm-4 control-label" title="Extension Number">
+                            Ext Number<span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">       
+                        <input type="number" class="form-control" placeholder="Enter Extension Number" id="ext_no" name="ext_no" value="<?=set_value('ext_no',$contract->ext_no)?>" >                    				 
+                               
+                            <span class="control-label">
+                                <?php echo form_error('ext_no'); ?>
+                            </span>                         
                         </div>                      
                     </div>
                     </div>
                 </div>
+                <div class="form-group" >
+                    <div class="col-sm-4">
+                        <div class='form-group' > 
+                            <label for="end-date" class="col-sm-4 control-label">
+                                <?=$this->lang->line("contract_active")?> <span class="text-red">*</span>
+                            </label>
+                            <div class="col-sm-8">
+                            <?php 
+                                $array[1] = "Active";
+                                $array[0] = "Inactive";
+                                echo form_dropdown("active", $array,
+                                    set_value("active"), "id='active' class='form-control hide-dropdown-icon'"
+                                    ); 
+                            ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                    <div class='form-group' id="select-client">                   
+                        <label for="phone" class="col-sm-4 control-label">
+                            <?="Create Client"?><span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                        <?php 
+                             foreach($users as $user){
+                                 $list[$user->userID]= $user->name;
+                             }
+                             echo form_dropdown("create_client", $list,
+                                  set_value("create_client",$contract->create_client), "id='create_client' class='form-control hide-dropdown-icon'"
+                                 ); 
+                        ?>                            
+                        </div>                       
+                    </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class='form-group' > 
+                            <label for="end-date" class="col-sm-4 control-label">
+                               Attachments
+                            </label>
+                            <div class="col-sm-8">
+                                <input type="file" multiple="" name="attachments[]" id="attachments">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                   <!-- Client Registration Module -->
+                   <div id="client-reg" style="display:none;" class="col-sm-9"> 
+                    <h4>Client Admin Details : </h4>
+                    <input type="hidden" id="client-registration" name="client-registration" value="<?=set_value('client-registration')?>" />
+                  <div class="form-group" style="margin: 0 0 10px;border: solid 1px #ddd;padding: 19px 0 0;">
+                  <div class="col-md-6">
+                   <?php
+                        if(form_error('client_name'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="name" class="col-sm-4 control-label">
+                            <?=$this->lang->line("client_name")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="client_name" name="client_name" value="<?=set_value('client_name')?>" >
+                            <span class="control-label">
+                              <?php echo form_error('client_name'); ?>
+                            </span>
+                        </div>                        
+                    </div>
+                    <?php
+                        if(form_error('client_phone'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="phone" class="col-sm-4 control-label">
+                            <?=$this->lang->line("client_phone")?><span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" id="client_phone" name="client_phone" value="<?=set_value('client_phone')?>" maxlength="10" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" >
+                            <span class="control-label">
+                              <?php echo form_error('client_phone'); ?>
+                            </span>
+                        </div>                       
+                    </div>
+                </div>
+                <div class="col-md-6">                  
+                    <?php
+                        if(form_error('client_domain'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="client_domain" class="col-sm-4 control-label">
+                            <?=$this->lang->line("client_domain")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="client_domain" name="client_domain" value="<?=set_value('client_domain')?>" >
+                            <span class="control-label">
+                            <?php echo form_error('client_domain'); ?>
+                            </span>
+                        </div>                        
+                    </div>
+                    <?php
+                        if(form_error('client_email'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="client_email" class="col-sm-4 control-label">
+                            <?=$this->lang->line("client_email")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="client_email" name="client_email" value="<?=set_value('client_email')?>" >
+                            <span class="control-label">
+                            <?php echo form_error('client_email'); ?>
+                            </span>
+                        </div>                        
+                    </div>
+                   </div>
+                   <div class="col-md-6">                   
+                    <?php
+                        if(form_error('client_username'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="client_username" class="col-sm-4 control-label">
+                            <?=$this->lang->line("client_username")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="client_username" name="client_username" value="<?=set_value('client_username')?>" >
+                            <span class="control-label">
+                                <?php echo form_error('client_username'); ?>
+                            </span>
+                        </div>                         
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <?php
+                        if(form_error('client_password'))
+                            echo "<div class='form-group has-error' >";
+                        else
+                            echo "<div class='form-group' >";
+                    ?>
+                        <label for="client_password" class="col-sm-4 control-label">
+                            <?=$this->lang->line("client_password")?> <span class="text-red">*</span>
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="client_password" name="client_password" value="<?=set_value('client_password')?>" >
+                            <span class="control-label">
+                            <?php echo form_error('client_password'); ?>
+                            </span>
+                        </div>                         
+                    </div>
+                 </div>
+                 </div>
+                 </div> 
+                 <div class="col-sm-9"><h5>Products Module</h5>
                 <?php 
                    $productslist[0]=$this->lang->line("select_product");					
                    foreach($products as $product){	
@@ -266,41 +445,6 @@
                     </div>  
                     </div>  
                    <?php $i++; } ?>
-                   <div class="form-group">
-                <div class="col-md-6">
-                <div class='form-group'>
-                        <label for="contract_name" class="col-sm-4 control-label">
-                        <?="Create Client"?><span class="text-red">*</span>
-                        </label>
-                        <div class="col-sm-8">                        				 
-                        <?php 
-                             foreach($users as $user){
-                                 $list[$user->userID]= $user->name;
-                             }
-                             echo form_dropdown("create_client", $list,
-                                  set_value("create_client",$contract->create_client), "id='create_client' class='form-control hide-dropdown-icon'"
-                                 ); 
-                        ?>  						 
-                        </div>                     
-                    </div>
-                    </div>
-                    <div class="col-md-6">
-                    <div class='form-group' >
-                        <label for="airlineID" class="col-sm-3 control-label">
-                            <?=$this->lang->line("contract_active")?><span class="text-red">*</span>
-                        </label>
-                        <div class="col-sm-9">                          				 
-                        <?php 
-                             $array[1] = "Active";
-                             $array[0] = "Inactive";
-                             echo form_dropdown("active", $array,
-                                  set_value("active"), "id='active' class='form-control hide-dropdown-icon'"
-                                 ); 
-                        ?>                       
-                        </div>                      
-                    </div>
-                    </div>
-                </div> 
                 <div class='form-group'>   
                     <div class="col-md-12" align="center">                        
                         <input type="submit" class="btn btn-success" value="<?=$this->lang->line("update_contract")?>" >                        

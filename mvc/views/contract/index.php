@@ -36,7 +36,7 @@
 				</div>	
 			</div>
             <div id="hide-table">
-               <table id="example1" class="table table-striped table-bordered table-hover dataTable no-footer">
+               <table id="example_rowspan" class="table table-striped table-bordered table-hover dataTable no-footer">
                  <thead>
                     <tr>
                         <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
@@ -86,10 +86,10 @@
                             $product->expire = $expireStr1 . $expstr . $expireStr2;
                          if($j == 1){ ?>
                     <tr>
-                        <th rowspan="<?=count($contract->products)?>"><?=$i?></th>
-                        <th rowspan="<?=count($contract->products)?>"><?=$contract->name?></th>
-                        <th rowspan="<?=count($contract->products)?>"><?=$contract->carrier_code?></th>                        
-                        <th rowspan="<?=count($contract->products)?>"><?=$contract->client_name?></th>                        
+                        <td rowspan="<?=count($contract->products)?>"><?=$i?></td>
+                        <td rowspan="<?=count($contract->products)?>"><?=$contract->name?></td>
+                        <td rowspan="<?=count($contract->products)?>"><?=$contract->carrier_code?></td>                        
+                        <td rowspan="<?=count($contract->products)?>"><?=$contract->client_name?></td>                        
                         <td><?=$product->product_name?></td>
                         <td><?=date_format(date_create($product->start_date),'d-m-Y')?></td>
                         <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
@@ -118,7 +118,8 @@
                             <?php
                                echo btn_edit('contract/edit/'.$contract->contractID, $this->lang->line('edit'));
 							  //echo btn_view('contract/view/#myModal', $this->lang->line('view'));
-							  echo '<a href="#myModal" data-target="#myModal" data-toggle="modal" class="btn btn-success btn-xs mrg"><i class="fa fa-eye" data-placement="top" data-toggle="tooltip" data-original-title="View"></i></a>';
+							 // echo '<a href="#myModal" data-target="#myModal" data-toggle="modal" class="btn btn-success btn-xs mrg"><i class="fa fa-eye" data-placement="top" data-toggle="tooltip" data-original-title="View"></i></a>';
+							  echo '<a onclick="show_doc_model('.$contract->contractID.')" class="btn btn-success btn-xs mrg"><i class="fa fa-eye" data-placement="top" data-toggle="tooltip" data-original-title="View"></i></a>';
                                echo btn_delete('contract/delete/'.$contract->contractID, $this->lang->line('delete'));
                             ?>
 							
@@ -152,16 +153,27 @@
 		  <div class="row">
 			  <!-- The Modal -->
 			  <div class="modal fade" id="myModal" role="dialog" >
-				<div class="modal-dialog">
+				<div class="modal-dialog modal-lg">
 				  <div class="modal-content">			  
 					<!-- Modal Header -->
 					<div class="modal-header">
-					  <h4 class="modal-title text-center">Airline Contract View</h4>
+					  <h4 class="modal-title text-center"> Airline Attachment files</h4>
 					  <button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>				
 					<!-- Modal body -->
 					<div class="modal-body">
-					  Airline Contract View data.....
+                    <div id="hide-table">
+                        <table id="doc_table" class="table table-striped table-bordered table-hover dataTable no-footer">
+                            <thead>
+                                <th class="col-sm-3">File</th>
+                                <th class="col-sm-1" align="center">View</th>
+                                <th class="col-sm-8">Log</th>
+                            </thead>
+                            <tbody id="doc_list">
+                                
+                            </tbody>
+                        </table>
+                        </div>
 					</div>				
 					<!-- Modal footer -->
 					<div class="modal-footer">
@@ -300,11 +312,48 @@
       }
   }); 
   
-</script>
+  function show_doc_model(id){
+      var html = '';
+      $.ajax({
+            type: 'POST',
+            url: "<?=base_url('contract/getContractFiles')?>",
+            data: "contractID=" + id,
+            dataType: "html",
+            success: function(data) {
+                var files = jQuery.parseJSON(data);
+                for(var i=0;i<files.length;i++){
+                    html += '<tr>';
+                    html += '<td>'+files[i]['file_name']+'</td>';
+                    html += '<td>';
+                    html += '<a href="<?=base_url('contract/viewdoc/')?>'+files[i]['contract_fileID']+'" class="btn btn-warning btn-xs mrg" data-placement="top" data-toggle="tooltip" data-original-title="View"><i class="fa fa-eye"></i></a>';
+                    html += '</td>';
+                    html += '<td><u><a data-toggle="collapse" data-target="#viewlog'+files[i]['contract_fileID']+'" style="color:blue;">showlog</a></u>';
+                    html += '<div id="viewlog'+files[i]['contract_fileID']+'" class="collapse">'+files[i]['logdata']+'</div>';
+                    html += '</td>';
+                    html += '</tr>';
+                    $('#doc_list').html(html);
+                    $('#doc_table').DataTable();
+                    $('#myModal').modal('show');
+                }
+            }
+      });
+  }
 
-<script>
  $('#airlineID').select2();
  $(document).ready(function() {	
+    $('.header').trigger('click');
+    $('#example_rowspan').DataTable( {
+        dom: 'Bfrtip',
+        'rowsGroup': [2],
+		   buttons: [
+	        { extend: 'copy', exportOptions: { columns: "thead th:not(.noExport)" } },
+			{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
+			{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
+			{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } }                
+        ] ,
+        search: false
+    });	
+
     $('#contracttable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,

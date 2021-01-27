@@ -385,6 +385,22 @@ class Contract extends Admin_Controller {
 					$userID = $this->input->post('create_client');
 				}			
 
+				/* POC User Adding */
+				$poc["name"] = $this->input->post("poc_username");
+				$poc["email"] = $this->input->post("email_id");
+				$poc["phone"] = $this->input->post("mobile_number");									
+				$poc["username"] = $this->input->post("poc_username");
+				$poc["password"] = $this->user_m->hash($this->input->post("poc_password"));
+				$poc["usertypeID"] = 2;
+				$poc["roleID"] = 29;
+				$poc["create_date"] = $poc["modify_date"] = date("Y-m-d h:i:s");
+				$poc["create_userID"] = $this->session->userdata('loginuserID');
+				$poc["create_username"] = $this->session->userdata('username');
+				$poc["create_usertype"] = $this->session->userdata('roleID');
+				$poc["active"] = 1;	
+				$this->user_m->insert_user($poc);
+				$pocuserID = $this->db->insert_id();
+
 				// Contract Adding
 				$data['airlineID'] = $this->input->post('airlineID');
 				$data['name'] = $this->input->post('name'); 
@@ -399,10 +415,12 @@ class Contract extends Admin_Controller {
 				$data['create_userID'] = $this->session->userdata('loginuserID');
 				$data['modify_userID'] = $this->session->userdata('loginuserID');
 				$data['create_client'] = $userID;               
+				$data['poc_user'] = $pocuserID;               
 				$this->contract_m->insert_contract($data);
 				$contractID = $this->db->insert_id();
-			  
 				
+				
+
 				// Adding product to contract
 				$i =1;
 				while($i <= count($this->data['products']) && !empty($this->input->post('pmod'.$i.'-productID'))){
@@ -430,7 +448,37 @@ class Contract extends Admin_Controller {
 				 }
 
 				  $i++;
-			    } 
+				} 
+				
+				/* Uploading Attachment  Files */
+				if(!empty($_FILES['attachments']['name'][0])){ 
+					$attach['contractID'] = $contractID;
+					$attach['create_date'] = $attach['modify_date'] = $log['date'] = date('Y-m-d h:i:s');
+					$attach['create_userID'] = $log['userID'] = $this->session->userdata('loginuserID');
+					$config['upload_path'] = "./uploads/attach";
+					$config['allowed_types'] = "*";
+					for ($i = 0; $i < count($_FILES ['attachments']['name']); $i ++) {
+						$_FILES['file']['name'] = $_FILES['attachments']['name'][$i];
+						$_FILES['file']['type'] = $_FILES['attachments']['type'][$i];
+						$_FILES['file']['tmp_name'] = $_FILES['attachments']['tmp_name'][$i];
+						$_FILES['file']['error'] = $_FILES['attachments']['error'][$i];
+						$_FILES['file']['size'] = $_FILES['attachments']['size'][$i];
+	
+						$filename = time().$_FILES['attachments']['name'][$i];
+						$config['file_name'] = $filename;
+						$this->load->library('upload', $config);
+	
+						if($this->upload->do_upload("file")) {
+							$attach['file_name'] = $filename;
+							$contract_fileID = $this->common_m->insert('VX_contract_file',$attach);
+							$log['contract_fileID'] = $contract_fileID;
+							$log['activity'] = 'New file :'.$filename.' Added';
+							$this->common_m->insert('VX_contract_filelog',$log);
+						} else {
+							log_message('info',$this->upload->display_errors());
+						}
+					}
+				}
 				 
 				$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 				redirect(base_url("contract/index"));
@@ -493,6 +541,16 @@ class Contract extends Admin_Controller {
 					$this->data["subview"] = "contract/edit";
 					$this->load->view('_layout_main', $this->data);
 				} else {
+					/* POC User Updating */
+					$poc["name"] = $this->input->post("poc_username");
+					$poc["email"] = $this->input->post("email_id");
+					$poc["phone"] = $this->input->post("mobile_number");									
+					$poc["username"] = $this->input->post("poc_username");
+					$poc["password"] = $this->user_m->hash($this->input->post("poc_password"));
+					$poc["modify_date"] = date("Y-m-d h:i:s");
+					$this->user_m->update_user($poc,$this->data['contract']->poc_user);
+					$pocuserID = $this->db->insert_id();
+
 					//$data['airlineID'] = $this->input->post('airlineID');
 					$data['name'] = $this->input->post('name');	
 					$data['email_id'] = $this->input->post('email_id'); 
@@ -526,21 +584,49 @@ class Contract extends Admin_Controller {
 					$i++;
 							  //add product to user
 					foreach($this->data['users'] as $user) {
-					$userID = $user->userID;
-
-		 	   		 $user_products = $this->user_m->getProductsByUser($userID);	
-					$product = Array();
-					 if($userID && ! in_array($this->input->post('pmod'.$i.'-productID'), explode(',',$user_products))){
-						$product["userID"] = $userID;
-						$product["create_date"] = time();
-						$product["modify_date"] = time();
-						$product["create_userID"] = $this->session->userdata('loginuserID');
-						$product["modify_userID"] = $this->session->userdata('loginuserID');					
-						$product['productID'] = $this->input->post('pmod'.$i.'-productID');
-						$this->user_m->insert_user_product($product);					
-					 }
+						$userID = $user->userID;
+		 	   		 	$user_products = $this->user_m->getProductsByUser($userID);	
+						$product = Array();
+						if($userID && ! in_array($this->input->post('pmod'.$i.'-productID'), explode(',',$user_products))){
+							$product["userID"] = $userID;
+							$product["create_date"] = time();
+							$product["modify_date"] = time();
+							$product["create_userID"] = $this->session->userdata('loginuserID');
+							$product["modify_userID"] = $this->session->userdata('loginuserID');					
+							$product['productID'] = $this->input->post('pmod'.$i.'-productID');
+							$this->user_m->insert_user_product($product);					
+						}
 					}
 					} 
+					/* Uploading Attachment  Files */
+					if(!empty($_FILES['attachments']['name'][0])){ 
+						$attach['contractID'] =  $this->data['contractID'];
+						$attach['create_date'] = $attach['modify_date'] = $log['date'] = date('Y-m-d h:i:s');
+						$attach['create_userID'] = $log['userID'] = $this->session->userdata('loginuserID');
+						$config['upload_path'] = "./uploads/attach";
+						$config['allowed_types'] = "*";
+						for ($i = 0; $i < count($_FILES ['attachments']['name']); $i ++) {
+							$_FILES['file']['name'] = $_FILES['attachments']['name'][$i];
+							$_FILES['file']['type'] = $_FILES['attachments']['type'][$i];
+							$_FILES['file']['tmp_name'] = $_FILES['attachments']['tmp_name'][$i];
+							$_FILES['file']['error'] = $_FILES['attachments']['error'][$i];
+							$_FILES['file']['size'] = $_FILES['attachments']['size'][$i];
+		
+							$filename = time().$_FILES['attachments']['name'][$i];
+							$config['file_name'] = $filename;
+							$this->load->library('upload', $config);
+		
+							if($this->upload->do_upload("file")) {
+								$attach['file_name'] = $filename;
+								$contract_fileID = $this->common_m->insert('VX_contract_file',$attach);
+								$log['contract_fileID'] = $contract_fileID;
+								$log['activity'] = 'New file :'.$filename.' Added';
+								$this->common_m->insert('VX_contract_filelog',$log);
+							} else {
+								log_message('info',$this->upload->display_errors());
+							}
+						}
+					}
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 					redirect(base_url("contract/index"));
 				}
@@ -786,6 +872,42 @@ class Contract extends Admin_Controller {
 		$products = $this->user_m->getUserActiveProducts($airlineID);
 		foreach($products as $product){
 			echo "<option value='".$product->productID."'>".$product->name."</option>";
+		}
+	}
+
+	public function getContractFiles(){
+		$contractID = $this->input->post('contractID');
+		$files = $this->common_m->get_multi_where('VX_contract_file',array('contractID'=>$contractID));
+		foreach($files as $file) {
+			$logdata = $this->contract_m->get_file_log($file['contract_fileID']);
+			$loginfo = '<ul style="text-align: left;">';
+			foreach($logdata as $log){
+				$loginfo .= '<li>'.$log->activity .' By '.$log->name.' on '.date('d-m-Y h:i',strtotime($log->date)).'</li>';
+			}
+			$loginfo .= '</ul>';
+			$file['logdata'] = $loginfo;
+			$json[] = $file;
+		}
+		$this->output->set_content_type('application/json');
+        $this->output->set_output(json_encode($json));
+	}
+
+	public function viewdoc($id){
+		if(permissionChecker('contract_docview')) {
+			if($id){
+				$log['contract_fileID'] = $id;
+				$log['userID'] = $this->session->userdata('loginuserID');
+				$log['activity'] = 'This File is Viewed';
+				$log['date'] = date('Y-m-d h:i:s');
+				$this->common_m->insert('VX_contract_filelog',$log);
+				$contractfile = $this->common_m->get_single_where('VX_contract_file',array('contract_fileID'=>$id));
+				redirect(base_url('uploads/attach/'.$contractfile['file_name']));
+			} else {
+				show_error('Sorry There Is No file..!');
+			}
+		} else {
+			$this->data["subview"] = "errorpermission";
+			$this->load->view('_layout_main', $this->data);
 		}
 	}
 }
