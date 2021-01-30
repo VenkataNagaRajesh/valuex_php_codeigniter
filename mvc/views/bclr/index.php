@@ -1,3 +1,12 @@
+<?php if(empty($check_product) && $this->session->userdata('roleID') != 1) { ?>
+<div id="notice-warning" class="col-md-12">
+    <div class="alert alert-warning" style="margin-top:20px;">
+        <i class="fa fa-check-circle"></i>
+        Sorry Your Baggage Product Expired ..!
+        <button type="button" class="close" data-dismiss="alert">×</button>
+    </div>
+</div>
+<?php } ?>
 <div class="fclr-bar">
 <?php  if(permissionChecker('bclr_add')) {  ?>
 	<h2 class="title-tool-bar" style="color:#fff;float:left;width:96%;"><i class="fa fa-sun-o"></i> Baggage Control Rule
@@ -769,6 +778,10 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Frequency'});
 <script>
 
 function savebclr() {
+    <?php if(empty($check_product) && $this->session->userdata('roleID') !=1 ) { ?>
+        alert("Sorry Your Baggage Product Expired..!");
+        window.location.reload(true);
+   <?php } else { ?>
    var formdata = $('#bclr_add_form').serialize();
     $.ajax({
           async: false,
@@ -779,7 +792,7 @@ function savebclr() {
           success: function(data) {
                     var bclrinfo = jQuery.parseJSON(data);
                     var status = bclrinfo['status'];
-			newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
+		            newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
                     if (status.includes('success')) {
                         alert(status);
 			    var isHidden = $( "#bclrAdd" ).is( ":hidden" );
@@ -803,6 +816,7 @@ function savebclr() {
                     }
           }
     });
+    <?php } ?>
 }
 
 function matchRafeed(bclr_id = 0) {

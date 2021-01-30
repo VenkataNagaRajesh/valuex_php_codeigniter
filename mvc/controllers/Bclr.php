@@ -40,7 +40,7 @@ class Bclr extends Admin_Controller
             array(
                 'field' => 'partner_carrierID',
                 'label' => $this->lang->line("partner_carrier"),
-                'rules' => 'trim|max_length[200]|xss_clean'
+                'rules' => 'trim|max_length[200]|xss_clean|callback_checkPartnerExpire'
             ),
             array(
                 'field' => 'allowance',
@@ -130,6 +130,32 @@ class Bclr extends Admin_Controller
 
         );
         return $rules;
+    }
+
+    function checkPartnerExpire($partner_carrier){
+        if($this->input->post('partner_carrierID')){
+            if($this->input->post('carrierID')){
+                $current_time = strtotime(date('d-m-Y'));
+                $where = array(
+                    "carrierID" => $this->input->post('carrierID'),
+                    "partner_carrierID" => $this->input->post('partner_carrierID'),
+                    "start_date <=" => $current_time,
+                    "end_date >=" => $current_time
+                );
+                $partnerinfo = $this->partner_m->get_single_partner($where);
+                if (count($partnerinfo) > 0) {
+                    return true; 
+                } else {
+                    $this->form_validation->set_message('checkPartnerExpire','Partner Carrier Expired');
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        } else {
+            $this->form_validation->set_message('checkPartnerExpire','Partner Carrier Required');
+            return false;
+        }
     }
 
     function valFrequency($num)
@@ -543,11 +569,11 @@ class Bclr extends Admin_Controller
                         $this->bclr_m->update_bclr($array, $bclr_id);
                         $msg = $this->generateCWTBCLR($bclr_id, "update");
                         $this->generateCWT($bclr_id, "update");
-			if ($msg ) {
-                        	$json['status'] = "success : $msg";
-			} else {
-                        	$json['status'] = 'success';
-			}
+                if ($msg ) {
+                                $json['status'] = "success : $msg";
+                } else {
+                                $json['status'] = 'success';
+                }
                     }
                 } else {
                     if ($exist_id[0]) {
@@ -610,13 +636,14 @@ class Bclr extends Admin_Controller
             )
         );
 
-	if($bclr_id > 0 || $this->input->post('flt_bclr_id')){
-	  $this->data['flt_bclr_id'] = $bclr_id;
-	}
+        if($bclr_id > 0 || $this->input->post('flt_bclr_id')){
+        $this->data['flt_bclr_id'] = $bclr_id;
+        }
 
         $userID = $this->session->userdata('loginuserID');
         $roleID = $this->session->userdata('roleID');
-
+        #$check_product = array();
+        $this->data['check_product'] = $this->user_m->loginUserProducts(array('p.productID'=>2));
         if ($this->input->post('flt_carrierID')) {
             $this->data['flt_carrierID'] = $this->input->post('flt_carrierID');
         } elseif ($roleID != 1) {

@@ -17,7 +17,7 @@ class Paxfeed extends Admin_Controller {
 		$this->load->model('fclr_m');
 		$language = $this->session->userdata('lang');
 		$this->lang->load('paxfeed', $language);
-        $this->data['icon'] = $this->menu_m->getMenu(array("link"=>"airline_cabin"))->icon;		
+		$this->data['icon'] = $this->menu_m->getMenu(array("link"=>"airline_cabin"))->icon;	
 	}	
 	
 	
@@ -146,6 +146,7 @@ class Paxfeed extends Admin_Controller {
                         //      $defnData = $this->airports_m->getDefns();
 
 		$this->mydebug->paxfeed_log("Processing the excel file " . $_FILES['file']['name'] , 0);
+		$success_count = $fail_count = 0;
           foreach ($Sheets as $Index => $Name){
 			  $Reader -> ChangeSheet($Index);
               $i = 0;
@@ -173,23 +174,26 @@ class Paxfeed extends Admin_Controller {
 					break;
 			 }
                         } else {
-							 if($flag == 1){                                                                                      
+							 if($flag == 1){ 
+		$car_code = $Row[array_search('carrier code',$import_header)];
+
 					if(count($Row) == 26){ //print_r($Row); exit;	
 											
 				    $this->mydebug->paxfeed_log("Columns count Matched for row " . $column , 0);
 					$paxfeedraw = array();
 					
 						 $paxfeedraw['airline_code'] =  $Row[array_search('airline code',$import_header)];
-						
 					if (!is_numeric($paxfeedraw['airline_code']) || strlen($paxfeedraw['airline_code']) != '3' ) {
 						$this->mydebug->paxfeed_log("Airline code should be 3 digits in row " . $column , 1);
+						$fail_count++;
 						continue;
 					}
 
 					 $paxfeedraw['pnr_ref'] = $Row[array_search('pnr ref',$import_header)];
 					 if ( strlen($paxfeedraw['pnr_ref']) != '6' ) {
                                                 $this->mydebug->paxfeed_log("PNR ref should be of length 6 in row " . $column , 1);
-                                                continue;
+												$fail_count++;
+												continue;
 										}
 										
 
@@ -198,7 +202,8 @@ class Paxfeed extends Admin_Controller {
 
 					if ( strlen($paxfeedraw['pax_nbr']) >= 3 || !is_numeric($paxfeedraw['pax_nbr'])) {
                                                 $this->mydebug->paxfeed_log("Pax nbr should be of length 2 in row " . $column , 1);
-                                                continue;
+												$fail_count++;
+												continue;
 										}
 				
 										
@@ -207,13 +212,15 @@ class Paxfeed extends Admin_Controller {
 
                                        if ( strlen($paxfeedraw['first_name']) >= 99 )  {
                                               $this->mydebug->paxfeed_log("First name should be of length 99 characters in row " . $column , 1);
-                                                continue;
+											    $fail_count++;
+												continue;
                                         }
 
                                       $paxfeedraw['last_name'] = trim($Row[array_search('last name',$import_header)]);
 
 					if ( strlen($paxfeedraw['last_name']) >= 99  ) {
                                               $this->mydebug->paxfeed_log("Last name should be of length 99 characters in row " . $column , 1);
+												$fail_count++;
                                                 continue;
                                         }
 										
@@ -223,6 +230,7 @@ class Paxfeed extends Admin_Controller {
 						
 						
 						$this->mydebug->paxfeed_log("Operating Carrier Code should be 2 alphabets in row " . $column , 1);
+						$fail_count++;
 						continue;
 						  
 				  }
@@ -234,6 +242,7 @@ class Paxfeed extends Admin_Controller {
 						
 						
 						$this->mydebug->paxfeed_log("Marketing Carrier Code should be 2 alphabets in row " . $column , 1);
+						$fail_count++;
 						continue;  
 				  }
 
@@ -244,12 +253,14 @@ class Paxfeed extends Admin_Controller {
 
 					 if ( strlen($paxfeedraw['ptc']) >= 4 || !ctype_alpha($paxfeedraw['ptc'])) {
                                               $this->mydebug->paxfeed_log("PTC should be 3 characters in row " . $column , 1);
+												$fail_count++;
                                                 continue;
                                         }
 
                                      $paxfeedraw['fqtv'] = $Row[array_search('fqtv',$import_header)];
 					if ( strlen($paxfeedraw['fqtv']) >= 13 || !is_numeric($paxfeedraw['fqtv'])) {
                                               $this->mydebug->paxfeed_log("FQTV should be  less than".$paxfeedraw['fqtv']. "  12 digits in row " . $column , 1);
+												$fail_count++;
                                                 continue;
                                         }
 
@@ -260,7 +271,8 @@ class Paxfeed extends Admin_Controller {
 						
 											  $this->mydebug->paxfeed_log("SEG nbr should be lessthan or equal 2 digits in row " . $column , 1);
 											 
-											  continue;	
+												$fail_count++;
+												continue;	
 												
 										}
 					
@@ -270,6 +282,7 @@ class Paxfeed extends Admin_Controller {
 
 					if ( strlen($paxfeedraw['carrier_code']) != 2){
                                               $this->mydebug->paxfeed_log("Carrier code should be 2 alphabets in row " . $column , 1);
+												$fail_count++;
                                                 continue;
                                         }
 
@@ -277,6 +290,7 @@ class Paxfeed extends Admin_Controller {
 	
 					 if ( strlen($paxfeedraw['flight_number']) != 6 ) {
                                               $this->mydebug->paxfeed_log("Flight number should be  6 alplanumeric " . $column , 1);
+												$fail_count++;
                                                 continue;
                                         }
 
@@ -290,6 +304,7 @@ class Paxfeed extends Admin_Controller {
 
 					if( strlen($paxfeedraw['class']) != 1 || !in_array($paxfeedraw['class'],$class_arr)){
 						$this->mydebug->paxfeed_log("Class should be in A-Z in row " . $column , 1);
+												$fail_count++;
                                                 continue;
 
 					}
@@ -299,11 +314,13 @@ class Paxfeed extends Admin_Controller {
 
 					if(count($cabin_new_entry) != 1) {
 						$this->mydebug->paxfeed_log("Cabin - class mapping data not proper in row " . $column , 1);
+												$fail_count++;
                                                 continue;
 					}
                                       $paxfeedraw['from_city'] = $Row[array_search('board point',$import_header)];
 					if( strlen($paxfeedraw['from_city']) != 3 || !ctype_alpha($paxfeedraw['from_city'])){
                                                 $this->mydebug->paxfeed_log("Board Point should be 3 letter code in row " . $column , 1);
+												$fail_count++;
                                                 continue;
 
                                         }
@@ -312,12 +329,14 @@ class Paxfeed extends Admin_Controller {
 
 					 if( strlen($paxfeedraw['to_city']) != 3 || !ctype_alpha($paxfeedraw['to_city'])){
                                                 $this->mydebug->paxfeed_log("Off Point should be 3 letter code in row " . $column , 1);
+												$fail_count++;
                                                 continue;
 
                                         }
                                       $paxfeedraw['phone'] = $Row[array_search('phone',$import_header)];
                                       if( strlen($paxfeedraw['phone']) >= 13 || !is_numeric($paxfeedraw['phone'])){
                                                 $this->mydebug->paxfeed_log("Phone num should not be more than 12 digits in row " . $column , 1);
+												$fail_count++;
                                                 continue;
 
                                         }
@@ -327,6 +346,7 @@ class Paxfeed extends Admin_Controller {
 
 					if( strlen($paxfeedraw['booking_country']) != 2 || !ctype_alpha($paxfeedraw['booking_country'])){
                                                 $this->mydebug->paxfeed_log("Booking country shoud be 2 Alpha code in row " . $column , 1);
+												$fail_count++;
                                                 continue;
 
                                         }
@@ -336,6 +356,7 @@ class Paxfeed extends Admin_Controller {
 
 					if( strlen($paxfeedraw['booking_city']) != 3 || !ctype_alpha($paxfeedraw['booking_city'])){
                                                 $this->mydebug->paxfeed_log("Booking city shoud be 3 Alpha code in row " . $column , 1);
+												$fail_count++;
                                                 continue;
 
                                         }
@@ -344,10 +365,12 @@ class Paxfeed extends Admin_Controller {
                                       $paxfeedraw['office_id'] = $Row[array_search('office-id',$import_header)];
 					if( strlen($paxfeedraw['office_id']) > 9 ||  strlen($paxfeedraw['office_id']) < 9 ){
                                                 $this->mydebug->paxfeed_log("Office ID should  have 9 alpha numerics characters  " . $column , 1);
+												$fail_count++;
                                                 continue;
 
                                         } else if( ! ctype_alnum ($paxfeedraw['office_id'])){
                                                 $this->mydebug->paxfeed_log("Office ID should  have only alpha numerics characters  " . $column , 1);
+												$fail_count++;
                                                 continue;
 
                                         }
@@ -357,6 +380,7 @@ class Paxfeed extends Admin_Controller {
 
 					 if( strlen($paxfeedraw['channel']) > 99 || !ctype_alpha($paxfeedraw['channel'])){
                                                 $this->mydebug->paxfeed_log("Channel should not be more than 99 characters in row " . $column , 1);
+												$fail_count++;
                                                 continue;
 
                                         }
@@ -366,6 +390,7 @@ class Paxfeed extends Admin_Controller {
 
 					if( !is_numeric($paxfeedraw['tier_markup']) || $paxfeedraw['tier_markup'] >= 5){
                                                 $this->mydebug->paxfeed_log("Tier markup should be 1-4 in row " . $column , 1);
+												$fail_count++;
                                                 continue;
 
 										}
@@ -381,42 +406,49 @@ class Paxfeed extends Admin_Controller {
 					$is_uniq_pnr_carrier_flight_psgr_num = $this->paxfeedraw_m->get_single_paxfeedraw(array('pnr_ref' => $paxfeedraw['pnr_ref'],'flight_number'=>$paxfeedraw['flight_number'],'carrier_code' => $paxfeedraw['carrier_code'],'pax_nbr' => $paxfeedraw['pax_nbr']));
 					if(count($is_uniq_pnr_carrier_flight_psgr_num) > 0 ){
 						$this->mydebug->paxfeed_log("Multi Pax entry, entry should be unique per pnr,carrier, flight_number, passenger number for row  " . $column , 1);
+												$fail_count++;
                                                 continue;
 
 					}
 					
                                           if($paxfeedraw['from_city'] != $pnr_exist->from_city){
 						$this->mydebug->paxfeed_log("Multi Pax entry,  invalid board point for row " . $column , 1);
+						$fail_count++;
 						continue;
 					}
 
 					if($paxfeedraw['to_city'] != $pnr_exist->to_city) {
 
 					 $this->mydebug->paxfeed_log("Multi Pax entry,  invalid off point for row " . $column , 1);
+												$fail_count++;
                                                 continue;
 					}
 
 					if($paxfeedraw['dep_date'] != $pnr_exist->dep_date) {
 
 					 $this->mydebug->paxfeed_log("Multi Pax entry,  invalid departure date for row " . $column , 1);
+												$fail_count++;
                                                 continue;
 
 					}
 				
 					if( $paxfeedraw['arrival_date'] != $pnr_exist->arrival_date ){
 					$this->mydebug->paxfeed_log("Multi Pax entry,  invalid arrival date for row " . $column , 1);
+												$fail_count++;
                                                 continue;
 					}
 
 	
 					if($paxfeedraw['arrival_time'] != $pnr_exist->arrival_time) {
 						 $this->mydebug->paxfeed_log("Multi Pax entry,  invalid arrival time for row " . $column , 1);
+												$fail_count++;
                                                 continue;
 					}
 
 
 					if($paxfeedraw['dept_time'] != $pnr_exist->dept_time) {
 						$this->mydebug->paxfeed_log("Multi Pax entry,  invalid departure time for row " . $column , 1);
+												$fail_count++;
                                                 continue;
 	
 					}	
@@ -424,23 +456,27 @@ class Paxfeed extends Admin_Controller {
 					if( $paxfeedraw['carrier_code'] != $pnr_exist->carrier_code) {
 
 						$this->mydebug->paxfeed_log("Multi Pax entry,  invalid carrier code for row " . $column , 1);
+												$fail_count++;
                                                 continue;
 					}
 
 					if( $paxfeedraw['operating_carrier'] != $pnr_exist->operating_carrier) {
 
 						$this->mydebug->paxfeed_log("Multi Pax entry,  invalid carrier code for row " . $column , 1);
+												$fail_count++;
                                                 continue;
 					}
 
 					if( $paxfeedraw['marketing_carrier'] != $pnr_exist->marketing_carrier) {
 
 						$this->mydebug->paxfeed_log("Multi Pax entry,  invalid carrier code for row " . $column , 1);
+												$fail_count++;
                                                 continue;
 					}
 
 					if($cabin_new_entry->cabin_id !=  $cabin_old_entry->cabin_id){
                                                 $this->mydebug->paxfeed_log("Multi Pax entry,  Invalid cabin for row " . $column , 1);
+												$fail_count++;
                                                 continue;
                                         }
 
@@ -448,6 +484,7 @@ class Paxfeed extends Admin_Controller {
                                         if( $paxfeedraw['class'] != $pnr_exist->class) {
 
                                                 $this->mydebug->paxfeed_log("Multi Pax entry,  invalid class for row " . $column , 1);
+												$fail_count++;
                                                 continue;
                                         }
 
@@ -458,7 +495,8 @@ class Paxfeed extends Admin_Controller {
                                           $paxfeedraw['modify_date'] = time();
                                           $paxfeedraw['create_userID'] = $this->session->userdata('loginuserID');
                                           $paxfeedraw['modify_userID'] = $this->session->userdata('loginuserID');
-                                          $raw_pax_id = $this->paxfeedraw_m->insert_paxfeedraw($paxfeedraw);
+										  $raw_pax_id = $this->paxfeedraw_m->insert_paxfeedraw($paxfeedraw);
+										 
 						if($raw_pax_id){
 							$this->mydebug->paxfeed_log("Raw feed id is inserted for row " . $column , 0);
 						}
@@ -470,6 +508,7 @@ class Paxfeed extends Admin_Controller {
 						$exist_data = $this->paxfeed_m->get_single_paxfeed(array('dtpfraw_id' => $exist_pax_raw));
 						if (count($exist_data) >= 1) {
 							$this->mydebug->paxfeed_log("Pax feed entry already exist for row " . $column , 0);
+							$fail_count++;
 							continue;
 						} else {
 							$raw_pax_id = $exist_pax_raw;
@@ -537,6 +576,7 @@ class Paxfeed extends Admin_Controller {
 
 				if($is_null_flag == 1){
 					$this->mydebug->paxfeed_log("Improper data for row ". $column. " skipping ..", 1);
+					$fail_count++;
 					continue;
 
 				}
@@ -556,12 +596,14 @@ class Paxfeed extends Admin_Controller {
                                                               $insert_id = $this->paxfeed_m->insert_paxfeed($paxfeed);
 								if ( $insert_id ) {
 								array_push($pax_insert_list,$paxfeed['pnr_ref']);
-							    $this->mydebug->paxfeed_log("Inserted pax record for row " . $column, 0);
+								$this->mydebug->paxfeed_log("Inserted pax record for row " . $column, 0);
+								$success_count++;
 								} else{
 									$this->mydebug->paxfeed_log("Not inserted pax record for row " . $column .' not a valid data ', 1);
+									$fail_count++;
 								}
 					}else {
-
+						$fail_count++;
 						$this->mydebug->paxfeed_log("Duplicate record for row ". $column, 0);
 					}
 			}
@@ -569,7 +611,8 @@ class Paxfeed extends Admin_Controller {
 
 					   } else {
 						   print_r("mismatch");
-						$this->mydebug->paxfeed_log("Columns count didn't match for row ". $column . " skipping ..", 1);
+						   $fail_count++;
+						   $this->mydebug->paxfeed_log("Columns count didn't match for row ". $column . " skipping ..", 1);
 					   }
 
 					}
@@ -577,7 +620,8 @@ class Paxfeed extends Admin_Controller {
 				   $i++;					   
 				  }
 				} 
-				
+
+				$this->sendDatafeedMail($car_code,'PAX',$success_count,$fail_count);
 			  } 				 
 			} catch (Exception $E)	{
 				echo $E -> getMessage();

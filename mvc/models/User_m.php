@@ -206,16 +206,20 @@ class user_m extends MY_Model {
 		 return $query->row('count');
 	 }
 
-	 function loginUserProducts(){
+	 function loginUserProducts($where = array()){
 		 $this->db->select('cp.*,p.name product_name,c.name contract_name')->from('VX_contract_products cp');
-		 $this->db->join('VX_user_product up','up.productID = cp.productID',"LEFT");
+		 #$this->db->join('VX_user_product up','up.productID = cp.productID',"LEFT");
 		 $this->db->join('VX_contract c','c.contractID = cp.contractID','INNER');
 		 $this->db->join('VX_products p','p.productID = cp.productID','INNER');		 
-		 $this->db->where('up.userID',$this->session->userdata('loginuserID'));
+		 $this->db->where('c.create_client',$this->session->userdata('loginuserID'));
 		 $this->db->where('cp.end_date >=',date('Y-m-d'));
 		 $this->db->where('c.active',1);
 		 $this->db->where('cp.status',1);
+		 if($where){
+			 $this->db->where($where);
+		 }
 		 $query = $this->db->get();
+		 #echo $this->db->last_query(); exit;
 		 return $query->result();
 	 }
 }

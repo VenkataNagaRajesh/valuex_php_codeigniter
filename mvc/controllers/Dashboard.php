@@ -36,21 +36,39 @@ class Dashboard extends Admin_Controller {
 		
 		$schoolyearID = $this->session->userdata('defaultschoolyearID');
 		$settings = $this->setting_m->get_setting();
-		
+		$expires_products['notify'] = array();
 		if($this->session->userdata('usertypeID') == 2){
 			$this->data['products'] = $this->user_m->loginUserProducts();
 			$this->data['show_notice'] = '';
 			foreach($this->data['products'] as $product){
 				$OldDate = strtotime($product->end_date);
                 $NewDate = date('M j, Y', $OldDate);
-                $diff = date_diff(date_create($NewDate),date_create(date("M j, Y")));
-				$product->expire = $diff->format('%a');				
-				if($product->expire <= $settings->notice_period){
-					$this->data['show_notice'] .= "<li>Your Product ".$product->product_name." is Expired in ".$product->expire."Days</li>";					
+				$diff = date_diff(date_create($NewDate),date_create(date("M j, Y")));
+                $expireStr1 = $OldDate > time() ? "Expires in " : "Expired ";
+                $expireStr2 = $OldDate > time() ? "" : " Ago";
+			    $daysdiff = $diff->format('%a');
+				$expstr = '';
+				if ( $diff->format('%Y') != '00') {
+					$expstr .= $diff->format('%Y') == 1 ? $diff->format('%Y yr') : $diff->format('%Y yrs');
+				}
+				if ( $diff->format('%m') != '00') {
+					$expstr .= $expstr ? " " : '';
+					$expstr .= $diff->format('%m') == 1 ? $diff->format('%m mth') : $diff->format('%m mths');
+				}
+				if ( $diff->format('%d') != '00') {
+					$expstr .= $expstr ? " " : '';
+					$expstr .= $diff->format('%d') == 1 ? $diff->format('%d day') : $diff->format('%d days');
+				}
+
+				#$product->expire = $diff->format('%a');
+				$product->expire = $expireStr1 . $expstr . $expireStr2;				
+				if($diff->format('%a') <= $settings->notice_period){
+					$this->data['show_notice'] .= "<li>Your Product ".$product->product_name." is ".$product->expire." </li>";					
+					$expires_products['notify'][] = "Your Product ".$product->product_name." is ".$product->expire;
 				}
 			}		
 		}
-		
+		$this->session->set_userdata($expires_products);
 		$allmenu 	= pluck($this->menu_m->get_order_by_menu(), 'icon', 'link');
 		$allmenulang = pluck($this->menu_m->get_order_by_menu(), 'menuName', 'link');		
 		//$invoices	= $this->invoice_m->get_invoice();	

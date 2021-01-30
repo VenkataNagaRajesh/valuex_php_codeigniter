@@ -397,6 +397,7 @@ class Fclr extends Admin_Controller
                         )
                 );
 
+                $this->data['check_product'] = $this->user_m->loginUserProducts(array('p.productID'=>1));
 
                 if ($fclr_id > 0) {
                         $this->data['sfclr_id'] = $fclr_id;

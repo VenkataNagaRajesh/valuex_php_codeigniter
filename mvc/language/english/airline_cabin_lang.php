@@ -36,6 +36,7 @@ $lang["mail"] = "Send Pdf to Mail";
 
 $lang['airline_file_browse'] = 'File Browse';
 $lang['airline_clear'] = 'Clear';
+$lang['airline'] = 'Airline';
 
 $lang['to'] = 'To';
 $lang['subject'] = 'Subject';

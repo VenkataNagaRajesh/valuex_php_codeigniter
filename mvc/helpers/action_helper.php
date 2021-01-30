@@ -128,8 +128,8 @@ function share_file($uri, $id) {
 }
 
 
-function btn_dash_view($uri, $name, $class="btn-success") {
-    return anchor($uri, "<span class='fa fa-check-square-o'></span>", "class='btn ".$class." btn-xs mrg' style='background-color:#00bcd4;color:#fff;' data-placement='top' data-toggle='tooltip' data-original-title='".$name."'");
+function btn_dash_view($uri, $name, $class="btn-success",$icon='fa-check-square-o') {
+    return anchor($uri, "<span class='fa ".$icon."'></span>", "class='btn ".$class." btn-xs mrg'  data-placement='top' data-toggle='tooltip' data-original-title='".$name."'");
 }
 
 

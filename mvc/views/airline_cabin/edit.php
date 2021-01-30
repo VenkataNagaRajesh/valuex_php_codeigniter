@@ -127,7 +127,7 @@
                             echo "<div class='form-group' >";
                     ?>
                         <label for="images" class="col-sm-2 control-label">
-                            <?=$this->lang->line("images")?> 
+                            Cabin Gallary <?=$this->lang->line("images")?> 
                         </label>
                         <div class="col-sm-6">
                         <input type="file"  name="images[]" id="images" multiple>

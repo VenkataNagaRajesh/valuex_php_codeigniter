@@ -571,7 +571,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , 
 
 			$list->img_cnt = $this->airline_cabin_m->getImagesCount($list->cabin_map_id);
                         if(permissionChecker('airline_cabin_edit') ) {
-				$list->action = btn_edit('airline_cabin/edit/'.$list->cabin_map_id, $this->lang->line('edit'));
+				$list->action = btn_edit('airline_cabin/edit/'.$list->cabin_map_id, $this->lang->line('edit').' '.$this->lang->line('airline_cabin'));
 			}
 			
 			if (permissionChecker('airline_cabin_view') ) {
@@ -583,10 +583,10 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS cabin_map_id,  ac.code as airline_code , 
 
 			}
                         if(permissionChecker('airline_cabin_edit') ) {
-				$list->action .= btn_edit('airline/edit/'.$list->carrierID, $this->lang->line('edit'));
+				$list->action .= btn_dash_view('airline/edit/'.$list->carrierID, $this->lang->line('edit').' '.$this->lang->line('airline'),'btn-primary');
 			}
                         if(permissionChecker('airline_cabin_edit') ) {
-				$list->action .= btn_edit('airline/gallery/'.$list->carrierID, $this->lang->line('edit_gallery'));
+				$list->action .= btn_dash_view('airline/gallery/'.$list->carrierID, $this->lang->line('edit_gallery'),'btn-warning','fa-file-image-o');
 			}
 			if (permissionChecker('airline_cabin_view') ) {
 			       $list->action .= btn_view('airline/view/'.$list->carrierID, $this->lang->line('view_gallery'));	

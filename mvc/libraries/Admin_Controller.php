@@ -100,8 +100,8 @@ class Admin_Controller extends MY_Controller {
 
 		$permissionset = array();
 		$userdata = $this->session->userdata;
-		$loginuserProducts = $this->user_m->loginUserProducts();
 		#print_r($loginuserProducts); exit;
+		/* $loginuserProducts = $this->user_m->loginUserProducts();
 		$settings = $this->setting_m->get_setting();
 		$expires_products['notify'] = array();
 		if($userdata['usertypeID'] == 2){
@@ -115,15 +115,15 @@ class Admin_Controller extends MY_Controller {
 				}
 			}
 			$this->session->set_userdata($expires_products);
-		}
+		} */
 		if(isset($userdata['loginuserID']) && !isset($userdata['get_permission'])) {
 				if(!$this->session->userdata($permission)) {
 					if($userdata['usertypeID'] == 1){
 					  $user_permission = $this->permission_m->get_modules_with_permission($userdata['roleID']);
 					} else { 
-					//	$user_products = $this->user_m->getProductsInfoByUser($userdata['loginuserID'])->products;
-						
-						$user_products = array_column('productID',$loginuserProducts);						
+						$user_products = $this->user_m->getProductsInfoByUser($userdata['loginuserID'])->products;
+						#$loginuserProducts = $this->user_m->loginUserProducts();
+						#$user_products = array_column('productID',$loginuserProducts);						
 						$user_products = implode(',',$user_products);
 						$user_permission = $this->permission_m->get_modules_with_permission($userdata['roleID'],$user_products);
 					}
@@ -659,7 +659,6 @@ class Admin_Controller extends MY_Controller {
 			$config['wordwrap'] = TRUE;
 			$config['mailtype'] = 'html';
 			$this->email->initialize($config);
-
 			$this->email->from($siteinfos->email,$siteinfos->sname);
 			$this->email->to($email);
 			$this->email->subject($subject);
@@ -711,6 +710,38 @@ class Admin_Controller extends MY_Controller {
 				       );
 
 		die(json_encode($response));
+	 }
+
+	 public function sendDatafeedMail($carrier_code='CA',$feed_type='pax',$success_count=10,$fail_count=10){
+		 $this->load->model('client_m');
+		 $admin = $this->client_m->getAirlineAdminByCarriercode($carrier_code);
+		 $siteinfos = $this->reset_m->get_site();
+		 $subject = $feed_type.' Feed upload - '.date('d-m-Y h:i:s');
+		 $message = $success_count .' Records Uploaded Successfully and '.$fail_count.' Not Uploaded';
+		 	$config['protocol']='smtp';
+			$config['smtp_host']='mail.sweken.com';
+			$config['smtp_port']='26';
+			$config['smtp_timeout']='30';
+			$config['smtp_user']='info@sweken.com';
+			$config['smtp_pass']='Infoinfo-1!';
+			$config['charset']='utf-8';
+			$config['newline']="\r\n";
+			$config['wordwrap'] = TRUE;
+			$config['mailtype'] = 'html';
+			$this->email->initialize($config);
+			$this->email->from($siteinfos->email,$siteinfos->sname);
+			$this->email->to($admin['email']);
+			$this->email->subject($subject);
+			$this->email->message($message);
+			if($this->email->send()) {
+				echo "mail sent successfully";
+				$this->mydebug->debug("mail sent successfully");
+			} else {
+				echo "mail not sent successfully";
+				$this->mydebug->debug($this->lang->line('mail_error'));
+			}
+			exit;
+		return true;
 	 }
 
 }

@@ -76,4 +76,16 @@ class client_m extends MY_Model {
 		$result =  $query->row();
 		return $result->userID;
 	}
+
+	function getAirlineAdminByCarriercode($carrier_code){
+		$this->db->select('u.email')->from('VX_user u');
+		$this->db->join('VX_user_airline ua','ua.userID = u.userID','INNER');
+		$this->db->join('VX_data_defns dd','dd.vx_aln_data_defnsID = ua.airlineID','LEFT');
+		$this->db->where('u.roleID',6);
+		$this->db->where('u.active',1);
+        $this->db->where('dd.aln_data_typeID',12);
+		$this->db->where('dd.code',$carrier_code);
+		$query = $this->db->get();
+		return $query->row_array();
+	}
 }
