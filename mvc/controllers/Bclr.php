@@ -770,7 +770,7 @@ class Bclr extends Admin_Controller
     {
         $userID = $this->session->userdata('loginuserID');
         $roleID = $this->session->userdata('roleID');
-        $aColumns = array("MainSet.bclr_id", "MainSet.version_id", "MainSet.carrier_code", "MainSet.partner_carrier_code", "MainSet.allowance", "MainSet.aircraft_type", "MainSet.flight_num_range", "MainSet.from_cabin_data", "MainSet.origin_level_value", "SubSet.origin_content_data", "MainSet.dest_level_value", "SubSet.dest_content_data", "MainSet.effective_date", "MainSet.discontinue_date", "MainSet.season_name", "SubSet.frequency", "MainSet.bag_type", "MainSet.rule_auth_carrier_code", "MainSet.dep_time_start", "MainSet.dep_time_end", "MainSet.min_unit", "MainSet.max_capacity", "MainSet.min_price", "MainSet.max_price", "MainSet.active");
+        $aColumns = array("MainSet.bclr_id",  "MainSet.carrier_code","MainSet.version_id", "MainSet.partner_carrier_code", "MainSet.allowance", "MainSet.aircraft_type", "MainSet.flight_num_range", "SubSet.from_cabin_data", "MainSet.origin_level_value", "SubSet.origin_content_data", "MainSet.dest_level_value", "SubSet.dest_content_data", "MainSet.effective_date", "MainSet.discontinue_date", "MainSet.season_name", "SubSet.frequency", "MainSet.bag_type", "MainSet.rule_auth_carrier_code", "MainSet.dep_time_start", "MainSet.dep_time_end", "MainSet.min_unit", "MainSet.max_capacity", "MainSet.min_price", "MainSet.max_price", "MainSet.active");
 
         $sLimit = "";
 
