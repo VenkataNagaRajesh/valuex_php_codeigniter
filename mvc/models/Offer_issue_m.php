@@ -146,7 +146,7 @@ public function getBidInfoFromOfferID($offer_id, $flight_number,$carrier_code) {
 
 }
 public function getOfferDetailsById($id) {
-
+//$sGroup = ' group by MainSet.flight_number';
 $query = " select  SQL_CALC_FOUND_ROWS  
 MainSet.offer_id, MainSet.dtpf_id,  MainSet.upgrade_type,MainSet.offer_date, MainSet.name,MainSet.flight_date , SubSet.carrier , MainSet.flight_number , 
 SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
@@ -191,13 +191,13 @@ LEFT JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf1.carrier_code)
 				group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
 ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.dtpf_id = SubSet.dtpf_id) where MainSet.offer_id='$id'
 $sWhere 
+$sGroup
 $sOrder $sLimit";
 
 
-
+#echo $query; exit;
 
 $rResult = $this->install_m->run_query($query);
-
 return $rResult;
 
 }

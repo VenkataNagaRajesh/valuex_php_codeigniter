@@ -135,7 +135,7 @@ class Paxfeed extends Admin_Controller {
 
 
 
-	$header = array_map("strtolower", array("Airline Code","PNR ref","Pax nbr","first name","last name","ptc","FQTV","seg nbr","carrier code","flight nbr","dept date","arrival date","dept time", "arrival time","class","board point","off point","PAX contact email","Phone","Booking country","booking city","office-id","channel","tier markup","Operating Carrier","Marketing Carrier"));	
+	$header = array_map("strtolower", array("Airline Code","PNR ref","Pax nbr","first name","last name","ptc","FQTV","seg nbr","carrier code","flight nbr","dept date","arrival date","dept time", "arrival time","class","board point","off point","PAX contact email","Phone","Booking country","booking city","office-id","channel","tier markup","Operating Carrier","Marketing Carrier","Ticket Number"));	
 		$header = array_map('strtolower', $header);
 		
 
@@ -152,7 +152,7 @@ class Paxfeed extends Admin_Controller {
               $i = 0;
                //$time_start = microtime(true);
 		$column = 0;                   
-             foreach ($Reader as $Row){
+            foreach ($Reader as $Row){
 		 	
 			$column++;
 		$Row = array_map('trim', $Row);
@@ -161,8 +161,6 @@ class Paxfeed extends Admin_Controller {
                   	$flag = 0 ;
 		       // $Row = array_map('trim', $Row);
 					$import_header = array_map('strtolower', $Row);
-					
-
                         if(count(array_diff($header,$import_header)) == 0){
                              $flag = 1;
 				$this->mydebug->paxfeed_log("Header Matched for file  " . $_FILES['file']['name'] , 0);
@@ -177,7 +175,7 @@ class Paxfeed extends Admin_Controller {
 							 if($flag == 1){ 
 		$car_code = $Row[array_search('carrier code',$import_header)];
 
-					if(count($Row) == 26){ //print_r($Row); exit;	
+					if(count($Row) == 27){ //print_r($Row); exit;	
 											
 				    $this->mydebug->paxfeed_log("Columns count Matched for row " . $column , 0);
 					$paxfeedraw = array();
@@ -394,7 +392,13 @@ class Paxfeed extends Admin_Controller {
                                                 continue;
 
 										}
-					
+
+					$paxfeedraw['ticket_number'] = $Row[array_search('ticket number',$import_header)];
+					if( !is_numeric($paxfeedraw['ticket_number']) || strlen($paxfeedraw['ticket_number']) > 13 || strlen($paxfeedraw['ticket_number']) > 13) {
+						$this->mydebug->paxfeed_log("Ticket Number Should be 13 digit numeric in row " . $column , 1);
+						$fail_count++;
+						continue;
+					}
 
 					$exist_pax_raw = $this->paxfeedraw_m->checkPaxFeedRaw($paxfeedraw);
 				      if(!$exist_pax_raw) {
@@ -404,6 +408,13 @@ class Paxfeed extends Admin_Controller {
                                         $cabin_new_entry = $this->airline_cabin_class_m->validateCabinMapData($paxfeedraw['carrier_code'],$paxfeedraw['class']);
 					$cabin_old_entry = $this->airline_cabin_class_m->validateCabinMapData($pnr_exist->carrier_code,$pnr_exist->class);
 					$is_uniq_pnr_carrier_flight_psgr_num = $this->paxfeedraw_m->get_single_paxfeedraw(array('pnr_ref' => $paxfeedraw['pnr_ref'],'flight_number'=>$paxfeedraw['flight_number'],'carrier_code' => $paxfeedraw['carrier_code'],'pax_nbr' => $paxfeedraw['pax_nbr']));
+					$valTktNum = $this->paxfeedraw_m->get_single_paxfeedraw(array('pnr_ref'=>$paxfeedraw['
+					'],'ticket_number'=>$paxfeedraw['ticket_number']));
+					if(count($valTktNum) > 0){
+						$this->mydebug->paxfeed_log("ticket number exist,it should be unique with(pnr_ref,flight_number) combination for row  " . $column , 1);
+						$fail_count++;
+                        continue;
+					}
 					if(count($is_uniq_pnr_carrier_flight_psgr_num) > 0 ){
 						$this->mydebug->paxfeed_log("Multi Pax entry, entry should be unique per pnr,carrier, flight_number, passenger number for row  " . $column , 1);
 												$fail_count++;
@@ -486,7 +497,12 @@ class Paxfeed extends Admin_Controller {
                                                 $this->mydebug->paxfeed_log("Multi Pax entry,  invalid class for row " . $column , 1);
 												$fail_count++;
                                                 continue;
-                                        }
+										}
+									if( $paxfeedraw['class'] != $pnr_exist->class) {
+										$this->mydebug->paxfeed_log("Multi Pax entry,  invalid class for row " . $column , 1);
+										$fail_count++;
+										continue;
+									}
 
                                         }
 
@@ -548,7 +564,8 @@ class Paxfeed extends Admin_Controller {
                                          $paxfeed['booking_country'] =  $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['booking_country'],'2');
 					 $paxfeed['booking_city'] = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['booking_city'],'3');
                                          $paxfeed['office_id'] = $paxfeedraw['office_id'];
-                                         $paxfeed['channel'] = $paxfeedraw['channel'];
+										 $paxfeed['channel'] = $paxfeedraw['channel'];
+										 $paxfeed['ticket_number'] = $paxfeedraw['ticket_number'];
 				if ( $paxfeedraw["tier_markup"] ) {
 				$paxfeed['tier_markup'] = $this->preference_m->get_preference_value_bycode('T'.$paxfeedraw["tier_markup"].'_MARKUP','24',$paxfeed['carrier_code'] );
 				} else {

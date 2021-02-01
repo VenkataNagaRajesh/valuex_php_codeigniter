@@ -734,13 +734,10 @@ class Admin_Controller extends MY_Controller {
 			$this->email->subject($subject);
 			$this->email->message($message);
 			if($this->email->send()) {
-				echo "mail sent successfully";
 				$this->mydebug->debug("mail sent successfully");
 			} else {
-				echo "mail not sent successfully";
 				$this->mydebug->debug($this->lang->line('mail_error'));
 			}
-			exit;
 		return true;
 	 }
 

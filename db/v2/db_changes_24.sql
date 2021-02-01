@@ -20,3 +20,6 @@ CREATE TABLE `VX_contract_filelog` (
 
 alter table VX_contract add column poc_user int(11) NOT NULL after mobile_number;
 insert into VX_permissions set description='Contract Document View',name='contract_docview',productID=1;
+
+alter table VX_daily_tkt_pax_feed_raw add column ticket_number varchar(50) after marketing_carrier;
+alter table VX_daily_tkt_pax_feed add column ticket_number varchar(50) after marketing_carrier;

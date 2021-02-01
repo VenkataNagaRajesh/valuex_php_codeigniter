@@ -478,7 +478,8 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','cdef
  function downloadFormat(){
                 $this->load->helper('download');
        // $filename = APPPATH.'downloads/invfeed.xlsx';
-        $filename = APPPATH.'downloads/invfeed_with_capacity.xlsx';
+      //  $filename = APPPATH.'downloads/invfeed_with_capacity.xlsx';
+        $filename = APPPATH.'downloads/invfeed_latest.xls';
                 force_download($filename, null);
       }
 
