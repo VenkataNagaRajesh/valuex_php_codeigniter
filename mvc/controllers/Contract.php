@@ -400,6 +400,13 @@ class Contract extends Admin_Controller {
 				$poc["active"] = 1;	
 				$this->user_m->insert_user($poc);
 				$pocuserID = $this->db->insert_id();
+				$pulink['userID'] = $pocuserID;
+				$pulink["create_date"] = time();
+				$pulink["modify_date"] = time();
+				$pulink["create_userID"] = $this->session->userdata('loginuserID');
+				$pulink["modify_userID"] = $this->session->userdata('loginuserID');
+				$pulink['airlineID'] = $this->input->post('airlineID');
+				$this->user_m->insert_user_airline($pulink);
 
 				// Contract Adding
 				$data['airlineID'] = $this->input->post('airlineID');
@@ -731,12 +738,12 @@ class Contract extends Admin_Controller {
 				{
 					if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
 					{
-						if($_GET['iSortCol_0'] == 8){
+						/* if($_GET['iSortCol_0'] == 8){
 							$sOrder .= " (s.order_no*-1) DESC ,";
-						} else {
+						} else { */
 						 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
 							".$_GET['sSortDir_'.$i] .", ";
-						}
+						//}
 					}
 				}				
 				  $sOrder = substr_replace( $sOrder, "", -2 );

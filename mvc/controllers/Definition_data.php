@@ -340,12 +340,12 @@ class Definition_data extends Admin_Controller
 			$sOrder = "ORDER BY  ";
 			for ($i = 0; $i < intval($_GET['iSortingCols']); $i++) {
 				if ($_GET['bSortable_' . intval($_GET['iSortCol_' . $i])] == "true") {
-					if ($_GET['iSortCol_0'] == 8) {
+					/* if ($_GET['iSortCol_0'] == 8) {
 						$sOrder .= " (s.order_no*-1) DESC ,";
-					} else {
+					} else { */
 						$sOrder .= $aColumns[intval($_GET['iSortCol_' . $i])] . "
 							" . $_GET['sSortDir_' . $i] . ", ";
-					}
+					//}
 				}
 			}
 			$sOrder = substr_replace($sOrder, "", -2);

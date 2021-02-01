@@ -750,7 +750,7 @@ class Client extends Admin_Controller {
 		$userID = $this->session->userdata('loginuserID');
 		$usertypeID = $this->session->userdata('usertypeID');	  
 				
-	    $aColumns = array('c.userID','c.photo','c.name','c.email','c.photo','c.phone','dd.code','c.active');
+	    $aColumns = array('c.userID','dd.code','c.photo','c.name','c.email','c.phone','c.domain','c.active','r.role','ut.usertype');
 	
 		$sLimit = "";
 		
@@ -765,12 +765,12 @@ class Client extends Admin_Controller {
 				{
 					if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
 					{
-						if($_GET['iSortCol_0'] == 8){
+						/* if($_GET['iSortCol_0'] == 8){
 							$sOrder .= " (s.order_no*-1) DESC ,";
-						} else {
+						} else { */
 						 $sOrder .= $aColumns[ intval( $_GET['iSortCol_'.$i] ) ]."
 							".$_GET['sSortDir_'.$i] .", ";
-						}
+						//}
 					}
 				}				
 				  $sOrder = substr_replace( $sOrder, "", -2 );

@@ -174,7 +174,7 @@ class Role extends Admin_Controller {
 		if((int)$id) {
 			$this->data['role'] = $this->role_m->get_role($id);
 			if($this->data['role']) {
-				$reletionarray = array(1,2,3,4,5,6,7);
+				$reletionarray = array(1,2,3,4,5,6,7,29);
 				if(!in_array($this->data['role']->roleID, $reletionarray)) {
 					$this->role_m->delete_role($id);
 					$this->session->set_flashdata('success', $this->lang->line('menu_success'));
