@@ -628,13 +628,13 @@ $sWhere $sOrder $sLimit";
 
 		switch ($product) {
 			case 1:
-			$this->mydebug->debug("OFFER GEN: PRODUCT UPGRADE : CARRIER ID: " . $carrierId);
-   			 $this->processGenUpgradeOffers($carrierId);
-			break;
+				 $this->mydebug->debug("OFFER GEN: PRODUCT UPGRADE : CARRIER ID: " . $carrierId);
+   			     $this->processGenUpgradeOffers($carrierId);
+				 break;
 			case 2:
-			$carriers[] = $carrierId;
-			$this->mydebug->debug("OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: " . $carrierId);
-			break;
+				$carriers[] = $carrierId;
+				$this->mydebug->debug("OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: " . $carrierId);
+				break;
 		}
 			
 	}
@@ -958,10 +958,10 @@ $sWhere $sOrder $sLimit";
 		$origin_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($bclr->origin_content, $bclr->origin_level);
 		$dest_list_p = $this->marketzone_m->getAirportsByLevelAndLevelID($bclr->dest_content, $bclr->dest_level);
 		
-		$checkCarrierId = $pax->op_carrier;
+		$checkCarrierId = $pax->op_carrier; //3958
 		if ( $checkPartner ) {
-			if ( $bclr->partner_carrierID ) {
-				$checkCarrierId = $bclr->partner_carrierID;
+			if ( $bclr->partner_carrierID ) { //5000
+				$checkCarrierId = $bclr->partner_carrierID; //5000
 			} else {
 				return 0;
 			}
@@ -984,7 +984,8 @@ $sWhere $sOrder $sLimit";
 		echo "<br>MATCHEND +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++";
 		
 		$matched = 0;
-		if ($bclr->carrierID == $checkCarrierId ) { 
+		echo ('<br>  Check Carrier with '.$pax->carrier_code.' == '.$checkCarrierId);
+		if ($pax->carrier_code == $checkCarrierId ) {  // 3958 == 5000
 			echo ("<br>OFFER GEN: PRODUCT BAGGAGE : MATCHED CARRIER CODE - BCLR ID $bclrId FOR PAX " . $pax->dtpf_id . "  CARRIER ID: " . $carrierId);
 			$matched++ ;
 		} else {

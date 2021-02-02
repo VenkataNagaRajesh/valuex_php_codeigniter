@@ -52,6 +52,7 @@ class Rafeed extends Admin_Controller
 		$this->load->model('airline_cabin_def_m');
 		$this->load->model('airline_cabin_class_m');
 		$this->load->model("user_m");
+		$this->load->model("contract_m");
 		$language = $this->session->userdata('lang');
 		$this->lang->load('rafeed', $language);
 		$this->data['icon'] = $this->menu_m->getMenu(array("link" => "rafeed"))->icon;
@@ -516,14 +517,28 @@ echo "MISED,$cDocumentType";
 										}
 										$this->mydebug->rafeed_log("ROW=".print_r($Row,1), 0);
 										$this->mydebug->rafeed_log("Doctument Type records.. ". $cDocumentType, 0);
+										$carrier = $Row[array_search('carrier', $import_header)];
+										$carrier_id = $this->airports_m->getDefIdByTypeAndCode($carrier, '12');
 										switch (strtolower($cDocumentType)) {
 											case 'd': // baggage rafeed
 												$strRedirector = "baggage";
-												$this->baggageUpload($Row, $import_header, $column);
+												$ug_product = $this->contract_m->isProductActive($carrier_id,2);
+												if($ug_product == 0){
+													$this->mydebug->rafeed_log("This ".$carrier."  Baggage Product in deactive mode" . $column, 1);
+												} else {
+													$this->mydebug->rafeed_log("This ".$carrier."  Baggage Product in active mode" . $column, 1);
+													$this->baggageUpload($Row, $import_header, $column);
+												}
 												break;
 
 											case 't': // ticketing rafeed
-												$this->ticketUpgradeUpload($Row, $import_header, $column);
+												$bg_product = $this->contract_m->isProductActive($carrier_id,1);
+												if($bg_product == 0){
+													$this->mydebug->rafeed_log("This ".$carrier."  Upgrade Product in deactive mode" . $column, 1);
+												} else {
+													$this->mydebug->rafeed_log("This ".$carrier." Airline  Upgrade Product in active mode" . $column, 1);
+													$this->ticketUpgradeUpload($Row, $import_header, $column);
+												}
 												break;
 
 											default:
@@ -602,7 +617,6 @@ echo "MISED,$cDocumentType";
 		$carrier = $Row[array_search('carrier', $import_header)];
 		$arrBaggageRaFeed['carrier'] =
 			$this->airports_m->getDefIdByTypeAndCode($carrier, '12');
-
 		if (!ctype_alpha($carrier) || (strlen($carrier) != 2)) {
 			$this->mydebug->rafeed_log("Carrier should be character and lenght 2 in row " . $column, 1);
 		}

@@ -133,12 +133,14 @@ class Contract_m extends MY_Model {
 		$this->db->join('VX_contract_products cp','cp.contractID = c.contractID','LEFT');
 		$this->db->join('VX_products p','p.productID = cp.productID','LEFT');
 		$this->db->where("end_date  > NOW()");
+		$this->db->where('c.active',1);
+		$this->db->where('cp.status',1);
 		if ( $airline_id ) {
 			$this->db->where('c.airlineID',$airline_id);
 		}
 		$this->db->order_by(" airlineID, productID");
 		$query = $this->db->get();
-		//print_r($this->db->last_query()); exit;
+		#print_r($this->db->last_query()); exit;
 		return $query->result();
 	}
 
@@ -148,6 +150,20 @@ class Contract_m extends MY_Model {
 		$this->db->where('l.contract_fileID',$contract_fileID);
 		$query = $this->db->get();
 		return $query->result();
+	}
+
+	function isProductActive($carrier,$productID){ 
+		$this->db->select('c.name')->from('VX_contract c');
+		$this->db->join('VX_contract_products cp','cp.contractID = c.contractID','LEFT');
+		$this->db->join('VX_products p','p.productID = cp.productID','LEFT');
+		$this->db->where("end_date  > NOW()");
+		$this->db->where('c.active',1);
+		$this->db->where('cp.status',1);
+		$this->db->where('c.airlineID',$carrier);
+		$this->db->where('cp.productID',$productID);
+		$query = $this->db->get();
+		#print_r($this->db->last_query()); exit;
+		return $query->num_rows();
 	}
 }
 

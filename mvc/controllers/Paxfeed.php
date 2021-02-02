@@ -245,7 +245,19 @@ class Paxfeed extends Admin_Controller {
 				  }
 
 				 
-
+				/* Operating and marketing Carrier check */
+				$op_car = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['operating_carrier'],'12');
+				$mkt_car = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['marketing_carrier'],'12');
+				if(!$op_car){
+					$this->mydebug->paxfeed_log("Operating Carrier not there in our carrier list in row " . $column , 1);
+					$fail_count++;
+					continue;
+				}
+				if(!$mkt_car){
+					$this->mydebug->paxfeed_log("Marketing Carrier not there in our carrier list in row " . $column , 1);
+					$fail_count++;
+					continue;
+				}
 
                     $paxfeedraw['ptc'] = $Row[array_search('ptc',$import_header)];
 
@@ -399,6 +411,8 @@ class Paxfeed extends Admin_Controller {
 						$fail_count++;
 						continue;
 					}
+
+					
 
 					$exist_pax_raw = $this->paxfeedraw_m->checkPaxFeedRaw($paxfeedraw);
 				      if(!$exist_pax_raw) {
