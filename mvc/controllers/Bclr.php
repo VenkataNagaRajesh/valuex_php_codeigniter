@@ -153,8 +153,9 @@ class Bclr extends Admin_Controller
                 return true;
             }
         } else {
-            $this->form_validation->set_message('checkPartnerExpire','Partner Carrier Required');
-            return false;
+                return true;
+            #$this->form_validation->set_message('checkPartnerExpire','Partner Carrier Required');
+            #return false;
         }
     }
 
@@ -704,7 +705,7 @@ class Bclr extends Admin_Controller
         if ($this->input->post('flt_allowance')) {
             $this->data['flt_allowance'] = $this->input->post('flt_allowance');
         } else {
-            $this->data['flt_allowance'] = 1;
+            $this->data['flt_allowance'] = 0;
         }
 
         if ($this->input->post('flt_frequency')) {
@@ -722,7 +723,7 @@ class Bclr extends Admin_Controller
         if ($this->input->post('flt_bag_type')) {
             $this->data['flt_bag_type'] = $this->input->post('flt_bag_type');
         } else {
-            $this->data['flt_bag_type'] = 1;
+            $this->data['flt_bag_type'] = 0;
         }
 
         if ($this->input->post('flt_min_unit')) {

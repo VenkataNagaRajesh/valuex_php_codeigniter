@@ -47,6 +47,7 @@
 					</div>
 					<div class="col-md-2 col-sm-3">
 						<?php 
+                            $allowance[0] = 'All';
                             $allowance[1] = 'Whitelist';
                             $allowance[2] = 'Blacklist';
 							echo form_dropdown("allowance", $allowance,set_value("allowance"), "id='allowance' class='form-control hide-dropdown-icon select2'");?>
@@ -122,6 +123,7 @@
                     </div>                     
                     <div class="col-md-2 col-sm-3">
                      <?php                         
+                          $unittypes[0] = "All";                           
                           $unittypes[1] = "KG";                           
                           $unittypes[2] = "Piece";                           
                         echo form_dropdown("bag_type", $unittypes, set_value("bag_type"), "id='bag_type' class='form-control select2'");
