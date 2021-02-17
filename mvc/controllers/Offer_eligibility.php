@@ -757,7 +757,7 @@ $sWhere $sOrder $sLimit";
 		foreach ($bg_pax_data as $pax_pnr_single ) {
 			//echo "<br>SINGLEPNR=<pre>" . print_r($pax_pnr_single,1) . "</pre>";
 			$single_adult_full_pax = $this->offer_eligibility_m->getBaggageSingleAdultPax($pax_pnr_single);
-			//echo "<br>FULLPAX=<pre>" . print_r($single_adult_full_pax,1) . "</pre>";
+			echo "<br>FULLPAX=<pre>" . print_r($single_adult_full_pax,1) . "</pre>";
 			$pax_cnt = 0;
 			foreach ($single_adult_full_pax as $s_pax ) {
 			    $pnr = $s_pax->pnr_ref;
@@ -978,6 +978,7 @@ $sWhere $sOrder $sLimit";
 		echo "<br>BCLR=" . $bclr->effective_date . " + " . $bclr->dept_time_start;
 		echo "<br>BCLRT=" . $bclr->effective_date  +  $bclr->dept_time_start;
 	echo "<br>DEPART MATCH=" . date("d M Y H:i:s", $pax->dep_date + $pax->dept_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dept_time_start)) ."  , " . date("d M Y H:i:s",$pax->dep_date+$pax->dept_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dept_time_end);
+	echo "<br>DEPART MATCH=" .  ($pax->dep_date + $pax->dept_time). " >= " . ($bclr->effective_date + $bclr->dept_time_start) ."  , " . ($pax->dep_date+$pax->dept_time). " <=" .  ($bclr->discontinue_date + $bclr->dept_time_end);
 	echo "<br>ARRIVA MATCH=" . date("d M Y H:i:s", $pax->arrival_date+$pax->arrival_time) . " >= " . date("d M Y H:i:s",($bclr->effective_date + $bclr->dept_time_start)) ."  , " . date("d M Y H:i:s",$pax->arrival_date+$pax->arrival_time). " <=" ,  date("d M Y H:i:s",$bclr->discontinue_date + $bclr->dept_time_end);
 		echo "<br>ORGIN LIST=" .implode(',',$origin_list_p);
 		echo "<br>DEST LIST=" .implode(',',$dest_list_p);

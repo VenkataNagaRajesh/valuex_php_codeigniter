@@ -227,6 +227,8 @@ class bid_m extends MY_Model {
 		$this->db->join('VX_airline_cabin_images i','i.airline_cabin_map_id = m.cabin_map_id','LEFT');
 		$this->db->where('m.airline_code',$airlineID);
 		$this->db->where('m.airline_cabin',$cabin);
+		$this->db->order_by('RAND()');
+		$this->db->limit(1);
 		$query = $this->db->get();
 		return $query->result();
 	}

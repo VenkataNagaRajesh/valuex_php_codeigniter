@@ -137,7 +137,7 @@ class Offer_eligibility_m extends MY_Model {
 		$sQuery .= " AND `pnr_ref` = '" .  $pax_pnr_single->pnr_ref . "'";
 		$sQuery .= " AND `first_name` = '" .  $pax_pnr_single->first_name . "'";
 		$sQuery .= " AND `last_name` = '" .  $pax_pnr_single->last_name . "'";
-		//print_r($sQuery);
+		echo "SINGLQU=" . print_r($sQuery,1);
 		$result = $this->install_m->run_query($sQuery);
 		//print_r($this->db->last_query());
                 return  $result;

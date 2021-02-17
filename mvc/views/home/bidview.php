@@ -1,3 +1,61 @@
+<style>
+    /*09-02-2021 style sheet*/
+
+.subs-hdng{ width:100%; margin:0; padding:0; background:#f4f4f4; font-size:18px; font-weight:500; color:#000;}
+.top-tbl-bar{ width:100%; margin:20px 0; padding:0; background:#248168; float:left; border:0px;}
+.top-tbl-bar h2{ width:100%; margin:0; padding: 10px 0; font-size:20px; font-weight:500; color: #fff;}
+
+.sub-tbl-bar{ width:100%; margin:0px 0; padding:0; display:block; border:0px;}
+.sub-tbl-bar h2{ width: 100%;
+    margin: 0 0 20px 0;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #000;
+    background: #efefef;}
+
+
+
+.lft-gap{padding-left:0px !important;}
+.accordion {
+    float: left;
+    width: 100%;
+}
+.accordion-inner h2{width:100%; margin:0; padding:30px 0 10px 0;  font-size:20px; font-weight:500; color:#000; border-bottom:1px solid #ccc;}
+.accordion-heading h2 {
+    font-size: 18px;
+    margin: 0;
+    padding: 10px 0;
+}
+.lst-box{width:100%; margin:0px; padding:0px;}
+.lst-box ul{width:100%; margin:0px; padding:0px; list-type:none;}
+.lst-box li{width:100%; margin:10px; padding:0px;}
+.bid-tab .tab-content .tab-pane p{margin-top:0px;}
+#offer .price-range{padding:10px 15px ;}
+.badge{width:20px; height:20px;padding:0px; border-radius:50%; line-height:17px !important; text-align:center;}
+.payment-box .actual-cash{margin-top: 20px;}
+.payment-box .card-exp input{width:85px;}
+@media (min-width: 480px) and (max-width: 680px) {
+    
+  .lst-box li{width:32%; margin:0px !important; }
+  .bid-tab li{padding:0px;}
+#offer .price-range{padding:20px 15px 0px 15px ;}
+  .payment-box .card-exp input{width:60px;}
+
+}
+@media (min-width: 320px) and (max-width: 479px) {
+    
+  .lst-box li{width:45%; margin:0px !important; }
+  .bid-tab li{padding:0px;}
+  .payment-box .card-exp input{width:55px;}
+
+}
+
+
+</style>
+
+
+
 <div class="container top-bar" style="background:<?=$mail_header_color?>">
 	<div class="row">
 		<div class="col-md-12">
@@ -11,8 +69,8 @@
 	<div class="row">
 		<div class="bid-tab">
 			<ul class="nav nav-tabs">
-				<li class="col-md-6 col-sm-6"><a href="#offer"><span class="badge badge-secondary" style="color:<?=$mail_header_color?>">1</span> Make Us an Offer</a></li>
-				<li class="col-md-6 col-sm-6"><a href="#payment"><span class="badge badge-secondary" style="color:<?=$mail_header_color?>">2</span> Review & Payment</a></li>
+				<li class="col-xs-6 col-md-6 col-sm-6 col-lg-6"><a href="#offer"><span class="badge badge-secondary" style="color:<?=$mail_header_color?>">1</span> Make Us an Offer</a></li>
+				<li class="col-xs-6 col-md-6 col-sm-6 col-lg-6"><a href="#payment"><span class="badge badge-secondary" style="color:<?=$mail_header_color?>">2</span> Review & Payment</a></li>
 			</ul>
             <div class="tab-content">
                 <div id="offer" class="">
@@ -26,295 +84,245 @@
 						</ol>
 						<p>The submission of your bid will be confirmed in a separate email. you will receive a message from us between 120 and 48 hours before departure informing you whether or not you bid has been accepted, Bids are per flight segment and do not including the original ticket price</p>
 					</div>
-					<div class="col-md-10 col-sm-10">
+					<div class="col-md-12 col-sm-12">
 						<div class="pass-info">
 							<p>Passenger(s):<span style="color:<?=$mail_header_color?>"><?php echo ucfirst($results[0]->pax_names); ?></span>
 							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$results[0]->pnr_ref?></span></p>
-							<div class="table">
-								<table class="table hidden-xs">
-									<thead style="background:<?=$mail_header_color?>">
-										<tr>
-											<th>Flight Information</th>
-											<th style="text-align:left;"></th>
-											<th>Bid Amount</th>
-											<!--<th>Action</th>-->
-										</tr>
-									</thead>
-									<tbody>
-										<tr><th><p>Upgrade Offer</p></th></tr>
-										<?php $n=1; foreach($results as $result){?>
-										<tr>
-											<td><div class="col-md-12"><p><?=$n?> . <?php echo $result->from_city; ?> To <?php echo $result->to_city; ?> </p></div></td>
-											<td><p>Upgrade To</p></td>
-											<td></td>
-										</tr>
-										<tr>
-											<td>								
-												<div style="text-align:left" class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
-													<div class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $result->from_city; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time);?></span></p>
-														<ul>
-															<li><?php echo date('d M Y',$result->dep_date); ?></li>
-															<li style="color:<?=$mail_header_color?>"><?php echo $result->carrier_code.$result->flight_number; ?></li>
-															<!--<li><?=$result->time_diff?></li>-->
-														</ul>
-														<small><?php echo $result->from_airport; ?></small>
-													</div>
-													<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
-													<div style="align:left" class="col-md-5">
-														<p style="color:<?=$mail_header_color?>"><?php echo $result->to_city; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time);?></span></p>
-														<ul>
-															<li><?php echo date('d M Y',$result->arrival_date); ?></li>
-															<li style="color:<?=$mail_header_color?>"><?php echo $result->carrier_code.$result->flight_number; ?></li>
-															<!--<li><?=$result->time_diff?></li>-->
-														</ul>
-														<small><?php echo $result->to_airport; ?></small>
-													</div>
-												</div>											
-											</td>
-											<td>		 
-												<div class="bid-radio col-md-12">
-												   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
-												   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>								      
-													<label class="cabins-<?=$result->flight_number?> radio-inline <?=($status == $excluded_status)?"bid-visible":""?>" >
-														<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" ><?php echo $cabins[$value]; ?>
-													</label><br>
-												   <?php if($status == $excluded_status) { $i++; } } } ?>
-												   <?php if($i != 0){?>
-                                               		<label class="checkbox-inline<?=($result->fclr == null)?"bid-visible":""?>">
-														<input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid 
-													</label>	
-												   <?php } ?>
-													<label class="radio-inline">
-														<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="" >No Bid
-													</label>
-                                              </div>
-											</td>
-											<td>
-												<?php if($result->fclr != null){													 
-													 foreach($result->to_cabins as $key => $value) {		 
-													  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
-													   if($status == $sent_mail_status){
-														 break;  
-													   }
-													 }
-													 $i = array_search($key, explode(',',$result->fclr)); 	?>       
-												
-													<div class="price-range col-md-12">		
-													<b>Min</b> <i class="fa fa-dollar"></i> <b id="bid_min_<?=$result->flight_number?>"></b>
-															<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
-													<b>Max</b> <i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b>
-													</div>
-												<?php }  ?>
-											</td>
-										</tr>
-										<?php $n++; } ?>
-										<?php $n = 1; if(count($baggage) > 0){ ?>
-											<tr>
-												<td colspan=3 style="color: black;"><b> Baggage offer</b> </td>
-											</tr>
-											<?php
-										
-											?>
-											<?php foreach($baggage as $bg => $row){ 
-													
-												?>
-												<?php $bslider = $row['pax'];
-												// var_dump($bslider);
-												// die();
-												?>
-												<tr>
-													<td>
-														<p><?=$n++ ?> . <?php echo $bslider['from_city_name']; ?> To <?php echo $bslider['to_city_name']; ?> </p>
-													</td>
-													<td><p>Booked Cabin</p></td>
-													<td></td>
-												</tr>
-												<tr>
-													<td style="color: black;">
-														<div style="text-align:left" class="bid-info">
-															<div class="col-md-5">
-																<p style="color:<?=$mail_header_color?>"><?php echo $bslider['from_city_name']; ?> <span class="time-bid"><?=date('H:i A',$bslider['dep_date']+$bslider['dept_time']);?></span></p>
-																<ul>
-																	<li><?php echo date('d M Y',$bslider['dep_date']); ?></li>
-																	<li style="color:<?=$mail_header_color?>"><?php echo $bslider['flight_number'];?></li>
-																</ul>
-																<small><?php echo $bslider['from_airport']; ?></small>
-															</div>
-															<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
-															<div style="text-align:left" class="col-md-5">
-																<p style="color:<?=$mail_header_color?>"><?php echo $bslider['to_city_name']; ?><span class="time-bid"><?=date('H:i A',$bslider['arrival_date']+$bslider['arrival_time']);?></span></p>
-																<ul>
-																	<li><?php echo date('d M Y',$bslider['arrival_date']); ?></li>
-																	<li style="color:<?=$mail_header_color?>"><?php echo $bslider['flight_number'];?></li>
-																</ul>
-																<small><?php echo $bslider['to_airport']; ?></small>
-															</div>
-														</div>
-													</td>
-													<td style="color: black;"><p></p>
-														<label class="checkbox-inline">
-															<input type="checkbox" name="ckb" id="ckb" value="" >Not Interested
-														</label>
-													</td>
-													<?php if($bclr[$bslider['ond']]->bag_type=='PC'){ ?>
-													<td style="color: black;" >
-													<div id="slider">
-														<div class="price-range col-md-12">	
-															<b><?=$bclr[$bslider['ond']]->bag_type . " - " . $bslider['per_min']?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
-															<input id="baggage_slider<?=$bslider['ond']?>" data-slider-id='baggage_slider<?=$bslider['ond']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$bslider['piece'];?>" data-slider-step="1" data-slider-value="<?=$bslider['min_price'];?>" data-slider-handle="round" min-slider-handle="50"/>
-															<b> &nbsp;&nbsp;<?=$bslider['piece']?></b>
-														</div>
-													</div>
-													</td>
-													<?php } else{ ?>
-														<td style="color: black;" >
-														<div id="slider">
-														<div class="price-range col-md-12">	
-															<b><?=$bclr[$bslider['ond']]->bag_type . " - " . $bslider['per_min']?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
-															<input id="baggage_slider<?=$bslider['ond']?>" data-slider-id='baggage_slider<?=$bslider['ond']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$bslider['per_max'];?>" data-slider-step="1" data-slider-value="<?=$bslider['min_price'];?>" data-slider-handle="round" min-slider-handle="50"/>
-															<b> &nbsp;&nbsp;<?=$bslider['per_max']?></b>
-														</div>
-														</div>
-													</td>
+					<div class="col-sm-12 top-tbl-bar">
+    					   <div class="col-xs-7 col-sm-5 col-lg-6"><h2>Flight Information</h2></div>
+    					   <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
+					   </div>
+ <div class="col-sm-12 sub-tbl-bar"><h2 style='float:left'>Upgrade Offer</h2></div>	           
+   <div class="container">
+	 <div class="accordion" id="upgrade-refine">
+                <?php $n=1; foreach($results as $result){?>
 
-												<?php } ?>
-												</tr>
-											<?php } ?>
-										 <?php } ?>
-									</tbody>
-								</table>
-								<!--========Mobile Data Bidding=======--> 
-								<div class="hidden-lg hidden-md hidden-sm mob-slide">
-									<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">		
-										<div class="panel panel-success">
-											<div class="panel-heading" role="tab" id="headingOne">
-												<h4 class="panel-title">
-													<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne" class="collapsed">
-														<i class="short-full glyphicon glyphicon-plus"></i>
-														<p><?=$n-1?> . <?php echo $result->from_city; ?> To <?php echo $result->to_city; ?> </p>
-													</a>
-												</h4>
-											</div>
-											<div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false" style="height: 0px;">
-												<div class="panel-body">
-													<div class="col-xs-12">
-														<div class="col-xs-12">
-															<div style="background:<?=$mail_header_color?>" class="col-xs-12">
-																<h4>Flight Information</h4>
-															</div>
-															<div class="bid-info <?=($result->fclr == null)?"bid-visible":""?>">
-																<div class="col-md-5">
-																	<p style="color:<?=$mail_header_color?>"><?php echo $result->from_city; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time)?></span></p>
-																	<ul>
-																		<li><?php echo date('d M Y',$result->dep_date); ?></li>
-																		<li style="color:<?=$mail_header_color?>"><?php echo $result->carrier_code.$result->flight_number; ?></li>
-																		<!--<li><?=$result->time_diff?></li>-->
-																	</ul>
-																	<small data-toggle="tooltip" data-placement="top" title="<?php echo $result->from_city; ?>" class="badge">Airport Info</small>
-																</div>
-																<div class="col-md-2"><p style="text-align:center;"><i class="fa fa-plane"></i></p></div>
-																<div class="col-md-5">
-																	<p style="color:<?=$mail_header_color?>"><?php echo $result->to_city; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time)?></span></p>
-																	<ul>
-																		<li><?php echo date('d M Y',$result->arrival_date); ?></li>
-																		<li style="color:<?=$mail_header_color?>"><?php echo $result->carrier_code.$result->flight_number; ?></li>
-																		<!--<li><?=$result->time_diff?></li>-->
-																	</ul>
-																	<small data-toggle="tooltip" data-placement="top" title="<?php echo $result->to_city; ?>" class="badge">Airport Info</small>
-																</div>
-															</div>
-														</div><br>
-														<div class="col-xs-12">
-															<div style="background:<?=$mail_header_color?>" class="col-xs-12">
-																<h4>Upgrade To Cabin</h4>
-															</div>
-															<div class="radio-mob">
-															   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
-															   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>								      
-																<label class="cabins-<?=$result->flight_number?> radio-inline <?=($status == $excluded_status)?"bid-visible":""?>" >
-																	<input type="radio" name="mb_bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" ><?php echo $cabins[$value]; ?>
-																</label><br>
-															   <?php if($status == $excluded_status) { $i++; } } } ?>
-															   <?php if($i != 0){?>
-																			<label class="checkbox-inline<?=($result->fclr == null)?"bid-visible":""?>">
-																	<input type="checkbox" name="mb_bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid 
-																</label>	
-															   <?php } ?>
-															</div>
-														</div><br><br>
-														<div class="col-xs-12">
-															<div style="background:<?=$mail_header_color?>" class="col-xs-12">
-																<h4>Bid Amount</h4>
-															</div>
-															<div class="col-xs-12">
-																<?php if($result->fclr != null){																	 
-																	 foreach($result->to_cabins as $key => $value) {		 
-																	  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
-																	   if($status == $sent_mail_status){
-																		 break;  
-																	   } 
-																	 }
-																	 $i = array_search($key, explode(',',$result->fclr)); 
-																	 ?>       
-																	
-																	<div class="price-range col-md-12">		
-																		<span><b>Min</b> <i class="fa fa-dollar"></i> <b id="mb_bid_min_<?=$result->flight_number?>"></b></span>
-																			<input id="mb_bid_slider_<?=$result->flight_number?>" data-slider-id='mb_bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
-																		<span class="max-range"><b>Max</b> <i class="fa fa-dollar"></i> <b id="mb_bid_max_<?=$result->flight_number?>"></b></span>
-																	</div>
-																<?php }  ?>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
+    <div class="hidden-phone hidden-xs">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#upgrade-refine" href="#upgrade-search<?=$n?>">
+              <legend><h2><?=$n?> . <?php echo $result->from_city; ?> To <?php echo $result->to_city; ?></h2></legend>
+            </a>
+        </div>
+    </div>
+
+    <div class="visible-phone visible-xs">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#upgrade-refine" href="#upgrade-search<?=$n?>">
+              <legend><h2><?=$n?> . <?php echo $result->from_city; ?> To <?php echo $result->to_city; ?></h2></legend>
+            </a>
+        </div>
+    </div>
+    <div id="upgrade-search<?=$n?>" class="accordion-body collapse in">
+        <div class="accordion-inner">
+                <div class="row">
+                    
+                    <div class="col-xs-12 col-sm-5 col-lg-4 lft-gap">
+                        <div class="col-xs-6 col-sm-6">                        
+                                <p style="color:<?=$mail_header_color?>"><?php echo $result->from_city; ?> <span class="time-bid"><?=date('H:i A',$result->dep_date+$result->dept_time);?></span></p>
+        						<ul>
+        							<li><?php echo date('d M Y',$result->dep_date); ?></li>
+        							<li style="color:<?=$mail_header_color?>"><?php echo $result->carrier_code.$result->flight_number; ?></li>
+        							<!--<li><?=$result->time_diff?></li>-->
+        						</ul>
+        						<small><?php echo substr($result->from_airport,0,25) . ".."; ?></small>                        
+                    	</div>
+
+                        <div class="col-xs-6 col-sm-6">
+
+                                <p style="color:<?=$mail_header_color?>"><?php echo $result->to_city; ?> <span class="time-bid"><?=date('H:i A',$result->arrival_date+$result->arrival_time);?></span></p>
+                                <ul>
+                                	<li><?php echo date('d M Y',$result->arrival_date); ?></li>
+                                	<li style="color:<?=$mail_header_color?>"><?php echo $result->carrier_code.$result->flight_number; ?></li>
+                                	<!--<li><?=$result->time_diff?></li>-->
+                                </ul>
+                                <small><?php echo substr($result->to_airport,0,25) . ".."; ?></small>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-2 col-lg-2 lft-gap">
+                        <div class="col-xs-12 col-sm-12"><b style="color:#000; float:left">Upgrade To</b></div>
+                        <div class="col-xs-12 col-sm-12">
+    						<div class="col-xs-12 col-sm-12">
+    						    <div class="lst-box">
+    						    
+							   <ul>
+							   <?php $i=0; //$offer_cabins = explode(',',$result->to_cabins);
+							   foreach($result->to_cabins as $key => $value) { if($result->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>			
+								<li class="cabins-<?=$result->flight_number?> radio-inline <?=($status == $excluded_status)?"bid-visible":""?>" >
+									<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="<?php echo $value.'|'.$key; ?>" ><?php echo $cabins[$value]; ?>
+								</li>
+							   <?php if($status == $excluded_status) { $i++; } } } ?>
+							   <?php if($i != 0){?>
+                           		<li class="checkbox-inline<?=($result->fclr == null)?"bid-visible":""?>">
+									<input type="checkbox" name="bid_action_<?=$result->flight_number?>" value="1" /> Cancel Bid 
+								</li>	
+							   <?php } ?>
+								<li class="radio-inline" >
+									<input type="radio" name="bid_cabin_<?=$result->flight_number?>" value="" >No Bid
+								</li>
+								 </ul>
+								 </div>
+                           </div>
+                        
+                        </div>
+
+                    </div>
+                    <div class="col-xs-12 col-sm-3 col-lg-4 lft-gap">
+                            
+                            <?php if($result->fclr != null){													 
+								 foreach($result->to_cabins as $key => $value) {		 
+								  $split = explode('-',$key); $key = $split[0]; $status = $split[1];
+								   if($status == $sent_mail_status){
+									 break;  
+								   }
+								 }
+								 $i = array_search($key, explode(',',$result->fclr)); 	?>       
+							
+								<div class="price-range col-md-12">		
+								<span style="float:left;width:60px !important;"><b>Min</b> <i class="fa fa-dollar"></i> <b id="bid_min_<?=$result->flight_number?>"></b></span>
+								<input id="bid_slider_<?=$result->flight_number?>" data-slider-id='bid_slider_<?=$result->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$result->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$result->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$result->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
+								<span style="float:right"><b>Max</b> <i class="fa fa-dollar"></i> <b id="bid_max_<?=$result->flight_number?>"></b></span>
+								</div>
+							<?php }  ?>
+                        </div>
+                    <div  id="side-image-<?=$result->flight_number?>" class="col-xs-12 col-sm-2 col-lg-2 side-image" style="margin:10px 0;">
+                    </div>
+                </div>
+            </div> 
+            
+	    </div>
+
+ <script>
+	$(window).bind('resize load', function() {
+    if ($(this).width() <= 767) {
+        $('#upgrade-search<?=$n?>').removeClass('in');
+    } else {
+        $('#upgrade-search<?=$n?>').addClass('in');
+    }
+});
+</script>               
+    			   
+	    
+<?php $n++;}  ?>	    
+</div>	    
+</div>	    
+
+</div>					   
+
+<div class="clear"></div>
+
+
+<div class="col-sm-12 sub-tbl-bar"><h2 style='float:left'>Baggage offer</h2></div>
+   <div class="container">
+	 <div class="accordion" id="baggage-refine">
+ 	<?php $n=1;foreach($baggage as $bg => $row){ ?>
+				<?php $bslider = $row['pax'];
+				// var_dump($bslider);
+				// die();
+?>
+    <div class="hidden-phone hidden-xs">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#baggage-refine" href="#baggage-search<?=$n?>">
+              <legend><h2><?=$n ?> . <?php echo $bslider['from_city_name']; ?> To <?php echo $bslider['to_city_name']; ?></h2></legend>
+            </a>
+        </div>
+    </div>
+
+    <div class="visible-phone visible-xs">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#baggage-refine" href="#baggage-search<?=$n?>">
+              <legend><h2><?=$n ?> . <?php echo $bslider['from_city_name']; ?> To <?php echo $bslider['to_city_name']; ?></h2></legend>
+            </a>
+        </div>
+    </div>
+    <div id="baggage-search<?=$n?>" class="accordion-body collapse in">
+        <div class="accordion-inner">
+                <div class="row">
+                    
+                    <div class="col-xs-12 col-sm-5 col-lg-4 lft-gap">
+                        <div class="col-xs-6 col-sm-6">                        
+                                <p style="color:<?=$mail_header_color?>"><?php echo $bslider['from_city_name']; ?> <span class="time-bid"><?=date('H:i A',$bslider['dep_date']+$bslider['dept_time']);?></span></p>
+								<ul>
+									<li><?php echo date('d M Y',$bslider['dep_date']); ?></li>
+									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['flight_number'];?></li>
+								</ul>
+								<small><?php echo substr($bslider['from_airport'],0,25) . ".."; ?></small>                       
+                            </div>
+
+                        <div class="col-xs-6 col-sm-6">
+                                <p style="color:<?=$mail_header_color?>"><?php echo $bslider['to_city_name']; ?> <span class="time-bid"><?=date('H:i A',$bslider['arrival_date']+$bslider['arrival_time']);?></span></p>
+								<ul>
+									<li><?php echo date('d M Y',$bslider['arrival_date']); ?></li>
+									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['flight_number'];?></li>
+								</ul>
+								<small><?php echo substr($bslider['to_airport'],0,25) . ".."; ?></small>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-2 col-lg-2 lft-gap">
+                        <div class="col-sm-12">
+    						<label class="checkbox-inline">
+								<input type="checkbox" name="ckb" id="ckb" value="" >Check this box if not Interested
+							</label>
+                        
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-3 col-lg-4 lft-gap">
+                       
+						<?php if($bclr[$bslider['ond']]->bag_type=='PC'){ ?>	
+							<div id="slider">
+								<div class="price-range col-md-12">	
+									<b><?=$bclr[$bslider['ond']]->bag_type . " - " . $bslider['per_min']?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
+									<input id="baggage_slider<?=$bslider['ond']?>" data-slider-id='baggage_slider<?=$bslider['ond']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$bslider['piece'];?>" data-slider-step="1" data-slider-value="<?=$bslider['min_price'];?>" data-slider-handle="round" min-slider-handle="50"/>
+									<b> Max&nbsp;&nbsp;<?=$bslider['piece']?> Piece </b>
 								</div>
 							</div>
-							<div class="col-md-12" style="padding-right:0;">
+
+<?php } else{ ?>
+								<div id="slider">
+								<div class="price-range col-md-12">	
+									<b><?=$bclr[$bslider['ond']]->bag_type . " - " . $bslider['per_min']?>&nbsp;&nbsp;&nbsp;&nbsp;</b>
+									<input id="baggage_slider<?=$bslider['ond']?>" data-slider-id='baggage_slider<?=$bslider['ond']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$bslider['per_max'];?>" data-slider-step="1" data-slider-value="<?=$bslider['min_price'];?>" data-slider-handle="round" min-slider-handle="50"/>
+									<b> Max&nbsp;&nbsp;<?=$bslider['per_max']?> KG</b>
+								</div>
+								</div>
+
+<?php } ?>
+
+						</div>
+					<div class="col-xs-12 col-sm-2 col-lg-2" style="margin:10px 0;">
+
+						<img src="http:/devx.sweken.com//assets/home/images/baggage.jpg" alt="Los Angeles" style="width:100%;">
+        			</div>
+                </div>
+           </div>
+      </div>
+ <script>
+	$(window).bind('resize load', function() {
+    if ($(this).width() <= 767) {
+        $('#baggage-search<?=$n?>').removeClass('in');
+    } else {
+        $('#baggage-search<?=$n?>').addClass('in');
+    }
+});
+</script>               
+    			   
+	    
+<?php $n++;}  ?>	    
+            </div>  
+	    </div>
+</div>	    
+	  
+			   
+
+
+					   
+				   
+								<div class="col-xs-12 col-md-12 col-md-10 col-lg-10" style="padding-right:0;">
 								<p class="pull-right">Total Bid Amount  <strong style="margin-left:12px;"> <i class="fa fa-dollar"></i> <b id="tot"></b></strong> </p>
 							</div>
-							<div class="col-sm-12">
+							<div class="col-xs-12 col-md-12 col-sm-10 col-lg-10">
 								<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button" style="background:<?=$mail_header_color?>">Continue</a>
 							</div>
 						</div>
-					</div>
-					<div class="col-md-2 hidden-sm">
-						<!--<div class="side-image">
-							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb1.jpg'); ?>" alt="img1">
-						</div>
-						<div class="side-image">
-							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb2.jpg'); ?>" alt="img1">
-						</div>
-						<div class="side-image">
-							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb3.jpg'); ?>" alt="img1">
-						</div>
-						<div class="side-image">
-							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb1.jpg'); ?>" alt="img1">
-						</div>
-						<div class="side-image">
-							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb2.jpg'); ?>" alt="img1">
-						</div>
-						<div class="side-image">
-							<img class="img-responsive img-thumbnail" src="<?php echo base_url('assets/home/images/multi-bid/mb3.jpg'); ?>" alt="img1">
-						</div>-->
-					
-						<div class="side-image"></div>
-					</div>
-					<div class="col-sm-12 hidden-xs hidden-md hidden-lg">
-						<marquee>
-						 <div class="side-image">
-                         </div>
-						 </marquee>
-					</div>
-					<div class="col-md-2">
-						<h2 class="baggage-title"><span>Baggage</span></h2>
-						<div class="bg-title-border"></div>
-						<img src="<?php echo base_url('assets/home/images/baggage.jpg'); ?>"  class="img-responsive" />
-					</div>
-				</div>
                 <div id="payment" class="">
 					<div class="col-md-9 col-sm-9">
 						<div class="col-md-2 back-btn">
@@ -347,23 +355,18 @@
 											</div>
 										</div>
 									</div>                            
-									<div class="form-group card-exp">
-										<div class="col-md-6">
+									<div class="form-group card-exp col-xs-12 col-sm-12 col-lg-12">
+										<div class="col-xs-6 col-sm-6 col-lg-6">
 											<label for="cardExpiry">Expiry Date</label>
 											<input type="number" class="form-control" name="month_expiry" id="month_expiry" placeholder="MM" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2"/>
 											/ <input type="number" class="form-control" name="year_expiry" id="year_expiry" placeholder="YY" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2"/>
 										</div>
-										<div class="col-md-6">
-											<label for="cardCVC" style="position: relative;margin-left: auto;margin-right: 2em;">CVV</label>
-											<input type="number" class="form-control pull-right" name="cvv" id="cvv" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="3" />
+										<div class="col-xs-6 col-sm-6 col-lg-6">
+											<label for="cardCVC" >CVV</label>
+											<input type="number" class="form-control " name="cvv" id="cvv" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="3" />
 										</div>
 									</div>
-									<div class="col-md-12">
-										<div class="pay-info">
-											<p style="color:<?=$mail_header_color?>">Your card will be saved for future usage upon BID Confirmation</p>
-											<p style="color:<?=$mail_header_color?>">Bid Participation Charges  <b>(1$ Non Refundable)</b></p>
-										</div>
-									</div>
+								
 								</div>
 								<?php if(in_array(2,$active_products)){ ?>
 									<div class="col-md-4 actual-cash">
@@ -380,6 +383,12 @@
 									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$result->offer_id?>)" style="background:<?=$mail_header_color?>">Pay Now</a>	
 								</div>
 								<?php } ?>
+									<div class="col-md-12">
+										<div class="pay-info">
+											<p style="color:<?=$mail_header_color?>">Your card will be saved for future usage upon BID Confirmation</p>
+											<p style="color:<?=$mail_header_color?>">Bid Participation Charges  <b>(1$ Non Refundable)</b></p>
+										</div>
+									</div>
 							</form>
 						</div>
 					</div>
@@ -410,7 +419,8 @@
         </div>
 	</div>
 </div>
-
+	    <br>
+	    <br>
 <script>
 var mile_value = <?=$mile_value?>;
 var mile_proportion = <?=$mile_proportion?>;
@@ -434,6 +444,7 @@ $(document).ready(function () {
 		 break;  
 	   }
 	 }
+		$flag =1;
 	 $i = array_search($key, explode(',',$result->fclr)); 
 	 if($flag == 1 && explode(',',$result->min)[$i]){  ?>  
 	$('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>]').filter('[value="<?=$value.'|'.$key?>"]').attr('checked', true);
@@ -470,7 +481,7 @@ function updateCabinMedia(flight_number){
 		  data: {"cabin" :upgrade_type,"carrierID":<?=$results[0]->carrier?>},
           dataType: "html",			
           success: function(data) {
-			   $('.side-image').html('');
+			   //$('.side-image').html('');
                $('.side-video').html('');				   
             var cabin_media = jQuery.parseJSON(data); 
 			var imghtml = ''; var videohtml = '';
@@ -479,7 +490,7 @@ function updateCabinMedia(flight_number){
 			for (i = 0; i < cabin_media['cabin_images'].length; i++) {			 
 			 imghtml += '<img class="img-responsive" src="<?=base_url("uploads/images/")?>'+cabin_media['cabin_images'][i]['image']+'" alt="img1">';
 			}
-             $('.side-image').html(imghtml);
+             $('#side-image-' + flight_number).html(imghtml);
 			 
 			//Dynamic Cabin Videos
             for (i = 0; i < cabin_media['cabin_videos'].length; i++) {			 
@@ -551,13 +562,13 @@ $('#miles').slider({
 		   var bg_pay_cash = (bg_val) - Math.round(dollar/2);;
 			$("#up_paid_cash").text(numformat(up_pay_cash));
 			$("#bg_paid_cash").text(numformat(bg_pay_cash));
-			$("#up_paid_miles").text(numformat(value/2) + ' Miles'+'($'+numformat(Math.round(dollar/2))+')'); 		
-			$("#bg_paid_miles").text(numformat(value/2) + ' Miles'+'($'+numformat(Math.round(dollar/2))+')'); 		
+			$("#up_paid_miles").text(numformat(value/2) + ' Miles ' +'($'+numformat(Math.round(dollar/2))+')'); 		
+			$("#bg_paid_miles").text(numformat(value/2) + ' Miles '+'($'+numformat(Math.round(dollar/2))+')'); 		
         <?php } else { ?>
 			$("#paid_cash").text(numformat(pay_cash));
-        	$("#paid_miles").text(numformat(value) + ' Miles'+'($'+numformat(Math.round(dollar))+')'); 		
+        	$("#paid_miles").text(numformat(value) + ' Miles '+'($'+numformat(Math.round(dollar))+')'); 		
 		<?php } ?>
-		return '$'+numformat(pay_cash)+' + '+numformat(value) + ' Miles'+'($'+numformat(Math.round(dollar))+')';
+		return '$'+numformat(pay_cash)+' + '+numformat(value) + ' Miles '+'($'+numformat(Math.round(dollar))+')';
 		//return value;
 	}
 });

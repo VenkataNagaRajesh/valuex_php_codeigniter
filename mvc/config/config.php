@@ -544,4 +544,4 @@ $config['demo'] = FALSE;
 $config['installed'] = TRUE;
 
 $config["clv_log_folder_path"] = APPPATH . "logs";
-$config["clv_log_file_pattern"] = "log-*.php";
+$config["clv_log_file_pattern"] = "log-*.log";
