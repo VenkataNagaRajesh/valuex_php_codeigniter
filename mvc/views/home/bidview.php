@@ -290,7 +290,7 @@
 						</div>
 					<div class="col-xs-12 col-sm-2 col-lg-2" style="margin:10px 0;">
 
-						<img src="http:/devx.sweken.com//assets/home/images/baggage.jpg" alt="Los Angeles" style="width:100%;">
+						<img src="<?=base_url('assets/home/images/baggage.jpg')?>" alt="Los Angeles" style="width:100%;">
         			</div>
                 </div>
            </div>
