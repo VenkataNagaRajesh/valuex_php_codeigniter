@@ -1173,7 +1173,9 @@ $sWhere $sOrder $sLimit";
                          //$data = $this->fclr_m->getUpgradeCabinsData($upgrade);
 			$rules = $this->eligibility_exclusion_m->apply_exclusion_rules();
 			 foreach($data as $f) {
-
+				 #Deactive old records of any
+				 $q = "UPDATE VX_offer_info SET active = 0 WHERE dtpf_id = ".$feed->dtpf_id." and product_id = 1 ";	
+				 $this->db->query($q);
 				 $ext = array();
                                                 $ext['dtpf_id'] = $feed->dtpf_id;
                                                 $ext['rule_id'] = $f->fclr_id;

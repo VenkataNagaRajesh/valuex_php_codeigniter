@@ -74,7 +74,8 @@ class bid_m extends MY_Model {
 	} else {
 		$this->db->where('dd.alias','sent_offer_mail');
 	}
-	$this->db->where("tpf.pnr_ref",$pnr_ref);	 
+	$this->db->where("tpf.pnr_ref",$pnr_ref);	
+	$this->db->where('pfe.active',1);   
 	$this->db->group_by('tpf.flight_number');
 	//$this->db->order_by('defto.level','ASC');
 	$query = $this->db->get();  
