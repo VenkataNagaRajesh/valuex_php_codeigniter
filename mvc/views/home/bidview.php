@@ -2,7 +2,7 @@
     /*09-02-2021 style sheet*/
 
 .subs-hdng{ width:100%; margin:0; padding:0; background:#f4f4f4; font-size:18px; font-weight:500; color:#000;}
-.top-tbl-bar{ width:100%; margin:20px 0; padding:0; background:#248168; float:left; border:0px;}
+.top-tbl-bar{ width:100%; margin:20px 0; padding:0; background:<?=$mail_header_color?>; float:left; border:0px;}
 .top-tbl-bar h2{ width:100%; margin:0; padding: 10px 0; font-size:20px; font-weight:500; color: #fff;}
 
 .sub-tbl-bar{ width:100%; margin:0px 0; padding:0; display:block; border:0px;}
@@ -88,7 +88,7 @@
 						<div class="pass-info">
 							<p>Passenger(s):<span style="color:<?=$mail_header_color?>"><?php echo ucfirst($results[0]->pax_names); ?></span>
 							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$results[0]->pnr_ref?></span></p>
-					<div class="col-sm-12 top-tbl-bar">
+					<div class="col-sm-12 top-tbl-bar" >
     					   <div class="col-xs-7 col-sm-5 col-lg-6"><h2>Flight Information</h2></div>
     					   <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
 					   </div>
@@ -466,8 +466,8 @@ $(document).ready(function () {
     mileSliderUpdate(); 
 	<?php if(in_array(2,$active_products) && count($baggage) > 0){ foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
 		
-	$('#baggage_slider<?=$bslider['ond']?>Slider .slider-selection').css({"background":"#f952be"});
-    $('#baggage_slider<?=$bslider['ond']?>Slider .slider-handle').css({"background":"#f952be"});
+	$('#baggage_slider<?=$bslider['ond']?>Slider .slider-selection').css({"background":"<?=$mail_header_color?>"});
+    $('#baggage_slider<?=$bslider['ond']?>Slider .slider-handle').css({"background":"<?=$mail_header_color?>"});
 	<?php } } ?>
 });
 
@@ -651,7 +651,7 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 	//	  } 
 		<?php } } ?>
 		<?php if(in_array(2,$active_products) && count($baggage) > 0) { 
-		  foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
+		  foreach($baggage as $pax => $paxval){ $bslider = $baggage[$pax]['pax']; ?> 
 		  var bg_val = $("#baggage_slider<?=$bslider['ond']?>").slider('getValue');
 		var price = <?=$bslider['price'] ?>;
 		var total_piece = <?=$bslider['total_piece'] ?>;
