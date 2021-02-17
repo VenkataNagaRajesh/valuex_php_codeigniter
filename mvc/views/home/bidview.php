@@ -290,7 +290,7 @@
 						</div>
 					<div class="col-xs-12 col-sm-2 col-lg-2" style="margin:10px 0;">
 
-						<img src="http:/devx.sweken.com//assets/home/images/baggage.jpg" alt="Los Angeles" style="width:100%;">
+						<img src="<?=base_url('assets/home/images/baggage.jpg')?>" alt="Los Angeles" style="width:100%;">
         			</div>
                 </div>
            </div>
@@ -651,7 +651,7 @@ $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$result->flight_number?>
 	//	  } 
 		<?php } } ?>
 		<?php if(in_array(2,$active_products) && count($baggage) > 0) { 
-		  foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
+		  foreach($baggage as $pax => $paxval){ $bslider = $baggage[$pax]['pax']; ?> 
 		  var bg_val = $("#baggage_slider<?=$bslider['ond']?>").slider('getValue');
 		var price = <?=$bslider['price'] ?>;
 		var total_piece = <?=$bslider['total_piece'] ?>;
