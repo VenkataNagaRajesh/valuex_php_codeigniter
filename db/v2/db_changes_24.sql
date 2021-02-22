@@ -23,3 +23,6 @@ insert into VX_permissions set description='Contract Document View',name='contra
 
 alter table VX_daily_tkt_pax_feed_raw add column ticket_number varchar(50) after marketing_carrier;
 alter table VX_daily_tkt_pax_feed add column ticket_number varchar(50) after marketing_carrier;
+
+update VX_permissions set name='pref_setting/app_settings' where name='pref_setting';
+update VX_menu set link='pref_setting/app_settings' where link='pref_setting';

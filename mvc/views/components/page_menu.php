@@ -55,15 +55,17 @@
                if($per == 1){ 
         ?>
     <?php if($menu['link']==$this->router->fetch_class()){
-         $menuactive ='active';
+          $menuactive ='active';
         }  else {
             if(in_array($this->router->fetch_class(),array_column($menu['child'],'link'))){
               $menuactive ="active";
+            } else if(in_array('pref_setting/airline_settings',array_column($menu['child'],'link'))){
+              $menuactive ="active";
             } else {
-            $menuactive ='';
-
-           }
+              $menuactive ='';
+            }
         }
+       // print_r($menu);
     ?>
           <li class="treeview <?=(count($menu['child'])>0)?'has-treeview':''?> <?=$menuactive?>">
             <a href="<?= base_url($menu['link']) ?>" class="nav-link">
@@ -79,10 +81,10 @@
             <?php foreach($menu['child'] as $child) {
                         if(permissionChecker($child['link'])) {
  ?>
-              <li class="nav-item  <?=($child['link']==$this->router->fetch_class())?'active':''?>">
+              <li class="nav-item  <?=(($child['link']==$this->router->fetch_class()||$child['link']==$this->router->fetch_class().'/'.$this->router->fetch_method()))?'active':''?>">
                 <a href="<?=base_url($child['link'])?>" class="nav-link">
                   <i class="fa <?=$child['icon']?> nav-icon"></i>
-                  <span><?=ucwords($child['menuName'])?></span   >
+                  <span><?=ucwords($child['menuName'])?></span>
                 </a>
               </li>
             <?php } } ?>

@@ -22,7 +22,7 @@ class Pref_setting extends Admin_Controller {
 	   }
 	}
 
-	public function index() {	
+	public function app_settings() {	
 	    $this->data['headerassets'] = array(
            'css' => array(
                    'assets/select2/css/select2.css',
