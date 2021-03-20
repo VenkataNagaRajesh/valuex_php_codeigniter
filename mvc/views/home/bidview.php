@@ -113,7 +113,7 @@
     					   <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
 					</div>
 <?php  $upgrade_offer = 0; $any_product = 0;
-	if ( in_array(1,explode(',',$offer[0]->products))) { // 1 - UPGRADE PRODUCT
+	if ( is_array($upgrade) && count($upgrade)) {// 1 - UPGRADE PRODUCT
 		$upgrade_offer = 1;
 		$any_product = 1;
 ?>
@@ -284,7 +284,7 @@ function updateCabinMedia(flight_number){
 </div>					   
 
 <?php  $baggage_offer = 0; 
-	if ( in_array(2,explode(',',$offer[0]->products))) {// 2 - BAGGAGE PRODUCT
+	if ( is_array($baggage) && count($baggage)) {// 2 - BAGGAGE PRODUCT
 		$baggage_offer = 1;
 		$any_product = 1;
 ?>
