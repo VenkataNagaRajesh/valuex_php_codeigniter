@@ -94,7 +94,7 @@ class Bidding extends MY_Controller {
 			$dteEnd   = new DateTime($arrival); 
 			$dteDiff  = $dteStart->diff($dteEnd);
 			$result->time_diff = $dteDiff->format('%d days %H hours %i min');
-            		$this->data['passengers_count'] = count(explode(',',$result->pax_names)); 			
+            		$this->data['passengers_count'] = count(explode(',',$offer[0]->pax_names)); 			
      	}      
         //$this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
 		$this->data['cabins']  = $this->bid_m->get_cabins($this->data['upgrade'][0]->carrier);

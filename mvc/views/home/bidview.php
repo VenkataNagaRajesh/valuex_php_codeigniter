@@ -75,7 +75,6 @@
 	}
 </script>
 
-
 <div class="container top-bar" style="background:<?=$mail_header_color?>">
 	<div class="row">
 		<div class="col-md-12">
@@ -108,6 +107,7 @@
 						<div class="pass-info">
 							<p>Passenger(s):<span style="color:<?=$mail_header_color?>"><?php echo ucfirst($offer[0]->pax_names); ?></span>
 							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$pnr_ref?></span></p>
+							<span class="pull-right" style="color:#333;">No Of Passengers : <?=$passengers_count?></span></p>
 					<div class="col-sm-12 top-tbl-bar" >
     					   <div class="col-xs-7 col-sm-5 col-lg-6"><h2>Flight Information</h2></div>
     					   <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
@@ -203,9 +203,9 @@
 								 $i = array_search($key, explode(',',$upg->fclr)); 	?>       
 							
 								<div class="price-range col-md-12">		
-								<span style="float:left;width:60px !important;"><b>Min</b> <i class="fa fa-dollar"></i> <b id="bid_min_<?=$upg->flight_number?>"></b></span>
+								<span style="float:left;width:60px !important;"><b>Min: $</b> <i class="fa fa-dollar"></i> <b id="bid_min_<?=$upg->flight_number?>"></b></span>
 								<input id="bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>" data-slider-id='bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$upg->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$upg->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$upg->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
-								<span style="float:right"><b>Max</b> <i class="fa fa-dollar"></i> <b id="bid_max_<?=$upg->flight_number?>"></b></span>
+								<span style="float:right"><b>Max: $</b> <i class="fa fa-dollar"></i> <b id="bid_max_<?=$upg->flight_number?>"></b></span>
 								</div>
 							<?php }  ?>
                         </div>
@@ -456,13 +456,12 @@ var cwtpoints<?=$ond?> = [];
 								</div>
 								<div class="col-md-4 actual-cash">
 								<?php if($upgrade_offer){ ?>
-									<p>Upgrade Total Cash: <strong><i class="fa fa-dollar"></i><b id="up_paid_cash"></b></strong></p>
-									<p>Upgrade Total Miles: <b id="up_paid_miles"></b> </p>
+									<p>Upgrade Total: <strong><i class="fa fa-dollar"></i><b id="up_paid_cash"></b></strong></p>
+									<!--<p>Upgrade Total Miles: <b id="up_paid_miles"></b> </p>-->
 								<?php }?>
 								<?php if($baggage_offer){ ?>
-									<p>Baggage Total Cash: <strong><i class="fa fa-dollar"></i> <b id="bg_paid_cash"></b></strong></p>
-									<p>Baggage Total Miles: <b id="bg_paid_miles"></b> </p>
-									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$upg->offer_id?>)" style="background:<?=$mail_header_color?>">Pay Now</a>	
+									<p>Baggage Total: <strong><i class="fa fa-dollar"></i> <b id="bg_paid_cash"></b></strong></p>
+									<!--<p>Baggage Total Miles: <b id="bg_paid_miles"></b> </p>-->
 								<?php }?>
 								</div>
 								<div class="col-md-4 actual-cash">
@@ -566,16 +565,18 @@ $(document).ready(function () {
 			  <?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
 			  var bg_val = bg_val + cwtpoints<?=$bslider['ond']?>[$("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>").slider('getValue')];
 			  <?php } ?>
-			   var bg_pay_cash = (bg_val) - Math.round(dollar);;
-			   $("#bg_paid_cash").text(numformat(bg_pay_cash));
-			   $("#bg_paid_miles").text(numformat(value) + ' ($ '+numformat(Math.round(dollar))+')'); 		
+			   //var bg_pay_cash = (bg_val) - Math.round(dollar);;
+			   var bg_pay_cash = bg_val;
+			   $("#bg_paid_cash").text('$ ' + numformat(bg_pay_cash));
+			   //$("#bg_paid_miles").text(numformat(value) + ' ($ '+numformat(Math.round(dollar))+')'); 		
 			  <?php } ?>
 			<?php if($upgrade_offer) { ?>
-			   	var up_pay_cash = (bid_amount - bg_val) - Math.round(dollar);;
+			   	//var up_pay_cash = (bid_amount - bg_val) - Math.round(dollar);;
+			   	var up_pay_cash = bid_amount - bg_val;
 				$("#up_paid_cash").text('$ ' + numformat(up_pay_cash));
-				$("#up_paid_miles").text(numformat(value) + ' ($ '+numformat(Math.round(dollar))+')'); 		
+				//$("#up_paid_miles").text(numformat(value) + ' ($ '+numformat(Math.round(dollar))+')'); 		
 			  <?php } ?>
-			$("#paid_cash").text('$' + numformat(pay_cash));
+			$("#paid_cash").text('$ ' + numformat(pay_cash));
 			$("#paid_miles").text(numformat(value) + ' ($ '+numformat(Math.round(dollar))+')'); 		
 			return '$ '+numformat(pay_cash)+' + '+numformat(value) + '($ '+numformat(Math.round(dollar))+')';
 		}
@@ -801,6 +802,9 @@ $("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>")
 		$(this).checked = true;
 		var bid_cabin = $(this).val();
 		var upg = $(this).val().split('|');
+
+		if  (upg != '') {
+			$("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>").slider('enable');
 		updateCabinMedia(<?=$upg->flight_number?>);
 	        $.ajax({
 		  async: false,
@@ -822,6 +826,15 @@ $("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>")
 			changeColors('<?=$upg->product_id . '_' . $upg->flight_number?>');
   		}
 		});
+		} else {
+			$("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>").slider('setAttribute', 'min',0);
+			$("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>").slider('setValue',0);
+			$("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>").slider('disable');
+			var tot_avg = getTotal();
+			$("#tot").text(numformat(tot_avg));
+			$("#bidtot").text(numformat(tot_avg));			
+			mileSliderUpdate();
+		}
  
 	});
 <?php } } ?>
