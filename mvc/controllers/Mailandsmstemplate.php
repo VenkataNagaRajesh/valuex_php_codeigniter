@@ -92,6 +92,7 @@ class Mailandsmstemplate extends Admin_Controller {
 		#$this->data['template_types'] =  $this->airports_m->getDefnsListByType(25);
 		#$dir = "assets/mail-temps";
 		$dir = "mvc/views/mail-templates";
+		#$dir = "mvc/views/offer-email-temps";
 
 		// Sort in ascending order - this is default
 		$a =  scandir($dir,1);
@@ -171,6 +172,7 @@ class Mailandsmstemplate extends Admin_Controller {
 		#$this->data['template_types'] =  $this->airports_m->getDefnsListByType(25);
 		#$dir = "assets/mail-temps";
 		$dir = "mvc/views/mail-templates";
+		#$dir = "mvc/views/offer-email-temps";
 
 		// Sort in ascending order - this is default
 		$a =  scandir($dir,1);

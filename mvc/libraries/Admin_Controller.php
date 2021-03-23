@@ -612,15 +612,13 @@ class Admin_Controller extends MY_Controller {
 	 public function sendMailTemplateParser($template,$data){
            	   $this->load->library('parser');
 		   $this->load->library('email');
-		   /* $data['upgrade_offer_mail_template1'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
-		   $data['upgrade_offer_mail_template3'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
-		    $data['upgrade_offer_mail_template2'] = $data['base_url'] .'assets/home/images/temp2-bnr.jpg';
-		    $data['logo'] =$data['base_url'] .'assets/home/images/emir.png';  
-            	    $data['airline_logo'] = $data['base_url'] .'assets/home/images/temp2-logo.jpg';  */           
+			//Check any customized tpl for this carrier saved in database 
 		   $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['airlineID'])->template;
 		   if ( empty($tpl) ) {
+			//Check any customized tpl file for this carrier 
 		   	$tpl_file = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$data['airlineID'])->template_path;
 			$dir = "mvc/views/mail-templates";
+			#$dir = "mvc/views/offer-email-temps";
 			$tpl_path = "$dir/$tpl_file";
 		        if (is_file($tpl_path)){
 				$tpl = file_get_contents($tpl_path);
@@ -635,16 +633,14 @@ class Admin_Controller extends MY_Controller {
 			return;
 		   }
 
-		   $tpl = str_replace(array('<!--{','}-->'),array('{','}'),$tpl);		   
+		   #$tpl = str_replace(array('<!--{','}-->'),array('{','}'),$tpl);		   
 		   $message = $this->parser->parse_string($tpl, $data,true);
 		  //$this->mydebug->debug($tpl); exit;
-		  
 		  // $template="home/temp-2";		
 		   //$message = $this->parser->parse($template, $data);
 		  $message =html_entity_decode($message);
 		  $siteinfos = $this->reset_m->get_site();
-			  $this->mydebug->debug($data['tomail'].'----'.$template);		  
-		  //print_r($message);
+		  $this->mydebug->debug($data['tomail'].'----'.$template);		  
 		  if($data['tomail']) {                      
 			$subject = $data['mail_subject'];
 			$email = $data['tomail'];

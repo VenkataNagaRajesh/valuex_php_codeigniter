@@ -48,7 +48,27 @@ class Offer_issue extends Admin_Controller {
                 $pnr_ref = htmlentities(escapeString($this->uri->segment(3)));
                 $email = htmlentities(escapeString($this->uri->segment(4)));
                 $mailto =  $email . "@gmail.com";
-		$this->run_offer_issue($pnr_ref, $mailto);
+                $data = array(
+                'tomail' => $mailto,
+                'pnr_ref' => "$pnr_ref",
+                'coupon_code' => '34535',
+                );			       
+               // $this->sendMailTemplateParser('bid_accepted',$data);
+		//$this->run_offer_issue($pnr_ref, $mailto);
+                $this->upgradeOfferMail($data);		 
+	}
+
+	function resendoffer(){
+                $pnr_ref = htmlentities(escapeString($this->uri->segment(3)));
+                $email = htmlentities(escapeString($this->uri->segment(4)));
+                $mailto =  $email . "@gmail.com";
+		//$this->run_offer_issue($pnr_ref, $mailto);
+                $data = array(
+                'tomail' => $mailto,
+                'pnr_ref' => "$pnr_ref",
+                'coupon_code' => '34535',
+                );			       
+                $this->upgradeOfferMail($data);		 
 	}
 
         public function tplviewnew() {
@@ -205,43 +225,45 @@ class Offer_issue extends Admin_Controller {
 			$coupon_code = $this->generateRandomString(6);
 
 			//echo $coupon_code;exit;
-			$array = array();
-			//$array['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
-			$array['booking_status'] = $booking_status;
-			$array["modify_date"] = time();
-                        $array["modify_userID"] = $this->session->userdata('loginuserID');
+			if (!$mail_to) {
+				$array = array();
+				//$array['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
+				$array['booking_status'] = $booking_status;
+				$array["modify_date"] = time();
+				$array["modify_userID"] = $this->session->userdata('loginuserID');
 
-			
-			// update extension table with new status
+				
+				// update extension table with new status
+				$this->offer_eligibility_m->update_dtpfext($array,$p_list);
+		
+				$ref['pnr_ref'] = $offer->pnr_ref;
+				$ref['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
+				$ref['offer_status'] = $booking_status; 
+				$ref["create_date"] = time();
+				$ref["modify_date"] = time();
+				$ref["create_userID"] = $this->session->userdata('loginuserID');
+				$ref["modify_userID"] = $this->session->userdata('loginuserID');
 
-			$this->offer_eligibility_m->update_dtpfext($array,$p_list);
-	
-			$ref['pnr_ref'] = $offer->pnr_ref;
-			$ref['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
-			$ref['offer_status'] = $booking_status; 
-			$ref["create_date"] = time();
-                        $ref["modify_date"] = time();
-                        $ref["create_userID"] = $this->session->userdata('loginuserID');
-                        $ref["modify_userID"] = $this->session->userdata('loginuserID');
+				$this->offer_reference_m->insert_offer_ref($ref);//offer update ref table
+				
+				// update tracker about change in status
+				$tracker = array();
+				$tracker['booking_status_from'] = $offer->booking_status;
+				$tracker['booking_status_to'] = $array['booking_status'];
+				$tracker['comment'] = 'Sent Offer Email';
+				$tracker["create_date"] = time();
+				$tracker["modify_date"] = time();
+				$tracker["create_userID"] = $this->session->userdata('loginuserID');
+				$tracker["modify_userID"] = $this->session->userdata('loginuserID');
+			//	var_dump($p_list);exit;
 
-			$this->offer_reference_m->insert_offer_ref($ref);//offer update ref table
-			
-			// update tracker about change in status
-			$tracker = array();
-			$tracker['booking_status_from'] = $offer->booking_status;
-			$tracker['booking_status_to'] = $array['booking_status'];
-			$tracker['comment'] = 'Sent Offer Email';
-			$tracker["create_date"] = time();
-			$tracker["modify_date"] = time();
-			$tracker["create_userID"] = $this->session->userdata('loginuserID');
-			$tracker["modify_userID"] = $this->session->userdata('loginuserID');
-		//	var_dump($p_list);exit;
-
-			foreach($p_list as $id) {
-				$tracker['dtpfext_id'] = $id;
-				$this->offer_issue_m->insert_dtpf_tracker($tracker);
+				foreach($p_list as $id) {
+					$tracker['dtpfext_id'] = $id;
+					$this->offer_issue_m->insert_dtpf_tracker($tracker);
+				}
 			}
-			
+
+		if ($mailto ) {
 			 // send email
 			 $message = '
 <html>
@@ -252,7 +274,7 @@ class Offer_issue extends Admin_Controller {
 <td width="5%"></td>
 	<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
 <h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
-Thankyou for booking with us. We are pleased to inform you that you are eligible to bid for higer cabin upgrade and
+Thank you for booking with us. We are pleased to inform you that you are eligible to bid for higer cabin upgrade and
 experience our luxury products and services.<br />
 <br />
 <big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
@@ -280,18 +302,14 @@ PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b
 			'airlineID' => $offer->carrier_code		
 			); 	
 
-		if ($mailto ) {
 			echo "<br>SENDING OFFFER=" . print_r($data,1);
-		}
 	    		$this->upgradeOfferMail($data);
-
-		}	
-
-		if ($mailto ) {
 			echo "<br>Offer Sent Successfully!";
-		} else {
-			redirect(base_url("offer_issue/index"));
+			return;
+
 		}
+		}
+		redirect(base_url("offer_issue/index"));
 	}
 
 
@@ -1053,114 +1071,158 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
     public function upgradeOfferMail($maildata){
 		$pnr_ref = $maildata['pnr_ref'];
-                $results = $this->bid_m->getPassengers($pnr_ref);
+                $offer = $this->bid_m->getPassengers($pnr_ref);
+
+		$prodlist = explode(',',$offer[0]->products);
+		$baggage_offer = 0;
+		$upgrade_offer = 0;
 		$exclude = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-                $cabins  = $this->airline_cabin_m->getAirlineCabins();
+          	$cabins  = $this->airline_cabin_m->getAirlineCabins();
+		foreach ($prodlist as $prodId) {
+			switch ($prodId) {
+				case 1:
+					$upgrade_offer = 1;
+					$results = $this->bid_m->getUpgradeOffers($pnr_ref);
+					if(count($results)>0){
+						foreach($results as $result){
+						  $result->to_cabins = explode(',',$result->to_cabins);
+						  $dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
+						  $arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
+						  $dteStart = new DateTime($dept); 
+						  $dteEnd   = new DateTime($arrival); 
+						  $dteDiff  = $dteStart->diff($dteEnd);
+						  $result->time_diff = $dteDiff->format('%H hrs %i Min');
+						  $cdata = array();
+						  foreach($result->to_cabins as $value){
+								$cdata = explode('-',$value);              		
+								if($cdata[2] != $exclude){
+									$tocabins[$cdata[3]] = $cabins[$cdata[0]];
+									//$result->tocabins[] = array('cabin_name' => $cabins[$cdata[0]]); 
+								}              
+							}
+							ksort($tocabins);
+							foreach($tocabins as $c){
+								$result->tocabins[] = array('cabin_name' => $c);
+							}
+							if($result->fclr != null && !empty($result->tocabins)){			
+								$paxdata['dep_date'] = date('D d M Y',$result->dep_date);
+								$paxdata['dep_time'] = date('H:i',$result->dept_time);
+								$paxdata['arrival_date'] = date('D d M Y',$result->arrival_date);
+								$paxdata['arrival_time'] = date('H:i',$result->darrival_time);
+								$paxdata['carrier_code'] = $result->carrier_code;
+								$paxdata['carrier_name'] = $result->carrier_name;
+								$paxdata['flight_number'] = $result->flight_number;
+								$paxdata['from_city_code'] = $result->from_city_code;
+								$paxdata['from_city'] = $result->from_city;
+								$paxdata['to_city_code'] = $result->to_city_code;
+								$paxdata['to_city'] = $result->to_city;
+								$paxdata['seat_no'] = $result->seat_no;
+								$paxdata['current_cabin'] = $result->current_cabin;
+								$paxdata['cabins'] = $result->tocabins;
+								$paxdata['time_diff'] = $result->time_diff;
+								$offerdata[] = $paxdata;
+							}
+								$maildata['carrier_name'] = $result->carrier_name;
+								break;
+							}
+					  		$maildata['highest_upgrade_class'] = $result->tocabins[0]['cabin_name'];
+						}
 
-		$bclr_offer = 0;
-		$fclr_offer = 0;
-
-		foreach($results as $result){
-                        
-                 
-                  $result->to_cabins = explode(',',$result->to_cabins);
-                  $dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
-		  $arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
-		  $dteStart = new DateTime($dept); 
-		  $dteEnd   = new DateTime($arrival); 
-		  $dteDiff  = $dteStart->diff($dteEnd);
-		  $result->time_diff = $dteDiff->format('%H hrs %i Min');
-		  $cdata = array();
-		   foreach($result->to_cabins as $value){
-				$cdata = explode('-',$value);              		
-				if($cdata[2] != $exclude){
-					$tocabins[$cdata[3]] = $cabins[$cdata[0]];
-					//$result->tocabins[] = array('cabin_name' => $cabins[$cdata[0]]); 
-				}              
-                	}
-		        ksort($tocabins);
-				foreach($tocabins as $c){
-					$result->tocabins[] = array('cabin_name' => $c);
-				}
-			if($result->fclr != null && !empty($result->tocabins)){			
-				$paxdata['dep_date'] = date('D d M Y',$result->dep_date);
-                                $paxdata['dep_time'] = date('H:i',$result->dept_time);
-                                $paxdata['arrival_date'] = date('D d M Y',$result->arrival_date);
-				$paxdata['arrival_time'] = date('H:i',$result->darrival_time);
-				$paxdata['carrier_code'] = $result->carrier_code;
-				$paxdata['carrier_name'] = $result->carrier_name;
-				$paxdata['flight_number'] = $result->flight_number;
-				$paxdata['from_city_code'] = $result->from_city_code;
-				$paxdata['from_city'] = $result->from_city;
-				$paxdata['to_city_code'] = $result->to_city_code;
-				$paxdata['to_city'] = $result->to_city;
-				$paxdata['seat_no'] = $result->seat_no;
-				$paxdata['current_cabin'] = $result->current_cabin;
-                                $paxdata['cabins'] = $result->tocabins;
-                                $paxdata['time_diff'] = $result->time_diff;
-				$offerdata[] = $paxdata;
-                    	}
-		    if ( $result->bclr ) {
-			$bclr_offer  = 1;
-		    }
-		    if ( $result->fclr ) {
-			$fclr_offer  = 1;
-		    }
-		    
-                    $maildata['carrier_name'] = $result->carrier_name;
+						//print_r($results); exit();
+					break;
+					case 2:
+						$baggage_offer = 1;
+						if ( $upgrade_offer) {
+							break;//HACK
+						}
+						$results = $this->offer_issue_m->getBaggageOffer($pnr_ref);
+						if(count($results)>0){
+						foreach($results as $result){
+						  $dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
+						  $arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
+						  $dteStart = new DateTime($dept); 
+						  $dteEnd   = new DateTime($arrival); 
+						  $dteDiff  = $dteStart->diff($dteEnd);
+						  $result->time_diff = $dteDiff->format('%H hrs %i Min');
+						  $cdata = array();
+							$paxdata['dep_date'] = date('D d M Y',$result->dep_date);
+							$paxdata['dep_time'] = date('H:i',$result->dept_time);
+							$paxdata['arrival_date'] = date('D d M Y',$result->arrival_date);
+							$paxdata['arrival_time'] = date('H:i',$result->darrival_time);
+							$paxdata['carrier_code'] = $result->carrier_code;
+							$paxdata['carrier_name'] = $result->carrier_name;
+							$paxdata['flight_number'] = $result->flight_number;
+							$paxdata['from_city_code'] = $result->from_city_code;
+							$paxdata['from_city'] = $result->from_city;
+							$paxdata['to_city_code'] = $result->to_city_code;
+							$paxdata['to_city'] = $result->to_city;
+							$paxdata['seat_no'] = $result->seat_no;
+							$paxdata['current_cabin'] = $result->current_cabin;
+							$paxdata['cabins'] = $result->tocabins;
+							$paxdata['time_diff'] = $result->time_diff;
+							$offerdata[] = $paxdata;
+							$maildata['carrier_name'] = $result->carrier_name;
+							break;
+						}
+						}
+					//print_r($results); exit();
 				break;
-                }
 
-		if ( $bclr_offer && $fclr_offer ) {
-			echo "<br>UPGRADE & BAGGAGE COMBO OFFER";
-                        $template = "upgrade_baggage_offer";    
-                        $maildata['mail_subject'] .= " Upgrade & Baggage offer";    
-		} elseif( $fclr_offer) {
-			echo "<br>UPGRADE OFFER";
-                        $template = "upgrade_offer";    
-                        $maildata['mail_subject'] .= " Upgrade offer";    
-		} elseif( $bclr_offer) {
-			echo "<br>BAGGAGE OFFER";
-                        $template = "baggage_offer";    
-                        $maildata['mail_subject'] .= " Baggage offer";    
+				default:
+			break;
 		}
-		echo "<br>TEMPLATE= " .$template;
+	}
 
-                if(count($results)>0){
-                  $maildata['highest_upgrade_class'] = $results[0]->tocabins[0]['cabin_name'];
-                }
-		//print_r($results); exit();
+	if ( $baggage_offer && $upgrade_offer ) {
+			#echo "<br>UPGRADE & BAGGAGE COMBO OFFER";
+			$template = "upgrade_baggage_offer";    
+			$maildata['mail_subject'] .= " Upgrade & Baggage offer";    
+		} elseif( $upgrade_offer) {
+			#echo "<br>UPGRADE OFFER";
+			$template = "upgrade_offer";    
+			$maildata['mail_subject'] .= " Upgrade offer";    
+		} elseif( $baggage_offer) {
+			#echo "<br>BAGGAGE OFFER";
+			$template = "baggage_offer";    
+			$maildata['mail_subject'] .= " Baggage offer";    
+		}
 
                 $primary_client = $this->user_m->getClientByAirline($maildata['airlineID'],6)[0];	   
 		$pax_names = $this->bid_m->getPaxNames($pnr_ref);
                 $maildata['offer_data'] = $offerdata;
+                $maildata['airlineID'] = $offer[0]->carrier_code;
+                $maildata['first_name'] = $offer[0]->pax_names;
+                $maildata['mail_subject'] = 'Congratulations! You got great deal ! Grab it..';
                 #$maildata = array_merge($maildata, $paxdata);
 		$dir = "assets/mail-temps";
-		#$tpl_path = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID'])->template_path;
-/*
-		if ( $fclr_offer) {
-                 $maildata['up_tpl_bnr'] = base_url("$dir/$tpl_path/header.jpg");
+		$tpl_file = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID'])->template_path;
+		$t = explode('.',$tpl_file);
+		$tpl_path = $t[0]. '-imgs';
+
+		if ( $upgrade_offer) {
+                 $maildata['up_tpl_bnr'] = base_url("$dir/$tpl_path/banner.jpg");
                  $maildata['up_tpl_bnrtop'] = base_url("$dir/$tpl_path/bannerTop.png");	
                  $maildata['up_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");
                  #$maildata['up_tpl_bnrbottom'] = base_url("assets/mail-temps/bg_temp1_images/bannerBottom.png");	
                  #$maildata['up_tpl_contact_img'] = base_url("assets/mail-temps/bg_temp2_images/contactUs.png");	
 		}
 
-		if( $bclr_offer) {
-                 #$maildata['bg_tpl_bnr'] = base_url("assets/mail-temps/bg_temp1_images/header.jpg');
-                 $maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/bag.png");	
-                 #$maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/header.jpg");
+		if( $baggage_offer) {
+                 $maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/banner.jpg");	
                  $maildata['bg_tpl_bnrtop'] = base_url("$dir/$tpl_path/bannerTop.png");	
                  $maildata['bg_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");	
+                 #$maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/header.jpg");
                  #$maildata['bg_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");	
                  #$maildata['bg_tpl_contact_img'] = base_url("$dir/$tpl_path/contactUs.png");	
+                 #$maildata['bg_tpl_bnr'] = base_url("assets/mail-temps/bg_temp1_images/header.jpg');
 		}
-                 $maildata['fb_icon'] = base_url("$dir/facebook.png");		
-                 $maildata['tag_img'] = base_url("$dir/tag.png");		
-                 $maildata['twitter_icon'] = base_url("$dir/twitter.png");	
-                 $maildata['pinterest_icon'] = base_url("$dir/pinterest.png");	
+                 $maildata['open_browser'] = base_url("$dir/$tpl_path/openBrowser.png");
+                 $maildata['facebook_icon'] = base_url("$dir/$tpl_path/facebook.png");		
+                 $maildata['tag_img'] = base_url("$dir/$tpl_path/tag.png");		
+                 $maildata['twitter_icon'] = base_url("$dir/$tpl_path/twitter.png");	
+                 $maildata['pinterest_icon'] = base_url("$dir/$tpl_path/pinterest.png");	
                  $maildata['openbrowser_img'] = base_url("$dir/openBrowser.png");
-*/
+            	 $maildata['airline_logo'] = base_url('uploads/images/'.$this->airline_m->getAirlineLogo($maildata['airlineID'])->logo);            
                  //$maildata['bg_tpl1_bnr'] = base_url('assets/mail-temps/bg_temp1_images/header.jpg');
                  //$maildata['bg_tpl1_bnrtop'] = base_url('assets/mail-temps/bg_temp1_images/bannerTop.png');	
                  //$maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
@@ -1209,8 +1271,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 		   /* $data['upgrade_offer_mail_template1'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
 		   $data['upgrade_offer_mail_template3'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
 		    $data['upgrade_offer_mail_template2'] = $data['base_url'] .'assets/home/images/temp2-bnr.jpg';
-		    $data['logo'] =$data['base_url'] .'assets/home/images/emir.png';  
-            	    $data['airline_logo'] = $data['base_url'] .'assets/home/images/temp2-logo.jpg';  */           
+		    $data['logo'] =$data['base_url'] .'assets/home/images/emir.png';  */
                 //$this->sendMailTemplateParser('upgrade_offer',$maildata);
                 $this->sendMailTemplateParser($template,$maildata);
 	}		
