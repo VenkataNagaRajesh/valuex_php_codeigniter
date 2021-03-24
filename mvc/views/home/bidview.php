@@ -689,7 +689,7 @@ $(document).ready(function () {
 						  success: function(data) {
 							var info = jQuery.parseJSON(data);              		
 							if(info['status'] == "success"){
-								//window.location = "<?=base_url('home/paysuccess')?>/"+offer_id;
+								window.location = "<?=base_url('home/paysuccess')?>/"+offer_id;
 								paysuccess = 1;
 							} else {
 								//alert(info['status']);
@@ -707,6 +707,7 @@ $(document).ready(function () {
 								if ( bg_weight_obj ) {
 									 bg_weight = bg_weight_obj.slider('getValue');
 								}
+								var flight_number = <?=$bslider['flight_number']?>;				
 								var bg_value = cwtpoints<?=$bslider['ond']?>[bg_weight];
 								var dtpfext_id=<?=$bslider['dtpfext_id']?>;
 								var product_id=<?=$bslider['product_id']?>;
@@ -714,7 +715,7 @@ $(document).ready(function () {
 								async: false,
 								type: 'POST',
 								url: "<?=base_url('homes/bidding/saveBidData')?>",       
-								data: {"ond":<?=$bslider['ond']?>,"orderID":orderID,"dtpfext_id":dtpfext_id,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"product_id":product_id,"tot_miles":bg_miles,"tot_bid":bg_tot_bid},
+								data: {"ond":<?=$bslider['ond']?>,"flight_number":flight_number,"orderID":orderID,"dtpfext_id":dtpfext_id,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"product_id":product_id,"tot_miles":bg_miles,"tot_bid":bg_tot_bid},
 								dataType: "html",			
 								success: function(data) {
 									var info = jQuery.parseJSON(data);              		
@@ -731,7 +732,7 @@ $(document).ready(function () {
 					       }
 					<?php } ?>
 						if(paysuccess == 1){
-							   window.location = "<?=base_url('home/paysuccess')?>/"+offer_id;
+							   //window.location = "<?=base_url('home/paysuccess')?>/"+offer_id;
 						} else {
 							   alert($(status).text());
 				}

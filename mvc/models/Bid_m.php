@@ -166,6 +166,8 @@ class bid_m extends MY_Model {
 		$this->db->update('UP_bid',$data);
         $id = $bid_data->bid_id;		
 	  }
+
+//		echo $this->db->last_query();
 	  return $id;
   } 
   

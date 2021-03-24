@@ -308,7 +308,7 @@ return $rResult;
 		#$this->db->where('dd.alias','bid_received');
 		#$this->db->group_by(array('pf.pnr_ref' , 'booking_status', 'from_city','to_city','carrier_code','carrier_c', 'from_city_name','to_city_name'));
 		$query = $this->db->get();
-		#var_dump($this->db->last_query());exit;
+	//	echo ($this->db->last_query());exit;
                 return $query->result();
 	}
 
