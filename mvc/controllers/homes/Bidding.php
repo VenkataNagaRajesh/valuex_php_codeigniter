@@ -56,6 +56,8 @@ class Bidding extends MY_Controller {
 		}
 		
 		$this->data['offer'] = $this->bid_m->getPassengers($this->session->userdata('pnr_ref'));
+		$offer = $this->data['offer'] ;
+		$offerId = $offer[0]->offer_id;
 		#print_r($this->data['upgrade'] ); exit;
 		//$this->data['tomail'] = explode(',',$this->data['upgrade'][0]->email_list)[0]; 
 		$this->data['pnr_ref'] = $this->session->userdata('pnr_ref');
@@ -67,9 +69,7 @@ class Bidding extends MY_Controller {
 		}
 		$this->data['upgrade'] = $this->bid_m->getUpgradeOffers($this->session->userdata('pnr_ref'));
                
-		$offerId = 0;
 		foreach($this->data['upgrade'] as $result ){
-			$offerId = $result->offer_id;
 			//reducing duplicate names for multi cabins case
 			$result->pax_names = $this->bid_m->getPaxNames($this->session->userdata('pnr_ref'));
 			$tocabins = array();
@@ -96,6 +96,7 @@ class Bidding extends MY_Controller {
 			$result->time_diff = $dteDiff->format('%d days %H hours %i min');
             		$this->data['passengers_count'] = count(explode(',',$offer[0]->pax_names)); 			
      	}      
+          	$this->data['offer_id'] = $offerId;
         //$this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
 		$this->data['cabins']  = $this->bid_m->get_cabins($this->data['upgrade'][0]->carrier);
        // $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
@@ -286,7 +287,7 @@ class Bidding extends MY_Controller {
 			}          
 			
 			
-			if(count($this->input->post("upgrade_type")) >= 1 ){
+			if($this->input->post("upgrade_type")){
 				$data['upgrade_type'] = $this->input->post("upgrade_type");
 				$data['cash'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
 				$data['miles'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
@@ -378,33 +379,43 @@ class Bidding extends MY_Controller {
 			   $maildata['cash'] = number_format($this->input->post("bid_value"));
 			   $maildata['base_url'] = base_url();			    		
 			   $maildata['tomail'] = explode(',',$maildata['email_list'])[0]; 
-               $maildata['type'] = $this->input->post('type');
-               $maildata['resubmit_link'] = base_url('homes/resubmit?pnr_ref='.$maildata['pnr_ref']);
+			   $maildata['type'] = $this->input->post('type');
+			   $maildata['resubmit_link'] = base_url('homes/resubmit?pnr_ref='.$maildata['pnr_ref']);
 			   $maildata['cancel_link'] = base_url('homes/cancel?pnr_ref='.$maildata['pnr_ref']);
 			   $maildata['bid_value'] = number_format($maildata['bid_value']);
-			   if($maildata['type'] == 'resubmit'){
-					$maildata['template'] = 'bid_resubmit';
-					$maildata['subject'] = 'Your bid has been Successfully Re-Submitted';
-				} else {
-					$maildata['template'] = 'bid_success';
-					$maildata['subject'] = 'Your bid has been Successfully Submitted';
+
+				if  ($data['productID'] == 1) {
+					$mail_subject = "Your bid has been Successfully";
+					if($maildata['type'] == 'resubmit'){
+						$mail_subject .= " Re-Submitted";
+						$maildata['template'] = 'bid_resubmit';
+					} else {
+						$mail_subject .= " Submitted";
+						$maildata['template'] = 'bid_success';
+					}
+				} elseif  ($data['productID'] == 2) {
+					$mail_subject = "Congratulations!. Your extra baggage offer has been confirmed";
+					$maildata['template'] = 'baggage_confirmed';
 				}
-               			   
-			  // $maildata['tomail'] = 'swekenit@gmail.com';
+				$maildata['subject'] = $mail_subject;
+
+			    //$maildata['tomail'] = 'vamsi63@gmail.com';
 				$this->sendMail($maildata);
 			    $json['status'] = "success";
 			  
-			    // calculate average and rank
-                  $bid_array['flight_number'] =  $data['flight_number'];
-                  $bid_array['upgrade_type'] = $data['upgrade_type'];
-                  $fly_data = $this->offer_issue_m->get_flight_date($data['offer_id'],$data['flight_number']);
-                  $bid_array['flight_date'] = $fly_data->dep_date;
-                  $bid_array['carrier_code'] = $fly_data->carrier_code;
-		  		  $bid_array['from_cabin'] = $fly_data->cabin;
-                  $this->offer_issue_m->calculateBidAvg($bid_array);
+				if  ($data['productID'] == 1) {
+			    	// calculate average and rank
+                 	 $bid_array['flight_number'] =  $data['flight_number'];
+                 	 $bid_array['upgrade_type'] = $data['upgrade_type'];
+                 	 $fly_data = $this->offer_issue_m->get_flight_date($data['offer_id'],$data['flight_number']);
+                 	 $bid_array['flight_date'] = $fly_data->dep_date;
+                  	$bid_array['carrier_code'] = $fly_data->carrier_code;
+		  		 	 $bid_array['from_cabin'] = $fly_data->cabin;
+                  	$this->offer_issue_m->calculateBidAvg($bid_array);
+				}
 								
-			  $this->session->unset_userdata('validation_check');
-			  $this->session->unset_userdata('pnr_ref');
+			  	$this->session->unset_userdata('validation_check');
+			  	$this->session->unset_userdata('pnr_ref');
     	    }	
 		  } else {
              if($this->input->post('type') == 'resubmit'){
@@ -418,7 +429,6 @@ class Bidding extends MY_Controller {
 			// $this->mydebug->debug("extension list");
 			  $p_list = explode(',',$extention_data->p_list);
 			 // $this->mydebug->debug($extention_data->p_list);		 
-			   
               $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $no_bid_Status,"modify_date"=>time()),$p_list);
 			  $json['status'] = "success";
 		  }		  

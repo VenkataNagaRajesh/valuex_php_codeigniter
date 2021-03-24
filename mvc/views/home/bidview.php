@@ -467,7 +467,7 @@ var cwtpoints<?=$ond?> = [];
 								<div class="col-md-4 actual-cash">
 									<p>Total Cash: <strong><i class="fa fa-dollar"></i> <b id="paid_cash"></b></strong></p>
 									<p>Total Miles: <b id="paid_miles"></b> </p>
-									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$upg->offer_id?>)" style="background:<?=$mail_header_color?>">Pay Now</a>	
+									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$offer_id?>)" style="background:<?=$mail_header_color?>">Pay Now</a>	
 								</div>
 								<div class="col-md-12">
 									<div class="pay-info">
@@ -646,7 +646,7 @@ $(document).ready(function () {
 						<?php if($baggage_offer) { ?>
 							var bg_tot_value = 0;
 						<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
-							bg_tot_value_obj = $("#bid_slider_<?=$bslider['producti_id']?>_<?=$bslider['flight_number']?>");
+							bg_tot_value_obj = $("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>");
 							if ( bg_tot_value_obj ) {
 								bg_tot_value = bg_tot_value + cwtpoints<?=$bslider['ond']?>[bg_tot_value_obj.slider('getValue')];
 							}
@@ -663,8 +663,11 @@ $(document).ready(function () {
 							var up_pay_cash = pay_cash;
 				<?php } ?>
 				      <?php foreach($upgrade as $upg){  if($upg->fclr != null) { ?>
-						var bid_value = $("#<?=$mobile_view?>bid_slider_<?=$upg->flight_number?>").slider('getValue')*<?=$passengers_count?>;			
-						//var pay_cash = bid_value - Math.round(miles * mile_value);				
+						var bid_value = $("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>").slider('getValue')*<?=$passengers_count?>;			
+						var up_pay_cash = bid_value - Math.round(miles * mile_value);				
+						var up_miles = miles;
+						var up_tot_bid = tot_bid;
+						//var up_pay_cash = pay_cash;
 						var flight_number = <?=$upg->flight_number?>;				
 						var upgrade = $('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$upg->flight_number?>]:checked').val().split('|');
 						var upgrade_type = upgrade[0];	
@@ -699,13 +702,14 @@ $(document).ready(function () {
 					  <?php if($baggage_offer){ ?>
 					       if(status != ''){
 							<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
-								var bg_weight_obj = $("#bid_slider_<?$bslider['product_id']?>_<?=$bslider['flight_number']?>");
+								var bg_weight_obj = $("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>");
 								var bg_weight = 0;
 								if ( bg_weight_obj ) {
 									 bg_weight = bg_weight_obj.slider('getValue');
 								}
 								var bg_value = cwtpoints<?=$bslider['ond']?>[bg_weight];
 								var dtpfext_id=<?=$bslider['dtpfext_id']?>;
+								var product_id=<?=$bslider['product_id']?>;
 								$.ajax({
 								async: false,
 								type: 'POST',
