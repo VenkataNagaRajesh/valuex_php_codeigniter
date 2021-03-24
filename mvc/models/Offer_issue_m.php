@@ -175,10 +175,10 @@ LEFT  JOIN (
 				select  flight_number,group_concat(distinct first_name, ' ' , last_name, ':', ptc.code, ':', pax_contact_email, ':' , phone , ':' , fqtv, ':', tier SEPARATOR '<br>' ) as p_list,
 						group_concat(distinct dep_date) as flight_date  ,
 						pnr_ref, 
-						group_concat(distinct fdef.cabin) as from_cabin  , fc.code as from_city, 
+						fdef.cabin as from_cabin  , fc.code as from_city, 
 tc.code as to_city, from_city as boarding_point , to_city as off_point, 
 fc.aln_data_value as from_city_name, tc.aln_data_value as to_city_name,
- group_concat(distinct pf1.cabin) as from_cabin_id, 
+ pf1.cabin as from_cabin_id, 
 						 car.code as carrier, pf1.carrier_code, pf1.dtpf_id,pf1.from_city as from_city_code,pf1.to_city as to_city_code,pf1.cabin as to_cabin_code
 				
 				from VX_daily_tkt_pax_feed pf1 
