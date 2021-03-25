@@ -8,7 +8,7 @@ $lang['menu_offer'] = "Offer Details";
 $lang['active'] = 'Status';
 $lang['offer_information'] = 'Offer Issue Information';
 
-$lang['offer_issue'] = 'Offer Issue';
+$lang['offer_issue'] = 'Send Offer Mail';
 $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
 $lang['fclr_id'] = 'FCLR ID';
@@ -22,6 +22,7 @@ $lang['pnr_ref'] = 'PNR Reference';
 $lang['passenger_list'] = 'Passenger List'; 
 $lang['generate_offer_eligibility'] = 'Generate Offer Eligibility Data';
 $lang['view'] = 'View';
+$lang['resend'] = 'Send Offer Mail to PAX';
 $lang['details'] = 'Details';
 $lang['avg'] = 'Average';
 $lang['min'] = 'Minimum';

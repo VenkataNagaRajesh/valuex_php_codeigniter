@@ -49,26 +49,27 @@ class Offer_issue extends Admin_Controller {
                 $email = htmlentities(escapeString($this->uri->segment(4)));
                 $mailto =  $email . "@gmail.com";
                 $data = array(
-                'tomail' => $mailto,
-                'pnr_ref' => "$pnr_ref",
-                'coupon_code' => '34535',
+						'tomail' => $mailto,
+						'pnr_ref' => "$pnr_ref",
+						'coupon_code' => '34535',
                 );			       
-               // $this->sendMailTemplateParser('bid_accepted',$data);
-		//$this->run_offer_issue($pnr_ref, $mailto);
                 $this->upgradeOfferMail($data);		 
 	}
 
 	function resendoffer(){
-                $pnr_ref = htmlentities(escapeString($this->uri->segment(3)));
-                $email = htmlentities(escapeString($this->uri->segment(4)));
-                $mailto =  $email . "@gmail.com";
-		//$this->run_offer_issue($pnr_ref, $mailto);
-                $data = array(
-                'tomail' => $mailto,
-                'pnr_ref' => "$pnr_ref",
-                'coupon_code' => '34535',
-                );			       
-                $this->upgradeOfferMail($data);		 
+		$pnr_ref = htmlentities(escapeString($this->uri->segment(3)));
+		$email = htmlentities(escapeString($this->uri->segment(4)));
+		$mailto =  $email . "@gmail.com";
+        $data = array(
+			'pnr_ref' => "$pnr_ref",
+			'coupon_code' => '34535',
+        );			       
+		if ($mailto) {
+			$data['tomail'] =  $mailto;
+		}
+        $this->upgradeOfferMail($data);		 
+		$this->session->set_flashdata('success', 'Offer Mail sent to PAX successfully');
+		redirect(base_url("offer_issue/index"));
 	}
 
         public function tplviewnew() {
@@ -179,7 +180,7 @@ class Offer_issue extends Admin_Controller {
 
 	}
 
-	public function run_offer_issue($pnr = '', $mailto = '') {
+	public function run_offer_issue($pnr = '') {
         $this->data['headerassets'] = array(
                 'css' => array(
                         'assets/select2/css/select2.css',
@@ -196,11 +197,10 @@ class Offer_issue extends Admin_Controller {
 		$days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
 
 		$current_time = time();
-	        $tstamp = $current_time + ($days * 86400);
+	    $tstamp = $current_time + ($days * 86400);
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
-/*		$sQuery = " select group_concat(distinct pfe.dtpfext_id) as pf_list , group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names , booking_status, pnr_ref , flight_number, carrier_code, from_city,to_city,dep_date, dep_time, arrival_time, fci.aln_data_value as from_city_name , tci.aln_data_value as to_city_name, group_concat(distinct pfe.fclr_id)  as fclr_list ,group_concat(pax_contact_email) as email_list , cab.aln_data_value as cabin from VX_aln_dtpf_ext pfe LEFT JOIN vx_aln_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN vx_aln_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  LEFT JOIN vx_aln_data_defns  cab on (cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13) where  dd.alias = 'new'  group by tpf.pnr_ref, flight_number, carrier_code, from_city, to_city ,dep_date,booking_status, from_city_name, to_city_name, dep_time, arrival_time, cabin";*/
 		$sQuery = " select tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND tpf.is_up_offer_processed = 1 and tpf.active = 1  ";
 		if ($pnr) {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
@@ -208,10 +208,6 @@ class Offer_issue extends Admin_Controller {
 			$sQuery .= " AND dd.alias = 'new' ";
 		}
 		$sQuery .= " group by tpf.pnr_ref ,  booking_status,tpf.carrier_code";
-		if ($mailto ) {
-			echo "<br>$sQuery";
-
-		}
 
 		$rResult = $this->install_m->run_query($sQuery);
 		$booking_status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
@@ -221,20 +217,16 @@ class Offer_issue extends Admin_Controller {
 			$p_list = explode(',',$offer->pf_list);
 			$namelist = explode(';',$offer->pax_names);
 			$emails_list = explode(',', $offer->email_list);
-
 			$coupon_code = $this->generateRandomString(6);
 
-			//echo $coupon_code;exit;
-			if (!$mail_to) {
-				$array = array();
-				//$array['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
-				$array['booking_status'] = $booking_status;
-				$array["modify_date"] = time();
-				$array["modify_userID"] = $this->session->userdata('loginuserID');
+			$array = array();
+			$array['booking_status'] = $booking_status;
+			$array["modify_date"] = time();
+			$array["modify_userID"] = $this->session->userdata('loginuserID');
 
 				
-				// update extension table with new status
-				$this->offer_eligibility_m->update_dtpfext($array,$p_list);
+			// update extension table with new status
+			$this->offer_eligibility_m->update_dtpfext($array,$p_list);
 		
 				$ref['pnr_ref'] = $offer->pnr_ref;
 				$ref['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
@@ -255,60 +247,22 @@ class Offer_issue extends Admin_Controller {
 				$tracker["modify_date"] = time();
 				$tracker["create_userID"] = $this->session->userdata('loginuserID');
 				$tracker["modify_userID"] = $this->session->userdata('loginuserID');
-			//	var_dump($p_list);exit;
 
 				foreach($p_list as $id) {
 					$tracker['dtpfext_id'] = $id;
 					$this->offer_issue_m->insert_dtpf_tracker($tracker);
 				}
+
+				$data = array(
+					'pnr_ref' => $offer->pnr_ref,
+					'coupon_code' => $ref['coupon_code'],
+					'tomail' => $offer->email_list
+				);			       
+				$this->upgradeOfferMail($data);		 
+				$this->session->set_flashdata('success', 'Offer Mail sent to all New PAX successfully');
+				redirect(base_url("offer_issue/index"));
+
 			}
-
-		if ($mailto ) {
-			 // send email
-			 $message = '
-<html>
-<body>
-<div style="max-width: 800px; margin: 0; padding: 30px 0;">
-	<table width="80%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-<td width="5%"></td>
-	<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
-Thank you for booking with us. We are pleased to inform you that you are eligible to bid for higer cabin upgrade and
-experience our luxury products and services.<br />
-<br />
-<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-<br />
-PNR Reference : <b style="color: blue;">'.$offer->pnr_ref.'</b>  Coupon Code :<b style="color: blue;">'.$coupon_code.'</b><br />
-<br />
-<br />
-<br />
-</td>
-</tr>
-</table>
-
-</div>
-</body>
-</html>
-';
-
-		       $data = array(
-			'first_name'   => $namelist[0],
-			'last_name' => '',
-			'tomail' => $mailto ? $mailto : $emails_list[0],
-			'pnr_ref' => $offer->pnr_ref,
-			'coupon_code' => $coupon_code, 		
-			'mail_subject' => "Congratulations! You got great deal ! Grab it.."	,
-			'airlineID' => $offer->carrier_code		
-			); 	
-
-			echo "<br>SENDING OFFFER=" . print_r($data,1);
-	    		$this->upgradeOfferMail($data);
-			echo "<br>Offer Sent Successfully!";
-			return;
-
-		}
-		}
 		redirect(base_url("offer_issue/index"));
 	}
 
@@ -507,6 +461,7 @@ $sWhere $sOrder $sLimit";
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->to_city.'</a>';
 			
 			$feed->booking_status = btn_view('offer_issue/view/'.$feed->offer_id, $this->lang->line('view'));
+                   	$feed->action =  '<a target="_blank" href="' . base_url('offer_issue/resendoffer/' . $feed->pnr_ref) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="SEND OFFER MAIL TO PAX"><i class="fa fa-check"></i></a>';
                         $feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default";
                         $feed->departure_date = date('d-m-Y',$feed->flight_date);
 			$bid_cnt = $this->bid_m->getBidByOfferID($feed->offer_id);	
