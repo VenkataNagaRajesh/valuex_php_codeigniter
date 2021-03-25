@@ -256,8 +256,9 @@ class Offer_issue extends Admin_Controller {
 				$data = array(
 					'pnr_ref' => $offer->pnr_ref,
 					'coupon_code' => $ref['coupon_code'],
-					'tomail' => $offer->email_list
+					'tomail' => $emails_list[0]
 				);			       
+
 				$this->upgradeOfferMail($data);		 
 				$this->session->set_flashdata('success', 'Offer Mail sent to all New PAX successfully');
 				redirect(base_url("offer_issue/index"));
@@ -1029,6 +1030,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                 $offer = $this->bid_m->getPassengers($pnr_ref);
 
 		$prodlist = explode(',',$offer[0]->products);
+		$email_list = explode(',',$offer[0]->email_list);
+		
 		$baggage_offer = 0;
 		$upgrade_offer = 0;
 		$exclude = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
@@ -1147,6 +1150,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                 $maildata['offer_data'] = $offerdata;
                 $maildata['airlineID'] = $offer[0]->carrier_code;
                 $maildata['first_name'] = $offer[0]->pax_names;
+                $maildata['tomail'] = $email_list[0];
                 $maildata['mail_subject'] = 'Congratulations! You got great deal ! Grab it..';
                 #$maildata = array_merge($maildata, $paxdata);
 		$dir = "assets/mail-temps";
