@@ -46,7 +46,7 @@ class bid_m extends MY_Model {
    */
   
    function getPassengers($pnr_ref,$bidstatus = NULL){
-	$this->db->select("oref.offer_id,tpf.carrier_code, group_concat( distinct (pfe.product_id)) products,   group_concat(distinct (first_name), ' ', last_name SEPARATOR ', ') as pax_names")->from('VX_daily_tkt_pax_feed tpf');	
+	$this->db->select("oref.offer_id,tpf.carrier_code, group_concat( distinct (pfe.product_id)) products,   group_concat(distinct (first_name), ' ', last_name SEPARATOR ', ') as pax_namesi, group_concat(tpf.pax_contact_email) as email_list")->from('VX_daily_tkt_pax_feed tpf');	
 	$this->db->join('VX_offer_info pfe','(tpf.dtpf_id = pfe.dtpf_id AND pfe.rule_id > 0 )','LEFT');		 
 	$this->db->join('UP_fare_control_range fclr','(fclr.fclr_id = pfe.rule_id )','LEFT');	
 	$this->db->join('BG_baggage_control_rule bclr','(bclr.bclr_id = pfe.rule_id )','LEFT');	
