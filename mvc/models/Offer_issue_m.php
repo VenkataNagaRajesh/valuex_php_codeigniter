@@ -220,6 +220,7 @@ return $rResult;
 		$sql = " SELECT DISTINCT oi.product_id, p.name FROM VX_offer_info oi, VX_offer o, VX_daily_tkt_pax_feed dtpf, VX_products p ";
 		$sql .= " WHERE dtpf.pnr_ref = o.pnr_ref AND dtpf.dtpf_id = oi.dtpf_id AND p.productID = oi.product_id";
 		$sql .= " AND o.offer_id = " . $id; 
+		$sql .= " AND oi.active = 1";
 		$rResult = $this->install_m->run_query($sql);
 		$products = Array();
 		foreach($rResult as $row) {
@@ -236,7 +237,7 @@ return $rResult;
 
 			$sql = " SELECT  SQL_CALC_FOUND_ROWS MainSet.min, MainSet.max, MainSet.average, MainSet.slider_start, MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin, MainSet.to_cabin , MainSet.cash, MainSet.miles, MainSet.booking_status, SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number FROM (  select distinct oref.offer_id, tdef.desc as to_cabin , oref.create_date as offer_date ,pf.flight_number, bs.aln_data_value as booking_status, oref.pnr_ref,oref.cash_percentage, oref.cash, oref.miles, fc.min, fc.max, fc.average, fc.slider_start from  VX_offer oref ";
 			$sql .= " LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref) ";
-			$sql .= " INNER JOIN VX_offer_info pext on (pext.dtpf_id = pf.dtpf_id) ";
+			$sql .= " INNER JOIN VX_offer_info pext on (pext.dtpf_id = pf.dtpf_id AND pext.active = 1) ";
 			$sql .= " LEFT JOIN UP_fare_control_range fc on (fc.fclr_id = pext.rule_id) ";
 			$sql .= " INNER JOIN  VX_airline_cabin_def tdef on (pf.carrier_code = tdef.carrier ) ";
 			$sql .= " LEFT  JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = fc.to_cabin AND tcab.aln_data_typeID = 13 AND tcab.alias = tdef.level) ";
@@ -257,7 +258,7 @@ return $rResult;
 
 			$sql = " SELECT  SQL_CALC_FOUND_ROWS MainSet.min_unit, MainSet.max_capacity, MainSet.min_price, MainSet.max_price, MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin, MainSet.cash, MainSet.miles, MainSet.booking_status, SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number FROM (  select distinct oref.offer_id, oref.create_date as offer_date ,pf.flight_number, bs.aln_data_value as booking_status, oref.pnr_ref,oref.cash_percentage, oref.cash, oref.miles, bc.min_unit, bc.max_capacity, bc.min_price, bc.max_price from  VX_offer oref ";
 			$sql .= " LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref) ";
-			$sql .= " INNER JOIN VX_offer_info pext on (pext.dtpf_id = pf.dtpf_id) ";
+			$sql .= " INNER JOIN VX_offer_info pext on (pext.dtpf_id = pf.dtpf_id AND pext.active = 1) ";
 			$sql .= " LEFT JOIN BG_baggage_control_rule bc on (bc.bclr_id = pext.rule_id) ";
 			$sql .= " LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20) ";
 			$sql .= " WHERE  oref.offer_id = ".$id." AND pext.product_id = " . $product_id . " ) as MainSet  ";
