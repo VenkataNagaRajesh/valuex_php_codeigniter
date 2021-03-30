@@ -967,7 +967,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','mark
 
  function downloadFormat(){
                 $this->load->helper('download');
-        $filename = APPPATH.'downloads/paxfeed.xlsx';
+        $filename = APPPATH.'downloads/paxfeed.xls';
                 force_download($filename, null);
       }
 
