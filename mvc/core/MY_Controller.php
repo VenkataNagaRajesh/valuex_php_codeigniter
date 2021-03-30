@@ -44,6 +44,7 @@ class MY_Controller extends CI_Controller {
 	}
 	
 	public function allowValidation($pnr_ref){	
+return;
 		$status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 		//$bid_confirmation = $this->preference_m->get_preference(array("pref_code" => 'BID_CONFIRMATION'))->pref_value;
 		//$bid_expire = $this->preference_m->get_preference(array("pref_code" => 'BID_EXPIRE'))->pref_value;
@@ -95,6 +96,7 @@ class MY_Controller extends CI_Controller {
 		   
 	   $tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($data['template'],$data['carrier'])->template;
 	   $message = $this->parser->parse_string($tpl, $data,TRUE);
+#echo $message;exit;
 	   // $this->mydebug->debug($message);
 	  $message =html_entity_decode($message);
 	  $siteinfos = $this->reset_m->get_site();  	     
@@ -103,7 +105,7 @@ class MY_Controller extends CI_Controller {
 		 $config['smtp_port']='26';
 		 $config['smtp_timeout']='30';
 		 $config['smtp_user']='info@sweken.com';
-		 $config['smtp_pass']='Infoinfo-9!';
+		 $config['smtp_pass']='Infoinfo-1!';
 		 $config['charset']='utf-8';
 		 $config['newline']="\r\n";
 		 $config['wordwrap'] = TRUE;

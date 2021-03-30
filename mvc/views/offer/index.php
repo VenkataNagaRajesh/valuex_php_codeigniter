@@ -101,8 +101,11 @@
 							<th class="col-lg-1"><?=$this->lang->line('destination')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('departure_date')?></th>							
 							<th class="col-lg-1"><?=$this->lang->line('flight_number')?></th>
-                            <th class="col-lg-1"><?=$this->lang->line('offer_status')?></th>
-                            <th class="col-lg-1"><?=$this->lang->line('bid_info')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('offer_status')?></th>
+							<th class="col-lg-1"><?=$this->lang->line('bid_info')?></th>
+							<?php if(permissionChecker('paxfeed_delete')){?>
+								<th class="col-lg-1 noExport" ><?=$this->lang->line('action')?></th>
+							<?php }?>
 						</tr>
 					 </thead>
 					 <tbody>                          
@@ -193,7 +196,8 @@ $("#dep_from_date").datepicker({
                    {"data": "departure_date" },                 
                    {"data": "flight_number" },
                    {"data": "booking_status" },
-		           {"data": "bid_info" }
+		           {"data": "bid_info" },
+		           {"data": "action" }
 
 				  ],			     
      dom: 'B<"clear">lfrtip',
