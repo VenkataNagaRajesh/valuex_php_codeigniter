@@ -68,14 +68,34 @@
 
 
 </style>
+<?php 
+		if ( $error) {
+?>
+				<br>
+				<br>
+				<div class="container" style="background-color:red">
+					<div class="row">
+						<div class="col-md-12" style="text-align:center;color:white">
+								<b><big><?=$error?></big></b>
+						</div>
+					</div>
+				</div>
+<?php
+		exit;
+		}
+	$any_product = 0;
+	if ($upgrade_offer || $baggage_offer) {// 2 - BAGGAGE PRODUCT
+		$any_product = 1;
+	}
+if ($any_product ) {
+?>
 <script>
-
 	function numformat(n){
 		return n.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 	}
 </script>
 
-<div class="container top-bar" style="background:<?=$mail_header_color?>">
+<div class="container" style="background:<?=$mail_header_color?>">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="col-md-2">
@@ -105,18 +125,44 @@
 					</div>
 					<div class="col-md-12 col-sm-12">
 						<div class="pass-info">
-							<p>Passenger(s):<span style="color:<?=$mail_header_color?>"><?php echo ucfirst($offer[0]->pax_names); ?></span>
-							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$pnr_ref?></span></p>
-							<span class="pull-right" style="color:#333;">No Of Passengers : <?=$passengers_count?></span></p>
+							<p>Passenger(s):<span style="color:<?=$mail_header_color?>"><?php echo ucfirst($pax_names); ?></span>
+							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$pnr_ref?></span>
+							<br><span class="pull-right" style="color:#333;">No Of Passengers: <?=$passengers_count?></span>
+<?php
+		if ( isset($resubmit) && isset($last_bid_total_value)) {
+			
+?>
+							<br><span class="pull-right" style="color:#333;align:right">Status: Re-bidding:  Last Bid Total: $ <i><?=$last_bid_total_value?></i></span>
+<?
+		} else {
+?>
+			<br><span class="pull-right" style="color:#333;align:right">Status: Fresh Bidding</i></span>
+<?
+		}
+?>
+							</p>
+<?
+	} else {
+?>
+				<br>
+				<br>
+				<div class="container" style="background-color:red">
+					<div class="row">
+						<div class="col-md-12" style="text-align:center;color:white">
+								<b><big>No Active Offers found for this PNR </big></b>
+						</div>
+					</div>
+				</div>
+<?
+	}
+?>
+<?php   
+	if ($upgrade_offer) {// 1 - UPGRADE PRODUCT
+?>
 					<div class="col-sm-12 top-tbl-bar" >
     					   <div class="col-xs-7 col-sm-5 col-lg-6"><h2>Flight Information</h2></div>
     					   <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
 					</div>
-<?php  $upgrade_offer = 0; $any_product = 0;
-	if ( is_array($upgrade) && count($upgrade)) {// 1 - UPGRADE PRODUCT
-		$upgrade_offer = 1;
-		$any_product = 1;
-?>
  <div class="col-sm-12 sub-tbl-bar"><h2 style='float:left'>Upgrade Offer</h2></div>	           
    <div class="container">
 	 <div class="accordion" id="upgrade-refine">
@@ -206,6 +252,15 @@
 								<span style="float:left;width:60px !important;"><b>Min: $</b> <i class="fa fa-dollar"></i> <b id="bid_min_<?=$upg->flight_number?>"></b></span>
 								<input id="bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>" data-slider-id='bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$upg->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$upg->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$upg->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
 								<span style="float:right"><b>Max: $</b> <i class="fa fa-dollar"></i> <b id="bid_max_<?=$upg->flight_number?>"></b></span>
+<?php
+			$last_bid_name = 'last_bid_' . $upg->product_id . '_' . $upg->flight_number;
+			if (isset($last_bid[$last_bid_name])) {
+					$last_bid_value = $last_bid[$last_bid_name];
+?>
+								<br><span style="float:left;"><b>Last Bid Value: $</b> <i class="fa fa-dollar"><?=$last_bid_value?></i></span>
+<?
+			}
+?>
 								</div>
 							<?php }  ?>
                         </div>
@@ -283,14 +338,16 @@ function updateCabinMedia(flight_number){
 <?php } ?>
 </div>					   
 
-<?php  $baggage_offer = 0; 
-	if ( is_array($baggage) && count($baggage)) {// 2 - BAGGAGE PRODUCT
-		$baggage_offer = 1;
-		$any_product = 1;
+<?php  
+	if ($baggage_offer) {// 2 - BAGGAGE PRODUCT
 ?>
 <div class="clear"></div>
 
 
+<div class="col-sm-12 top-tbl-bar" >
+   <div class="col-xs-7 col-sm-5 col-lg-6"><h2>Flight Information</h2></div>
+   <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
+</div>
 <div class="col-sm-12 sub-tbl-bar"><h2 style='float:left'>Baggage offer</h2></div>
    <div class="container">
 	 <div class="accordion" id="baggage-refine">
@@ -416,6 +473,18 @@ var cwtpoints<?=$ond?> = [];
 						</div>
 						<div class="col-md-10 booking-ref">
 							<h2 class="pull-right"><b>Booking Ref No: <?php echo $upgrade[0]->pnr_ref; ?></b></h2>
+<?php
+		if ( isset($resubmit) && isset($last_bid_total_value)) {
+			
+?>
+							<br><span class="pull-right" style="color:#333;align:right">Status: Re-bidding:  Last Bid Total: $ <i><?=$last_bid_total_value?></i></span>
+<?
+		} else {
+?>
+							<br><span class="pull-right" style="color:#333;align:right">Status: Fresh Bidding</i></span>
+<?
+		}
+?>
 						</div>
 						<div class="col-md-12">
 							<p class="pull-right">Total Bid Amount  <strong style="margin-left:12px;"> <i class="fa fa-dollar"></i> <b id="bidtot"></b></strong></p>
@@ -467,7 +536,7 @@ var cwtpoints<?=$ond?> = [];
 								<div class="col-md-4 actual-cash">
 									<p>Total Cash: <strong><i class="fa fa-dollar"></i> <b id="paid_cash"></b></strong></p>
 									<p>Total Miles: <b id="paid_miles"></b> </p>
-									<a href="#" type="button" class="btn btn-danger" onclick="saveBid(<?=$offer_id?>)" style="background:<?=$mail_header_color?>">Pay Now</a>	
+									<a href="#" type="button" class="btn btn-danger" onclick="saveBid('<?=$pnr_ref?>')" style="background:<?=$mail_header_color?>">Pay Now</a>	
 								</div>
 								<div class="col-md-12">
 									<div class="pay-info">
@@ -541,6 +610,9 @@ $('#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>')
 <?php } ?>
 <?php } ?>
 
+<?php
+if ( $any_product ) { //ANY PRODUCTS EXISTS
+?>
 	function getTotal() {
 		var tot_avg = 0;
 		<?php foreach($upgrade as $upg){  if($upg->fclr != null){ ?>//$(this). prop("checked") == true
@@ -610,9 +682,6 @@ $('#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>')
 	});
 		$('#milesSlider .slider-selection').css({"background":"#0feded"});
 		$('#milesSlider .slider-handle').css({"background":"#0feded"});	
-<?php
-if ( $any_product ) { //ANY PRODUCTS EXISTS
-?>
 	var mile_value = <?=$mile_value?>;
 	var mile_proportion = <?=$mile_proportion?>;
 
@@ -633,7 +702,7 @@ $(document).ready(function () {
 
 
 
-	function saveBid(offer_id) {	 
+	function saveBid(pnr_ref) {	 
 		var miles = $("#miles").slider('getValue');
 		var tot_bid = getTotal();
 		var pay_cash = tot_bid - Math.round(miles * mile_value);	
@@ -642,7 +711,7 @@ $(document).ready(function () {
 				  async: false,
 				  type: 'POST',
 				  url: "<?=base_url('homes/bidding/saveCardData')?>",          
-					  data: {"card_number" :$('#card_number').val(),"month_expiry":$('#month_expiry').val(),"year_expiry":$('#year_expiry').val(),"cvv":$('#cvv').val(),"offer_id":offer_id,"cash":pay_cash,"miles":miles,"tot_bid":tot_bid},
+					  data: {"card_number" :$('#card_number').val(),"month_expiry":$('#month_expiry').val(),"year_expiry":$('#year_expiry').val(),"cvv":$('#cvv').val(),"pnr_ref":pnr_ref,"cash":pay_cash,"miles":miles,"tot_bid":tot_bid},
 				  dataType: "html",	         		  
 				  success: function(data) {
 					var cardinfo = jQuery.parseJSON(data);
@@ -679,6 +748,7 @@ $(document).ready(function () {
 						var fclr_id = upgrade[1];
 						var dtpfext_id=<?=$upg->dtpfext_id?>;
 						var product_id=<?=$upg->product_id?>;
+						var offer_id=<?=$upg->offer_id?>;
 						//var bid_action = $('input[type=radio][name=bid_action_<?=$upg->flight_number?>]:checked').val();
 						if($('input[type=checkbox][name=<?=$mobile_view?>bid_action_<?=$upg->flight_number?>]').prop("checked") == false){
 							var bid_action = 1;
@@ -694,7 +764,7 @@ $(document).ready(function () {
 						  success: function(data) {
 							var info = jQuery.parseJSON(data);              		
 							if(info['status'] == "success"){
-								window.location = "<?=base_url('home/paysuccess')?>/"+offer_id;
+								window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
 								paysuccess = 1;
 							} else {
 								//alert(info['status']);
@@ -716,6 +786,7 @@ $(document).ready(function () {
 								var bg_value = cwtpoints<?=$bslider['ond']?>[bg_weight];
 								var dtpfext_id=<?=$bslider['dtpfext_id']?>;
 								var product_id=<?=$bslider['product_id']?>;
+								var offer_id=<?=$bslider['offer_id']?>;
 								$.ajax({
 								async: false,
 								type: 'POST',
@@ -737,7 +808,7 @@ $(document).ready(function () {
 					       }
 					<?php } ?>
 						if(paysuccess == 1){
-							   //window.location = "<?=base_url('home/paysuccess')?>/"+offer_id;
+							   //window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
 						} else {
 							   alert($(status).text());
 				}

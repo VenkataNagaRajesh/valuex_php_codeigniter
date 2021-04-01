@@ -18,7 +18,7 @@
 					</p>
 					<p>
 						<span>Reference No:</span><br>
-						<span><b>VALUEX: <?=$offer_data->pnr_ref?></b></span>
+						<span><b>VALUEX: <?=$pnr_ref?></b></span>
 					</p>
 				</div>
 			</div>

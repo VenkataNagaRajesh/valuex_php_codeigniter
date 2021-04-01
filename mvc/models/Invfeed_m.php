@@ -54,8 +54,8 @@ class Invfeed_m extends MY_Model {
                 $this->db->where($array);
 		$this->db->where('active','1');
 		$this->db->limit(1);
-				$query = $this->db->get();
-				$data = $query->row();
+		$query = $this->db->get();
+			$data = $query->row();
 		return  $data;
 	}
 

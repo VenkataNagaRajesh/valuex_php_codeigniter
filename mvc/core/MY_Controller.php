@@ -43,33 +43,7 @@ class MY_Controller extends CI_Controller {
 		 }
 	}
 	
-	public function allowValidation($pnr_ref){	
-return;
-		$status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
-		//$bid_confirmation = $this->preference_m->get_preference(array("pref_code" => 'BID_CONFIRMATION'))->pref_value;
-		//$bid_expire = $this->preference_m->get_preference(array("pref_code" => 'BID_EXPIRE'))->pref_value;
-					
-		$offer_data = $this->offer_reference_m->getOfferDataByRef($pnr_ref);
-		
-		 $bid_confirmation = $this->preference_m->get_preference_value_bycode('BID_CONFIRMATION','24',$offer_data->carrier_code);	
-         $bid_expire = $this->preference_m->get_preference_value_bycode('BID_EXPIRE','24',$offer_data->carrier_code);		
-		
-		if(empty($offer_data->offer_status)){
-			return "Invalid PNR Reference";
-		} else {
-			if($status == $offer_data->offer_status){
-				$added_timestamp = strtotime('+'.$bid_expire+$bid_confirmation.' day', time());
-				if($added_timestamp > $offer_data->dep_date){
-					$error ="Offer Expired";
-				} else {
-					$error = '';
-				}  
-			} else {
-				$error = "This Offer Status Not matched";
-			}
-			//$error = '';
-			return $error;
-	    }
+	public function allowValidation($pnr_ref) {	
 	}
 	
 	public function sendMail($data){

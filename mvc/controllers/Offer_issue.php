@@ -201,7 +201,7 @@ class Offer_issue extends Admin_Controller {
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
-		$sQuery = " select tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND tpf.is_up_offer_processed = 1 and tpf.active = 1  ";
+		$sQuery = " select pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND tpf.is_up_offer_processed = 1 and tpf.active = 1  ";
 		if ($pnr) {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
 		} else {
@@ -231,6 +231,7 @@ class Offer_issue extends Admin_Controller {
 				$ref['pnr_ref'] = $offer->pnr_ref;
 				$ref['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
 				$ref['offer_status'] = $booking_status; 
+				$ref['product_id'] =  $offer->product_id;
 				$ref["create_date"] = time();
 				$ref["modify_date"] = time();
 				$ref["create_userID"] = $this->session->userdata('loginuserID');
@@ -1151,10 +1152,11 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                 $maildata['airlineID'] = $offer[0]->carrier_code;
                 $maildata['first_name'] = $offer[0]->pax_names;
                 $maildata['tomail'] = $email_list[0];
-                $maildata['mail_subject'] = 'Congratulations! You got great deal ! Grab it..';
                 #$maildata = array_merge($maildata, $paxdata);
 		$dir = "assets/mail-temps";
-		$tpl_file = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID'])->template_path;
+		$tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID']);
+		$tpl_file = $$tpl->template_path;
+                $maildata['mail_subject'] = (!empty($tpl->mail_subject)) ? $tpl->mail_subject : "ongratulations! You got great deal ! Grab it..";
 		$t = explode('.',$tpl_file);
 		$tpl_path = $t[0]. '-imgs';
 

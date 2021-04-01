@@ -119,6 +119,22 @@
                               <input type="checkbox" name="default" class="form-control" id="default" style="height:19px"<?=($mailtemplate->default == 1)?"checked":''?>/>
                              </div>
                         </div>					   
+                       <?php
+                           if(form_error('email_subject'))
+                               echo "<div class='form-group has-error' >";
+                           else
+                               echo "<div class='form-group' >";
+                       ?>
+                           <label for="email_name" class="col-sm-1 control-label">
+                               <?=$this->lang->line("email_subject")?>
+                           </label>
+                           <div class="col-sm-4">
+                               <input type="text" class="form-control" id="email_subject" name="email_subject" value="<?=set_value('email_subject',$mailtemplate->mail_subject)?>" >
+                           </div>
+                           <span class="col-sm-4 control-label">
+                               <?php echo form_error('email_subject'); ?>
+                           </span>
+                       </div>					  
 						
 						<div class="form-group">
 							<div class="col-sm-1 control-label">

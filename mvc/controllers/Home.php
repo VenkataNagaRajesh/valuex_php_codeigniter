@@ -20,7 +20,7 @@ class Home extends MY_Controller {
 	protected function rules() {
 		$rules = array(
 			array(
-				'field' => 'pnr', 
+				'field' => 'pnr_ref', 
 				'label' => $this->lang->line("home_pnr"), 
 				'rules' => 'trim|required|xss_clean|max_length[60]'
 			)
@@ -63,7 +63,7 @@ class Home extends MY_Controller {
 		  $this->load->model('offer_eligibility_m');
           $coupon_code = $this->offer_eligibility_m->hash($code);
 		 // $status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
-		  $count = $this->bid_m->pnr_code_validate($this->input->post('pnr'),$coupon_code);
+		  $count = $this->bid_m->pnr_code_validate($this->input->post('pnr_ref'),$coupon_code);
 		  if($count > 0){
 			return TRUE; 
 		  } else {
@@ -76,12 +76,11 @@ class Home extends MY_Controller {
 	
 	
 	public function index() {
-		//$_GET['pnr_ref'] = 'US0401';
-        $this->data = array(
+        	$this->data = array(
 				'widget' => $this->recaptcha->getWidget(),
 				'script' => $this->recaptcha->getScriptTag(),
 		);
-		if(!empty($_GET['pnr_ref'])){
+		if(!empty($_POST['pnr_ref'])){
 		  $airline = $this->bid_m->getAirlineLogoByPNR($_GET['pnr_ref']);
 		  if(!empty($airline->logo)){
 		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
@@ -97,28 +96,19 @@ class Home extends MY_Controller {
 			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
 			$this->data['airline_video_link'] = 'https://www.youtube.com/embed/_O2_nTt1N6w';
 		}
-		$this->data['pnr_ref'] = $_GET['pnr_ref'];
+		$this->data['pnr_ref'] = $_POST['pnr_ref'];
 		
 		if($_POST) {
 			$rules = $this->rules();
 			$this->form_validation->set_rules($rules);
 			if ($this->form_validation->run() == FALSE) { 
 				$this->data["subview"] = "home/index";
-		        $this->load->view('_layout_home', $this->data);		
+				$this->load->view('_layout_home', $this->data);		
 			} else {				
-				$this->data['error'] = $this->allowValidation($this->input->post('pnr'));
-                if(empty($this->data['error'])){
-					$this->session->set_userdata('validation_check', 1);
-					$this->session->set_userdata('pnr_ref',$this->input->post('pnr'));
-					//$offer = $this->offer_reference_m->get_single_offer_ref(array('pnr_ref'=>$this->input->post('pnr')));
-				   redirect(base_url("homes/bidding"));
-				} else {
-				   $this->data["subview"] = "home/index";
-		           $this->load->view('_layout_home', $this->data);
-				}				
+			   redirect(base_url("homes/bidding/?pnr_ref=" . $this->data['pnr_ref']));
 			}			
 		} else {
-           $this->data['error'] = $this->session->flashdata('error');			
+           	   $this->data['error'] = $this->session->flashdata('error');			
 		   $this->data["subview"] = "home/index";
 		   $this->load->view('_layout_home', $this->data);
 		}     		
@@ -154,9 +144,9 @@ class Home extends MY_Controller {
 	}
 	
 	public function paysuccess() {
-        $offer_id = htmlentities(escapeString($this->uri->segment(3)));	
-        $this->data['offer_data'] = $this->offer_reference_m->get_single_offer_ref(array("offer_id" => $offer_id));
-         $airline = $this->bid_m->getAirlineLogoByPNR($this->data['offer_data']->pnr_ref);
+        $pnr_ref = htmlentities(escapeString($this->uri->segment(3)));	
+        $airline = $this->bid_m->getAirlineLogoByPNR($pnr_ref);
+	$this->data['pnr_ref'] = $pnr_ref;
 		  if(!empty($airline->logo)){
 			$this->data['carrier_color'] = $airline->mail_header_color;
 		   if(empty($this->data['carrier_color'])){
@@ -170,6 +160,7 @@ class Home extends MY_Controller {
 		$this->data["subview"] = "home/paysuccess";
 		$this->load->view('_layout_home', $this->data);
 	}
+
 	public function temp1() {
         $dtpf_id = htmlentities(escapeString($this->uri->segment(3)));	
         $this->data['pax_data'] = $this->paxfeed_m->get_single_paxfeed(array('dtpf_id'=>$dtpf_id));		

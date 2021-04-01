@@ -30,136 +30,172 @@ class Bidding extends MY_Controller {
 		}
   
     public function index() { 
-		$this->load->library('user_agent');
-		if ($this->agent->is_mobile()){
-			$this->data['mobile_view'] ="mb_";
-        } else {
-		   $this->data['mobile_view'] = "";
-		}
-      //$this->session->set_userdata('pnr_ref','AS0414');
-      //$this->session->set_userdata('validation_check',1);	 
-       if(!empty($this->input->get('pnr_ref'))){
-		   $this->data['error'] = $this->allowValidation($this->input->get('pnr_ref'));
-           if(empty($this->data['error'])){
-			 $this->session->set_userdata('validation_check', 1);
-			 $this->session->set_userdata('pnr_ref',$this->input->get('pnr_ref'));
-		   } else {
-			  // print_r($this->data['error']); exit;
-			  $this->session->set_flashdata('error', $this->data['error']);
-			  redirect(base_url('home/index?pnr_ref='.$this->input->get('pnr_ref'))); 
-		   } 
-	   }  
 
-		if($this->session->userdata('validation_check') != 1 || empty($this->session->userdata('pnr_ref'))){
-			redirect(base_url('home/index'));
-			$this->session->unset_userdata('pnr_ref');
-		}
-		
-		$this->data['offer'] = $this->bid_m->getPassengers($this->session->userdata('pnr_ref'));
-		$offer = $this->data['offer'] ;
-		$offerId = $offer[0]->offer_id;
-		#print_r($this->data['upgrade'] ); exit;
-		//$this->data['tomail'] = explode(',',$this->data['upgrade'][0]->email_list)[0]; 
-		$this->data['pnr_ref'] = $this->session->userdata('pnr_ref');
+	$this->load->library('user_agent');
+       	if(!empty($this->input->post('pnr_ref'))){
+		$pnr_ref = $this->input->post('pnr_ref');
+	}
+       	if(!empty($this->input->get('pnr_ref'))){
+		$pnr_ref = $this->input->get('pnr_ref');
+	}
 
-		if ( !$this->data['offer']){
-                	$this->session->set_flashdata('info', 'Oops! Could not find active offer for PNR ' . $this->session->userdata('pnr_ref'));
-			redirect(base_url('home/index'));
-			return TRUE;
+       	if(!empty($pnr_ref)){
+
+				$this->data['pnr_ref'] = $pnr_ref; 
+				$offer_ref = $this->offer_reference_m->getOfferDataByRef($pnr_ref);
+				if ( !count($offer_ref) ) {
+					$this->data['error'] = "Sorry the offer for PNR $pnr_ref is not found! or no longer valid!"; 
+				} else {
+						$status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+						$bid_received = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
+						//$bid_confirmation = $this->preference_m->get_preference(array("pref_code" => 'BID_CONFIRMATION'))->pref_value;
+						//$bid_expire = $this->preference_m->get_preference(array("pref_code" => 'BID_EXPIRE'))->pref_value;
+
+						foreach($offer_ref as $offer_data) {
+							$carrier_id = $offer_data->carrier_code;
+							$bid_confirmation = $this->preference_m->get_preference_value_bycode('BID_CONFIRMATION','24',$carrier_id);
+							$bid_expire = $this->preference_m->get_preference_value_bycode('BID_EXPIRE','24',$carrier_id);		
+
+							$added_timestamp = strtotime('+'.$bid_expire+$bid_confirmation.' day', time());
+							if($added_timestamp > $offer_data->dep_date){
+								$this->data['error_'. $offer_data->product_id] = $offer->product_name . " Offer Expired"; 
+							}  
+
+							if($status == $offer_data->offer_status || $bid_received == $offer_data->offer_status){
+								switch($offer_data->product_id ) {
+									case 1: 
+										if ( $bid_received == $offer_data->offer_status ) {
+											$this->showUpgradeOffer($pnr_ref,'bid_received');
+										} else {
+											$this->showUpgradeOffer($pnr_ref);
+										}
+										break;
+									case 2: 
+										$this->showBaggageOffer($pnr_ref);
+									break;
+								}
+							}
+						}
+
+						$offer = $this->bid_m->getPassengers($pnr_ref);
+						$this->data['offer'] = $offer;
+						$this->data['pax_names'] = $offer[0]->pax_names; 
+						$carrier_id = $offer[0]->carrier_id;
+						#print_r($this->data['upgrade'] ); exit;
+						//$this->data['tomail'] = explode(',',$this->data['upgrade'][0]->email_list)[0]; 
+
+						$this->data['mile_value'] = $this->preference_m->get_preference_value_bycode('MILES_DOLLAR','24',$carrier_id);	
+						$this->data['mile_proportion'] = $this->preference_m->get_preference_value_bycode('MIN_CASH_PROPORTION','24',$carrer_id);	
+						$this->data['sent_mail_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+						$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
+						
+						$airline = $this->bid_m->getAirlineLogoByPNR($pnr_ref);
+						if(!empty($airline->logo)){
+							$this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
+						} else {
+							$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+						}
+						$this->data['airline_name'] = $airline->aln_data_value;
+						  
+						$this->data['mail_header_color'] = $airline->mail_header_color;
+						if(empty($this->data['mail_header_color'])){
+							 $this->data['mail_header_color'] = '#333';  
+						}
+
+						$this->data['images'] = $this->airline_m->getImagesByType($airline->airlineID,'gallery');
+						$this->data['airline_video_link'] = str_replace('watch?v=','embed/',$airline->video_links);		 
+				}
+
+			} else {
+					$this->data['error'] = 'OOPS! PNR MISSING';
+			}
+			#echo "<pre>" . print_r($this->data['baggage'],1) . "</pre>"; exit;
+			$this->data["subview"] = "home/bidview";
+			$this->load->view('_layout_home', $this->data);
 		}
-		$this->data['upgrade'] = $this->bid_m->getUpgradeOffers($this->session->userdata('pnr_ref'));
-               
-		foreach($this->data['upgrade'] as $result ){
-			//reducing duplicate names for multi cabins case
-			$result->pax_names = $this->bid_m->getPaxNames($this->session->userdata('pnr_ref'));
-			$tocabins = array();
-			$tocabins1 = array();
-			$result->to_cabins = explode(',',$result->to_cabins);
-			foreach($result->to_cabins as $value){
-				$data = explode('-',$value);
-				 $tocabins1[$data[3]][$data[1].'-'.$data[2]] = $data[0];
-               		}			  
-		     	// asort($tocabins1);
-			ksort($tocabins1);
-			foreach($tocabins1 as $cabins){
-				  foreach($cabins as $key => $value){
-				    $tocabins[$key] = $value;
-				  }					  
-			} 
-              		$result->to_cabins = $tocabins;
-			   
-			$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
-			$arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
-			$dteStart = new DateTime($dept); 
-			$dteEnd   = new DateTime($arrival); 
-			$dteDiff  = $dteStart->diff($dteEnd);
-			$result->time_diff = $dteDiff->format('%d days %H hours %i min');
-            		$this->data['passengers_count'] = count(explode(',',$offer[0]->pax_names)); 			
-     	}      
-          	$this->data['offer_id'] = $offerId;
-        //$this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
-		$this->data['cabins']  = $this->bid_m->get_cabins($this->data['upgrade'][0]->carrier);
-       // $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
-        // $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;
-		
-          $this->data['mile_value'] = $this->preference_m->get_preference_value_bycode('MILES_DOLLAR','24',$this->data['upgrade'][0]->carrier);	
-         $this->data['mile_proportion'] = $this->preference_m->get_preference_value_bycode('MIN_CASH_PROPORTION','24',$this->data['upgrade'][0]->carrier);	
+
+		function showUpgradeOffer ($pnr_ref, $bidstatus = '') {
+
+			if ( $pnr_ref ) {
+
+				$this->data['upgrade'] = $this->bid_m->getUpgradeOffers($pnr_ref, $bidstatus);
+				foreach($this->data['upgrade'] as $result ){
+					$this->data['offer_id_'. $result->product_id] = $result->offer_id;
+					$this->data['upgrade_offer'] = 1;
+					if ( $result->bid_id) {
+						$this->data['last_bid']['last_bid_'. $result->product_id . '_'. $result->flight_number] = $result->bid_value;
+						$this->data['last_bid_total_value'] += $result->bid_value;
+						$this->data['resubmit'] = 1;
+					}
+					//reducing duplicate names for multi cabins case
+					$result->pax_names = $this->bid_m->getPaxNames($pnr_ref);
+					$tocabins = array();
+					$tocabins1 = array();
+					$result->to_cabins = explode(',',$result->to_cabins);
+					foreach($result->to_cabins as $value){
+						$data = explode('-',$value);
+						 $tocabins1[$data[3]][$data[1].'-'.$data[2]] = $data[0];
+							}			  
+						// asort($tocabins1);
+					ksort($tocabins1);
+					foreach($tocabins1 as $cabins){
+						  foreach($cabins as $key => $value){
+							$tocabins[$key] = $value;
+						  }					  
+					} 
+							$result->to_cabins = $tocabins;
+					   
+					$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
+					$arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
+					$dteStart = new DateTime($dept); 
+					$dteEnd   = new DateTime($arrival); 
+					$dteDiff  = $dteStart->diff($dteEnd);
+					$result->time_diff = $dteDiff->format('%d days %H hours %i min');
+					$this->data['passengers_count'] = count(explode(',',$offer[0]->pax_names)); 			
+				}      
 		 
-		$this->data['sent_mail_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
-		$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-		
-		if(!empty($this->session->userdata('pnr_ref'))){
-		  $airline = $this->bid_m->getAirlineLogoByPNR($this->session->userdata('pnr_ref'));
-		  if(!empty($airline->logo)){
-		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
-		  } else {
-			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
-		  }
-		   $this->data['airline_name'] = $airline->aln_data_value;
-		  
-		   $this->data['mail_header_color'] = $airline->mail_header_color;
-		   if(empty($this->data['mail_header_color'])){
-			 $this->data['mail_header_color'] = '#333';  
-		   }
-
-         $this->data['images'] = $this->airline_m->getImagesByType($airline->airlineID,'gallery');
-         $this->data['airline_video_link'] = str_replace('watch?v=','embed/',$airline->video_links);		 
-		} else {
-			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');	
-            $this->data['mail_header_color'] = '#333';			
+				//$this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
+				$this->data['cabins']  = $this->bid_m->get_cabins($this->data['upgrade'][0]->carrier);
+			   // $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
+				// $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;
+			} else {
+				$this->data['error'] .= '<br>OOPS! PNR FOR UPGRADE OFFER MISSING';
+			}
 		}
 
-		$pnr_ref = $this->session->userdata('pnr_ref');
-		if ( $pnr_ref ) {
-                        $this->data['active_products'] = array_keys($this->offer_issue_m->getProductsforOffer($offerId));
-			$bgoffer = $this->offer_issue_m->getBaggageOffer($pnr_ref);
-		#echo "<pre>" . print_r($bgoffer,1) . "</pre>"; exit;
-			if ( $bgoffer) {
-				$this->data['baggage_bag_type'] = $this->preference_m->get_preference_value_bycode('BAG_TYPE','24',$airline->airlineID);
-				$this->data['baggage_min_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MIN_VAL','24',$airline->airlineID);
-				$this->data['baggage_max_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MAX_VAL','24',$airline->airlineID);
-				$this->data['piece'] = $this->preference_m->get_preference_value_bycode('PIECE','24',$airline->airlineID);
-				$pnr_ref=$this->session->userdata('pnr_ref');
-				// var_dump($pnr_ref);
-				$test="SELECT v.product_id, v.dtpfext_id,v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref'";
-				$rquery = $this->install_m->run_query($test);
-				// var_dump($rquery);
-				$mr=[];
-				$yy=[];
-				foreach($rquery as $rq){
-					$mr[$rq->ond][$rq->dtpf_id]['from_city']=$rq->from_city;
-					$mr[$rq->ond][$rq->dtpf_id]['to_city']=$rq->to_city;
-					$mr[$rq->ond][$rq->dtpf_id]['dtpf_id']=$rq->dtpf_id;
-					$mr[$rq->ond][$rq->dtpf_id]['dtpfext_id']=$rq->dtpfext_id;
-					$mr[$rq->ond][$rq->dtpf_id]['pnr_ref']=$rq->pnr_ref;
-					$mr[$rq->ond][$rq->dtpf_id]['ond']=$rq->ond;
-					$mr[$rq->ond][$rq->dtpf_id]['rule_id']=$rq->rule_id;
-					$mr[$rq->ond][$rq->dtpf_id]['product_id']=$rq->product_id;
+		function showBaggageOffer ($pnr_ref) {
+			if ( $pnr_ref ) {
+					$this->data['active_products'] = array_keys($this->offer_issue_m->getProductsforOffer($offerId));
+					$bgoffer = $this->offer_issue_m->getBaggageOffer($pnr_ref);
+				#echo "<pre>" . print_r($bgoffer,1) . "</pre>"; exit;
+					if ( $bgoffer) {
+					$this->data['baggage_offer'] = 1;
+						$this->data['baggage_bag_type'] = $this->preference_m->get_preference_value_bycode('BAG_TYPE','24',$airline->airlineID);
+						$this->data['baggage_min_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MIN_VAL','24',$airline->airlineID);
+						$this->data['baggage_max_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MAX_VAL','24',$airline->airlineID);
+						$this->data['piece'] = $this->preference_m->get_preference_value_bycode('PIECE','24',$airline->airlineID);
+						$pnr_ref=$this->session->userdata('pnr_ref');
+						// var_dump($pnr_ref);
+						$test="SELECT b.bid_id, v.product_id, v.dtpfext_id,v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2) WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref'";
+						$rquery = $this->install_m->run_query($test);
+						// var_dump($rquery);
+						$mr=[];
+						$yy=[];
+						foreach($rquery as $rq){
+							$mr[$rq->ond][$rq->dtpf_id]['from_city']=$rq->from_city;
+							$mr[$rq->ond][$rq->dtpf_id]['bid_id']=$rq->bid_id;
+							$mr[$rq->ond][$rq->dtpf_id]['to_city']=$rq->to_city;
+							$mr[$rq->ond][$rq->dtpf_id]['dtpf_id']=$rq->dtpf_id;
+							$mr[$rq->ond][$rq->dtpf_id]['dtpfext_id']=$rq->dtpfext_id;
+							$mr[$rq->ond][$rq->dtpf_id]['pnr_ref']=$rq->pnr_ref;
+							$mr[$rq->ond][$rq->dtpf_id]['ond']=$rq->ond;
+							$mr[$rq->ond][$rq->dtpf_id]['rule_id']=$rq->rule_id;
+							$mr[$rq->ond][$rq->dtpf_id]['product_id']=$rq->product_id;
 
-					$mr[$rq->ond][$rq->dtpf_id]['flight_number']=$rq->flight_number;
-					$mr[$rq->ond][$rq->dtpf_id]['dep_date']=$rq->dep_date;
-					$mr[$rq->ond][$rq->dtpf_id]['arrival_date']=$rq->arrival_date;
-					$mr[$rq->ond][$rq->dtpf_id]['dept_time']=$rq->dept_time;
+							$mr[$rq->ond][$rq->dtpf_id]['flight_number']=$rq->flight_number;
+							$mr[$rq->ond][$rq->dtpf_id]['dep_date']=$rq->dep_date;
+							$mr[$rq->ond][$rq->dtpf_id]['arrival_date']=$rq->arrival_date;
+							$mr[$rq->ond][$rq->dtpf_id]['dept_time']=$rq->dept_time;
 					$mr[$rq->ond][$rq->dtpf_id]['arrival_time']=$rq->arrival_time;
 				}
 				
@@ -194,7 +230,7 @@ class Bidding extends MY_Controller {
 				}
 				// var_dump($tr);
 				// die();
-				$sum_query="SELECT v.product_id, sum(vxx.min_price) as min_price,sum(vxx.max_capacity) as max_capacity,v.ond,v.dtpfext_id FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref' group by v.ond";
+				$sum_query="SELECT b.bid_id, v.product_id, sum(vxx.min_price) as min_price,sum(vxx.max_capacity) as max_capacity,v.ond,v.dtpfext_id FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2) WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref' group by v.ond";
 				$sum_res = $this->install_m->run_query($sum_query);
 				// var_dump($sum_res);
 				// die();
@@ -227,6 +263,12 @@ class Bidding extends MY_Controller {
 				// die();
 				foreach($tr as $bg ) {
 					// var_dump(json_encode($bg,JSON_FORCE_OBJECT),"<br>");
+					if ( $bg->bid_id) {
+						$this->data['last_bid']['last_bid_'. $bg->product_id . '_'. $bg->flight_number] = $bg->bid_value;
+						$this->data['last_bid_total_value'] += $bg->bid_value;
+						$this->data['resubmit'] = 1;
+					}
+					//reducing duplicate names for multi cabins case
 				
 					$cwtdata = $this->bclr_m->getActiveCWT($bg['rule_id']);
 					$bclrdata = $this->bclr_m->get_bclr($bg['rule_id']);
@@ -240,10 +282,9 @@ class Bidding extends MY_Controller {
 				// 	$this->data['bclr'][$bg->ond] = $bclrdata;
 
 			}
+		} else {
+				$this->data['error'] .= '<br>OOPS! PNR FOR UPGRADE OFFER MISSING';
 		}
-		#echo "<pre>" . print_r($this->data['baggage'],1) . "</pre>"; exit;
-		$this->data["subview"] = "home/bidview";
-		$this->load->view('_layout_home', $this->data);
 	}
 	
 	public function getFclrValues(){
@@ -531,7 +572,7 @@ class Bidding extends MY_Controller {
 	}
 	
 	public function saveCardData(){
-		 if($this->input->post('offer_id')) {
+		 if($this->input->post('pnf_ref')) {
 			  $rules = $this->rules();
 			$this->form_validation->set_rules($rules);
 			if ($this->form_validation->run() == FALSE) { 
@@ -540,7 +581,7 @@ class Bidding extends MY_Controller {
 			$orderID =  $this->bid_m->create_order();
 			$json['orderID'] = $orderID;
 			$data['orderID'] = $orderID;
-			$data['offer_id'] = $this->input->post('offer_id');
+			$data['pnf_ref'] = $this->input->post('pnf_ref');
 			$data['card_number'] = $this->input->post("card_number");
 			$data['month_expiry'] = $this->input->post("month_expiry");
 			$data['year_expiry'] = $this->input->post("year_expiry");
@@ -558,13 +599,13 @@ class Bidding extends MY_Controller {
 			   } else {
 				$ref["cash_percentage"] = 0;   
 			   }
-			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('offer_id'));
+			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('pnr_ref'));
 			if($id){
 			  $json['status'] = "success";
 		    }
 		  }			
 		}else{
-			$json['status'] = "send offer_id";
+			$json['status'] = "send PNR";
 		}	 	 
 		$this->output->set_content_type('application/json');
         $this->output->set_output(json_encode($json));

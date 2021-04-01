@@ -65,14 +65,16 @@ class Offer_reference_m extends MY_Model {
         }
 		
 	public function getOfferDataByRef($pnr_ref) {
-		$this->db->select('ref.offer_status,MIN(tpf.dep_date) dep_date,tpf.carrier_code')->from('VX_daily_tkt_pax_feed tpf');
+		$this->db->select('ref.product_id, p.name as product_name, ref.offer_status,MIN(tpf.dep_date) dep_date,tpf.carrier_code')->from('VX_daily_tkt_pax_feed tpf');
 		$this->db->join('VX_offer ref','ref.pnr_ref = tpf.pnr_ref','LEFT');
-            	$this->db->where('ref.pnr_ref',$pnr_ref);
+		$this->db->join('VX_products p','p.productID = ref.product_id','LEFT');
+        $this->db->where('ref.pnr_ref',$pnr_ref);
             //$this->db->group_by('tpf.flight_number');			
 				//$this->mydebug->debug($this->db->last_query());
 
-            $query = $this->db->get();
-            return 	$query->row();		
+        $query = $this->db->get();
+       //     return 	$query->row();		
+		return $query->result();
 	}
 		
 	function offersTotalCount(){

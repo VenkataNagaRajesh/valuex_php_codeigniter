@@ -7,6 +7,7 @@ $lang['edit_gallery'] = "Add template Photos";
 $lang['view_gallery'] = "View template Photos";
 $lang['slno'] = "#";
 $lang['mailandsmstemplate_name'] = "Name";
+$lang['email_subject'] = "Mail Subject";
 $lang['mailandsmstemplate_user'] = "User";
 $lang['mailandsmstemplate_tags'] = "Tags";
 $lang['mailandsmstemplate_category'] = "Category";

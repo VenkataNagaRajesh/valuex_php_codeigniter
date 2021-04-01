@@ -30,140 +30,141 @@ class Resubmit extends MY_Controller {
     }
 
      function index(){ 
-        if(empty($this->input->get('pnr_ref'))){
-			redirect(base_url('home/index'));
-		}		 
-        $this->load->library('user_agent');
-		if ($this->agent->is_mobile()){
-           $this->data['mobile_view'] ="mb_";
-        } else {
-		   $this->data['mobile_view'] = "";
-		}
-        $this->data['bid_received'] =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
-		$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-				
-        $status = $this->bid_m->getOfferStatus($this->input->get('pnr_ref'));
-		if(empty($status)){
-			redirect(base_url('home/index'));
-		}
-        if($status->status_no != $this->data['bid_received']){
-			$this->data['message'] = $status->status;
-			$this->data['pnr_ref'] = $this->input->get('pnr_ref');
-			$airline = $this->bid_m->getAirlineLogoByPNR($this->input->get('pnr_ref'));
-			  if(!empty($airline->logo)){
-				$this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
-			  } else {
-				$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
-			  }
-			$this->data["subview"] = "home/not-resubmit";
-		    $this->load->view('_layout_home', $this->data);
-		} else {		
-		 $this->data['results'] = $this->bid_m->getPassengers($this->input->get('pnr_ref'),'bid_received');    
-         if(empty($this->data['results'])){ 
-			redirect(base_url('home/index'));
-		}
-        foreach($this->data['results'] as $result ){			
-			$result->pax_names = $this->bid_m->getPaxNames($this->input->get('pnr_ref'));
-			$tocabins = array();
-			$tocabins1 = array();
-			$result->to_cabins = explode(',',$result->to_cabins);
-			  foreach($result->to_cabins as $value){
-                $data = explode('-',$value);
-                 $tocabins1[$data[3]][$data[1].'-'.$data[2]] = $data[0];
-               }			  
-			     // asort($tocabins1);
-				  ksort($tocabins1);
-				  foreach($tocabins1 as $cabins){
-					  foreach($cabins as $key => $value){
-					    $tocabins[$key] = $value;
-					  }					  
-				  }
-				
-				
-              $result->to_cabins = $tocabins;
-			   
-			$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
-			$arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
-			$dteStart = new DateTime($dept); 
-			$dteEnd   = new DateTime($arrival); 
-			$dteDiff  = $dteStart->diff($dteEnd);
-			$result->time_diff = $dteDiff->format('%d days %H hours %i min');
-            $this->data['passengers_count'] = count(explode(',',$result->pax_names));
-            $result->sliderval = $result->bid_value/$this->data['passengers_count'];
-            $this->data['bid_miles'] = $this->data['bid_miles'] + $result->bid_miles; 			
-     	}
-		//print_r($this->data['results']); exit;
-        $bid_data = $this->bid_m->getBidData($this->data['results'][0]->offer_id);
-		$this->data['card_data'] = $this->bid_m->getCardData($this->data['results'][0]->offer_id);
-       // print_r($this->data['results']); exit;
-        $this->data['cabins']  = $this->bid_m->get_cabins($this->data['results'][0]->carrier);
-		
-         // $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
-        // $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;
-		
-          $this->data['mile_value'] = $this->preference_m->get_preference_value_bycode('MILES_DOLLAR','24',$this->data['results'][0]->carrier);	
-         $this->data['mile_proportion'] = $this->preference_m->get_preference_value_bycode('MIN_CASH_PROPORTION','24',$this->data['results'][0]->carrier);		
-		
-		if(!empty($this->input->get('pnr_ref'))){
-		  $airline = $this->bid_m->getAirlineLogoByPNR($this->input->get('pnr_ref'));
-		  if(!empty($airline->logo)){
-		    $this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
-		  } else {
-			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
-		  }
- 
-           $this->data['mail_header_color'] = $airline->mail_header_color;
-		   if(empty($this->data['mail_header_color'])){
-			 $this->data['mail_header_color'] = '#333';  
-		   }
-		   
-         $this->data['images'] = $this->airline_m->getImagesByType($airline->airlineID,'gallery');
-         $this->data['airline_video_link'] = str_replace('watch?v=','embed/',$airline->video_links);		 
-		} else {
-			 $this->data['mail_header_color'] = '#333'; 
-			$this->data['airline_logo'] = base_url('assets/home/images/emir.png');			
-		}
+				if(empty($this->input->get('pnr_ref'))){
+					redirect(base_url('home/index'));
+				}		 
+				$this->load->library('user_agent');
+				if ($this->agent->is_mobile()){
+					$this->data['mobile_view'] ="mb_";
+				} else {
+					$this->data['mobile_view'] = "";
+				}
+				$this->data['bid_received'] =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
+				$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 
-		$this->data['baggage_bag_type'] = $this->preference_m->get_preference_value_bycode('BAG_TYPE','24',5500);
-		$this->data['baggage_min_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MIN_VAL','24',5500);
-		$this->data['baggage_max_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MAX_VAL','24',5500);
-		$cwtdata = $this->bclr_m->getActiveCWT(1);
-		foreach($cwtdata as $cwt){
-            $this->data['cwtpoints'][$cwt->cum_wt] = round($cwt->price_per_kg);
-		}
+				$status = $this->bid_m->getOfferStatus($this->input->get('pnr_ref'));
+				if(empty($status)){
+					redirect(base_url('home/index'));
+				}
 
-		/* checking products contracts for airline */
-		$where = array(
-				'c.airlineID'=>$airline->airlineID,
-				'cp.start_date <= ' => date('Y-m-d 00:00:00'),
-				'cp.end_date >= ' => date('Y-m-d 00:00:00'),
-				'c.active' => 1
-				);
-		$contract_info = $this->contract_m->getAirlineCurrentProducts($where);
-		$this->data['active_products'] = explode(',',$contract_info->active_products);
-		if(in_array(2,$this->data['active_products'])) {		
-			$baggage1 = $this->bclr_m->get_single_bclr(array('bclr_id'=>1));
-			$old_baggage1 = $this->baggage_m->get_single_baggage(array('bclr_id'=>1,"offer_id"=>$this->data['results'][0]->offer_id));
-			$baggage1->weight = $old_baggage1->weight;
-			$baggage1->miles = $old_baggage1->miles;
-			$baggage1->sold_weight = 50;
-			$baggage2 = $this->bclr_m->get_single_bclr(array('bclr_id'=>2));
-			$old_baggage2 = $this->baggage_m->get_single_baggage(array('bclr_id'=>2,"offer_id"=>$this->data['results'][0]->offer_id));
-			$baggage2->weight = $old_baggage2->weight;
-			$baggage2->miles = $old_baggage2->miles;
+				if($status->status_no != $this->data['bid_received']) {
+						$this->data['message'] = $status->status;
+						$this->data['pnr_ref'] = $this->input->get('pnr_ref');
+						$airline = $this->bid_m->getAirlineLogoByPNR($this->input->get('pnr_ref'));
+						if(!empty($airline->logo)){
+							$this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
+						} else {
+							$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+						}
+						$this->data["subview"] = "home/not-resubmit";
+						$this->load->view('_layout_home', $this->data);
+				} else {		
+						$this->data['results'] = $this->bid_m->getPassengers($this->input->get('pnr_ref'),'bid_received');    
+						if(empty($this->data['results'])){ 
+							redirect(base_url('home/index'));
+						}
+						foreach($this->data['results'] as $result ){			
+						$result->pax_names = $this->bid_m->getPaxNames($this->input->get('pnr_ref'));
+						$tocabins = array();
+						$tocabins1 = array();
+						$result->to_cabins = explode(',',$result->to_cabins);
+						foreach($result->to_cabins as $value){
+								$data = explode('-',$value);
+								$tocabins1[$data[3]][$data[1].'-'.$data[2]] = $data[0];
+						}			  
+						// asort($tocabins1);
+						ksort($tocabins1);
+						foreach($tocabins1 as $cabins){
+						foreach($cabins as $key => $value){
+						$tocabins[$key] = $value;
+						}					  
+						}
 
 
-			$baggage2->sold_weight = 50;
-			$this->data['baggage'][0] = $baggage1;
-			$this->data['baggage'][1] = $baggage2;
-            $this->data['bid_miles'] = $this->data['bid_miles'] + ($old_baggage1->miles + $old_baggage2->miles); 			
-		} 
-		//print_r($old_baggage2); exit;
-		$this->data["subview"] = "home/resubmit";
-		$this->load->view('_layout_home', $this->data);	
-	  }		
-	}
+						$result->to_cabins = $tocabins;
 
-    
-    
-}
+						$dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
+						$arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
+						$dteStart = new DateTime($dept); 
+						$dteEnd   = new DateTime($arrival); 
+						$dteDiff  = $dteStart->diff($dteEnd);
+						$result->time_diff = $dteDiff->format('%d days %H hours %i min');
+						$this->data['passengers_count'] = count(explode(',',$result->pax_names));
+						$result->sliderval = $result->bid_value/$this->data['passengers_count'];
+						$this->data['bid_miles'] = $this->data['bid_miles'] + $result->bid_miles; 			
+						}
+						//print_r($this->data['results']); exit;
+						$bid_data = $this->bid_m->getBidData($this->data['results'][0]->offer_id);
+						$this->data['card_data'] = $this->bid_m->getCardData($this->data['results'][0]->offer_id);
+						// print_r($this->data['results']); exit;
+						$this->data['cabins']  = $this->bid_m->get_cabins($this->data['results'][0]->carrier);
+
+						// $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
+						// $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;
+
+						$this->data['mile_value'] = $this->preference_m->get_preference_value_bycode('MILES_DOLLAR','24',$this->data['results'][0]->carrier);	
+						$this->data['mile_proportion'] = $this->preference_m->get_preference_value_bycode('MIN_CASH_PROPORTION','24',$this->data['results'][0]->carrier);		
+
+						if(!empty($this->input->get('pnr_ref'))){
+						$airline = $this->bid_m->getAirlineLogoByPNR($this->input->get('pnr_ref'));
+						if(!empty($airline->logo)){
+						$this->data['airline_logo'] = base_url('uploads/images/'.$airline->logo);
+						} else {
+						$this->data['airline_logo'] = base_url('assets/home/images/emir.png');
+						}
+
+						$this->data['mail_header_color'] = $airline->mail_header_color;
+						if(empty($this->data['mail_header_color'])){
+						$this->data['mail_header_color'] = '#333';  
+						}
+
+						$this->data['images'] = $this->airline_m->getImagesByType($airline->airlineID,'gallery');
+						$this->data['airline_video_link'] = str_replace('watch?v=','embed/',$airline->video_links);		 
+						} else {
+						$this->data['mail_header_color'] = '#333'; 
+						$this->data['airline_logo'] = base_url('assets/home/images/emir.png');			
+						}
+
+						$this->data['baggage_bag_type'] = $this->preference_m->get_preference_value_bycode('BAG_TYPE','24',5500);
+						$this->data['baggage_min_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MIN_VAL','24',5500);
+						$this->data['baggage_max_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MAX_VAL','24',5500);
+						$cwtdata = $this->bclr_m->getActiveCWT(1);
+						foreach($cwtdata as $cwt){
+						$this->data['cwtpoints'][$cwt->cum_wt] = round($cwt->price_per_kg);
+						}
+
+						/* checking products contracts for airline */
+						$where = array(
+						'c.airlineID'=>$airline->airlineID,
+						'cp.start_date <= ' => date('Y-m-d 00:00:00'),
+						'cp.end_date >= ' => date('Y-m-d 00:00:00'),
+						'c.active' => 1
+						);
+						$contract_info = $this->contract_m->getAirlineCurrentProducts($where);
+						$this->data['active_products'] = explode(',',$contract_info->active_products);
+						if(in_array(2,$this->data['active_products'])) {		
+						$baggage1 = $this->bclr_m->get_single_bclr(array('bclr_id'=>1));
+						$old_baggage1 = $this->baggage_m->get_single_baggage(array('bclr_id'=>1,"offer_id"=>$this->data['results'][0]->offer_id));
+						$baggage1->weight = $old_baggage1->weight;
+						$baggage1->miles = $old_baggage1->miles;
+						$baggage1->sold_weight = 50;
+						$baggage2 = $this->bclr_m->get_single_bclr(array('bclr_id'=>2));
+						$old_baggage2 = $this->baggage_m->get_single_baggage(array('bclr_id'=>2,"offer_id"=>$this->data['results'][0]->offer_id));
+						$baggage2->weight = $old_baggage2->weight;
+						$baggage2->miles = $old_baggage2->miles;
+
+
+						$baggage2->sold_weight = 50;
+						$this->data['baggage'][0] = $baggage1;
+						$this->data['baggage'][1] = $baggage2;
+						$this->data['bid_miles'] = $this->data['bid_miles'] + ($old_baggage1->miles + $old_baggage2->miles); 			
+						} 
+						//print_r($old_baggage2); exit;
+						$this->data["subview"] = "home/resubmit";
+						$this->load->view('_layout_home', $this->data);	
+						}		
+						}
+
+
+
+						}

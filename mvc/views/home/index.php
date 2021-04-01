@@ -36,7 +36,7 @@
 									else     
 										echo "<div class='col-sm-12' >";
 								  ?>
-									<input type="text" class="form-control" id="pnr" name="pnr" placeholder="PNR" value="<?=set_value('pnr',$pnr_ref)?>" >
+									<input type="text" class="form-control" id="pnr" name="pnr_ref" placeholder="PNR" value="<?=set_value('pnr',$pnr_ref)?>" >
 									 <span>
 										<?php echo form_error('pnr'); ?>
 									</span>

@@ -46,7 +46,7 @@ class bid_m extends MY_Model {
    */
   
    function getPassengers($pnr_ref,$bidstatus = NULL){
-	$this->db->select("oref.offer_id,tpf.carrier_code, group_concat( distinct (pfe.product_id)) products,   group_concat(distinct (first_name), ' ', last_name SEPARATOR ', ') as pax_namesi, group_concat(tpf.pax_contact_email) as email_list")->from('VX_daily_tkt_pax_feed tpf');	
+	$this->db->select("group_concat( distinct (oref.offer_id)) offer_id,tpf.carrier_code, group_concat( distinct (pfe.product_id)) products,   group_concat(distinct (first_name), ' ', last_name SEPARATOR ', ') as pax_names, group_concat(DISTINCT tpf.pax_contact_email) as email_list")->from('VX_daily_tkt_pax_feed tpf');	
 	$this->db->join('VX_offer_info pfe','(tpf.dtpf_id = pfe.dtpf_id AND pfe.rule_id > 0 )','LEFT');		 
 	$this->db->join('UP_fare_control_range fclr','(fclr.fclr_id = pfe.rule_id )','LEFT');	
 	$this->db->join('BG_baggage_control_rule bclr','(bclr.bclr_id = pfe.rule_id )','LEFT');	
@@ -84,7 +84,7 @@ class bid_m extends MY_Model {
   }
 
    function getUpgradeOffers($pnr_ref,$bidstatus = NULL){
-	$this->db->select("count(distinct fclr.fclr_id) fclr,pfe.dtpfext_id,pfe.product_id,a1.code from_airport_code, a1.aln_data_value as from_airport,  a2.code to_airport_code, a2.aln_data_value as to_airport,  car.aln_data_value carrier_name,tpf.carrier_code carrier,tpf.cabin,tpf.pnr_ref,tpf.seat_no,def.desc current_cabin, count(distinct fclr.fclr_id) fclr,group_concat(distinct fclr.to_cabin,'-',fclr.fclr_id,'-',pfe.booking_status,'-',tdef.level) to_cabins,group_concat( distinct round(fclr.min)) min,group_concat( distinct round(fclr.max)) max,group_concat( distinct round(fclr.average)) avg,group_concat( distinct round(fclr.slider_start)) slider_position,tpf.flight_number,tpf.dep_date, tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat( pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.miles,oref.offer_id,air_city1.aln_data_value air_from_city,air_city2.aln_data_value air_to_city,bid.bid_value,bid.miles bid_miles,bid.upgrade_type bid_upgrade")->from('VX_daily_tkt_pax_feed tpf');	
+	$this->db->select("bid.bid_id, count(distinct fclr.fclr_id) fclr,pfe.dtpfext_id,pfe.product_id,a1.code from_airport_code, a1.aln_data_value as from_airport,  a2.code to_airport_code, a2.aln_data_value as to_airport,  car.aln_data_value carrier_name,tpf.carrier_code carrier,tpf.cabin,tpf.pnr_ref,tpf.seat_no,def.desc current_cabin, count(distinct fclr.fclr_id) fclr,group_concat(distinct fclr.to_cabin,'-',fclr.fclr_id,'-',pfe.booking_status,'-',tdef.level) to_cabins,group_concat( distinct round(fclr.min)) min,group_concat( distinct round(fclr.max)) max,group_concat( distinct round(fclr.average)) avg,group_concat( distinct round(fclr.slider_start)) slider_position,tpf.flight_number,tpf.dep_date, tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat( pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.miles,oref.offer_id,air_city1.aln_data_value air_from_city,air_city2.aln_data_value air_to_city,bid.bid_value,bid.miles bid_miles,bid.upgrade_type bid_upgrade")->from('VX_daily_tkt_pax_feed tpf');	
 	$this->db->join('VX_offer_info pfe','(tpf.dtpf_id = pfe.dtpf_id AND pfe.rule_id > 0 )','LEFT');		 
 	$this->db->join('UP_fare_control_range fclr','(fclr.fclr_id = pfe.rule_id )','LEFT');	
 	$this->db->join('VX_data_defns  tci','(tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)','LEFT');
@@ -117,7 +117,7 @@ class bid_m extends MY_Model {
 	$this->db->group_by('tpf.flight_number');
 	//$this->db->order_by('defto.level','ASC');
 	$query = $this->db->get();  
-	#print_r($this->db->last_query()); exit;
+	//print_r($this->db->last_query()); exit;
 	return $query->result();
   }
   

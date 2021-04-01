@@ -216,10 +216,10 @@ return $rResult;
 		$result = $query->row();
 		return $result;
 	}
-	function getProductsforOffer($id) {
+	function getProductsforOffer($pnr_ref) {
 		$sql = " SELECT DISTINCT oi.product_id, p.name FROM VX_offer_info oi, VX_offer o, VX_daily_tkt_pax_feed dtpf, VX_products p ";
 		$sql .= " WHERE dtpf.pnr_ref = o.pnr_ref AND dtpf.dtpf_id = oi.dtpf_id AND p.productID = oi.product_id";
-		$sql .= " AND o.offer_id = " . $id; 
+		$sql .= " AND dtpf.pnr_ref = '" . $pnr_ref ."'"; 
 		$sql .= " AND oi.active = 1";
 		$rResult = $this->install_m->run_query($sql);
 		$products = Array();

@@ -196,6 +196,7 @@ class Mailandsmstemplate extends Admin_Controller {
 							
 							$array = array(
 								'name' => $this->input->post('email_name'),						
+								'mail_subject' => $this->input->post('email_subject'),						
 								'catID' => $this->input->post('category'),
 								'airlineID' => $this->input->post('airlineID'),
 								'template' => $this->input->post('email_template',FALSE),				
