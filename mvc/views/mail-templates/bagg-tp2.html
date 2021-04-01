@@ -218,14 +218,14 @@ td[class="spechide"]
 						<td class="specbundle3" align="left">
 							<div class="contentEditableContainer contentTextEditable">
 								<div class="contentEditable" style='color:#333;font-size:23px;line-height:42px;font-family: Helvetica Neue;'>
-								  <p style="color:#333;font-size:15px;"><b><i>Congratulations {first_name} {last_name} !!!.</b></i></p>
+								  <p style="color:#333;font-size:15px;"><b><i><?= $greeting_line?> {first_name} {last_name} !!!.</b></i></p>
 								</div>
 							</div>
                               <div class="contentEditableContainer contentTextEditable">
                                 <div class="contentEditable" style='font-size:16px;color:#333;line-height:24px;font-style: italic;'>
                                   <p >you are Eligible for Baggage Upgrade</p>
                                 </div>
-                              </div> 
+                              </div>
 						</td>
 						<td width="30" style="background:#333;width:3px;"></td>
 						<td align="left">
@@ -253,6 +253,7 @@ td[class="spechide"]
 							<div class="contentEditableContainer contentTextEditable">
 								<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-color:#ddd;">
 									<tbody>
+                    <!--{offer_data}-->
 									<tr>
 									<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;font-family:calibri;border-bottom:solid 1px #ddd;padding-bottom:10px;" class="hidden-lg hidden-sm hidden-md">
 										<div style="width:100%;text-align:center;">
@@ -296,6 +297,7 @@ td[class="spechide"]
 					</div>
 				</td>
 			</tr>
+      <!--{/offer_data}-->
 											<tr>
 								<td align="right" valign="middle">
 										<div class="contentEditableContainer contentTextEditable">
