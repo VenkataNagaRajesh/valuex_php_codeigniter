@@ -195,6 +195,7 @@ td[class="spechide"]
 					<td>
 						<table align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
 							<tbody>
+
 								<tr>
 									<td align="left" valign="middle">
 										<div class="contentEditableContainer contentImageEditable">
@@ -211,7 +212,7 @@ td[class="spechide"]
 									<td align="right" valign="top" width="18">
 										<div class="contentEditableContainer contentImageEditable" style="display:inline-block;">
 											<div class="contentEditable">
-												<a target='_blank' href="{openbrowser_link}"><img alt="open in browser image" data-default="placeholder" height="15" src="../../../assets/mail-temps/upg-tp1-imgs/openBrowser.png" style="padding-left:10px;" width="15" /></a></div>
+												<a target='_blank' href="{openbrowser_link}"><img alt="open in browser image" data-default="placeholder" height="15" src="{open_browser}" style="padding-left:10px;" width="15" /></a></div>
 										</div>
 									</td>
 								</tr>
@@ -231,7 +232,7 @@ td[class="spechide"]
 																	<td align="center" bgcolor="#52619E" height="184" style="background-size:560px 184px;" valign="middle" width="560">
 																		<div class="contentEditableContainer contentImageEditable">
 																			<div class="contentEditable">
-																				<img class="banner" alt="product image" data-default="placeholder" data-max-width="560" height="300" src="../../../assets/mail-temps/upg-tp1-imgs/banner.jpg" width="560" /></div>
+																				<img class="banner" alt="product image" data-default="placeholder" data-max-width="560" height="300" src="{up_tpl_bnr}" width="560" /></div>
 																		</div>
 																	</td>
 																</tr>
@@ -265,7 +266,7 @@ td[class="spechide"]
 																													<h1 style="text-align:center;color:#ff6633;font-size:28px;">
 																														Congratulations {first_name} !!!</h1><br>
 																												</div>
-																												<div class="contentEditable" style="color:#fff;padding: 20px;background-image: url('../../../assets/mail-temps/upg-tp1-imgs/tag.png');right: 0;position: relative;width: auto;text-align: center;background-size: contain;background-position: center;background-repeat: no-repeat;">
+																												<div class="contentEditable" style="color:#fff;padding: 20px;background-image:  url('{tag_img}');right: 0;position: relative;width: auto;text-align: center;background-size: contain;background-position: center;background-repeat: no-repeat;">
 																													<h2 style="font-size:16px;font-style: italic;">
 																														You are Eligible for an Upgrade to <span style="font-size: 16px;text-align: center;color: #fff;position: relative;left: 15px;"><b>{highest_upgrade_class} Class</b></span></h2>
 																												</div>
@@ -296,6 +297,7 @@ td[class="spechide"]
 					<div class="contentEditableContainer contentTextEditable">
 						<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-color:#ddd;">
 							<tbody>
+	<!--{offer_data}-->
 								<tr>
 									<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;font-family:calibri;border-bottom:solid 1px #ddd;padding-bottom:10px;" class="hidden-lg hidden-sm hidden-md">
 										<div style="width:100%;text-align:center;">
@@ -338,6 +340,7 @@ td[class="spechide"]
 					</div>
 				</td>
 			</tr>
+			<!--{/offer_data}-->
 																									<tr>
 																										<td align="right" style="padding-bottom:8px;" valign="top">
 																											<div class="contentEditableContainer contentTextEditable">
@@ -387,7 +390,7 @@ td[class="spechide"]
 																										<td width="251" align="center" valign="middle">
 																											<div class="contentEditableContainer contentImageEditable">
 																												<div class="contentEditable">
-																													<img alt="product image" data-default="placeholder" data-max-width="251" height="142" src="../../../assets/mail-temps/upg-tp1-imgs/side-img1.jpg" width="251" /></div>
+																													<img alt="product image" data-default="placeholder" data-max-width="251" height="142" src="{airline_logo}" width="251" /></div>
 																											</div>
 																										</td>
 																										<td width="9">
@@ -414,7 +417,7 @@ td[class="spechide"]
 																										<td width="251" align="center" valign="middle">
 																											<div class="contentEditableContainer contentImageEditable">
 																												<div class="contentEditable">
-																													<img alt="product image" data-default="placeholder" data-max-width="251" height="142" src="../../../assets/mail-temps/upg-tp1-imgs/side-img2.jpg" width="251" /></div>
+																													<img alt="product image" data-default="placeholder" data-max-width="251" height="142" src="{airline_logo}" width="251" /></div>
 																											</div>
 																										</td>
 																										<td width="9">
@@ -473,7 +476,7 @@ td[class="spechide"]
 																									<td align="center" bgcolor="#0b0b5f" height="50" valign="middle" width="50">
 																										<div class="contentEditableContainer contentFacebookEditable">
 																											<div class="contentEditable" valign="middle">
-																												<a target='_blank' href="{fb_link}"><img alt="facebook link" data-default="placeholder" data-max-width="37" height="37" src="../../../assets/mail-temps/upg-tp1-imgs/facebook.png" width="37" data-customIcon="true" /></a></div>
+																												<a target='_blank' href="{fb_link}"><img alt="{facebook_icon}" data-default="placeholder" data-max-width="37" height="37" src="../../../assets/mail-temps/upg-tp1-imgs/facebook.png" width="37" data-customIcon="true" /></a></div>
 																										</div>
 																									</td>
 																								</tr>
@@ -487,7 +490,7 @@ td[class="spechide"]
 																									<td align="center" bgcolor="#12a4c3" height="50" valign="middle" width="50">
 																										<div class="contentEditableContainer contentTwitterEditable">
 																											<div class="contentEditable" valign="middle">
-																												<a target='_blank' href="{twitter_link}"><img alt="twitter link" data-default="placeholder" data-max-width="37" height="37" src="../../../assets/mail-temps/upg-tp1-imgs/twitter.png" width="37" data-customIcon="true" /></a></div>
+																												<a target='_blank' href="{twitter_link}"><img alt="{twitter_icon}" data-default="placeholder" data-max-width="37" height="37" src="../../../assets/mail-temps/upg-tp1-imgs/twitter.png" width="37" data-customIcon="true" /></a></div>
 																										</div>
 																									</td>
 																								</tr>

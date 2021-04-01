@@ -177,7 +177,7 @@ td[class="spechide"]
 				   <td valign="middle" height="60" width="75" align="right">
                               <div class="contentEditableContainer contentImageEditable" style='display:inline-block;'>
                                 <div class="contentEditable" >
-                                  <a target='_blank' href="{openbrowser_link}" title="Open in your Browser"><img src="../../../assets/mail-temps/bagg-tp2-imgs/openBrowser.png" alt='open in browser image' data-default="placeholder" width='15' height='15' style='padding-left:10px;'></a>
+                                  <a target='_blank' href="{openbrowser_link}" title="Open in your Browser"><img src="{open_browser}" alt='open in browser image' data-default="placeholder" width='15' height='15' style='padding-left:10px;'></a>
                                 </div>
                               </div>
                             </td>
@@ -203,7 +203,7 @@ td[class="spechide"]
                   <td>
                     <div class="contentEditableContainer contentImageEditable" >
                       <div class="contentEditable">
-                        <img class="banner" src="../../../assets/mail-temps/bagg-tp2-imgs/banner.png" width="600" style='margin:0; padding:0;' border="0">
+                        <img class="banner" src="{bg_tpl_bnr}" width="600" style='margin:0; padding:0;' border="0">
                       </div>
                     </div>
                   </td>
@@ -218,14 +218,14 @@ td[class="spechide"]
 						<td class="specbundle3" align="left">
 							<div class="contentEditableContainer contentTextEditable">
 								<div class="contentEditable" style='color:#333;font-size:23px;line-height:42px;font-family: Helvetica Neue;'>
-								  <p style="color:#333;font-size:15px;"><b><i>Congratulations {first_name} {last_name} !!!.</b></i></p>
+								  <p style="color:#333;font-size:15px;"><b><i><?= $greeting_line?> {first_name} {last_name} !!!.</b></i></p>
 								</div>
 							</div>
                               <div class="contentEditableContainer contentTextEditable">
                                 <div class="contentEditable" style='font-size:16px;color:#333;line-height:24px;font-style: italic;'>
                                   <p >you are Eligible for Baggage Upgrade</p>
                                 </div>
-                              </div> 
+                              </div>
 						</td>
 						<td width="30" style="background:#333;width:3px;"></td>
 						<td align="left">
@@ -253,6 +253,7 @@ td[class="spechide"]
 							<div class="contentEditableContainer contentTextEditable">
 								<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-color:#ddd;">
 									<tbody>
+  <!--{offer_data}-->
 									<tr>
 									<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;font-family:calibri;border-bottom:solid 1px #ddd;padding-bottom:10px;" class="hidden-lg hidden-sm hidden-md">
 										<div style="width:100%;text-align:center;">
@@ -296,6 +297,7 @@ td[class="spechide"]
 					</div>
 				</td>
 			</tr>
+      <!--{/offer_data}-->
 											<tr>
 								<td align="right" valign="middle">
 										<div class="contentEditableContainer contentTextEditable">
@@ -325,7 +327,7 @@ td[class="spechide"]
                       <div class="movableContent">
                         <div class="contentEditableContainer contentImageEditable">
                           <div class="contentEditable">
-                            <img class="banner" data-default="placeholder" data-max-width="180" src="../../../assets/mail-temps/bagg-tp2-imgs/line.png" width="100%" height="10"/>
+                            <img class="banner" data-default="placeholder" data-max-width="180" src="{bg_tpl_bnr}" width="100%" height="10"/>
                           </div>
                         </div>
                       </div>
@@ -344,7 +346,7 @@ td[class="spechide"]
                       <div class="movableContent">
                         <div class="contentEditableContainer contentImageEditable">
                           <div class="contentEditable">
-                            <img class="banner" data-default="placeholder" data-max-width="180" src="../../../assets/mail-temps/bagg-tp2-imgs/line.png" width="100%" height="10"/>
+                            <img class="banner" data-default="placeholder" data-max-width="180" src="{bg_tpl_bnr}" width="100%" height="10"/>
                           </div>
                         </div>
                       </div>
@@ -386,7 +388,7 @@ td[class="spechide"]
                     <td valign="top" width="250" class="specbundle3" align="center">
                           <div class="contentEditableContainer contentImageEditable">
                             <div class="contentEditable">
-                              <img data-default="placeholder" data-max-width="250" src="../../../assets/mail-temps/bagg-tp2-imgs/contactUs.png" width="250"/>
+                              <img data-default="placeholder" data-max-width="250" src="{bg_tpl_bnr}" width="250"/>
                             </div>
                           </div>
                     </td>
@@ -423,7 +425,7 @@ td[class="spechide"]
                       <!--Twitter-->
                      <div class="contentEditableContainer contentTwitterEditable" style="min-height: 0px;">
                       <div class="contentEditable">
-                        <a href="{twitter_link}"><img src="../../../assets/mail-temps/bagg-tp2-imgs/whiteTweet.png" title="Follow us on Twitter" width="20" data-customIcon="true" data-max-width='20'></a>
+                        <a href="{twitter_link}"><img src="{twitter_icon}"  title="Follow us on Twitter" width="20" data-customIcon="true" data-max-width='20'></a>
                         </div>
                       </div>
                       <!--.Twitter-->
@@ -433,7 +435,7 @@ td[class="spechide"]
                       <!--Facebook-->
                      <div class="contentEditableContainer contentFacebookEditable" style="min-height: 0px;">
                       <div class="contentEditable">
-                          <a href="{fb_link}"><img src="../../../assets/mail-temps/bagg-tp2-imgs/whitebook.png" title="Like us on Facebook" width="20" data-customIcon="true" data-max-width='20'></a>
+                          <a href="{fb_link}"><img src="{facebook_icon}" title="Like us on Facebook" width="20" data-customIcon="true" data-max-width='20'></a>
                         </div>
                       </div>
                       <!--.Facebook-->
@@ -443,7 +445,7 @@ td[class="spechide"]
                       <!--Instagram/Tumblr-->
                      <div class="contentEditableContainer contentImageEditable" style="min-height: 0px;">
                       <div class="contentEditable">
-                        <a href="{cam_link}"><img src="../../../assets/mail-temps/bagg-tp2-imgs/whiteCam.png" title="Check out our pics" width="20" ></a>
+                        <a href="{cam_link}"><img src="cam_icon" title="Check out our pics" width="20" ></a>
                         </div>
                       </div>
                       <!--.Instagram/Tumblr-->

@@ -1524,10 +1524,10 @@ echo "MISED,$cDocumentType";
 		switch ($p_nType) {
 
 			case 'rafeed-baggage':
-				$filename = APPPATH . 'downloads/rafeed-baggage.xlsx';
+				$filename = APPPATH . 'downloads/rafeed-baggage.xls';
 				break;
 			default:
-				$filename = APPPATH . 'downloads/rafeed.xlsx';
+				$filename = APPPATH . 'downloads/rafeed.xls';
 		}
 
 
