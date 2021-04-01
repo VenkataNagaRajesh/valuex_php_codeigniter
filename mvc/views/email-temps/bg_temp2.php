@@ -13,7 +13,7 @@
         h2 {margin-top:0; color:#D70000; font-size:18px;font-family:"Lucida Grande", "Helvetica Neue", Helvetica, Arial, sans-serif;font-weight:normal;}
         h3 {margin:0;font-family:"Lucida Grande", "Helvetica Neue", Helvetica, Arial, sans-serif;}
         .bgItem{background: #D70000;}   
-        ul {list-style-image: url(<?=base_url('assets/mail-temps/bg_temp2_images/bullet.png')?>);}
+        ul {list-style-image: url(../../../assets/mail-temps/bagg-tp2-imgs/bullet.png);}
 		
 
   @media only screen and (max-width:480px)
@@ -154,6 +154,7 @@ td[class="spechide"]
     <body paddingwidth="0" paddingheight="0" bgcolor="#d1d3d4"  style="padding-top: 0; padding-bottom: 0; padding-top: 0; padding-bottom: 0; background-repeat: repeat; width: 100% !important; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; -webkit-font-smoothing: antialiased;" offset="0" toppadding="0" leftpadding="0">
     <!-- main container -->
     	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+		<table width="560" border="0" cellspacing="0" cellpadding="0" style="border: solid 1px #ddd;box-shadow: 0px 0px 20px -8px #000;" align="center">
   <tbody>
     <tr>
       <td class='movableContentContainer' align="center">
@@ -161,22 +162,25 @@ td[class="spechide"]
             	<table align="center" border="0" cellpadding="0" cellspacing="0" width="600" class="MainContainer">
               <tbody>
                 <tr>
-                  <td align="center" colspan="9" height="20">
-                  </td>
-                </tr>
-                <tr>
                 	<td><table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#f5f5f5">
   <tbody>
     <tr>
       <td class="specbundle3"><table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tbody>
     <tr>
-      <td valign="top" height="60" width="75" align="middle">
+      <td valign="middle" height="60" width="75" align="middle">
                     <div class="contentEditableContainer contentImageEditable">
                       <div class="contentEditable">
-                        <img data-default="placeholder" data-max-width="75" data-max-height="60" src="<?=base_url('assets/mail-temps/crenva.png')?>" width="180" height="auto" ></div>
+                        <img data-default="placeholder" data-max-width="75" data-max-height="60" src="{airline_logo}" width="180" height="auto" ></div>
                     </div>
                   </td>
+				   <td valign="middle" height="60" width="75" align="right">
+                              <div class="contentEditableContainer contentImageEditable" style='display:inline-block;'>
+                                <div class="contentEditable" >
+                                  <a target='_blank' href="{openbrowser_link}" title="Open in your Browser"><img src="{open_browser}" alt='open in browser image' data-default="placeholder" width='15' height='15' style='padding-left:10px;'></a>
+                                </div>
+                              </div>
+                            </td>
     </tr>
   </tbody>
 </table>
@@ -199,7 +203,7 @@ td[class="spechide"]
                   <td>
                     <div class="contentEditableContainer contentImageEditable" >
                       <div class="contentEditable">
-                        <img class="banner" src="<?=base_url('assets/mail-temps/bg_temp2_images/featuredImage.png')?>" width="600" style='margin:0; padding:0;' border="0">
+                        <img class="banner" src="{bg_tpl_bnr}" width="600" style='margin:0; padding:0;' border="0">
                       </div>
                     </div>
                   </td>
@@ -214,7 +218,7 @@ td[class="spechide"]
 						<td class="specbundle3" align="left">
 							<div class="contentEditableContainer contentTextEditable">
 								<div class="contentEditable" style='color:#333;font-size:23px;line-height:42px;font-family: Helvetica Neue;'>
-								  <p style="color:#333;font-size:15px;"><b><i>Congratulations Luke Kenny!!!.</b></i></p>
+								  <p style="color:#333;font-size:15px;"><b><i>Congratulations {first_name} {last_name} !!!.</b></i></p>
 								</div>
 							</div>
                               <div class="contentEditableContainer contentTextEditable">
@@ -249,22 +253,24 @@ td[class="spechide"]
 							<div class="contentEditableContainer contentTextEditable">
 								<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-color:#ddd;">
 									<tbody>
+     <!--{/offer_data}-->
 									<tr>
 									<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;font-family:calibri;border-bottom:solid 1px #ddd;padding-bottom:10px;" class="hidden-lg hidden-sm hidden-md">
 										<div style="width:100%;text-align:center;">
-											 <p style="color:#333;"><b>Bangalore - Hyderabad | Tue, 23 May 17, 17:30 hrs</b></p>
+											 <p style="color:#333;"><b>{from_city_code} - {to_city_code} | {dep_date}, {dep_time}</b></p>
 										</div>
 									</div>	
 								</tr>
 								<tr><td height="20"></td></tr>
 								<tr>
+									<td width="20"></td>
 									<td>
 										<div class="contentEditable">
 											<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;margin-bottom: 20px;font-family:calibri;" class="hidden-lg hidden-sm hidden-md">
 												<div style="width:100%;">
-													<p><b>Duration : </b><span>1h 10m</span></p>
-													<p><b>Flight : </b><span>CA2345</span></p>
-													<p><b>Cabin : </b><span>Economy</span></p>
+													<p><b>Duration : </b><span>{time_diff}</span></p>
+													<p><b>Flight : </b><span>{carrier_code}{flight_number}</span></p>
+													<p><b>Cabin : </b><span>{current_cabin}</span></p>
 												</div>
 											</div>	
 										</div>
@@ -275,33 +281,36 @@ td[class="spechide"]
 											<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;margin-bottom: 20px;font-family:calibri;" class="hidden-lg hidden-sm hidden-md">
 												<div style="width:50%;float:left;">
 													<p><b><i>Departure</i></b></p>
-													<p><b>Bangalore(BLR)</b><br><span>Tue, 23 May 17, 17:30 hrs</span></p>	
+													<p><b>{from_city}({from_city_code})</b><br><span>{dep_date}, {dep_time}</span></p>	
 												</div>
 												<div style="width:50%;float:left">
 													<p><b><i>Arrival</i></b></p>
-													<p><b>Hyderabad Shamshabad (HYD)</b><br><span>Tue, 23 May 17, 18:40 hrs</span></p>
+													<p><b>{to_city} ({to_city_code})</b><br><span>{arrival_date}, {arrival_time}</span></p>
 												</div>
 											</div>	
 										</div>
 									</td>
+									<td width="20"></td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
 				</td>
 			</tr>
+<!--{/offer_data}-->
 											<tr>
 								<td align="right" valign="middle">
 										<div class="contentEditableContainer contentTextEditable">
 											<div class="contentEditable">
 												<div style="font-weight:500;position: relative;min-height: 1px;overflow: auto;width:100%;margin-bottom: 20px;font-family:calibri;" class="hidden-lg hidden-sm hidden-md">
 													<div style="width:100%;" class="mob-table">
-														 <a target='_blank' href="#" style='padding:8px 25px;color:#fff;background:#ff6633;text-decoration:none;font-weight:bold;font-size:13px;border-radius:3px;font-family:calibri, serif;display:inline-block;'>BID NOW</a>
+														 <a target='_blank' href="{bidnow_link}" style='padding:8px 25px;color:#fff;background:#ff6633;text-decoration:none;font-weight:bold;font-size:13px;border-radius:3px;font-family:calibri, serif;display:inline-block;'>BID NOW</a>
 													</div>
 												</div>	
 											</div>		
 										</div>
 									</td>
+									
 							</tr>
             </table>
             </div>
@@ -318,7 +327,7 @@ td[class="spechide"]
                       <div class="movableContent">
                         <div class="contentEditableContainer contentImageEditable">
                           <div class="contentEditable">
-                            <img class="banner" data-default="placeholder" data-max-width="180" src="<?=base_url('assets/mail-temps/bg_temp2_images/line.png')?>" width="180" height="20"/>
+                            <img class="banner" data-default="placeholder" data-max-width="180" src="{bg_tpl_bnr}" width="100%" height="10"/>
                           </div>
                         </div>
                       </div>
@@ -337,7 +346,7 @@ td[class="spechide"]
                       <div class="movableContent">
                         <div class="contentEditableContainer contentImageEditable">
                           <div class="contentEditable">
-                            <img class="banner" data-default="placeholder" data-max-width="180" src="<?=base_url('assets/mail-temps/bg_temp2_images/line.png')?>" width="180" height="30"/>
+                            <img class="banner" data-default="placeholder" data-max-width="180" src="{bg_tpl_bnr}" width="100%" height="10"/>
                           </div>
                         </div>
                       </div>
@@ -361,14 +370,15 @@ td[class="spechide"]
                   </tr>
                   
                   <tr>
+					<td width="20"></td>
                     <td valign="top" width="320" class="specbundle3">
                         <div class="contentEditableContainer contentTextEditable">
                             <div class="contentEditable">
                                 <h2 style="text-align:left;">Get in touch</h2>
                                 <p style="text-align:left;">Our support team is able to answer all your questions. Just get in touch with us:</p>
                                   <ul>
-                                  <li>Call us: 9999999999</li>
-                                  <li>Email us: support@crenva.com</li>
+                                  <li>Call us: {primary_phone}</li>
+                                  <li>Email us: {primary_mail}</li>
                                 </ul>
                             </div>
                         </div>
@@ -378,10 +388,11 @@ td[class="spechide"]
                     <td valign="top" width="250" class="specbundle3" align="center">
                           <div class="contentEditableContainer contentImageEditable">
                             <div class="contentEditable">
-                              <img data-default="placeholder" data-max-width="250" src="<?=base_url('assets/mail-temps/bg_temp2_images/contactUs.png')?>" width="250"/>
+                              <img data-default="placeholder" data-max-width="250" src="{bg_tpl_bnr}" width="250"/>
                             </div>
                           </div>
                     </td>
+					<td width="20"></td>
                 </tr>
 
                   <tr>
@@ -414,7 +425,7 @@ td[class="spechide"]
                       <!--Twitter-->
                      <div class="contentEditableContainer contentTwitterEditable" style="min-height: 0px;">
                       <div class="contentEditable">
-                        <img src="<?=base_url('assets/mail-temps/bg_temp2_images/whiteTweet.png')?>" title="Follow us on Twitter" width="20" data-customIcon="true" data-max-width='20'>
+                        <a href="{twitter_link}"><img src="{twitter_icon}"  title="Follow us on Twitter" width="20" data-customIcon="true" data-max-width='20'></a>
                         </div>
                       </div>
                       <!--.Twitter-->
@@ -424,7 +435,7 @@ td[class="spechide"]
                       <!--Facebook-->
                      <div class="contentEditableContainer contentFacebookEditable" style="min-height: 0px;">
                       <div class="contentEditable">
-                        <img src="<?=base_url('assets/mail-temps/bg_temp2_images/whitebook.png')?>" title="Like us on Facebook" width="20" data-customIcon="true" data-max-width='20'>
+                          <a href="{fb_link}"><img src="{facebook_icon}" title="Like us on Facebook" width="20" data-customIcon="true" data-max-width='20'></a>
                         </div>
                       </div>
                       <!--.Facebook-->
@@ -434,7 +445,7 @@ td[class="spechide"]
                       <!--Instagram/Tumblr-->
                      <div class="contentEditableContainer contentImageEditable" style="min-height: 0px;">
                       <div class="contentEditable">
-                        <img src="<?=base_url('assets/mail-temps/bg_temp2_images/whiteCam.png')?>" title="Check out our pics" width="20" >
+                        <a href="{cam_link}"><img src="cam_icon" title="Check out our pics" width="20" ></a>
                         </div>
                       </div>
                       <!--.Instagram/Tumblr-->
@@ -488,7 +499,7 @@ td[class="spechide"]
                           <div class="contentEditableContainer contentTextEditable">
 							<div class="contentEditableContainer contentTextEditable">
 									<div class="contentEditable">
-									  <p style="text-align:center;"><a href="#" style="color:#fff;">Help Center | I'm Not Intrested</a></p>
+									  <p style="text-align:center;"><a href="{not_intrested_link}" style="color:#fff;">Help Center | I'm Not Intrested</a></p>
 									</div>
 							</div>
                           </div>
@@ -498,7 +509,7 @@ td[class="spechide"]
                           <div class="contentEditableContainer contentTextEditable">
                             <div class="contentEditable">
                               <p>
-                              <a target='_blank' href="[FORWARD]/contact" style="font-size: 12px; text-align:center; color:#ffffff">
+                              <a target='_blank' href="{forward_friend_link}" style="font-size: 12px; text-align:center; color:#ffffff">
                                 Foward to a friend</a>
                               </p>
                             </div>
@@ -517,7 +528,7 @@ td[class="spechide"]
                           <div class="contentEditableContainer contentTextEditable">
                             <div class="contentEditable">
                               <p>
-                              <a target='_blank' href="[UNSUBSCRIBE]" style="font-size: 12px; text-align:center; color:#ffffff">
+                              <a target='_blank' href="{unsubscribe_link}" style="font-size: 12px; text-align:center; color:#ffffff">
                                 If you don’t want to receive emails from us anymore, click here to unsubscribe</a>
                               </p>
                             </div>
@@ -529,6 +540,7 @@ td[class="spechide"]
       </td>
     </tr>
   </tbody>
+  </table>
 </table>
 
 
