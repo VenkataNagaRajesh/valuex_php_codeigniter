@@ -68,6 +68,7 @@
                     <tr>
 					<th><input class="filter" title="Select All" type="checkbox" id="bulkDelete"/>#</th>
                         <!--<th class="col-lg-2"><?=$this->lang->line('master_airport')?></th>-->
+						<th class="col-lg-1"><?=$this->lang->line('master_airport')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('master_code')?></th>
 						<!--<th class="col-lg-1"><?=$this->lang->line('master_city')?></th>-->
 						<th class="col-lg-1"><?=$this->lang->line('master_citycode')?></th>
@@ -126,6 +127,7 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
                     "success": fnCallback
 			 } ); },	  
       "columns": [{"data": "chkbox" },                
+				  {"data": "airport"},				
 				  {"data": "code"},				
 				  {"data": "citycode" },				
 				  {"data": "countrycode" },

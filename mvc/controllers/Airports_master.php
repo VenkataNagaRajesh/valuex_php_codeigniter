@@ -473,7 +473,7 @@ function server_processing(){
 	$userID = $this->session->userdata('loginuserID');
 	$roleID = $this->session->userdata('roleID');	  
 	
-    $aColumns = array('m.vx_amdID','ma.code','mct.code','mc.code','mr.aln_data_value','mar.aln_data_value','ma.code', 'ma.alias','ma.active');
+    $aColumns = array('m.vx_amdID','ma.aln_data_value', 'ma.code','mct.code','mc.code','mr.aln_data_value','mar.aln_data_value','ma.code', 'ma.alias','ma.active');
 
 	$sLimit = "";
 	
@@ -600,7 +600,7 @@ $rownum = 1 + $_GET['iDisplayStart'];
     $i++;			
 	}
 	if(isset($_REQUEST['export'])){
-	  $columns = array('#','Name','Code','City','City Code','Country','Country Code','Region','Area');
+	  $columns = array('#','Name','Airport'. 'Code','City','City Code','Country','Country Code','Region','Area');
 	  $rows = array("temp_id","airport","code","city","citycode","country","countrycode","region","area");
 	  $this->exportall($output['aaData'],$columns,$rows);		
 	} else {	
