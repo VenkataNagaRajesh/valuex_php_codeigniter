@@ -83,7 +83,6 @@ class Airports_m extends MY_Model
 	public function addMasterData($data)
 	{
 		$this->db->insert('VX_master_data', $data);
-		//echo $this->db->last_query();exit;
 		if ($this->db->affected_rows() > 0) {
 			return $this->db->insert_id();
 		} else {
@@ -388,7 +387,7 @@ class Airports_m extends MY_Model
 		$this->db->join('VX_data_defns mar', 'mar.vx_aln_data_defnsID = mr.parentID', 'LEFT');
 		$this->db->where('ma.vx_aln_data_defnsID', $id);
 		$query = $this->db->get();
-		//	echo $this->db->last_query();
+	//	echo $this->db->last_query();
 		return $query->row();
 	}
 

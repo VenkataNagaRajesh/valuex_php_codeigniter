@@ -195,7 +195,6 @@ class Airports_master extends Admin_Controller {
 	}
 
 	public function upload(){
-
 	 if($_FILES){
 		 if (empty($_FILES['file']['name'])) {
             		$this->session->set_flashdata('error',"Please select File");			
@@ -212,7 +211,7 @@ class Airports_master extends Admin_Controller {
 			$Reader = new SpreadsheetReader($file); 
 			$header = array_map('strtolower',array('S.No','Airport Name','Airport Code','City Name','City Code','Country Code','Country','Region','Area','ICAO Code'));
 			 $header = array_map('strtolower', $header);
-			//print_r(count($header)); exit;
+			print_r(($header));
 			$Sheets = $Reader -> Sheets();
 			$defnData = $this->airports_m->getDefns();
 			$newDefData = Array();
@@ -260,7 +259,9 @@ class Airports_master extends Admin_Controller {
 						$area = $Row[$area_key];
 						$city = $Row[$city_key];
 						unset($validate);
+						$airport = preg_replace('/[^A-Za-z0-9 ]/', '', $airport);
 						$validate = array('airport'=> $airport,'airportcode' => $Row[$airportcode_key],'citycode' => $Row[$citycode_key],'countrycode' => $Row[$countrycode_key],'area' => $area,'region' => $region);					        								 
+						$validate = array_map('trim', $validate);
 		    				$val_status = $this->validateAirport($validate);   //Input data valid 
 					  	if($val_status){								
 							$airport_row = $this->airports_m->checkAirport($airport);//Check Airport record exists
@@ -311,6 +312,7 @@ class Airports_master extends Admin_Controller {
 								$newDefData[3][$Row[$citycode_key]] =  $data['cityID'];
 							  }	 							  
 							 
+								$airport = preg_replace('/[^A-Za-z0-9 ]/', '', $airport);
 						     	$data['airportID'] = $this->airports_m->addAirport($airport, $data['cityID'],$Row[$airportcode_key], $Row[$icao_key]);
 								$newDefData[1][$Row[$airportcode_key]] =  $data['airportID'];
 			     
@@ -393,8 +395,8 @@ class Airports_master extends Admin_Controller {
 								  $data['airportID'] =  $airport_data_def->airportID;
 								  $data['countryID'] = $airport_data_def->countryID;
 								  $data['cityID'] = $airport_data_def->cityID;
-								  $data['regionID'] = $airport_data_def->regionID;
-								  $data['areaID'] = $airport_data_def->areaID;
+								  $data['regionID'] = ($airport_data_def->regionID != null) ? $airport_data_def->regionID : 0;
+								  $data['areaID'] = ($airport_data_def->areaID != null) ? $airport_data_def->areaID  : 0;
 
 								  $data['lat'] = $latitude;
 								  $data['lng'] = $longitude;						 
@@ -411,7 +413,7 @@ class Airports_master extends Admin_Controller {
 							}
 
 							//Let u update 
-							$this->mydebug->airports_log("Airport :".$airport." already  existed");		 
+							$this->mydebug->airport_master_log("Airport :".$airport." already  existed");		 
 						}
 					 } 
 									
@@ -443,23 +445,23 @@ class Airports_master extends Admin_Controller {
 function validateAirport($validate){
 #$validateAirportCode = $this->airports_m->checkAirportCode($validate['airportcode']);		
 	if(strlen($validate['airportcode']) != 3 || ctype_alpha($validate['airportcode']) != 1){
-		$this->mydebug->airports_log("Airport Code must be alphabets and length 3 ".$validate['airport'].'-'.$validate['airportcode']);
+		$this->mydebug->airport_master_log("Airport Code must be alphabets and length 3 ".$validate['airport'].'-'.$validate['airportcode']);
 		return FALSE;
 	/*} else if($validateAirportCode != 0){
-		$this->mydebug->airports_log("Airport Code must be UNIQUE ".$validate['airport'].'-'.$validate['airportcode']);
+		$this->mydebug->airport_master_log("Airport Code must be UNIQUE ".$validate['airport'].'-'.$validate['airportcode']);
 		return FALSE;
 */
 	} else if(strlen($validate['citycode']) != 3 || ctype_alpha($validate['citycode']) != 1){
-		$this->mydebug->airports_log("City Code must be alphabets and length 3 ".$validate['airport'].'-'.$validate['citycode']);
+		$this->mydebug->airport_master_log("City Code must be alphabets and length 3 ".$validate['airport'].'-'.$validate['citycode']);
 		return FALSE;
 	} else if(strlen($validate['countrycode']) != 2 || ctype_alpha($validate['countrycode']) != 1){
-		$this->mydebug->airports_log("Countrycode Code must be alphabets and length 2 ".$validate['airport'].'-'.$validate['countrycode']);
+		$this->mydebug->airport_master_log("Countrycode Code must be alphabets and length 2 ".$validate['airport'].'-'.$validate['countrycode']);
 		return FALSE;
 	} else if(strlen($validate['area']) != 1 || !is_numeric($validate['area'])){
-		$this->mydebug->airports_log("Area must be numeric and length 1 ".$validate['airport'].'-'.$validate['area']);
+		$this->mydebug->airport_master_log("Area must be numeric and length 1 ".$validate['airport'].'-'.$validate['area']);
 		return FALSE;
-	} else if(strlen($validate['region']) > 99 || !ctype_alpha($validate['region'])){
-		$this->mydebug->airports_log("region must be alphabets and length <= 99 ".$validate['airport'].'-'.$validate['region']);			
+	} else if(strlen($validate['region']) > 99){
+		$this->mydebug->airport_master_log("region must be alphabets and length <= 99 ".$validate['airport'].'-'.$validate['region']);			
 		return FALSE;
 	} else {			
 		return TRUE;
@@ -712,6 +714,7 @@ foreach($data_id_array as $id) {
 }
 }
 }
+
 
 
 }
