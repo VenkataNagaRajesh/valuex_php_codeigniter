@@ -80,6 +80,7 @@ class Bidding extends MY_Controller {
 						$offer = $this->bid_m->getPassengers($pnr_ref);
 						$this->data['offer'] = $offer;
 						$this->data['pax_names'] = $offer[0]->pax_names; 
+						$this->data['passengers_count'] = count(explode(',',$offer[0]->pax_names)); 			
 						$carrier_id = $offer[0]->carrier_id;
 						#print_r($this->data['upgrade'] ); exit;
 						//$this->data['tomail'] = explode(',',$this->data['upgrade'][0]->email_list)[0]; 
@@ -105,7 +106,6 @@ class Bidding extends MY_Controller {
 						$this->data['images'] = $this->airline_m->getImagesByType($airline->airlineID,'gallery');
 						$this->data['airline_video_link'] = str_replace('watch?v=','embed/',$airline->video_links);		 
 				}
-
 			} else {
 					$this->data['error'] = 'OOPS! PNR MISSING';
 			}
@@ -151,7 +151,6 @@ class Bidding extends MY_Controller {
 					$dteEnd   = new DateTime($arrival); 
 					$dteDiff  = $dteStart->diff($dteEnd);
 					$result->time_diff = $dteDiff->format('%d days %H hours %i min');
-					$this->data['passengers_count'] = count(explode(',',$offer[0]->pax_names)); 			
 				}      
 		 
 				//$this->data['cabins']  = $this->airline_cabin_m->getAirlineCabins();
@@ -165,6 +164,7 @@ class Bidding extends MY_Controller {
 
 		function showBaggageOffer ($pnr_ref) {
 			if ( $pnr_ref ) {
+					$airline = $this->bid_m->getAirlineLogoByPNR($pnr_ref);
 					$this->data['active_products'] = array_keys($this->offer_issue_m->getProductsforOffer($offerId));
 					$bgoffer = $this->offer_issue_m->getBaggageOffer($pnr_ref);
 				#echo "<pre>" . print_r($bgoffer,1) . "</pre>"; exit;
@@ -174,9 +174,8 @@ class Bidding extends MY_Controller {
 						$this->data['baggage_min_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MIN_VAL','24',$airline->airlineID);
 						$this->data['baggage_max_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MAX_VAL','24',$airline->airlineID);
 						$this->data['piece'] = $this->preference_m->get_preference_value_bycode('PIECE','24',$airline->airlineID);
-						$pnr_ref=$this->session->userdata('pnr_ref');
 						// var_dump($pnr_ref);
-						$test="SELECT b.bid_id, v.product_id, v.dtpfext_id,v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2) WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref'";
+						$test="SELECT b.bid_id, o.offer_id, v.product_id, v.dtpfext_id,v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2) LEFT JOIN VX_offer o ON ( o.pnr_ref = vx.pnr_ref ) WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref'";
 						$rquery = $this->install_m->run_query($test);
 						// var_dump($rquery);
 						$mr=[];
@@ -191,6 +190,7 @@ class Bidding extends MY_Controller {
 							$mr[$rq->ond][$rq->dtpf_id]['ond']=$rq->ond;
 							$mr[$rq->ond][$rq->dtpf_id]['rule_id']=$rq->rule_id;
 							$mr[$rq->ond][$rq->dtpf_id]['product_id']=$rq->product_id;
+							$mr[$rq->ond][$rq->dtpf_id]['offer_id']=$rq->offer_id;
 
 							$mr[$rq->ond][$rq->dtpf_id]['flight_number']=$rq->flight_number;
 							$mr[$rq->ond][$rq->dtpf_id]['dep_date']=$rq->dep_date;
@@ -216,6 +216,7 @@ class Bidding extends MY_Controller {
 					$tr[$key1]['to_city_name']=$this->getCityName($value1['last_one']['to_city']);
 					$tr[$key1]['dtpf_id']=$value1['first_one']['dtpf_id'];
 					$tr[$key1]['product_id']=$value1['first_one']['product_id'];
+					$tr[$key1]['offer_id']=$value1['first_one']['offer_id'];
 					$tr[$key1]['dtpfext_id']=$value1['first_one']['dtpfext_id'];
 					$tr[$key1]['to_city']=$value1['last_one']['to_city'];
 					$tr[$key1]['ond']=$value1['last_one']['ond'];
