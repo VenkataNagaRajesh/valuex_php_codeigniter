@@ -72,12 +72,16 @@ class Market_airport extends Admin_Controller {
 		$this->data['city_list'] = $this->airports_m->getDefnsCodesListByType('3');
 		$this->data['region_list'] = $this->airports_m->getDefnsListByType('4');
                 $roleID = $this->session->userdata('roleID');
+                $userID = $this->session->userdata('loginuserID');
 		
                 if($roleID != 1){
                     $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
                 } else {
                     $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 }
+		if (count($this->data['airlines']) == 1){
+                    $this->data['filter_airline'] = $this->data['airlines'][0];
+		}
 		$this->data["subview"] = "market_airport/index";
 		$this->load->view('_layout_main', $this->data);
 	}
