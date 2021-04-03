@@ -27,6 +27,7 @@ class Season_airport extends Admin_Controller {
             )
       );
       $roleID = $this->session->userdata('roleID');
+                $userID = $this->session->userdata('loginuserID');
           if(!empty($this->input->post('seasonID'))){
             $this->data['seasonID'] = $this->input->post('seasonID');
           } else {
@@ -52,6 +53,9 @@ class Season_airport extends Admin_Controller {
                 } else {
                     $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 } 
+		if (count($this->data['airlines']) == 1){
+                    $this->data['filter_airline'] = $this->data['airlines'][0]->vx_aln_data_defnsID;
+		}
 		$this->data['airports_list'] = $this->airports_m->getDefns('1');
 		$this->data["subview"] = "season_airport/index";
 		$this->load->view('_layout_main', $this->data);
