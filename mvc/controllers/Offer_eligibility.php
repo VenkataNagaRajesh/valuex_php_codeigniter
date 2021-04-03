@@ -367,7 +367,7 @@ $sWhere $sOrder $sLimit";
 			} else {
 				$feed->rule_id = '&nbsp;';
 			}
-			$feed->offer_id = '<a target="_new" style="color:blue;" href="'.base_url('offer_issue/view/'.$feed->offer_id).'"  >'.$feed->offer_id.'</a>';
+			$feed->offer_id = '<a target="_new" style="color:blue;" href="'.base_url('offer_issue/view/'.$feed->pnr_ref).'"  >'.$feed->offer_id.'</a>';
 			$feed->dtpf_id = '<a target="_new" style="color:blue;" href="'.base_url('paxfeed/index/'.$feed->dtpf_id).'"  >'.$feed->dtpf_id.'</a>';
 
 			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default";

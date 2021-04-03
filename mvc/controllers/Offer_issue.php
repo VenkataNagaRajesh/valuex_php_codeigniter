@@ -109,7 +109,7 @@ class Offer_issue extends Admin_Controller {
         public function view() {
                 $id = htmlentities(escapeString($this->uri->segment(3)));
 
-                if ((int)$id) {
+                if ($id) {
                         $this->data['products'] = $this->offer_issue_m->getProductsforOffer($id);
 			foreach($this->data["products"] as $pdId => $value ) {
                         	$this->data["offers"][$pdId] = $this->offer_issue_m->getOfferDetails($id, $pdId);
@@ -462,7 +462,7 @@ $sWhere $sOrder $sLimit";
                         $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->to_city_code));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->to_city.'</a>';
 			
-			$feed->booking_status = btn_view('offer_issue/view/'.$feed->offer_id, $this->lang->line('view'));
+			$feed->booking_status = btn_view('offer_issue/view/'.$feed->pnr_ref, $this->lang->line('view'));
                    	$feed->action =  '<a target="_blank" href="' . base_url('offer_issue/resendoffer/' . $feed->pnr_ref) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="SEND OFFER MAIL TO PAX"><i class="fa fa-check"></i></a>';
                         $feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default";
                         $feed->departure_date = date('d-m-Y',$feed->flight_date);
@@ -1156,7 +1156,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 		$dir = "assets/mail-temps";
 		$tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID']);
 		$tpl_file = $$tpl->template_path;
-                $maildata['mail_subject'] = (!empty($tpl->mail_subject)) ? $tpl->mail_subject : "ongratulations! You got great deal ! Grab it..";
+                $maildata['mail_subject'] = (!empty($tpl->mail_subject)) ? $tpl->mail_subject : "Congratulations! You got great deal ! Grab it..";
 		$t = explode('.',$tpl_file);
 		$tpl_path = $t[0]. '-imgs';
 
