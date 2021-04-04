@@ -1146,16 +1146,17 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 			$maildata['mail_subject'] .= " Baggage offer";    
 		}
 
-                $primary_client = $this->user_m->getClientByAirline($maildata['airlineID'],6)[0];	   
 		$pax_names = $this->bid_m->getPaxNames($pnr_ref);
+				$maildata['pnr_ref'] =  $pnr_ref;
                 $maildata['offer_data'] = $offerdata;
                 $maildata['airlineID'] = $offer[0]->carrier_code;
                 $maildata['first_name'] = $offer[0]->pax_names;
                 $maildata['tomail'] = $email_list[0];
+                $primary_client = $this->user_m->getClientByAirline($maildata['airlineID'],6)[0];	   
                 #$maildata = array_merge($maildata, $paxdata);
 		$dir = "assets/mail-temps";
 		$tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID']);
-		$tpl_file = $$tpl->template_path;
+		$tpl_file = $tpl->template_path;
                 $maildata['mail_subject'] = (!empty($tpl->mail_subject)) ? $tpl->mail_subject : "Congratulations! You got great deal ! Grab it..";
 		$t = explode('.',$tpl_file);
 		$tpl_path = $t[0]. '-imgs';
@@ -1169,7 +1170,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 		}
 
 		if( $baggage_offer) {
-                 $maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/banner.jpg");	
+                 $maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/banner.png");	
                  $maildata['bg_tpl_bnrtop'] = base_url("$dir/$tpl_path/bannerTop.png");	
                  $maildata['bg_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");	
                  #$maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/header.jpg");

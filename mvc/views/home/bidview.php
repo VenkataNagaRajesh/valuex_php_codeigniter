@@ -472,7 +472,7 @@ var cwtpoints<?=$ond?> = [];
 							<a type="button" class="btn btn-danger btn btn-secondary sw-btn-prev" style="background:<?=$mail_header_color?>"><i class="fa fa-arrow-left" ></i> Back</a>
 						</div>
 						<div class="col-md-10 booking-ref">
-							<h2 class="pull-right"><b>Booking Ref No: <?php echo $upgrade[0]->pnr_ref; ?></b></h2>
+							<h2 class="pull-right"><b>Booking Ref No: <?php echo $pnr_ref; ?></b></h2>
 <?php
 		if ( isset($resubmit) && isset($last_bid_total_value)) {
 			
