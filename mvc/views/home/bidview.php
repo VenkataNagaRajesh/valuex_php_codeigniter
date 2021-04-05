@@ -467,28 +467,38 @@ var cwtpoints<?=$ond?> = [];
 	</div>
 </div>
                 <div id="payment" class="">
-					<div class="col-md-9 col-sm-9">
+					<div class="col-sm-12 col-md-9 ">
 						<div class="col-md-2 back-btn">
 							<a type="button" class="btn btn-danger btn btn-secondary sw-btn-prev" style="background:<?=$mail_header_color?>"><i class="fa fa-arrow-left" ></i> Back</a>
 						</div>
-						<div class="col-md-10 booking-ref">
-							<h2 class="pull-right"><b>Booking Ref No: <?php echo $pnr_ref; ?></b></h2>
+						<div class="col-md-10 ">
+						    <div class="col-md-12">
+						        <h2 class="pull-right" style="margin:5px 0px;"><b>Booking Ref No: <?php echo $pnr_ref; ?></b></h2>
 <?php
 		if ( isset($resubmit) && isset($last_bid_total_value)) {
 			
 ?>
-							<br><span class="pull-right" style="color:#333;align:right">Status: Re-bidding:  Last Bid Total: $ <i><?=$last_bid_total_value?></i></span>
+						        
+						    </div>
+						    <div class="col-md-12">
+						        <h2 class="pull-right" ><span style="color:#333;align:right">Status: Re-bidding:  Last Bid Total: $ <i><?=$last_bid_total_value?></i></span></h2>
 <?
 		} else {
 ?>
-							<br><span class="pull-right" style="color:#333;align:right">Status: Fresh Bidding</i></span>
+						        
+						    </div>
+						    <div class="col-md-12">
+							
+							
+							<h2 class="pull-right"><span style="color:#333;align:right">Status: Fresh Bidding</i></span></h2>
 <?
 		}
-?>
-						</div>
-						<div class="col-md-12">
+?>                      </div>
+	                    <div class="col-md-12">
 							<p class="pull-right">Total Bid Amount  <strong style="margin-left:12px;"> <i class="fa fa-dollar"></i> <b id="bidtot"></b></strong></p>
 						</div>
+						</div>
+					
 						<div class="col-md-12 ">
 							<div class="price-range">
 								<b id="mile-min"> </b>
@@ -496,7 +506,7 @@ var cwtpoints<?=$ond?> = [];
 								<b id="mile-max"></b> 
 							</div>
 						</div>
-						<div class="col-md-12 payment-box">
+						<div class="col-sm-12 col-md-12 payment-box">
 							<form role="form" id="payment-form" method="POST" action="#">
 								<div class="col-md-8">
 									<div class="form-group">
@@ -547,7 +557,7 @@ var cwtpoints<?=$ond?> = [];
 							</form>
 						</div>
 					</div>
-					<div class="col-md-3 col-sm-3">
+					<div class="col-sm-12 col-md-3 ">
 						<div class="side-video">
 							<iframe src="https://www.youtube.com/embed/_O2_nTt1N6w" width="100%" height="180"></iframe>
 							
