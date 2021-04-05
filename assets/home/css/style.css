@@ -11,12 +11,13 @@
 *	Edit this section
 *
 * ======================================================= */
+
 body {
   font-family: calibri;
   line-height: 1.6;
   font-size: 15px;
   background: #fff;
-  color: #848484;
+  color: #484848;
   font-weight: 400;
   overflow-x: hidden;
 }
@@ -206,7 +207,7 @@ figure {
 }
 .bid-tab .tab-content .pass-info p span{
 	color: #ff6633;
-	margin-left: 12px;
+	margin-left: 2px;
 	text-transform: capitalize;
 }
 .bid-tab .tab-content .pass-info p{
@@ -302,7 +303,7 @@ figure {
 	cursor: pointer;
 	color:#fff;
 }
-.bid-tab .nav-tabs > li a:before{
+/*.bid-tab .nav-tabs > li a:before{
     content: " ";
     display: block;
     width: 0;
@@ -316,7 +317,7 @@ figure {
     margin-left: 1px;
     left: 100%;
     z-index: 1;
-}
+}*/
 .bid-tab .nav-tabs > li > a:hover {
     border-color: #333;
 }
@@ -369,11 +370,14 @@ figure {
 	background: #f5f5f5;
 	padding: 14px;
 	margin: 20px 0px;
+	float:left;
+	width:100%;
 }
 #offer .price-range{
 	background: #f5f5f5;
-	padding: 14px;
+	padding:0px 14px;
 	color: black;
+	margin: 20px 0px;
 }
 #offer .pass-info .btn-danger{
 	background: #ff6633;
@@ -399,7 +403,6 @@ figure {
 .sw-theme-arrows > ul.step-anchor > li > a, .sw-theme-arrows > ul.step-anchor > li > a:hover {
     color: #333;
     text-decoration: none;
-    padding: 10px 0 10px 45px;
     position: relative;
     display: block;
     border: 0 !important;
@@ -408,7 +411,7 @@ figure {
     background: #ddd;
 }
 
-.sw-theme-arrows > ul.step-anchor > li > a:after {
+/*.sw-theme-arrows > ul.step-anchor > li > a:after {
     content: " ";
     display: block;
     width: 0;
@@ -422,9 +425,9 @@ figure {
     left: 100%;
     z-index: 2;
 	
-}
+}*/
 
-.sw-theme-arrows > ul.step-anchor > li > a:before {
+/*.sw-theme-arrows > ul.step-anchor > li > a:before {
     content: " ";
     display: block;
     width: 0;
@@ -438,7 +441,7 @@ figure {
     margin-left: 1px;
     left: 100%;
     z-index: 1;
-}
+}*/
 
 .sw-theme-arrows > ul.step-anchor > li.active > a {
     border-color: #666 !important;
@@ -446,10 +449,10 @@ figure {
 	background: #666 !important;
 }
 
-.sw-theme-arrows > ul.step-anchor > li.active > a:after {
+/*.sw-theme-arrows > ul.step-anchor > li.active > a:after {
     border-left: 30px solid #666 !important;
 }
-
+*/
 .sw-theme-arrows > ul.step-anchor > li.done > a {
     border-color: #ddd !important;
 	color: #333 !important;
@@ -688,7 +691,7 @@ figure {
 	margin-right:10px;
 }
 .price-range .slider-horizontal{
-	width:200px !important;
+	width:55% !important;
 	margin: 0 8px;
 }
 .price-range b{
@@ -790,7 +793,8 @@ figure {
 }
 @media screen and (max-width: 767px) {
 	.nav-tabs > li {
-		float:none;
+		/*float:none;*/
+		float:left;
 	}
 	#offer .pull-right, #payment .pull-right{
 		display: table;
@@ -810,12 +814,17 @@ figure {
 		padding-right: 0;
 	}
 	.bid-tab #payment h2 {
-		padding:10px;
+		padding: 0 10px;
+		width:100%;
+		text-align:right;
 	}
 	.payment-box {
-		padding: 12px 0;
-		margin: 12px 0;
+		/*padding: 12px 0;
+		margin: 12px 0;*/
+		float:left;
+		width:100%;
 	}
+	.payment-box .actual-cash{text-align:right;}
 	.payment-box .col-md-8 {
 		padding:0;
 	}
@@ -999,6 +1008,8 @@ input[type=number]::-webkit-outer-spin-button {
     background: #fff; 
     padding: 0 15px; 
 }
+
+
 @media (min-width: 768px) and (max-width: 1000px) {
 	.bid-tab .tab-content .pass-info .bid-info {
 		display: flex;
@@ -1052,6 +1063,16 @@ input[type=number]::-webkit-outer-spin-button {
 		float:right;
 	}
 	#offer .price-range {
-		height: 100px;
+		height: 70px;
+		padding-top: 15px;
 	}
 }
+
+
+
+
+
+
+
+
+
