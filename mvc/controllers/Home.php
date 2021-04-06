@@ -146,7 +146,9 @@ class Home extends MY_Controller {
 	public function paysuccess() {
         $pnr_ref = htmlentities(escapeString($this->uri->segment(3)));	
         $airline = $this->bid_m->getAirlineLogoByPNR($pnr_ref);
+        $recentOrder = $this->bid_m->getRecentOrderByPNR($pnr_ref);
 	$this->data['pnr_ref'] = $pnr_ref;
+	$this->data['order_id'] = $recentOrder->orderID;
 		  if(!empty($airline->logo)){
 			$this->data['carrier_color'] = $airline->mail_header_color;
 		   if(empty($this->data['carrier_color'])){

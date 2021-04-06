@@ -328,8 +328,10 @@ class Bidding extends MY_Controller {
                $this->saveBiddingHistory($this->input->post('offer_id'));
 			}          
 			
-			
-			if($this->input->post("upgrade_type")){
+			$data = Array();
+			$product_id = $this->input->post("product_id");
+			switch($product_id) {
+			case 1:
 				$data['upgrade_type'] = $this->input->post("upgrade_type");
 				$data['cash'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
 				$data['miles'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
@@ -342,7 +344,8 @@ class Bidding extends MY_Controller {
 				$data['active'] = 1;
 				$data['orderID'] = $this->input->post('orderID');
 				$data['productID'] = 1;
-			}else{
+				break;
+			case 2:
 				$data['weight'] = $this->input->post("weight");	
 				$data['cash'] = ($this->input->post("baggage_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
 				$data['bid_submit_date'] = time();
@@ -355,8 +358,15 @@ class Bidding extends MY_Controller {
 				$data['flight_number'] = $this->input->post("flight_number");
 				$data['orderID'] = $this->input->post('orderID');
 				$data['productID'] = 2;
+				break;
+				default:
+				break;
 			}
-            $id = $this->bid_m->save_bid_data($data);			
+		
+			$id = 0;
+		  if ($data) {
+          	$id = $this->bid_m->save_bid_data($data);			
+		  }
           if($id){
               if($this->input->post('type') == 'resubmit'){
 				$select_passengers_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_received',$this->input->post("fclr_id"),1);
@@ -426,7 +436,17 @@ class Bidding extends MY_Controller {
 			   $maildata['cancel_link'] = base_url('homes/cancel?pnr_ref='.$maildata['pnr_ref']);
 			   $maildata['bid_value'] = number_format($maildata['bid_value']);
 
-				if  ($data['productID'] == 1) {
+				switch ($product_id) {
+					Case 1:
+			    	// calculate average and rank
+                 	 $bid_array['flight_number'] =  $data['flight_number'];
+                 	 $bid_array['upgrade_type'] = $data['upgrade_type'];
+                 	 $fly_data = $this->offer_issue_m->get_flight_date($data['offer_id'],$data['flight_number']);
+                 	 $bid_array['flight_date'] = $fly_data->dep_date;
+                  	 $bid_array['carrier_code'] = $fly_data->carrier_code;
+		  		 	 $bid_array['from_cabin'] = $fly_data->cabin;
+                  	 $this->offer_issue_m->calculateBidAvg($bid_array);
+
 					$mail_subject = "Your bid for upgrade has been Successfully";
 					if($maildata['type'] == 'resubmit'){
 						$mail_subject .= " Re-Submitted";
@@ -435,30 +455,25 @@ class Bidding extends MY_Controller {
 						$mail_subject .= " Submitted";
 						$maildata['template'] = 'bid_success';
 					}
-				} elseif  ($data['productID'] == 2) {
+					break;
+
+					Case 2:
 					$mail_subject = "Congratulations!. Your extra baggage offer has been confirmed";
 					$maildata['template'] = 'baggage_confirmed';
+					break;
+
+					default:
+					break;
 				}
+
 				$maildata['subject'] = $mail_subject;
 
 			    #$maildata['tomail'] = 'vamsi63@gmail.com';
 				$this->sendMail($maildata);
 			    $json['status'] = "success";
-			  
-				if  ($data['productID'] == 1) {
-			    	// calculate average and rank
-                 	 $bid_array['flight_number'] =  $data['flight_number'];
-                 	 $bid_array['upgrade_type'] = $data['upgrade_type'];
-                 	 $fly_data = $this->offer_issue_m->get_flight_date($data['offer_id'],$data['flight_number']);
-                 	 $bid_array['flight_date'] = $fly_data->dep_date;
-                  	$bid_array['carrier_code'] = $fly_data->carrier_code;
-		  		 	 $bid_array['from_cabin'] = $fly_data->cabin;
-                  	$this->offer_issue_m->calculateBidAvg($bid_array);
-				}
-								
-			  	$this->session->unset_userdata('validation_check');
-			  	$this->session->unset_userdata('pnr_ref');
-    	    }	
+    	    } else {
+			    $json['status'] = "Unable to save bid!";
+			}	
 		  } else {
              if($this->input->post('type') == 'resubmit'){
                  $extention_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_received');
@@ -573,7 +588,7 @@ class Bidding extends MY_Controller {
 	}
 	
 	public function saveCardData(){
-		 if($this->input->post('pnf_ref')) {
+		 if($this->input->post('pnr_ref')) {
 			  $rules = $this->rules();
 			$this->form_validation->set_rules($rules);
 			if ($this->form_validation->run() == FALSE) { 
@@ -582,7 +597,7 @@ class Bidding extends MY_Controller {
 			$orderID =  $this->bid_m->create_order();
 			$json['orderID'] = $orderID;
 			$data['orderID'] = $orderID;
-			$data['pnf_ref'] = $this->input->post('pnf_ref');
+			$data['pnr_ref'] = $this->input->post('pnr_ref');
 			$data['card_number'] = $this->input->post("card_number");
 			$data['month_expiry'] = $this->input->post("month_expiry");
 			$data['year_expiry'] = $this->input->post("year_expiry");
@@ -603,7 +618,7 @@ class Bidding extends MY_Controller {
 			   $this->offer_reference_m->update_offer_ref($ref,$this->input->post('pnr_ref'));
 			if($id){
 			  $json['status'] = "success";
-		    }
+		    	}
 		  }			
 		}else{
 			$json['status'] = "send PNR";

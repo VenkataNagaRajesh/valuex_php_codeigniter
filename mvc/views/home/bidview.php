@@ -818,7 +818,7 @@ $(document).ready(function () {
 					       }
 					<?php } ?>
 						if(paysuccess == 1){
-							   //window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
+							   window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
 						} else {
 							   alert($(status).text());
 				}

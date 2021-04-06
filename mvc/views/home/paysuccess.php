@@ -14,11 +14,10 @@
 				<div class="success-payment">
 					<p>
 						<span>Thank You....!</span><br>
-						<span>Your bid has been Successfully Placed with</span>
+						<span>Your bid/order has been successfully placed for PNR# <b><?=$pnr_ref?></b></span>
 					</p>
 					<p>
-						<span>Reference No:</span><br>
-						<span><b>VALUEX: <?=$pnr_ref?></b></span>
+						<span>Use this transaction Reference # <b><?=$order_id?></b> for any queries!</span><br>
 					</p>
 				</div>
 			</div>
