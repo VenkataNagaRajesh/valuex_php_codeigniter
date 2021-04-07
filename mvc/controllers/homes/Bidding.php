@@ -330,6 +330,7 @@ class Bidding extends MY_Controller {
 			
 			$data = Array();
 			$product_id = $this->input->post("product_id");
+		    $id = 0;
 			switch($product_id) {
 			case 1:
 				$data['upgrade_type'] = $this->input->post("upgrade_type");
@@ -344,6 +345,8 @@ class Bidding extends MY_Controller {
 				$data['active'] = 1;
 				$data['orderID'] = $this->input->post('orderID');
 				$data['productID'] = 1;
+				$bid_status = 'bid_received';
+          		$id = $this->bid_m->save_bid_data($data);			
 				break;
 			case 2:
 				$data['weight'] = $this->input->post("weight");	
@@ -358,15 +361,13 @@ class Bidding extends MY_Controller {
 				$data['flight_number'] = $this->input->post("flight_number");
 				$data['orderID'] = $this->input->post('orderID');
 				$data['productID'] = 2;
+				$bid_status = 'bid_accepted';
+          		$id = $this->bid_m->insert_bid_data($data);		//Always allow excess baggage till offer expired
 				break;
 				default:
 				break;
 			}
 		
-			$id = 0;
-		  if ($data) {
-          	$id = $this->bid_m->save_bid_data($data);			
-		  }
           if($id){
               if($this->input->post('type') == 'resubmit'){
 				$select_passengers_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_received',$this->input->post("fclr_id"),1);
@@ -383,7 +384,7 @@ class Bidding extends MY_Controller {
 			     $select_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),1);
 			     $unselect_passengers_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"));
 			  }
-			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
+			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
 			  $unselect_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_unselect_cabin','20');
 			   $array['booking_status'] = $select_status;
                $array["modify_date"] = time(); 

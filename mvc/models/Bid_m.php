@@ -153,6 +153,12 @@ class bid_m extends MY_Model {
 	  return $query->row(); 
    } 
   
+  public function insert_bid_data($data){
+	   $this->db->insert("UP_bid",$data);
+	   $id = $this->db->insert_id();
+//		echo $this->db->last_query();
+	  return $id;
+  } 
   public function save_bid_data($data){
 	  $this->db->select('*')->from('UP_bid');
 	  $this->db->where('offer_id',$data['offer_id']);
