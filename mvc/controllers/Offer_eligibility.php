@@ -617,7 +617,7 @@ $sWhere $sOrder $sLimit";
 	ob_start();
 	# Get Contracts to decide what carrier and what products offers to be generated
 	$contracts = $this->contract_m->getActiveContracts();
-	echo "<pre>CONTRACTS=" . print_r($contracts,1). "</pre>";
+	#echo "<pre>CONTRACTS=" . print_r($contracts,1). "</pre>";
    	#$this->processGenBaggageOffers(5500);
 #exit;
 
@@ -629,7 +629,7 @@ $sWhere $sOrder $sLimit";
 		switch ($product) {
 			case 1:
 				 $this->mydebug->debug("OFFER GEN: PRODUCT UPGRADE : CARRIER ID: " . $carrierId);
-   			     $this->processGenUpgradeOffers($carrierId);
+   			     	$this->processGenUpgradeOffers($carrierId);
 				 break;
 			case 2:
 				$carriers[] = $carrierId;
@@ -707,7 +707,7 @@ $sWhere $sOrder $sLimit";
    function processGenBaggageOffers($carriers, $pnr = 0) {
 	
 		$bclr_rules = $this->bclr_m->get_bclr_by_all_carriers($carriers);
-		#echo "<br>OND BCLR ALLCARR=<pre>" . print_r($bclr_rules,1) . "</pre>";
+		echo "<br>OND BCLR ALLCARR=<pre>" . print_r($bclr_rules,1) . "</pre>";
 		#$bclr_rules = $this->bclr_m->get_bclr_by_carrier_id($carrierId);
 		if ( !count($bclr_rules) ) {
 			echo ("<br>OFFER GEN: PROCESS BAGGAGE : NO BCLR RULES FOUND FOR CARRIER IDS: " . implode(',', $carriers));
@@ -836,13 +836,17 @@ $sWhere $sOrder $sLimit";
 							} else {
 								$bclrId = $bclrIds[0];
 							}
-							if ( $bclr_rules[$bclrId]['allowance']) {
+						foreach($bclr_rules[$op_carrier] as $bclr_rule) {
+							if ( $bclr_rule->partner_carrierID && $bclr_rule->bclr_id == $bclrId && $bclr_rule->allowance == 1) {
 							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER DEFINED BCLR RULES FOR PAX ID $dtpfId FOR  PARTNER CARRIER ID: " . $bclr_rule->partner_carrierID . ", BCRL RULE WHITELISTED= "  . $bclrId);
 								$ext['ond'] = $ond_grp;
-							} else {
+								break; 
+							} elseif ( $bclr_rule->partner_carrierID && $bclr_rule->bclr_id == $bclrId && $bclr_rule->allowance == 0) {
 							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER DEFINED BCLR RULES FOR PAX ID $dtpfId FOR  PARTNER CARRIER ID: " . $bclr_rule->partner_carrierID . ", BCRL RULE BLOCKED= "  . $bclrId);
 								$ext['ond'] = 'BL'; //PARTNER  BLOCK LIST
+								break; 
 							}
+						}
 						} else {
 							//If no partner specific  rules  matched , consider current carrier rules 
 							echo ("<br>OFFER GEN: PROCESS BAGGAGE : CHECK PARTNER RULES NOT MATCHED, CHECKEING DEFAULT  BCLR RULES FOR PAX ID $dtpfId FOR  CARRIER ID: " . $carrierID);

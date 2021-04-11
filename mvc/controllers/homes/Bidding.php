@@ -48,6 +48,7 @@ class Bidding extends MY_Controller {
 				} else {
 						$status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 						$bid_received = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
+						$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 						//$bid_confirmation = $this->preference_m->get_preference(array("pref_code" => 'BID_CONFIRMATION'))->pref_value;
 						//$bid_expire = $this->preference_m->get_preference(array("pref_code" => 'BID_EXPIRE'))->pref_value;
 
@@ -88,7 +89,6 @@ class Bidding extends MY_Controller {
 						$this->data['mile_value'] = $this->preference_m->get_preference_value_bycode('MILES_DOLLAR','24',$carrier_id);	
 						$this->data['mile_proportion'] = $this->preference_m->get_preference_value_bycode('MIN_CASH_PROPORTION','24',$carrer_id);	
 						$this->data['sent_mail_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
-						$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 						
 						$airline = $this->bid_m->getAirlineLogoByPNR($pnr_ref);
 						if(!empty($airline->logo)){
@@ -167,7 +167,7 @@ class Bidding extends MY_Controller {
 					$airline = $this->bid_m->getAirlineLogoByPNR($pnr_ref);
 					$this->data['active_products'] = array_keys($this->offer_issue_m->getProductsforOffer($offerId));
 					$bgoffer = $this->offer_issue_m->getBaggageOffer($pnr_ref);
-				#echo "<pre>" . print_r($bgoffer,1) . "</pre>"; exit;
+			//	echo "<pre>" . print_r($bgoffer,1) . "</pre>"; exit;
 					if ( $bgoffer) {
 					$this->data['baggage_offer'] = 1;
 						$this->data['baggage_bag_type'] = $this->preference_m->get_preference_value_bycode('BAG_TYPE','24',$airline->airlineID);
@@ -321,6 +321,7 @@ class Bidding extends MY_Controller {
 		$city = $result1[0]->aln_data_value;
 		return $city;
 	}
+
 	public function saveBidData(){				
 		if($this->input->post('offer_id')){ 		
 		  if($this->input->post('bid_action') == 0){

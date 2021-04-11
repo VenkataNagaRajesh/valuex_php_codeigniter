@@ -117,9 +117,9 @@ class Offer_eligibility_m extends MY_Model {
 		if ($pnr ) {
 			$sQuery .= " AND `pnr_ref` = '$pnr' "; 
 		}
-		$sQuery .= " AND `dep_date` > $timestamp ORDER BY `pnr_ref`) t1 GROUP BY pnr_ref";
+		$sQuery .= " AND `dep_date` > $timestamp ORDER BY `pnr_ref`,  dtpf_id asc) t1 GROUP BY pnr_ref";
 		$result = $this->install_m->run_query($sQuery);
-		#print_r($this->db->last_query());exit;
+		//print_r($this->db->last_query());exit;
                 return  $result;
 	}
 

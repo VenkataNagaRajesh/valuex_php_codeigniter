@@ -218,18 +218,19 @@ if ($any_product ) {
 							   <ul>
 							   <?php $i=0; //$offer_cabins = explode(',',$upg->to_cabins);
 							   foreach($upg->to_cabins as $key => $value) { if($upg->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>			
+			<?php $last_bid_name = 'last_bid_' . $upg->product_id . '_' . $upg->flight_number;?>
 								<li class="cabins-<?=$upg->flight_number?> radio-inline <?=($status == $excluded_status)?"bid-visible":""?>" >
 									<input type="radio" name="bid_cabin_<?=$upg->flight_number?>" value="<?php echo $value.'|'.$key; ?>" ><?php echo $cabins[$value]; ?>
 								</li>
 							   <?php if($status == $excluded_status) { $i++; } } } ?>
-							   <?php if($i != 0){?>
+								<li class="radio-inline" >
+									<input type="radio" name="bid_cabin_<?=$upg->flight_number?>" value="" >No Bid
+								</li>
+								<?php if (isset($last_bid[$last_bid_name])) {?>
                            		<li class="checkbox-inline<?=($upg->fclr == null)?"bid-visible":""?>">
 									<input type="checkbox" name="bid_action_<?=$upg->flight_number?>" value="1" /> Cancel Bid 
 								</li>	
 							   <?php } ?>
-								<li class="radio-inline" >
-									<input type="radio" name="bid_cabin_<?=$upg->flight_number?>" value="" >No Bid
-								</li>
 								 </ul>
 								 </div>
                            </div>
@@ -253,7 +254,6 @@ if ($any_product ) {
 								<input id="bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>" data-slider-id='bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$upg->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$upg->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$upg->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
 								<span style="float:right"><b>Max: $</b> <i class="fa fa-dollar"></i> <b id="bid_max_<?=$upg->flight_number?>"></b></span>
 <?php
-			$last_bid_name = 'last_bid_' . $upg->product_id . '_' . $upg->flight_number;
 			if (isset($last_bid[$last_bid_name])) {
 					$last_bid_value = $last_bid[$last_bid_name];
 ?>

@@ -201,7 +201,7 @@ class Offer_issue extends Admin_Controller {
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
-		$sQuery = " select pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND tpf.is_up_offer_processed = 1 and tpf.active = 1  ";
+		$sQuery = " select pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1  ";
 		if ($pnr) {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
 		} else {
@@ -210,7 +210,7 @@ class Offer_issue extends Admin_Controller {
 		$sQuery .= " group by tpf.pnr_ref ,  booking_status,tpf.carrier_code";
 
 		$rResult = $this->install_m->run_query($sQuery);
-		$booking_status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+		$booking_status = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
 
 	 	foreach($rResult as $offer) {
 
@@ -219,15 +219,6 @@ class Offer_issue extends Admin_Controller {
 			$emails_list = explode(',', $offer->email_list);
 			$coupon_code = $this->generateRandomString(6);
 
-			$array = array();
-			$array['booking_status'] = $booking_status;
-			$array["modify_date"] = time();
-			$array["modify_userID"] = $this->session->userdata('loginuserID');
-
-				
-			// update extension table with new status
-			$this->offer_eligibility_m->update_dtpfext($array,$p_list);
-		
 				$ref['pnr_ref'] = $offer->pnr_ref;
 				$ref['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
 				$ref['offer_status'] = $booking_status; 
@@ -238,7 +229,61 @@ class Offer_issue extends Admin_Controller {
 				$ref["modify_userID"] = $this->session->userdata('loginuserID');
 
 				$this->offer_reference_m->insert_offer_ref($ref);//offer update ref table
-				
+
+		}
+		$this->session->set_flashdata('success', 'Generated Offers all New PAX successfully');
+		redirect(base_url("offer_issue/index"));
+	}
+
+	public function send_offer_mail($pnr = '') {
+        $this->data['headerassets'] = array(
+                'css' => array(
+                        'assets/select2/css/select2.css',
+                        'assets/select2/css/select2-bootstrap.css',
+                                                'assets/datepicker/datepicker.css'
+                ),
+                'js' => array(
+                        'assets/select2/select2.js',
+                                                'assets/datepicker/datepicker.js'
+                )
+        );
+		$days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
+
+		$current_time = time();
+	    	$tstamp = $current_time + ($days * 86400);
+
+		$this->data['siteinfos'] = $this->reset_m->get_site();
+	
+		$sQuery = " select o.offer_id, pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe  LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id ) LEFT JOIN VX_offer o on (o.pnr_ref = tpf.pnr_ref AND pfe.product_id = o.product_id AND o.active = 1)  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1  ";
+		if ($pnr) {
+			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
+		} else {
+			$sQuery .= " AND (dd.alias = 'new' OR o.offer_status = 1970)";
+		}
+		$sQuery .= " group by tpf.pnr_ref ,  booking_status,tpf.carrier_code";
+
+		$rResult = $this->install_m->run_query($sQuery);
+		$booking_status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+
+	 	foreach($rResult as $offer) {
+
+			$emails_list = explode(',', $offer->email_list);
+			$coupon_code = $this->generateRandomString(6);
+
+			$array = array();
+			$array['booking_status'] = $booking_status;
+			$array["modify_date"] = time();
+			$array["modify_userID"] = $this->session->userdata('loginuserID');
+
+			// update extension table with new status
+			$this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+			$array = array();
+			$array['offer_status'] = $booking_status;
+			$array["modify_date"] = time();
+			$array["modify_userID"] = $this->session->userdata('loginuserID');
+			$this->offer_reference_m->update_offer_ref($array,$offer->offer_id);
+
 				// update tracker about change in status
 				$tracker = array();
 				$tracker['booking_status_from'] = $offer->booking_status;
@@ -253,18 +298,19 @@ class Offer_issue extends Admin_Controller {
 					$tracker['dtpfext_id'] = $id;
 					$this->offer_issue_m->insert_dtpf_tracker($tracker);
 				}
-
+		
 				$data = array(
 					'pnr_ref' => $offer->pnr_ref,
-					'coupon_code' => $ref['coupon_code'],
+					'coupon_code' => $coupon_code,
 					'tomail' => $emails_list[0]
 				);			       
+				if ( ! empty($data['pnr_ref']) ){
 
-				$this->upgradeOfferMail($data);		 
-				$this->session->set_flashdata('success', 'Offer Mail sent to all New PAX successfully');
-				redirect(base_url("offer_issue/index"));
+					$this->upgradeOfferMail($data);		 
+				}
 
 			}
+		$this->session->set_flashdata('success', 'Offer Mail sent to all New PAX successfully');
 		redirect(base_url("offer_issue/index"));
 	}
 
@@ -415,31 +461,33 @@ $sQuery = "
  select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.passenger_list,SubSet.product_id, SubSet.from_cabin,
-                          MainSet.cash, MainSet.miles,  SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number, SubSet.from_city_name, SubSet.to_city_name, SubSet.name
+                          MainSet.cash, MainSet.miles,  SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number, SubSet.from_city_name, SubSet.to_city_name, SubSet.name, SubSet.booking_status
 
                 FROM (  select distinct oref.offer_id, oref.create_date as offer_date , oref.pnr_ref,oref.cash_percentage, oref.cash, oref.miles from  VX_offer oref  
                      ) as MainSet 
                         INNER JOIN (
-                                        select  flight_number,
+                                        select  flight_number, bs.aln_data_value as booking_status,
                                                 group_concat(distinct dep_date) as flight_date  ,
-                                                pnr_ref,group_concat(distinct first_name, ' ' , last_name SEPARATOR '<br>' ) as passenger_list ,  from_city as from_city_code, to_city as to_city_code, 
+                                                pext.pnr_ref,group_concat(distinct first_name, ' ' , last_name SEPARATOR '<br>' ) as passenger_list ,  from_city as from_city_code, to_city as to_city_code, 
                                                 group_concat(distinct cdef.desc) as from_cabin  , fc.aln_data_value as from_city_name, fc.code as from_city, tc.code as to_city, tc.aln_data_value as to_city_name,
                                                 car.code as carrier , pf1.carrier_code,prq.product_id as product_id,prd.name as name
                                          from VX_daily_tkt_pax_feed pf1 LEFT JOIN VX_offer_info prq on (pf1.dtpf_id = prq.dtpf_id) 
                                          LEFT JOIN VX_products prd on (prq.product_id = prd.productID)
+                                         LEFT JOIN VX_offer pext on (pext.pnr_ref = pf1.pnr_ref AND prq.product_id = pext.product_id)
                                         LEFT JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = pf1.ptc AND ptc.aln_data_typeID = 18)
                                         LEFT JOIN VX_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
                                         LEFT JOIN VX_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
-					INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = pf1.carrier_code)
-                                        INNER JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 and cab.alias = cdef.level)
+					LEFT JOIN VX_airline_cabin_def cdef on (cdef.carrier = pf1.carrier_code)
+                                        LEFT JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 and cab.alias = cdef.level)
                                         LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
-                                        where pf1.is_up_offer_processed = 1  
+		     			LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.offer_status AND bs.aln_data_typeID = 20)
+                                        where (pf1.is_up_offer_processed = 1  || pf1.is_bg_offer_processed = 1)
                                        group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
                    ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref ) 
 $sWhere $sOrder $sLimit";
 
 
-// print_r($sQuery);exit;
+//print_r($sQuery);exit;
 
         $rResult = $this->install_m->run_query($sQuery);
         $sQuery = "SELECT FOUND_ROWS() as total";
@@ -462,7 +510,8 @@ $sWhere $sOrder $sLimit";
                         $dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->to_city_code));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->to_city.'</a>';
 			
-			$feed->booking_status = btn_view('offer_issue/view/'.$feed->pnr_ref, $this->lang->line('view'));
+			#$feed->action = btn_view('offer_issue/view/'.$feed->pnr_ref, $this->lang->line('view'));
+                   	$feed->booking_status =  '<a target="_blank" href="' . base_url('offer_issue/view/' . $feed->pnr_ref) . '"  data-placement="top" data-toggle="tooltip" data-original-title="VIEW MORE OFFER DETAILS">'. $feed->booking_status. '</a>';
                    	$feed->action =  '<a target="_blank" href="' . base_url('offer_issue/resendoffer/' . $feed->pnr_ref) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="SEND OFFER MAIL TO PAX"><i class="fa fa-check"></i></a>';
                         $feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default";
                         $feed->departure_date = date('d-m-Y',$feed->flight_date);
@@ -503,7 +552,7 @@ $sWhere $sOrder $sLimit";
 		//
 	$sQuery = "select pf.dep_date , pf.flight_number , pf.carrier_code , group_concat(distinct offer_id) as offer_list  
 			from VX_offer oref 
-			INNER JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and pf.is_up_offer_processed = 1 and pf.active = 1)
+			INNER JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and (pf.is_up_offer_processed = 1 OR pf.is_bg_offer_processed = 1) and pf.active = 1)
 			INNER JOIN VX_offer_info pext on (pext.dtpf_id = pf.dtpf_id)
 			INNER JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20)
 			WHERE pf.dep_date >= ".$current_time. " AND pf.dep_date <= " . $tstamp  .
@@ -522,7 +571,7 @@ $sWhere $sOrder $sLimit";
              pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,car.aln_data_value as car_name ,cdef.desc as upgrade_cabin
              from UP_bid bid
              LEFT JOIN VX_offer oref on (oref.offer_id = bid.offer_id )
-             LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  pf.is_up_offer_processed = 1 and pf.active = 1 )
+             LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  (pf.is_up_offer_processed = 1 OR pf.is_bg_offer_processed = 1) and pf.active = 1 )
              LEFT JOIN VX_data_defns df on (df.vx_aln_data_defnsID = pf.from_city and df.aln_data_typeID = 1)
              LEFT JOIN VX_data_defns dt on (dt.vx_aln_data_defnsID = pf.to_city and dt.aln_data_typeID = 1)
              LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code and car.aln_data_typeID = 12)
@@ -1029,6 +1078,10 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
     public function upgradeOfferMail($maildata){
 		$pnr_ref = $maildata['pnr_ref'];
                 $offer = $this->bid_m->getPassengers($pnr_ref);
+		if (!$offer[0]->carrier_code) {
+		echo "carrier missing for $pnr_ref";
+		 return;
+		}
 
 		$prodlist = explode(',',$offer[0]->products);
 		$email_list = explode(',',$offer[0]->email_list);

@@ -412,6 +412,13 @@ function getParentsofAirportByType($airportID,$id) {
     	function getAirportsByLevelAndLevelID($levelIds, $level = 0) { 
 		//Level means level type ids Market, Country, City, Airport 
 		//Level IDs means  MarketID, CountryID, CityID, AirportID 
+		$session_key = "airport-leve-id-" . implode(":",$levelIds). "-$level";
+		echo "<br>SEESIONKEU=" . $session_key;
+                if ( $this->session->has_userdata($session_key)) {
+		echo "<br>GET FROM SEESION=" . $session_key;
+			
+			return $this->session->userdata($session_key);
+		}
 
 		if (!is_array($levelIds)){
 			$arr = explode(',', $levelIds); 
@@ -435,6 +442,8 @@ function getParentsofAirportByType($airportID,$id) {
 				}
 			}
 		}
+		echo "<br>SEETTING SEESION=" . $session_key;
+                $this->session->set_userdata($session_key,$data);
 		return $data;
 	}
 }
