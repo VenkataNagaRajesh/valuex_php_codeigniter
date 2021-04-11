@@ -11,6 +11,10 @@
 				 <i class="fa fa-upload"></i>
 				 <?=$this->lang->line('offer_issue')?>
 			</a>
+			<a href="<?php echo base_url('offer_issue/send_offer_mail') ?>">
+				 <i class="fa fa-upload"></i>
+				 <?=$this->lang->line('send_offer_mail')?>
+			</a>
 			<a href="<?php echo base_url('offer_issue/auto_acsr') ?>">
 				 <i class="fa fa-upload"></i>
 				 <?php echo "AUTO ACSR"?>

@@ -8,7 +8,8 @@ $lang['menu_offer'] = "Offer Details";
 $lang['active'] = 'Status';
 $lang['offer_information'] = 'Offer Issue Information';
 
-$lang['offer_issue'] = 'Send Offer Mail';
+$lang['offer_issue'] = 'Generate Offers';
+$lang['send_offer_mail'] = 'Send Offer Mails';
 $lang['edit'] = 'Edit';
 $lang['delete'] = 'Delete';
 $lang['fclr_id'] = 'FCLR ID';
