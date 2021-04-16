@@ -201,13 +201,13 @@ class Offer_issue extends Admin_Controller {
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
-		$sQuery = " select pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1  ";
+		$sQuery = " select pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat( distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1 AND pfe.active = 1  ";
 		if ($pnr) {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
 		} else {
 			$sQuery .= " AND dd.alias = 'new' ";
 		}
-		$sQuery .= " group by tpf.pnr_ref ,  booking_status,tpf.carrier_code";
+		$sQuery .= " group by tpf.pnr_ref ,  booking_status,tpf.carrier_code, pfe.product_id ";
 
 		$rResult = $this->install_m->run_query($sQuery);
 		$booking_status = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
@@ -254,7 +254,7 @@ class Offer_issue extends Admin_Controller {
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
-		$sQuery = " select o.offer_id, pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(pax_contact_email) as email_list, group_concat(first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe  LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id ) LEFT JOIN VX_offer o on (o.pnr_ref = tpf.pnr_ref AND pfe.product_id = o.product_id AND o.active = 1)  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1  ";
+		$sQuery = " select o.offer_id, pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe  LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id ) LEFT JOIN VX_offer o on (o.pnr_ref = tpf.pnr_ref AND pfe.product_id = o.product_id AND o.active = 1)  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1  ";
 		if ($pnr) {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
 		} else {
@@ -306,11 +306,15 @@ class Offer_issue extends Admin_Controller {
 				);			       
 				if ( ! empty($data['pnr_ref']) ){
 
-					$this->upgradeOfferMail($data);		 
+					$msg .= $this->upgradeOfferMail($data);		 
 				}
 
 			}
-		$this->session->set_flashdata('success', 'Offer Mail sent to all New PAX successfully');
+		$fmsg  = 'Offer Mail sent to New PAX successfully');
+		if ($msg ) {
+			$fmsg .= "<br>But have some errors.. " . $msg;
+		}
+		$this->session->set_flashdata('success', $fmsg);
 		redirect(base_url("offer_issue/index"));
 	}
 

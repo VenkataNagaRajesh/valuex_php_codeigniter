@@ -311,7 +311,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as pro
 		     LEFT JOIN UP_fare_control_range fc on  (pext.rule_id = fc.fclr_id AND pext.product_id = 1)
 		     LEFT JOIN BG_baggage_control_rule bc on  (pext.rule_id = bc.bclr_id AND pext.product_id = 2)
 		     LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = fc.season_id )
-		     LEFT JOIN VX_offer of on (of.pnr_ref = pf.pnr_ref )
+		     LEFT JOIN VX_offer of on (of.pnr_ref = pf.pnr_ref AND pext.product_id = of.product_id )
 		     LEFT JOIN VX_products vp on (vp.productID = pext.product_id )
                      LEFT JOIN  VX_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
 		     LEFT JOIN VX_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
