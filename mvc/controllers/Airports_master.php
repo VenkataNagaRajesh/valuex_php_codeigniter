@@ -104,6 +104,17 @@ class Airports_master extends Admin_Controller {
 		} else {
 		    $this->data['areaID'] = 0;
 		}	
+		if(!empty($this->input->post('countryID'))){	
+	    	$this->data['countryID'] = $this->input->post('countryID');
+		} else {
+		    $this->data['countryID'] = 0;
+		}	
+		
+		if(!empty($this->input->post('airportID'))){	
+	    	$this->data['airportID'] = $this->input->post('airportID');
+		} else {
+		    $this->data['airportID'] = 0;
+		}	
 		
 		$this->data["subview"] = "airports_master/index";
 		$this->load->view('_layout_main', $this->data);

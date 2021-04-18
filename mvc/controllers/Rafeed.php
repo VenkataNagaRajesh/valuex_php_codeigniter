@@ -699,7 +699,7 @@ echo "MISED,$cDocumentType";
 
 		$cabin_arr = array_values($this->airline_cabin_def_m->getCabinsDataForCarrier($arrBaggageRaFeed['carrier']));
 		if (!in_array($cabin, $cabin_arr)) {
-			$this->mydebug->rafeed_log("cabin should in " . implode(',', $cabin_arr) . 'in row ' . $column, 1);
+			$this->mydebug->rafeed_log("cabin ($cabin) should in " . implode(',', $cabin_arr) . 'in row ' . $column, 1);
 			return;
 		}
 

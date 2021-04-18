@@ -26,11 +26,6 @@
 			  <div class="nav-tabs-custom" style="margin-bottom:0;">
 			  <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>
-                <div class="col-sm-2">			   
-                 <?php $status = array("1" => "Active","0" => "InActive","2" => "Status");               
-                  						
-				   echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
-                </div>			
 			    <div class="col-sm-2">			   
                  <?php $alist = array("0" => " Area");               
                    foreach($areaslist as $area){
@@ -39,23 +34,34 @@
 				   echo form_dropdown("areaID", $alist,set_value("areaID",$areaID), "id='areaID' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>
 				 <div class="col-sm-2">
-                    <select name="regionID" id="regionID" class="form-control select2" placeholder="Region">
-				   
-				    </select>
+                 <?php $alist = array("0" => " Region");               
+				  echo form_dropdown("regionID", $alist,set_value("regionID",$regionID), "id='regionID' class='form-control hide-dropdown-icon select2'");    ?>
                  </div>
 				<div class="col-sm-2">
-                 	<select name="countryID" id="countryID" class="form-control select2" placeholder="Country">
+                 <?php $alist = array("0" => " Country");               
+				  echo form_dropdown("countryID", $alist,set_value("countryID",$countryID), "id='countryID' class='form-control hide-dropdown-icon select2'");    ?>
 				   
-				    </select>	
                  </div>
                  <div class="col-sm-2">			   
-                   <select name="cityID" id="cityID" class="form-control select2" placeholder="City">
+                 <?php $alist = array("0" => " City");               
+				  echo form_dropdown("cityID", $alist,set_value("cityID",$cityID), "id='cityID' class='form-control hide-dropdown-icon select2'");    ?>
 				   
-				   </select>
                  </div>              				
+                 <div class="col-sm-2">			   
+                 <?php $alist = array("0" => " Airport");               
+				  echo form_dropdown("airportID", $alist,set_value("airportID",$airportID), "id='airportID' class='form-control hide-dropdown-icon select2'");    ?>
+				   
+                 </div>              				
+                <div class="col-sm-2">			   
+                 <?php $status = array("1" => "Active","0" => "InActive","2" => "Status");               
+                  						
+				   echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
+                </div>			
 			    
+		<br>
+		<br>
                  
-                <div class="col-sm-2 text-right">
+                <div class="col-sm-12 text-right" style="align: right">
                   <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
 				  <button type="button" class="btn btn-danger" onclick="downloadMasterData()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
                 </div>	             				
@@ -101,12 +107,55 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
 	 var countryID = <?=$countryID?>;	
 	 var regionID =<?=$regionID?>;
 	 var areaID = <?=$areaID?>; 
+	 var cityID = <?=$cityID?>; 
+
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: "<?=base_url('general/getAirportRegions')?>",          
+		   data: {'regionID': regionID},
+            dataType: "html",			
+            success: function(data) {
+               $('#regionID').html(data);			   
+            }
+        }); 		
+	$('#regionID').val(regionID).change();
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: "<?=base_url('general/getAirportCities')?>",          
+		   data: {'cityID': cityID},
+            dataType: "html",			
+            success: function(data) {
+               $('#cityID').html(data);			   
+            }
+        }); 		
+	$('#cityID').val(cityID).change();
+
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: "<?=base_url('general/getAirportCountries')?>",          
+		   data: {'countryID': countryID},
+            dataType: "html",			
+            success: function(data) {
+               $('#countryID').html(data);			   
+            }
+        }); 		
+	$('#countryID').val(countryID).change();
 	 
-	 $("#areaID").trigger("change");
-	$("#regionID").trigger("change");
-	$("#countryID").trigger("change");
-	$("#cityID").trigger("change");
-	 
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: "<?=base_url('general/getAirports')?>",          
+		   data: {'airportID': airportID},
+            dataType: "html",			
+            success: function(data) {
+               $('#airportID').html(data);			   
+            }
+        }); 		
+	$('#airportID').val(airportID).change();
+
     $('#master').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
@@ -278,64 +327,6 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
       }
   }); 
   
-  $('#countryID').on('change',function(event) {
-   var countryID = $(this).val();
-    var cityID = <?php echo $cityID; ?>;   
-   if(countryID == null) {
-        $('#cityID').val(0);
-    } else { 
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportCities')?>",          
-		   data: {"countryID" :countryID,"cityID":cityID},
-            dataType: "html",			
-            success: function(data) { 
-               $('#cityID').html(data);
-            }
-        }); 		
-	}
-});	
-
-$('#areaID').on('change',function(e) {
-	e.preventDefault();
-   var areaID = $(this).val();  
-   var regionID = <?php echo $regionID; ?>;   
-	if(areaID === null) {
-        $('#regionID').val(0);
-    } else {
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportRegions')?>",          
-		   data: {"areaID": areaID,"regionID":regionID},
-            dataType: "html",			
-            success: function(data) {
-               $('#regionID').html(data);
-            }
-        }); 		
-	}
-});
-
-$('#regionID').on('change', function(event) {
-   var regionID = $(this).val();
-    var countryID = <?php echo $countryID; ?>;  
-	if(regionID === null) {
-        $('#countryID').val(0);
-    } else {  
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirportCountries')?>",          
-		   data: {"regionID" :regionID,"countryID":countryID},
-            dataType: "html",			
-            success: function(data) {
-               $('#countryID').html(data);			   
-            }
-        }); 		
-	}
-});
-
 $(document).ready(function () {
 
 $("#bulkDelete").on('click',function() { // bulk checked

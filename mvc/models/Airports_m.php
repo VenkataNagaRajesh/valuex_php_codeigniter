@@ -90,19 +90,58 @@ class Airports_m extends MY_Model
 		}
 	}
 
-	public function getDefns($type = null, $parent = null)
+	 public function getDefns($type = null, $parent = null)
+        {
+                $this->db->select('vx_aln_data_defnsID,aln_data_typeID,aln_data_value,code, alias')->from('VX_data_defns');
+                if ($type != null) {
+                        $this->db->where('aln_data_typeID', $type);
+                } else {
+                        $this->db->where('aln_data_typeID !=', 1);
+                }
+                if ($parent != null) {
+                        $this->db->where('parentID', $parent);
+                }
+                $query = $this->db->get();
+                //$this->mydebug->debug($this->db->last_query());
+                return $query->result();
+        }
+
+
+	public function getDefnsByMasterData($type = null, $parent = null)
 	{
-		$this->db->select('vx_aln_data_defnsID,aln_data_typeID,aln_data_value,code, alias')->from('VX_data_defns');
-		if ($type != null) {
-			$this->db->where('aln_data_typeID', $type);
-		} else {
-			$this->db->where('aln_data_typeID !=', 1);
+		switch($type) {
+			case 5: 
+				$column = 'areaID';
+				$col = 'areaID';
+			break;
+			case 4: 
+				$column = 'areaID';
+				$col = 'regionID';
+			break;
+			case 2: 
+				$column = 'regionID';
+				$col = 'countryID';
+			break;
+			case 3: 
+				$column = 'countryID';
+				$col = 'cityID';
+			break;
+			case 1: 
+				$column = 'cityID';
+				$col = 'airportID';
+			break;
 		}
-		if ($parent != null) {
-			$this->db->where('parentID', $parent);
+		$this->db->distinct();
+		$this->db->select('vx_aln_data_defnsID,aln_data_typeID,aln_data_value,code, alias')->from('VX_master_data m');
+		$this->db->join('VX_data_defns ma', 'ma.vx_aln_data_defnsID = m.' . $col, 'LEFT');
+		if ( $parent ) {
+			$this->db->where($column, $parent);
+		} else  {
+			$this->db->where('aln_data_typeID', $type);
 		}
 		$query = $this->db->get();
 		//$this->mydebug->debug($this->db->last_query());	  
+		//echo $this->db->last_query();	 
 		return $query->result();
 	}
 

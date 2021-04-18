@@ -841,6 +841,7 @@ class Fclr extends Admin_Controller
         {
 
                 $param = htmlentities(escapeString($this->uri->segment(3)));
+                $carrier_id = $this->input->get('carrier_id');
                 if ((int) $param) {
                         $year = $param;
                 	$where = " year(FROM_UNIXTIME(rf.departure_date)) = " . $year;
@@ -852,58 +853,10 @@ class Fclr extends Admin_Controller
                 	$where = " rf.departure_date <= " . $lastday;
                 }
 
-                /*	$sQuery = " 
-                SELECT  boarding_point, carrier_code,off_point, season_id,flight_number, day_of_week , source_point, dest_point , departure_date,  group_concat(code,' ' , price SEPARATOR ';') as code_price  FROM (SELECT dcla.code ,operating_airline_code,season_id, departure_date ,day_of_week ,flight_number, dbp.code as source_point , dop.code as dest_point ,boarding_point,off_point , group_concat(prorated_price)  as price,dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dc on (dc.vx_aln_data_defnsID = rf.booking_country)  LEFT JOIN vx_aln_data_defns dci on  (dci.vx_aln_data_defnsID = rf.booking_city) LEFT JOIN vx_aln_data_defns dico on (dico.vx_aln_data_defnsID = rf.issuance_country)  LEFT JOIN vx_aln_data_defns dici on  (dici.vx_aln_data_defnsID = rf.issuance_city) LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.operating_airline_code)  LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN  vx_aln_data_defns dbp on (dbp.vx_aln_data_defnsID = rf.boarding_point) LEFT JOIN vx_aln_data_defns dop on (dop.vx_aln_data_defnsID = rf.off_point) LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) LEFT JOIN VX_airline_cabin_class acc  on ( acc.carrier = rf.operating_airline_code AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class)   group by dcla.code, day_of_week,flight_number, boarding_point,off_point,season_id,departure_date,operating_airline_code  order by flight_number )  as MainSet group by  boarding_point, off_point, day_of_week, season_id, flight_number, departure_date,operating_airline_code
-                ";*/
+		if ($carrier_id) {
+               		$where .= " AND rf.carrier = " . $carrier_id;
+		}
 
-                /*$sQuery = " 
-                SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number, 
-                        day_of_week ,departure_date,  group_concat(code,' ', cabin , ' ' , price SEPARATOR ';') as code_price  
-                        FROM (
-                        SELECT dcla.code ,rf.carrier,season_id, cabin ,departure_date ,day_of_week ,flight_number, 
-                                boarding_point,off_point , 
-                                group_concat(prorated_price)  as price,dai.code as carrier_code   
-                        FROM VX_aln_ra_feed rf  
-                        LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)  
-                        LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)
-                        LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) 
-                        LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) 
-                        LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier 
-                                                                        AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) 
-                                LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)
-                                where acc.order > 1   AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN') 
-                                group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,season_id,departure_date,rf.carrier  
-                                order by flight_number )  as MainSet 
-                                group by  boarding_point, off_point, day_of_week, season_id, flight_number, departure_date,carrier
-                ";*/
-
-
-                //lower cabin
-
-                /*$sQuery = " SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number, day_of_week ,  group_concat(code,' ', cabin , ' ' , price SEPARATOR ';') as code_price  FROM ( SELECT dcla.code ,rf.carrier,season_id, cabin ,day_of_week ,flight_number, boarding_point,off_point ,  group_concat(prorated_price)  as price,dai.code as carrier_code   FROM VX_aln_ra_feed rf  LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)   LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)                LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin)   LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)   where " . $where . " AND   rf.season_id = 0 AND acc.order > 1  AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN')  group by dcla.code, cabin , day_of_week,flight_number, boarding_point,off_point,season_id,rf.carrier  order by flight_number, day_of_week)  as MainSet group by  boarding_point, off_point, day_of_week, season_id, flight_number,carrier";
-                        $rResult1 = $this->install_m->run_query($sQuery);
-
-                $sQuery = " SELECT  boarding_point, carrier_code,carrier,off_point, season_id,flight_number, 
-                group_concat(code,' ', cabin , ' ' , price SEPARATOR ';') as code_price  
-                FROM (
-               SELECT dcla.code ,rf.carrier,season_id, cabin ,flight_number, 
-                      boarding_point,off_point , 
-                      group_concat(prorated_price)  as price,dai.code as carrier_code   
-               FROM VX_aln_ra_feed rf  
-               LEFT JOIN vx_aln_data_defns dai on (dai.vx_aln_data_defnsID = rf.carrier)  
-               LEFT JOIN vx_aln_data_defns doa on (doa.vx_aln_data_defnsID = rf.operating_airline_code)
-               LEFT JOIN vx_aln_data_defns dam on (dam.vx_aln_data_defnsID = rf.marketing_airline_code) 
-               LEFT JOIN vx_aln_data_defns dcla on (dcla.vx_aln_data_defnsID = rf.cabin) 
-               LEFT JOIN VX_aln_airline_cabin_class acc  on ( acc.carrier = rf.carrier 
-                                                        AND rf.cabin = acc.airline_cabin AND rf.class = acc.airline_class) 
-                LEFT JOIN vx_aln_data_defns ptc on (ptc.vx_aln_data_defnsID = rf.pax_type AND ptc.aln_data_typeID = 18)
-                where rf.season_id > 0 AND acc.order > 1   AND acc.is_revenue = 1 AND ptc.code NOT IN ('INF', 'INS', 'UNN') 
-                group by dcla.code, cabin ,flight_number, boarding_point,off_point,season_id,rf.carrier  
-                order by flight_number )  as MainSet 
-                group by  boarding_point, off_point, season_id, flight_number, carrier ";
-                $rResult2 = $this->install_m->run_query($sQuery);
-                $rResult = array_merge($rResult1, $rResult2);
-                */
 
                 $list = $this->airline_cabin_def_m->getDummyCabinsList();
                 $list1 = $list;

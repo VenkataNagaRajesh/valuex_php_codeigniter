@@ -161,7 +161,7 @@ function getAirlinesToMap($array) {
 		$query = $this->db->get();
                 $data = $query->result();
 		$result = array();
-	//	if(count($data) > 0 ) {
+		if(count($data) > 0 ) {
 			foreach($data as $res){
 				$result[$res->vx_aln_data_defnsID] = $res->cabin;
 			}
@@ -171,7 +171,7 @@ function getAirlinesToMap($array) {
 				return $result;
 			}
 				
-	//	} 
+		} 
 			/*else {
 
 				$this->db->select('dd.vx_aln_data_defnsID , cd.cabin')->from('VX_aln_airline_cabin_def cd');

@@ -117,7 +117,8 @@
 	</div>
 	<div class="col-md-12 table-responsive">
 		<div class="auto-gen col-md-12" style="margin: 10px 0 20px;">
-		<a href="<?php echo base_url('fclr/generatedata') ?>">
+		<?php $gen_url = 'fclr/generatedata'; if ($carrier_id) { $gen_url .= "/?carrier_id=$carrier_id"; } ?>
+		<a href="<?php echo base_url($gen_url) ?>">
 			<i class="fa fa-upload"></i>
 			<?=$this->lang->line('generate_fclr')?>
 		 </a>
