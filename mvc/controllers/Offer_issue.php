@@ -310,7 +310,7 @@ class Offer_issue extends Admin_Controller {
 				}
 
 			}
-		$fmsg  = 'Offer Mail sent to New PAX successfully');
+		$fmsg  = 'Offer Mail sent to New PAX successfully';
 		if ($msg ) {
 			$fmsg .= "<br>But have some errors.. " . $msg;
 		}
