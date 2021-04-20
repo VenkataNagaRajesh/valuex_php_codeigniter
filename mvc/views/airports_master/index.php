@@ -38,18 +38,21 @@
 				  echo form_dropdown("regionID", $alist,set_value("regionID",$regionID), "id='regionID' class='form-control hide-dropdown-icon select2'");    ?>
                  </div>
 				<div class="col-sm-2">
-                 <?php $alist = array("0" => " Country");               
-				  echo form_dropdown("countryID", $alist,set_value("countryID",$countryID), "id='countryID' class='form-control hide-dropdown-icon select2'");    ?>
+                 <?php #$alist = array("0" => " Country");               
+			#	  echo form_dropdown("countryID", $alist,set_value("countryID",$countryID), "id='countryID' class='form-control hide-dropdown-icon select2'");    ?>
+			<input id="country" name="country" class="form-control" placeholder="type country name or code"/> <input type="hidden" id="countryID" name="countryID" class="form-control" value="<?=set_value('countryID',$countryID)?>" /> 
 				   
                  </div>
                  <div class="col-sm-2">			   
-                 <?php $alist = array("0" => " City");               
-				  echo form_dropdown("cityID", $alist,set_value("cityID",$cityID), "id='cityID' class='form-control hide-dropdown-icon select2'");    ?>
+                 <?php #$alist = array("0" => " City");               
+		#		  echo form_dropdown("cityID", $alist,set_value("cityID",$cityID), "id='cityID' class='form-control hide-dropdown-icon select2'");    ?>
+			<input id="city" name="city" class="form-control" placeholder="type city name or code"/> <input type="hidden" id="cityID" name="cityID" class="form-control" value="<?=set_value('cityID',$cityID)?>" /> 
 				   
                  </div>              				
                  <div class="col-sm-2">			   
-                 <?php $alist = array("0" => " Airport");               
-				  echo form_dropdown("airportID", $alist,set_value("airportID",$airportID), "id='airportID' class='form-control hide-dropdown-icon select2'");    ?>
+                 <?php #$alist = array("0" => " Airport");               
+				  #echo form_dropdown("airportID", $alist,set_value("airportID",$airportID), "id='airportID' class='form-control hide-dropdown-icon select2'");    ?>
+			<input id="airport" name="airport" class="form-control" placeholder="type airport name or code"/> <input type="hidden" id="airportID" name="airportID" class="form-control" value="<?=set_value('airportID',$airportID)?>" /> 
 				   
                  </div>              				
                 <div class="col-sm-2">			   
@@ -108,6 +111,7 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
 	 var regionID =<?=$regionID?>;
 	 var areaID = <?=$areaID?>; 
 	 var cityID = <?=$cityID?>; 
+	 var airportID = <?=$airportID?>; 
 
         $.ajax({
             async: false,
@@ -144,17 +148,90 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
         }); 		
 	$('#countryID').val(countryID).change();
 	 
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: "<?=base_url('general/getAirports')?>",          
-		   data: {'airportID': airportID},
-            dataType: "html",			
-            success: function(data) {
-               $('#airportID').html(data);			   
-            }
-        }); 		
-	$('#airportID').val(airportID).change();
+$( "#airport" ).autocomplete({
+      //source: availableTags
+           source : function( request, response ) {
+                $.ajax({
+                    url: "<?=base_url('general/getAirportsByName')?>",
+                    dataType: "json",
+                    type: 'POST',
+                    data: {
+                        search: request.term
+                    },
+                    success: function (data) {
+		   response( $.map( data, function( item ) {                  
+				  return {                                    
+					label: item['airport_name'],
+				value: item['airportID']
+				  }
+		  }));
+                    }
+                });
+            },
+    	minLength: 3,
+        'select': function(event, ui) {
+        $('#airport').val(ui.item.label);
+	$('#airportID').val(ui.item.value);
+        return false; // Prevent the widget from inserting the value.
+    },
+ }).val('<?php echo $airport_name; ?>').data('autocomplete');
+
+$( "#country" ).autocomplete({
+      //source: availableTags
+           source : function( request, response ) {
+                $.ajax({
+                    url: "<?=base_url('general/getCountriesByName')?>",
+                    dataType: "json",
+                    type: 'POST',
+                    data: {
+                        search: request.term
+                    },
+                    success: function (data) {
+		   response( $.map( data, function( item ) {                  
+				  return {                                    
+					label: item['country_name'],
+				value: item['countryID']
+				  }
+		  }));
+                    }
+                });
+            },
+    	minLength: 2,
+        'select': function(event, ui) {
+        $('#country').val(ui.item.label);
+	$('#countryID').val(ui.item.value);
+        return false; // Prevent the widget from inserting the value.
+    },
+ }).val('<?php echo $country_name; ?>').data('autocomplete');
+
+$( "#city" ).autocomplete({
+      //source: availableTags
+           source : function( request, response ) {
+                $.ajax({
+                    url: "<?=base_url('general/getCitiesByName')?>",
+                    dataType: "json",
+                    type: 'POST',
+                    data: {
+                        search: request.term
+                    },
+                    success: function (data) {
+		   response( $.map( data, function( item ) {                  
+				  return {                                    
+					label: item['city_name'],
+				value: item['cityID']
+				  }
+		  }));
+                    }
+                });
+            },
+    	minLength: 3,
+        'select': function(event, ui) {
+        $('#city').val(ui.item.label);
+	$('#cityID').val(ui.item.value);
+        return false; // Prevent the widget from inserting the value.
+    },
+ }).val('<?php echo $city_name; ?>').data('autocomplete');
+
 
     $('#master').DataTable( {
       "bProcessing": true,
@@ -167,6 +244,7 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
 				   {"name": "regionID","value": $("#regionID").val()},
 				   {"name": "areaID","value": $("#areaID").val()},
 				   {"name": "cityID","value": $("#cityID").val()},
+				   {"name": "airportID","value": $("#airportID").val()},
 				   {"name": "active","value": $("#active").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -221,7 +299,7 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
                            $.ajax({
                                 url: "<?php echo base_url('airports_master/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"countryID":$("#countryID").val(),"regionID": $("#regionID").val(),"areaID": $("#areaID").val(),"cityID": $("#cityID").val(),"active": $("#active").val()},
+                                data: {sSearch: $("input[type=search]").val(),"countryID":$("#countryID").val(),"regionID": $("#regionID").val(),"areaID": $("#areaID").val(),"cityID": $("#cityID").val(),"airportID": $("#airportID").val(),"active": $("#active").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -245,7 +323,7 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
 	     $.ajax({
               url: "<?php echo base_url('airports_master/server_processing'); ?>?page=all&&export=1",
               type: 'get',
-              data: {"countryID":$("#countryID").val(),"regionID": $("#regionID").val(),"areaID": $("#areaID").val(),"cityID": $("#cityID").val(),"active": $("#active").val()},
+              data: {"countryID":$("#countryID").val(),"regionID": $("#regionID").val(),"areaID": $("#areaID").val(),"cityID": $("#cityID").val(),"airportID": $("#airportID").val(),"active": $("#active").val()},
               dataType: 'json'
           }).done(function(data){
 		 var $a = $("<a>");

@@ -39,6 +39,39 @@ class General extends Admin_Controller {
 			}
 	}
 	
+	
+
+	public function getAirportsByName(){
+		$search = $this->input->post('search');
+		if($search){
+			$airports = $this->airports_m->getAirportsByName($search,1);
+		} else {
+		$airports = array();
+		}
+		$this->output->set_content_type('application/json');
+	        $this->output->set_output(json_encode($airports));
+	}
+	public function getCitiesByName(){
+		$search = $this->input->post('search');
+		if($search){
+			$cities = $this->airports_m->getCitiesByName($search,1);
+		} else {
+		$cities = array();
+		}
+		$this->output->set_content_type('application/json');
+	        $this->output->set_output(json_encode($cities));
+	}
+	public function getCountriesByName(){
+		$search = $this->input->post('search');
+		if($search){
+			$countries = $this->airports_m->getCountriesByName($search,1);
+		} else {
+		$countries = array();
+		}
+		$this->output->set_content_type('application/json');
+	        $this->output->set_output(json_encode($countries));
+	}
+
 	public function getAirportCities(){
 		$countryID = $this->input->post('countryID');		
 		$cityID = $this->input->post('cityID');	

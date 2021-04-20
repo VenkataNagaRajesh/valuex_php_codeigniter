@@ -554,6 +554,14 @@ function server_processing(){
 	      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
       $sWhere .= 'm.countryID = '.$this->input->get('countryID');		 
 	}
+		if($this->input->get('cityID') > 0){
+	      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+      $sWhere .= 'm.cityID = '.$this->input->get('cityID');		 
+	}
+		if($this->input->get('airportID') > 0){
+	      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+      $sWhere .= 'm.airportID = '.$this->input->get('airportID');		 
+	}
     if(isset($_GET['active']) && $this->input->get('active') != 2){ 
 	      $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
       $sWhere .= 'm.active = '.$this->input->get('active');		 

@@ -105,6 +105,62 @@ class Airports_m extends MY_Model
                 //$this->mydebug->debug($this->db->last_query());
                 return $query->result();
         }
+	public function getCountriesByName($search,$countryVal=0){
+                $this->db->select('CONCAT_WS("-",d.code,d.aln_data_value) as country_name,d.vx_aln_data_defnsID as  countryID')->from('VX_data_defns d');
+                $this->db->group_start();
+                $this->db->like('d.aln_data_value',$search);
+                $this->db->or_like('d.code',$search);
+                $this->db->group_end();
+                if($countryVal){
+                   $this->db->where('d.vx_aln_data_defnsID !=',0);
+                } else {
+                   $this->db->where('d.vx_aln_data_defnsID',0);
+                }
+                   $this->db->where('d.active',1);
+                   $this->db->where('d.aln_data_typeID',2);
+                #$this->db->limit(5);
+                $query = $this->db->get();
+	//	echo $this->db->last_query();	 exit;
+                return $query->result();
+        }
+
+	public function getCitiesByName($search,$cityVal=0){
+                $this->db->select('CONCAT_WS("-",d.code,d.aln_data_value) as city_name,d.vx_aln_data_defnsID as cityID')->from('VX_data_defns d');
+                $this->db->group_start();
+                $this->db->like('d.aln_data_value',$search);
+                $this->db->or_like('d.code',$search);
+                $this->db->group_end();
+                if($cityVal){
+                   $this->db->where('d.vx_aln_data_defnsID !=',0);
+                } else {
+                   $this->db->where('d.vx_aln_data_defnsID',0);
+                }
+                   $this->db->where('d.active',1);
+                   $this->db->where('d.aln_data_typeID',3);
+                #$this->db->limit(5);
+                $query = $this->db->get();
+	//	echo $this->db->last_query();	 exit;
+                return $query->result();
+        }
+
+	public function getAirportsByName($search,$airportVal=0){
+                $this->db->select('CONCAT_WS("-",d.code,d.aln_data_value) as airport_name,d.vx_aln_data_defnsID as airportID')->from('VX_data_defns d');
+                $this->db->group_start();
+                $this->db->like('d.aln_data_value',$search);
+                $this->db->or_like('d.code',$search);
+                $this->db->group_end();
+                if($airportVal){
+                   $this->db->where('d.vx_aln_data_defnsID !=',0);
+                } else {
+                   $this->db->where('d.vx_aln_data_defnsID',0);
+                }
+                   $this->db->where('d.active',1);
+                   $this->db->where('d.aln_data_typeID',1);
+                #$this->db->limit(5);
+                $query = $this->db->get();
+                return $query->result();
+        }
+
 
 
 	public function getDefnsByMasterData($type = null, $parent = null)
