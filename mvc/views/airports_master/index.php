@@ -54,13 +54,14 @@
 				  #echo form_dropdown("airportID", $alist,set_value("airportID",$airportID), "id='airportID' class='form-control hide-dropdown-icon select2'");    ?>
 			<input id="airport" name="airport" class="form-control" placeholder="type airport name or code"/> <input type="hidden" id="airportID" name="airportID" class="form-control" value="<?=set_value('airportID',$airportID)?>" /> 
 				   
-                 </div>              				
+                 </div> 
+              
                 <div class="col-sm-2">			   
                  <?php $status = array("1" => "Active","0" => "InActive","2" => "Status");               
                   						
 				   echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>			
-			    
+	
 		<br>
 		<br>
                  
@@ -71,6 +72,7 @@
 			  </div>
 			 </form>	
 			</div>
+
             <div id="hide-table">
                <table id="master" class="table table-bordered dataTable no-footer">
                  <thead>
@@ -87,9 +89,19 @@
 						<th class="col-lg-1"><?=$this->lang->line('master_region')?></th>
 						<th class="col-lg-1"><?=$this->lang->line('master_area')?></th>					
 						<th class="col-lg-1"><?=$this->lang->line('master_alias')?></th>
+
+                            <?php if($this->session->userdata('name')=='valuex' )
+                            {
+                                ?>                        
 						<th class="col-lg-1 noExport"><?=$this->lang->line('master_active')?></th>
-                        <?php if(permissionChecker('airports_master_edit') || permissionChecker('airports_master_delete')) { ?>
-                        <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
+
+
+                        <?php } ?>
+                        <th class="col-lg-1 noExport"> <?= $this->lang->line('action') ?> </th>
+                        
+                      <?php if(permissionChecker('airports_master_edit') || permissionChecker('airports_master_delete')) { ?>
+                        
+
                         <?php } ?>
                     </tr>
                  </thead>
@@ -260,9 +272,14 @@ $( "#city" ).autocomplete({
 				  {"data": "countrycode" },
 				  {"data": "region" },
                   {"data": "area"},                  				  
-                  {"data": "alias"},                  				  
-                  {"data": "active"},
+                  {"data": "alias"},  
+<?php  if($this->session->userdata('name')=='valuex')
+{   ?>                {"data": "active"},
+<?php }?>
+
+
                   {"data": "action"}
+
 				  ],			     
      dom: 'B<"clear">lfrtip',	
     // buttons: [ 'copy', 'csv', 'excel','pdf' ],	
