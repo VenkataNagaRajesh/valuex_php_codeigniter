@@ -145,11 +145,23 @@ function getAirlinesToMap($array) {
 
 	}
 
-	function getDummyCabinsList(){
-		$this->db->select('alias, code')->from('VX_data_defns ');
-		$this->db->where('aln_data_typeID','13');
-		$query = $this->db->get();
-                $data = $query->result();
+	function getDummyCabinsList($carrier_id = 0) {
+		if ( $carrier_id ) {
+			$this->db->select('level as alias, cabin as code ')->from('VX_airline_cabin_def ');
+			$this->db->where('carrier',$carrier_id);
+			$query = $this->db->get();
+			$data = $query->result();
+		}
+		if ( !count($data) ) { //Get default cabin mapping 
+			$this->db->select('alias, code')->from('VX_data_defns ');
+			$this->db->where('aln_data_typeID','13');
+			if ( $carrier_id) {
+				$this->db->where('aln_data_typeID','13');
+			}
+			$query = $this->db->get();
+			$data = $query->result();
+		}
+		//echo $this->db->last_query();exit;
 		return $data;
 	}
 		
