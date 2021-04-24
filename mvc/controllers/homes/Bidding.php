@@ -434,8 +434,8 @@ class Bidding extends MY_Controller {
 			   $maildata['base_url'] = base_url();			    		
 			   $maildata['tomail'] = explode(',',$maildata['email_list'])[0]; 
 			   $maildata['type'] = $this->input->post('type');
-			   $maildata['resubmit_link'] = base_url('homes/resubmit?pnr_ref='.$maildata['pnr_ref']);
-			   $maildata['cancel_link'] = base_url('homes/cancel?pnr_ref='.$maildata['pnr_ref']);
+			   $maildata['resubmit_link'] = base_url('homes/bidding?pnr_ref='.$maildata['pnr_ref']);
+			   $maildata['cancel_link'] = base_url('homes/bidding?pnr_ref='.$maildata['pnr_ref']);
 			   $maildata['bid_value'] = number_format($maildata['bid_value']);
 
 				switch ($product_id) {
