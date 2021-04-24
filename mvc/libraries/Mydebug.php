@@ -14,6 +14,15 @@ class Mydebug {
          }
          fwrite($file,$msg."\n");
        }
+
+      public function debug_log($logname, $msg)
+        {
+
+          $file = fopen(APPPATH."/logs/log-$logname-". date('Y-m-d-H-m-s'). '.log','w');
+          fwrite($file,'ERROR - '.date('Y-m-d H:m:s')." --> ".$msg."\n");
+	  fclose($file);
+       }
+	   
 	   
 	   public function airports_log($logs) //ERROR - 2018-01-23 07:12:31 --> 404 Page Not Found: admin/Logs/indexx
         {
