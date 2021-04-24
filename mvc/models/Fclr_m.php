@@ -64,6 +64,8 @@ class Fclr_m extends MY_Model {
                   $array["modify_userID"] = $this->session->userdata('loginuserID');
                  $this->fclr_m->insert_fclr($array);
             }
+	//	echo $this->db->last_query();
+	//	echo "<br>";
 	}
 
 
