@@ -663,7 +663,7 @@ class Fclr extends Admin_Controller
                 $sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code as carrier_code , off_point, 
 		season_id,flight_number, fdef.cabin as fcabin, sea.season_name,
             	tdef.cabin as tcabin,  dfre.code as day_of_week , fc.active, sea.ams_season_start_date as start_date, sea.ams_season_end_date as end_date,
-            	min,max,average,slider_start,from_cabin, to_cabin,
+            	round(min) as min ,round(max) as max,floor(average) as average_value,round(slider_start)as slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point,
 		dfre.aln_data_value, dop.aln_data_value, dbp.aln_data_value, dai.aln_data_value, fdef.desc,tdef.desc 
 		
