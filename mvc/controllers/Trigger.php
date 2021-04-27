@@ -230,9 +230,14 @@ class Trigger extends Admin_Controller {
 
     public function season_trigger(){
 		$timestamp = $this->trigger_m->get_trigger_time('VX_season');
-		if (isset($timestamp)) { 
+
+	if ($timestamp) { 
+
+		//echo $timestamp;
+	
 		      $data = $this->season_m->getSeasons_for_triggerrun($timestamp);
-			foreach($data as $season){ 		  
+			foreach($data as $season){ 	
+			  
 			    if(!is_null($season->ams_orig_level_value)) {
 					$orig_arr = explode(',',$season->ams_orig_level_value);
 				}else {
@@ -320,9 +325,15 @@ class Trigger extends Admin_Controller {
                    $this->season_airport_map_m->insert_destseason_airport_mapid($darray);
 				}
 			}
+			$this->mydebug->debug("market type dest");
 			$tarray['modify_date'] = time();
-			$tarray['isReconfigured'] = '0';
+			$tarray['isReconfigured'] = '1';
 			$this->trigger_m->update_trigger($tarray,'VX_season');
+			
+			
+			
+			echo "i am here";
+			exit();
 		} 
 		$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 		redirect(base_url("season/index"));

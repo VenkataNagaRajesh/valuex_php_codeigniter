@@ -210,11 +210,11 @@ if ($any_product ) {
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2 lft-gap">
-                        <div class="col-xs-12 col-sm-12"><b style="color:#000; float:left">Upgrade To</b></div>
+                        <div class="col-xs-12 col-sm-12"><b style="color:#000; float:left">eloek To</b></div>
                         <div class="col-xs-12 col-sm-12">
     						<div class="col-xs-12 col-sm-12">
     						    <div class="lst-box">
-    						    
+
 							   <ul>
 							   <?php $i=0; //$offer_cabins = explode(',',$upg->to_cabins);
 							   foreach($upg->to_cabins as $key => $value) { if($upg->fclr != null){  $split = explode('-',$key); $key = $split[0]; $status = $split[1]; ?>			
@@ -502,7 +502,7 @@ var cwtpoints<?=$ond?> = [];
 						<div class="col-md-12 ">
 							<div class="price-range">
 								<b id="mile-min"> </b>
-								<input id="miles" data-slider-id='milesSlider' type="text" data-slider-min="0" data-slider-max="<?=$upgrade[0]->miles?>" data-slider-step="5" data-slider-value="<?=$upgrade[0]->miles/2?>" data-slider-handle="round" min-slider-handle="200"/>
+									<input id="miles" data-slider-id='milesSlider' type="text" data-slider-min="0" data-slider-max="<?=$upgrade[0]->miles?>" data-slider-step="5" data-slider-value="<?= $upgrade[0]->miles/2 ?>" data-slider-handle="round" min-slider-handle="200"/>
 								<b id="mile-max"></b> 
 							</div>
 						</div>
@@ -649,13 +649,14 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 				tot_avg = tot_avg + total
 				//   console.log(tot_avg+'tot_avg');
 			 }
+
 		<?php }?>
 	      return tot_avg.toFixed(2);
 	}
 
 	function mileSliderUpdate(){	  
 		var value = getTotal();	  
-		var miles = value/mile_value;
+		var miles = Math.round(value/mile_value);
 		$("#mile-min").text(0+' Miles');  
 		$("#mile-max").text( numformat(Math.round(Math.round(miles)* mile_proportion))+' Miles');
 		$("#miles").slider('setAttribute', 'max', Math.round(Math.round(miles)* mile_proportion));	  

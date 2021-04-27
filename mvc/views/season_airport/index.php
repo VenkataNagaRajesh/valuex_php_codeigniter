@@ -62,10 +62,16 @@
 				 <th class="col-lg-1"><?=$this->lang->line('slno')?></th>
 				 <th class="col-lg-1"><?=$this->lang->line('season_airline')?></th>
 				 <th class="col-lg-1"><?=$this->lang->line('season_name')?></th>
-				 <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>
-				 <th class="col-lg-1"><?=$this->lang->line('country')?></th>				
+				 <th class="col-lg-1"><?=$this->lang->line('airport_code')?></th>
+				 <th class="col-lg-1"><?=$this->lang->line('airport_name')?></th>   
+				 
+				 <th class="col-lg-1"><?=$this->lang->line('country_code')?></th>	
+				 <th class="col-lg-1"><?=$this->lang->line('country')?></th>	
+							
 				 <th class="col-lg-1"><?=$this->lang->line('region')?></th>	
 				 <th class="col-lg-1"><?=$this->lang->line('area')?></th>	
+				 <th class="col-lg-1"><?=$this->lang->line('city_code')?></th>	
+		
 			   </tr>
 			  </thead>
 			   <tbody>
@@ -114,9 +120,12 @@
 		          {"data": "carrier_code"},
 		          {"data": "season_name"},
                   {"data": "airport_code" },
-		          {"data": "country_code" },		          
+				  {"data": "airport_name" },
+		          {"data": "country_code" },
+				  {"data": "country_name" },		          
 		          {"data": "region" },
-		          {"data": "area" }
+		          {"data": "area" },
+		          {"data": "city_code" },
 				 ],			   
 	//"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']	
 	dom: 'B<"clear">lfrtip',

@@ -302,7 +302,7 @@ class Marketzone extends Admin_Controller {
              $this->data['airlines'] = $this->airline_m->getAirlinesData();
           }
 
-		 $id = htmlentities(escapeString($this->uri->segment(3)));
+		$id = htmlentities(escapeString($this->uri->segment(3)));
         if((int)$id) {
             $this->data['marketzone'] = $this->marketzone_m->get_single_marketzone(array('market_id' => $id));
             if($this->data['marketzone']) {

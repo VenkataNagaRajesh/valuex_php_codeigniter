@@ -110,7 +110,7 @@
 				</div>
 				<div class="col-md-12 col-sm-4 text-right">
 						<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savefclr();">Add FCLR</a>
-						<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
+						<a href="#" type="button" id='cancel' class="btn btn-danger" data-toggle="collapse" data-target="#fclrAdd" onclick="form_reset()">Cancel</a>
 				</div>
 			</div>
 		</form>
@@ -401,8 +401,8 @@ function loaddatatable() {
 		   {"data": "day_of_week" },
 		   {"data": "fcabin" },
 		   {"data": "tcabin" },
-		   {"data": "average" },
-                   {"data": "min" },
+		   {"data": "average_value" },
+            {"data": "min" },
 		  {"data": "max" },
 		 {"data": "slider_start" },
 		 {"data": "active"},
@@ -676,8 +676,18 @@ function form_reset(){
           $inputs.each(function (index)
        {
           $(this).val("");  
-       });
+          //$('#fclrAdd').toggle();
+  
+                var isVisible = $( "#fclrAdd" ).is( ":visible" );
 
+                var isHidden = $( "#fclrAdd" ).is( ":hidden" );
+                if( isVisible == true) {
+                        $( "#fclr_add_btn" ).trigger( "click" );
+                }    
+        });
+      
+     
+  
            $("#board_point").val(0).trigger('change');
            $("#off_point").val(0).trigger('change');
            $("#season_id").val(0).trigger('change');
@@ -685,7 +695,10 @@ function form_reset(){
            $("#frequency").val(0).trigger('change');
            $("#upgrade_from_cabin_type").val(0).trigger('change');
            $("#upgrade_to_cabin_type").val(0).trigger('change');
+
   }
+
+
 
     $(document).ready(function(){
         // Add minus icon for collapse element which is open by default

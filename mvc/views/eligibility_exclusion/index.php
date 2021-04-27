@@ -253,7 +253,7 @@
 			<div class="col-md-12">
 				<span class="col-md-3">
 					<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="saverule();">ADD Rule</a>
-					<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
+					<a href="#" type="button" class="btn btn-danger"  data-toggle="collapse" data-target="#eerAdd" onclick="form_reset()">Cancel</a>
 				</span>
 			</div>
 		</form>
@@ -934,6 +934,16 @@ $.ajax({
 
 function form_reset(){    
           var $inputs = $('#add_rule_form :input'); 
+
+        //for collpase the #eerAdd div
+    
+            var isVisible = $( "#eerAdd" ).is( ":visible" );
+
+            var isHidden = $( "#eerAdd" ).is( ":hidden" );
+            if( isVisible) {
+                    $( "#eerAdd" ).trigger( "click" );
+            }    
+
           $('#desc').val("");  
 	  $('#flight_nbr_start').val("");
 	  $('#flight_nbr_end').val("");
