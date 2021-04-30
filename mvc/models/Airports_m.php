@@ -144,6 +144,7 @@ class Airports_m extends MY_Model
         }
 
 	public function getAirportsByName($search,$airportVal=0){
+
                 $this->db->select('CONCAT_WS("-",d.code,d.aln_data_value) as airport_name,d.vx_aln_data_defnsID as airportID')->from('VX_data_defns d');
                 $this->db->group_start();
                 $this->db->like('d.aln_data_value',$search);
@@ -160,6 +161,27 @@ class Airports_m extends MY_Model
                 $query = $this->db->get();
                 return $query->result();
         }
+
+		public function getAirportsByNameBasedOnSeason($search,$season)
+		{
+			
+			$this->db->select('CONCAT_WS("-",d.code,d.aln_data_value) as airport_name,d.vx_aln_data_defnsID as airportID');
+			$this->db->group_start();
+			$this->db->from('VX_data_defns d');
+        	$this->db->like('d.code',$search);
+			$this->db->like('d.aln_data_value',$search);
+			$this->db->group_end();
+			$this->db->join('vx_season_airport_origin_map','vx_season_airport_origin_map.orig_airportID=d.vx_aln_data_defnsID','inner');	
+			$this->db->where('VX_aln_seasonID',$season)->from('vx_season');
+			$this->db->order_by('d.aln_data_value');
+			
+			
+		
+			#$this->db->limit(5);
+			$query = $this->db->get();
+			return $query->result();
+
+		}
 
 
 

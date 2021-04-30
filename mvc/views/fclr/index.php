@@ -42,24 +42,33 @@
 
 							echo form_dropdown("carrier_code", $airlinelist,set_value("carrier_code",$default_airlineID), "id='carrier_code' class='form-control hide-dropdown-icon select2'"); ?>
 					</div>
-					<div class="col-md-2 col-sm-3">
-						<?php
-							$airports['0'] = 'Board Point';
-							ksort($airports);
-							echo form_dropdown("board_point", $airports,set_value("board_point"), "id='board_point' class='form-control hide-dropdown-icon select2'"); ?>
-					</div>
-					<div class="col-md-2 col-sm-3">
-						<?php
-							$airports['0'] = 'Off Point';
-							ksort($airports);
-							echo form_dropdown("off_point", $airports,set_value("off_point"), "id='off_point' class='form-control hide-dropdown-icon select2'");?>
-					</div>
-					<div class="col-md-2 col-sm-3">
+                    <div class="col-md-2 col-sm-3">
 						<?php 
 							$seasons[0] = 'Seasons';
 							ksort($seasons);
 							echo form_dropdown("season_id", $seasons,set_value("season_id"), "id='season_id' class='form-control hide-dropdown-icon select2'");?>
 					</div>
+
+                    <div class="col-md-2 col-sm-3">
+                      <input id="board_point" name="board_point" class="form-control" placeholder="Board Point"/> <input type="hidden" id="board_point_id" name="board_point_id" class="form-control" value="<?= set_value('board_point_id',$board_point)?>" /> 
+                    </div>
+
+                    <div class="col-md-2 col-sm-3">
+                      <input id="off_point" name="off_point" class="form-control" placeholder="Off Point"/> <input type="hidden" id="off_pointID" name="off_pointID" class="form-control" value="<?= set_value('off_pointID',$off_point_name)?>" /> 
+                    </div>
+				<!--	<div class="col-md-2 col-sm-3">
+						<?php
+							#$airports['0'] = 'Board Point';
+						#	ksort($airports);
+							#echo form_dropdown("board_point", $airports,set_value("board_point"), "id='board_point' class='form-control hide-dropdown-icon select2'"); ?>
+					</div>
+					<div class="col-md-2 col-sm-3">
+					    <?php
+							#$airports['0'] = 'Off Point';
+							#ksort($airports);
+							#echo form_dropdown("off_point", $airports,set_value("off_point"), "id='off_point' class='form-control hide-dropdown-icon select2'");?>
+					</div>    -->
+				
 					<div class="col-md-2 col-sm-3">
 						<input type="text" placeholder="Flight No" class="form-control" id="flight_number" name="flight_number" value="<?=set_value('flight_number')?>" >
 					</div>
@@ -253,6 +262,7 @@
 						<th class="col-lg-1"><?=$this->lang->line('slider_start')?></th>
 						<th class="col-lg-1 noExport">Active</th>
                         <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
+
                     </tr>
                  </thead>
                  <tbody>                          
@@ -301,6 +311,79 @@ $.ajax({     async: false,
 
 $('#upgrade_from_cabin_type').trigger('change');
 $('#upgrade_to_cabin_type').trigger('change');
+
+
+//auto-complete textview for boardpoint-autocomplte-textview
+
+$( "#board_point" ).autocomplete({
+      //source: availableTags
+           source : function( request, response ) {
+                $.ajax({
+                    url: "<?=base_url('general/getAirportsByName')?>",
+                    dataType: "json",
+                    type: 'POST',
+                    data: {
+                        
+                        search: request.term,
+                        season: $("#season_id").val(),
+                    },
+                    success: function (data) {
+                        
+                            response( $.map( data, function( item ) {                  
+                                    return {                                    
+                                        label: item['airport_name'],
+                                    value: item['airportID']
+                                    }
+                            }));
+          
+                    },
+                    
+                    
+                });
+            },
+    	minLength: 0,
+        'select': function(event, ui) {
+        $('#airport_name').val(ui.item.label);
+	$('#airportID').val(ui.item.value);
+        return false; // Prevent the widget from inserting the value.
+    },
+ }).val('<?php echo $airport_name; ?>').data('autocomplete');
+
+
+ $( "#off_point" ).autocomplete({
+      //source: availableTags
+           source : function( request, response ) {
+                $.ajax({
+                    url: "<?=base_url('general/getAirportsByName')?>",
+                    dataType: "json",
+                    type: 'POST',
+                    data: {
+                        
+                        search: request.term,
+                        season: $("#season_id").val(),
+                        
+                    },
+                    success: function (data) {
+                        
+		   response( $.map( data, function( item ) {                  
+				  return {                                    
+					label: item['airport_name'],
+				value: item['airportID']
+				  }
+		  }));
+          
+                    },
+                   
+                });
+            },
+    	minLength: 0,
+        'select': function(event, ui) {
+        $('#airport_name').val(ui.item.label);
+	$('#airportID').val(ui.item.value);
+        return false; // Prevent the widget from inserting the value.
+    },
+ }).val('<?php echo $airportID; ?>').data('autocomplete');
+
 
 
 
@@ -676,16 +759,12 @@ function form_reset(){
           $inputs.each(function (index)
        {
           $(this).val("");  
-          //$('#fclrAdd').toggle();
-  
-                var isVisible = $( "#fclrAdd" ).is( ":visible" );
-
-                var isHidden = $( "#fclrAdd" ).is( ":hidden" );
-                if( isVisible == true) {
-                        $( "#fclr_add_btn" ).trigger( "click" );
-                }    
+            
         });
-      
+        var isVisible = $( "#fclrAdd" ).isVisible();
+             if( isVisible == true) {
+                    $( "#fclr_add_btn" ).trigger( "click" );
+                } 
      
   
            $("#board_point").val(0).trigger('change');
