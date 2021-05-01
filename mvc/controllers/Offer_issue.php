@@ -560,19 +560,19 @@ $sWhere $sOrder $sLimit";
 		from VX_offer oref 
 		INNER JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and (pf.is_up_offer_processed = 1 OR pf.is_bg_offer_processed = 1) and pf.active = 1)
 		INNER JOIN VX_offer_info pext on (pext.dtpf_id = pf.dtpf_id AND oref.product_id = pext.product_id)
-		INNER JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20)
+		INNER JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = oref.offer_status AND dd.aln_data_typeID = 20)
 		WHERE pf.dep_date >= ".$current_time. " AND pf.dep_date <= " . $tstamp  .
 		" AND dd.alias != 'excl' AND pext.exclusion_id = 0 AND 
 		dd.alias = 'bid_received'  group by pf.flight_number, pf.carrier_code, pf.dep_date  order by pf.flight_number"; 
 
-		//var_dump($sQuery);exit;
+		///var_dump($sQuery);
 		$rResult = $this->install_m->run_query($sQuery);
 		  
 
 		$full_offerlist = array();
 		$partial_offerlist = array();	
 		foreach($rResult as $data ) {
-			$q = "  SELECT distinct oref.product_id, bid_id, bid.rank, bid_value as bid_val,pf.dep_date,pf.dept_time,pf.arrival_time,bid.upgrade_type,pf.flight_number,
+			$q = "  SELECT distinct oref.product_id, bid.orderID,bid_id, bid.rank, bid_value as bid_val,pf.dep_date,pf.dept_time,pf.arrival_time,bid.upgrade_type,pf.flight_number,
 			 pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,car.aln_data_value as car_name ,cdef.desc as upgrade_cabin
 			 from UP_bid bid
 			 LEFT JOIN VX_offer oref on (oref.offer_id = bid.offer_id AND bid.productID = oref.product_id )
@@ -586,10 +586,9 @@ $sWhere $sOrder $sLimit";
 		  " order by bid.rank asc"; 
 			$offers =  $this->install_m->run_query($q);
 //var_dump($q);echo "<br><br>";exit;
-//var_dump($offers); echo "<br><br>";exit;
 			foreach ($offers as $feed ) {
 				$passenger_data = $this->offer_issue_m->getPassengerData($feed->offer_id,$feed->flight_number);	
-				var_dump($passenger_data);
+				//var_dump($passenger_data);
 				$inv = array();
 				$inv['flight_nbr'] = $data->flight_number;
 				$inv['airline_id'] = $data->carrier_code;
@@ -644,7 +643,6 @@ $sWhere $sOrder $sLimit";
 					$acsr['from_cabin'] = $feed->cabin;
 					$acsr['to_cabin'] = $feed->upgrade_type;
 					$acsr_rules = $this->acsr_m->apply_acsr_rules(0,$acsr);	
-	print_r($acsr_rules);
 					if(count($acsr_rules) > 0)  {
 						foreach ($acsr_rules as $acsr_rule )  {
 							$acsrquery = $this->acsr_m->apply_acsr_rules(1);
@@ -880,7 +878,7 @@ $sWhere $sOrder $sLimit";
 		</html>
 		';
 
-				 $card_data = $this->bid_m->getCardData($feed->offer_id);
+				 $card_data = $this->bid_m->getCardData($feed->orderID);
 				 $card_number = substr(trim($card_data->card_number), -4);
 				 $e_data = array(
 					'first_name'   => $namelist[0],
