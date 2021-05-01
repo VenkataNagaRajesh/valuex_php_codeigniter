@@ -654,7 +654,7 @@ $sQuery .= " INNER JOIN UP_fare_control_range fclr on (pe.rule_id = fclr.fclr_id
 					LEFT JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf.carrier_code AND  fcab.alias = fdef.level AND  pe.product_id = 1  ) 
 					LEFT JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = bid.upgrade_type AND tcab.aln_data_typeID = 13 AND pe.product_id = 1 )
 					LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code AND  tcab.alias = tdef.level AND  pe.product_id = 1  ) 
-                                        LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
+                                        LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = oref.offer_status AND bs.aln_data_typeID = 20) 
                                           ".$mainsetWhere."
                      ) as MainSet 
 

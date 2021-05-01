@@ -208,8 +208,9 @@ class bid_m extends MY_Model {
 	}
   public function getCardData($offer_id){
 	  $this->db->select("*")->from("VX_card_data");
-	  $this->db->where('offer_id',$offer_id);
+	  $this->db->where('orderID',$offer_id);
 	  $query = $this->db->get();
+	//echo $this->db->last_query();
 	  return $query->row();
   } 
   public function getRecentOrderByPNR($pnr_ref){
