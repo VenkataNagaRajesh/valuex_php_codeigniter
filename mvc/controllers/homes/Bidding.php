@@ -76,13 +76,14 @@ class Bidding extends MY_Controller {
 									break;
 								}
 							}
-						}
+						} 
 
 						$offer = $this->bid_m->getPassengers($pnr_ref);
 						$this->data['offer'] = $offer;
 						$this->data['pax_names'] = $offer[0]->pax_names; 
 						$this->data['passengers_count'] = count(explode(',',$offer[0]->pax_names)); 			
 						$carrier_id = $offer[0]->carrier_id;
+						
 						#print_r($this->data['upgrade'] ); exit;
 						//$this->data['tomail'] = explode(',',$this->data['upgrade'][0]->email_list)[0]; 
 

@@ -937,12 +937,12 @@ function form_reset(){
 
         //for collpase the #eerAdd div
     
-            var isVisible = $( "#eerAdd" ).is( ":visible" );
-
-            var isHidden = $( "#eerAdd" ).is( ":hidden" );
-            if( isVisible) {
+            var isVisible = $( "#eerAdd" ).isVisible();
+            if( isVisible==true) {
                     $( "#eerAdd" ).trigger( "click" );
-            }    
+                    
+            } 
+
 
           $('#desc').val("");  
 	  $('#flight_nbr_start').val("");
