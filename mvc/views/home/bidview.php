@@ -769,7 +769,7 @@ $(document).ready(function () {
 						  success: function(data) {
 							var info = jQuery.parseJSON(data);              		
 							if(info['status'] == "success"){
-								//window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
+								window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
 								paysuccess = 1;
 							} else {
 								//alert(info['status']);
@@ -813,7 +813,7 @@ $(document).ready(function () {
 					       }
 					<?php } ?>
 						if(paysuccess == 1){
-						//	   window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
+							   window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
 						} else {
 							   alert($(status).text());
 				}
