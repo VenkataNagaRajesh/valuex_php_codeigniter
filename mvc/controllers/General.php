@@ -25,6 +25,7 @@ class General extends Admin_Controller {
 				}
 			}
 	}
+
 	public function getAirports(){
 		$airportID = $this->input->post('airportID');		
 		$cityID = $this->input->post('cityID');	
@@ -39,18 +40,29 @@ class General extends Admin_Controller {
 			}
 	}
 	
-	
-
 	public function getAirportsByName(){
+
 		$search = $this->input->post('search');
-		if($search){
+		$season=$this->input->post('season');
+
+		if($season=="0"){
+			
 			$airports = $this->airports_m->getAirportsByName($search,1);
-		} else {
+		} 
+		else if($season>0)
+		{
+			//alert($season);
+				$airports=$this->airports_m->getAirportsByNameBasedOnSeason($search,$season);
+		}
+		else {
 		$airports = array();
 		}
 		$this->output->set_content_type('application/json');
 	        $this->output->set_output(json_encode($airports));
 	}
+
+
+
 	public function getCitiesByName(){
 		$search = $this->input->post('search');
 		if($search){

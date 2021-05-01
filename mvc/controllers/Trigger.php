@@ -330,10 +330,6 @@ class Trigger extends Admin_Controller {
 			$tarray['isReconfigured'] = '1';
 			$this->trigger_m->update_trigger($tarray,'VX_season');
 			
-			
-			
-			echo "i am here";
-			exit();
 		} 
 		$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 		redirect(base_url("season/index"));

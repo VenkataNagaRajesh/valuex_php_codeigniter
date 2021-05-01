@@ -117,7 +117,7 @@
 						<div class="col-md-12">
 							<p class="pull-right">
 								<a href="#" type="button" class="btn btn-danger" id='btn_txt' onclick="saveseason()">Save</a>
-								<a href="#" type="button" class="btn btn-danger">Cancel</a>
+								<a href="#" type="button" class="btn btn-danger"data-toggle="collapse" id="season_cancel_btn"data-target="#seasonAdd" onclick="season_form_reset()">Cancel</a>
 							</p>
 						</div>
 					</div>
@@ -411,6 +411,20 @@ $('#destID').change(function(e){
       }); 
 });
 
+function season_form_reset()
+{
+	var $inputs = $('#seasonAdd :input'); 
+          $inputs.each(function (index)
+       {
+          $(this).val("");  
+            
+        });
+	var isVisible = $( "#seasonAdd" ).isVisible();
+             if( isVisible == true) {
+                    $( "#season_cancel_btn" ).trigger( "click" );
+                } 
+     
+}
 function seasoncalender (seasonlist = '[]') 
 {
 	var season_data = jQuery.parseJSON(seasonlist);
@@ -665,6 +679,8 @@ function form_reset(){
 		$(this).val(""); 
 		$(this).parent().removeClass('has-error'); 		  
 	});
+
+	
 	$("#airlineID").removeAttr("selected");
 	$('#airlineID').trigger('change');
 	$("#orig_all").removeAttr("checked");

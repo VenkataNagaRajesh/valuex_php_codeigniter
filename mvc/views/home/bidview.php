@@ -133,15 +133,15 @@ if ($any_product ) {
 			
 ?>
 							<br><span class="pull-right" style="color:#333;align:right">Status: Re-bidding:  Last Bid Total: $ <i><?=$last_bid_total_value?></i></span>
-<?
+<?php
 		} else {
 ?>
 			<br><span class="pull-right" style="color:#333;align:right">Status: Fresh Bidding</i></span>
-<?
+<?php
 		}
 ?>
 							</p>
-<?
+<?php
 	} else {
 ?>
 				<br>
@@ -153,7 +153,7 @@ if ($any_product ) {
 						</div>
 					</div>
 				</div>
-<?
+<?php
 	}
 ?>
 <?php   
@@ -250,14 +250,14 @@ if ($any_product ) {
 							
 								<div class="price-range col-md-12">		
 								<span style="float:left;width:60px !important;"><b>Min: $</b> <i class="fa fa-dollar"></i> <b id="bid_min_<?=$upg->flight_number?>"></b></span>
-								<input id="bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>" data-slider-id='bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$upg->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$upg->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$upg->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
+									<input id="bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>" data-slider-id='bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$upg->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$upg->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$upg->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
 								<span style="float:right"><b>Max: $</b> <i class="fa fa-dollar"></i> <b id="bid_max_<?=$upg->flight_number?>"></b></span>
 <?php
 			if (isset($last_bid[$last_bid_name])) {
 					$last_bid_value = $last_bid[$last_bid_name];
 ?>
 								<br><span style="float:left;"><b>Last Bid Value: $</b> <i class="fa fa-dollar"><?=$last_bid_value?></i></span>
-<?
+<?php
 			}
 ?>
 								</div>
@@ -482,7 +482,7 @@ var cwtpoints<?=$ond?> = [];
 						    </div>
 						    <div class="col-md-12">
 						        <h2 class="pull-right" ><span style="color:#333;align:right">Status: Re-bidding:  Last Bid Total: $ <i><?=$last_bid_total_value?></i></span></h2>
-<?
+<?php
 		} else {
 ?>
 						        
@@ -491,7 +491,7 @@ var cwtpoints<?=$ond?> = [];
 							
 							
 							<h2 class="pull-right"><span style="color:#333;align:right">Status: Fresh Bidding</i></span></h2>
-<?
+<?php
 		}
 ?>                      </div>
 	                    <div class="col-md-12">
