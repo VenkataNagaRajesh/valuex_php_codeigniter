@@ -234,6 +234,7 @@ class Season extends Admin_Controller {
            }			
       // print_r($this->data['seasonslist']); exit;
 		$this->data['types'] = $this->airports_m->getDefdataTypes(null,array(1,2,3,4,5,17));
+		
 			if($roleID != 1){
 			 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);	   
 		   } else {
@@ -331,7 +332,7 @@ class Season extends Admin_Controller {
 				$tarray['modify_date'] = time();
 				$tarray['create_userID'] = $this->session->userdata('loginuserID');
 				$tarray['modify_userID'] = $this->session->userdata('loginuserID');
-				$tarray['isReconfigured'] = '1';
+				$tarray['isReconfigured'] = '0';
 			
 			    $this->trigger_m->insert_trigger($tarray);		
 				
@@ -412,7 +413,7 @@ class Season extends Admin_Controller {
 				$tarray['modify_date'] = time();
 				$tarray['create_userID'] = $this->session->userdata('loginuserID');
 				$tarray['modify_userID'] = $this->session->userdata('loginuserID');
-				$tarray['isReconfigured'] = '1';
+				$tarray['isReconfigured'] = '0';
 			
 			    $this->trigger_m->insert_trigger($tarray);				
 				$json['status'] = "success";
@@ -482,9 +483,10 @@ class Season extends Admin_Controller {
 						$tarray['modify_date'] = time();
 						$tarray['create_userID'] = $this->session->userdata('loginuserID');
 						$tarray['modify_userID'] = $this->session->userdata('loginuserID');
-						$tarray['isReconfigured'] = '1';
+						$tarray['isReconfigured'] = '0';
 					
 					    $this->trigger_m->insert_trigger($tarray);	 	
+						
 						
 						$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 						redirect(base_url("season/index"));

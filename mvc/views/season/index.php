@@ -183,13 +183,13 @@
 									 <button type="button" class="form-control btn btn-danger" name="filter" onclick="downloadSeason()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
 					</div>
 					<div class="bttn-cl">
-					<?php if(permissionChecker('season_reconfigure')) {
-					 if( isset ($reconfigure)) {?>
+					<?php  if(permissionChecker('season_reconfigure')) {
+					 if(isset ($reconfigure) && $reconfigure) {?>
                                			<a href="<?php echo base_url('trigger/season_trigger') ?>" class="btn btn-danger">
                        <i class="fa fa-plus"></i>
                        <?=$this->lang->line('generate_map_table')?>
                    </a>
-                        <?php } }?>
+                        <?php  }   }?>
 					</div>
                	</div>	
 			</div>

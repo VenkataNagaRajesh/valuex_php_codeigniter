@@ -13,6 +13,7 @@ class Trigger_m extends MY_Model {
 
 	function insert_trigger($array) {
 		$error = parent::insert($array);
+
 		return TRUE;
 	}
  	
@@ -20,11 +21,13 @@ class Trigger_m extends MY_Model {
 
 	 	$this->db->select('create_date');
                 $this->db->from('VX_trigger_table');
-                $this->db->where(array('isReconfigured' => 1, 'table_name' => $table));
-		$this->db->order_by("create_date",'ASC');
+                $this->db->where(array('isReconfigured' => 0, 'table_name' => $table));
+			
+		$this->db->order_by("create_date",'DSC');
 		$this->db->limit(1);
                 $query = $this->db->get();
                 $type = $query->row();
+			
                 return $type->create_date;
 
         }
@@ -40,17 +43,20 @@ class Trigger_m extends MY_Model {
 
 
 	function update_trigger($data, $table_name = NULL){
-	          $this->db->where('isReconfigured','1');
+	          $this->db->where('isReconfigured','0');
 		if($table_name) {
 		  $this->db->where('table_name',$table_name);
 		}
            	$this->db->update('VX_trigger_table',$data);
-		//var_dump($this->db->last_query());exit;
+		
         	  if ($this->db->affected_rows() > 0){
              		return $this->db->insert_id();
           	  } else {
              		return FALSE;
           	  }
+				
+
+
 	}
 
 	function hash($string) {
