@@ -228,7 +228,6 @@ if ($any_product ) {
 								</li>
 								<?php if (isset($last_bid[$last_bid_name])) {?>
                            		<li class="checkbox-inline<?=($upg->fclr == null)?"bid-visible":""?>">
-									<input type="checkbox" name="bid_action_<?=$upg->flight_number?>" value="1" /> Cancel Bid 
 								</li>	
 							   <?php } ?>
 								 </ul>
@@ -478,6 +477,7 @@ var cwtpoints<?=$ond?> = [];
 		if ( isset($resubmit) && isset($last_bid_total_value)) {
 			
 ?>
+			<input type='hidden' name="type" id="type" value=1>
 						        
 						    </div>
 						    <div class="col-md-12">
@@ -759,22 +759,16 @@ $(document).ready(function () {
 						var dtpfext_id=<?=$upg->dtpfext_id?>;
 						var product_id=<?=$upg->product_id?>;
 						var offer_id=<?=$upg->offer_id?>;
-						//var bid_action = $('input[type=radio][name=bid_action_<?=$upg->flight_number?>]:checked').val();
-						if($('input[type=checkbox][name=<?=$mobile_view?>bid_action_<?=$upg->flight_number?>]').prop("checked") == false){
-							var bid_action = 1;
-						} else {
-							var bid_action = 0;
-						}
 						 $.ajax({
 						  async: false,
 						  type: 'POST',
 						  url: "<?=base_url('homes/bidding/saveBidData')?>",          
-						  data: {"orderID":orderID,"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,'bid_action':bid_action,'product_id':product_id,"tot_cash":up_pay_cash,"dtpfext_id":dtpfext_id,"tot_miles":up_miles,"tot_bid":up_tot_bid,"type":"submit"},
+						  data: {"orderID":orderID,"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,'product_id':product_id,"tot_cash":up_pay_cash,"dtpfext_id":dtpfext_id,"tot_miles":up_miles,"tot_bid":up_tot_bid,"type":"submit"},
 						  dataType: "html",			
 						  success: function(data) {
 							var info = jQuery.parseJSON(data);              		
 							if(info['status'] == "success"){
-								window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
+								//window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
 								paysuccess = 1;
 							} else {
 								//alert(info['status']);
@@ -818,7 +812,7 @@ $(document).ready(function () {
 					       }
 					<?php } ?>
 						if(paysuccess == 1){
-							   window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
+						//	   window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
 						} else {
 							   alert($(status).text());
 				}

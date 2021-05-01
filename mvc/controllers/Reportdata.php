@@ -118,13 +118,13 @@
             $data['to_cabin'] = explode('-',$cabkey)[3];
             $dataID = $this->reportdata_m->checkdata($data);
           $accepted_list = array_filter($cablist,function ($item) use ($bid_accepted) {
-              if ($item->booking_status == $bid_accepted) {
+              if ($item->offer_status == $bid_accepted) {
                   return true;
               }
               return false;
           });
           $rejected_list = array_filter($cablist,function ($item) use ($bid_rejected) {
-              if ($item->booking_status == $bid_rejected) {
+              if ($item->offer_status == $bid_rejected) {
                   return true;
               }
               return false;

@@ -210,7 +210,7 @@ class Offer_issue extends Admin_Controller {
 		$sQuery .= " group by tpf.pnr_ref ,  booking_status,tpf.carrier_code, pfe.product_id ";
 
 		$rResult = $this->install_m->run_query($sQuery);
-		$booking_status = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
+		$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
 
 	 	foreach($rResult as $offer) {
 
@@ -221,7 +221,7 @@ class Offer_issue extends Admin_Controller {
 
 				$ref['pnr_ref'] = $offer->pnr_ref;
 				$ref['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
-				$ref['offer_status'] = $booking_status; 
+				$ref['offer_status'] = $offer_status; 
 				$ref['product_id'] =  $offer->product_id;
 				$ref["create_date"] = time();
 				$ref["modify_date"] = time();
@@ -254,7 +254,7 @@ class Offer_issue extends Admin_Controller {
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
-		$sQuery = " select o.offer_id, pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe  LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id ) LEFT JOIN VX_offer o on (o.pnr_ref = tpf.pnr_ref AND pfe.product_id = o.product_id AND o.active = 1)  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1  ";
+		$sQuery = " select o.offer_status, o.offer_id, pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe  LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id ) LEFT JOIN VX_offer o on (o.pnr_ref = tpf.pnr_ref AND pfe.product_id = o.product_id AND o.active = 1)  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1  ";
 		if ($pnr) {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
 		} else {
@@ -263,7 +263,7 @@ class Offer_issue extends Admin_Controller {
 		$sQuery .= " group by tpf.pnr_ref ,  booking_status,tpf.carrier_code";
 
 		$rResult = $this->install_m->run_query($sQuery);
-		$booking_status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+		$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 
 	 	foreach($rResult as $offer) {
 
@@ -271,7 +271,7 @@ class Offer_issue extends Admin_Controller {
 			$coupon_code = $this->generateRandomString(6);
 
 			$array = array();
-			$array['booking_status'] = $booking_status;
+			$array['booking_status'] = $offer_status;
 			$array["modify_date"] = time();
 			$array["modify_userID"] = $this->session->userdata('loginuserID');
 
@@ -279,15 +279,16 @@ class Offer_issue extends Admin_Controller {
 			$this->offer_eligibility_m->update_dtpfext($array,$p_list);
 
 			$array = array();
-			$array['offer_status'] = $booking_status;
+			$array['offer_status'] = $offer_status;
+			$array['product_id'] = $offer->product_id;
 			$array["modify_date"] = time();
 			$array["modify_userID"] = $this->session->userdata('loginuserID');
 			$this->offer_reference_m->update_offer_ref($array,$offer->offer_id);
 
 				// update tracker about change in status
 				$tracker = array();
-				$tracker['booking_status_from'] = $offer->booking_status;
-				$tracker['booking_status_to'] = $array['booking_status'];
+				$tracker['booking_status_from'] = $offer->offer_status;
+				$tracker['booking_status_to'] = $array['offer_status'];
 				$tracker['comment'] = 'Sent Offer Email';
 				$tracker["create_date"] = time();
 				$tracker["modify_date"] = time();
@@ -465,12 +466,12 @@ $sQuery = "
  select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.passenger_list,SubSet.product_id, SubSet.from_cabin,
-                          MainSet.cash, MainSet.miles,  SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number, SubSet.from_city_name, SubSet.to_city_name, SubSet.name, SubSet.booking_status
+                          MainSet.cash, MainSet.miles,  SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number, SubSet.from_city_name, SubSet.to_city_name, SubSet.name, SubSet.booking_status, SubSet.offer_status
 
                 FROM (  select distinct oref.offer_id, oref.create_date as offer_date , oref.pnr_ref,oref.cash_percentage, oref.cash, oref.miles from  VX_offer oref  
                      ) as MainSet 
                         INNER JOIN (
-                                        select  flight_number, bs.aln_data_value as booking_status,
+                                        select  flight_number, bs.aln_data_value as booking_status, os.aln_data_value as offer_status,
                                                 group_concat(distinct dep_date) as flight_date  ,
                                                 pext.pnr_ref,group_concat(distinct first_name, ' ' , last_name SEPARATOR '<br>' ) as passenger_list ,  from_city as from_city_code, to_city as to_city_code, 
                                                 group_concat(distinct cdef.desc) as from_cabin  , fc.aln_data_value as from_city_name, fc.code as from_city, tc.code as to_city, tc.aln_data_value as to_city_name,
@@ -485,13 +486,13 @@ $sQuery = "
                                         LEFT JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 and cab.alias = cdef.level)
                                         LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
 		     			LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.offer_status AND bs.aln_data_typeID = 20)
+		     			LEFT JOIN VX_data_defns os on (os.vx_aln_data_defnsID = pext.offer_status AND os.aln_data_typeID = 20)
                                         where (pf1.is_up_offer_processed = 1  || pf1.is_bg_offer_processed = 1)
                                        group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
                    ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref ) 
 $sWhere $sOrder $sLimit";
 
 
-//print_r($sQuery);exit;
 
         $rResult = $this->install_m->run_query($sQuery);
         $sQuery = "SELECT FOUND_ROWS() as total";
@@ -515,7 +516,7 @@ $sWhere $sOrder $sLimit";
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->to_city.'</a>';
 			
 			#$feed->action = btn_view('offer_issue/view/'.$feed->pnr_ref, $this->lang->line('view'));
-                   	$feed->booking_status =  '<a target="_blank" href="' . base_url('offer_issue/view/' . $feed->pnr_ref) . '"  data-placement="top" data-toggle="tooltip" data-original-title="VIEW MORE OFFER DETAILS">'. $feed->booking_status. '</a>';
+                   	$feed->offer_status =  '<a target="_blank" href="' . base_url('offer_issue/view/' . $feed->pnr_ref) . '"  data-placement="top" data-toggle="tooltip" data-original-title="VIEW MORE OFFER DETAILS">'. $feed->offer_status. '</a>';
                    	$feed->action =  '<a target="_blank" href="' . base_url('offer_issue/resendoffer/' . $feed->pnr_ref) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="SEND OFFER MAIL TO PAX"><i class="fa fa-check"></i></a>';
                         $feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default";
                         $feed->departure_date = date('d-m-Y',$feed->flight_date);
@@ -542,573 +543,550 @@ $sWhere $sOrder $sLimit";
 
 	}
 
-  function auto_acsr() {
-	$this->load->model('preference_m');
-	
-	$days = $this->preference_m->get_application_preference_value('CONFIRM_WINDOW','7');
-	$ignore_exclusion_rules = $this->preference_m->get_application_preference_value('IGNORE_EXCLUSION_RULES','7');
+	function auto_acsr() {
 
-	$current_time = time();
-	$tstamp = $current_time + ($days * 86400);
+		$this->load->model('preference_m');
+
+		$days = $this->preference_m->get_application_preference_value('CONFIRM_WINDOW','7');
+		$ignore_exclusion_rules = $this->preference_m->get_application_preference_value('IGNORE_EXCLUSION_RULES','7');
+
+		$current_time = time();
+		$tstamp = $current_time + ($days * 86400);
 
 		// update is required if offer status is updated in VX_aln_offer_ref
-		// for now considering offer status is updated in  PF records
-		//
-	$sQuery = "select pf.dep_date , pf.flight_number , pf.carrier_code , group_concat(distinct offer_id) as offer_list  
-			from VX_offer oref 
-			INNER JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and (pf.is_up_offer_processed = 1 OR pf.is_bg_offer_processed = 1) and pf.active = 1)
-			INNER JOIN VX_offer_info pext on (pext.dtpf_id = pf.dtpf_id)
-			INNER JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20)
-			WHERE pf.dep_date >= ".$current_time. " AND pf.dep_date <= " . $tstamp  .
-			" AND dd.alias != 'excl' AND pext.exclusion_id = 0 AND 
-			dd.alias = 'bid_received'  group by pf.flight_number, pf.carrier_code, pf.dep_date  order by pf.flight_number"; 
+					// for now considering offer status is updated in  PF records
+			//
+		$sQuery = "select oref.offer_status, pf.dep_date , pf.flight_number , pf.carrier_code , group_concat(distinct offer_id) as offer_list  
+		from VX_offer oref 
+		INNER JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and (pf.is_up_offer_processed = 1 OR pf.is_bg_offer_processed = 1) and pf.active = 1)
+		INNER JOIN VX_offer_info pext on (pext.dtpf_id = pf.dtpf_id AND oref.product_id = pext.product_id)
+		INNER JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20)
+		WHERE pf.dep_date >= ".$current_time. " AND pf.dep_date <= " . $tstamp  .
+		" AND dd.alias != 'excl' AND pext.exclusion_id = 0 AND 
+		dd.alias = 'bid_received'  group by pf.flight_number, pf.carrier_code, pf.dep_date  order by pf.flight_number"; 
 
-	//var_dump($sQuery);exit;
-	$rResult = $this->install_m->run_query($sQuery);
-      
+		//var_dump($sQuery);exit;
+		$rResult = $this->install_m->run_query($sQuery);
+		  
 
-//	var_dump($rResult);exit;
-	$full_offerlist = array();
-	$partial_offerlist = array();	
-	foreach($rResult as $data ) {
-		$q = "  SELECT distinct bid_id, bid.rank, bid_value as bid_val,pf.dep_date,pf.dept_time,pf.arrival_time,bid.upgrade_type,pf.flight_number,
-             pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,car.aln_data_value as car_name ,cdef.desc as upgrade_cabin
-             from UP_bid bid
-             LEFT JOIN VX_offer oref on (oref.offer_id = bid.offer_id )
-             LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  (pf.is_up_offer_processed = 1 OR pf.is_bg_offer_processed = 1) and pf.active = 1 )
-             LEFT JOIN VX_data_defns df on (df.vx_aln_data_defnsID = pf.from_city and df.aln_data_typeID = 1)
-             LEFT JOIN VX_data_defns dt on (dt.vx_aln_data_defnsID = pf.to_city and dt.aln_data_typeID = 1)
-             LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code and car.aln_data_typeID = 12)
-	     INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = pf.carrier_code)
-             INNER JOIN VX_data_defns dcabin on (dcabin.vx_aln_data_defnsID = bid.upgrade_type and dcabin.aln_data_typeID = 13 and cdef.level = dcabin.alias)
-             WHERE bid.offer_id IN (".$data->offer_list .") AND bid.flight_number = " .$data->flight_number .
-          " order by bid.rank asc"; 
-		$offers =  $this->install_m->run_query($q);
-		//var_dump($q);echo "<br><br>";exit;
-	//	var_dump($offers); echo "<br><br>";exit;
-		foreach ($offers as $feed ) {
-			$passenger_data = $this->offer_issue_m->getPassengerData($feed->offer_id,$feed->flight_number);	
-			//var_dump($passenger_data);exit;
-			
-			$inv = array();
-                        $inv['flight_nbr'] = $data->flight_number;
-                        $inv['airline_id'] = $data->carrier_code;
-                        $inv['departure_date'] = $data->dep_date;
-			$inv['cabin'] = $feed->upgrade_type;
-			$inv['origin_airport'] = $feed->from_city; 
-			$inv['dest_airport'] =  $feed->to_city;
-			$inv['active'] = 1;
-                        $seats_data = $this->invfeed_m->getEmptyCabinSeats($inv);
-			$cabin_seats = $seats_data->empty_seats - $seats_data->sold_seats;
-			
-//echo "offerId: " . $feed->offer_id . "<br>";
-//echo "seats:". $cabin_seats .  "<br> <br>";
-			$namelist = explode(',',$passenger_data->passengers);
-			$emails_list =  explode(',',$passenger_data->emails);
+		$full_offerlist = array();
+		$partial_offerlist = array();	
+		foreach($rResult as $data ) {
+			$q = "  SELECT distinct oref.product_id, bid_id, bid.rank, bid_value as bid_val,pf.dep_date,pf.dept_time,pf.arrival_time,bid.upgrade_type,pf.flight_number,
+			 pf.rbd_markup, pf.tier_markup ,bid.offer_id,bid.cash cash,bid.miles miles, bid.cash_percentage as cash_per,bid_submit_date , pf.from_city, pf.to_city, pf.carrier_code, pf.cabin, df.code as src_point, dt.code as dest_point, df.aln_data_value src_point_name,dt.aln_data_value dest_poin_name, car.code as carrier_name,car.aln_data_value as car_name ,cdef.desc as upgrade_cabin
+			 from UP_bid bid
+			 LEFT JOIN VX_offer oref on (oref.offer_id = bid.offer_id AND bid.productID = oref.product_id )
+			 LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref  AND pf.flight_number = bid.flight_number AND  (pf.is_up_offer_processed = 1 OR pf.is_bg_offer_processed = 1) and pf.active = 1 )
+			 LEFT JOIN VX_data_defns df on (df.vx_aln_data_defnsID = pf.from_city and df.aln_data_typeID = 1)
+			 LEFT JOIN VX_data_defns dt on (dt.vx_aln_data_defnsID = pf.to_city and dt.aln_data_typeID = 1)
+			 LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf.carrier_code and car.aln_data_typeID = 12)
+		 	INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = pf.carrier_code)
+			 INNER JOIN VX_data_defns dcabin on (dcabin.vx_aln_data_defnsID = bid.upgrade_type and dcabin.aln_data_typeID = 13 and cdef.level = dcabin.alias)
+			 WHERE bid.offer_id IN (".$data->offer_list .") AND bid.flight_number = " .$data->flight_number .
+		  " order by bid.rank asc"; 
+			$offers =  $this->install_m->run_query($q);
+//var_dump($q);echo "<br><br>";exit;
+//var_dump($offers); echo "<br><br>";exit;
+			foreach ($offers as $feed ) {
+				$passenger_data = $this->offer_issue_m->getPassengerData($feed->offer_id,$feed->flight_number);	
+				var_dump($passenger_data);
+				$inv = array();
+				$inv['flight_nbr'] = $data->flight_number;
+				$inv['airline_id'] = $data->carrier_code;
+				$inv['departure_date'] = $data->dep_date;
+				$inv['cabin'] = $feed->upgrade_type;
+				$inv['origin_airport'] = $feed->from_city; 
+				$inv['dest_airport'] =  $feed->to_city;
+				$inv['active'] = 1;
+				$seats_data = $this->invfeed_m->getEmptyCabinSeats($inv);
+				$cabin_seats = $seats_data->empty_seats - $seats_data->sold_seats;
 
-			$passenger_cnt =  count($namelist);
-			
-			// apply excl rules herer something might have chnaged....!!!
+				//echo "offerId: " . $feed->offer_id . "<br>";
+				//echo "seats:". $cabin_seats .  "<br> <br>";
+				$namelist = explode(',',$passenger_data->passengers);
+				$emails_list =  explode(',',$passenger_data->emails);
 
-			if ( $ignore_exclusion_rules ) {
-				$excl_id = 0; //Ignore exclusion rules check
-			} else {
+				$passenger_cnt =  count($namelist);
 
-				$excl_arr = array();
-				$excl_arr['from_city'] = $feed->from_city;
-				$excl_arr['to_city'] = $feed->to_city;
-				$excl_arr['flight_number'] = $feed->flight_number;
-				$excl_arr['dep_date'] = $feed->dep_date;
-				$excl_arr['from_cabin'] = $feed->cabin;
-				$excl_arr['to_cabin'] = $feed->upgrade_type;
-				$excl_arr['carrier_code'] = $feed->carrier_code;
-				$day_of_week = date('w', $feed->dep_date);
-				$day = ($day_of_week)?$day_of_week:7;
-				$p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
-				$excl_arr['frequency'] = $p_freq;
-				$excl_arr['dept_time'] = $feed->dept_time;
-				$excl_arr['arrival_time'] = $feed->arrival_time;
+				// apply excl rules herer something might have chnaged....!!!
+				if ( $ignore_exclusion_rules ) {
+					$excl_id = 0;
+				} else {
+				       $excl_arr = array();
+				       $excl_arr['from_city'] = $feed->from_city;
+				       $excl_arr['to_city'] = $feed->to_city;
+				       $excl_arr['flight_number'] = $feed->flight_number;
+				       $excl_arr['dep_date'] = $feed->dep_date;
+				       $excl_arr['from_cabin'] = $feed->cabin;
+				       $excl_arr['to_cabin'] = $feed->upgrade_type;
+				       $excl_arr['carrier_code'] = $feed->carrier_code;
+				       $day_of_week = date('w', $feed->dep_date);
+				       $day = ($day_of_week)?$day_of_week:7;
+				       $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
+				       $excl_arr['frequency'] = $p_freq;
+				       $excl_arr['dept_time'] = $feed->dept_time;
+				       $excl_arr['arrival_time'] = $feed->arrival_time;
 
+				       if($acsr['season_id'] == 0 ) {
+					       $acsr['frequency'] = $p_freq;
+				       }
 
-				if($acsr['season_id'] == 0 ) {
-					$acsr['frequency'] = $p_freq;
+				      $excl_id = $this->eligibility_exclusion_m->apply_excl_rules_before_acsr($excl_arr);
 				}
 
-				$excl_id = $this->eligibility_exclusion_m->apply_excl_rules_before_acsr($excl_arr);	
-			}
+				if ( $excl_id == 0) {
 
-			if ($excl_id == 0 ) {
+					 // get list of acsr that are partially matching 
+					$acsr = array();
+					$acsr['from_city'] = $feed->from_city;
+					$acsr['to_city'] = $feed->to_city;
+					$acsr['dep_date'] = $feed->dep_date;
+					$acsr['from_cabin'] = $feed->cabin;
+					$acsr['to_cabin'] = $feed->upgrade_type;
+					$acsr_rules = $this->acsr_m->apply_acsr_rules(0,$acsr);	
+	print_r($acsr_rules);
+					if(count($acsr_rules) > 0)  {
+						foreach ($acsr_rules as $acsr_rule )  {
+							$acsrquery = $this->acsr_m->apply_acsr_rules(1);
+							$acsrquery .= ' AND acsr_id = ' .$acsr_rule->acsr_id;
+							if($acsr_rule->frequency != '0' ) {
+							  $acsrquery .= ' AND (FIND_IN_SET('.$p_freq.',frequency))';
+						}
+						if($acsr_rule->carrier != 0 ) {
+						  $acsrquery .= " AND  (carrier = ".$feed->carrier_code. ")";
+						}
+								if($acsr_rule->flight_nbr_start != '0' AND $acsr_rule->flight_nbr_end != 0 ) {
+									 $acsrquery .= " AND  (flight_nbr_start <= ". $feed->flight_number. " and flight_nbr_end >= " . $feed->flight_number. ")";
+								}
+								if($acsr_rule->flight_dep_time_start != -1 AND $acsr_rule->flight_dep_time_end != -1 ) {
+									$acsrquery .= " AND (flight_dep_time_start <= ".$feed->dept_time." and flight_dep_time_end >= ".$feed->dept_time.")";
+								}
+								$acsr_match_result = $this->install_m->run_query($acsrquery);
+								$acsr_data = $acsr_match_result[0];
+								if(count($acsr_data) > 0 ) { // acsr rule matched for the appropriate case
+								  break;
+								}
+							} // forloop for acsr rules
+					}
+				if(($acsr_data->status == 'reject' && ($feed->bid_val/$passenger_cnt) < $acsr_data->min_bid_price) ) {			
+					$acsr_status = 'reject';
+				}
+			
+				if ( $acsr_status == 'reject' ) {
 
-			 // get list of acsr that are partially matching 
+							// send mail min bid value not met
+							// update pf entry status and VX_aln_offer_ref status as bid not accepted
+				//		echo "rejected ---<br>";
+													   $message = '
+				<html>
+				<body>
+				<div style="max-width: 800px; margin: 0; padding: 30px 0;">
+				<table width="80%" border="0" cellpadding="0" cellspacing="0">
+				<tr>
+		<td width="5%"></td>
+				<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
+		<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
+		 Your bid is rejected due to less bid price.<br />
+		<br />
+		<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
+		<br />
+		PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
-                        $acsr = array();
-                        $acsr['from_city'] = $feed->from_city;
-                        $acsr['to_city'] = $feed->to_city;
-                        $acsr['dep_date'] = $feed->dep_date;
-                        $acsr['from_cabin'] = $feed->cabin;
-                        $acsr['to_cabin'] = $feed->upgrade_type;
+		<br />
+		<br />
+		<br />
+		</td>
+		</tr>
+		</table>
 
-			$acsr_rules = $this->acsr_m->apply_acsr_rules(0,$acsr);	
-
-			if(count($acsr_rules) > 0)  {
-			foreach ($acsr_rules as $acsr_rule )  {
-				$acsrquery = $this->acsr_m->apply_acsr_rules(1);
-				$acsrquery .= ' AND acsr_id = ' .$acsr_rule->acsr_id;
-				if($acsr_rule->frequency != '0' ) {
-                                      $acsrquery .= ' AND (FIND_IN_SET('.$p_freq.',frequency))';
-                                }
-
-				if($acsr_rule->carrier != 0 ) {
-                                      $acsrquery .= " AND  (carrier = ".$feed->carrier_code. ")";
-                                 }
-				
-				 if($acsr_rule->flight_nbr_start != '0' AND $acsr_rule->flight_nbr_end != 0 ) {
-                                         $acsrquery .= " AND  (flight_nbr_start <= ". $feed->flight_number. " and flight_nbr_end >= " . $feed->flight_number. ")";
-
-                                  }
-
-				   if($acsr_rule->flight_dep_time_start != -1 AND $acsr_rule->flight_dep_time_end != -1 ) {
-
-                                                        $acsrquery .= " AND (flight_dep_time_start <= ".$feed->dept_time." and flight_dep_time_end >= ".$feed->dept_time.")";
-                                    }
-				$acsr_match_result = $this->install_m->run_query($acsrquery);
-				$acsr_data = $acsr_match_result[0];
-                                if(count($acsr_data) > 0 ) { // acsr rule matched for the appropriate case
-                                      break;
-                                }
-			} // forloop for acsr rules
-				
-			$this->data['siteinfos'] = $this->reset_m->get_site();
-		/*	echo "pnr ref: " . $passenger_data->pnr_ref;
-			echo "<br>";
-			echo "<br>status: " . $acsr_data->status ;
-			echo "<br>bidval: " . $feed->bid_val;
-			echo "<br>min bid price " . $acsr_data->min_bid_price;
-			echo "<br> cabincnt = " .$cabin_seats;
-			echo "<br>  passen cnt = " . $passenger_cnt;
-			echo "<br> memp = " .  $acsr_data->memp;	
-			echo "<br>";*/
-			//var_dump($acsr_data);	echo "<br>";exit;
-
-			if(($acsr_data->status == 'reject' && ($feed->bid_val/$passenger_cnt) < $acsr_data->min_bid_price) ) {			
-					// send mail min bid value not met
-					// update pf entry status and VX_aln_offer_ref status as bid not accepted
-		//		echo "rejected ---<br>";
-					                           $message = '
-        <html>
-        <body>
-        <div style="max-width: 800px; margin: 0; padding: 30px 0;">
-        <table width="80%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-<td width="5%"></td>
-        <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
- Your bid is rejected due to less bid price.<br />
-<br />
-<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-<br />
-PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
-
-<br />
-<br />
-<br />
-</td>
-</tr>
-</table>
-
-</div>
-</body>
-</html>
-';
+		</div>
+		</body>
+		</html>
+		';
 
 
-                        /*  $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                         //$this->email->from('testsweken321@gmail.com', 'ADMIN');
-                         $this->email->to($emails_list[0]);
-                         $this->email->subject("Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point);
-                        $this->email->message($message);
-                        $this->email->send(); */					
-						
-						 $rejectmail = array(
-							'first_name'   => $namelist[0],
-							'last_name' => '',
-							'tomail' => $emails_list[0],
-							'pnr_ref' => $passenger_data->pnr_ref,
-                            'airlineID' => $feed->carrier_code,							
-							'mail_subject' => "Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point		
-							); 
-                        $this->sendMailTemplateParser('bid_reject',$rejectmail);
-				 $array = array();
-                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
-                        $array["modify_date"] = time();
-                        $array["modify_userID"] = $this->session->userdata('loginuserID');
-			$p_list = explode(',',$passenger_data->p_list);
+								/*  $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+								 //$this->email->from('testsweken321@gmail.com', 'ADMIN');
+								 $this->email->to($emails_list[0]);
+								 $this->email->subject("Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point);
+								$this->email->message($message);
+								$this->email->send(); */					
+								
+								 $rejectmail = array(
+									'first_name'   => $namelist[0],
+									'last_name' => '',
+									'tomail' => $emails_list[0],
+									'pnr_ref' => $passenger_data->pnr_ref,
+									'airlineID' => $feed->carrier_code,							
+									'mail_subject' => "Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point		
+									); 
+								$this->sendMailTemplateParser('bid_reject',$rejectmail);
+						 $array = array();
+								$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
+								$array['booking_status'] = $offer_status;
+								$array["modify_date"] = time();
+								$array["modify_userID"] = $this->session->userdata('loginuserID');
+					$p_list = explode(',',$passenger_data->p_list);
 
-                        // update extension table with new status
+								// update extension table with new status
 
-                        $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+								$this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+								$array = array();
+								$array['offer_status'] = $offer_status;
+								$array['product_id'] = $feed->product_id;
+								$array["modify_date"] = time();
+								$array["modify_userID"] = $this->session->userdata('loginuserID');
+								$this->offer_reference_m->update_offer_ref($array,$feed->offer_id);
 
 
-			// update tracker about change in status
-                        $tracker = array();
-                                $tracker['booking_status_from'] = $passenger_data->booking_status;
-                                $tracker['booking_status_to'] = $array['booking_status'];
-                                $tracker['comment'] = 'Bid Rejected by ACSR';
-                                $tracker["create_date"] = time();
-                                $tracker["modify_date"] = time();
-                                $tracker["create_userID"] = $this->session->userdata('loginuserID');
-                                $tracker["modify_userID"] = $this->session->userdata('loginuserID');
-                        //      var_dump($p_list);exit;
 
-                                foreach($p_list as $id) {
-                                        $tracker['dtpfext_id'] = $id;
-                                        $this->offer_issue_m->insert_dtpf_tracker($tracker);
-                                }
+					// update tracker about change in status
+								$tracker = array();
+										$tracker['booking_status_from'] = $passenger_data->offer_status;
+										$tracker['booking_status_to'] = $array['booking_status'];
+										$tracker['comment'] = 'Bid Rejected by ACSR';
+										$tracker["create_date"] = time();
+										$tracker["modify_date"] = time();
+										$tracker["create_userID"] = $this->session->userdata('loginuserID');
+										$tracker["modify_userID"] = $this->session->userdata('loginuserID');
+								//      var_dump($p_list);exit;
+
+										foreach($p_list as $id) {
+												$tracker['dtpfext_id'] = $id;
+												$this->offer_issue_m->insert_dtpf_tracker($tracker);
+										}
 
 
 
 
-			} else {
-			/*
-				echo $acsr_data->status . "<br>";
-				echo $feed->bid_val . "<br>";
-				echo $acsr_data->min_bid_price . "<br>";exit;*/
-				if ( $acsr_data->status == 'accept' && ($feed->bid_val/$passenger_cnt) > $acsr_data->min_bid_price ) { 
+				} else { //Accept
+					  if (($cabin_seats - $passenger_cnt) < $acsr_data->memp) {
 
-				  if (($cabin_seats -  $passenger_cnt) < $acsr_data->memp) {
-					
-					                                                                  $message = '
-        <html>
-        <body>
-        <div style="max-width: 800px; margin: 0; padding: 30px 0;">
-        <table width="80%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-<td width="5%"></td>
-        <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
- Your bid is not processed due to non availability of seats.<br />
-<br />
-<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-<br />
-PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+							  $message = '
+								<html>
+								<body>
+								<div style="max-width: 800px; margin: 0; padding: 30px 0;">
+								<table width="80%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+						<td width="5%"></td>
+								<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
+						<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
+						 Your bid is not processed due to non availability of seats.<br />
+						<br />
+						<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
+						<br />
+						PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
-<br />
-<br />
-<br />
-</td>
-</tr>
-</table>
+						<br />
+						<br />
+						<br />
+						</td>
+						</tr>
+						</table>
 
-</div>
-</body>
-</html>
-';
+						</div>
+						</body>
+						</html>
+						';
 
 
-                         $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                         //$this->email->from('testsweken321@gmail.com', 'ADMIN');
-                         $this->email->to($emails_list[0]);
-                         $this->email->subject("Bid is rejected, No seats avaiable  From " .$feed->src_point.' To ' . $feed->dest_point);
-                        $this->email->message($message);
-                        $this->email->send();
+						$this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+						//$this->email->from('testsweken321@gmail.com', 'ADMIN');
+						$this->email->to($emails_list[0]);
+						$this->email->subject("Bid is rejected, No seats avaiable  From " .$feed->src_point.' To ' . $feed->dest_point);
+						$this->email->message($message);
+						$this->email->send();
 
-                                 $array = array();
-                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('no_seats','20');
-                        $array["modify_date"] = time();
-                        $array["modify_userID"] = $this->session->userdata('loginuserID');
-                        $p_list = explode(',',$passenger_data->p_list);
-
-
-				   // update extension table with new status
-
-                        $this->offer_eligibility_m->update_dtpfext($array,$p_list);
-
-			 // update tracker about change in status
-                        $tracker = array();
-                                $tracker['booking_status_from'] = $passenger_data->booking_status;
-                                $tracker['booking_status_to'] = $array['booking_status'];
-                                $tracker['comment'] = 'No Seats Avaiable updated by ACSR';
-                                $tracker["create_date"] = time();
-                                $tracker["modify_date"] = time();
-                                $tracker["create_userID"] = $this->session->userdata('loginuserID');
-                                $tracker["modify_userID"] = $this->session->userdata('loginuserID');
-                        //      var_dump($p_list);exit;
-
-                                foreach($p_list as $id) {
-                                        $tracker['dtpfext_id'] = $id;
-                                        $this->offer_issue_m->insert_dtpf_tracker($tracker);
-                                }
+						$array = array();
+						$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('no_seats','20');
+						$array['booking_status'] = $offer_status;
+						$array["modify_date"] = time();
+						$array["modify_userID"] = $this->session->userdata('loginuserID');
+						$p_list = explode(',',$passenger_data->p_list);
 
 
+						// update extension table with new status
 
+						$this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+						$array = array();
+						$array['offer_status'] = $offer_status;
+						$array['product_id'] = $feed->product_id;
+						$array["modify_date"] = time();
+						$array["modify_userID"] = $this->session->userdata('loginuserID');
+						$this->offer_reference_m->update_offer_ref($array,$feed->offer_id);
+
+						// update tracker about change in status
+						$tracker = array();
+						$tracker['booking_status_from'] = $passenger_data->offer_status;
+						$tracker['booking_status_to'] = $array['booking_status'];
+						$tracker['comment'] = 'No Seats Avaiable updated by ACSR';
+						$tracker["create_date"] = time();
+						$tracker["modify_date"] = time();
+						$tracker["create_userID"] = $this->session->userdata('loginuserID');
+						$tracker["modify_userID"] = $this->session->userdata('loginuserID');
+						//      var_dump($p_list);exit;
+
+						foreach($p_list as $id) {
+							$tracker['dtpfext_id'] = $id;
+							$this->offer_issue_m->insert_dtpf_tracker($tracker);
+						}
 
 				} else {
-		//	echo "accepetd";
+						//	echo "accepetd";
 
-				// check preference before accepting for cutoff time.
+						// check preference before accepting for cutoff time.
 
-			       $cabin_type = $this->airports_m->getDefDataForAirlineCabin($feed->cabin,'13',$feed->carrier_code);
-			       $cutoff_time = 0;
-				$cutoff_time  = $this->preference_m->get_preference_value_bycode('OFFER_ACPT_LEVEL'.$cabin_type->level,'24',$feed->carrier_code);
-					
-				$cutoff_time_in_secs = $cutoff_time * 3600 ;
+						$cabin_type = $this->airports_m->getDefDataForAirlineCabin($feed->cabin,'13',$feed->carrier_code);
+						$cutoff_time = 0;
+						$cutoff_time  = $this->preference_m->get_preference_value_bycode('OFFER_ACPT_LEVEL'.$cabin_type->level,'24',$feed->carrier_code);
 
-				if( ($feed->dep_date - $current_time ) > $cutoff_time_in_secs ) {	
-				//update sold seats or allocated seats in inv feed
-					$update['sold_seats'] = $seats_data->sold_seats + $passenger_cnt;
-					$update['modify_date'] = time();
-                                        $update['modify_userID'] = $this->session->userdata('loginuserID');
+						$cutoff_time_in_secs = $cutoff_time * 3600 ;
 
-					$this->invfeed_m->update_entries($update,$inv);
-				
-					// accept bid
-					                                                         $message = '
-        <html>
-        <body>
-        <div style="max-width: 800px; margin: 0; padding: 30px 0;">
-        <table width="80%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-<td width="5%"></td>
-        <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
- Your bid is accepted.<br />
-<br />
-<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-<br />
-PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+						if( ($feed->dep_date - $current_time ) > $cutoff_time_in_secs ) {	
+						//update sold seats or allocated seats in inv feed
+											$update['sold_seats'] = $seats_data->sold_seats + $passenger_cnt;
+											$update['modify_date'] = time();
+																$update['modify_userID'] = $this->session->userdata('loginuserID');
 
-<br />
-<br />
-<br />
-</td>
-</tr>
-</table>
+											$this->invfeed_m->update_entries($update,$inv);
+										
+											// accept bid
+						 $message = '
+								<html>
+								<body>
+								<div style="max-width: 800px; margin: 0; padding: 30px 0;">
+								<table width="80%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+						<td width="5%"></td>
+								<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
+						<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
+						 Your bid is accepted.<br />
+						<br />
+						<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
+						<br />
+						PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
-</div>
-</body>
-</html>
-';
+						<br />
+						<br />
+						<br />
+		</td>
+		</tr>
+		</table>
 
-/*
-                          $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                        //$this->email->from('testsweken321@gmail.com', 'ADMIN');
-                         $this->email->to($emails_list[0]);
-                         $this->email->subject("Bid is accepted From " .$feed->src_point.'To ' . $feed->dest_point);
-                        $this->email->message($message);
-                        $this->email->send(); /*
-						  $cabin_name = $this->airports_m->get_definition_data($feed->upgrade_type)->aln_data_value;
-                        $this->email->send(); */ 
-						 
-						 $card_data = $this->bid_m->getCardData($feed->offer_id);
-						 $card_number = substr(trim($card_data->card_number), -4);
-						 $e_data = array(
-							'first_name'   => $namelist[0],
-							'last_name' => '',
-							'tomail' => $emails_list[0],
-							'pnr_ref' => $passenger_data->pnr_ref,						
-							'mail_subject' => "Bid is accepted From " .$feed->src_point." To " . $feed->dest_point,
-							'card_number' => $card_number,
-							'cash_paid' => number_format($feed->cash),
-							'miles_used' => number_format($feed->miles),
-							'flight_no' => $feed->carrier_name.$feed->flight_number,
-							'dep_date' => date('d-m-Y',$feed->dep_date),
-							'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
-							'origin' => $feed->src_point,
-							'destination' => $feed->dest_point, 
-							'upgrade_to' => $feed->upgrade_cabin,
-							'airlineID' => $feed->carrier_code,
-							'carrier_name' => $feed->car_name,
-							'bid_value' => $feed->bid_val,
-                            'feedback_link' => base_url('home/feedback?pnr_ref='.$passenger_data->pnr_ref) 							
-						 ); 			 
-					  //$this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);
-                      $this->sendMailTemplateParser('bid_accepted',$e_data);					  
+		</div>
+		</body>
+		</html>
+		';
 
-			 $array = array();
-                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
-                        $array["modify_date"] = time();
-                        $array["modify_userID"] = $this->session->userdata('loginuserID');
+				 $card_data = $this->bid_m->getCardData($feed->offer_id);
+				 $card_number = substr(trim($card_data->card_number), -4);
+				 $e_data = array(
+					'first_name'   => $namelist[0],
+					'last_name' => '',
+					'tomail' => $emails_list[0],
+					'pnr_ref' => $passenger_data->pnr_ref,						
+					'mail_subject' => "Bid is accepted From " .$feed->src_point." To " . $feed->dest_point,
+					'card_number' => $card_number,
+					'cash_paid' => number_format($feed->cash),
+					'miles_used' => number_format($feed->miles),
+					'flight_no' => $feed->carrier_name.$feed->flight_number,
+					'dep_date' => date('d-m-Y',$feed->dep_date),
+					'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
+					'origin' => $feed->src_point,
+					'destination' => $feed->dest_point, 
+					'upgrade_to' => $feed->upgrade_cabin,
+					'airlineID' => $feed->carrier_code,
+					'carrier_name' => $feed->car_name,
+					'bid_value' => $feed->bid_val,
+					'feedback_link' => base_url('home/feedback?pnr_ref='.$passenger_data->pnr_ref) 							
+				 ); 			 
+			  //$this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);
+			  	$this->sendMailTemplateParser('bid_accepted',$e_data);					  
+
+	 			$array = array();
+				$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
+				$array['booking_status'] = $offer_status;
+				$array["modify_date"] = time();
+				$array["modify_userID"] = $this->session->userdata('loginuserID');
 
 
-                        // update extension table with new status
-			$p_list = explode(',',$passenger_data->p_list);
-                        $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+				// update extension table with new status
+				$p_list = explode(',',$passenger_data->p_list);
+				$this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+				$array = array();
+				$array['offer_status'] = $offer_status;
+				$array['product_id'] = $feed->product_id;
+				$array["modify_date"] = time();
+				$array["modify_userID"] = $this->session->userdata('loginuserID');
+				$this->offer_reference_m->update_offer_ref($array,$feed->offer_id);
 
 
-			 // update tracker about change in status
-                        $tracker = array();
-                                $tracker['booking_status_from'] = $passenger_data->booking_status;
-                                $tracker['booking_status_to'] = $array['booking_status'];
-                                $tracker['comment'] = 'Bid is Accepted updated by Acsr';
-                                $tracker["create_date"] = time();
-                                $tracker["modify_date"] = time();
-                                $tracker["create_userID"] = $this->session->userdata('loginuserID');
-                                $tracker["modify_userID"] = $this->session->userdata('loginuserID');
-                        //      var_dump($p_list);exit;
+	 // update tracker about change in status
+				$tracker = array();
+				$tracker['booking_status_from'] = $passenger_data->offer_status;
+				$tracker['booking_status_to'] = $array['booking_status'];
+				$tracker['comment'] = 'Bid is Accepted updated by Acsr';
+				$tracker["create_date"] = time();
+				$tracker["modify_date"] = time();
+				$tracker["create_userID"] = $this->session->userdata('loginuserID');
+				$tracker["modify_userID"] = $this->session->userdata('loginuserID');
+		//      var_dump($p_list);exit;
 
-                                foreach($p_list as $id) {
-                                        $tracker['dtpfext_id'] = $id;
-                                        $this->offer_issue_m->insert_dtpf_tracker($tracker);
-                                }
-
-
-
-
-	          } else {
-
-
-                                                                                        $message = '
-        <html>
-        <body>
-        <div style="max-width: 800px; margin: 0; padding: 30px 0;">
-        <table width="80%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-<td width="5%"></td>
-        <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
- Your bid offer is expired.<br />
-<br />
-<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-<br />
-PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
-
-<br />
-<br />
-<br />
-</td>
-</tr>
-</table>
-
-</div>
-</body>
-</html>
-';
-
-
-
-		                         $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-                         //$this->email->from('testsweken321@gmail.com', 'ADMIN');
-                         $this->email->to($emails_list[0]);
-                         $this->email->subject("Bid Offer is expired  From " .$feed->src_point.'To ' . $feed->dest_point);
-                        $this->email->message($message);
-                        $this->email->send();
-
-                         $array = array();
-                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('offer_expire','20');
-                        $array["modify_date"] = time();
-                        $array["modify_userID"] = $this->session->userdata('loginuserID');
-
-
-                        // update extension table with new status
-                        $p_list = explode(',',$passenger_data->p_list);
-                        $this->offer_eligibility_m->update_dtpfext($array,$p_list);
-
-			 // update tracker about change in status
-                        $tracker = array();
-                                $tracker['booking_status_from'] = $passenger_data->booking_status;
-                                $tracker['booking_status_to'] = $array['booking_status'];
-                                $tracker['comment'] = 'Offer Date expired updated by ACSR';
-                                $tracker["create_date"] = time();
-                                $tracker["modify_date"] = time();
-                                $tracker["create_userID"] = $this->session->userdata('loginuserID');
-                                $tracker["modify_userID"] = $this->session->userdata('loginuserID');
-                        //      var_dump($p_list);exit;
-
-                                foreach($p_list as $id) {
-                                        $tracker['dtpfext_id'] = $id;
-                                        $this->offer_issue_m->insert_dtpf_tracker($tracker);
-                                }
-
-
-
-
-
-
-		  }
-
-		}
-
-			}
+				foreach($p_list as $id) {
+					$tracker['dtpfext_id'] = $id;
+					$this->offer_issue_m->insert_dtpf_tracker($tracker);
 				}
-		} // have partial acsr rules 
 
-		} else {
-
-			//exclude
-			$array = array();
-                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-                        $array["modify_date"] = time();
-                        $array["modify_userID"] = $this->session->userdata('loginuserID');
+		  				} else {
 
 
-                        // update extension table with new status
-                        $p_list = explode(',',$passenger_data->p_list);
-                        $this->offer_eligibility_m->update_dtpfext($array,$p_list);
+							 $message = '
+								<html>
+								<body>
+								<div style="max-width: 800px; margin: 0; padding: 30px 0;">
+								<table width="80%" border="0" cellpadding="0" cellspacing="0">
+								<tr>
+								<td width="5%"></td>
+								<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
+								<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
+								Your bid offer is expired.<br />
+								<br />
+								<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
+								<br />
+								PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 
-			 // update tracker about change in status
-                        $tracker = array();
-                                $tracker['booking_status_from'] = $passenger_data->booking_status;
-                                $tracker['booking_status_to'] = $array['booking_status'];
-                                $tracker['comment'] = 'Excluded updated by ACSR';
-                                $tracker["create_date"] = time();
-                                $tracker["modify_date"] = time();
-                                $tracker["create_userID"] = $this->session->userdata('loginuserID');
-                                $tracker["modify_userID"] = $this->session->userdata('loginuserID');
-                        //      var_dump($p_list);exit;
+								<br />
+								<br />
+								<br />
+								</td>
+								</tr>
+								</table>
 
-                                foreach($p_list as $id) {
-                                        $tracker['dtpfext_id'] = $id;
-                                        $this->offer_issue_m->insert_dtpf_tracker($tracker);
-                                }
+								</div>
+								</body>
+								</html>
+								';
+
+								$this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
+								//$this->email->from('testsweken321@gmail.com', 'ADMIN');
+								$this->email->to($emails_list[0]);
+								$this->email->subject("Bid Offer is expired  From " .$feed->src_point.'To ' . $feed->dest_point);
+								$this->email->message($message);
+								$this->email->send();
+
+								$array = array();
+								$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('offer_expire','20');
+								$array['booking_status'] = $offer_status;
+								$array["modify_date"] = time();
+								$array["modify_userID"] = $this->session->userdata('loginuserID');
 
 
+								// update extension table with new status
+								$p_list = explode(',',$passenger_data->p_list);
+								$this->offer_eligibility_m->update_dtpfext($array,$p_list);
+
+								$array = array();
+								$array['offer_status'] = $offer_status;
+								$array['product_id'] = $feed->product_id;
+								$array["modify_date"] = time();
+								$array["modify_userID"] = $this->session->userdata('loginuserID');
+								$this->offer_reference_m->update_offer_ref($array,$feed->offer_id);
+
+								// update tracker about change in status
+								$tracker = array();
+								$tracker['booking_status_from'] = $passenger_data->offer_status;
+								$tracker['booking_status_to'] = $array['booking_status'];
+								$tracker['comment'] = 'Offer Date expired updated by ACSR';
+								$tracker["create_date"] = time();
+								$tracker["modify_date"] = time();
+								$tracker["create_userID"] = $this->session->userdata('loginuserID');
+								$tracker["modify_userID"] = $this->session->userdata('loginuserID');
+								//      var_dump($p_list);exit;
+
+								foreach($p_list as $id) {
+									$tracker['dtpfext_id'] = $id;
+									$this->offer_issue_m->insert_dtpf_tracker($tracker);
+								}
+						}
+
+					}
+
+				} // have partial acsr rules 
+			} else {
+				//exclude
+				$array = array();
+				$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
+				$array['booking_status'] = $offer_status;
+				$array["modify_date"] = time();
+				$array["modify_userID"] = $this->session->userdata('loginuserID');
 
 
-				
-		}
+				// update extension table with new status
+				$p_list = explode(',',$passenger_data->p_list);
+				$this->offer_eligibility_m->update_dtpfext($array,$p_list);
 
+				$array = array();
+				$array['offer_status'] = $offer_status;
+				$array['product_id'] = $feed->product_id;
+				$array["modify_date"] = time();
+				$array["modify_userID"] = $this->session->userdata('loginuserID');
+				$this->offer_reference_m->update_offer_ref($array,$feed->offer_id);
 
+				// update tracker about change in status
+				$tracker = array();
+				$tracker['booking_status_from'] = $passenger_data->offer_status;
+				$tracker['booking_status_to'] = $array['booking_status'];
+				$tracker['comment'] = 'Excluded updated by ACSR';
+				$tracker["create_date"] = time();
+				$tracker["modify_date"] = time();
+				$tracker["create_userID"] = $this->session->userdata('loginuserID');
+				$tracker["modify_userID"] = $this->session->userdata('loginuserID');
+				//      var_dump($p_list);exit;
+
+				foreach($p_list as $id) {
+					$tracker['dtpfext_id'] = $id;
+					$this->offer_issue_m->insert_dtpf_tracker($tracker);
+				}
 
 				}
-		
-
 			}
-			
+		}
 		redirect(base_url("offer_table/index"));
-
-
 	}
 
-    public function upgradeOfferMail($maildata){
-		$pnr_ref = $maildata['pnr_ref'];
-                $offer = $this->bid_m->getPassengers($pnr_ref);
-		if (!$offer[0]->carrier_code) {
-		echo "carrier missing for $pnr_ref";
-		 return;
-		}
+	public function upgradeOfferMail($maildata){
+			$pnr_ref = $maildata['pnr_ref'];
+			$offer = $this->bid_m->getPassengers($pnr_ref);
+			if (!$offer[0]->carrier_code) {
+			echo "carrier missing for $pnr_ref";
+			return;
+			}
 
-		$prodlist = explode(',',$offer[0]->products);
-		$email_list = explode(',',$offer[0]->email_list);
-		
-		$baggage_offer = 0;
-		$upgrade_offer = 0;
-		$exclude = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-          	$cabins  = $this->airline_cabin_m->getAirlineCabins();
-		foreach ($prodlist as $prodId) {
-			switch ($prodId) {
-				case 1:
-					$upgrade_offer = 1;
-					$results = $this->bid_m->getUpgradeOffers($pnr_ref);
-					if(count($results)>0){
-						foreach($results as $result){
-						  $result->to_cabins = explode(',',$result->to_cabins);
-						  $dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
-						  $arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
-						  $dteStart = new DateTime($dept); 
-						  $dteEnd   = new DateTime($arrival); 
-						  $dteDiff  = $dteStart->diff($dteEnd);
-						  $result->time_diff = $dteDiff->format('%H hrs %i Min');
-						  $cdata = array();
+			$prodlist = explode(',',$offer[0]->products);
+			$email_list = explode(',',$offer[0]->email_list);
+
+			$baggage_offer = 0;
+			$upgrade_offer = 0;
+			$exclude = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
+	$cabins  = $this->airline_cabin_m->getAirlineCabins();
+	foreach ($prodlist as $prodId) {
+		switch ($prodId) {
+			case 1:
+				$upgrade_offer = 1;
+				$results = $this->bid_m->getUpgradeOffers($pnr_ref);
+				if(count($results)>0){
+					foreach($results as $result){
+					  $result->to_cabins = explode(',',$result->to_cabins);
+					  $dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
+					  $arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
+					  $dteStart = new DateTime($dept); 
+					  $dteEnd   = new DateTime($arrival); 
+					  $dteDiff  = $dteStart->diff($dteEnd);
+					  $result->time_diff = $dteDiff->format('%H hrs %i Min');
+					  $cdata = array();
 						  foreach($result->to_cabins as $value){
 								$cdata = explode('-',$value);              		
 								if($cdata[2] != $exclude){

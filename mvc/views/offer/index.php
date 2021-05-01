@@ -199,7 +199,7 @@ $("#dep_from_date").datepicker({
                    {"data": "dest_point" },
                    {"data": "departure_date" },                 
                    {"data": "flight_number" },
-                   {"data": "booking_status" },
+                   {"data": "offer_status" },
 		           {"data": "bid_info" },
 		           {"data": "action" }
 

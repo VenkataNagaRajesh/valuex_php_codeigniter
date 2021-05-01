@@ -1034,7 +1034,7 @@ if(!empty($data_id_array)) {
                         $data = array();
                         if($upgrade['season_id'] > 0) {
 				if ( $paxfeed_id) {
-					echo "<br>CHECKING WITH SEASON ID = " .  $paxfeed_id;
+					echo "<br>CHECKING WITH SEASON ID FOR PAX = " .  $paxfeed_id;
 				}
                                 $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
                         }
@@ -1051,9 +1051,9 @@ if(!empty($data_id_array)) {
                                 $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
 				if ( $paxfeed_id ) {
 					if (  $data) {
-						echo "<br>MATCHED CABIN DATA WITH FREQUENCY = " . print_r($data,1);
+						echo "<br>MATCHED  DATA WITH FREQUENCY $p_freq = " . print_r($data,1);
 					} else {
-						echo "<br>CABIN DATA NOT MATCHED WITH FREQUENCY";
+						echo "<br>DATA NOT MATCHED WITH FREQUENCY - $p_freq";
 					}
 				}
 

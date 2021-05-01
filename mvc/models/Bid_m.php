@@ -174,7 +174,7 @@ class bid_m extends MY_Model {
         $id = $bid_data->bid_id;		
 	  }
 
-//		echo $this->db->last_query();
+	//echo $this->db->last_query();exit;
 	  return $id;
   } 
   

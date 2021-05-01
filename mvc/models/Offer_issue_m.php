@@ -35,7 +35,7 @@ class Offer_issue_m extends MY_Model {
 
 	function getPassengerData($offerid,$flight_number) {
 
-		$this->db->select("group_concat(distinct dep_date) as dep_date,pext.booking_status,oref.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(first_name , ' ' , last_name)  as passengers, group_concat(distinct pax_contact_email)  as emails, group_concat(distinct pext.dtpfext_id) as p_list, carrier_code, from_city, to_city, group_concat(distinct dept_time) as dept_time, car.code as carrier_c, fc.code as from_city_name, tc.code as to_city_name,car.aln_data_value carrier_name")->from('VX_daily_tkt_pax_feed pf');
+		$this->db->select("oref.offer_status, group_concat(distinct dep_date) as dep_date,pext.booking_status,oref.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(first_name , ' ' , last_name)  as passengers, group_concat(distinct pax_contact_email)  as emails, group_concat(distinct pext.dtpfext_id) as p_list, carrier_code, from_city, to_city, group_concat(distinct dept_time) as dept_time, car.code as carrier_c, fc.code as from_city_name, tc.code as to_city_name,car.aln_data_value carrier_name")->from('VX_daily_tkt_pax_feed pf');
 		$this->db->join('VX_offer oref', 'oref.pnr_ref =  pf.pnr_ref', 'LEFT');
 		$this->db->join('VX_offer_info pext', 'pext.dtpf_id =  pf.dtpf_id', 'LEFT');
 		$this->db->join(' VX_data_defns dd', 'dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20', 'LEFT');
@@ -54,13 +54,15 @@ class Offer_issue_m extends MY_Model {
 		return $passgr;
 	}
 	
-	function getPassengerDataByStatus($offerid,$flight_number = null,$status,$fclr_id = null,$fclr_true = 0) {
+	function getPassengerDataByStatus($offerid,$flight_number = null,$status,$fclr_id = null,$fclr_true = 0, $product_id = 0) {
 		$this->db->select("oref.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name)  as passengers, group_concat(distinct pax_contact_email)  as emails, group_concat(distinct pext.dtpfext_id) as p_list")->from('VX_daily_tkt_pax_feed pf');
 		$this->db->join('VX_offer oref', 'oref.pnr_ref =  pf.pnr_ref', 'LEFT');
 		$this->db->join('VX_offer_info pext', 'pext.dtpf_id =  pf.dtpf_id', 'LEFT');
 		$this->db->join('VX_data_defns dd', 'dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20', 'LEFT');
 		$this->db->where('offer_id',$offerid); 
 		$this->db->where('dd.alias',$status);
+		$this->db->where('pext.active',1);
+		$this->db->where('pext.product_id',$product_id);
 		if($fclr_id != null){
 			if($fclr_true){
 			  $this->db->where('pext.rule_id',$fclr_id);
@@ -74,6 +76,7 @@ class Offer_issue_m extends MY_Model {
 		$this->db->group_by('pf.pnr_ref' , 'booking_status');
 		$query = $this->db->get();
 		//$this->mydebug->debug($this->db->last_query());
+		//echo $this->db->last_query();exit;
         $passgr = $query->row();		
 		return $passgr;
 	}
@@ -164,8 +167,8 @@ FROM (
 				LEFT JOIN VX_products prq on (pe.product_id = prq.productID) 
 				LEFT JOIN VX_offer oref on (bid.offer_id = oref.offer_id) 
 				LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and pf.dtpf_id = pe.dtpf_id )
-LEFT JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = bid.upgrade_type AND tcab.aln_data_typeID = 13 )
-LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code AND  tcab.alias = tdef.level ) 
+				LEFT JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = bid.upgrade_type AND tcab.aln_data_typeID = 13 )
+				LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code AND  tcab.alias = tdef.level ) 
 				LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
 				  ".$mainsetWhere."
 ) as MainSet 
@@ -185,8 +188,8 @@ fc.aln_data_value as from_city_name, tc.aln_data_value as to_city_name,
 				LEFT JOIN VX_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
 				LEFT JOIN VX_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
 				LEFT JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = pf1.ptc AND ptc.aln_data_typeID = 18)
-LEFT JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf1.carrier_code)
-				LEFT JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 and cab.alias = fdef.level)
+				LEFT JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13)
+				LEFT JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf1.carrier_code AND  cab.alias = fdef.level ) 
 				LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12) 
 				group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
 ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.dtpf_id = SubSet.dtpf_id) where MainSet.offer_id='$id'

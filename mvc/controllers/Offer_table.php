@@ -270,7 +270,7 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 					}	
 
                          $array = array();
-                        $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
+                        $array['offer_status'] = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
                         $array["modify_date"] = time();
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
 
@@ -281,8 +281,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 	
 			 // update tracker about change in status
                         $tracker = array();
-                                $tracker['booking_status_from'] = $passenger_data->booking_status;
-                                $tracker['booking_status_to'] = $array['booking_status'];
+                                $tracker['booking_status_from'] = $passenger_data->offer_status;
+                                $tracker['booking_status_to'] = $array['offer_status'];
                                 $tracker['comment'] = $comment;
                                 $tracker["create_date"] = time();
                                 $tracker["modify_date"] = time();
@@ -422,7 +422,7 @@ function processbid1() {
                                                 }	
         
                                  $array = array();
-                                $array['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
+                                $array['offer_status'] = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
                                 $array["modify_date"] = time();
                                 $array["modify_userID"] = $this->session->userdata('loginuserID');
         
@@ -433,8 +433,8 @@ function processbid1() {
                 
                                  // update tracker about change in status
                                 $tracker = array();
-                                        $tracker['booking_status_from'] = $passenger_data->booking_status;
-                                        $tracker['booking_status_to'] = $array['booking_status'];
+                                        $tracker['booking_status_from'] = $passenger_data->offer_status;
+                                        $tracker['booking_status_to'] = $array['offer_status'];
                                         $tracker['comment'] = $comment;
                                         $tracker["create_date"] = time();
                                         $tracker["modify_date"] = time();
@@ -572,7 +572,7 @@ function processbid1() {
 
                         if(!empty($this->input->get('offer_status'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'MainSet.booking_status = '.  $this->input->get('offer_status');
+                                $sWhere .= 'MainSet.offer_status = '.  $this->input->get('offer_status');
                         }
 
 
@@ -632,15 +632,15 @@ $sQuery = " select  SQL_CALC_FOUND_ROWS
                         MainSet.offer_id, MainSet.dtpf_id,  MainSet.upgrade_type,MainSet.offer_date, MainSet.name,MainSet.flight_date , SubSet.carrier , MainSet.flight_number , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, MainSet.from_cabin,
                         MainSet.to_cabin, MainSet.bid_value  , SubSet.fqtv, MainSet.cash, MainSet.miles, MainSet.offer_status,
-			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code, MainSet.product_id, MainSet.bid_id
+			SubSet.from_cabin_id, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.offer_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code, MainSet.product_id, MainSet.bid_id
 
                 FROM ( 
                                 select bid.bid_id, pf.dtpf_id,  oref.offer_id,oref.create_date as offer_date , prq.name as name,bid_value, bid_avg,bid_markup_val,
-                                tcab.code as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, pe.product_id, pf.dep_date as flight_date, bid.productID, fcab.code as from_cabin
+                                tdef.cabin as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, pe.product_id, pf.dep_date as flight_date, bid.productID, fdef.cabin as from_cabin
                                 from  
                                         UP_bid bid 
                                         
-                                        INNER JOIN VX_offer_info pe on (bid.dtpfext_id = pe.dtpfext_id)
+                                        INNER JOIN VX_offer_info pe on (bid.dtpfext_id = pe.dtpfext_id and pe.active = 1)
                                         INNER JOIN VX_products prq on (pe.product_id = prq.productID) 
                                         INNER JOIN VX_offer oref on (bid.offer_id = oref.offer_id) ";
 if ( $product_id ==  1 ) {
@@ -650,10 +650,11 @@ $sQuery .= " INNER JOIN UP_fare_control_range fclr on (pe.rule_id = fclr.fclr_id
 }
 	$sQuery .= "
                                         INNER JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and pf.dtpf_id = pe.dtpf_id )
-					LEFT JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = bid.upgrade_type AND tcab.aln_data_typeID = 13 AND pe.product_id = 1 )
 					INNER JOIN VX_data_defns fcab on (fcab.vx_aln_data_defnsID = pf.cabin AND fcab.aln_data_typeID = 13 )
+					LEFT JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf.carrier_code AND  fcab.alias = fdef.level AND  pe.product_id = 1  ) 
+					LEFT JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = bid.upgrade_type AND tcab.aln_data_typeID = 13 AND pe.product_id = 1 )
 					LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code AND  tcab.alias = tdef.level AND  pe.product_id = 1  ) 
-                                        INNER JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
+                                        LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
                                           ".$mainsetWhere."
                      ) as MainSet 
 

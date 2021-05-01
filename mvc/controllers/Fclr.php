@@ -842,6 +842,7 @@ class Fclr extends Admin_Controller
         {
 		$errors = 0;
 
+			$airlines = $this->airline_m->get_airlines();
                 $param = htmlentities(escapeString($this->uri->segment(3)));
                 $carrier_id = $this->input->get('carrier_id');
 		//$carrier_id = 5418;
@@ -857,23 +858,22 @@ class Fclr extends Admin_Controller
                 }
 
 		$carriers = Array();
-		if ($carrier_id) {
-			$carriers[] = $carrier_id;
+		if ( $carrier_id) {
+			$contracts = $this->contract_m->getActiveContracts($carrier_id);
 		} else {
-
 			$contracts = $this->contract_m->getActiveContracts();
-			foreach($contracts as $contract) {
-				$product = $contract->productID;
-				switch ($product) {
-				case 1:
-					$carriers[] = $contract->airlineID;
-				break;
-				}
+		}
+		foreach($contracts as $contract) {
+			$product = $contract->productID;
+			switch ($product) {
+			case 1:
+				$carriers[$contract->airlineID] = $contract->code;
+			break;
 			}
 		}
 
 
-		foreach($carriers as $carrier_id) {
+		foreach($carriers as $carrier_id => $airline_code) {
                	$where = $where_date . " AND rf.carrier = " . $carrier_id;
 
                 $list = $this->airline_cabin_def_m->getDummyCabinsList($carrier_id);
@@ -913,10 +913,10 @@ class Fclr extends Admin_Controller
                         $rResult = $this->install_m->run_query($sQuery);
                         $rResult1 = array_merge($rResult1, $rResult);
 			if ( !$rResult) {
-				$msg .= "<br>No matching records FROM RA FEED for NO SEASON carrer ID : $carrier_id, for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1]  ;
+				$msg .= "<br>No matching records FROM RA FEED for NO SEASON carrer ID : $carrier_id,($airline_code) for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1]  ;
 				$errors = 1;
 			} else {
-				$msg .= "<br>FOUND matching records FROM RA FEED for NO SEASON carrer ID : $carrier_id, for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1]  ;
+				$msg .= "<br>FOUND matching records FROM RA FEED for NO SEASON carrer ID : $carrier_id,($airline_code) for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1]  ;
 			}
 #echo "<br><br>$sQuery";
                 }
@@ -934,10 +934,10 @@ class Fclr extends Admin_Controller
                         $rResult = $this->install_m->run_query($sQuery);
                         $rResult2 = array_merge($rResult, $rResult2);
 			if ( !$rResult) {
-				$msg .= "<br>No matching records FROM RA FEED for MATCING SEASON carrer ID : $carrier_id, for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1];
+				$msg .= "<br>No matching records FROM RA FEED for MATCING SEASON carrer ID : $carrier_id, ($airline_code) for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1];
 				$errors = 1;
 			} else {
-				$msg .= "<br>Found matching records FROM RA FEED for MATCING SEASON carrer ID : $carrier_id, for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1];
+				$msg .= "<br>Found matching records FROM RA FEED for MATCING SEASON carrer ID : $carrier_id, ($airline_code) for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1];
 			}
 #echo "<br><br>$sQuery";
                 }
@@ -979,14 +979,14 @@ class Fclr extends Admin_Controller
 			}
 		} else {
 			$errors = 1;
-			$msg .= "<br>Sorry, Could not find matching records to generate FCLR for carrer ID : $carrier_id";
+			$msg .= "<br>Sorry, Could not find matching records to generate FCLR for carrer ID : $carrier_id" .  " ($airline_code)";
 		}
 		}
 
 		$this->mydebug->debug_log('fclr',$msg);
 		$msg = "FCLR generated successfully!";
 		if ( $errors) {
-			$msg .= ", But hsa some errors. Please check FCLR log for more info";
+			$msg .= ", But hsa some errors. Please check FCLR log for more info. Note: FCLR will be genereated based on matched parameters like Boarding point, Off point, Depature day, across cabins for same flight number for pre defined  seasons..  ";
 		}
                	$this->session->set_flashdata('success', $msg);
                redirect(base_url("fclr/index"));

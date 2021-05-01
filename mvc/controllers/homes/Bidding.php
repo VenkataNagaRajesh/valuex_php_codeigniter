@@ -324,10 +324,9 @@ class Bidding extends MY_Controller {
 
 	public function saveBidData(){				
 		if($this->input->post('offer_id')){ 		
-		  if($this->input->post('bid_action') == 0){
             if($this->input->post('type') == 'resubmit'){
                $this->saveBiddingHistory($this->input->post('offer_id'));
-			}          
+	    }          
 			
 			$data = Array();
 			$product_id = $this->input->post("product_id");
@@ -382,13 +381,13 @@ class Bidding extends MY_Controller {
 				 $unselect_passengers_data->p_list .= (!empty($unselect_passengers_data2->p_list))?','.$unselect_passengers_data2->p_list:''; 
 				// print_r('UNSelect Passengers Data '.$select_passengers_data->p_list); exit;
               } else {
-			     $select_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),1);
-			     $unselect_passengers_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"));
-			  }
+			     $select_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),1,$product_id);
+			     $unselect_passengers_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),0,$product_id);
+	  }
 			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
 			  $unselect_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_unselect_cabin','20');
 			   $array['booking_status'] = $select_status;
-               $array["modify_date"] = time(); 
+          		     $array["modify_date"] = time(); 
 			   
 			   $select_p_list = explode(',',$select_passengers_data->p_list);
 			   $unselect_p_list = explode(',',$unselect_passengers_data->p_list);
@@ -476,7 +475,6 @@ class Bidding extends MY_Controller {
     	    } else {
 			    $json['status'] = "Unable to save bid!";
 			}	
-		  } else {
              if($this->input->post('type') == 'resubmit'){
                  $extention_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_received');
                  $extention_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_unselect_cabin');
@@ -490,7 +488,6 @@ class Bidding extends MY_Controller {
 			 // $this->mydebug->debug($extention_data->p_list);		 
               $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $no_bid_Status,"modify_date"=>time()),$p_list);
 			  $json['status'] = "success";
-		  }		  
 		}else{
 			$json['status'] = "send offer_id";
 		}
@@ -611,6 +608,7 @@ class Bidding extends MY_Controller {
 			   $ref['miles'] = $this->input->post("miles");
 			   $tot_bid = $this->input->post("tot_bid");
 			   $ref['offer_status'] = $select_status;
+			   $ref['product_id'] = $this->input->post("product_id");
 			   $ref["modify_date"] = time();
 			   if($tot_bid != 0){
 			    $ref["cash_percentage"] = round((($ref['cash']/ $tot_bid)*100),2);
