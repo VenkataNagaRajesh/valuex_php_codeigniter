@@ -396,7 +396,14 @@ class Bidding extends MY_Controller {
 			   $this->mydebug->debug($unselect_passengers_data->p_list); */
 			   
              $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $select_status,"modify_date"=>time()),$select_p_list);
-		     $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);
+	     $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);
+
+						$array = array();
+						$array['offer_status'] = $select_status;
+						$array['product_id'] = $product_id;
+						$array["modify_date"] = time();
+						$array["modify_userID"] = $this->session->userdata('loginuserID');
+						$this->offer_reference_m->update_offer_ref($array,$this->input->post('offer_id'));
               
                // updating bid status tracker
               if($this->input->post('type') == 'resubmit'){
@@ -487,6 +494,12 @@ class Bidding extends MY_Controller {
 			  $p_list = explode(',',$extention_data->p_list);
 			 // $this->mydebug->debug($extention_data->p_list);		 
               $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $no_bid_Status,"modify_date"=>time()),$p_list);
+						$array = array();
+						$array['offer_status'] = $no_bid_Status;
+						$array['product_id'] = $product_id;
+						$array["modify_date"] = time();
+						$array["modify_userID"] = $this->session->userdata('loginuserID');
+						$this->offer_reference_m->update_offer_ref($array,$this->input->post('offer_id'));
 			  $json['status'] = "success";
 		}else{
 			$json['status'] = "send offer_id";
