@@ -150,6 +150,7 @@ public function getBidInfoFromOfferID($offer_id, $flight_number,$carrier_code) {
 }
 public function getOfferDetailsById($id) {
 //$sGroup = ' group by MainSet.flight_number';
+$mainsetWhere = "WHERE bid.active =1 ";
 $query = " select  SQL_CALC_FOUND_ROWS  
 MainSet.offer_id, MainSet.dtpf_id,  MainSet.upgrade_type,MainSet.offer_date, MainSet.name,MainSet.flight_date , SubSet.carrier , MainSet.flight_number , 
 SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,

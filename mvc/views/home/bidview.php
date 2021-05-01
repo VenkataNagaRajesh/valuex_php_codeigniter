@@ -477,7 +477,7 @@ var cwtpoints<?=$ond?> = [];
 		if ( isset($resubmit) && isset($last_bid_total_value)) {
 			
 ?>
-			<input type='hidden' name="type" id="type" value=1>
+			<input type='hidden' name="bid_id" id="type" value=<?=$resubmit?>>
 						        
 						    </div>
 						    <div class="col-md-12">
@@ -764,7 +764,7 @@ $(document).ready(function () {
 						  async: false,
 						  type: 'POST',
 						  url: "<?=base_url('homes/bidding/saveBidData')?>",          
-						  data: {"orderID":orderID,"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,'product_id':product_id,"tot_cash":up_pay_cash,"dtpfext_id":dtpfext_id,"tot_miles":up_miles,"tot_bid":up_tot_bid,"type":"submit"},
+						  data: {"orderID":orderID,"offer_id" :offer_id,"bid_value":bid_value,"flight_number":flight_number,"upgrade_type":upgrade_type,'product_id':product_id,"tot_cash":up_pay_cash,"dtpfext_id":dtpfext_id,"tot_miles":up_miles,"tot_bid":up_tot_bid,"bid_id":"<?=$resubmit?>"},
 						  dataType: "html",			
 						  success: function(data) {
 							var info = jQuery.parseJSON(data);              		
@@ -796,7 +796,7 @@ $(document).ready(function () {
 								async: false,
 								type: 'POST',
 								url: "<?=base_url('homes/bidding/saveBidData')?>",       
-								data: {"ond":<?=$bslider['ond']?>,"flight_number":flight_number,"orderID":orderID,"dtpfext_id":dtpfext_id,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"product_id":product_id,"tot_miles":bg_miles,"tot_bid":bg_tot_bid},
+								data: {"ond":<?=$bslider['ond']?>,"flight_number":flight_number,"orderID":orderID,"dtpfext_id":dtpfext_id,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"product_id":product_id,"tot_miles":bg_miles,"tot_bid":bg_tot_bid, "bid_id":"<?=$resubmit?>"},
 								dataType: "html",			
 								success: function(data) {
 									var info = jQuery.parseJSON(data);              		

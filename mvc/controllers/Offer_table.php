@@ -625,7 +625,8 @@ function processbid1() {
                    $mainsetWhere .= '  pe.product_id = bid.productID  AND  bid.productID = '.  $this->input->get('product_id');
 	       }
 
-              // $mainsetWhere = "";
+                   $mainsetWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $mainsetWhere .= '  bid.active = 1';
 
 
 $sQuery = " select  SQL_CALC_FOUND_ROWS  

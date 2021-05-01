@@ -125,7 +125,7 @@ class Bidding extends MY_Controller {
 					if ( $result->bid_id) {
 						$this->data['last_bid']['last_bid_'. $result->product_id . '_'. $result->flight_number] = $result->bid_value;
 						$this->data['last_bid_total_value'] += $result->bid_value;
-						$this->data['resubmit'] = 1;
+						$this->data['resubmit'] = $result->bid_id;
 					}
 					//reducing duplicate names for multi cabins case
 					$result->pax_names = $this->bid_m->getPaxNames($pnr_ref);
@@ -267,7 +267,7 @@ class Bidding extends MY_Controller {
 					if ( $bg->bid_id) {
 						$this->data['last_bid']['last_bid_'. $bg->product_id . '_'. $bg->flight_number] = $bg->bid_value;
 						$this->data['last_bid_total_value'] += $bg->bid_value;
-						$this->data['resubmit'] = 1;
+						$this->data['resubmit'] = $bg->bid_id;
 					}
 					//reducing duplicate names for multi cabins case
 				
@@ -323,16 +323,25 @@ class Bidding extends MY_Controller {
 	}
 
 	public function saveBidData(){				
+		$product_id = $this->input->post("product_id");
+            	$bid_id  = $this->input->post('bid_id');
+            	$offer_id  = $this->input->post('offer_id');
 		if($this->input->post('offer_id')){ 		
-            if($this->input->post('type') == 'resubmit'){
+            if($bid_id && $product_id){//Bid  Resubmit case
                $this->saveBiddingHistory($this->input->post('offer_id'));
 	    }          
 			
-			$data = Array();
-			$product_id = $this->input->post("product_id");
+		$data = Array();
 		    $id = 0;
 			switch($product_id) {
 			case 1:
+				//Deactive old Bid records for this offer if any for same product offer
+            			if($bid_id && $product_id){//Bid  Resubmit case
+					$data['active'] = 0;
+					$this->bid_m->update_bid($data, $product_id, $offer_id);			
+					$data = Array();
+				}
+
 				$data['upgrade_type'] = $this->input->post("upgrade_type");
 				$data['cash'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
 				$data['miles'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
@@ -346,7 +355,7 @@ class Bidding extends MY_Controller {
 				$data['orderID'] = $this->input->post('orderID');
 				$data['productID'] = 1;
 				$bid_status = 'bid_received';
-          		$id = $this->bid_m->save_bid_data($data);			
+          			$id = $this->bid_m->insert_bid_data($data);		//Always allow excess baggage till offer expired
 				break;
 			case 2:
 				$data['weight'] = $this->input->post("weight");	
@@ -369,7 +378,7 @@ class Bidding extends MY_Controller {
 			}
 		
           if($id){
-              if($this->input->post('type') == 'resubmit'){
+              if($this->input->post('bid_id')){
 				$select_passengers_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_received',$this->input->post("fclr_id"),1);
                 $select_passengers_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_unselect_cabin',$this->input->post("fclr_id"),1);
 				$select_passengers_data->p_list = $select_passengers_data1->p_list;
@@ -406,7 +415,7 @@ class Bidding extends MY_Controller {
 						$this->offer_reference_m->update_offer_ref($array,$this->input->post('offer_id'));
               
                // updating bid status tracker
-              if($this->input->post('type') == 'resubmit'){
+              if($this->input->post('bid_id')){
                  $tracker = array();				 
 				 $tracker['comment'] = 'Bid Resubmited By Customer';
 			     $tracker["create_date"] = time();
@@ -415,11 +424,11 @@ class Bidding extends MY_Controller {
 				 if(!empty($select_passengers_data2->p_list)){				                                         
               	 foreach($p_list1 as $id) {
                     $tracker['booking_status_from'] = $unselect_status;
-				    $tracker['booking_status_to'] = $select_status;
-					$tracker['dtpfext_id'] = $id;
+		    $tracker['booking_status_to'] = $select_status;
+		    $tracker['dtpfext_id'] = $id;
                     $this->offer_issue_m->insert_dtpf_tracker($tracker);
 				 }
-				}
+		}
                 $p_list2 = explode(',',$unselect_passengers_data1->p_list);                 
 				if(!empty($unselect_passengers_data1->p_list)){
               	 foreach($p_list2 as $id) {
@@ -482,7 +491,8 @@ class Bidding extends MY_Controller {
     	    } else {
 			    $json['status'] = "Unable to save bid!";
 			}	
-             if($this->input->post('type') == 'resubmit'){
+
+             if($this->input->post('bid_id')){
                  $extention_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_received');
                  $extention_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_unselect_cabin');
                  $extention_data->p_list = $extention_data1->p_list.','.$extention_data->p_list;
@@ -494,12 +504,6 @@ class Bidding extends MY_Controller {
 			  $p_list = explode(',',$extention_data->p_list);
 			 // $this->mydebug->debug($extention_data->p_list);		 
               $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $no_bid_Status,"modify_date"=>time()),$p_list);
-						$array = array();
-						$array['offer_status'] = $no_bid_Status;
-						$array['product_id'] = $product_id;
-						$array["modify_date"] = time();
-						$array["modify_userID"] = $this->session->userdata('loginuserID');
-						$this->offer_reference_m->update_offer_ref($array,$this->input->post('offer_id'));
 			  $json['status'] = "success";
 		}else{
 			$json['status'] = "send offer_id";
@@ -513,7 +517,7 @@ class Bidding extends MY_Controller {
 	public function saveBaggageData(){
 		if($this->input->post('offer_id')){
 			//$this->mydebug->debug($_POST);
-			if($this->input->post('type') == 'resubmit'){
+			if($this->input->post('bid_id')){
 				$this->saveBaggageHistory($this->input->post('offer_id'));
 			 }
 			$data['cash'] = ($this->input->post("baggage_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");

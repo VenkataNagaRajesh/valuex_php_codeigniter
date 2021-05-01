@@ -178,6 +178,13 @@ class bid_m extends MY_Model {
 	  return $id;
   } 
   
+  public function update_bid($data,$product_id,$offer_id){	  
+		$this->db->where('offer_id',$offer_id);
+		$this->db->where('productID',$product_id);
+		$this->db->update('UP_bid',$data);
+		//echo $this->db->last_query();exit;
+  }
+  
   public function save_card_data($data){	  
 /*	  $this->db->select('*')->from('VX_card_data');
 	  $this->db->where('pnr_ref',$data['pnr_ref']);	 
