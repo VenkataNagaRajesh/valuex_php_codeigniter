@@ -810,12 +810,15 @@ class Fclr extends Admin_Controller
         {
                 if (permissionChecker('fclr_edit')) {
                         $id = $this->input->post('id');
+                        $slider=$this->input->post('slider_start');
+                        $minimum_values=$this->input->post('min');
+
                         $status = $this->input->post('status');
                         if ($id != '' && $status != '') {
                                 if ((int) $id) {
                                         $data['modify_userID'] = $this->session->userdata('loginuserID');
                                         $data['modify_date'] = time();
-                                        if ($status == 'chacked') {
+                                        if ($status == 'chacked' || $slider>0  || $minimum_values>0) {
                                                 $data['active'] = 1;
                                                 $this->fclr_m->update_fclr($data, $id);
                                                 echo 'Success';
