@@ -95,6 +95,7 @@ class Mailandsmstemplate extends Admin_Controller {
 		#$dir = "mvc/views/offer-email-temps";
 
 		// Sort in ascending order - this is default
+		$this->data['template_types']['none'] = 'None (Default)';
 		$a =  scandir($dir,1);
 		foreach($a as $d) {
 			if ( $d == '.' || $d == '..') continue;
@@ -175,6 +176,7 @@ class Mailandsmstemplate extends Admin_Controller {
 		#$dir = "mvc/views/offer-email-temps";
 
 		// Sort in ascending order - this is default
+		$this->data['template_types']['none'] = 'None (Default)';
 		$a =  scandir($dir,1);
 		foreach($a as $d) {
 			if ( $d == '.' || $d == '..') continue;
@@ -215,6 +217,7 @@ class Mailandsmstemplate extends Admin_Controller {
 				} else {
 					$this->data["subview"] = "mailandsmstemplate/edit";
 					$this->load->view('_layout_main', $this->data);
+
 				}
 			} else {
 				$this->data["subview"] = "error";
