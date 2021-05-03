@@ -135,7 +135,7 @@
 				{ extend: 'csv', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'excel', exportOptions: { columns: "thead th:not(.noExport)" } },
 				{ extend: 'pdf', exportOptions: { columns: "thead th:not(.noExport)" } },
-                { text: 'Export All', exportOptions: { columns: ':visible' },
+                { text: 'Export All', exportOptions: { columns: 'thead th:not(.noExport)' },
                         action: function(e, dt, node, config) {
                            $.ajax({
                                 url: "<?php echo base_url('season_airport/server_processing'); ?>?page=all&&export=1",

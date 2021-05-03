@@ -174,7 +174,7 @@ class Season_airport extends Admin_Controller {
                 "iTotalRecords" => $rResultFilterTotal,
                 "iTotalDisplayRecords" => $rResultFilterTotal,
                 "aaData" => array()
-            );
+            ); 
 			 $i++;
 			 $n = 1;
             foreach($rResult as $list){
@@ -183,8 +183,8 @@ class Season_airport extends Admin_Controller {
                $output['aaData'][] = $list;
             }
              if(isset($_REQUEST['export'])){
-				  $columns = array('#','Season Name','Airport Name','City','Country','Region','Area');
-				  $rows = array('temp_id','season_name','airport','city','country','region','area');
+				  $columns = array('#','Season Name','Airport Code','Airport Name','Country Code','Country Name','Region','Area','City code');
+				  $rows = array('temp_id','season_name','airport_code','airport_name','country_code','country_name','region','area','city_code');
 				  $this->exportall($output['aaData'],$columns,$rows);		
 			 } else {	
 				  echo json_encode( $output );
