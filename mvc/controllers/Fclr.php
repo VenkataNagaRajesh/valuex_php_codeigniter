@@ -991,6 +991,14 @@ class Fclr extends Admin_Controller
 				$array1['min'] = $data->min;
 				$array1['max'] = $data->max;
 				$array1['slider_start'] = $data->slider_start;
+
+                                if($array1['min']<$min || $array1['max']<$max || $array1['slider_start']<$slider_val)
+                                {
+                                        $array['active']=0;
+                                }
+                                else{
+                                        $array['active']=1;
+                                }
 				$this->fclr_m->checkANDInsertFCLR($array, $array1);
 
 				//}

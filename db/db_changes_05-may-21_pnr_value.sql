@@ -1,0 +1,1 @@
+update vx_preference set pref_value=1  where VX_aln_preferenceID=67;

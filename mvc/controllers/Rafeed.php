@@ -1579,7 +1579,14 @@ echo "MISED,$cDocumentType";
 			foreach ($data_id_array as $id) {
 				$this->data['rafeed'] = $this->rafeed_m->get_single_rafeed(array('rafeed_id' => $id));
 				if ($this->data['rafeed']) {
-					$this->rafeed_m->delete_rafeed($id);
+					if($this->rafeed_m->delete_rafeed($id))
+					{
+						alert('success');
+					}
+					else{
+						alert('fail');
+					}
+				
 				}
 			}
 		}
