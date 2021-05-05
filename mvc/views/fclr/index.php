@@ -571,7 +571,7 @@ function downloadFCLR(){
   var status = '';
   var id = 0;
  $('#fclrtable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
-      if($(this).prop('checked')) {
+      if($(this).prop('checked') ) {
           status = 'chacked';
           id = $(this).parent().attr("id");
       } else {

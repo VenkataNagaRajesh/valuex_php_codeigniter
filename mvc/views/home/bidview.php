@@ -348,7 +348,7 @@ function updateCabinMedia(flight_number){
    <div class="col-xs-7 col-sm-5 col-lg-6"><h2>Flight Information</h2></div>
    <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
 </div>
-<div class="col-sm-12 sub-tbl-bar"><h2 style='float:left'>Baggage offer</h2></div>
+<div class="col-sm-12 sub-tbl-bar"><h2 style='float:left '>Baggage offer</h2></div>
    <div class="container">
 	 <div class="accordion" id="baggage-refine">
 <?php $n=1;foreach($baggage as $bg => $row){ ?>
@@ -413,10 +413,21 @@ function updateCabinMedia(flight_number){
 							<div id="slider">
 								<div class="price-range col-md-12">	
 									<b> Min&nbsp;&nbsp;<?=$bslider['per_min']?>  <?=$bclr[$bslider['ond']]->bag_type?>&nbsp;&nbsp;</b>
-									<input id="bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>" data-slider-id='bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>Slider' type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$item_unit?>" data-slider-step="1" data-slider-value="<?=$bslider['min_price'];?>" data-slider-handle="round" min-slider-handle="50"/>
+									<input id="bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>"
+									 
+									data-slider-id='bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>Slider' 
+									 
+									 type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$item_unit?>" 
+									 
+									 data-slider-step="1" data-slider-value="<?=$bslider['min_price'];?>" data-slider-handle="round" 
+									 
+									 min-slider-handle="50"/>
+
+									 
 									<b> Max&nbsp;&nbsp;<?=$item_unit?> <?=$item_title?> </b>
 								</div>
 							</div>
+							
 						</div>
 					<div class="col-xs-12 col-sm-3 col-md-2 col-lg-2" style="margin:10px 0;">
 

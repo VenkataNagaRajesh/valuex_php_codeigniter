@@ -160,6 +160,7 @@ $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
         }); 		
 	$('#countryID').val(countryID).change();
 	 
+     
 $( "#airport" ).autocomplete({
       //source: availableTags
            source : function( request, response ) {
@@ -243,6 +244,7 @@ $( "#city" ).autocomplete({
         return false; // Prevent the widget from inserting the value.
     },
  }).val('<?php echo $city_name; ?>').data('autocomplete');
+
 
 
     $('#master').DataTable( {
