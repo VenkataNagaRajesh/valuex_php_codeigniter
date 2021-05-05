@@ -1,0 +1,429 @@
+stdClass Object
+(
+    [name] => Sirisha Majji
+    [airlineID] => 3958
+    [productID] => 1
+    [end_date] => 2021-06-30 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 3958
+stdClass Object
+(
+    [name] => Sirisha Majji
+    [airlineID] => 3958
+    [productID] => 2
+    [end_date] => 2021-07-31 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 3958
+stdClass Object
+(
+    [name] => AS - UG contract
+    [airlineID] => 4079
+    [productID] => 1
+    [end_date] => 2021-07-31 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 4079
+stdClass Object
+(
+    [name] => NK Test 21
+    [airlineID] => 5000
+    [productID] => 1
+    [end_date] => 2022-12-31 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5000
+stdClass Object
+(
+    [name] => Airline
+    [airlineID] => 5108
+    [productID] => 10
+    [end_date] => 2022-12-31 00:00:00
+)
+
+stdClass Object
+(
+    [name] => Asha ALAJINGA
+    [airlineID] => 5282
+    [productID] => 1
+    [end_date] => 2021-12-25 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5282
+stdClass Object
+(
+    [name] => Asha ALAJINGA
+    [airlineID] => 5282
+    [productID] => 2
+    [end_date] => 2022-02-01 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5282
+stdClass Object
+(
+    [name] => Sirisha Majji
+    [airlineID] => 5363
+    [productID] => 1
+    [end_date] => 2021-06-30 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5363
+stdClass Object
+(
+    [name] => Sirisha Majji
+    [airlineID] => 5363
+    [productID] => 2
+    [end_date] => 2021-08-31 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5363
+stdClass Object
+(
+    [name] => ashu
+    [airlineID] => 5418
+    [productID] => 1
+    [end_date] => 2021-12-31 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5418
+stdClass Object
+(
+    [name] => ashu
+    [airlineID] => 5418
+    [productID] => 2
+    [end_date] => 2022-01-10 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5418
+stdClass Object
+(
+    [name] => Arun Kumar
+    [airlineID] => 5500
+    [productID] => 1
+    [end_date] => 2021-12-31 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5500
+stdClass Object
+(
+    [name] => Arun Kumar
+    [airlineID] => 5500
+    [productID] => 2
+    [end_date] => 2021-12-31 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5500
+stdClass Object
+(
+    [name] => UK Contract
+    [airlineID] => 5563
+    [productID] => 2
+    [end_date] => 2030-01-31 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5563
+stdClass Object
+(
+    [name] => AA - C33
+    [airlineID] => 5716
+    [productID] => 1
+    [end_date] => 2021-09-30 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5716
+stdClass Object
+(
+    [name] => AA - C33
+    [airlineID] => 5716
+    [productID] => 2
+    [end_date] => 2030-09-30 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5716
+stdClass Object
+(
+    [name] => Sirisha Majji
+    [airlineID] => 3958
+    [productID] => 1
+    [end_date] => 2021-06-30 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 3958
+stdClass Object
+(
+    [name] => Sirisha Majji
+    [airlineID] => 3958
+    [productID] => 2
+    [end_date] => 2021-07-31 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 3958
+stdClass Object
+(
+    [name] => AS - UG contract
+    [airlineID] => 4079
+    [productID] => 1
+    [end_date] => 2021-07-31 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 4079
+stdClass Object
+(
+    [name] => NK Test 21
+    [airlineID] => 5000
+    [productID] => 1
+    [end_date] => 2022-12-31 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5000
+stdClass Object
+(
+    [name] => Airline
+    [airlineID] => 5108
+    [productID] => 10
+    [end_date] => 2022-12-31 00:00:00
+)
+
+stdClass Object
+(
+    [name] => Asha ALAJINGA
+    [airlineID] => 5282
+    [productID] => 1
+    [end_date] => 2021-12-25 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5282
+stdClass Object
+(
+    [name] => Asha ALAJINGA
+    [airlineID] => 5282
+    [productID] => 2
+    [end_date] => 2022-02-01 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5282
+stdClass Object
+(
+    [name] => Sirisha Majji
+    [airlineID] => 5363
+    [productID] => 1
+    [end_date] => 2021-06-30 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5363
+stdClass Object
+(
+    [name] => Sirisha Majji
+    [airlineID] => 5363
+    [productID] => 2
+    [end_date] => 2021-08-31 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5363
+stdClass Object
+(
+    [name] => ashu
+    [airlineID] => 5418
+    [productID] => 1
+    [end_date] => 2021-12-31 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5418
+stdClass Object
+(
+    [name] => ashu
+    [airlineID] => 5418
+    [productID] => 2
+    [end_date] => 2022-01-10 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5418
+stdClass Object
+(
+    [name] => Arun Kumar
+    [airlineID] => 5500
+    [productID] => 1
+    [end_date] => 2021-12-31 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5500
+stdClass Object
+(
+    [name] => Arun Kumar
+    [airlineID] => 5500
+    [productID] => 2
+    [end_date] => 2021-12-31 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5500
+stdClass Object
+(
+    [name] => UK Contract
+    [airlineID] => 5563
+    [productID] => 2
+    [end_date] => 2030-01-31 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5563
+stdClass Object
+(
+    [name] => AA - C33
+    [airlineID] => 5716
+    [productID] => 1
+    [end_date] => 2021-09-30 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5716
+stdClass Object
+(
+    [name] => AA - C33
+    [airlineID] => 5716
+    [productID] => 2
+    [end_date] => 2030-09-30 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5716
+stdClass Object
+(
+    [name] => Sirisha Majji
+    [airlineID] => 3958
+    [productID] => 1
+    [end_date] => 2021-06-30 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 3958
+stdClass Object
+(
+    [name] => Sirisha Majji
+    [airlineID] => 3958
+    [productID] => 2
+    [end_date] => 2021-07-31 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 3958
+stdClass Object
+(
+    [name] => AS - UG contract
+    [airlineID] => 4079
+    [productID] => 1
+    [end_date] => 2021-07-31 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 4079
+stdClass Object
+(
+    [name] => NK Test 21
+    [airlineID] => 5000
+    [productID] => 1
+    [end_date] => 2022-12-31 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5000
+stdClass Object
+(
+    [name] => Airline
+    [airlineID] => 5108
+    [productID] => 10
+    [end_date] => 2022-12-31 00:00:00
+)
+
+stdClass Object
+(
+    [name] => Asha ALAJINGA
+    [airlineID] => 5282
+    [productID] => 1
+    [end_date] => 2021-12-25 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5282
+stdClass Object
+(
+    [name] => Asha ALAJINGA
+    [airlineID] => 5282
+    [productID] => 2
+    [end_date] => 2022-02-01 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5282
+stdClass Object
+(
+    [name] => Sirisha Majji
+    [airlineID] => 5363
+    [productID] => 1
+    [end_date] => 2021-06-30 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5363
+stdClass Object
+(
+    [name] => Sirisha Majji
+    [airlineID] => 5363
+    [productID] => 2
+    [end_date] => 2021-08-31 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5363
+stdClass Object
+(
+    [name] => ashu
+    [airlineID] => 5418
+    [productID] => 1
+    [end_date] => 2021-12-31 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5418
+stdClass Object
+(
+    [name] => ashu
+    [airlineID] => 5418
+    [productID] => 2
+    [end_date] => 2022-01-10 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5418
+stdClass Object
+(
+    [name] => Arun Kumar
+    [airlineID] => 5500
+    [productID] => 1
+    [end_date] => 2021-12-31 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5500
+stdClass Object
+(
+    [name] => Arun Kumar
+    [airlineID] => 5500
+    [productID] => 2
+    [end_date] => 2021-12-31 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5500
+stdClass Object
+(
+    [name] => UK Contract
+    [airlineID] => 5563
+    [productID] => 2
+    [end_date] => 2030-01-31 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5563
+stdClass Object
+(
+    [name] => AA - C33
+    [airlineID] => 5716
+    [productID] => 1
+    [end_date] => 2021-09-30 00:00:00
+)
+
+OFFER GEN: PRODUCT UPGRADE : CARRIER ID: 5716
+stdClass Object
+(
+    [name] => AA - C33
+    [airlineID] => 5716
+    [productID] => 2
+    [end_date] => 2030-09-30 00:00:00
+)
+
+OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: 5716

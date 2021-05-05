@@ -356,7 +356,7 @@
                                     $('#rafeedtable').DataTable().ajax.reload();
                                     $('#bulkDelete').prop("checked", false);
                                 },
-                                async: false
+                                async: true
                             });
                         }
                     }
