@@ -516,8 +516,12 @@ $sWhere $sOrder $sLimit";
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->to_city.'</a>';
 			
 			#$feed->action = btn_view('offer_issue/view/'.$feed->pnr_ref, $this->lang->line('view'));
+			if ( $feed->offer_status  == 'New' || $feed->offer_status  == 'Sent Offer Mail') {
+                   		$feed->action =  '<a target="_blank" href="' . base_url('offer_issue/resendoffer/' . $feed->pnr_ref) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="SEND OFFER MAIL TO PAX"><i class="fa fa-check"></i></a>';
+			} else {
+                   		$feed->action = '';
+			}
                    	$feed->offer_status =  '<a target="_blank" href="' . base_url('offer_issue/view/' . $feed->pnr_ref) . '"  data-placement="top" data-toggle="tooltip" data-original-title="VIEW MORE OFFER DETAILS">'. $feed->offer_status. '</a>';
-                   	$feed->action =  '<a target="_blank" href="' . base_url('offer_issue/resendoffer/' . $feed->pnr_ref) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="SEND OFFER MAIL TO PAX"><i class="fa fa-check"></i></a>';
                         $feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default";
                         $feed->departure_date = date('d-m-Y',$feed->flight_date);
 			$bid_cnt = $this->bid_m->getBidByOfferID($feed->offer_id);	
