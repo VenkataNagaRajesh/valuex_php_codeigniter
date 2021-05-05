@@ -10,7 +10,7 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model("offer_eligibility_m");
 		$this->load->model("eligibility_exclusion_m");
 		$this->load->model("airline_m");
-		$this->load->model("bclr_m");
+		$this->load->model("bid_m");
 		$this->load->model("season_m");
 		$this->load->model("partner_m");
 		$this->load->model('paxfeed_m');
