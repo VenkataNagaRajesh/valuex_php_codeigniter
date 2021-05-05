@@ -991,8 +991,8 @@ class Fclr extends Admin_Controller
 				$array1['min'] = $data->min;
 				$array1['max'] = $data->max;
 				$array1['slider_start'] = $data->slider_start;
-                                
-                                if($array['min']<$min || $array['max']<$max || $array['slider_start']<$slider_val)
+
+                                if($array1['min']<$min || $array1['max']<$max || $array1['slider_start']<$slider_val)
                                 {
                                         $array['active']=0;
                                 }
