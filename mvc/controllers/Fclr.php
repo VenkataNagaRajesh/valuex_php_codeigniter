@@ -174,7 +174,8 @@ class Fclr extends Admin_Controller
                                         'avg' => form_error('avg'),
                                         'slider_start' => form_error('slider_start'),
                                 );
-                        } else {
+                        } 
+                        else {
 
 
                                 $array["boarding_point"] = $this->input->post("board_point");
@@ -191,6 +192,18 @@ class Fclr extends Admin_Controller
                                 $array['min'] = $this->input->post("min");
                                 $array['max'] = $this->input->post("max");
                                 $array['slider_start'] = $this->input->post("slider_start");
+
+                                $min=$this->preference_m->get_preference_value_bycode('fclr_min',24,4079);
+                                $max=$this->preference_m->get_preference_value_bycode('fclr_max',24,4079);
+                                $slider_val=$this->preference_m->get_preference_value_bycode('fclr_slider_value',24,4079);
+                        
+                                if($array['min']<$min || $array['max']<$max || $array['slider_start']<$slider_val)
+                                {
+                                        $array['active']=0;
+                                }
+                                else{
+                                        $array['active']=1;
+                                }
 
                                 if ($fclr_id) {
                                         if ($exist_id && $exist_id != $fclr_id) {
@@ -214,7 +227,8 @@ class Fclr extends Admin_Controller
                                         }
                                 }
                         }
-                } else {
+                }
+                else {
                         $json['status'] = "no data";
                 }
 
@@ -827,7 +841,9 @@ class Fclr extends Admin_Controller
                                                 $this->fclr_m->update_fclr($data, $id);
                                                 echo 'Success';
                                         } else {
+
                                                 echo "Error";
+                                                
                                         }
                                 } else {
                                         echo "Error";

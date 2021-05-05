@@ -248,7 +248,8 @@ class Pref_setting extends Admin_Controller {
 			}
 
 			if(count($preferences) > 0 ) {
-			 foreach($preferences as $pref) { if($pref->active == 1) { 
+			 foreach($preferences as $pref) { if($pref->active == 1) 
+                                { 
                         if(form_error('prefvalue-'.$pref->VX_aln_preferenceID))
                             echo "<div class='form-group has-error' >";
                         else
@@ -292,6 +293,10 @@ class Pref_setting extends Admin_Controller {
                                 }
                                                    
 			} 
+                        
+                      
+
+
                            echo "</div>";
                         echo "<span class='col-sm-4 control-label'>";
                        echo form_error('pref_value-'.$pref->VX_aln_preferenceID);
