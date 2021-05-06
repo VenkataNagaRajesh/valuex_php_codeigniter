@@ -25,10 +25,26 @@ class Rafeed_m extends MY_Model
 		return $query;
 	}
 
-	function get_single_rafeed($array = NULL)
+	function get_single_rafeed($array = NULL,$table_name)
 	{
-		$query = parent::get_single($array);
+		if($table_name=='UP_ra_feed')
+		{
+		$this->db->select('rafeed_id');
+		$this->db->from('UP_ra_feed');
+		$this->db->where($array);
+		$this->db->limit(1);
+		$query = $this->db->get();
 		return $query;
+		}
+		else if($table_name=="BG_ra_feed")
+		{
+			$this->db->select('id');
+		$this->db->from('BG_ra_feed');
+		$this->db->where($array);
+		$this->db->limit(1);
+		$query = $this->db->get();
+		return $query;
+		}
 	}
 
 	function checkRaFeed($array)
@@ -135,12 +151,23 @@ class Rafeed_m extends MY_Model
 		return $id;
 	}
 
-	public function delete_rafeed($id)
+	public function delete_rafeed($id,$table_name)
 	{
+		
+		if($table_name=="UP_ra_feed")
+		{
 		parent::delete($id);
-		$this->db->where('sub_season_record', $id);
+		$this->db->where('rafeed_id', $id);
 		$this->db->delete('UP_ra_feed');
 		return TRUE;
+		}
+		else if($table_name=="BG_ra_feed")
+		{
+			parent::delete($id);
+		$this->db->where('id', $id);
+		$this->db->delete('BG_ra_feed');
+		return TRUE;
+		}
 	}
 
 	// baggage

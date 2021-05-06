@@ -336,7 +336,8 @@
                                 type: "POST",
                                 url: "<?php echo base_url('rafeed/delete_rafeed_bulk_records'); ?>",
                                 data: {
-                                    data_ids: ids_string
+                                    data_ids: ids_string,
+                                    table_name:'BG_ra_feed'
                                 },
                                 success: function(result) {
                                     $('#rafeedtable').DataTable().ajax.reload();

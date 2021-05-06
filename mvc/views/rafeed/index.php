@@ -350,13 +350,14 @@
                                 type: "POST",
                                 url: "<?php echo base_url('rafeed/delete_rafeed_bulk_records'); ?>",
                                 data: {
-                                    data_ids: ids_string
+                                    data_ids: ids_string,
+                                    table_name:"UP_ra_feed"
                                 },
                                 success: function(result) {
                                     $('#rafeedtable').DataTable().ajax.reload();
                                     $('#bulkDelete').prop("checked", false);
                                 },
-                                async: true
+                                async: false
                             });
                         }
                     }
@@ -585,7 +586,8 @@
         });
 
 
-        $('#deleteTriger').on("click", function(event) { // triggering delete one by one
+        $('#deleteTriger').on("click", function(event) {
+           
             if ($('.deleteRow:checked').length > 0) { // at-least one checkbox checked
                 var ids = [];
                 $('.deleteRow').each(function() {
@@ -593,13 +595,16 @@
                         ids.push($(this).val());
                     }
                 });
+                
                 var ids_string = ids.toString(); // array to string conversion 
+                
                 $.ajax({
-                    type: "POST",
-                    url: "<?php echo base_url('rafeed/delete_rafeed_bulk_records'); ?>",
-                    data: {
-                        data_ids: ids_string
-                    },
+                                type: "POST",
+                                url: "<?php echo base_url('rafeed/delete_rafeed_bulk_records'); ?>",
+                                data: {
+                                    data_ids: ids_string,
+                                   
+                                },
                     success: function(result) {
                         $('#rafeedtable').DataTable().ajax.reload();
                         $('#bulkDelete').prop("checked", false);
