@@ -946,9 +946,11 @@ class Bclr extends Admin_Controller
                 ON origin_set.bclr_id = dest_set.bclr_id 
 
                 LEFT JOIN (
-                        SELECT bc.bclr_id,bc.from_cabin, COALESCE(group_concat(c.code),group_concat(c.aln_data_value)) AS from_cabin_data FROM BG_baggage_control_rule bc 
+                        SELECT bc.bclr_id,bc.from_cabin, COALESCE(group_concat(cd.cabin),group_concat(cd.cabin)) AS from_cabin_data FROM BG_baggage_control_rule bc 
                         LEFT OUTER JOIN  VX_data_defns c ON 
-                        (find_in_set(c.vx_aln_data_defnsID, bc.from_cabin)) GROUP BY bc.bclr_id 
+                        (find_in_set(c.vx_aln_data_defnsID, bc.from_cabin) ) 
+                        LEFT  JOIN  VX_airline_cabin_def cd ON ( cd.carrier = bc.carrierID AND c.alias = cd.level)
+			GROUP BY bc.bclr_id
                 ) as cabin_set
                 ON origin_set.bclr_id = cabin_set.bclr_id 
 
