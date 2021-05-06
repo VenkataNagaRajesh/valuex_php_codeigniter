@@ -1574,21 +1574,32 @@ echo "MISED,$cDocumentType";
 	public function delete_rafeed_bulk_records()
 	{
 		$data_ids = $_REQUEST['data_ids'];
+		$data_table=$_REQUEST['table_name'];
 		$data_id_array = explode(",", $data_ids);
-		if (!empty($data_id_array)) {
+		if($data_table=="UP_ra_feed")
+		{
+			if (!empty($data_id_array)) {
 			foreach ($data_id_array as $id) {
-				$this->data['rafeed'] = $this->rafeed_m->get_single_rafeed(array('rafeed_id' => $id));
+				$this->data['rafeed'] = $this->rafeed_m->get_single_rafeed(array('rafeed_id' => $id),$data_table);
 				if ($this->data['rafeed']) {
-					if($this->rafeed_m->delete_rafeed($id))
-					{
-						alert('success');
-					}
-					else{
-						alert('fail');
-					}
-				
+					$this->rafeed_m->delete_rafeed($id,$data_table);
 				}
 			}
 		}
+		}
+		else if(!empty($data_id_array) &&  $data_table=="BG_ra_feed")
+		{
+			if (!empty($data_id_array)) {
+				foreach ($data_id_array as $id) {
+					$this->data['rafeed'] = $this->rafeed_m->get_single_rafeed(array('id' => $id),$data_table);
+					
+					if ($this->data['rafeed']) {
+						$this->rafeed_m->delete_rafeed($id,$data_table);
+						
+					}
+				}
+			}
+		}
+
 	}
 }
