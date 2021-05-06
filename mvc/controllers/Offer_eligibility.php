@@ -15,6 +15,7 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model("partner_m");
 		$this->load->model('paxfeed_m');
 		$this->load->model("marketzone_m");
+		$this->load->model("bclr_m");
 		$this->load->model("fclr_m");
 		$this->load->model("season_m");
 		$this->load->model("airports_m");
@@ -626,7 +627,6 @@ $sWhere $sOrder $sLimit";
 		$this->mydebug->debug(print_r($contract,1));
 		$product = $contract->productID;
 		$carrierId = $contract->airlineID;
-		if ( $carrierId == 5500 ) {
 
 		switch ($product) {
 			case 1:
@@ -637,7 +637,6 @@ $sWhere $sOrder $sLimit";
 				$carriers[] = $carrierId;
 				$this->mydebug->debug("OFFER GEN: PRODUCT BAGGAGE : CARRIER ID: " . $carrierId);
 				break;
-		}
 		}
 			
 	}
