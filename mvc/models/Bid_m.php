@@ -69,8 +69,9 @@ class bid_m extends MY_Model {
 	$this->db->join('VX_data_defns dcto','(dcto.aln_data_typeID = 13 and dcto.vx_aln_data_defnsID = fclr.to_cabin)','LEFT');
 	$this->db->join('VX_airline_cabin_def tdef','(tdef.carrier = tpf.carrier_code) AND (dcto.alias = tdef.level)','LEFT');
 
+	
 	if(!empty($bidstatus)){
-		$this->db->where('dd.alias',$bidstatus);
+		$this->db->where('dd.alias is null',$bidstatus);
 	} else {
 		#$this->db->where('dd.alias','sent_offer_mail');
 	}
