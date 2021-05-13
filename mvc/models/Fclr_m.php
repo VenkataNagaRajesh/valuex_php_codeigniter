@@ -71,7 +71,13 @@ class Fclr_m extends MY_Model {
 
 
         public function delete_fclr($id){
-                parent::delete($id);
+                $data = [
+                        'active' => 0,
+                    ];
+                    $this->db->where('fclr_id', $id);
+                    $this->db->update('UP_fare_control_range', $data);
+                   return true;
+
         }
 
         function getFareDataForGivenID($cabin) {
