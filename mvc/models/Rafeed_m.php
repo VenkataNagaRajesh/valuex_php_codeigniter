@@ -156,17 +156,30 @@ class Rafeed_m extends MY_Model
 		
 		if($table_name=="UP_ra_feed")
 		{
-		parent::delete($id);
-		$this->db->where('rafeed_id', $id);
-		$this->db->delete('UP_ra_feed');
-		return TRUE;
+		// parent::delete($id);
+		// $this->db->where('rafeed_id', $id);
+		// $this->db->delete('UP_ra_feed');
+		// return TRUE;
+
+				$data = [
+					'active' => 0,
+				];
+				$this->db->where('rafeed_id', $id);
+				$this->db->update('UP_ra_feed', $data);
+			return true;
 		}
 		else if($table_name=="BG_ra_feed")
 		{
-			parent::delete($id);
-		$this->db->where('id', $id);
-		$this->db->delete('BG_ra_feed');
-		return TRUE;
+			$data = [
+				'active' => 0,
+			];
+			$this->db->where('id', $id);
+			$this->db->update('BG_ra_feed', $data);
+		return true;
+		// 	parent::delete($id);
+		// $this->db->where('id', $id);
+		// $this->db->delete('BG_ra_feed');
+		// return TRUE;
 		}
 	}
 
