@@ -175,7 +175,7 @@ class Paxfeed extends Admin_Controller {
 							 if($flag == 1){ 
 		$car_code = $Row[array_search('carrier code',$import_header)];
 
-					if(count($Row) == 27){ //print_r($Row); exit;	
+					#if(count($Row) == 27){ //print_r($Row); exit;	
 											
 				    $this->mydebug->paxfeed_log("Columns count Matched for row " . $column , 0);
 					$paxfeedraw = array();
@@ -227,7 +227,7 @@ class Paxfeed extends Admin_Controller {
 					if ( strlen($paxfeedraw['operating_carrier']) != 2){
 						
 						
-						$this->mydebug->paxfeed_log("Operating Carrier Code should be 2 alphabets in row " . $column , 1);
+						$this->mydebug->paxfeed_log("Operating Carrier Code should be 2 alphabets in row - '" .$paxfeedraw['operating_carrier'] . "' " . $column , 1);
 						$fail_count++;
 						continue;
 						  
@@ -246,8 +246,8 @@ class Paxfeed extends Admin_Controller {
 
 				 
 				/* Operating and marketing Carrier check */
-				$op_car = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['operating_carrier'],'12');
-				$mkt_car = $this->airports_m->getDefIdByTypeAndCode($paxfeedraw['marketing_carrier'],'12');
+				$op_car = $this->airports_m->getDefIdByTypeAndCode(trim($paxfeedraw['operating_carrier']),'12');
+				$mkt_car = $this->airports_m->getDefIdByTypeAndCode(trim($paxfeedraw['marketing_carrier']),'12');
 				if(!$op_car){
 					$this->mydebug->paxfeed_log("Operating Carrier not there in our carrier list in row " . $column , 1);
 					$fail_count++;
@@ -638,7 +638,9 @@ class Paxfeed extends Admin_Controller {
 						$this->mydebug->paxfeed_log("Duplicate record for row ". $column, 0);
 					}
 			}
-		}
+		#} else {
+		#		    $this->mydebug->paxfeed_log("Columns count is not 27!  ", 0);
+		#}
 
 					   } else {
 						   print_r("mismatch");
