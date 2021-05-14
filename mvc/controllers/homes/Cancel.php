@@ -42,12 +42,16 @@ class Cancel extends MY_Controller {
 		if(empty($this->input->get('pnr_ref'))){
 			redirect(base_url('home/index'));
 		}		 
+		if(empty($this->input->get('offer_id'))){
+			redirect(base_url('home/index'));
+		}		 
 		if(empty($this->input->get('type'))){
 			redirect(base_url('home/index'));
 		}		 
 
 		$product_id = $this->input->get('type');
 		$pnr_ref = $this->input->get('pnr_ref');
+		$offer_id = $this->input->get('offer_id');
 
 		$bid_cancel = $this->rafeed_m->getDefIdByTypeAndAlias('bid_cancel','20');
 		$bid_received = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
@@ -56,7 +60,7 @@ class Cancel extends MY_Controller {
 		$ref['offer_status'] = $bid_cancel;
 		$ref['product_id'] = $product_id;
 		$ref["modify_date"] = time();
-		$this->offer_reference_m->update_offer_ref($ref,$this->session->userdata('cancel_offer'));
+		$this->offer_reference_m->update_offer_ref($ref,$offer_id);
 		$extention_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->session->userdata('cancel_offer'),null,'bid_received');
         $extention_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->session->userdata('cancel_offer'),null,'bid_unselect_cabin');
          $extention_data->p_list = $extention_data1->p_list.','.$extention_data2->p_list;            
@@ -88,7 +92,7 @@ class Cancel extends MY_Controller {
 		  }
 		  
 		   //send bid cancel mail
-			   $offer_data = $this->bid_m->get_offer_data($this->session->userdata('cancel_offer'));
+			   $offer_data = $this->bid_m->get_offer_data($offer_id);
 			   $maildata = (array)$offer_data;
 			   $maildata['dep_date'] = date('d/m/Y',$maildata['dep_date']);
 			   $maildata['dep_time'] = gmdate('H:i A',$maildata['dept_time']);			  
@@ -98,7 +102,7 @@ class Cancel extends MY_Controller {
                //$maildata['tomail'] = 'swekenit@gmail.com';
 			   $maildata['template'] = 'bid_cancel';
 			   $maildata['subject'] = 'Your bid has been Successfully Cancelled';
-				$this->sendMail($maildata);
+		    	   $this->sendMail($maildata);
 				
 		  $airline = $this->bid_m->getAirlineLogoByPNR($this->session->userdata('ref'));
 		  if(!empty($airline->logo)){
@@ -112,7 +116,8 @@ class Cancel extends MY_Controller {
 			 $this->data['mail_header_color'] = '#333';  
 		   }
       		
-		$this->data['pnr_ref'] = $this->session->userdata('ref');
+		$this->data['pnr_ref'] = $pnr_ref; 
+		$this->data['offer_id'] = $offer_id; 
 		$this->data['subview'] = 'home/cancel-page';
 		$this->load->view('_layout_home', $this->data);	
 	}

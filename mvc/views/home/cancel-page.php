@@ -17,8 +17,8 @@
 						<span>Successfully Cancelled This Offer..!</span>
 					</p>
 					<p>
-						<span>Reference No:</span><br>
-						<span><b>VALUEX: <?=$pnr_ref?></b></span>
+						<span>Reference No: <?=$offer_id?></span><br>
+						<span><b>PNR: <?=$pnr_ref?></b></span>
 					</p>
 				</div>
 			</div>

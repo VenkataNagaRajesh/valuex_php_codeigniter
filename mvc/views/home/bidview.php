@@ -163,7 +163,16 @@ if ($any_product ) {
     					   <div class="col-xs-7 col-sm-5 col-lg-6"><h2>Flight Information</h2></div>
     					   <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
 					</div>
- <div class="col-sm-12 sub-tbl-bar"><h2 style='float:left'>Upgrade Offer</h2></div>	           
+ <div class="col-sm-12 sub-tbl-bar">
+	<span class="col-xs-7 col-sm-5 col-lg-6" style='float:left'><h2>Upgrade Offer</h2></span>
+<?php
+	if ( $resubmit ) {
+?>
+        <span style="float:right;background: #efefef"><a href='#' onclick="if ( confirm('Are you sure that you like to cancel the bid ?')) window.location='<?=base_url('homes/cancel/page/?pnr_ref='. $pnr_ref. '&offer_id=' . $offer_id_1 . '&type=1')?>';" type="button" class="btn btn-danger" >Cancel Bid</a></span>
+<?php
+	}
+?>
+</div>
    <div class="container">
 	 <div class="accordion" id="upgrade-refine">
                 <?php $n=1; foreach($upgrade as $upg){?>
@@ -347,7 +356,16 @@ function updateCabinMedia(flight_number){
    <div class="col-xs-7 col-sm-5 col-lg-6"><h2>Flight Information</h2></div>
    <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
 </div>
-<div class="col-sm-12 sub-tbl-bar"><h2 style='float:left '>Baggage offer</h2></div>
+ <div class="col-sm-12 sub-tbl-bar">
+	<span class="col-xs-7 col-sm-5 col-lg-6" style='float:left'><h2>Baggage Offer</h2></span>
+<?php
+	if ( $resubmit ) {
+?>
+        <span style="float:right;background: #efefef"><a href='#' onclick="if ( confirm('Are you sure that you like to cancel the bid ?')) window.location='<?=base_url('homes/cancel/page/?pnr_ref=' . $pnr_ref . '&offer_id='. $offer_id_2. '&type=2')?>';" type="button" class="btn btn-danger" >Cancel Bid</a></span>
+<?php
+	}
+?>
+</div>
    <div class="container">
 	 <div class="accordion" id="baggage-refine">
 <?php $n=1;foreach($baggage as $bg => $row){ ?>
