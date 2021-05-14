@@ -45,7 +45,7 @@ class General extends Admin_Controller {
 		$search = $this->input->post('search');
 		$season=$this->input->post('season');
 
-		if($season=="0"){
+		if(empty($season)){
 			
 			$airports = $this->airports_m->getAirportsByName($search,1);
 		} 
@@ -54,6 +54,7 @@ class General extends Admin_Controller {
 			//alert($season);
 				$airports=$this->airports_m->getAirportsByNameBasedOnSeason($search,$season);
 		}
+		
 		else {
 		$airports = array();
 		}
