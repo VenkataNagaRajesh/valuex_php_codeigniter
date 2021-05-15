@@ -137,19 +137,16 @@
 				<div class="form-group">
 										<div class="col-md-2 col-sm-3 select-form">
 						<div class="col-md-12">
-
-		 <?php
-                                                        echo form_dropdown("scarrier", $airlinelist,set_value("scarrier",$scarrier_id), "id='scarrier' class='form-control hide-dropdown-icon select2'"); ?>
-
-						</div>
+                            <?php
+                                echo form_dropdown("scarrier", $airlinelist,set_value("scarrier",$scarrier_id), "id='scarrier' class='form-control hide-dropdown-icon select2'"); ?>
+                        </div>
 						<div class="col-md-12">
-		 <?php
-                                                        $seasons['0'] = 'Season';
-                                                        ksort($seasons);
-                                                        echo form_dropdown("sseason_id", $seasons,set_value("sseason_id",$sseason_id), "id='sseason_id' class='form-control hide-dropdown-icon select2'"); ?>
-
-						</div>
-						
+		                     <?php
+                                $seasons['0'] = 'Season';
+                                ksort($seasons);
+                                echo form_dropdown("sseason_id", $seasons,set_value("sseason_id",$sseason_id), "id='sseason_id' class='form-control hide-dropdown-icon select2'"); ?>
+						</div>	
+                      					
 					</div>
 					<div class="col-md-2 col-sm-3 select-form">
 						<div class="col-md-12">
@@ -224,7 +221,9 @@
 			  <div class="col-md-12">
 
                 <input type="text" class="form-control" placeholder='FCLR ID' id="sfclr_id" name="sfclr_id" value="<?=set_value('sfclr_id',$sfclr_id)?>" >
-                                                </div>
+                </div>
+                
+                
 					</div>
 					<div class="col-md-12" style="padding-right:20px;">
                                                <div class="bttn-cl pull-right" style="margin-left: 15px;">
@@ -241,6 +240,12 @@
 	</div>
 	<div class="col-md-12 fclr-table">
 		<div id="hide-table" class="fclr-table-data">
+        <div class="col-md-2">
+                      <select class="form-control"  name="fclr_act_Inact" id="fclr_act_Inact">
+                                    <option value="1">Active</option>
+                                    <option value="0">In active</option>
+                                </select>
+                        </div>
              <table id="fclrtable" class="table table-bordered dataTable no-footer">
                  <thead>
 					<tr>
@@ -429,9 +434,34 @@ loaddatatable();
 });
 
 
+$('#fclr_act_Inact').change(function(event) {    
+  var act_Inact = $('#fclr_act_Inact').val();    
+  $.ajax({
+      url:"fclr/server_processing",
+      method:"GET",
+      data:{inputVal:act_Inact},
+      success:function(data)
+      {
+        loaddatatable();
+        $("li.paginate_button:nth-child(2) a").trigger('click');       
+      }
+  });
+ $('#fclrtable').DataTable();
+});
+
+$act_Inact = $('fclr_#act_Inact').val();
+
+$('#fclr_act_Inact').trigger('change');     
+$('#fclr_act_Inact').val('<?=$act_Inact?>').trigger('change');
+
+        
+
 function loaddatatable() {
     $('#fclrtable').DataTable( {
       "bProcessing": true,
+      "retrieve": true,
+      "paging": true,
+    "searching": false,
 	"stateSave": true,
       "bServerSide": true,
 	  "initComplete": function (settings, json) {  
@@ -453,8 +483,7 @@ function loaddatatable() {
 			       {"name": "sseason_id","value": $("#sseason_id").val()},
 			       {"name": "sfclr_id","value": $("#sfclr_id").val()},
                    {"name": "scarrier","value": $("#scarrier").val()},
-
-                  
+                   {"name":"inputVal","value":$("#fclr_act_Inact").val()}                  
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -492,6 +521,7 @@ function loaddatatable() {
                   {"data": "action"}
 				  ],			     
      dom: 'B<"clear">lfrtip',
+
     // buttons: [ 'copy', 'csv', 'excel','pdf' ]	  
 	 buttons: [ { text: 'Delete', exportOptions: { columns: ':visible' },
                   action: function(e, dt, node, config) {
@@ -542,7 +572,7 @@ function loaddatatable() {
 			//"autoWidth":false,
 			//"columnDefs": [ {"targets": 0,"width": "30px" }]
     });	
-
+    
   } 
 
 function downloadFCLR(){

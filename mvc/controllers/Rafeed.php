@@ -1223,7 +1223,7 @@ echo "MISED,$cDocumentType";
 			$sWhere .= 'rf.carrier IN (' . implode(',', $this->session->userdata('login_user_airlineID')) . ')';
 		}
 
-
+		$ac=$_GET['inputVal'];
 		$sWhere .=  ($sWhere == '') ? ' WHERE ' : ' AND ';
 		$sWhere .=  " rf.sub_season_record = 0 ";
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS rafeed_id,ticket_number, coupon_number, dc.code as booking_country , 
@@ -1245,7 +1245,7 @@ echo "MISED,$cDocumentType";
 			  LEFT JOIN VX_data_defns dcar on (dcar.vx_aln_data_defnsID = rf.carrier)
                           LEFT JOIN  VX_data_defns dbp on (dbp.vx_aln_data_defnsID = rf.boarding_point)  
                           LEFT JOIN VX_data_defns dop on (dop.vx_aln_data_defnsID = rf.off_point) 
-			 INNER JOIN VX_airline_cabin_def def on (def.carrier = rf.carrier )AND rf.active=1
+			 INNER JOIN VX_airline_cabin_def def on (def.carrier = rf.carrier )AND rf.active=$ac
                            INNER JOIN VX_data_defns dcla on (dcla.alias = def.level and dcla.aln_data_typeID = 13 and rf.cabin = dcla.vx_aln_data_defnsID) 
 			   LEFT JOIN VX_data_defns dpax on (dpax.vx_aln_data_defnsID = rf.pax_type) 
 			  LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = rf.day_of_week)

@@ -119,12 +119,7 @@
 
                         </div>
 
-
-
-
-
-
-
+                 
                         <div class="col-sm-4 text-right">
                             <button type="submit" class="btn btn-danger" data-toggle="tooltip" data-title="Filter" name="filter" id="filter"><i class="fa fa-filter"></i></button>
                             <button type="button" data-toggle="tooltip" data-title="Download" class="btn btn-danger" onclick="downloadRAFeed()"><i class="fa fa-download"></i></button>
@@ -132,8 +127,15 @@
                     </div>
                 </form>
 				</div>
+                
                 <div class="col-md-12" style="padding:0;">
                     <div class="tab-content table-responsive" id="hide-table">
+                    <div class="col-md-2">
+                      <select class="form-control"  name="upg_act_Inact" id="upg_act_Inact">
+                                    <option value="1">Active</option>
+                                    <option value="0">In active</option>
+                                </select>
+                        </div>
                         <table id="rafeedtable" class="table table-bordered dataTable no-footer">
                             <thead>
                                 <tr>
@@ -182,7 +184,35 @@
     </div>
 </div>
 <script>
+
+
+
+
+//$('#upg_act_Inact').trigger('change');     
+//$('#upg_act_Inact').val('<?=$act_Inact?>').trigger('change');
+
     $(document).ready(function() {
+
+        loaddatatable();
+
+
+        $('#upg_act_Inact').change(function(event) {    
+            var act_Inact = $('#upg_act_Inact').val();    
+            $.ajax({
+                url:"rafeed/server_processing",
+                method:"GET",
+                data:{inputVal:act_Inact},
+                success:function(data)
+                {
+                    $('#rafeedtable').DataTable().destroy();
+                    loaddatatable();
+                    $("li.paginate_button:nth-child(2) a").trigger('click');       
+                }
+            });
+            //$('#rafeedtable').DataTable();
+         });
+
+
         $('#airline_code').change(function(event) {
             var carrier = $('#airline_code').val();
             $.ajax({
@@ -203,9 +233,14 @@
 
         $('#class').val('<?= $cla ?>').trigger('change');
 
+    });
 
+function loaddatatable()
+{
+    
         $('#rafeedtable').DataTable({
-            "bProcessing": true,
+           "bProcessing": true,
+	        "stateSave": true,
             "bServerSide": true,
 			"initComplete": function (settings, json) {  
 				$("#rafeedtable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");            
@@ -243,6 +278,11 @@
                         "name": "end_date",
                         "value": $("#end_date").val()
                     },
+                    {
+                        "name":"inputVal",
+                        "value":$("#upg_act_Inact").val()
+                    }
+                    
 
                 ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax({
@@ -433,9 +473,7 @@
             }]
 
         });
-
-
-    });
+     }
 
     function downloadRAFeed() {
         $.ajax({
