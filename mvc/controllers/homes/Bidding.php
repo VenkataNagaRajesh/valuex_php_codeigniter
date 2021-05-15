@@ -159,7 +159,7 @@ class Bidding extends MY_Controller {
 			   // $this->data['mile_value'] = $this->preference_m->get_preference(array("pref_code" => 'MILES_DOLLAR'))->pref_value;
 				// $this->data['mile_proportion'] = $this->preference_m->get_preference(array("pref_code" => 'MIN_CASH_PROPORTION'))->pref_value;
 			} else {
-				$this->data['error'] .= '<br>OOPS! PNR FOR UPGRADE OFFER MISSING';
+				$this->data['error'] .= '<br>OOPS! PNR FOR OFFER MISSING';
 			}
 		}
 

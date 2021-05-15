@@ -219,7 +219,7 @@ if ($any_product ) {
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2 lft-gap">
-                        <div class="col-xs-12 col-sm-12"><b style="color:#000; float:left">eloek To</b></div>
+                        <div class="col-xs-12 col-sm-12"><b style="color:#000; float:left">upgrade To</b></div>
                         <div class="col-xs-12 col-sm-12">
     						<div class="col-xs-12 col-sm-12">
     						    <div class="lst-box">
