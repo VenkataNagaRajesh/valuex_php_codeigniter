@@ -128,18 +128,6 @@ if ($any_product ) {
 							<p>Passenger(s):<span style="color:<?=$mail_header_color?>"><?php echo ucfirst($pax_names); ?></span>
 							<span class="pull-right" style="color:#333;">Booking Ref No: <?=$pnr_ref?></span>
 							<br><span class="pull-right" style="color:#333;">No Of Passengers: <?=$passengers_count?></span>
-<?php
-		if ( isset($resubmit) && isset($last_bid_total_value)) {
-			
-?>
-							<br><span class="pull-right" style="color:#333;align:right">Status: Re-bidding:  Last Bid Total: $ <i><?=$last_bid_total_value?></i></span>
-<?php
-		} else {
-?>
-			<br><span class="pull-right" style="color:#333;align:right">Status: Fresh Bidding</i></span>
-<?php
-		}
-?>
 							</p>
 <?php
 	} else {
@@ -164,14 +152,6 @@ if ($any_product ) {
     					   <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
 					</div>
  <div class="col-sm-12 sub-tbl-bar">
-	<span class="col-xs-7 col-sm-5 col-lg-6" style='float:left'><h2>Upgrade Offer</h2></span>
-<?php
-	if ( $resubmit ) {
-?>
-        <span style="float:right;background: #efefef"><a href='#' onclick="if ( confirm('Are you sure that you like to cancel the bid ?')) window.location='<?=base_url('homes/cancel/page/?pnr_ref='. $pnr_ref. '&offer_id=' . $offer_id_1 . '&type=1')?>';" type="button" class="btn btn-danger" >Cancel Bid</a></span>
-<?php
-	}
-?>
 </div>
    <div class="container">
 	 <div class="accordion" id="upgrade-refine">
@@ -219,7 +199,7 @@ if ($any_product ) {
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2 lft-gap">
-                        <div class="col-xs-12 col-sm-12"><b style="color:#000; float:left">eloek To</b></div>
+                        <div class="col-xs-12 col-sm-12"><b style="color:#000; float:left">Upgrade To</b></div>
                         <div class="col-xs-12 col-sm-12">
     						<div class="col-xs-12 col-sm-12">
     						    <div class="lst-box">
@@ -357,14 +337,6 @@ function updateCabinMedia(flight_number){
    <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
 </div>
  <div class="col-sm-12 sub-tbl-bar">
-	<span class="col-xs-7 col-sm-5 col-lg-6" style='float:left'><h2>Baggage Offer</h2></span>
-<?php
-	if ( $resubmit ) {
-?>
-        <span style="float:right;background: #efefef"><a href='#' onclick="if ( confirm('Are you sure that you like to cancel the bid ?')) window.location='<?=base_url('homes/cancel/page/?pnr_ref=' . $pnr_ref . '&offer_id='. $offer_id_2. '&type=2')?>';" type="button" class="btn btn-danger" >Cancel Bid</a></span>
-<?php
-	}
-?>
 </div>
    <div class="container">
 	 <div class="accordion" id="baggage-refine">
@@ -502,27 +474,6 @@ var cwtpoints<?=$ond?> = [];
 						<div class="col-md-10 ">
 						    <div class="col-md-12">
 						        <h2 class="pull-right" style="margin:5px 0px;"><b>Booking Ref No: <?php echo $pnr_ref; ?></b></h2>
-<?php
-		if ( isset($resubmit) && isset($last_bid_total_value)) {
-			
-?>
-			<input type='hidden' name="bid_id" id="type" value=<?=$resubmit?>>
-						        
-						    </div>
-						    <div class="col-md-12">
-						        <h2 class="pull-right" ><span style="color:#333;align:right">Status: Re-bidding:  Last Bid Total: $ <i><?=$last_bid_total_value?></i></span></h2>
-<?php
-		} else {
-?>
-						        
-						    </div>
-						    <div class="col-md-12">
-							
-							
-							<h2 class="pull-right"><span style="color:#333;align:right">Status: Fresh Bidding</i></span></h2>
-<?php
-		}
-?>                      </div>
 	                    <div class="col-md-12">
 							<p class="pull-right">Total Bid Amount  <strong style="margin-left:12px;"> <i class="fa fa-dollar"></i> <b id="bidtot"></b></strong></p>
 						</div>

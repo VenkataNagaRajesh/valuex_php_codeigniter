@@ -43,10 +43,11 @@ class Bidding extends MY_Controller {
 
 				$this->data['pnr_ref'] = $pnr_ref; 
 				$offer_ref = $this->offer_reference_m->getOfferDataByRef($pnr_ref);
+			//	echo "<pre>OFFERS=" . print_r($offer_ref,1) . "</pre>"; exit;
 				if ( !count($offer_ref) ) {
 					$this->data['error'] = "Sorry the offer for PNR $pnr_ref is not found! or no longer valid!"; 
 				} else {
-						$status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+						$sent_offer_mail = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 						$bid_received = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
 						$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 						//$bid_confirmation = $this->preference_m->get_preference(array("pref_code" => 'BID_CONFIRMATION'))->pref_value;
@@ -62,7 +63,7 @@ class Bidding extends MY_Controller {
 								$this->data['error_'. $offer_data->product_id] = $offer->product_name . " Offer Expired"; 
 							}  
 
-							if($status == $offer_data->offer_status || $bid_received == $offer_data->offer_status){
+							if($sent_offer_mail == $offer_data->offer_status || $bid_received == $offer_data->offer_status){
 								switch($offer_data->product_id ) {
 									case 1: 
 										if ( $bid_received == $offer_data->offer_status ) {
@@ -125,8 +126,10 @@ class Bidding extends MY_Controller {
 					$this->data['upgrade_offer'] = 1;
 					if ( $result->bid_id) {
 						$this->data['last_bid']['last_bid_'. $result->product_id . '_'. $result->flight_number] = $result->bid_value;
-						$this->data['last_bid_total_value'] += $result->bid_value;
-						$this->data['resubmit'] = $result->bid_id;
+						$this->data['last_bid_value_'. $result->product_id] += $result->bid_value;
+						$this->data['bid_id_'. $result->product_id] = $result->bid_id;
+					} else {
+						$this->data['bid_id_'. $result->product_id] = 0;
 					}
 					//reducing duplicate names for multi cabins case
 					$result->pax_names = $this->bid_m->getPaxNames($pnr_ref);
@@ -267,8 +270,10 @@ class Bidding extends MY_Controller {
 					// var_dump(json_encode($bg,JSON_FORCE_OBJECT),"<br>");
 					if ( $bg->bid_id) {
 						$this->data['last_bid']['last_bid_'. $bg->product_id . '_'. $bg->flight_number] = $bg->bid_value;
-						$this->data['last_bid_total_value'] += $bg->bid_value;
-						$this->data['resubmit'] = $bg->bid_id;
+						$this->data['last_bid_value_'. $bg->product_id] += $bg->bid_value;
+						$this->data['bid_id_'. $bg->product_id] = $bg->bid_id;
+					} else {
+						$this->data['bid_id_'. $bg->product_id] =  0;
 					}
 					//reducing duplicate names for multi cabins case
 				
