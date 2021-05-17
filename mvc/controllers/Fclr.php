@@ -521,11 +521,10 @@ class Fclr extends Admin_Controller
         }
 
 
-
-
-
         function server_processing()
         {
+
+
                 $userID = $this->session->userdata('loginuserID');
                 $roleID = $this->session->userdata('roleID');
 
@@ -671,10 +670,7 @@ class Fclr extends Admin_Controller
                         $sWhere .= 'fc.carrier_code IN (' . implode(',', $this->session->userdata('login_user_airlineID')) . ')';
                 }
 
-
-
-
-
+               $ac=$_GET['inputVal'];
                 $sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code as carrier_code , off_point, 
 		season_id,flight_number, fdef.cabin as fcabin, sea.season_name,
             	tdef.cabin as tcabin,  dfre.code as day_of_week , fc.active, sea.ams_season_start_date as start_date, sea.ams_season_end_date as end_date,
@@ -686,8 +682,8 @@ class Fclr extends Admin_Controller
                      LEFT JOIN  VX_data_defns dbp on (dbp.vx_aln_data_defnsID = fc.boarding_point) 
 		     LEFT JOIN VX_data_defns dop on (dop.vx_aln_data_defnsID = fc.off_point)    
 		     LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = fc.carrier_code)
-		     LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency)
-		     INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = fc.carrier_code)
+		     LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency) 
+		     INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = fc.carrier_code) and fc.active=$ac
 
 		     INNER JOIN VX_data_defns fca on (fca.alias = fdef.level and fca.aln_data_typeID = 13 AND fca.vx_aln_data_defnsID = fc.from_cabin)
 		     
@@ -695,10 +691,14 @@ class Fclr extends Admin_Controller
                      INNER JOIN VX_data_defns tca on (tca.alias = tdef.level and tca.aln_data_typeID = 13 AND tca.vx_aln_data_defnsID = fc.to_cabin)
 		     LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = fc.season_id )
 		     LEFT JOIN VX_market_airport_map smap on (smap.airport_id = fc.boarding_point ) 
-		     LEFT JOIN VX_market_airport_map dmap on (dmap.airport_id = fc.off_point)$sWhere $sOrder $sLimit";
+		     LEFT JOIN VX_market_airport_map dmap on (dmap.airport_id = fc.off_point)
+                     
+                     
+                     $sWhere $sOrder $sLimit";
 
 
                 $rResult = $this->install_m->run_query($sQuery);
+                
                 $sQuery = "SELECT FOUND_ROWS() as total";
                 $rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;
                 $output = array(
@@ -706,6 +706,7 @@ class Fclr extends Admin_Controller
                         "iTotalRecords" => $rResultFilterTotal,
                         "iTotalDisplayRecords" => $rResultFilterTotal,
                         "aaData" => array()
+              
                 );
 
                 $i = 1;
@@ -826,7 +827,6 @@ class Fclr extends Admin_Controller
                         $id = $this->input->post('id');
                         $slider=$this->input->post('slider_start');
                         $minimum_values=$this->input->post('min');
-
                         $status = $this->input->post('status');
                         if ($id != '' && $status != '') {
                                 if ((int) $id) {
@@ -836,7 +836,7 @@ class Fclr extends Admin_Controller
                                                 $data['active'] = 1;
                                                 $this->fclr_m->update_fclr($data, $id);
                                                 echo 'Success';
-                                        } elseif ($status == 'unchacked') {
+                                        } else if ($status == 'unchacked') {
                                                 $data['active'] = 0;
                                                 $this->fclr_m->update_fclr($data, $id);
                                                 echo 'Success';
