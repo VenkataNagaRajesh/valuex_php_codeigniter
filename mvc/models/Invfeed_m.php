@@ -94,7 +94,12 @@ class Invfeed_m extends MY_Model {
 	}
 
 	public function delete_invfeed($id){
-		parent::delete($id);
+		$data = [
+			'active' => 0,
+		];
+		$this->db->where('invfeed_id', $id);
+		$this->db->update('VX_daily_inv_feed', $data);
+	   return true;
 	}
 	
 }

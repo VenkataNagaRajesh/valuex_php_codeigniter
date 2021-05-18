@@ -38,15 +38,22 @@
 					 echo form_dropdown("type", $types,set_value("type",$type), "id='type' class='form-control hide-dropdown-icon select2'");    ?>
 				</div>
 				
+
+				<div class="col-sm-3 col-md-2">
+                        <?php
+                        $country_list['0'] = "Country code";
+							ksort($country_list);
+                        echo form_dropdown("country_id", $country_list,set_value("country_id",$countryID), "id='country_id' class='form-control hide-dropdown-icon select2' placeholder='Country code'");    ?>
+                 </div>
 				<div class="col-sm-3 col-md-2">
 				 <?php  $list['0'] = " Airport";
 					 foreach($airports_list as $alist ) {
 						$list[$alist->vx_aln_data_defnsID] = $alist->code;
 					 }
-					 echo form_dropdown("airportID", $list,set_value("airportID",$list), "id='airportID' class='form-control hide-dropdown-icon select2'");    ?>
+					 echo form_dropdown("airportID", $list,set_value("airportID",$list), "id='airportID' class='form-control hide-dropdown-icon select2' placeholder='Airport code or Name'");    ?>
 				</div>
 				
-				<div class="col-sm-3 col-md-4 text-right">
+				<div class="col-sm-3 col-md-2 text-right">
 				  <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
 				  <button type="button" class="btn btn-danger" onclick="downloadSeasonAirport()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
 				</div>			
