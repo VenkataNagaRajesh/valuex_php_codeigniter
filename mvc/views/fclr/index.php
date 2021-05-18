@@ -245,7 +245,7 @@
                                     <option value="1">Active</option>
                                     <option value="0">In active</option>
                                 </select>
-                        </div>
+            </div>
              <table id="fclrtable" class="table table-bordered dataTable no-footer">
                  <thead>
 					<tr>
@@ -443,13 +443,13 @@ $('#fclr_act_Inact').change(function(event) {
       success:function(data)
       {
         loaddatatable();
-        $("li.paginate_button:nth-child(2) a").trigger('click');       
+        $("li.paginate_button:nth-child(1) a").trigger('click');       
       }
   });
  $('#fclrtable').DataTable();
 });
 
-$act_Inact = $('fclr_#act_Inact').val();
+$act_Inact = $('#fclr_act_Inact').val();
 
 $('#fclr_act_Inact').trigger('change');     
 $('#fclr_act_Inact').val('<?=$act_Inact?>').trigger('change');
@@ -601,7 +601,7 @@ function downloadFCLR(){
   var status = '';
   var id = 0;
  $('#fclrtable tbody').on('click', 'tr .onoffswitch-small-checkbox', function () {
-      if($(this).prop('checked') ) {
+    if($(this).prop('checked')) {
           status = 'chacked';
           id = $(this).parent().attr("id");
       } else {
@@ -640,7 +640,6 @@ function downloadFCLR(){
                       toastr.options = {
                         "closeButton": true,
                         "debug": false,
-                        "newestOnTop": false,
                         "progressBar": false,
                         "positionClass": "toast-top-right",
                         "preventDuplicates": false,
@@ -659,6 +658,7 @@ function downloadFCLR(){
           });
       }
   }); 
+
 $( ".select2" ).select2({closeOnSelect:false, placeholder:'Select Frequency'});
  </script>
 

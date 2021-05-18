@@ -159,6 +159,12 @@
 			</div>
 		<div class="col-md-12" style="padding:0;">
                         <div class="tab-content table-responsive px-feed" id="hide-table">
+                        <div class="col-md-2">
+                        <select class="form-control"  name="paxfeed_act_Inact" id="paxfeed_act_Inact">
+                                    <option value="1">Active</option>
+                                    <option value="0">In active</option>
+                                </select>
+                        </div>
                <table id="paxfeedtable" class="table table-bordered dataTable no-footer">
                  <thead>
                     <tr>
@@ -210,7 +216,28 @@
 </div>
 <script>
  $(document).ready(function() {	 
+
+    onloaddatatable();
+
+
+$('#paxfeed_act_Inact').change(function(event) {    
+    var act_Inact = $('#paxfeed_act_Inact').val();    
+    $.ajax({
+        url:"paxfeed/server_processing",
+        method:"GET",
+        data:{inputVal:act_Inact},
+        success:function(data)
+        {
+            $("li.paginate_button:nth-child(2) a").trigger('click');       
+        }
+    });
+});
+
+
+ });
 	
+function onloaddatatable()
+{
     $('#paxfeedtable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
@@ -232,6 +259,7 @@
 				   {"name": "frequency","value": $("#frequency").val()},
 				   {"name": "pf_id","value": $("#pf_id").val()},
 				   {"name": "carrierCode","value": $("#carrier_code").val()},
+                   {"name":"inputVal","value":$("#paxfeed_act_Inact").val()},
 				   ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -241,7 +269,7 @@
                     "success": fnCallback
                          } ); }, 
 
-	"stateSaveCallback": function (settings, data) {
+	    "stateSaveCallback": function (settings, data) {
                 window.localStorage.setItem("paxdatatable", JSON.stringify(data));
             },
             "stateLoadCallback": function (settings) {
@@ -339,10 +367,8 @@
 
 	"columnDefs": [ {"targets": 0,"width": "50px" }]
 
-    });
-	
-	
-  });
+    });	
+}
  
   function downloadPAXFeed(){
 	  $.ajax({

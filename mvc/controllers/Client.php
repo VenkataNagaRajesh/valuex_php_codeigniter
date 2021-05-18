@@ -835,9 +835,11 @@ class Client extends Admin_Controller {
 			$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
 			$sWhere .= 'c.active = '.$this->input->get('active');		 
 	        } else {
-			//Default show Active users 
+			//Default show Active users
 			$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-			$sWhere .= 'c.active = 1';
+			$ac=$_GET['active'];
+			echo $ac; exit;
+			$sWhere .= 'c.active ='.$ac;
 		}
 			
 		    $sGroupby = " GROUP BY c.userID";
