@@ -204,8 +204,6 @@ class Offer_issue extends Admin_Controller {
 		$sQuery = " select pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat( distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1 AND pfe.active = 1  ";
 		if ($pnr) {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
-		} else {
-			$sQuery .= " AND dd.alias = 'new' ";
 		}
 		$sQuery .= " group by tpf.pnr_ref ,  booking_status,tpf.carrier_code, pfe.product_id ";
 

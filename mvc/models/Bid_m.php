@@ -70,15 +70,11 @@ class bid_m extends MY_Model {
 	$this->db->join('VX_airline_cabin_def tdef','(tdef.carrier = tpf.carrier_code) AND (dcto.alias = tdef.level)','LEFT');
 
 	
-	if(!empty($bidstatus)){
-		$this->db->where('dd.alias is null',$bidstatus);
-	} else {
-		#$this->db->where('dd.alias','sent_offer_mail');
+	if($bidstatus != NULL ){
+		$this->db->where('dd.alias',$bidstatus);
 	}
 	$this->db->where("tpf.pnr_ref",$pnr_ref);	
 	$this->db->where('pfe.active',1);   
-	//$this->db->group_by('pfe.product_id');
-	//$this->db->order_by('defto.level','ASC');
 	$query = $this->db->get();  
 	//print_r($this->db->last_query()); exit;
 	return $query->result();
