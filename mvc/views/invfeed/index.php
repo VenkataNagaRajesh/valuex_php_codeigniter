@@ -96,6 +96,12 @@
 			 </form>
 			</div>
             <div id="hide-table">
+            <div class="col-md-2">
+                      <select class="form-control"  name="inv_act_Inact" id="inv_act_Inact">
+                                    <option value="1">Active</option>
+                                    <option value="0">In active</option>
+                                </select>
+            </div>
                <table id="invfeedtable" class="table table-bordered dataTable no-footer">
                  <thead>
                     <tr>
@@ -130,7 +136,22 @@
 </div>
 <script>
  $(document).ready(function() {	 
-	
+	loaddatatable();
+    $('#inv_act_Inact').change(function(event) {    
+  var act_Inact = $('#inv_act_Inact').val();    
+  $.ajax({
+      url:"fclr/server_processing",
+      method:"GET",
+      data:{inputVal:act_Inact},
+      success:function(data)
+      {
+       // loaddatatable();
+        $("li.paginate_button:nth-child(1) a").trigger('click');       
+      }
+  });
+ $('#invfeedtable').DataTable();
+});
+
 $('#airline_code').change(function(event) {    
   var carrier = $('#airline_code').val();                 
 $.ajax({     async: false,            
@@ -150,9 +171,10 @@ $('#airline_code').trigger('change');
 $('#cabin').trigger('change');
 $('#cabin').val('<?=$cabin?>').trigger('change');
 
+});
 
-
-
+function loaddatatable()
+{
     $('#invfeedtable').DataTable( {
       "bProcessing": true,
       "bServerSide": true,
@@ -165,6 +187,7 @@ $('#cabin').val('<?=$cabin?>').trigger('change');
                    {"name": "airLine","value": $("#airline_code").val()},
 		           {"name": "flight_range","value": $("#flight_range").val()},
 			       {"name": "start_date","value": $("#start_date").val()},
+                   {"name":"inputVal","value":$("#inv_act_Inact").val()}
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -251,7 +274,7 @@ $('#cabin').val('<?=$cabin?>').trigger('change');
     });
 	
 	
-  });
+ }
  
   function downloadINVFeed(){
 	  $.ajax({

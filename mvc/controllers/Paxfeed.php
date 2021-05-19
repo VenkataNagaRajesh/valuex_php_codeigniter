@@ -855,7 +855,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','mark
                 }
 
 
-			
+			$paxfeed_ac=$_GET['inputVal'];
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
 
 			dtpf_id,first_name, last_name, pnr_ref,operating_carrier,marketing_carrier, pax_nbr,flight_number, pax.ptc ,ptc.code as ptc_code, fqtv, seg_nbr, dep_date, class ,dt.code as to_city, is_fclr_processed, fclr_data,
@@ -869,7 +869,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','mark
 			LEFT JOIN VX_data_defns cou  on (cou.vx_aln_data_defnsID = pax.booking_country) 
                         LEFT JOIN VX_data_defns cit on  (cit.vx_aln_data_defnsID = pax.booking_city) 
 			LEFT JOIN  VX_data_defns dca on (dca.vx_aln_data_defnsID = pax.carrier_code)	
-			INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = pax.carrier_code)
+			INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = pax.carrier_code) and pax.active=$paxfeed_ac
 			INNER JOIN  VX_data_defns dcab on (dcab.vx_aln_data_defnsID = pax.cabin and dcab.aln_data_typeID = 13 and dcab.alias = cdef.level)
 			LEFT JOIN  VX_data_defns ptc on (ptc.vx_aln_data_defnsID = pax.ptc)
 		$sWhere			

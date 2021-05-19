@@ -56,8 +56,14 @@ class Season_airport extends Admin_Controller {
 		if (count($this->data['airlines']) == 1){
                     $this->data['filter_airline'] = $this->data['airlines'][0]->vx_aln_data_defnsID;
 		}
+                if(!empty($this->input->post('country_id'))){
+                        $this->data['countryID'] = $this->input->post('country_id');
+                        } else {
+                          $this->data['countryID'] = 0;
+                        }         
 		$this->data['airports_list'] = $this->airports_m->getDefns('1');
-		$this->data["subview"] = "season_airport/index";
+                $this->data['country_list'] = $this->airports_m->getDefnsCodesListByType('2');
+                $this->data["subview"] = "season_airport/index";
 		$this->load->view('_layout_main', $this->data);
 	}
 

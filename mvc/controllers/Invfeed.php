@@ -94,7 +94,8 @@ class Invfeed extends Admin_Controller {
                 }
         }	
 
-	public function upload(){
+	public function upload()
+	{
 	
 	 if($_FILES){
 		 if (empty($_FILES['file']['name'])) {
@@ -107,12 +108,14 @@ class Invfeed extends Admin_Controller {
           	
 		try {	
 		   $file = $_FILES['file']['tmp_name'];          
-			   if(move_uploaded_file($file, APPPATH."/uploads/".$_FILES['file']['name'])){		
+			   if(move_uploaded_file($file, APPPATH."/uploads/".$_FILES['file']['name']))
+			   {		
 
 				$file =  APPPATH."/uploads/".$_FILES['file']['name']; 			   
 				$Reader = new SpreadsheetReader($file); 
-				 $header = array_map('strtolower',array("Airlline code", "Flight nbr","Dept date","Origin Airport","Destination Airport","Cabin","Empty seats","Aircraft Type","Seat Capacity","Sold Weight"));	
-				$header = array_map('strtolower', $header);
+				$header = array_map('strtolower',array("Airlline code", "Flight nbr","Dept date","Origin Airport","Destination Airport","Cabin","Empty seats","Aircraft Type","Seat Capacity","Sold Weight"));	
+				
+				//$header = array_map('strtolower', $header);
 				$Sheets = $Reader -> Sheets();
 					
 			$this->mydebug->invfeed_log("Processing the excel file " . $_FILES['file']['name'] , 0);
@@ -130,41 +133,63 @@ class Invfeed extends Admin_Controller {
 					$column++;
 						$Row = array_map('trim', $Row);
                                     //  print_r($Row);exit;
-                                        if($i == 0){ // header checking                                         
+                                        if($i == 0)
+										{ // header checking                                         
 						
                                           $flag = 0 ;
-                                         $import_header = array_map('strtolower', $Row);
-                                         if(count(array_diff($header,$import_header)) == 0 ){
-						$this->mydebug->invfeed_log("Header Matched for " . $_FILES['file']['name'] , 0);
-                                                 $flag = 1;
-                                         } else {
-							$this->mydebug->invfeed_log("Header mismatch" , 1);
-						 $this->session->set_flashdata('error', "Header mismatch, upload failed!");
-					     redirect(base_url("invfeed/index")); 	
-							break;
-					}
-                                        } else {
-                                           if($flag == 1){                                                                                      						
-					   	 if(count($Row) == 10){ //print_r($Row); exit;						
-							$this->mydebug->invfeed_log("coulmns count matched , uploading data for row " . $column , 0);
-							$invfeedraw = array();
-							$invfeedraw['airline'] = $Row[array_search('airline code',$import_header)];
-							//if(strlen($invfeedraw['airline']) != '2' || !ctype_alpha($invfeedraw['airline'])){
-								if(strlen($invfeedraw['airline']) != '2'){
-								 $this->mydebug->invfeed_log("Carrier code should be 2 charcters " . $column , 1);
-								 continue;
-							}
-							$invfeedraw['flight_nbr'] = $Row[array_search('flight nbr',$import_header)];
-							if(strlen($invfeedraw['flight_nbr']) >= '7'){
+                                          $import_header = array_map('strtolower', $Row);
+										
+													if(count(array_diff($header,$import_header))==0)
+													{
+													//	print_r($header);
+													//	print_r($import_header);
+													//	echo count(array_diff($header,$import_header));
+													echo "in if bloclk;";
+													//	exit();
+														
+															$this->mydebug->invfeed_log("Header Matched for " . $_FILES['file']['name'] , 0);
+															$flag = 1;
+													} 
+													else
+													{
+														print_r($header);
+														echo "in else block";
+														print_r($import_header);
+														echo "hai".count(array_diff($header,$import_header)); exit();
+
+																$this->mydebug->invfeed_log("Header mismatch" , 1);
+															$this->session->set_flashdata('error', "Header mismatch, upload failed!");
+															redirect(base_url("invfeed/index")); 	
+																break;
+													}
+										
+                                        }
+										else 
+										{
+                                           if($flag == 1){ 
+
+							if(count($Row) == 10)
+								{ //print_r($Row); exit;						
+										$this->mydebug->invfeed_log("coulmns count matched , uploading data for row " . $column , 0);
+										$invfeedraw = array();
+										$invfeedraw['airline'] = $Row[array_search('airline code',$import_header)];
+										//if(strlen($invfeedraw['airline']) != '2' || !ctype_alpha($invfeedraw['airline'])){
+											if(strlen($invfeedraw['airline']) != '2'){
+											$this->mydebug->invfeed_log("Carrier code should be 2 charcters " . $column , 1);
+											continue;
+								}
+											$invfeedraw['flight_nbr'] = $Row[array_search('flight nbr',$import_header)];
+							if(strlen($invfeedraw['flight_nbr']) >= '7')
+							{
 
 								 $this->mydebug->invfeed_log("Flight number should not be more than 6 charcters " . $column , 1);
-                                                                continue;
+                                continue;
 							}
 							$invfeedraw['departure_date'] = $Row[array_search('dept date',$import_header)];
 							 $invfeedraw['origin_airport'] = $Row[array_search('origin airport',$import_header)];
-							 if(strlen($invfeedraw['origin_airport']) != '3' || !ctype_alpha($invfeedraw['origin_airport'])){
-
-									 $this->mydebug->invfeed_log("Origin Airport  should be 3 charcters " . $column , 1);
+							 if(strlen($invfeedraw['origin_airport']) != '3' || !ctype_alpha($invfeedraw['origin_airport']))
+							 {
+								 $this->mydebug->invfeed_log("Origin Airport  should be 3 charcters " . $column , 1);
 								continue;
 							}
 							$invfeedraw['dest_airport'] = $Row[array_search('destination airport',$import_header)];
@@ -172,7 +197,7 @@ class Invfeed extends Admin_Controller {
 							if (strlen($invfeedraw['dest_airport']) != '3' || !ctype_alpha($invfeedraw['dest_airport'])){
 
 							 $this->mydebug->invfeed_log("Dest Airport should be 3 charcters " . $column , 1);
-                                                                continue;
+                              continue;
 
 							}
 
@@ -410,18 +435,20 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','cdef
                 }
 
 		$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-		$sWhere .= 'inv.active = 1'; 
+		$ac=$_GET['inputVal'];
+		$sWhere .= 'inv.active='. $ac;
 			
+		//$ac=;
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
 			invfeed_id, flight_nbr, departure_date, do.code as origin_airport, 
 		        departure_date, sold_seats, empty_seats,seat_capacity,sold_weight,
 			ds.code as dest_airport, cdef.cabin as cabin, 
 			da.code as airline_code ,act.aln_data_value as aircraft_type,
 			inv.active   FROM VX_daily_inv_feed inv  
-			LEFT JOIN VX_data_defns do on (do.vx_aln_data_defnsID = inv.origin_airport) 
+			LEFT JOIN VX_data_defns do on (do.vx_aln_data_defnsID = inv.origin_airport)
 			LEFT JOIN VX_data_defns ds on  (ds.vx_aln_data_defnsID = inv.dest_airport) 
 			LEFT JOIN  VX_data_defns da on (da.vx_aln_data_defnsID = inv.airline_id)
-			INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = inv.airline_id)
+			INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = inv.airline_id) 
 			INNER JOIN VX_data_defns act on (act.vx_aln_data_defnsID = inv.aircraft_typeID AND act.aln_data_typeID = 21)
 			INNER JOIN VX_data_defns dc on (dc.vx_aln_data_defnsID = inv.cabin and dc.aln_data_typeID = 13 and cdef.level = dc.alias)  
 		$sWhere			
@@ -429,6 +456,7 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','cdef
 		$sLimit	"; 
 	
 	$rResult = $this->install_m->run_query($sQuery);
+	#echo $this->db->last_query(); exit;
 	$sQuery = "SELECT FOUND_ROWS() as total";
 	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	
 			
