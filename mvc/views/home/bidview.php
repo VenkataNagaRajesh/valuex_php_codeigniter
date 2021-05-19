@@ -152,6 +152,26 @@ if ($any_product ) {
     					   <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
 					</div>
  <div class="col-sm-12 sub-tbl-bar">
+<?php
+		if ( isset($bid_id_1) && $bid_id_1 > 0) {
+			
+?>
+		<span class="col-sm-11" style='float:left'><h2>Upgrade Offer:
+			<input type='hidden' name="bid_id_1" id="type" value="<?=$bid_id_1?>">
+			&nbsp;&nbsp;Status: Re-bidding
+			&nbsp;Last Bid Total: $ <i><?=$last_bid_value_1?></i>  <i><?=$bid_id_1?></i>
+			</h2></span>
+        		<span class="col-sm-1"  style="float:right;color:#333;align:right"><a href='#' onclick="if ( confirm('Are you sure that you like to cancel the bid ?')) window.location='<?=base_url('homes/cancel/page/?pnr_ref='. $pnr_ref. '&offer_id=' . $offer_id_1 . '&type=1')?>';" type="button" class="btn btn-danger" >Cancel Bid</a></span>
+<?php
+		} else {
+?>
+			<span class="col-sm-12" style='float:left'><h2>Upgrade Offer:
+			&nbsp;&nbsp;Status: Fresh Bidding
+			</h2></span>
+			</span>
+<?php
+		}
+?>                   
 </div>
    <div class="container">
 	 <div class="accordion" id="upgrade-refine">
@@ -337,6 +357,26 @@ function updateCabinMedia(flight_number){
    <div class="col-xs-5 col-sm-6 col-lg-6" ><h2>Bid Amount</h2></div>
 </div>
  <div class="col-sm-12 sub-tbl-bar">
+<?php
+		if ( isset($bid_id_2) && $bid_id_2 > 0) {
+			
+?>
+		<span class="col-sm-11" style='float:left'><h2>Baggage Offer: 
+			<input type='hidden' name="bid_id_2" id="type" value="<?=$bid_id_2?>">
+			&nbsp;&nbsp;Status: Re-bidding
+			&nbsp;Last Bid Total: $ <i><?=$last_bid_value_2?></i>
+			</h2></span>
+        		<span class="col-sm-1"  style="float:right;color:#333;align:right"><a href='#' onclick="if ( confirm('Are you sure that you like to cancel the bid ?')) window.location='<?=base_url('homes/cancel/page/?pnr_ref='. $pnr_ref. '&offer_id=' . $offer_id_2 . '&type=2')?>';" type="button" class="btn btn-danger" >Cancel Bid</a></span>
+<?php
+		} else {
+?>
+			<span class="col-sm-12" style='float:left'><h2>Baggage Offer
+			Status: Fresh Bidding
+			</h2></span>
+			</span>
+<?php
+		}
+?>             
 </div>
    <div class="container">
 	 <div class="accordion" id="baggage-refine">
