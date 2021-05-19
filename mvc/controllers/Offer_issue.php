@@ -1063,7 +1063,7 @@ $sWhere $sOrder $sLimit";
 			$pnr_ref = $maildata['pnr_ref'];
 			$offer = $this->bid_m->getPassengers($pnr_ref);
 			if (!$offer[0]->carrier_code) {
-			echo "carrier missing for $pnr_ref";
+			echo "<br>missing passenger deails for  $pnr_ref";
 			return;
 			}
 
