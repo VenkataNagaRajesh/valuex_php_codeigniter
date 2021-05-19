@@ -464,32 +464,31 @@ $sQuery = "
  select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.passenger_list,SubSet.product_id, SubSet.from_cabin,
-                          MainSet.cash, MainSet.miles,  SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number, SubSet.from_city_name, SubSet.to_city_name, SubSet.name, SubSet.booking_status, SubSet.offer_status
+                          MainSet.cash, MainSet.miles,  SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number, SubSet.from_city_name, SubSet.to_city_name, SubSet.name, SubSet.offer_status
 
                 FROM (  select distinct oref.offer_id, oref.create_date as offer_date , oref.pnr_ref,oref.cash_percentage, oref.cash, oref.miles from  VX_offer oref  
                      ) as MainSet 
                         INNER JOIN (
-                                        select  flight_number, bs.aln_data_value as booking_status, os.aln_data_value as offer_status,
+                                        select  pext.offer_id,flight_number,  os.aln_data_value as offer_status,
                                                 group_concat(distinct dep_date) as flight_date  ,
                                                 pext.pnr_ref,group_concat(distinct first_name, ' ' , last_name SEPARATOR '<br>' ) as passenger_list ,  from_city as from_city_code, to_city as to_city_code, 
                                                 group_concat(distinct cdef.desc) as from_cabin  , fc.aln_data_value as from_city_name, fc.code as from_city, tc.code as to_city, tc.aln_data_value as to_city_name,
                                                 car.code as carrier , pf1.carrier_code,prq.product_id as product_id,prd.name as name
-                                         from VX_daily_tkt_pax_feed pf1 LEFT JOIN VX_offer_info prq on (pf1.dtpf_id = prq.dtpf_id) 
-                                         LEFT JOIN VX_products prd on (prq.product_id = prd.productID)
-                                         LEFT JOIN VX_offer pext on (pext.pnr_ref = pf1.pnr_ref AND prq.product_id = pext.product_id)
-                                        LEFT JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = pf1.ptc AND ptc.aln_data_typeID = 18)
-                                        LEFT JOIN VX_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
-                                        LEFT JOIN VX_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
-					LEFT JOIN VX_airline_cabin_def cdef on (cdef.carrier = pf1.carrier_code)
-                                        LEFT JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 and cab.alias = cdef.level)
-                                        LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
-		     			LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.offer_status AND bs.aln_data_typeID = 20)
-		     			LEFT JOIN VX_data_defns os on (os.vx_aln_data_defnsID = pext.offer_status AND os.aln_data_typeID = 20)
-                                        where (pf1.is_up_offer_processed = 1  || pf1.is_bg_offer_processed = 1)
-                                       group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
-                   ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref ) 
+                                         from VX_daily_tkt_pax_feed pf1 
+                                         INNER JOIN VX_offer pext on (pext.pnr_ref = pf1.pnr_ref )
+					 INNER JOIN VX_offer_info prq on (pf1.dtpf_id = prq.dtpf_id AND prq.product_id = pext.product_id) 
+                                         INNER JOIN VX_products prd on (prq.product_id = prd.productID)
+                                        INNER JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = pf1.ptc AND ptc.aln_data_typeID = 18)
+                                        INNER JOIN VX_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1)
+                                        INNER JOIN VX_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1)
+					INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = pf1.carrier_code)
+                                        INNER JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 and cab.alias = cdef.level)
+                                        INNER JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
+		     			INNER JOIN VX_data_defns os on (os.vx_aln_data_defnsID = pext.offer_status AND os.aln_data_typeID = 20)
+                                        where (pf1.is_up_offer_processed = 1  || pf1.is_bg_offer_processed = 1) AND pf1.active = 1 AND pext.active = 1 AND prq.active = 1 
+                                       group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code,prq.product_id
+                   ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND SubSet.offer_id = MainSet.offer_id ) 
 $sWhere $sOrder $sLimit";
-
 
 
         $rResult = $this->install_m->run_query($sQuery);
