@@ -518,6 +518,7 @@ var cwtpoints<?=$ond?> = [];
 							<p class="pull-right">Total Bid Amount  <strong style="margin-left:12px;"> <i class="fa fa-dollar"></i> <b id="bidtot"></b></strong></p>
 						</div>
 						</div>
+						</div>
 					
 						<div class="col-md-12 ">
 							<div class="price-range">
