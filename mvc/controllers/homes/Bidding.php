@@ -120,16 +120,16 @@ class Bidding extends MY_Controller {
 
 			if ( $pnr_ref ) {
 
-				$this->data['upgrade'] = $this->bid_m->getUpgradeOffers($pnr_ref, $bidstatus);
+				$upgrade = $this->bid_m->getUpgradeOffers($pnr_ref, $bidstatus);
+				$this->data['upgrade'] =  $upgrade;
+	//			echo "<pre>UPGRADE=" . print_r($upgrade,1) . "</pre>"; exit;
 				foreach($this->data['upgrade'] as $result ){
 					$this->data['offer_id_'. $result->product_id] = $result->offer_id;
 					$this->data['upgrade_offer'] = 1;
 					if ( $result->bid_id) {
-						$this->data['last_bid']['last_bid_'. $result->product_id . '_'. $result->flight_number] = $result->bid_value;
-						$this->data['last_bid_value_'. $result->product_id] += $result->bid_value;
 						$this->data['bid_id_'. $result->product_id] = $result->bid_id;
-					} else {
-						$this->data['bid_id_'. $result->product_id] = 0;
+						$this->data['last_bid_value_'. $result->product_id] += $result->bid_value;
+						$this->data['last_bid_total_value'] += $result->bid_value;
 					}
 					//reducing duplicate names for multi cabins case
 					$result->pax_names = $this->bid_m->getPaxNames($pnr_ref);
@@ -173,13 +173,12 @@ class Bidding extends MY_Controller {
 					$bgoffer = $this->offer_issue_m->getBaggageOffer($pnr_ref);
 			//	echo "<pre>" . print_r($bgoffer,1) . "</pre>"; exit;
 					if ( $bgoffer) {
-					$this->data['baggage_offer'] = 1;
 						$this->data['baggage_bag_type'] = $this->preference_m->get_preference_value_bycode('BAG_TYPE','24',$airline->airlineID);
 						$this->data['baggage_min_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MIN_VAL','24',$airline->airlineID);
 						$this->data['baggage_max_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MAX_VAL','24',$airline->airlineID);
 						$this->data['piece'] = $this->preference_m->get_preference_value_bycode('PIECE','24',$airline->airlineID);
 						// var_dump($pnr_ref);
-						$test="SELECT b.bid_id, o.offer_id, v.product_id, v.dtpfext_id,v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2) LEFT JOIN VX_offer o ON ( o.pnr_ref = vx.pnr_ref ) WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref'";
+						$test="SELECT b.bid_id, b.bid_value, o.offer_id, v.product_id, v.dtpfext_id,v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2 AND b.active = 1) LEFT JOIN VX_offer o ON ( o.pnr_ref = vx.pnr_ref ) WHERE v.active =1 AND vx.active =1 AND vxxx.active = 1 AND o.active = 1  AND v.ond>=1 AND vx.pnr_ref = '$pnr_ref'";
 						$rquery = $this->install_m->run_query($test);
 						// var_dump($rquery);
 						$mr=[];
@@ -195,6 +194,13 @@ class Bidding extends MY_Controller {
 							$mr[$rq->ond][$rq->dtpf_id]['rule_id']=$rq->rule_id;
 							$mr[$rq->ond][$rq->dtpf_id]['product_id']=$rq->product_id;
 							$mr[$rq->ond][$rq->dtpf_id]['offer_id']=$rq->offer_id;
+							$mr[$rq->ond][$rq->dtpf_id]['bid_value']=$rq->bid_value;
+					$this->data['offer_id_'. $rq->product_id] = $rq->offer_id;
+					if ( $rq->bid_id) {
+						$this->data['bid_id_'. $rq->product_id] = $rq->bid_id;
+						$this->data['last_bid_value_'. $rq->product_id] += $rq->bid_value;
+						$this->data['last_bid_total_value'] += $rq->bid_value;
+					}
 
 							$mr[$rq->ond][$rq->dtpf_id]['flight_number']=$rq->flight_number;
 							$mr[$rq->ond][$rq->dtpf_id]['dep_date']=$rq->dep_date;
@@ -235,7 +241,7 @@ class Bidding extends MY_Controller {
 				}
 				// var_dump($tr);
 				// die();
-				$sum_query="SELECT b.bid_id, v.product_id, sum(vxx.min_price) as min_price,sum(vxx.max_capacity) as max_capacity,v.ond,v.dtpfext_id FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2) WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref' group by v.ond";
+				$sum_query="SELECT b.bid_id, b.bid_value, v.product_id, sum(vxx.min_price) as min_price,sum(vxx.max_capacity) as max_capacity,v.ond,v.dtpfext_id FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2 AND b.active = 1 ) WHERE v.active = 1 AND vx.active = 1 AND v.ond>=1 AND vx.pnr_ref = '$pnr_ref' group by v.ond";
 				$sum_res = $this->install_m->run_query($sum_query);
 				// var_dump($sum_res);
 				// die();
@@ -266,8 +272,12 @@ class Bidding extends MY_Controller {
 
 				// var_dump($tr);
 				// die();
+				if ( count($tr) ) {
+					$this->data['baggage_offer'] = 1;
+				}
 				foreach($tr as $bg ) {
 					// var_dump(json_encode($bg,JSON_FORCE_OBJECT),"<br>");
+/*
 					if ( $bg->bid_id) {
 						$this->data['last_bid']['last_bid_'. $bg->product_id . '_'. $bg->flight_number] = $bg->bid_value;
 						$this->data['last_bid_value_'. $bg->product_id] += $bg->bid_value;
@@ -275,6 +285,7 @@ class Bidding extends MY_Controller {
 					} else {
 						$this->data['bid_id_'. $bg->product_id] =  0;
 					}
+*/
 					//reducing duplicate names for multi cabins case
 				
 					$cwtdata = $this->bclr_m->getActiveCWT($bg['rule_id']);

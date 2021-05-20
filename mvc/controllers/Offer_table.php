@@ -621,11 +621,11 @@ function processbid1() {
                    $mainsetWhere .= "  pf.dep_date <= ".$this->input->get('flight_to_dep_date'); 
                }
                if(!empty($this->input->get('product_id'))){
-                   $mainsetWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
                    $mainsetWhere .= '  pe.product_id = bid.productID  AND  bid.productID = '.  $this->input->get('product_id');
 	       }
 
-                   $mainsetWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                   $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
                    $mainsetWhere .= '  bid.active = 1';
 
 

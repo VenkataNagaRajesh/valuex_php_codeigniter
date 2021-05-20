@@ -99,7 +99,7 @@ class bid_m extends MY_Model {
 	$this->db->join('VX_master_data m2','m2.airportID = c2.vx_aln_data_defnsID','LEFT');
 	$this->db->join('VX_data_defns air_city1','(air_city1.vx_aln_data_defnsID = m1.cityID AND air_city1.aln_data_typeID = 3)','LEFT');
 	$this->db->join('VX_data_defns air_city2','(air_city2.vx_aln_data_defnsID = m2.cityID AND air_city2.aln_data_typeID = 3)','LEFT');
-	$this->db->join('UP_bid bid','(bid.offer_id = oref.offer_id AND tpf.flight_number = bid.flight_number)','LEFT');	
+	$this->db->join('UP_bid bid','(bid.offer_id = oref.offer_id AND tpf.flight_number = bid.flight_number AND bid.active = 1)','LEFT');	
 	$this->db->join('VX_data_defns dcto','(dcto.aln_data_typeID = 13 and dcto.vx_aln_data_defnsID = fclr.to_cabin)','LEFT');
 	$this->db->join('VX_airline_cabin_def tdef','(tdef.carrier = tpf.carrier_code) AND (dcto.alias = tdef.level)','LEFT');
 
@@ -109,6 +109,7 @@ class bid_m extends MY_Model {
 		$this->db->where('dd.alias','sent_offer_mail');
 	}
 	$this->db->where("tpf.pnr_ref",$pnr_ref);	
+	$this->db->where("tpf.active",1);	
 	$this->db->where('pfe.active',1);   
 	$this->db->where('pfe.product_id',1);   
 	$this->db->group_by('tpf.flight_number');

@@ -309,6 +309,9 @@ return $rResult;
 		$this->db->join('VX_airline_cabin_def def','(def.carrier = pf.carrier_code) AND (dcla.alias = def.level)','INNER');
 		$this->db->where('oref.pnr_ref',$pnr_ref); 
 		$this->db->where('pext.product_id',2);  //BAGGAGE
+		$this->db->where('oref.active',1);  //BAGGAGE
+		$this->db->where('pf.active',1);  //BAGGAGE
+		$this->db->where('pext.active',1);  //BAGGAGE
 		$this->db->order_by('pext.ond ASC'); 
 		#$this->db->where('dd.alias','bid_received');
 		#$this->db->group_by(array('pf.pnr_ref' , 'booking_status', 'from_city','to_city','carrier_code','carrier_c', 'from_city_name','to_city_name'));
