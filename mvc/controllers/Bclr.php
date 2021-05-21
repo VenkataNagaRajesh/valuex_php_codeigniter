@@ -1115,7 +1115,11 @@ class Bclr extends Admin_Controller
             $this->data['last_year_total_weight_per_flight'] = $getBGBclrdata[0]->last_year_total_weight_per_flight;
             $this->data['average_weight_per_flight_per_pax'] = $getBGBclrdata[0]->average_weight_per_flight_per_pax;
             $this->data['average_price_per_flight_per_pax'] = $getBGBclrdata[0]->average_price_per_flight_per_pax;
-            $this->data['no_of_pax_per_flight'] = $getBGBclrdata[0]->no_of_passengers/$getBGBclrdata[0]->total_flight_count;
+            if(($getBGBclrdata[0]->total_flight_count)==0)
+                $this->data['no_of_pax_per_flight']="∞";
+            else
+                 $this->data['no_of_pax_per_flight'] = $getBGBclrdata[0]->no_of_passengers/$getBGBclrdata[0]->total_flight_count;
+
         } else {
             $this->data['last_year_average_price_per_kg'] = 0;
             $this->data['last_year_revenue_per_flight'] = 0;
@@ -1261,7 +1265,7 @@ class Bclr extends Admin_Controller
             $total_weight = $objCWTData->total_weight;
             $average_weight = $objCWTData->average_weight;
             $average_price = $objCWTData->average_price;
-            #$total_flight_count =  $objCWTData->total_flight_count;
+           # $total_flight_count =  $objCWTData->total_flight_count;
             $total_pax_count = $objCWTData->total_pax_count;
             $last_year_average_price_per_kg = $total_revenue/$total_weight;
             $last_year_total_weight_per_flight = $total_weight/$total_flight_count;
@@ -1460,6 +1464,7 @@ class Bclr extends Admin_Controller
 
 	if ( $total_flight_count ) {
         	$sQuery .= " SELECT COUNT(*) as total_flight_count FROM ( SELECT count(*) ";
+
 	} elseif ($matchCheck ) {
 		#$total_flight_count = 1;
         	$sQuery .= " SELECT COUNT(*) as total_flight_count   ";

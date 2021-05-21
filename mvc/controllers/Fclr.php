@@ -211,6 +211,7 @@ class Fclr extends Admin_Controller
                                         } else {
                                                 $array["modify_date"] = time();
                                                 $array["modify_userID"] = $this->session->userdata('loginuserID');
+                                                $array["manual_edit"]=1;
                                                 $this->fclr_m->update_fclr($array, $fclr_id);
                                                 $json['status'] = 'success';
                                         }
@@ -420,7 +421,8 @@ class Fclr extends Admin_Controller
 
                 if (!empty($this->input->post('boarding_point'))) {
                         $this->data['boarding_point'] = $this->input->post('boarding_point');
-                } else {
+                } 
+                else {
                         $this->data['boarding_point'] = 0;
                 }
                 if (!empty($this->input->post('soff_point'))) {
@@ -672,7 +674,7 @@ class Fclr extends Admin_Controller
 
                $ac=$_GET['inputVal'];
                 $sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code as carrier_code , off_point, 
-		season_id,flight_number, fdef.cabin as fcabin, sea.season_name,
+		season_id,flight_number, fdef.cabin as fcabin, sea.season_name,manual_edit,
             	tdef.cabin as tcabin,  dfre.code as day_of_week , fc.active, sea.ams_season_start_date as start_date, sea.ams_season_end_date as end_date,
             	round(min) as min ,round(max) as max,floor(average) as average_value,round(slider_start)as slider_start,from_cabin, to_cabin,
 		dbp.code as source_point , dop.code as dest_point,
@@ -743,9 +745,14 @@ class Fclr extends Admin_Controller
                         $feed->action = '';
                         if (permissionChecker('fclr_edit')) {
 
-                                $feed->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_fclr"  data-placement="top" onclick="editfclr(' . $feed->fclr_id . ')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit"></i></a>';
+                        if($feed->manual_edit) { 
+                                $man_edit_color="style='color:blue' title='Manually edited' alt='Manually edited'";
+                        } else {
+                                $man_edit_color="";
                         }
-
+                                $feed->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_fclr"  data-placement="top" onclick="editfclr(' . $feed->fclr_id . ')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit" '.$man_edit_color.'></i></a>';
+                        
+                }
                         if (permissionChecker('fclr_delete')) {
                                 $feed->action .= btn_delete('fclr/delete/' . $feed->fclr_id, $this->lang->line('delete'));
                         }
@@ -762,6 +769,8 @@ class Fclr extends Admin_Controller
                         $feed->id = $i;
                         $i++;
                         $output['aaData'][] = $feed;
+
+
                 }
 
 
@@ -863,7 +872,7 @@ class Fclr extends Admin_Controller
 
                 $param = htmlentities(escapeString($this->uri->segment(3)));
                 $carrier_id = $this->input->get('carrier_id');
-		//$carrier_id = 5418;
+		
                 if ((int) $param) {
                         $year = $param;
                 	$where_date = " year(FROM_UNIXTIME(rf.departure_date)) = " . $year;
@@ -930,6 +939,7 @@ class Fclr extends Admin_Controller
                                 ) SubSet  ON (MainSet.flight_number = SubSet.flight_number AND MainSet.boarding_point = SubSet.boarding_point AND MainSet.off_point = SubSet.off_point AND MainSet.day_of_week = SubSet.day_of_week AND MainSet.carrier = SubSet.carrier AND MainSet.porder = SubSet.porder )) as SubSet1 on (SuperSet.flight_number = SubSet1.flight_number AND SuperSet.boarding_point = SubSet1.boarding_point AND SuperSet.off_point = SubSet1.off_point AND SuperSet.day_of_week = SubSet1.day_of_week AND SuperSet.carrier = SubSet1.carrier) 
                         ";
                         $rResult = $this->install_m->run_query($sQuery);
+                        
                         $rResult1 = array_merge($rResult1, $rResult);
 			if ( !$rResult) {
 				$msg .= "<br>No matching records FROM RA FEED for NO SEASON carrer ID : $carrier_id, for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1]  ;

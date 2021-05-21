@@ -27,11 +27,15 @@ class Fclr_m extends MY_Model {
                 return TRUE;
         }
 
-	  function update_fclr($data, $id = NULL) {
-                parent::update($data, $id);
+	  function update_fclr($data, $id = NULL,$isMannual_Check=0) {
+                if($isMannual_Check)
+                {
+                        $this->db->where('manual_edit',0);
+                }
+                parent::update($data,$id);
                 return $id;
         }
-
+       
 	function checkFCLREntry($array){
                 $this->db->select('fclr_id');
                 $this->db->from('UP_fare_control_range');
@@ -47,7 +51,7 @@ class Fclr_m extends MY_Model {
 
 
         }
-
+       
 
 	function checkANDInsertFCLR($data,$array1) {
 	   $fclr_id = $this->checkFCLREntry($data);
@@ -55,7 +59,7 @@ class Fclr_m extends MY_Model {
            if($fclr_id){ 
                   $array["modify_date"] = time();
                   $array["modify_userID"] = $this->session->userdata('loginuserID');
-                  $this->fclr_m->update_fclr($array,$fclr_id);
+                  $this->fclr_m->update_fclr($array,$fclr_id,1);
 
            } else {
                   $array["create_date"] = time();

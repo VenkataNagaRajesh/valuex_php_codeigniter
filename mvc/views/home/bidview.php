@@ -605,6 +605,7 @@ var cwtpoints<?=$ond?> = [];
 $('#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>').slider({
 	tooltip: 'always',
 	formatter: function(value) {
+		$("#bidtot").text('$ ' + numformat(value));
 		return '$'+numformat(value) + ' Per Person';
 	}
 });
@@ -650,7 +651,7 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 			var total_piece = <?=$bslider['total_piece'] ?>;
 			var per_total = <?=$bslider['per_total'] ?>;
 			var bag_type = '<?=$bclr[$bslider['ond']]->bag_type?>';
-			var total;
+			var total=0;
 			if(bag_type=='PC'){
 				total=price+per_total*total_piece*bg_val;
 			}else{
@@ -717,8 +718,6 @@ $(document).ready(function () {
 		 event.preventDefault();
 	});
    		mileSliderUpdate(); 
-
-
 	});
 
 
