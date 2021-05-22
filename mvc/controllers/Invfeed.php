@@ -144,7 +144,7 @@ class Invfeed extends Admin_Controller {
 													//	print_r($header);
 													//	print_r($import_header);
 													//	echo count(array_diff($header,$import_header));
-													echo "in if bloclk;";
+													//echo "in if bloclk;";
 													//	exit();
 														
 															$this->mydebug->invfeed_log("Header Matched for " . $_FILES['file']['name'] , 0);
