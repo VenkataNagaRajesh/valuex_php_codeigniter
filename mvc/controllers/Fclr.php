@@ -145,6 +145,18 @@ class Fclr extends Admin_Controller
                 $id = $this->input->post('fclr_id');
                 if ((int) $id) {
                         $fclr = $this->fclr_m->get_single_fclr(array('fclr_id' => $id));
+			if ($fclr->boarding_point) {
+                        	$ap = $this->airports_m->get_definition_data($fclr->boarding_point);
+				$fclr->boarding_point_name = $ap->code;
+			} else {
+				$fclr->boarding_point_name = '';
+			}
+			if ($fclr->off_point) {
+                        	$ap = $this->airports_m->get_definition_data($fclr->off_point);
+				$fclr->off_point_name = $ap->code;
+			} else {
+				$fclr->off_point_name = '';
+			}
                 }
 
                 $this->output->set_content_type('application/json');
