@@ -146,7 +146,14 @@
                                 ksort($seasons);
                                 echo form_dropdown("sseason_id", $seasons,set_value("sseason_id",$sseason_id), "id='sseason_id' class='form-control hide-dropdown-icon select2'"); ?>
 						</div>	
-                      					
+
+                            <div class="col-md-12">
+                                    <select class="form-control select2"  name="fclr_status" id="fclr_status">
+                                        <option value="1">Active</option>
+                                        <option value="0">In active</option>
+                                    </select>
+                            </div>
+                            			
 					</div>
 					<div class="col-md-2 col-sm-3 select-form">
 						<div class="col-md-12">
@@ -155,6 +162,14 @@
 						<div class="col-md-12">
 							<input type="text" class="form-control" placeholder="End range" id="end_flight_number" name="end_flight_number" value="<?=set_value('end_flight_number',$end_flight_number)?>" >
 						</div>
+                        <div class="col-md-12">
+                                    <select class="form-control select2"  name="fclr_edit_status" id="fclr_edit_status">
+                                        <option value="0">All</option>
+                                        <option value="1">Manually Edited</option>
+                                        <option value="2">Manual Attention needed</option>
+                                        <option value="3">Manually Added</option>
+                                    </select>
+                            </div>
 					</div>
 
 					  <div class="col-md-2 col-sm-3 select-form">
@@ -240,12 +255,7 @@
 	</div>
 	<div class="col-md-12 fclr-table">
 		<div id="hide-table" class="fclr-table-data">
-        <div class="col-md-2">
-                      <select class="form-control"  name="fclr_act_Inact" id="fclr_act_Inact">
-                                    <option value="1">Active</option>
-                                    <option value="0">In active</option>
-                                </select>
-            </div>
+        
              <table id="fclrtable" class="table table-bordered dataTable no-footer">
                  <thead>
 					<tr>
@@ -434,27 +444,6 @@ loaddatatable();
 });
 
 
-$('#fclr_act_Inact').change(function(event) {    
-  var act_Inact = $('#fclr_act_Inact').val();    
-  $.ajax({
-      url:"fclr/server_processing",
-      method:"GET",
-      data:{inputVal:act_Inact},
-      success:function(data)
-      {
-        loaddatatable();
-        $("li.paginate_button:nth-child(1) a").trigger('click');       
-      }
-  });
- $('#fclrtable').DataTable();
-});
-
-$act_Inact = $('#fclr_act_Inact').val();
-
-$('#fclr_act_Inact').trigger('change');     
-$('#fclr_act_Inact').val('<?=$act_Inact?>').trigger('change');
-
-        
 
 function loaddatatable() {
     $('#fclrtable').DataTable( {
@@ -483,7 +472,7 @@ function loaddatatable() {
 			       {"name": "sseason_id","value": $("#sseason_id").val()},
 			       {"name": "sfclr_id","value": $("#sfclr_id").val()},
                    {"name": "scarrier","value": $("#scarrier").val()},
-                   {"name":"inputVal","value":$("#fclr_act_Inact").val()}                  
+                   {"name":"fclr_status","value":$("#fclr_status").val()}                  
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -677,7 +666,7 @@ $.ajax({
                          "off_point":$('#off_point').val(),
                          "season_id":$('#season_id').val(),
                          "carrier_code":$('#carrier_code').val(),
-			 "flight_number":$('#flight_number').val(),
+			            "flight_number":$('#flight_number').val(),
                          "frequency":$('#frequency').val(),
                           "upgrade_from_cabin_type":$('#upgrade_from_cabin_type').val(),
                           "upgrade_to_cabin_type":$('#upgrade_to_cabin_type').val(),
@@ -696,7 +685,8 @@ success: function(data) {
 			newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
                         if (status == 'success' ) {
                                 alert(status);
-				form_reset();
+                                location.reload();
+				
                                 $("#fclrtable").dataTable().fnDestroy();
                                 loaddatatable();
                         } else if (status == 'duplicate'){
@@ -709,7 +699,11 @@ success: function(data) {
                                         }                                               
                 });                             
                         }
-             }
+             },
+error:function()
+{
+    alert("please check the data before save");
+}
 
           });
     <?php } ?>
@@ -729,9 +723,10 @@ $.ajax({
           type: 'POST',
           url: "<?=base_url('fclr/getFCLRData')?>",          
                   data: {
-                           "fclr_id":fclr_id},
+                           fclr_id:fclr_id},
           dataType: "html",                     
           success: function(data) {
+            //  alert(manual_edit);
                 var fclrinfo = jQuery.parseJSON(data);
                 $('#btn_txt').text('Update FCLR');
                 $('#carrier_code').val(fclrinfo['carrier_code']);
@@ -863,9 +858,6 @@ $('#deleteTriger').on("click", function(event){ // triggering delete one by one
             });
         }
     }); 
-
-
-
 
 $('#fclrtable').on('click', '.deleteRow', function() {
         $(this).not("#bulkDelete").parents("tr").toggleClass('rowselected');
