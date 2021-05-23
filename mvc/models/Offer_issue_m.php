@@ -150,16 +150,17 @@ public function getBidInfoFromOfferID($offer_id, $flight_number,$carrier_code) {
 }
 public function getOfferDetailsById($id) {
 //$sGroup = ' group by MainSet.flight_number';
+$sOrder = ' ORDER BY MainSet.productID ASC ';
 $mainsetWhere = "WHERE bid.active =1 ";
 $query = " select  SQL_CALC_FOUND_ROWS  
 MainSet.offer_id, MainSet.dtpf_id,  MainSet.upgrade_type,MainSet.offer_date, MainSet.name,MainSet.flight_date , SubSet.carrier , MainSet.flight_number , 
-SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin,
+SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, MainSet.cabin as from_cabin,
 MainSet.to_cabin, MainSet.bid_value  ,MainSet.min,MainSet.max,  MainSet.cash, MainSet.miles, MainSet.offer_status,
 SubSet.from_cabin_id,MainSet.weight, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code, MainSet.name, MainSet.bid_id,MainSet.product_id,MainSet.productID,MainSet.flight,SubSet.from_city_code,SubSet.to_city_code,SubSet.to_cabin_code
 
 FROM ( 
 		select bid.bid_id,bid.weight ,pf.dtpf_id,  oref.offer_id,oref.create_date as offer_date , prq.name as name,bid_value, bid_avg,bid_markup_val,
-		tdef.cabin as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, pe.product_id, pf.dep_date as flight_date,fcc.min,fcc.max,bid.productID,pf.flight_number as flight
+		tdef.cabin as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, pe.product_id, pf.dep_date as flight_date,fcc.min,fcc.max,bid.productID,pf.flight_number as flight, pf.cabin
 		from  
 				UP_bid bid 
 				
@@ -170,7 +171,7 @@ FROM (
 				LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and pf.dtpf_id = pe.dtpf_id )
 				LEFT JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = bid.upgrade_type AND tcab.aln_data_typeID = 13 )
 				LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code AND  tcab.alias = tdef.level ) 
-				LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pe.booking_status AND bs.aln_data_typeID = 20) 
+				LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = oref.offer_status AND bs.aln_data_typeID = 20) 
 				  ".$mainsetWhere."
 ) as MainSet 
 

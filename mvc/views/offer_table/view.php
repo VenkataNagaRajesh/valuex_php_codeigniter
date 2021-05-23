@@ -97,6 +97,8 @@
 			</p>
 		</div>
 	</div>
+<?php if ( isset($upgrade_offer) && $upgrade_offer) {
+?>
 	<div class="col-md-12">
 	<h4>Upgrade Details</h4>
 		<div class="table-responsive">
@@ -127,7 +129,7 @@
                         			$inv['departure_date'] = $data->flight_date;
 						$inv['origin_airport'] = $data->from_city_code;
 						$inv['dest_airport'] = $data->to_city_code;
-						$inv['cabin'] = $data->to_cabin_code;
+						$inv['cabin'] = $data->upgrade_type;
 			                        $seats_data = $this->invfeed_m->getEmptyCabinSeats($inv);
                         			$empty_seats = $seats_data->empty_seats - $seats_data->sold_seats;
 				?>
@@ -164,9 +166,12 @@
 				</tbody>
 			</table>
 		</div>
+	<?php } ?>
 	</div>
 	<div class="col-md-12">
-	<h4>Bagage Details</h4>
+<?php if ( isset($baggage_offer) && $baggage_offer) {
+?>
+	<h4>Baggage Details</h4>
 		<div class="table-responsive">
 		
 			<table class="table-hover">
@@ -175,7 +180,7 @@
 						<th>Flight</th>
 						<th>Date</th>
 						<th>Origin</th>
-						<th>Desti</th>
+						<th>Destination</th>
 						<th>Booked C/R</th>
 						<th>Offer Price</th>
 						<th>Weight</th>
@@ -192,8 +197,8 @@
                         			$inv['departure_date'] = $data->flight_date;
 						$inv['origin_airport'] = $data->from_city_code;
 						$inv['dest_airport'] = $data->to_city_code;
-						$inv['cabin'] = $data->to_cabin_code;
-									$seats_data = $this->invfeed_m->getSoldWeight($inv);
+						$inv['cabin'] = $data->from_cabin;
+						$seats_data = $this->invfeed_m->getSoldWeight($inv);
                         			$empty_seats = $seats_data->empty_seats - $seats_data->sold_seats;
 				?>
 
@@ -224,6 +229,7 @@
 				</tbody>			
 			</table>
 		</div>
+	<?php } ?>
 	</div>
 </div>
 </div>

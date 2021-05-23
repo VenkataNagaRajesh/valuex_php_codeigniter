@@ -40,7 +40,15 @@ class Offer_table extends Admin_Controller {
 
 			$this->data["return"] = $return;
                 if ((int)$id) {
-                        $this->data["ofr"] = $this->offer_issue_m->getOfferDetailsById($id);
+                        $ofr = $this->offer_issue_m->getOfferDetailsById($id);
+                        $this->data["ofr"] = $ofr;
+			foreach ($ofr as $data ) {
+				if($data->productID==1){
+                        		$this->data["upgrade_offer"] = 1;
+				} else if($data->productID==2){
+                        		$this->data["baggage_offer"] = 1;
+				}
+			}
 
                         if($this->data["ofr"]) {
                                 $this->data["subview"] = "offer_table/view";
