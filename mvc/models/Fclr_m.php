@@ -24,7 +24,7 @@ class Fclr_m extends MY_Model {
 
         function insert_fclr($array) {
                 $error = parent::insert($array);
-		echo $this->db->last_query();exit;
+		//echo $this->db->last_query();exit;
                 return TRUE;
         }
 

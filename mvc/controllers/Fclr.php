@@ -198,6 +198,7 @@ class Fclr extends Admin_Controller
                                 $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
                                 $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
                                 $array['season_id'] = $this->input->post("season_id");
+                                $array['active'] =  1;
                                 $exist_id = $this->fclr_m->checkFCLREntry($array);
 
                                 $array['average'] = $this->input->post("avg");
@@ -205,25 +206,13 @@ class Fclr extends Admin_Controller
                                 $array['max'] = $this->input->post("max");
                                 $array['slider_start'] = $this->input->post("slider_start");
 
-                                $min=$this->preference_m->get_preference_value_bycode('fclr_min',24,4079);
-                                $max=$this->preference_m->get_preference_value_bycode('fclr_max',24,4079);
-                                $slider_val=$this->preference_m->get_preference_value_bycode('fclr_slider_value',24,4079);
-                        
-                                if($array['min']<$min || $array['max']<$max || $array['slider_start']<$slider_val)
-                                {
-                                        $array['active']=0;
-                                }
-                                else{
-                                        $array['active']=1;
-                                }
-
                                 if ($fclr_id) {
                                         if ($exist_id && $exist_id != $fclr_id) {
                                                 $json['status'] = 'duplicate';
                                         } else {
                                                 $array["modify_date"] = time();
                                                 $array["modify_userID"] = $this->session->userdata('loginuserID');
-                                                $array["manual_edit"]=1;
+                                                $array["manual_edit"]=1; //Some one edited 
                                                 $this->fclr_m->update_fclr($array, $fclr_id);
                                                 $json['status'] = 'success';
                                         }
@@ -231,6 +220,7 @@ class Fclr extends Admin_Controller
                                         if ($exist_id) {
                                                 $json['status'] = 'duplicate';
                                         } else {
+                                                $array["manual_edit"]=3; //Manually added entry
                                                 $array["create_date"] = time();
                                                 $array["modify_date"] = time();
                                                 $array["create_userID"] = $this->session->userdata('loginuserID');
@@ -757,8 +747,12 @@ class Fclr extends Admin_Controller
                         $feed->action = '';
                         if (permissionChecker('fclr_edit')) {
 
-                        if($feed->manual_edit) { 
+                        if($feed->manual_edit == 1 ) { 
                                 $man_edit_color="style='color:blue' title='Manually edited' alt='Manually edited'";
+                        } elseif($feed->manual_edit == 2 ) { 
+                                $man_edit_color="style='color:red' title='FCLR values needs attention' alt='FCLR values needs attention'";
+                        } elseif($feed->manual_edit == 3 ) { 
+                                $man_edit_color="style='color:red' title='Manually Added' alt='Manually Added'";
                         } else {
                                 $man_edit_color="";
                         }
@@ -982,6 +976,9 @@ class Fclr extends Admin_Controller
 			}
 #echo "<br><br>$sQuery";
                 }
+		$min=$this->preference_m->get_preference_value_bycode('fclr_min',24,$carrier_id);
+		$max=$this->preference_m->get_preference_value_bycode('fclr_max',24,$carrier_id);
+		$slider_val=$this->preference_m->get_preference_value_bycode('fclr_slider_value',24,$carrier_id);
 
                 $rResult = array_merge($rResult1, $rResult2);
 		if ($rResult ) {
@@ -1014,17 +1011,13 @@ class Fclr extends Admin_Controller
 				$array1['max'] = $data->max;
 				$array1['slider_start'] = $data->slider_start;
 
-                                if($array1['min']<$min || $array1['max']<$max || $array1['slider_start']<$slider_val)
+                                if($array1['min']<$min || $array1['max']>$max || $array1['slider_start']<$slider_val)
                                 {
-                                        $array['active']=0;
-                                }
-                                else{
-                                        $array['active']=1;
+                                        $array['manual_edit']=2;//Add an indicator for some thing wrong with any of the values.. needs manual attention
                                 }
 				$this->fclr_m->checkANDInsertFCLR($array, $array1);
 
 				//}
-
 			}
 		} else {
 			$errors = 1;
