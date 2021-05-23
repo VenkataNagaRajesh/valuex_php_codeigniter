@@ -669,7 +669,7 @@ $sWhere $sOrder $sLimit";
 								}
 							} // forloop for acsr rules
 					}
-				if(($acsr_data->status == 'reject' && ($feed->bid_val/$passenger_cnt) < $acsr_data->min_bid_price) ) {			
+				if(($acsr_data->status == 'reject' || ($feed->bid_val/$passenger_cnt) < $acsr_data->min_bid_price) ) {			
 					$acsr_status = 'reject';
 				}
 			
