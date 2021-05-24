@@ -705,7 +705,7 @@ class Fclr extends Admin_Controller
                      
                      $sWhere $sOrder $sLimit";
 
-              //  print($sWhere); exit;
+                //print($sQuery); exit;
                 $rResult = $this->install_m->run_query($sQuery);
                 
                 $sQuery = "SELECT FOUND_ROWS() as total";
@@ -1014,6 +1014,7 @@ class Fclr extends Admin_Controller
 				$array1['average'] = $data->average;
 				$array1['min'] = $data->min;
 				$array1['max'] = $data->max;
+				$array1['active'] = 1;
 				$array1['slider_start'] = $data->slider_start;
                         
 

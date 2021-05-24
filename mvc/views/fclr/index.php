@@ -459,6 +459,7 @@ function loaddatatable() {
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#sflight_number").val()},
 		           {"name": "flightNbrEnd","value": $("#end_flight_number").val()},
+		           {"name": "fclr_edit_status","value": $("#fclr_edit_status").val()},
                    {"name": "boardPoint","value": $("#boarding_point").val()},
                    {"name": "offPoint","value": $("#soff_point").val()},
 		           {"name": "depStartDate","value": $("#dep_from_date").val()},
@@ -544,7 +545,7 @@ function loaddatatable() {
                            $.ajax({
                                 url: "<?php echo base_url('fclr/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val()},
+                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val(), "sfclr_edit_status":$("#sfclr_edit_status").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
