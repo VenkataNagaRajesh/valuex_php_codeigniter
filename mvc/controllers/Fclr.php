@@ -1015,9 +1015,6 @@ class Fclr extends Admin_Controller
 				$array1['min'] = $data->min;
 				$array1['max'] = $data->max;
 				$array1['slider_start'] = $data->slider_start;
-                                $min=$this->preference_m->get_preference_value_bycode('fclr_min',24,);
-                                $max=$this->preference_m->get_preference_value_bycode('fclr_max',24,4079);
-                                $slider_val=$this->preference_m->get_preference_value_bycode('fclr_slider_value',24,4079);
                         
 
                                 if($array1['min']<$min || $array1['max']>$max || $array1['slider_start']<$slider_val)

@@ -49,8 +49,6 @@ class Fclr_m extends MY_Model {
                 } else {
                   return false;
                 }
-
-
         }
        
 

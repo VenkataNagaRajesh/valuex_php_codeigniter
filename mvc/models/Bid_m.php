@@ -10,6 +10,19 @@ class bid_m extends MY_Model {
 	 $result = $this->db->get();	 
 	 return $result->row('count');
   }
+	function checkBidExists($array){
+                $this->db->select('bid_id');
+                $this->db->from('UP_bid');
+                $this->db->where($array);
+                $this->db->limit(1);
+                $query = $this->db->get();
+                $check = $query->row();
+                if($check->bid_id) {
+                    return $check->bid_id;
+                } else {
+                  return 0;
+                }
+        }
   
   function cabins(){
 	  $this->db->select("*")->from('VX_data_defns');

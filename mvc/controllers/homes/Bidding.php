@@ -367,17 +367,24 @@ class Bidding extends MY_Controller {
 				$data['bid_value'] = $this->input->post("bid_value");	
 				$data['dtpfext_id'] = $this->input->post("dtpfext_id");
 				$data['flight_number'] = $this->input->post("flight_number");	
-				$data['bid_submit_date'] = time();
 				$data['active'] = 1;
-				$data['orderID'] = $this->input->post('orderID');
 				$data['productID'] = 1;
-				$bid_status = 'bid_received';
-          			$id = $this->bid_m->insert_bid_data($data);		//Always allow excess baggage till offer expired
+				$id  = $this->bid_m->checkBidExists($data);
+				if ( $id) {  //Just inform bid submitted nothing to do
+					$json['status'] = "bid_submitted";
+					$this->output->set_content_type('application/json');
+					$this->output->set_output(json_encode($json));
+					return;
+				} else {//Create New one
+					$data['bid_submit_date'] = time();
+					$data['orderID'] = $this->input->post('orderID');
+          				$id = $this->bid_m->insert_bid_data($data);		//Always allow excess baggage till offer expired
+					$bid_status = 'bid_received';
+				}
 				break;
 			case 2:
 				$data['weight'] = $this->input->post("weight");	
 				$data['cash'] = ($this->input->post("baggage_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
-				$data['bid_submit_date'] = time();
 				$data['active'] = 1;
 				$data['miles'] = ($this->input->post("baggage_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
 				$data["cash_percentage"] = round((($data['cash']/ $this->input->post("tot_bid"))*100),2);
@@ -385,10 +392,19 @@ class Bidding extends MY_Controller {
 				$data['bid_value'] = $this->input->post("baggage_value");	
 				$data['dtpfext_id'] = $this->input->post("dtpfext_id");
 				$data['flight_number'] = $this->input->post("flight_number");
-				$data['orderID'] = $this->input->post('orderID');
 				$data['productID'] = 2;
-				$bid_status = 'bid_accepted';
-          		$id = $this->bid_m->insert_bid_data($data);		//Always allow excess baggage till offer expired
+				$id  = $this->bid_m->checkBidExists($data);
+				if ( $id) {  //Just inform bid submitted nothing to do
+					$json['status'] = "bid_submitted";
+					$this->output->set_content_type('application/json');
+					$this->output->set_output(json_encode($json));
+					return;
+				} else { //Create New one
+					$data['bid_submit_date'] = time();
+					$data['orderID'] = $this->input->post('orderID');
+          				$id = $this->bid_m->insert_bid_data($data);		//Always allow excess baggage till offer expired
+					$bid_status = 'bid_accepted';
+				}
 				break;
 				default:
 				break;
