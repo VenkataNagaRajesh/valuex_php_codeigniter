@@ -436,6 +436,45 @@ class Fclr extends Admin_Controller
                 if (!empty($this->input->post('sflight_number'))) {
                         $this->data['flight_number'] = $this->input->post('sflight_number');
                 }
+                if (!empty($this->input->post('fclr_status'))) {
+                        $this->data['fclr_status'] = $this->input->post('fclr_status');
+                } else {
+                        $this->data['fclr_status'] = 1; //Default
+		}
+                if (!empty($this->input->post('fclr_edit_status'))) {
+                        $this->data['fclr_edit_status'] = $this->input->post('fclr_edit_status');
+                } else {
+                        $this->data['fclr_edit_status'] = ''; //Default
+		}
+
+                if (!empty($this->input->post('end_flight_number'))) {
+                        $this->data['end_flight_number'] = $this->input->post('end_flight_number');
+                }
+
+                if (!empty($this->input->post('dep_from_date'))) {
+                        $this->data['dep_from_date'] = date('d-m-Y', $this->input->post('dep_from_date'));
+                }
+
+
+                if (!empty($this->input->post('dep_to_date'))) {
+                        $this->data['dep_to_date'] = date('d-m-Y', $this->input->post('dep_to_date'));
+                }
+
+
+                if (!empty($this->input->post('smarket'))) {
+                        $this->data['smarket'] = $this->input->post('smarket');
+                } else {
+                        $this->data['smarket'] = 0;
+                }
+
+
+                if (!empty($this->input->post('dmarket'))) {
+                        $this->data['dmarket'] = $this->input->post('dmarket');
+                } else {
+                        $this->data['dmarket'] = 0;
+                }
+
+
 
                 if (!empty($this->input->post('end_flight_number'))) {
                         $this->data['end_flight_number'] = $this->input->post('end_flight_number');
@@ -632,7 +671,7 @@ class Fclr extends Admin_Controller
                          $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
                          $sWhere .= 'fc.active = ' .  $this->input->get('fclr_status');
                 }
-                if (isset($_GET['fclr_edit_status'])) {
+                if (!empty($_GET['fclr_edit_status'])) {
                         $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
                         $sWhere .= 'fc.manual_edit = ' .  $this->input->get('fclr_edit_status');
                }
@@ -1010,6 +1049,7 @@ class Fclr extends Admin_Controller
 				//if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
 				$array['from_cabin'] = $feed->from_cabin_code;
 				$array['to_cabin'] = $feed->to_cabin_code;
+				$array['active'] = 1;
 				$data = $this->calculate_Min_Max($feed->from_sd, $feed->to_sd, $feed->from_avg, $feed->to_avg);
 				$array1['average'] = $data->average;
 				$array1['min'] = $data->min;
@@ -1020,7 +1060,7 @@ class Fclr extends Admin_Controller
 
                                 if($array1['min']<$min || $array1['max']>$max || $array1['slider_start']<$slider_val)
                                 {
-                                        $array['manual_edit']=2;//Add an indicator for some thing wrong with any of the values.. needs manual attention
+                                        $array1['manual_edit']=2;//Add an indicator for some thing wrong with any of the values.. needs manual attention
                                 }
 				$this->fclr_m->checkANDInsertFCLR($array, $array1);
 

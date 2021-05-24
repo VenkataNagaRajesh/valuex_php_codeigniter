@@ -120,8 +120,8 @@
                         </div>
                         <div class="col-md-2">
                       <select class="form-control select2"  name="upg_status" id="upg_status">
-                                    <option value="1">Active</option>
-                                    <option value="0">In active</option>
+                                    <option value="1" <?=(($upg_status == 1 )? "selected":"")?>>Active</option>
+                                    <option value="0" <?=(($upg_status == 0 || $upg_status == '' )? "selected":"")?>>In active</option>
                                 </select>
                         </div>
                  
@@ -449,6 +449,7 @@ function loaddatatable()
                                 "offPoint": $("#offPoint").val(),
                                 "Class": $("#class").val(),
                                 "frequency": $("#frequency").val(),
+                                "upg_status": $("#upg_status").val(),
                                 "airLine": $("#airline_code").val(),
                                 "flight_range": $("#flight_range").val(),
                                 "start_date": $("#start_date").val(),
@@ -486,6 +487,7 @@ function loaddatatable()
                 "offPoint": $("#offPoint").val(),
                 "Class": $("#class").val(),
                 "frequency": $("#frequency").val(),
+                "upg_status": $("#upg_status").val(),
                 "airLine": $("#airline_code").val(),
                 "flight_range": $("#flight_range").val(),
                 "start_date": $("#start_date").val(),

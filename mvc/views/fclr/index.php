@@ -136,8 +136,8 @@
 
                             <div class="col-md-12">
                                     <select class="form-control select2"  name="fclr_status" id="fclr_status">
-                                        <option value="1">Active</option>
-                                        <option value="0">In active</option>
+					    <option value="1" <?=(($fclr_status == 1 )? "selected":"")?>>Active</option>
+					    <option value="0" <?=(($fclr_status == 0 || $fclr_status == '' )? "selected":"")?>>In active</option>
                                     </select>
                             </div>
                             			
@@ -151,7 +151,7 @@
 						</div>
                         <div class="col-md-12">
                                     <select class="form-control select2"  name="fclr_edit_status" id="fclr_edit_status">
-                                        <option value="0">All</option>
+                                        <option value="">All</option>
                                         <option value="1">Manually Edited</option>
                                         <option value="2">Manual Attention needed</option>
                                         <option value="3">Manually Added</option>
@@ -545,7 +545,7 @@ function loaddatatable() {
                            $.ajax({
                                 url: "<?php echo base_url('fclr/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val(), "sfclr_edit_status":$("#sfclr_edit_status").val()},
+                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val(), "sfclr_edit_status":$("#sfclr_edit_status").val(),"fclr_status":$("#fclr_status").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -568,7 +568,7 @@ function downloadFCLR(){
 	$.ajax({
        url: "<?php echo base_url('fclr/server_processing'); ?>?page=all&&export=1",
        type: 'get',
-       data: {"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val()},
+       data: {"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val(),"fclr_status":$("#fclr_status").val()},
        dataType: 'json'
        }).done(function(data){
 			var $a = $("<a>");
