@@ -24,6 +24,22 @@ class bid_m extends MY_Model {
                 }
         }
   
+	function checkRecentSavedCard($array){
+                $this->db->select('card_id');
+                $this->db->from('VX_card_data');
+                $this->db->where($array);
+                $this->db->where('FROM_UNIXTIME(date_added) >= NOW() - INTERVAL 1 MINUTE');
+                $this->db->limit(1);
+                $this->db->order_by('card_id','DESC');
+                $query = $this->db->get();
+                $check = $query->row();
+                if($check->card_id) {
+                    return $check->card_id;
+                } else {
+                  return 0;
+                }
+        }
+
   function cabins(){
 	  $this->db->select("*")->from('VX_data_defns');
 	  $this->db->where('aln_data_typeID','13');

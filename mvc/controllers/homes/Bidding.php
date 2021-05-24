@@ -643,17 +643,21 @@ class Bidding extends MY_Controller {
 			if ($this->form_validation->run() == FALSE) { 
 				$json['status'] = validation_errors();		
 			} else {
-			$orderID =  $this->bid_m->create_order();
-			$json['orderID'] = $orderID;
-			$data['orderID'] = $orderID;
 			$data['pnr_ref'] = $this->input->post('pnr_ref');
 			$data['card_number'] = $this->input->post("card_number");
 			$data['month_expiry'] = $this->input->post("month_expiry");
 			$data['year_expiry'] = $this->input->post("year_expiry");
 			$data['cvv'] = $this->input->post("cvv");
-			    $data['date_added'] = time();			
-			    $id = $this->bid_m->save_card_data($data);
+			$id  = $this->bid_m->checkRecentSavedCard($data);
+			if ( !$id) { // Don not create duplicate records, use recent card_id records created
+				$orderID =  $this->bid_m->create_order();
+				$json['orderID'] = $orderID;
+				$data['orderID'] = $orderID;
+				$data['date_added'] = time();			
+				$id = $this->bid_m->save_card_data($data);
+			}
 			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
+			$ref = Array();
 			   $ref['cash'] = $this->input->post("cash");
 			   $ref['miles'] = $this->input->post("miles");
 			   $tot_bid = $this->input->post("tot_bid");
