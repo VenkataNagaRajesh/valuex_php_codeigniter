@@ -36,7 +36,7 @@
                     ?>
 					</div>
                     <div class="col-md-2 col-sm-3">
-                        <select  name="from_cabin[]"  id="from_cabin" placeholder="From Cabin Content" class="form-control select2" multiple="multiple">
+                        <select  name="from_cabin[]"  id="from_cabin" placeholder="Cabin Content" class="form-control select2" multiple="multiple">
 				        </select>
 			<span> <input type="checkbox" id="cabin_checkbox_level"> Select All</span>
                     </div>
@@ -50,7 +50,7 @@
                             $allowance[0] = 'All';
                             $allowance[1] = 'Whitelist';
                             $allowance[2] = 'Blacklist';
-							echo form_dropdown("allowance", $allowance,set_value("allowance"), "id='allowance' class='form-control hide-dropdown-icon select2'");?>
+							echo form_dropdown("allowance", $allowance,set_value("allowance"), "id='allowance' class='form-control hide-dropdown-icon select2'name='allowance'");?>
 					</div>
                    
 					<div class="col-md-2 col-sm-3">
@@ -171,7 +171,7 @@
 				<div class="col-md-12 col-sm-3 text-right">
 						<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savebclr();">Add BCLR</a>
 						<a href="#" type="button"  id='check_rafeed_match' class="btn btn-danger" onclick="matchRafeed();">CHECK RAFEED MATCH</a>
-						<a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
+						<a href="#" type="button" id='bclr_cancel_btn' class="btn btn-danger" onclick="form_reset()" data-toggle="collapse" data-target="#bclrAdd" >Cancel</a>
 				</div> 	
 			</div>
 		</form>
@@ -593,7 +593,8 @@ function loaddatatable() {
                    {"name": "max_price","value": $("#flt_max_price").val()},		                           
                    {"name": "min_unit","value": $("#flt_min_unit").val()},		                           
                    {"name": "bclr_id","value": $("#flt_bclr_id").val()},		                           
-                   {"name": "max_capacity","value": $("#flt_max_capacity").val()},		                           
+                   {"name": "max_capacity","value": $("#flt_max_capacity").val()},
+                   //{"name":"bclr_status","value":1},		                           
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -797,12 +798,9 @@ function savebclr() {
                     var status = bclrinfo['status'];
 		            newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
                     if (status.includes('success')) {
-                        alert(status);
-			    var isHidden = $( "#bclrAdd" ).is( ":hidden" );
-			    if( isHidden == false ) {
-				    $( "#bclr_add_btn" ).trigger( "click" );
-			    }       
-		        form_reset();
+                        alert(status);      
+		                form_reset();
+                        location.reload();
                         $("#bclrtable").dataTable().fnDestroy();
                         loaddatatable();
                     } else if (status == 'duplicate'){
@@ -817,6 +815,10 @@ function savebclr() {
                             }                                              
                         });                             
                     }
+          },
+          error:function()
+          {
+              alert('data is not saved. please check the content before saving');
           }
     });
     <?php } ?>
@@ -893,11 +895,12 @@ function editbclr(bclr_id) {
     }
 
     function form_reset(){    
-        var $inputs = $('#bclr_add_form :input'); 
-        $inputs.each(function (index) {
-          $(this).val("");
-          $(this).parent().removeClass('has-error');  
-        });
+    
+    $('#bclr_add_form').trigger("reset");
+        var isVisible = $( "#bclrAdd" ).isVisible();
+             if( isVisible == true) {
+                    $( "#bclr_cancel_btn" ).trigger( "click" );
+                }
         $('#carrierID').val(0).trigger('change').parent().removeClass('has-error');
         $('#aircraft_type').parent().removeClass('has-error');
         $('#partner_carrierID').val(0).trigger('change').parent().removeClass('has-error');

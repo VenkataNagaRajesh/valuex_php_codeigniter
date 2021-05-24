@@ -628,8 +628,14 @@ class Fclr extends Admin_Controller
                         $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
                         $sWhere .= 'dmap.market_id = ' .  $this->input->get('dmarket');
                 }
-
-
+                if (isset($_GET['fclr_status'])) {
+                         $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+                         $sWhere .= 'fc.active = ' .  $this->input->get('fclr_status');
+                }
+                if (isset($_GET['fclr_edit_status'])) {
+                        $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+                        $sWhere .= 'fc.manual_edit = ' .  $this->input->get('fclr_edit_status');
+               }
 
                 if (!empty($this->input->get('sfrom_cabin'))) {
                         $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
@@ -674,7 +680,6 @@ class Fclr extends Admin_Controller
                         $sWhere .= 'fc.carrier_code IN (' . implode(',', $this->session->userdata('login_user_airlineID')) . ')';
                 }
 
-               $ac=$_GET['inputVal'];
                 $sQuery = " SELECT SQL_CALC_FOUND_ROWS distinct fclr_id,boarding_point, dai.code as carrier_code , off_point, 
 		season_id,flight_number, fdef.cabin as fcabin, sea.season_name,manual_edit,
             	tdef.cabin as tcabin,  dfre.code as day_of_week , fc.active, sea.ams_season_start_date as start_date, sea.ams_season_end_date as end_date,
@@ -687,7 +692,7 @@ class Fclr extends Admin_Controller
 		     LEFT JOIN VX_data_defns dop on (dop.vx_aln_data_defnsID = fc.off_point)    
 		     LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = fc.carrier_code)
 		     LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = fc.frequency) 
-		     INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = fc.carrier_code) and fc.active=$ac
+		     INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = fc.carrier_code)
 
 		     INNER JOIN VX_data_defns fca on (fca.alias = fdef.level and fca.aln_data_typeID = 13 AND fca.vx_aln_data_defnsID = fc.from_cabin)
 		     
@@ -700,7 +705,7 @@ class Fclr extends Admin_Controller
                      
                      $sWhere $sOrder $sLimit";
 
-
+              //  print($sWhere); exit;
                 $rResult = $this->install_m->run_query($sQuery);
                 
                 $sQuery = "SELECT FOUND_ROWS() as total";
@@ -1010,6 +1015,10 @@ class Fclr extends Admin_Controller
 				$array1['min'] = $data->min;
 				$array1['max'] = $data->max;
 				$array1['slider_start'] = $data->slider_start;
+                                $min=$this->preference_m->get_preference_value_bycode('fclr_min',24,);
+                                $max=$this->preference_m->get_preference_value_bycode('fclr_max',24,4079);
+                                $slider_val=$this->preference_m->get_preference_value_bycode('fclr_slider_value',24,4079);
+                        
 
                                 if($array1['min']<$min || $array1['max']>$max || $array1['slider_start']<$slider_val)
                                 {

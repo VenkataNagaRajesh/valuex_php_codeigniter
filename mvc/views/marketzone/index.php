@@ -123,7 +123,7 @@
 					<input type="text" class="form-control" id="desc" name="desc" placeholder='description'  value="<?=set_value('market_name')?>" >
 						<span class="pull-right">
 					   <a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="savezone()">Save</a>
-					  <a href="#" type="button" class="btn btn-danger" onclick="form_reset()">Cancel</a>
+					  <a href="#" type="button" class="btn btn-danger" onclick="form_reset()" data-toggle="collapse" data-target="#mzonesAdd">Cancel</a>
 						</span>
 					</div>
 				</div>
@@ -573,7 +573,11 @@ $.ajax({     async: false,
 
              dataType: "html",                                  
              success: function(data) {               
-             $('#amz_excl_value').html(data); }        
+             $('#amz_excl_value').html(data); },
+			 error:fucntion()        
+			 {
+				 alert('error');
+			 }
       });       
 });
  

@@ -118,10 +118,15 @@
                             <input type="text" class="form-control" placeholder='frequency' id="frequency" name="frequency" value="<?= set_value('frequency') ?>">
 
                         </div>
-
+                        <div class="col-md-2">
+                      <select class="form-control select2"  name="upg_status" id="upg_status">
+                                    <option value="1">Active</option>
+                                    <option value="0">In active</option>
+                                </select>
+                        </div>
                  
-                        <div class="col-sm-4 text-right">
-                            <button type="submit" class="btn btn-danger" data-toggle="tooltip" data-title="Filter" name="filter" id="filter"><i class="fa fa-filter"></i></button>
+                        <div class="col-sm-2 text-right">
+                            <button type="submit" class="btn btn-danger" data-toggle="tooltip" data-title="Filter" name="filter" id="filter" onclick="$('#rafeedtable').dataTable().fnDestroy();;loaddatatable();" ><i class="fa fa-filter"></i></button>
                             <button type="button" data-toggle="tooltip" data-title="Download" class="btn btn-danger" onclick="downloadRAFeed()"><i class="fa fa-download"></i></button>
                         </div>
                     </div>
@@ -130,12 +135,7 @@
                 
                 <div class="col-md-12" style="padding:0;">
                     <div class="tab-content table-responsive" id="hide-table">
-                    <div class="col-md-2">
-                      <select class="form-control"  name="upg_act_Inact" id="upg_act_Inact">
-                                    <option value="1">Active</option>
-                                    <option value="0">In active</option>
-                                </select>
-                        </div>
+                   
                         <table id="rafeedtable" class="table table-bordered dataTable no-footer">
                             <thead>
                                 <tr>
@@ -279,8 +279,8 @@ function loaddatatable()
                         "value": $("#end_date").val()
                     },
                     {
-                        "name":"inputVal",
-                        "value":$("#upg_act_Inact").val()
+                        "name":"upg_status",
+                        "value":$("#upg_status").val()
                     }
                     
 
