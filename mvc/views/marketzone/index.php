@@ -574,7 +574,7 @@ $.ajax({     async: false,
              dataType: "html",                                  
              success: function(data) {               
              $('#amz_excl_value').html(data); },
-			 error:fucntion()        
+			 error:function()        
 			 {
 				 alert('error');
 			 }
