@@ -1183,10 +1183,11 @@ $sWhere $sOrder $sLimit";
 		}
 
 		$pax_names = $this->bid_m->getPaxNames($pnr_ref);
+				$maildata['first_name']=$offer[0]->pax_names;
 				$maildata['pnr_ref'] =  $pnr_ref;
                 $maildata['offer_data'] = $offerdata;
                 $maildata['airlineID'] = $offer[0]->carrier_code;
-                $maildata['first_name'] = $offer[0]->pax_names;
+              //  $maildata['first_name'] = $offer[0]->pax_names;
                 $maildata['tomail'] = $email_list[0];
                 $primary_client = $this->user_m->getClientByAirline($maildata['airlineID'],6)[0];	   
                 #$maildata = array_merge($maildata, $paxdata);

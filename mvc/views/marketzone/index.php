@@ -255,14 +255,14 @@ function loaddatatable() {
       "sAjaxSource": "<?php echo base_url('marketzone/server_processing'); ?>",	  
       "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "marketID","value": $("#smarket_id").val()},
-		   {"name": "levelID","value": $("#samz_level_id").val()},
-		   {"name": "inclID","value": $("#samz_incl_id").val()},
-		   {"name": "exclID","value": $("#samz_excl_id").val()},
-		{"name": "levelvalue","value": $("#samz_level_value").val()},
-                {"name": "inclvalue","value": $("#samz_incl_value").val()},
-                   {"name": "exclvalue","value": $("#samz_excl_value").val()},
-		   {"name": "airlineID","value": $("#sairline_id").val()},
-		   {"name": "active","value": $("#active").val()}) //pushing custom parameters
+		  	 {"name": "levelID","value": $("#samz_level_id").val()},
+		     {"name": "inclID","value": $("#samz_incl_id").val()},
+		  	 {"name": "exclID","value": $("#samz_excl_id").val()},
+			 {"name": "levelvalue","value": $("#samz_level_value").val()},
+        	 {"name": "inclvalue","value": $("#samz_incl_value").val()},
+             {"name": "exclvalue","value": $("#samz_excl_value").val()},
+		   	 {"name": "airlineID","value": $("#sairline_id").val()},
+		     {"name": "active","value": $("#active").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
                     "type": "GET",
@@ -574,7 +574,7 @@ $.ajax({     async: false,
              dataType: "html",                                  
              success: function(data) {               
              $('#amz_excl_value').html(data); },
-			 error:fucntion()        
+			 error:funtion()        
 			 {
 				 alert('error');
 			 }
@@ -695,8 +695,10 @@ function editzone(market_id) {
 		var isHidden = $( "#mzonesAdd" ).is( ":hidden" );
 		if( isVisible == false ) {
 			$( "#add_zone_button" ).trigger( "click" );
+			//$("#mzonesAdd").visible(true);
 		}       
 $.ajax({
+	
           async: false,
           type: 'POST',
           url: "<?=base_url('marketzone/getMarketZoneData')?>",          
