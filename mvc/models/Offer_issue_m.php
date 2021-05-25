@@ -151,7 +151,8 @@ public function getBidInfoFromOfferID($offer_id, $flight_number,$carrier_code) {
 public function getOfferDetailsById($id) {
 //$sGroup = ' group by MainSet.flight_number';
 $sOrder = ' ORDER BY MainSet.productID ASC ';
-$mainsetWhere = "WHERE bid.active =1 ";
+$sWhere = '  ';
+$mainsetWhere = "WHERE bid.active =1 AND pf.active = 1 AND  oref.active = 1 AND pe.active = 1 ";
 $query = " select  SQL_CALC_FOUND_ROWS  
 MainSet.offer_id, MainSet.dtpf_id,  MainSet.upgrade_type,MainSet.offer_date, MainSet.name,MainSet.flight_date , SubSet.carrier , MainSet.flight_number , 
 SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, MainSet.from_cabin, MainSet.cash_percentage,
@@ -165,7 +166,8 @@ FROM (
 				UP_bid bid 
 				
 				LEFT JOIN VX_offer_info pe on (bid.dtpfext_id = pe.dtpfext_id)
-				LEFT JOIN UP_fare_control_range fcc on (fcc.fclr_id = pe.rule_id) 
+				LEFT JOIN UP_fare_control_range fcc on (fcc.fclr_id = pe.rule_id AND pe.product_id = 1) 
+				LEFT JOIN BG_baggage_control_rule bcc on (bcc.bclr_id = pe.rule_id AND pe.product_id = 2) 
 				LEFT JOIN VX_products prq on (pe.product_id = prq.productID) 
 				LEFT JOIN VX_offer oref on (bid.offer_id = oref.offer_id) 
 				LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and pf.dtpf_id = pe.dtpf_id )
@@ -195,6 +197,7 @@ fc.aln_data_value as from_city_name, tc.aln_data_value as to_city_name,
 				LEFT JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13)
 				LEFT JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf1.carrier_code AND  cab.alias = fdef.level ) 
 				LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12) 
+				WHERE pf1.active = 1 
 				group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
 ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.dtpf_id = SubSet.dtpf_id) where MainSet.offer_id='$id'
 $sWhere 
