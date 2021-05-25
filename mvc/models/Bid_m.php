@@ -140,6 +140,7 @@ class bid_m extends MY_Model {
 	$this->db->where("tpf.pnr_ref",$pnr_ref);	
 	$this->db->where("tpf.active",1);	
 	$this->db->where('pfe.active',1);   
+	$this->db->where('fclr.active',1);   
 	$this->db->where('pfe.product_id',1);   
 	$this->db->group_by('tpf.flight_number');
 	//$this->db->order_by('defto.level','ASC');

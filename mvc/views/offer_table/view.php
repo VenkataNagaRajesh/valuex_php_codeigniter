@@ -20,7 +20,7 @@
                         $pnr_ref = array_column($ofr,'pnr_ref');
 			$total_bid_price = array_sum(array_column($ofr,'bid_value'));
 			$total_cash_paid = array_sum(array_column($ofr,'cash'));
-			$cash_percentage =  round($ofr[0]->cash_percentage);
+			$cash_percentage =  round($total_cash_paid*100/$total_bid_price);
 			$miles_percentage = round(100 - $cash_percentage);
                 ?>
 
@@ -54,12 +54,10 @@
 			</ul>
 
 			<?php $pp_data = explode(':',$ps_data[0]);?>
-			<p>Passenger type : <b>Leisure</b></p>
 			<p><strong>Contact Info</strong><br>
 				<span>Email:</span><b><?php echo $pp_data[2]?></b><br>
 				<span>Phone:</span><b><?php echo $pp_data[3]?></b>
 			</p>
-			<div class="off-comment"><p><strong>Autopillot comment</strong> : Queed for analyst evaluation</p></div>
 		</div>
 	</div>
 	<div class="col-md-4">
