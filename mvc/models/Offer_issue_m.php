@@ -154,13 +154,13 @@ $sOrder = ' ORDER BY MainSet.productID ASC ';
 $mainsetWhere = "WHERE bid.active =1 ";
 $query = " select  SQL_CALC_FOUND_ROWS  
 MainSet.offer_id, MainSet.dtpf_id,  MainSet.upgrade_type,MainSet.offer_date, MainSet.name,MainSet.flight_date , SubSet.carrier , MainSet.flight_number , 
-SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, MainSet.from_cabin,
+SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, MainSet.from_cabin, MainSet.cash_percentage,
 MainSet.to_cabin, MainSet.bid_value  ,MainSet.min,MainSet.max,  MainSet.cash, MainSet.miles, MainSet.offer_status,
 SubSet.from_cabin_id,MainSet.weight, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code, MainSet.name, MainSet.bid_id,MainSet.product_id,MainSet.productID,MainSet.flight,SubSet.from_city_code,SubSet.to_city_code,SubSet.to_cabin_code
 
 FROM ( 
 		select bid.bid_id,bid.weight ,pf.dtpf_id,  oref.offer_id,oref.create_date as offer_date , prq.name as name,bid_value, bid_avg,bid_markup_val,
-		tdef.cabin as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, pe.product_id, pf.dep_date as flight_date,fcc.min,fcc.max,bid.productID,pf.flight_number as flight, pf.cabin, fdef.code as from_cabin
+		tdef.cabin as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, pe.product_id, pf.dep_date as flight_date,fcc.min,fcc.max,bid.productID,pf.flight_number as flight, pf.cabin, fcd.cabin as from_cabin, oref.cash_percentage
 		from  
 				UP_bid bid 
 				
@@ -302,6 +302,7 @@ return $rResult;
 		$this->db->select("pext.ond, pext.rule_id, pf.*, fc.aln_data_value as from_airport, tc.aln_data_value as to_airport, fc.code as from_city_code, tc.code as to_city_code, car.aln_data_value carrier_name, c1.aln_data_value as from_city, c2.aln_data_value as to_city,def.desc current_cabin")->from('VX_daily_tkt_pax_feed pf');
 		$this->db->join('VX_offer oref', 'oref.pnr_ref =  pf.pnr_ref', 'LEFT');
 		$this->db->join('VX_offer_info pext', 'pext.dtpf_id =  pf.dtpf_id AND pext.rule_id > 0', 'LEFT');
+		$this->db->join('BG_baggage_control_rule bclr', 'bclr.bclr_id =  pext.rule_id', 'LEFT');
 		$this->db->join(' VX_data_defns dd', 'dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20', 'LEFT');
 		$this->db->join(' VX_data_defns car', 'car.vx_aln_data_defnsID = pf.carrier_code AND car.aln_data_typeID = 12', 'LEFT');
 		$this->db->join(' VX_data_defns fc', 'fc.vx_aln_data_defnsID = pf.from_city AND fc.aln_data_typeID = 1', 'LEFT');
@@ -314,6 +315,7 @@ return $rResult;
 		$this->db->where('pext.product_id',2);  //BAGGAGE
 		$this->db->where('oref.active',1);  //BAGGAGE
 		$this->db->where('pf.active',1);  //BAGGAGE
+		$this->db->where('bclr.active',1);  //BAGGAGE
 		$this->db->where('pext.active',1);  //BAGGAGE
 		$this->db->order_by('pext.ond ASC'); 
 		#$this->db->where('dd.alias','bid_received');
