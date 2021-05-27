@@ -290,7 +290,7 @@
 						</div>
                         <div class="col-md-12 text-right">
 							<a type="button" class="btn btn-danger" onclick="downloadBCLR()" data-toggle="tooltip" data-title="Download" style="margin-right:10px;"><i class="fa fa-download"></i></a>
-							<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#bclrtable').dataTable().fnDestroy();;loaddatatable();" data-toggle="tooltip" data-title="Filter"><i class="fa fa-filter"></i></a>
+							<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="$('#bclrtable').dataTable().fnDestroy();loaddatatable();" data-toggle="tooltip" data-title="Filter"><i class="fa fa-filter"></i></a>
                         </div>
 					</div>								                            
 				</div>	
@@ -799,10 +799,10 @@ function savebclr() {
 		            newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
                     if (status.includes('success')) {
                         alert(status);      
-		                form_reset();
-                        location.reload();
                         $("#bclrtable").dataTable().fnDestroy();
                         loaddatatable();
+		        form_reset();
+                        location.reload();
                     } else if (status == 'duplicate'){
 			alert('Duplicate Entry');
 		    } else {                                
@@ -842,10 +842,10 @@ function matchRafeed(bclr_id = 0) {
 
 function editbclr(bclr_id) {
 
-    var isVisible = $( "#bclrAdd" ).is( ":visible" );
-    var isHidden = $( "#bclrAdd" ).is( ":hidden" );
+    var isVisible = $("#bclrAdd").is(":visible");
+    var isHidden = $("#bclrAdd").is(":hidden");
     if( isVisible == false ) {
-            $( "#bclr_add_btn" ).trigger( "click" );
+            $("#bclr_add_btn").trigger("click");
     }       
     $.ajax({
           async: false,
@@ -897,10 +897,12 @@ function editbclr(bclr_id) {
     function form_reset(){    
     
     $('#bclr_add_form').trigger("reset");
-        var isVisible = $( "#bclrAdd" ).isVisible();
+        var isVisible = $("#bclrAdd").is(':visible');
              if( isVisible == true) {
-                    $( "#bclr_cancel_btn" ).trigger( "click" );
+                    $("#bclr_cancel_btn").trigger("click");
                 }
+        $('#s2id_origin_content').empty();
+        $('#s2id_dest_content').empty();
         $('#carrierID').val(0).trigger('change').parent().removeClass('has-error');
         $('#aircraft_type').parent().removeClass('has-error');
         $('#partner_carrierID').val(0).trigger('change').parent().removeClass('has-error');

@@ -517,7 +517,7 @@ class Bclr extends Admin_Controller
                 $array['carrierID'] = $this->input->post('carrierID');
                 #$array['from_cabin'] = implode(',', $this->input->post('from_cabin'));
                 $array['partner_carrierID'] = $this->input->post('partner_carrierID');
-                $array['season_id'] = $this->input->post('season');
+                $array['season_id'] =  ($this->input->post('season') == null) ? 0 : $this->input->post('season');
                 $array['allowance'] = $this->input->post('allowance');
                 $array['aircraft_typeID'] = (int)$this->input->post('aircraft_type');
                 $array['flight_num_range'] = trim($this->input->post('flight_num_range'));
