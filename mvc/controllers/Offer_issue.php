@@ -69,7 +69,7 @@ class Offer_issue extends Admin_Controller {
 		}
         $this->upgradeOfferMail($data);		 
 		$this->session->set_flashdata('success', 'Offer Mail sent to PAX successfully');
-		//redirect(base_url("offer_issue/index"));
+		redirect(base_url("offer_issue/index"));
 	}
 
         public function tplviewnew() {
