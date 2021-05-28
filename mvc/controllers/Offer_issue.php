@@ -1190,7 +1190,7 @@ $sWhere $sOrder $sLimit";
               //  $maildata['first_name'] = $offer[0]->pax_names;
                 $maildata['tomail'] = $email_list[0];
                 $primary_client = $this->user_m->getClientByAirline($maildata['airlineID'],6)[0];	   
-                #$maildata = array_merge($maildata, $paxdata);
+                $maildata = array_merge($maildata, $paxdata);
 		$dir = "assets/mail-temps";
 		$tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID']);
 		$tpl_file = $tpl->template_path;
