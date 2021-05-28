@@ -24,13 +24,14 @@ class Fclr_m extends MY_Model {
 
         function insert_fclr($array) {
                 $error = parent::insert($array);
+		//echo $this->db->last_query();exit;
                 return TRUE;
         }
 
 	  function update_fclr($data, $id = NULL,$isMannual_Check=0) {
                 if($isMannual_Check)
                 {
-                        $this->db->where('manual_edit',0);
+                        $this->db->where('manual_edit == 0 OR manual_edit == 2');
                 }
                 parent::update($data,$id);
                 return $id;
@@ -48,8 +49,6 @@ class Fclr_m extends MY_Model {
                 } else {
                   return false;
                 }
-
-
         }
        
 

@@ -127,6 +127,12 @@ class Rafeed extends Admin_Controller
 			$this->data['frequency'] = '';
 		}
 
+		if (!empty($this->input->post('upg_status'))) {
+			$this->data['upg_status'] = $this->input->post('upg_status');
+		} else {
+			$this->data['upg_status'] = '';
+		}
+
 
 		if (!empty($this->input->post('start_date'))) {
 			$this->data['start_date'] = date('d-m-Y', $this->input->post('start_date'));
@@ -370,7 +376,7 @@ echo "MISED,$cDocumentType";
 											$this->mydebug->rafeed_log("Document type missed in file - ". $column, 0);
 											break;
 										}
-										$this->mydebug->rafeed_log("ROW=".print_r($Row,1), 0);
+										$this->mydebug->rafeed_log("ROW:$i-=".print_r($Row,1), 0);
 										$this->mydebug->rafeed_log("Doctument Type records.. ". $cDocumentType, 0);
 										switch (strtolower($cDocumentType)) {
 											case 'd': // baggage rafeed
@@ -526,9 +532,9 @@ echo "MISED,$cDocumentType";
 												$strRedirector = "baggage";
 												$ug_product = $this->contract_m->isProductActive($carrier_id,2);
 												if($ug_product == 0){
-													$this->mydebug->rafeed_log("This ".$carrier."  Baggage Product in deactive mode" . $column, 1);
+													$this->mydebug->rafeed_log("This ".$carrier."  Baggage Product in deactive mode - ROW:$i, COL:" . $column, 1);
 												} else {
-													$this->mydebug->rafeed_log("This ".$carrier."  Baggage Product in active mode" . $column, 1);
+													$this->mydebug->rafeed_log("This ".$carrier."  Baggage Product in active mode - ROW:$i, COL:" . $column, 1);
 													$this->baggageUpload($Row, $import_header, $column);
 												}
 												break;
@@ -536,9 +542,9 @@ echo "MISED,$cDocumentType";
 											case 't': // ticketing rafeed
 												$bg_product = $this->contract_m->isProductActive($carrier_id,1);
 												if($bg_product == 0){
-													$this->mydebug->rafeed_log("This ".$carrier."  Upgrade Product in deactive mode" . $column, 1);
+													$this->mydebug->rafeed_log("This ".$carrier."  Upgrade Product in deactive mode - ROW:$i, COL:" . $column, 1);
 												} else {
-													$this->mydebug->rafeed_log("This ".$carrier." Airline  Upgrade Product in active mode" . $column, 1);
+													$this->mydebug->rafeed_log("This ".$carrier." Airline  Upgrade Product in active mode - ROW:$i, COL:" . $column, 1);
 													$this->ticketUpgradeUpload($Row, $import_header, $column);
 												}
 												break;
@@ -1029,6 +1035,7 @@ echo "MISED,$cDocumentType";
 		$rafeed['channel'] = $Row[array_search('channel', $import_header)];
 		$pax_type = $Row[array_search('pax type', $import_header)];
 		$rafeed['pax_type'] =  $this->airports_m->getDefIdByTypeAndCode($pax_type, '18');
+		$rafeed['active'] = 1;
 
 		if (strlen($pax_type) >= 4 || !ctype_alpha($pax_type)) {
 			$this->mydebug->rafeed_log("Pax type code should be 2 alpha code in row " . $column, 1);
@@ -1227,8 +1234,8 @@ echo "MISED,$cDocumentType";
 		}
 
 		//$ac=$_GET['inputVal'];
-		$sWhere .=  ($sWhere == '') ? ' WHERE ' : ' AND ';
-		$sWhere .=  " rf.sub_season_record = 0 ";
+		#$sWhere .=  ($sWhere == '') ? ' WHERE ' : ' AND ';
+		#$sWhere .=  " rf.sub_season_record = 0 ";
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS rafeed_id,ticket_number, coupon_number, dc.code as booking_country , 
 				dfre.code as day_of_week,  dfre.aln_data_value , dc.aln_data_value, dci.aln_data_value, dico.aln_data_value,
 				dici.aln_data_value, dai.aln_data_value, dam.aln_data_value, dcar.aln_data_value, dbp.aln_data_value,
@@ -1258,7 +1265,7 @@ echo "MISED,$cDocumentType";
 		$sWhere			
 		$sOrder
 		$sLimit	";
-
+//echo $sQuery;exit;
 		$rResult = $this->install_m->run_query($sQuery);
 		$sQuery = "SELECT FOUND_ROWS() as total";
 		$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;

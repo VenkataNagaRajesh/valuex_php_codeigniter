@@ -77,7 +77,7 @@
                                                 <td><?=$data->to_city?></td>
 						 <td><?=$data->from_cabin?></td>
 						 <td><?=$data->to_cabin?></td>
-						 <td><?=$data->booking_status?></td>
+						 <td><?=$data->offer_status?></td>
 						 <td><?=$data->min?></td>
 						 <td><?=$data->max?></td>
 						 <td><?=$data->average?></td>
@@ -126,7 +126,7 @@
 							<td><?=$data->from_city?></td>
 							<td><?=$data->to_city?></td>
 							 <td><?=$data->from_cabin?></td>
-							 <td><?=$data->booking_status?></td>
+							 <td><?=$data->offer_status?></td>
 							 <td><?=$data->min_unit?></td>
 							 <td><?=$data->max_capacity?></td>
 							 <td><?=$data->min_price?></td>

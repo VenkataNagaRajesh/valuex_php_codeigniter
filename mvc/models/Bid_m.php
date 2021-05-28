@@ -10,7 +10,36 @@ class bid_m extends MY_Model {
 	 $result = $this->db->get();	 
 	 return $result->row('count');
   }
+	function checkBidExists($array){
+                $this->db->select('bid_id');
+                $this->db->from('UP_bid');
+                $this->db->where($array);
+                $this->db->limit(1);
+                $query = $this->db->get();
+                $check = $query->row();
+                if($check->bid_id) {
+                    return $check->bid_id;
+                } else {
+                  return 0;
+                }
+        }
   
+	function checkRecentSavedCard($array){
+                $this->db->select('card_id');
+                $this->db->from('VX_card_data');
+                $this->db->where($array);
+                $this->db->where('FROM_UNIXTIME(date_added) >= NOW() - INTERVAL 1 MINUTE');
+                $this->db->limit(1);
+                $this->db->order_by('card_id','DESC');
+                $query = $this->db->get();
+                $check = $query->row();
+                if($check->card_id) {
+                    return $check->card_id;
+                } else {
+                  return 0;
+                }
+        }
+
   function cabins(){
 	  $this->db->select("*")->from('VX_data_defns');
 	  $this->db->where('aln_data_typeID','13');
@@ -70,15 +99,11 @@ class bid_m extends MY_Model {
 	$this->db->join('VX_airline_cabin_def tdef','(tdef.carrier = tpf.carrier_code) AND (dcto.alias = tdef.level)','LEFT');
 
 	
-	if(!empty($bidstatus)){
-		$this->db->where('dd.alias is null',$bidstatus);
-	} else {
-		#$this->db->where('dd.alias','sent_offer_mail');
+	if($bidstatus != NULL ){
+		$this->db->where('dd.alias',$bidstatus);
 	}
 	$this->db->where("tpf.pnr_ref",$pnr_ref);	
 	$this->db->where('pfe.active',1);   
-	//$this->db->group_by('pfe.product_id');
-	//$this->db->order_by('defto.level','ASC');
 	$query = $this->db->get();  
 	//print_r($this->db->last_query()); exit;
 	return $query->result();
@@ -103,7 +128,7 @@ class bid_m extends MY_Model {
 	$this->db->join('VX_master_data m2','m2.airportID = c2.vx_aln_data_defnsID','LEFT');
 	$this->db->join('VX_data_defns air_city1','(air_city1.vx_aln_data_defnsID = m1.cityID AND air_city1.aln_data_typeID = 3)','LEFT');
 	$this->db->join('VX_data_defns air_city2','(air_city2.vx_aln_data_defnsID = m2.cityID AND air_city2.aln_data_typeID = 3)','LEFT');
-	$this->db->join('UP_bid bid','(bid.offer_id = oref.offer_id AND tpf.flight_number = bid.flight_number)','LEFT');	
+	$this->db->join('UP_bid bid','(bid.offer_id = oref.offer_id AND tpf.flight_number = bid.flight_number AND bid.active = 1)','LEFT');	
 	$this->db->join('VX_data_defns dcto','(dcto.aln_data_typeID = 13 and dcto.vx_aln_data_defnsID = fclr.to_cabin)','LEFT');
 	$this->db->join('VX_airline_cabin_def tdef','(tdef.carrier = tpf.carrier_code) AND (dcto.alias = tdef.level)','LEFT');
 
@@ -113,7 +138,9 @@ class bid_m extends MY_Model {
 		$this->db->where('dd.alias','sent_offer_mail');
 	}
 	$this->db->where("tpf.pnr_ref",$pnr_ref);	
+	$this->db->where("tpf.active",1);	
 	$this->db->where('pfe.active',1);   
+	$this->db->where('fclr.active',1);   
 	$this->db->where('pfe.product_id',1);   
 	$this->db->group_by('tpf.flight_number');
 	//$this->db->order_by('defto.level','ASC');
@@ -131,12 +158,13 @@ class bid_m extends MY_Model {
   }
   
    public function get_offer_data($offer_id){
-	   $this->db->select("def.desc cabin,udef.desc upgrade_type,tpf.seat_no,tpf.pnr_ref,tpf.carrier_code  carrier,tpf.dep_date,tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,car.aln_data_value carrier_name,tpf.flight_number,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.cash,oref.miles,bid.bid_value")->from('VX_offer_info pfe');	
-	  $this->db->join('VX_data_defns dd','(dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20)','LEFT');
+	   $this->db->select("of.aln_data_value as offer_status, def.desc cabin,udef.desc upgrade_type,tpf.seat_no,tpf.pnr_ref,tpf.carrier_code  carrier,tpf.dep_date,tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,car.aln_data_value carrier_name,tpf.flight_number,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.cash,oref.miles,bid.bid_value")->from('VX_offer_info pfe');	
 	  $this->db->join('VX_daily_tkt_pax_feed tpf','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');
-	  $this->db->join('UP_fare_control_range fclr','(fclr.fclr_id = pfe.rule_id AND fclr.from_cabin=tpf.cabin)','LEFT');	
-	  $this->db->join('BG_baggage_control_rule bclr','(bclr.bclr_id = pfe.rule_id )','LEFT');	
-	  $this->db->join('VX_offer oref','oref.pnr_ref = tpf.pnr_ref','LEFT');
+	  $this->db->join('VX_offer oref','oref.pnr_ref = tpf.pnr_ref AND oref.product_id = pfe.product_id','LEFT');
+	  $this->db->join('VX_data_defns dd','(dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20)','LEFT');
+	  $this->db->join('VX_data_defns of','(of.vx_aln_data_defnsID = oref.offer_status AND of.aln_data_typeID = 20)','LEFT');
+	  $this->db->join('UP_fare_control_range fclr','(fclr.fclr_id = pfe.rule_id AND fclr.from_cabin=tpf.cabin AND pfe.product_id = 1)','LEFT');	
+	  $this->db->join('BG_baggage_control_rule bclr','(bclr.bclr_id = pfe.rule_id and pfe.product_id = 2 )','LEFT');	
 	  $this->db->join('UP_bid bid','bid.offer_id = oref.offer_id','LEFT');
 	  //$this->db->join('vx_aln_data_defns upcab','upcab.vx_aln_data_defnsID = bid.upgrade_type','LEFT');
 	  //$this->db->join('vx_aln_data_defns  cab','(cab.vx_aln_data_defnsID = tpf.cabin AND cab.aln_data_typeID = 13)','LEFT');
@@ -151,6 +179,7 @@ class bid_m extends MY_Model {
 	 // $this->db->where('dd.alias','sent_offer_mail');
 	  $query = $this->db->get();
        $this->mydebug->debug($this->db->last_query());	  
+//       echo $this->db->last_query();	  
 	  return $query->row(); 
    } 
   
@@ -175,9 +204,16 @@ class bid_m extends MY_Model {
         $id = $bid_data->bid_id;		
 	  }
 
-//		echo $this->db->last_query();
+	//echo $this->db->last_query();exit;
 	  return $id;
   } 
+  
+  public function update_bid($data,$product_id,$offer_id){	  
+		$this->db->where('offer_id',$offer_id);
+		$this->db->where('productID',$product_id);
+		$this->db->update('UP_bid',$data);
+		//echo $this->db->last_query();exit;
+  }
   
   public function save_card_data($data){	  
 /*	  $this->db->select('*')->from('VX_card_data');
@@ -209,8 +245,9 @@ class bid_m extends MY_Model {
 	}
   public function getCardData($offer_id){
 	  $this->db->select("*")->from("VX_card_data");
-	  $this->db->where('offer_id',$offer_id);
+	  $this->db->where('orderID',$offer_id);
 	  $query = $this->db->get();
+	//echo $this->db->last_query();
 	  return $query->row();
   } 
   public function getRecentOrderByPNR($pnr_ref){

@@ -50,6 +50,7 @@ class Offer_eligibility_m extends MY_Model {
 		$this->db->where_in('dtpfext_id', $list1);
                 $this->db->update('VX_offer_info', $data);
         	$this->mydebug->debug($this->db->last_query());
+//        	echo $this->db->last_query();
         }
 
 	function checkDTPFExtEntry($array){
@@ -137,7 +138,7 @@ class Offer_eligibility_m extends MY_Model {
 		$sQuery .= " AND `pnr_ref` = '" .  $pax_pnr_single->pnr_ref . "'";
 		$sQuery .= " AND `first_name` = '" .  $pax_pnr_single->first_name . "'";
 		$sQuery .= " AND `last_name` = '" .  $pax_pnr_single->last_name . "'";
-		echo "SINGLQU=" . print_r($sQuery,1);
+		//echo "SINGLQU=" . print_r($sQuery,1);
 		$result = $this->install_m->run_query($sQuery);
 		//print_r($this->db->last_query());
                 return  $result;

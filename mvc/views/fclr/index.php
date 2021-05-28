@@ -50,25 +50,12 @@
 					</div>
 
                     <div class="col-md-2 col-sm-3">
-                      <input id="board_point" name="board_point" class="form-control" placeholder="Board Point"/> <input type="hidden" id="board_point_id" name="board_point_id" class="form-control" value="<?= set_value('board_point_id',$board_point)?>" /> 
+                      <input id="board_point_name" name="board_point_name" class="form-control" placeholder="Type & Select Board Point"/> <input type="hidden" id="board_point" name="board_point" class="form-control" value="<?=set_value('board_point',$board_point)?>" /> 
                     </div>
 
                     <div class="col-md-2 col-sm-3">
-                      <input id="off_point" name="off_point" class="form-control" placeholder="Off Point"/> <input type="hidden" id="off_pointID" name="off_pointID" class="form-control" value="<?= set_value('off_pointID',$off_point_name)?>" /> 
+                      <input id="off_point_name" name="off_point_name" class="form-control" placeholder="Type & Select Off Point"/> <input type="hidden" id="off_point" name="off_point" class="form-control" value="<?=set_value('off_point',$off_point)?>" /> 
                     </div>
-				<!--	<div class="col-md-2 col-sm-3">
-						<?php
-							#$airports['0'] = 'Board Point';
-						#	ksort($airports);
-							#echo form_dropdown("board_point", $airports,set_value("board_point"), "id='board_point' class='form-control hide-dropdown-icon select2'"); ?>
-					</div>
-					<div class="col-md-2 col-sm-3">
-					    <?php
-							#$airports['0'] = 'Off Point';
-							#ksort($airports);
-							#echo form_dropdown("off_point", $airports,set_value("off_point"), "id='off_point' class='form-control hide-dropdown-icon select2'");?>
-					</div>    -->
-				
 					<div class="col-md-2 col-sm-3">
 						<input type="text" placeholder="Flight No" class="form-control" id="flight_number" name="flight_number" value="<?=set_value('flight_number')?>" >
 					</div>
@@ -149,8 +136,8 @@
 
                             <div class="col-md-12">
                                     <select class="form-control select2"  name="fclr_status" id="fclr_status">
-                                        <option value="1">Active</option>
-                                        <option value="0">In active</option>
+					    <option value="1" <?=(($fclr_status == 1 )? "selected":"")?>>Active</option>
+					    <option value="0" <?=(($fclr_status == 0 || $fclr_status == '' )? "selected":"")?>>In active</option>
                                     </select>
                             </div>
                             			
@@ -164,7 +151,7 @@
 						</div>
                         <div class="col-md-12">
                                     <select class="form-control select2"  name="fclr_edit_status" id="fclr_edit_status">
-                                        <option value="0">All</option>
+                                        <option value="">All</option>
                                         <option value="1">Manually Edited</option>
                                         <option value="2">Manual Attention needed</option>
                                         <option value="3">Manually Added</option>
@@ -327,10 +314,22 @@ $.ajax({     async: false,
 $('#upgrade_from_cabin_type').trigger('change');
 $('#upgrade_to_cabin_type').trigger('change');
 
+$("#board_point_name").blur(function() {
+	var bval = $("#board_point_name").val();
+	if ( bval == '') {
+		$("#board_point").val(0);
+	}
+});
+$("#off_point_name").blur(function() {
+	var bval = $("#off_point_name").val();
+	if ( bval == '') {
+		$("#off_point").val(0);
+	}
+});
+
 
 //auto-complete textview for boardpoint-autocomplte-textview
-
-$( "#board_point" ).autocomplete({
+$( "#board_point_name" ).autocomplete({
       //source: availableTags
            source : function( request, response ) {
                 $.ajax({
@@ -347,7 +346,7 @@ $( "#board_point" ).autocomplete({
                             response( $.map( data, function( item ) {                  
                                     return {                                    
                                         label: item['airport_name'],
-                                    value: item['airportID']
+                                    	value: item['airportID']
                                     }
                             }));
           
@@ -356,16 +355,16 @@ $( "#board_point" ).autocomplete({
                     
                 });
             },
-    	minLength: 0,
+    	minLength: 3,
         'select': function(event, ui) {
-        $('#airport_name').val(ui.item.label);
-	$('#airportID').val(ui.item.value);
+        $('#board_point_name').val(ui.item.label);
+	$('#board_point').val(ui.item.value);
         return false; // Prevent the widget from inserting the value.
     },
- }).val('<?php echo $airport_name; ?>').data('autocomplete');
+ }).val('<?php echo $board_point_name; ?>').data('autocomplete');
 
 
- $( "#off_point" ).autocomplete({
+ $( "#off_point_name" ).autocomplete({
       //source: availableTags
            source : function( request, response ) {
                 $.ajax({
@@ -393,11 +392,11 @@ $( "#board_point" ).autocomplete({
             },
     	minLength: 0,
         'select': function(event, ui) {
-        $('#airport_name').val(ui.item.label);
-	$('#airportID').val(ui.item.value);
+        $('#off_point_name').val(ui.item.label);
+	$('#off_point').val(ui.item.value);
         return false; // Prevent the widget from inserting the value.
     },
- }).val('<?php echo $airportID; ?>').data('autocomplete');
+ }).val('<?php echo $off_point_name; ?>').data('autocomplete');
 
 
 
@@ -460,6 +459,7 @@ function loaddatatable() {
        "fnServerData": function ( sSource, aoData, fnCallback, oSettings ) {               
        aoData.push({"name": "flightNbr","value": $("#sflight_number").val()},
 		           {"name": "flightNbrEnd","value": $("#end_flight_number").val()},
+		           {"name": "fclr_edit_status","value": $("#fclr_edit_status").val()},
                    {"name": "boardPoint","value": $("#boarding_point").val()},
                    {"name": "offPoint","value": $("#soff_point").val()},
 		           {"name": "depStartDate","value": $("#dep_from_date").val()},
@@ -545,7 +545,7 @@ function loaddatatable() {
                            $.ajax({
                                 url: "<?php echo base_url('fclr/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val()},
+                                data: {sSearch: $("input[type=search]").val(),"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val(), "sfclr_edit_status":$("#sfclr_edit_status").val(),"fclr_status":$("#fclr_status").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -568,7 +568,7 @@ function downloadFCLR(){
 	$.ajax({
        url: "<?php echo base_url('fclr/server_processing'); ?>?page=all&&export=1",
        type: 'get',
-       data: {"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val()},
+       data: {"flightNbr":$("#sflight_number").val(),"flightNbrEnd":$("#end_flight_number").val(),"boardPoint":$("#boarding_point").val(),"offPoint":$("#soff_point").val(),"depStartDate":$("#dep_from_date").val(),"depEndDate":$("#dep_to_date").val(),"frequency":$("#sfrequency").val(),"smarket":$("#smarket").val(),"dmarket":$("#dmarket").val(),"sfrom_cabin":$("#sfrom_cabin").val(),"sto_cabin":$("#sto_cabin").val(),"sseason_id":$("#sseason_id").val(),"sfclr_id":$("#sfclr_id").val(),"scarrier":$("#scarrier").val(),"fclr_status":$("#fclr_status").val()},
        dataType: 'json'
        }).done(function(data){
 			var $a = $("<a>");
@@ -732,10 +732,12 @@ $.ajax({
                 $('#carrier_code').val(fclrinfo['carrier_code']);
                 $('#carrier_code').trigger('change');
                 $('#board_point').val(fclrinfo['boarding_point']);
-		$('#board_point').trigger('change');
+                $('#board_point_name').val(fclrinfo['boarding_point_name']);
+		//$('#board_point').trigger('change');
 
 		 $('#off_point').val(fclrinfo['off_point']);
-                $('#off_point').trigger('change');
+		 $('#off_point_name').val(fclrinfo['off_point_name']);
+                //$('#off_point').trigger('change');
 
 		 $('#flight_number').val(fclrinfo['flight_number']);
 
@@ -792,8 +794,8 @@ function form_reset(){
                 } 
      
   
-           $("#board_point").val(0).trigger('change');
-           $("#off_point").val(0).trigger('change');
+           //$("#board_point").val(0).trigger('change');
+           //$("#off_point").val(0).trigger('change');
            $("#season_id").val(0).trigger('change');
            $("#carrier_code").val(0).trigger('change');
            $("#frequency").val(0).trigger('change');

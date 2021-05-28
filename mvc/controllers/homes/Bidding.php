@@ -43,10 +43,11 @@ class Bidding extends MY_Controller {
 
 				$this->data['pnr_ref'] = $pnr_ref; 
 				$offer_ref = $this->offer_reference_m->getOfferDataByRef($pnr_ref);
+			//	echo "<pre>OFFERS=" . print_r($offer_ref,1) . "</pre>"; exit;
 				if ( !count($offer_ref) ) {
 					$this->data['error'] = "Sorry the offer for PNR $pnr_ref is not found! or no longer valid!"; 
 				} else {
-						$status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
+						$sent_offer_mail = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 						$bid_received = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
 						$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 						//$bid_confirmation = $this->preference_m->get_preference(array("pref_code" => 'BID_CONFIRMATION'))->pref_value;
@@ -62,7 +63,7 @@ class Bidding extends MY_Controller {
 								$this->data['error_'. $offer_data->product_id] = $offer->product_name . " Offer Expired"; 
 							}  
 
-							if($status == $offer_data->offer_status || $bid_received == $offer_data->offer_status){
+							if($sent_offer_mail == $offer_data->offer_status || $bid_received == $offer_data->offer_status){
 								switch($offer_data->product_id ) {
 									case 1: 
 										if ( $bid_received == $offer_data->offer_status ) {
@@ -119,14 +120,16 @@ class Bidding extends MY_Controller {
 
 			if ( $pnr_ref ) {
 
-				$this->data['upgrade'] = $this->bid_m->getUpgradeOffers($pnr_ref, $bidstatus);
+				$upgrade = $this->bid_m->getUpgradeOffers($pnr_ref, $bidstatus);
+				$this->data['upgrade'] =  $upgrade;
+	//			echo "<pre>UPGRADE=" . print_r($upgrade,1) . "</pre>"; exit;
 				foreach($this->data['upgrade'] as $result ){
 					$this->data['offer_id_'. $result->product_id] = $result->offer_id;
 					$this->data['upgrade_offer'] = 1;
 					if ( $result->bid_id) {
-						$this->data['last_bid']['last_bid_'. $result->product_id . '_'. $result->flight_number] = $result->bid_value;
+						$this->data['bid_id_'. $result->product_id] = $result->bid_id;
+						$this->data['last_bid_value_'. $result->product_id] += $result->bid_value;
 						$this->data['last_bid_total_value'] += $result->bid_value;
-						$this->data['resubmit'] = 1;
 					}
 					//reducing duplicate names for multi cabins case
 					$result->pax_names = $this->bid_m->getPaxNames($pnr_ref);
@@ -170,13 +173,12 @@ class Bidding extends MY_Controller {
 					$bgoffer = $this->offer_issue_m->getBaggageOffer($pnr_ref);
 			//	echo "<pre>" . print_r($bgoffer,1) . "</pre>"; exit;
 					if ( $bgoffer) {
-					$this->data['baggage_offer'] = 1;
 						$this->data['baggage_bag_type'] = $this->preference_m->get_preference_value_bycode('BAG_TYPE','24',$airline->airlineID);
 						$this->data['baggage_min_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MIN_VAL','24',$airline->airlineID);
 						$this->data['baggage_max_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MAX_VAL','24',$airline->airlineID);
 						$this->data['piece'] = $this->preference_m->get_preference_value_bycode('PIECE','24',$airline->airlineID);
 						// var_dump($pnr_ref);
-						$test="SELECT b.bid_id, o.offer_id, v.product_id, v.dtpfext_id,v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2) LEFT JOIN VX_offer o ON ( o.pnr_ref = vx.pnr_ref ) WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref'";
+						$test="SELECT b.bid_id, b.bid_value, o.offer_id, v.product_id, v.dtpfext_id,v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2 AND b.active = 1) LEFT JOIN VX_offer o ON ( o.pnr_ref = vx.pnr_ref ) WHERE v.active =1 AND vx.active =1 AND vxxx.active = 1 AND o.active = 1  AND v.ond>=1 AND vx.pnr_ref = '$pnr_ref'";
 						$rquery = $this->install_m->run_query($test);
 						// var_dump($rquery);
 						$mr=[];
@@ -192,6 +194,13 @@ class Bidding extends MY_Controller {
 							$mr[$rq->ond][$rq->dtpf_id]['rule_id']=$rq->rule_id;
 							$mr[$rq->ond][$rq->dtpf_id]['product_id']=$rq->product_id;
 							$mr[$rq->ond][$rq->dtpf_id]['offer_id']=$rq->offer_id;
+							$mr[$rq->ond][$rq->dtpf_id]['bid_value']=$rq->bid_value;
+					$this->data['offer_id_'. $rq->product_id] = $rq->offer_id;
+					if ( $rq->bid_id) {
+						$this->data['bid_id_'. $rq->product_id] = $rq->bid_id;
+						$this->data['last_bid_value_'. $rq->product_id] += $rq->bid_value;
+						$this->data['last_bid_total_value'] += $rq->bid_value;
+					}
 
 							$mr[$rq->ond][$rq->dtpf_id]['flight_number']=$rq->flight_number;
 							$mr[$rq->ond][$rq->dtpf_id]['dep_date']=$rq->dep_date;
@@ -232,7 +241,7 @@ class Bidding extends MY_Controller {
 				}
 				// var_dump($tr);
 				// die();
-				$sum_query="SELECT b.bid_id, v.product_id, sum(vxx.min_price) as min_price,sum(vxx.max_capacity) as max_capacity,v.ond,v.dtpfext_id FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2) WHERE v.ond>=1 AND vx.pnr_ref = '$pnr_ref' group by v.ond";
+				$sum_query="SELECT b.bid_id, b.bid_value, v.product_id, sum(vxx.min_price) as min_price,sum(vxx.max_capacity) as max_capacity,v.ond,v.dtpfext_id FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2 AND b.active = 1 ) WHERE v.active = 1 AND vx.active = 1 AND v.ond>=1 AND vx.pnr_ref = '$pnr_ref' group by v.ond";
 				$sum_res = $this->install_m->run_query($sum_query);
 				// var_dump($sum_res);
 				// die();
@@ -263,13 +272,20 @@ class Bidding extends MY_Controller {
 
 				// var_dump($tr);
 				// die();
+				if ( count($tr) ) {
+					$this->data['baggage_offer'] = 1;
+				}
 				foreach($tr as $bg ) {
 					// var_dump(json_encode($bg,JSON_FORCE_OBJECT),"<br>");
+/*
 					if ( $bg->bid_id) {
 						$this->data['last_bid']['last_bid_'. $bg->product_id . '_'. $bg->flight_number] = $bg->bid_value;
-						$this->data['last_bid_total_value'] += $bg->bid_value;
-						$this->data['resubmit'] = 1;
+						$this->data['last_bid_value_'. $bg->product_id] += $bg->bid_value;
+						$this->data['bid_id_'. $bg->product_id] = $bg->bid_id;
+					} else {
+						$this->data['bid_id_'. $bg->product_id] =  0;
 					}
+*/
 					//reducing duplicate names for multi cabins case
 				
 					$cwtdata = $this->bclr_m->getActiveCWT($bg['rule_id']);
@@ -324,17 +340,25 @@ class Bidding extends MY_Controller {
 	}
 
 	public function saveBidData(){				
+		$product_id = $this->input->post("product_id");
+            	$bid_id  = $this->input->post('bid_id');
+            	$offer_id  = $this->input->post('offer_id');
 		if($this->input->post('offer_id')){ 		
-		  if($this->input->post('bid_action') == 0){
-            if($this->input->post('type') == 'resubmit'){
+            if($bid_id && $product_id){//Bid  Resubmit case
                $this->saveBiddingHistory($this->input->post('offer_id'));
-			}          
+	    }          
 			
-			$data = Array();
-			$product_id = $this->input->post("product_id");
+		$data = Array();
 		    $id = 0;
 			switch($product_id) {
 			case 1:
+				//Deactive old Bid records for this offer if any for same product offer
+            			if($bid_id && $product_id){//Bid  Resubmit case
+					$data['active'] = 0;
+					$this->bid_m->update_bid($data, $product_id, $offer_id);			
+					$data = Array();
+				}
+
 				$data['upgrade_type'] = $this->input->post("upgrade_type");
 				$data['cash'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
 				$data['miles'] = ($this->input->post("bid_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
@@ -343,17 +367,24 @@ class Bidding extends MY_Controller {
 				$data['bid_value'] = $this->input->post("bid_value");	
 				$data['dtpfext_id'] = $this->input->post("dtpfext_id");
 				$data['flight_number'] = $this->input->post("flight_number");	
-				$data['bid_submit_date'] = time();
 				$data['active'] = 1;
-				$data['orderID'] = $this->input->post('orderID');
 				$data['productID'] = 1;
-				$bid_status = 'bid_received';
-          		$id = $this->bid_m->save_bid_data($data);			
+				$id  = $this->bid_m->checkBidExists($data);
+				if ( $id) {  //Just inform bid submitted nothing to do
+					$json['status'] = "bid_submitted";
+					$this->output->set_content_type('application/json');
+					$this->output->set_output(json_encode($json));
+					return;
+				} else {//Create New one
+					$data['bid_submit_date'] = time();
+					$data['orderID'] = $this->input->post('orderID');
+          				$id = $this->bid_m->insert_bid_data($data);		//Always allow excess baggage till offer expired
+					$bid_status = 'bid_received';
+				}
 				break;
 			case 2:
 				$data['weight'] = $this->input->post("weight");	
 				$data['cash'] = ($this->input->post("baggage_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
-				$data['bid_submit_date'] = time();
 				$data['active'] = 1;
 				$data['miles'] = ($this->input->post("baggage_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
 				$data["cash_percentage"] = round((($data['cash']/ $this->input->post("tot_bid"))*100),2);
@@ -361,17 +392,26 @@ class Bidding extends MY_Controller {
 				$data['bid_value'] = $this->input->post("baggage_value");	
 				$data['dtpfext_id'] = $this->input->post("dtpfext_id");
 				$data['flight_number'] = $this->input->post("flight_number");
-				$data['orderID'] = $this->input->post('orderID');
 				$data['productID'] = 2;
-				$bid_status = 'bid_accepted';
-          		$id = $this->bid_m->insert_bid_data($data);		//Always allow excess baggage till offer expired
+				$id  = $this->bid_m->checkBidExists($data);
+				if ( $id) {  //Just inform bid submitted nothing to do
+					$json['status'] = "bid_submitted";
+					$this->output->set_content_type('application/json');
+					$this->output->set_output(json_encode($json));
+					return;
+				} else { //Create New one
+					$data['bid_submit_date'] = time();
+					$data['orderID'] = $this->input->post('orderID');
+          				$id = $this->bid_m->insert_bid_data($data);		//Always allow excess baggage till offer expired
+					$bid_status = 'bid_accepted';
+				}
 				break;
 				default:
 				break;
 			}
 		
           if($id){
-              if($this->input->post('type') == 'resubmit'){
+              if($this->input->post('bid_id')){
 				$select_passengers_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_received',$this->input->post("fclr_id"),1);
                 $select_passengers_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_unselect_cabin',$this->input->post("fclr_id"),1);
 				$select_passengers_data->p_list = $select_passengers_data1->p_list;
@@ -383,13 +423,13 @@ class Bidding extends MY_Controller {
 				 $unselect_passengers_data->p_list .= (!empty($unselect_passengers_data2->p_list))?','.$unselect_passengers_data2->p_list:''; 
 				// print_r('UNSelect Passengers Data '.$select_passengers_data->p_list); exit;
               } else {
-			     $select_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),1);
-			     $unselect_passengers_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"));
-			  }
+			     $select_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),1,$product_id);
+			     $unselect_passengers_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),0,$product_id);
+	  }
 			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
 			  $unselect_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_unselect_cabin','20');
 			   $array['booking_status'] = $select_status;
-               $array["modify_date"] = time(); 
+          		     $array["modify_date"] = time(); 
 			   
 			   $select_p_list = explode(',',$select_passengers_data->p_list);
 			   $unselect_p_list = explode(',',$unselect_passengers_data->p_list);
@@ -398,10 +438,17 @@ class Bidding extends MY_Controller {
 			   $this->mydebug->debug($unselect_passengers_data->p_list); */
 			   
              $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $select_status,"modify_date"=>time()),$select_p_list);
-		     $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);
+	     $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $unselect_status,"modify_date"=>time()),$unselect_p_list);
+
+						$array = array();
+						$array['offer_status'] = $select_status;
+						$array['product_id'] = $product_id;
+						$array["modify_date"] = time();
+						$array["modify_userID"] = $this->session->userdata('loginuserID');
+						$this->offer_reference_m->update_offer_ref($array,$this->input->post('offer_id'));
               
                // updating bid status tracker
-              if($this->input->post('type') == 'resubmit'){
+              if($this->input->post('bid_id')){
                  $tracker = array();				 
 				 $tracker['comment'] = 'Bid Resubmited By Customer';
 			     $tracker["create_date"] = time();
@@ -410,11 +457,11 @@ class Bidding extends MY_Controller {
 				 if(!empty($select_passengers_data2->p_list)){				                                         
               	 foreach($p_list1 as $id) {
                     $tracker['booking_status_from'] = $unselect_status;
-				    $tracker['booking_status_to'] = $select_status;
-					$tracker['dtpfext_id'] = $id;
+		    $tracker['booking_status_to'] = $select_status;
+		    $tracker['dtpfext_id'] = $id;
                     $this->offer_issue_m->insert_dtpf_tracker($tracker);
 				 }
-				}
+		}
                 $p_list2 = explode(',',$unselect_passengers_data1->p_list);                 
 				if(!empty($unselect_passengers_data1->p_list)){
               	 foreach($p_list2 as $id) {
@@ -477,8 +524,8 @@ class Bidding extends MY_Controller {
     	    } else {
 			    $json['status'] = "Unable to save bid!";
 			}	
-		  } else {
-             if($this->input->post('type') == 'resubmit'){
+
+             if($this->input->post('bid_id')){
                  $extention_data1 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_received');
                  $extention_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'bid_unselect_cabin');
                  $extention_data->p_list = $extention_data1->p_list.','.$extention_data->p_list;
@@ -491,7 +538,6 @@ class Bidding extends MY_Controller {
 			 // $this->mydebug->debug($extention_data->p_list);		 
               $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $no_bid_Status,"modify_date"=>time()),$p_list);
 			  $json['status'] = "success";
-		  }		  
 		}else{
 			$json['status'] = "send offer_id";
 		}
@@ -504,7 +550,7 @@ class Bidding extends MY_Controller {
 	public function saveBaggageData(){
 		if($this->input->post('offer_id')){
 			//$this->mydebug->debug($_POST);
-			if($this->input->post('type') == 'resubmit'){
+			if($this->input->post('bid_id')){
 				$this->saveBaggageHistory($this->input->post('offer_id'));
 			 }
 			$data['cash'] = ($this->input->post("baggage_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
@@ -597,21 +643,26 @@ class Bidding extends MY_Controller {
 			if ($this->form_validation->run() == FALSE) { 
 				$json['status'] = validation_errors();		
 			} else {
-			$orderID =  $this->bid_m->create_order();
-			$json['orderID'] = $orderID;
-			$data['orderID'] = $orderID;
 			$data['pnr_ref'] = $this->input->post('pnr_ref');
 			$data['card_number'] = $this->input->post("card_number");
 			$data['month_expiry'] = $this->input->post("month_expiry");
 			$data['year_expiry'] = $this->input->post("year_expiry");
 			$data['cvv'] = $this->input->post("cvv");
-			    $data['date_added'] = time();			
-			    $id = $this->bid_m->save_card_data($data);
+			$id  = $this->bid_m->checkRecentSavedCard($data);
+			if ( !$id) { // Don not create duplicate records, use recent card_id records created
+				$orderID =  $this->bid_m->create_order();
+				$json['orderID'] = $orderID;
+				$data['orderID'] = $orderID;
+				$data['date_added'] = time();			
+				$id = $this->bid_m->save_card_data($data);
+			}
 			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
+			$ref = Array();
 			   $ref['cash'] = $this->input->post("cash");
 			   $ref['miles'] = $this->input->post("miles");
 			   $tot_bid = $this->input->post("tot_bid");
 			   $ref['offer_status'] = $select_status;
+			   $ref['product_id'] = $this->input->post("product_id");
 			   $ref["modify_date"] = time();
 			   if($tot_bid != 0){
 			    $ref["cash_percentage"] = round((($ref['cash']/ $tot_bid)*100),2);

@@ -10,11 +10,12 @@ class Offer_eligibility extends Admin_Controller {
 		$this->load->model("offer_eligibility_m");
 		$this->load->model("eligibility_exclusion_m");
 		$this->load->model("airline_m");
-		$this->load->model("bclr_m");
+		$this->load->model("bid_m");
 		$this->load->model("season_m");
 		$this->load->model("partner_m");
 		$this->load->model('paxfeed_m');
 		$this->load->model("marketzone_m");
+		$this->load->model("bclr_m");
 		$this->load->model("fclr_m");
 		$this->load->model("season_m");
 		$this->load->model("airports_m");
@@ -267,9 +268,9 @@ class Offer_eligibility extends Admin_Controller {
                         }
 
 
-			if(!empty($this->input->get('booking_status'))){
+			if(!empty($this->input->get('offer_status'))){
 				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= ' pext.booking_status = '.  $this->input->get('booking_status');
+                                $sWhere .= ' of.offer_status = '.  $this->input->get('offer_status');
                         }
 
 
@@ -303,9 +304,9 @@ class Offer_eligibility extends Admin_Controller {
 $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as product_offer_type, pext.product_id, pext.ond, pext.dtpf_id , pext.dtpfext_id ,
 		 boarding_point, dai.code as carrier_code , off_point, fc.season_id,pf.flight_number, fdef.cabin as fcabin, 
             	tdef.cabin as tcabin, dfre.code as day_of_week , sea.season_name,
-            	pf.dep_date as departure_date, min,max,average,slider_start,fca.aln_data_value as from_cabin, tca.aln_data_value as to_cabin,
+            	pf.dep_date as departure_date, min,max,average,slider_start,fdef.cabin as from_cabin, tdef.cabin as to_cabin,
 		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, 
-		pf.pnr_ref , bc.min_unit, bc.max_capacity, bc.min_price, bc.max_price
+		pf.pnr_ref , bc.min_unit, bc.max_capacity, bc.min_price, bc.max_price,  os.aln_data_value as offer_status
 		     from VX_offer_info pext 
 		     LEFT JOIN VX_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id and pf.active = 1)
 		     LEFT JOIN UP_fare_control_range fc on  (pext.rule_id = fc.fclr_id AND pext.product_id = 1)
@@ -313,15 +314,16 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as pro
 		     LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = fc.season_id )
 		     LEFT JOIN VX_offer of on (of.pnr_ref = pf.pnr_ref AND pext.product_id = of.product_id )
 		     LEFT JOIN VX_products vp on (vp.productID = pext.product_id )
-                     LEFT JOIN  VX_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
+                     LEFT JOIN VX_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
 		     LEFT JOIN VX_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
 		     LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = pf.carrier_code AND dai.aln_data_typeID = 12)
 		     LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = pf.frequency AND dfre.aln_data_typeID = 14)
-		     LEFT JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf.carrier_code AND pf.airline_code = fdef.carrier)
-		     LEFT JOIN VX_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin AND fca.aln_data_typeID = 13 )
-		     LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code AND  pf.airline_code = tdef.carrier)
+		     LEFT JOIN VX_data_defns fca on (fca.vx_aln_data_defnsID = pf.cabin AND fca.aln_data_typeID = 13 )
+		     LEFT JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf.carrier_code  AND fca.alias = fdef.level)
                      LEFT JOIN VX_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13 )
+		     LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code AND tca.alias = tdef.level)
 		     LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
+		     LEFT JOIN VX_data_defns os on (os.vx_aln_data_defnsID = of.offer_status AND bs.aln_data_typeID = 20)
 
 $sWhere $sOrder $sLimit";
 #print_r($sQuery) ;exit;
@@ -347,10 +349,10 @@ $sWhere $sOrder $sLimit";
 			$feed->source_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$boarding_markets.'">'.$feed->source_point.'</a>';
 			$dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
-               		$feed->bstatus = $feed->booking_status;			  
-			if($feed->booking_status == 'Excluded') {
+               		$feed->bstatus = $feed->offer_status;			  
+			if($feed->offer_status == 'Excluded') {
 				$excl_id = $this->eligibility_exclusion_m->getexclIdForGrpANDCabins($feed->exclusion_id,$feed->from_cabin,$feed->to_cabin);
-				$feed->booking_status = '<a href="'.base_url('eligibility_exclusion/index/'.$excl_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->exclusion_id.'">'.$feed->booking_status.'</a>';
+				$feed->offer_status = '<a href="'.base_url('eligibility_exclusion/index/'.$excl_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->exclusion_id.'">'.$feed->offer_status.'</a>';
 
 			}
             $feed->fclrID = $feed->rule_id;

@@ -517,7 +517,7 @@ class Bclr extends Admin_Controller
                 $array['carrierID'] = $this->input->post('carrierID');
                 #$array['from_cabin'] = implode(',', $this->input->post('from_cabin'));
                 $array['partner_carrierID'] = $this->input->post('partner_carrierID');
-                $array['season_id'] = $this->input->post('season');
+                $array['season_id'] =  ($this->input->post('season') == null) ? 0 : $this->input->post('season');
                 $array['allowance'] = $this->input->post('allowance');
                 $array['aircraft_typeID'] = (int)$this->input->post('aircraft_type');
                 $array['flight_num_range'] = trim($this->input->post('flight_num_range'));
@@ -884,7 +884,7 @@ class Bclr extends Admin_Controller
                 $sWhere .= ' FIND_IN_SET(' . $val . ',SubSet.dest_content)';
             }
         }
-
+        
         if (!empty($this->input->get('from_cabin'))) {
             $lval = explode(',', $this->input->get('from_cabin'));
             foreach ($lval as $val) {
@@ -905,9 +905,16 @@ class Bclr extends Admin_Controller
             $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
             $sWhere .= 'MainSet.carrierID IN (' . implode(',', $this->session->userdata('login_user_airlineID')) . ')';
         }
-
-        $sWhere.= " AND MainSet.active = '1'";
-
+        if(isset($_GET['bclr_staus']))
+        {
+                 $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+            $sWhere .= 'MainSet.active = ' .  $this->input->get('bclr_staus');
+        }
+       // $sWhere.= " AND  = '1'";
+       if (isset($_GET['bclr_status'])) {
+        $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+        $sWhere .= 'MainSet.active = ' .  $this->input->get('bclr_status');
+        }
 
         $sQuery = "SELECT SQL_CALC_FOUND_ROWS MainSet.from_cabin, MainSet.bclr_id,MainSet.version_id,MainSet.carrierID,MainSet.partner_carrierID,MainSet.allowance,MainSet.flight_num_range,MainSet.effective_date,MainSet.discontinue_date,MainSet.bag_type,MainSet.dep_time_start,MainSet.dep_time_end,MainSet.min_unit,MainSet.max_capacity,MainSet.min_price,MainSet.max_price,MainSet.active,
                 MainSet.rule_auth,MainSet.frequency,MainSet.carrier_code,MainSet.partner_carrier_code,MainSet.aircraft_type,MainSet.season_name,MainSet.rule_auth_carrier_code,MainSet.origin_level_value,MainSet.dest_level_value,
@@ -946,9 +953,11 @@ class Bclr extends Admin_Controller
                 ON origin_set.bclr_id = dest_set.bclr_id 
 
                 LEFT JOIN (
-                        SELECT bc.bclr_id,bc.from_cabin, COALESCE(group_concat(c.code),group_concat(c.aln_data_value)) AS from_cabin_data FROM BG_baggage_control_rule bc 
+                        SELECT bc.bclr_id,bc.from_cabin, COALESCE(group_concat(cd.cabin),group_concat(cd.cabin)) AS from_cabin_data FROM BG_baggage_control_rule bc 
                         LEFT OUTER JOIN  VX_data_defns c ON 
-                        (find_in_set(c.vx_aln_data_defnsID, bc.from_cabin)) GROUP BY bc.bclr_id 
+                        (find_in_set(c.vx_aln_data_defnsID, bc.from_cabin) ) 
+                        LEFT  JOIN  VX_airline_cabin_def cd ON ( cd.carrier = bc.carrierID AND c.alias = cd.level)
+			GROUP BY bc.bclr_id
                 ) as cabin_set
                 ON origin_set.bclr_id = cabin_set.bclr_id 
 
@@ -967,6 +976,7 @@ class Bclr extends Admin_Controller
 
         $rResult = $this->install_m->run_query($sQuery);
         // print_r($rResult);die();
+     
         $sQuery = "SELECT FOUND_ROWS() as total";
         $rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;
         $output = array(

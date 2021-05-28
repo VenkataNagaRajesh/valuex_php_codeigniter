@@ -145,6 +145,18 @@ class Fclr extends Admin_Controller
                 $id = $this->input->post('fclr_id');
                 if ((int) $id) {
                         $fclr = $this->fclr_m->get_single_fclr(array('fclr_id' => $id));
+			if ($fclr->boarding_point) {
+                        	$ap = $this->airports_m->get_definition_data($fclr->boarding_point);
+				$fclr->boarding_point_name = $ap->code;
+			} else {
+				$fclr->boarding_point_name = '';
+			}
+			if ($fclr->off_point) {
+                        	$ap = $this->airports_m->get_definition_data($fclr->off_point);
+				$fclr->off_point_name = $ap->code;
+			} else {
+				$fclr->off_point_name = '';
+			}
                 }
 
                 $this->output->set_content_type('application/json');
@@ -186,6 +198,7 @@ class Fclr extends Admin_Controller
                                 $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
                                 $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
                                 $array['season_id'] = $this->input->post("season_id");
+                                $array['active'] =  1;
                                 $exist_id = $this->fclr_m->checkFCLREntry($array);
 
                                 $array['average'] = $this->input->post("avg");
@@ -193,25 +206,13 @@ class Fclr extends Admin_Controller
                                 $array['max'] = $this->input->post("max");
                                 $array['slider_start'] = $this->input->post("slider_start");
 
-                                $min=$this->preference_m->get_preference_value_bycode('fclr_min',24,4079);
-                                $max=$this->preference_m->get_preference_value_bycode('fclr_max',24,4079);
-                                $slider_val=$this->preference_m->get_preference_value_bycode('fclr_slider_value',24,4079);
-                        
-                                if($array['min']<$min || $array['max']<$max || $array['slider_start']<$slider_val)
-                                {
-                                        $array['active']=0;
-                                }
-                                else{
-                                        $array['active']=1;
-                                }
-
                                 if ($fclr_id) {
                                         if ($exist_id && $exist_id != $fclr_id) {
                                                 $json['status'] = 'duplicate';
                                         } else {
                                                 $array["modify_date"] = time();
                                                 $array["modify_userID"] = $this->session->userdata('loginuserID');
-                                                $array["manual_edit"]=1;
+                                                $array["manual_edit"]=1; //Some one edited 
                                                 $this->fclr_m->update_fclr($array, $fclr_id);
                                                 $json['status'] = 'success';
                                         }
@@ -219,6 +220,7 @@ class Fclr extends Admin_Controller
                                         if ($exist_id) {
                                                 $json['status'] = 'duplicate';
                                         } else {
+                                                $array["manual_edit"]=3; //Manually added entry
                                                 $array["create_date"] = time();
                                                 $array["modify_date"] = time();
                                                 $array["create_userID"] = $this->session->userdata('loginuserID');
@@ -434,6 +436,45 @@ class Fclr extends Admin_Controller
                 if (!empty($this->input->post('sflight_number'))) {
                         $this->data['flight_number'] = $this->input->post('sflight_number');
                 }
+                if (!empty($this->input->post('fclr_status'))) {
+                        $this->data['fclr_status'] = $this->input->post('fclr_status');
+                } else {
+                        $this->data['fclr_status'] = 1; //Default
+		}
+                if (!empty($this->input->post('fclr_edit_status'))) {
+                        $this->data['fclr_edit_status'] = $this->input->post('fclr_edit_status');
+                } else {
+                        $this->data['fclr_edit_status'] = ''; //Default
+		}
+
+                if (!empty($this->input->post('end_flight_number'))) {
+                        $this->data['end_flight_number'] = $this->input->post('end_flight_number');
+                }
+
+                if (!empty($this->input->post('dep_from_date'))) {
+                        $this->data['dep_from_date'] = date('d-m-Y', $this->input->post('dep_from_date'));
+                }
+
+
+                if (!empty($this->input->post('dep_to_date'))) {
+                        $this->data['dep_to_date'] = date('d-m-Y', $this->input->post('dep_to_date'));
+                }
+
+
+                if (!empty($this->input->post('smarket'))) {
+                        $this->data['smarket'] = $this->input->post('smarket');
+                } else {
+                        $this->data['smarket'] = 0;
+                }
+
+
+                if (!empty($this->input->post('dmarket'))) {
+                        $this->data['dmarket'] = $this->input->post('dmarket');
+                } else {
+                        $this->data['dmarket'] = 0;
+                }
+
+
 
                 if (!empty($this->input->post('end_flight_number'))) {
                         $this->data['end_flight_number'] = $this->input->post('end_flight_number');
@@ -630,7 +671,7 @@ class Fclr extends Admin_Controller
                          $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
                          $sWhere .= 'fc.active = ' .  $this->input->get('fclr_status');
                 }
-                if (isset($_GET['fclr_edit_status'])) {
+                if (!empty($_GET['fclr_edit_status'])) {
                         $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
                         $sWhere .= 'fc.manual_edit = ' .  $this->input->get('fclr_edit_status');
                }
@@ -703,7 +744,7 @@ class Fclr extends Admin_Controller
                      
                      $sWhere $sOrder $sLimit";
 
-              //  print($sWhere); exit;
+                //print($sQuery); exit;
                 $rResult = $this->install_m->run_query($sQuery);
                 
                 $sQuery = "SELECT FOUND_ROWS() as total";
@@ -750,8 +791,12 @@ class Fclr extends Admin_Controller
                         $feed->action = '';
                         if (permissionChecker('fclr_edit')) {
 
-                        if($feed->manual_edit) { 
+                        if($feed->manual_edit == 1 ) { 
                                 $man_edit_color="style='color:blue' title='Manually edited' alt='Manually edited'";
+                        } elseif($feed->manual_edit == 2 ) { 
+                                $man_edit_color="style='color:red' title='FCLR values needs attention' alt='FCLR values needs attention'";
+                        } elseif($feed->manual_edit == 3 ) { 
+                                $man_edit_color="style='color:red' title='Manually Added' alt='Manually Added'";
                         } else {
                                 $man_edit_color="";
                         }
@@ -875,6 +920,7 @@ class Fclr extends Admin_Controller
         {
 		$errors = 0;
 
+			$airlines = $this->airline_m->get_airlines();
                 $param = htmlentities(escapeString($this->uri->segment(3)));
                 $carrier_id = $this->input->get('carrier_id');
 		
@@ -890,23 +936,22 @@ class Fclr extends Admin_Controller
                 }
 
 		$carriers = Array();
-		if ($carrier_id) {
-			$carriers[] = $carrier_id;
+		if ( $carrier_id) {
+			$contracts = $this->contract_m->getActiveContracts($carrier_id);
 		} else {
-
 			$contracts = $this->contract_m->getActiveContracts();
-			foreach($contracts as $contract) {
-				$product = $contract->productID;
-				switch ($product) {
-				case 1:
-					$carriers[] = $contract->airlineID;
-				break;
-				}
+		}
+		foreach($contracts as $contract) {
+			$product = $contract->productID;
+			switch ($product) {
+			case 1:
+				$carriers[$contract->airlineID] = $contract->code;
+			break;
 			}
 		}
 
 
-		foreach($carriers as $carrier_id) {
+		foreach($carriers as $carrier_id => $airline_code) {
                	$where = $where_date . " AND rf.carrier = " . $carrier_id;
 
                 $list = $this->airline_cabin_def_m->getDummyCabinsList($carrier_id);
@@ -947,10 +992,10 @@ class Fclr extends Admin_Controller
                         
                         $rResult1 = array_merge($rResult1, $rResult);
 			if ( !$rResult) {
-				$msg .= "<br>No matching records FROM RA FEED for NO SEASON carrer ID : $carrier_id, for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1]  ;
+				$msg .= "<br>No matching records FROM RA FEED for NO SEASON carrer ID : $carrier_id,($airline_code) for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1]  ;
 				$errors = 1;
 			} else {
-				$msg .= "<br>FOUND matching records FROM RA FEED for NO SEASON carrer ID : $carrier_id, for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1]  ;
+				$msg .= "<br>FOUND matching records FROM RA FEED for NO SEASON carrer ID : $carrier_id,($airline_code) for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1]  ;
 			}
 #echo "<br><br>$sQuery";
                 }
@@ -968,13 +1013,16 @@ class Fclr extends Admin_Controller
                         $rResult = $this->install_m->run_query($sQuery);
                         $rResult2 = array_merge($rResult, $rResult2);
 			if ( !$rResult) {
-				$msg .= "<br>No matching records FROM RA FEED for MATCING SEASON carrer ID : $carrier_id, for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1];
+				$msg .= "<br>No matching records FROM RA FEED for MATCING SEASON carrer ID : $carrier_id, ($airline_code) for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1];
 				$errors = 1;
 			} else {
-				$msg .= "<br>Found matching records FROM RA FEED for MATCING SEASON carrer ID : $carrier_id, for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1];
+				$msg .= "<br>Found matching records FROM RA FEED for MATCING SEASON carrer ID : $carrier_id, ($airline_code) for CABINS ". $cabin_arr[0] . " => " . $cabin_arr[1];
 			}
 #echo "<br><br>$sQuery";
                 }
+		$min=$this->preference_m->get_preference_value_bycode('fclr_min',24,$carrier_id);
+		$max=$this->preference_m->get_preference_value_bycode('fclr_max',24,$carrier_id);
+		$slider_val=$this->preference_m->get_preference_value_bycode('fclr_slider_value',24,$carrier_id);
 
                 $rResult = array_merge($rResult1, $rResult2);
 		if ($rResult ) {
@@ -1001,38 +1049,33 @@ class Fclr extends Admin_Controller
 				//if(count($fromCabin) > 0  AND count($toCabin) > 0 ){
 				$array['from_cabin'] = $feed->from_cabin_code;
 				$array['to_cabin'] = $feed->to_cabin_code;
+				$array['active'] = 1;
 				$data = $this->calculate_Min_Max($feed->from_sd, $feed->to_sd, $feed->from_avg, $feed->to_avg);
 				$array1['average'] = $data->average;
 				$array1['min'] = $data->min;
 				$array1['max'] = $data->max;
+				$array1['active'] = 1;
 				$array1['slider_start'] = $data->slider_start;
-                                $min=$this->preference_m->get_preference_value_bycode('fclr_min',24,);
-                                $max=$this->preference_m->get_preference_value_bycode('fclr_max',24,4079);
-                                $slider_val=$this->preference_m->get_preference_value_bycode('fclr_slider_value',24,4079);
                         
 
-                                if($array1['min']<$min || $array1['max']<$max || $array1['slider_start']<$slider_val)
+                                if($array1['min']<$min || $array1['max']>$max || $array1['slider_start']<$slider_val)
                                 {
-                                        $array['active']=0;
-                                }
-                                else{
-                                        $array['active']=1;
+                                        $array1['manual_edit']=2;//Add an indicator for some thing wrong with any of the values.. needs manual attention
                                 }
 				$this->fclr_m->checkANDInsertFCLR($array, $array1);
 
 				//}
-
 			}
 		} else {
 			$errors = 1;
-			$msg .= "<br>Sorry, Could not find matching records to generate FCLR for carrer ID : $carrier_id";
+			$msg .= "<br>Sorry, Could not find matching records to generate FCLR for carrer ID : $carrier_id" .  " ($airline_code)";
 		}
 		}
 
 		$this->mydebug->debug_log('fclr',$msg);
 		$msg = "FCLR generated successfully!";
 		if ( $errors) {
-			$msg .= ", But hsa some errors. Please check FCLR log for more info";
+			$msg .= ", But hsa some errors. Please check FCLR log for more info. Note: FCLR will be genereated based on matched parameters like Boarding point, Off point, Depature day, across cabins for same flight number for pre defined  seasons..  ";
 		}
                	$this->session->set_flashdata('success', $msg);
                redirect(base_url("fclr/index"));

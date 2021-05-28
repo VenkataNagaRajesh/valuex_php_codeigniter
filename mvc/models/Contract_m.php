@@ -129,9 +129,10 @@ class Contract_m extends MY_Model {
 
 	function getActiveContracts($airline_id = 0) {
 
-		$this->db->select('c.name, c.airlineID,  cp.productID, cp.end_date')->from('VX_contract c');
+		$this->db->select('c.name, c.airlineID, d.code, d.aln_data_value as airline,  cp.productID, cp.end_date')->from('VX_contract c');
 		$this->db->join('VX_contract_products cp','cp.contractID = c.contractID','LEFT');
 		$this->db->join('VX_products p','p.productID = cp.productID','LEFT');
+		$this->db->join('VX_data_defns d','d.vx_aln_data_defnsID = c.airlineID AND d.aln_data_typeID = 12','LEFT');
 		$this->db->where("end_date  > NOW()");
 		$this->db->where('c.active',1);
 		$this->db->where('cp.status',1);
@@ -140,7 +141,7 @@ class Contract_m extends MY_Model {
 		}
 		$this->db->order_by(" airlineID, productID");
 		$query = $this->db->get();
-		#print_r($this->db->last_query()); exit;
+	//	print_r($this->db->last_query()); exit;
 		return $query->result();
 	}
 

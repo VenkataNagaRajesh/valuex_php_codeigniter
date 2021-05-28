@@ -18,6 +18,7 @@ $lang['rule_id'] = 'RULE ID';
 $lang['offer_id'] = 'OFFER ID';
 $lang['product_offer_type'] = 'OFFER TYPE';
 $lang['booking_status'] = 'Offer Status';
+$lang['offer_status'] = 'Offer Status';
 $lang['generate_offer_eligibility'] = 'Generate Offer Eligibility Data';
 $lang['view'] = 'View';
 $lang['avg'] = 'Average';

@@ -58,6 +58,10 @@ class General extends Admin_Controller {
 		else {
 		$airports = array();
 		}
+		if ( empty($airports) ) {
+			$airports[0]['airportID'] = 0;
+			$airports[0]['airport_name'] = 'No Matching Airports';;
+		}
 		$this->output->set_content_type('application/json');
 	        $this->output->set_output(json_encode($airports));
 	}

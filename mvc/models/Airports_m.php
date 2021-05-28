@@ -171,14 +171,15 @@ class Airports_m extends MY_Model
         	$this->db->like('d.code',$search);
 			$this->db->like('d.aln_data_value',$search);
 			$this->db->group_end();
-			$this->db->join('vx_season_airport_origin_map','vx_season_airport_origin_map.orig_airportID=d.vx_aln_data_defnsID','inner');	
-			$this->db->where('VX_aln_seasonID',$season)->from('vx_season');
+			$this->db->join('VX_season_airport_origin_map','VX_season_airport_origin_map.orig_airportID=d.vx_aln_data_defnsID','inner');	
+			$this->db->where('VX_aln_seasonID',$season)->from('VX_season');
 			$this->db->order_by('d.aln_data_value');
 			
 			
 		
 			#$this->db->limit(5);
 			$query = $this->db->get();
+//		echo $this->db->last_query();	 exit;
 			return $query->result();
 
 		}
