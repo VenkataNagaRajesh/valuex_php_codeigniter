@@ -733,7 +733,7 @@ $.ajax({
 
 		if( zoneinfo['amz_excl_name'] != null ) {
 		var excl = zoneinfo['amz_excl_name'].split(',');
-                $('#amz_excl_value').val(zoneinfo['amz_excl_name']).trigger('change');
+                $('#amz_excl_value').val(excl).trigger('change');
 		}
 		
 		var mktid  = zoneinfo['market_id'];
