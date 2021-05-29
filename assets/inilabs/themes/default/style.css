@@ -45,9 +45,6 @@ body {
 p,table tr td{
 	text-transform:capitalize;
 }
-.content input{
-	text-transform:capitalize;
-}
 a {
   color: #333;
 }
@@ -4070,7 +4067,6 @@ fieldset[disabled] .btn-vk.active {
 }
 .mzone-config input{
 	margin-bottom: 10px;
-	text-transform: capitalize;
 }
 .mzone-config .zone-info1 select{
 	padding: 2px 3px;
