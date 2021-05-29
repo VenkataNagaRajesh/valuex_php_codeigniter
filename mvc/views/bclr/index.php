@@ -801,8 +801,8 @@ function savebclr() {
                         alert(status);      
                         $("#bclrtable").dataTable().fnDestroy();
                         loaddatatable();
+                        //location.reload();
 		        form_reset();
-                        location.reload();
                     } else if (status == 'duplicate'){
 			alert('Duplicate Entry');
 		    } else {                                
@@ -895,27 +895,13 @@ function editbclr(bclr_id) {
     }
 
     function form_reset(){    
-    
-    $('#bclr_add_form').trigger("reset");
-        var isVisible = $("#bclrAdd").is(':visible');
-             if( isVisible == true) {
-                    $("#bclr_cancel_btn").trigger("click");
-                }
-        $('#s2id_origin_content').empty();
-        $('#s2id_dest_content').empty();
-        $('#carrierID').val(0).trigger('change').parent().removeClass('has-error');
-        $('#aircraft_type').parent().removeClass('has-error');
-        $('#partner_carrierID').val(0).trigger('change').parent().removeClass('has-error');
-        $("#season").val(0).trigger('change').parent().removeClass('has-error');
-        $("#from_cabin").val(0).trigger('change').parent().removeClass('has-error');
-        $("#allowance").val(1).trigger('change'); 
-        $("#origin_level").val(0).trigger('change').parent().removeClass('has-error');
-        $('#origin_content').val(0).trigger('change').parent().removeClass('has-error');
-        $("#dest_level").val(0).trigger('change').parent().removeClass('has-error');
-        $('#dest_content').val(0).trigger('change').parent().removeClass('has-error');
-        $('#frequency').val(0).trigger('change').parent().removeClass('has-error');
-        $('#bag_type').val(1).trigger('change').parent();
-        $('#rule_auth_carrier').val(0).trigger('change').parent().removeClass('has-error');        
+    var isVisible = $("#bclrAdd").is(":visible");
+    var isHidden = $("#bclrAdd").is(":hidden");
+    if( isVisible == true ) {
+            $("#bclr_add_btn").trigger("click");
+    }       
+        $('.select2-search-choice').remove();
+	$("#bclr_add_form").trigger('reset'); //jquery
     }  
 
     $(document).ready(function(){

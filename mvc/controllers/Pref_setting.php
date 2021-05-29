@@ -44,7 +44,7 @@ class Pref_setting extends Admin_Controller {
 			 $this->preference_m->update_preference($array,$info[1]);
 		   }
 		  $this->session->set_flashdata('success', $this->lang->line('menu_success'));
-		  redirect(base_url("pref_setting"));			
+		  redirect(base_url("pref_setting/app_settings"));			
 		} else {			
 		  $this->data["subview"] = "preference/setting";
 		  $this->load->view('_layout_main', $this->data);		

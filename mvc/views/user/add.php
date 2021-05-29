@@ -277,7 +277,7 @@
                             <?=$this->lang->line("user_password")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
-                            <input type="password" class="form-control" id="password" name="password" value="<?=set_value('password')?>" >
+                            <input type="password"  id="password" name="password" value="<?=set_value('password')?>" >
                         </div>
                          <span class="col-sm-4 control-label">
                             <?php echo form_error('password'); ?>

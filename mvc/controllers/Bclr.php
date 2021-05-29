@@ -992,7 +992,7 @@ class Bclr extends Admin_Controller
         foreach ($rResult as $feed) {
             $feed->bag_type_value = ($feed->bag_type == 1) ? "KG" : "Piece";
             $feed->from_cabin_data = ($feed->from_cabin_data == "") ? "All(*)" : $feed->from_cabin_data;
-            $feed->allowance = ($feed->allowance == 1) ? "Whitelist" : "Blacklist";
+            $feed->allowance = ($feed->allowance == 1) ? "Whitelist" : (($feed->allowance == 2) ? "Blacklist" : "");
             $feed->dep_time_start = gmdate("H:i:s", $feed->dep_time_start);
             $feed->dep_time_end = gmdate("H:i:s", $feed->dep_time_end);
             $feed->chkbox = "<input type='checkbox'  class='deleteRow' value='" . $feed->bclr_id . "'  /> " . $rownum;
