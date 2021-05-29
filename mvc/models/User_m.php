@@ -53,6 +53,7 @@ class user_m extends MY_Model {
 		$this->db->join('VX_role ur', 'ur.roleID = u.roleID', 'LEFT');
 		$this->db->join('VX_usertype ut','ut.usertypeID = u.usertypeID ','LEFT');
 		$this->db->where('u.usertypeID !=',2);		
+		$this->db->where('u.active',1);		
 		$query = $this->db->get();
 		return $query->result();		
 	}
