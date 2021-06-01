@@ -670,7 +670,11 @@ class Bclr extends Admin_Controller
         } else {
             $this->data['flt_discontinue_date'] = '';
         }
-
+        if (!empty($this->input->post('bclr_status'))) {
+            $this->data['bclr_status'] = $this->input->post('bclr_status');
+    } else {
+            $this->data['bclr_status'] = 1; //Default
+            }
         if ($this->input->post('flt_origin_content')) {
             $this->data['flt_origin_content'] = $this->input->post('flt_origin_content');
         } else {
@@ -885,6 +889,10 @@ class Bclr extends Admin_Controller
             }
         }
         
+        if (isset($_GET['bclr_status'])) {
+                    $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+                    $sWhere .= 'MainSet.active = ' .  $this->input->get('bclr_status');
+           }        
         if (!empty($this->input->get('from_cabin'))) {
             $lval = explode(',', $this->input->get('from_cabin'));
             foreach ($lval as $val) {
@@ -1011,9 +1019,9 @@ class Bclr extends Admin_Controller
                 #$feed->action .=  '<a target="_blank" href="#" onclick="matchRafeed('. $feed->bclr_id . '); return false;" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="CHECK RAFEED MATCH"><i class="fa fa-eye"></i></a>';
             }
 
-            if (permissionChecker('bclr_delete')) {
-                $feed->action .= btn_delete('bclr/delete/' . $feed->bclr_id, $this->lang->line('delete'));
-            }
+            // if (permissionChecker('bclr_delete')) {
+            //     $feed->action .= btn_delete('bclr/delete/' . $feed->bclr_id, $this->lang->line('delete'));
+            // }
             $feed->status = $feed->active;
             $feed->active = "<div class='onoffswitch-small' id='" . $feed->bclr_id . "'>";
             $feed->active .= "<input type='checkbox' id='myonoffswitch" . $feed->bclr_id . "' class='onoffswitch-small-checkbox' name='paypal_demo'";

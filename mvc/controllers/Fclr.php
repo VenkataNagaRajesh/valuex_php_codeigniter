@@ -803,9 +803,9 @@ class Fclr extends Admin_Controller
                                 $feed->action .=  '<a href="#" class="btn btn-warning btn-xs mrg" id="edit_fclr"  data-placement="top" onclick="editfclr(' . $feed->fclr_id . ')" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-edit" '.$man_edit_color.'></i></a>';
                         
                 }
-                        if (permissionChecker('fclr_delete')) {
-                                $feed->action .= btn_delete('fclr/delete/' . $feed->fclr_id, $this->lang->line('delete'));
-                        }
+                        // if (permissionChecker('fclr_delete')) {
+                        //         $feed->action .= btn_delete('fclr/delete/' . $feed->fclr_id, $this->lang->line('delete'));
+                        // }
                         $status = $feed->active;
                         $feed->active = "<div class='onoffswitch-small' id='" . $feed->fclr_id . "'>";
                         $feed->active .= "<input type='checkbox' id='myonoffswitch" . $feed->fclr_id . "' class='onoffswitch-small-checkbox' name='paypal_demo'";
