@@ -339,8 +339,8 @@ class Bidding extends MY_Controller {
 		return $city;
 	}
 
-	public function saveBidData(){				
-		$product_id = $this->input->post("product_id");
+	public function saveBidData(){		
+				$product_id = $this->input->post("product_id");
             	$bid_id  = $this->input->post('bid_id');
             	$offer_id  = $this->input->post('offer_id');
 		if($this->input->post('offer_id')){ 		
@@ -351,7 +351,7 @@ class Bidding extends MY_Controller {
 		$data = Array();
 		    $id = 0;
 			switch($product_id) {
-			case 1:
+			case 1:		
 				//Deactive old Bid records for this offer if any for same product offer
             			if($bid_id && $product_id){//Bid  Resubmit case
 					$data['active'] = 0;
@@ -426,11 +426,11 @@ class Bidding extends MY_Controller {
 			     $select_passengers_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),1,$product_id);
 			     $unselect_passengers_data2 = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail',$this->input->post("fclr_id"),0,$product_id);
 	  }
-			  $select_status = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
-			  $unselect_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_unselect_cabin','20');
-			   $array['booking_status'] = $select_status;
+				$select_status = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
+			  	$unselect_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_unselect_cabin','20');
+			  	$array['booking_status'] = $select_status;
           		     $array["modify_date"] = time(); 
-			   
+			  
 			   $select_p_list = explode(',',$select_passengers_data->p_list);
 			   $unselect_p_list = explode(',',$unselect_passengers_data->p_list);
 			  /*  $this->mydebug->debug("selected and un selected list");
@@ -472,7 +472,7 @@ class Bidding extends MY_Controller {
 				 }
 				}
               }
- 			   
+ 			  
 			   //send bid success mail
 			   $offer_data = $this->bid_m->get_offer_data($this->input->post("offer_id"));
 			   $maildata = (array)$offer_data;
@@ -511,15 +511,13 @@ class Bidding extends MY_Controller {
 					$mail_subject = "Congratulations!. Your extra baggage offer has been confirmed";
 					$maildata['template'] = 'baggage_confirmed';
 					break;
-
 					default:
 					break;
 				}
-
 				$maildata['subject'] = $mail_subject;
-
+				$maildata['offer_id']=$offer_id;
 			    #$maildata['tomail'] = 'vamsi63@gmail.com';
-				$this->sendMail($maildata);
+				$this->upgradeOfferMail($maildata);
 			    $json['status'] = "success";
     	    } else {
 			    $json['status'] = "Unable to save bid!";

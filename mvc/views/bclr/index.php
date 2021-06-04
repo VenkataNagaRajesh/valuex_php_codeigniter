@@ -200,6 +200,12 @@
                         <div class="col-md-12">
                             <input type="number" class="form-control" name="flt_min_price" id="flt_min_price" placeholder="Min Price" value="<?=set_value('flt_min_price',$flt_min_price)?>" />                       
                         </div>
+                        <div class="col-md-12">
+                                    <select class="form-control select2"  name="bclr_status" id="bclr_status">
+					    <option value="1" <?=(($bclr_status == 1 )? "selected":"")?>>Active</option>
+					    <option value="0" <?=(($bclr_status == 0 || $bclr_status == '' )? "selected":"")?>>In active</option>
+                                    </select>
+                            </div>
 					</div>
 					<div class="col-md-2 col-sm-3 select-form">
 						<div class="col-md-12">
@@ -219,7 +225,8 @@
 						</div>
                         <div class="col-md-12">
                             <input type="number" class="form-control" name="flt_max_price" id="flt_max_price" placeholder="Max Price" value="<?=set_value('flt_max_price',$flt_max_price)?>" />                       
-                        </div>                        
+                        </div>
+                                                
 					</div>
 					<div class="col-md-2 col-sm-3 select-form">
                         <div class="col-md-12">
@@ -229,6 +236,7 @@
                                 echo form_dropdown("flt_frequency", $days_of_week, set_value("flt_frequency",$flt_frequency), "id='flt_frequency' class='form-control hide-dropdown-icon select2'");
                             ?> 
 						</div>
+                        
 						<div class="col-md-12">
                             <?php                         
                                 $flt_unittypes[0] = "All";                           
@@ -594,7 +602,7 @@ function loaddatatable() {
                    {"name": "min_unit","value": $("#flt_min_unit").val()},		                           
                    {"name": "bclr_id","value": $("#flt_bclr_id").val()},		                           
                    {"name": "max_capacity","value": $("#flt_max_capacity").val()},
-                   //{"name":"bclr_status","value":1},		                           
+                   {"name":"bclr_status","value":$("#bclr_status").val()}		                           
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -611,7 +619,9 @@ function loaddatatable() {
             if (data) data.start = 0;
             return data;
         },
-        "columns":[{"data": "bclr_id" },
+        "columns":[
+            
+            {"data": "chkbox" },
                    {"data": "carrier_code" },
                    {"data": "version_id"},
                    {"data": "partner_carrier_code" },
@@ -673,7 +683,7 @@ function loaddatatable() {
                            $.ajax({
                                 url: "<?php echo base_url('bclr/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"carrierID": $("#flt_carrierID").val(),"partner_carrierID": $("#flt_partner_carrierID").val(),"allowance": $("#flt_allowance").val(),"frequency": $("#flt_frequency").val(),"effective_date": $("#flt_effective_date").val(),"discontinue_date": $("#flt_discontinue_date").val(),"origin_level": $("#flt_origin_level").val(),"origin_content": $("#flt_origin_content").val(),"dest_level": $("#flt_dest_level").val(),"dest_content": $("#flt_dest_content").val(),"rule_auth": $("#flt_rule_auth_carrier").val(),"bag_type": $("#flt_bag_type").val(),"min_price": $("#flt_min_price").val(),"max_price": $("#flt_max_price").val(),"min_unit": $("#flt_min_unit").val(),"max_capacity": $("#flt_max_capacity").val(),"bclr_id": $("#flt_bclr_id").val()},
+                                data: {sSearch: $("input[type=search]").val(),"carrierID": $("#flt_carrierID").val(),"partner_carrierID": $("#flt_partner_carrierID").val(),"allowance": $("#flt_allowance").val(),"frequency": $("#flt_frequency").val(),"effective_date": $("#flt_effective_date").val(),"discontinue_date": $("#flt_discontinue_date").val(),"origin_level": $("#flt_origin_level").val(),"origin_content": $("#flt_origin_content").val(),"dest_level": $("#flt_dest_level").val(),"dest_content": $("#flt_dest_content").val(),"rule_auth": $("#flt_rule_auth_carrier").val(),"bag_type": $("#flt_bag_type").val(),"min_price": $("#flt_min_price").val(),"max_price": $("#flt_max_price").val(),"min_unit": $("#flt_min_unit").val(),"max_capacity": $("#flt_max_capacity").val(),"bclr_id": $("#flt_bclr_id").val(),"bclr_status":$("#bclr_status").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -696,7 +706,7 @@ function downloadBCLR(){
 	$.ajax({
        url: "<?php echo base_url('bclr/server_processing'); ?>?page=all&&export=1",
        type: 'get',
-       data: {sSearch: $("input[type=search]").val(),"carrierID": $("#flt_carrierID").val(),"partner_carrierID": $("#flt_partner_carrierID").val(),"allowance": $("#flt_allowance").val(),"frequency": $("#flt_frequency").val(),"effective_date": $("#flt_effective_date").val(),"discontinue_date": $("#flt_discontinue_date").val(),"origin_level": $("#flt_origin_level").val(),"origin_content": $("#flt_origin_content").val(),"dest_level": $("#flt_dest_level").val(),"dest_content": $("#flt_dest_content").val(),"rule_auth": $("#flt_rule_auth_carrier").val(),"bag_type": $("#flt_bag_type").val(),"min_price": $("#flt_min_price").val(),"max_price": $("#flt_max_price").val(),"min_unit": $("#flt_min_unit").val(),"max_capacity": $("#flt_max_capacity").val()}, "bclr_id": $("#flt_bclr_id").val(), "from_cabin": $("#flt_from_cabin").val(),
+       data: {sSearch: $("input[type=search]").val(),"carrierID": $("#flt_carrierID").val(),"partner_carrierID": $("#flt_partner_carrierID").val(),"allowance": $("#flt_allowance").val(),"frequency": $("#flt_frequency").val(),"effective_date": $("#flt_effective_date").val(),"discontinue_date": $("#flt_discontinue_date").val(),"origin_level": $("#flt_origin_level").val(),"origin_content": $("#flt_origin_content").val(),"dest_level": $("#flt_dest_level").val(),"dest_content": $("#flt_dest_content").val(),"rule_auth": $("#flt_rule_auth_carrier").val(),"bag_type": $("#flt_bag_type").val(),"min_price": $("#flt_min_price").val(),"max_price": $("#flt_max_price").val(),"min_unit": $("#flt_min_unit").val(),"max_capacity": $("#flt_max_capacity").val()}, "bclr_id": $("#flt_bclr_id").val(), "from_cabin": $("#flt_from_cabin").val(),"bclr_status":$("#bclr_status").val(),
        dataType: 'json'
        }).done(function(data){
 			var $a = $("<a>");
@@ -801,7 +811,7 @@ function savebclr() {
                         alert(status);      
                         $("#bclrtable").dataTable().fnDestroy();
                         loaddatatable();
-                        //location.reload();
+                        location.reload();
 		        form_reset();
                     } else if (status == 'duplicate'){
 			alert('Duplicate Entry');

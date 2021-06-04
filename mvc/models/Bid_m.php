@@ -105,7 +105,7 @@ class bid_m extends MY_Model {
 	$this->db->where("tpf.pnr_ref",$pnr_ref);	
 	$this->db->where('pfe.active',1);   
 	$query = $this->db->get();  
-	//print_r($this->db->last_query()); exit;
+//	print_r($this->db->last_query()); exit;
 	return $query->result();
   }
 
@@ -154,11 +154,12 @@ class bid_m extends MY_Model {
 	  $this->db->where('pnr_ref',$pnr_ref);
 	  $this->db->group_by('flight_number');
 	  $query = $this->db->get();
+	 
 	  return $query->row('pax_names');
   }
   
    public function get_offer_data($offer_id){
-	   $this->db->select("of.aln_data_value as offer_status, def.desc cabin,udef.desc upgrade_type,tpf.seat_no,tpf.pnr_ref,tpf.carrier_code  carrier,tpf.dep_date,tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,car.aln_data_value carrier_name,tpf.flight_number,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.cash,oref.miles,bid.bid_value")->from('VX_offer_info pfe');	
+	   $this->db->select("of.aln_data_value as offer_status,tpf.carrier_code as airlineID, oref.product_id,def.desc cabin,udef.desc upgrade_type,tpf.seat_no,tpf.pnr_ref,tpf.carrier_code  carrier,tpf.dep_date,tpf.arrival_date,tpf.dept_time,tpf.arrival_time,car.code carrier_code,car.aln_data_value carrier_name,tpf.flight_number,c1.aln_data_value from_city,c1.code from_city_code,c2.aln_data_value to_city,c2.code to_city_code,booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ' ,') as pax_names,oref.cash,oref.miles,bid.bid_value")->from('VX_offer_info pfe');	
 	  $this->db->join('VX_daily_tkt_pax_feed tpf','(tpf.dtpf_id = pfe.dtpf_id )','LEFT');
 	  $this->db->join('VX_offer oref','oref.pnr_ref = tpf.pnr_ref AND oref.product_id = pfe.product_id','LEFT');
 	  $this->db->join('VX_data_defns dd','(dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20)','LEFT');
@@ -179,7 +180,7 @@ class bid_m extends MY_Model {
 	 // $this->db->where('dd.alias','sent_offer_mail');
 	  $query = $this->db->get();
        $this->mydebug->debug($this->db->last_query());	  
-//       echo $this->db->last_query();	  
+     //  echo $this->db->last_query();	  
 	  return $query->row(); 
    } 
   

@@ -492,9 +492,9 @@ function loaddatatable() {
 
 
       "columns": [ {"data": "chkbox" },
-	    {"data": "carrier_code" },
+	       {"data": "carrier_code" },
 		   {"data": "source_point" },
-	           {"data": "dest_point" },	 
+	       {"data": "dest_point" },	 
 		   {"data": "flight_number" },
 		   {"data": "season_id" },
 		   {"data": "start_date" },

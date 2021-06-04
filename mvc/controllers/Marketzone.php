@@ -155,7 +155,11 @@ class Marketzone extends Admin_Controller {
                 } else {
                     $this->data['exclID'] = 0;
                 }
-
+                if (!empty($this->input->post('marketZone_status'))) {
+                        $this->data['marketZone_status'] = $this->input->post('marketZone_status');
+                } else {
+                        $this->data['marketZone_status'] = 1; //Default
+                        }
 		if(!empty($this->input->post('active'))){
                 $this->data['active'] = $this->input->post('active');
                 } else {
@@ -674,7 +678,10 @@ $aColumns =  array('MainSet.market_id','MainSet.market_name','MainSet.airline_na
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.airlineID = '.$this->input->get('airlineID');
                         }
-
+                        if (isset($_GET['marketZone_status'])) {
+                                $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+                                $sWhere .= 'MainSet.active = ' .  $this->input->get('marketZone_status');
+                       }  
 
 			if(!empty($this->input->get('levelvalue'))){
 				$lval = explode(',',$this->input->get('levelvalue'));
@@ -803,12 +810,10 @@ on MainSet.market_id = SubSet.market_id
 			if (permissionChecker('marketzone_view') ) {
 			       $marketzone->action .= btn_view('marketzone/view/'.$marketzone->market_id, $this->lang->line('view'));	
 			}
-
-			if (permissionChecker('marketzone_delete') ) {                                        				
-			 $marketzone->action .= btn_delete('marketzone/delete/'.$marketzone->market_id, $this->lang->line('delete'));
-			}
+			// if (permissionChecker('marketzone_delete') ) {                                        				
+			//  $marketzone->action .= btn_delete('marketzone/delete/'.$marketzone->market_id, $this->lang->line('delete'));
+			// }
 			$lstr = explode(',',$marketzone->levelname);
-				
 			$i = 1;
 			$marketzone->levelname  = '';
 			foreach($lstr as $label) {
