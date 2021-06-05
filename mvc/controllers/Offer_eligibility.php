@@ -722,7 +722,6 @@ $sWhere $sOrder $sLimit";
 		$days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
                 $current_time = time();
                 $tstamp = $current_time + ($days * 86400);
-                $tstamp = 0;//For testing
 		
 		//$id = $this->airline_cabin_class_m->checkCarrierDataByID($id);
 		# GET  PAXA FEED OF PTC TYPE ADT  ADULT , exclude UNN and NON-REV of speicific Class
