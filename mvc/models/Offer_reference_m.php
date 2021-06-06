@@ -28,11 +28,11 @@ class Offer_reference_m extends MY_Model {
 		$arr['pnr_ref'] = $array['pnr_ref'];
 		$arr['product_id'] = $array['product_id'];
 		$arr['active'] = 1;
-		if ($this->checkOfferRefEntry($arr)){
-                  $error = parent::insert($array);
-                        return TRUE;
+		$id = $this->checkOfferRefEntry($arr);
+		if (!$id){
+                  $id = parent::insert($array);
                 }
-
+                return $id;
         }
 
 

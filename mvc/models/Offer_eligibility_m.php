@@ -50,7 +50,7 @@ class Offer_eligibility_m extends MY_Model {
 		$this->db->where_in('dtpfext_id', $list1);
                 $this->db->update('VX_offer_info', $data);
         	$this->mydebug->debug($this->db->last_query());
-//        	echo $this->db->last_query();
+       // 	echo $this->db->last_query(); exit;
         }
 
 	function checkDTPFExtEntry($array){

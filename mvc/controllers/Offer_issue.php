@@ -203,12 +203,11 @@ class Offer_issue extends Admin_Controller {
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
-		$sQuery = " select pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat( distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) AND tpf.active = 1 AND pfe.active = 1 AND pfe.rule_id > 0 AND tpf.active = 1  ";
+		$sQuery = " select pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat( distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) AND tpf.active = 1 AND pfe.active = 1 AND pfe.rule_id > 0 AND tpf.active = 1 AND (pfe.offer_id = 0 or pfe.offer_id is NULL)  ";
 		if ($pnr) {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
 		}
-		$sQuery .= " group by tpf.pnr_ref ,  booking_status,tpf.carrier_code, pfe.product_id ";
-
+		$sQuery .= " group by tpf.pnr_ref,tpf.carrier_code, pfe.product_id ";
 		$rResult = $this->install_m->run_query($sQuery);
 		$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
 
@@ -228,7 +227,16 @@ class Offer_issue extends Admin_Controller {
 				$ref["create_userID"] = $this->session->userdata('loginuserID');
 				$ref["modify_userID"] = $this->session->userdata('loginuserID');
 
-				$this->offer_reference_m->insert_offer_ref($ref);//offer update ref table
+				$offer_id = $this->offer_reference_m->insert_offer_ref($ref);//offer update ref table
+
+			$array = array();
+			$array['offer_id'] = $offer_id;
+			$array['product_id'] =  $offer->product_id;
+			$array["modify_date"] = time();
+			$array["modify_userID"] = $this->session->userdata('loginuserID');
+
+			// update extension table with new status
+			$this->offer_eligibility_m->update_dtpfext($array,$p_list);
 
 		}
 		$this->session->set_flashdata('success', 'Generated Offers all New PAX successfully');
