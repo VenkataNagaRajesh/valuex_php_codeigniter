@@ -389,7 +389,12 @@ function getParentsofAirportByType($airportID,$id) {
 	}
 
 	function delete_marketzone($id){
-		parent::delete($id);
+		$data = [
+			'active' => 0,
+		];
+		$this->db->where('market_id', $id);
+		$this->db->update('VX_market_zone', $data);
+	   return true;
 	}
 
 	function hash($string) {

@@ -498,7 +498,11 @@ class Paxfeed extends Admin_Controller {
 												$fail_count++;
                                                 continue;
 					}
-
+					if (!empty($this->input->post('paxfeed_status'))) {
+                        $this->data['paxfeed_status'] = $this->input->post('paxfeed_status');
+                	} else {
+                        $this->data['paxfeed_status'] = 1; //Default
+                        }
 					if($cabin_new_entry->cabin_id !=  $cabin_old_entry->cabin_id){
                                                 $this->mydebug->paxfeed_log("Multi Pax entry,  Invalid cabin for row " . $column , 1);
 												$fail_count++;

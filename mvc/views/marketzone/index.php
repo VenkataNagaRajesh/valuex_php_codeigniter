@@ -146,6 +146,7 @@
 								 }
 								echo form_dropdown("smarket_id", $marketlist,set_value("smarket_id",$marketID), "id='smarket_id' class='form-control hide-dropdown-icon select2'");    ?>
 						</div>
+						
 						<div class="col-md-2 col-sm-3">
 							<?php 
 								$aln_datatypes['0'] = "Level Type";                         
@@ -176,11 +177,19 @@
 								echo form_dropdown("samz_excl_id", $aln_datatypes,set_value("samz_excl_id",$exclID), "id='samz_excl_id' class='form-control hide-dropdown-icon select2'");    ?> 
 						</div>
 
-			<div class="col-md-2 col-sm-3">
-                                                        <select  name="samz_excl_value[]"  id="samz_excl_value" class="form-control select2" multiple="multiple">
-                                                        </select>
-                                                </div>
+						<div class="col-md-2 col-sm-3">
+                                <select  name="samz_excl_value[]"  id="samz_excl_value" class="form-control select2" multiple="multiple">
+                                </select>
+                        </div>
+						<div class="col-md-2 col-sm-3">
+                                <select class="form-control select2"  name="marketZone_status" id="marketZone_status">
+										<option value="1" <?=(($marketZone_status == 1 )? "selected":"")?>>Active</option>
+										<option value="0" <?=(($marketZone_status == 0 || $marketZone_status == '' )? "selected":"")?>>In active</option>
+                                </select>
+                        </div>
+
 						<div class="col-md-8 text-right">
+						
 							<div class="bttn-cl">
 														   <a href="#" type="button"  id='filter_button' class="btn btn-danger" onclick="$('#tztable').dataTable().fnDestroy();loaddatatable();" style="padding: 6px 12px;"data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></a>
 
@@ -262,7 +271,8 @@ function loaddatatable() {
         	 {"name": "inclvalue","value": $("#samz_incl_value").val()},
              {"name": "exclvalue","value": $("#samz_excl_value").val()},
 		   	 {"name": "airlineID","value": $("#sairline_id").val()},
-		     {"name": "active","value": $("#active").val()}) //pushing custom parameters
+		     {"name": "active","value": $("#active").val()},
+			 {"name":"marketZone_status","value":$("#marketZone_status").val()}) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
                     "type": "GET",
@@ -326,7 +336,7 @@ function loaddatatable() {
                            $.ajax({
                                 url: "<?php echo base_url('marketzone/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"marketID": $("#smarket_id").val(),"levelID":$("#samz_level_id").val(),"inclID":$("#samz_incl_id").val(),"exclID":$("#samz_excl_id").val(),"airlineID":$("#sairline_id").val(),"active":$("#active").val()},
+                                data: {sSearch: $("input[type=search]").val(),"marketID": $("#smarket_id").val(),"levelID":$("#samz_level_id").val(),"inclID":$("#samz_incl_id").val(),"exclID":$("#samz_excl_id").val(),"airlineID":$("#sairline_id").val(),"active":$("#active").val(),"marketZone_status":$("#marketZone_status").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -361,7 +371,7 @@ function loaddatatable() {
 	   $.ajax({
              url: "<?php echo base_url('marketzone/server_processing'); ?>?page=all&&export=1",
              type: 'get',
-             data: {"marketID": $("#smarket_id").val(),"levelID":$("#samz_level_id").val(),"inclID":$("#samz_incl_id").val(),"exclID":$("#samz_excl_id").val(),"airlineID":$("#sairline_id").val(),"active":$("#active").val()},
+             data: {"marketID": $("#smarket_id").val(),"levelID":$("#samz_level_id").val(),"inclID":$("#samz_incl_id").val(),"exclID":$("#samz_excl_id").val(),"airlineID":$("#sairline_id").val(),"active":$("#active").val(),"marketZone_status":$("#marketZone_status")},
              dataType: 'json'
          }).done(function(data){
 			var $a = $("<a>");
@@ -734,8 +744,7 @@ $.ajax({
 		if( zoneinfo['amz_excl_name'] != null ) {
 		var excl = zoneinfo['amz_excl_name'].split(',');
                 $('#amz_excl_value').val(excl).trigger('change');
-		}
-		
+		}	
 		var mktid  = zoneinfo['market_id'];
 		$('#market_id').val(mktid);
 

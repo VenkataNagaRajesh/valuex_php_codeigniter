@@ -44,6 +44,7 @@ class Offer_issue extends Admin_Controller {
                 $this->upgradeOfferMail($data);		 
 	}
 
+
 	function sendoffer(){
                 $pnr_ref = htmlentities(escapeString($this->uri->segment(3)));
                 $email = htmlentities(escapeString($this->uri->segment(4)));
@@ -57,6 +58,7 @@ class Offer_issue extends Admin_Controller {
 	}
 
 	function resendoffer(){
+		
 		$pnr_ref = htmlentities(escapeString($this->uri->segment(3)));
 		$email = htmlentities(escapeString($this->uri->segment(4)));
 		$mailto =  $email . "@gmail.com";
@@ -66,13 +68,33 @@ class Offer_issue extends Admin_Controller {
         );			       
 		if ($mailto) {
 			$data['tomail'] =  $mailto;
-		}		
-	$this->send_offer_mail($pnr_ref);
-
-        #$this->upgradeOfferMail($data);		 
+		}	
+		$this->send_offer_mail($pnr_ref);
+        $this->upgradeOfferMail($data);		 
 		$this->session->set_flashdata('success', 'Offer Mail sent to PAX successfully');
-		redirect(base_url("offer_issue/index"));
+		//redirect(base_url("offer_issue/index"));		
 	}
+	//newly added fumction for test mail
+	function sendOfferConfirmation()
+	{
+		$offer_id=escapeString($this->uri->segment(3));
+		$email = htmlentities(escapeString($this->uri->segment(4)));
+		$mailto =  $email . "@gmail.com";
+        $maildata = array(
+			'pnr_ref' => "$pnr_ref",
+			'coupon_code' => '34535',
+        );			       
+		if ($mailto) {
+			$maildata['tomail'] =  $mailto;
+		}		
+
+		$maildata['template'] = 'baggage_confirmed';
+		$maildata['offer_id']=$offer_id;
+		$this->upgradeOfferMail($maildata);
+		//redirect(base_url("offer_issue/index"));
+	}
+
+/* test mail function ended */ 
 
         public function tplviewnew() {
 		$dir = "mvc/views/mail-templates/";
@@ -178,8 +200,6 @@ class Offer_issue extends Admin_Controller {
 			 
 		$this->data["subview"] = "offer/index";
                 $this->load->view('_layout_main', $this->data);
-
-
 	}
 
 	public function run_offer_issue($pnr = '') {
@@ -324,9 +344,10 @@ class Offer_issue extends Admin_Controller {
 			$fmsg .= "<br>But have some errors.. " . $msg;
 		}
 		$this->session->set_flashdata('success', $fmsg);
+		if(!($pnr)){
 		redirect(base_url("offer_issue/index"));
-	}
-
+		}
+}
 
 	
  public  function generateRandomString($length = 20) {
@@ -913,13 +934,12 @@ $sWhere $sOrder $sLimit";
 				 ); 			 
 			  //$this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);
 			  	$this->sendMailTemplateParser('bid_accepted',$e_data);					  
-
 	 			$array = array();
 				$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
 				$array['booking_status'] = $offer_status;
 				$array["modify_date"] = time();
 				$array["modify_userID"] = $this->session->userdata('loginuserID');
-
+				
 
 				// update extension table with new status
 				$p_list = explode(',',$passenger_data->p_list);
@@ -950,9 +970,7 @@ $sWhere $sOrder $sLimit";
 				}
 
 		  				} else {
-
-
-							 $message = '
+							$message = '
 								<html>
 								<body>
 								<div style="max-width: 800px; margin: 0; padding: 30px 0;">
@@ -1031,8 +1049,6 @@ $sWhere $sOrder $sLimit";
 				$array['booking_status'] = $offer_status;
 				$array["modify_date"] = time();
 				$array["modify_userID"] = $this->session->userdata('loginuserID');
-
-
 				// update extension table with new status
 				$p_list = explode(',',$passenger_data->p_list);
 				$this->offer_eligibility_m->update_dtpfext($array,$p_list);
@@ -1067,22 +1083,32 @@ $sWhere $sOrder $sLimit";
 	}
 
 	public function upgradeOfferMail($maildata){
-			$pnr_ref = $maildata['pnr_ref'];
-			$offer = $this->bid_m->getPassengers($pnr_ref);
-			if (!$offer[0]->carrier_code) {
-			echo "<br>missing passenger deails for  $pnr_ref";
-			return;
-			}
+		
+		if($maildata['offer_id'])
+		{
+			
 
+			$offerdt = $this->offer_issue_m->getOfferDetailsByOfferId($maildata['offer_id']);
+			
+			$maildata['pnr_ref']=$offerdt[0]->pnr_ref;
+		}
+			$pnr_ref=$maildata['pnr_ref'];
+			$offer = $this->bid_m->getPassengers($maildata['pnr_ref']);
+			
+			if (!$offer[0]->carrier_code) {
+				echo "<br>missing passenger deails for  $pnr_ref";
+				return;
+			}
+			
 			$prodlist = explode(',',$offer[0]->products);
 			$email_list = explode(',',$offer[0]->email_list);
 
 			$baggage_offer = 0;
 			$upgrade_offer = 0;
 			$exclude = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-	$cabins  = $this->airline_cabin_m->getAirlineCabins();
-	foreach ($prodlist as $prodId) {
-		switch ($prodId) {
+		$cabins  = $this->airline_cabin_m->getAirlineCabins();
+		foreach ($prodlist as $prodId) {
+			switch ($prodId) {
 			case 1:
 				$upgrade_offer = 1;
 				$results = $this->bid_m->getUpgradeOffers($pnr_ref);
@@ -1134,6 +1160,7 @@ $sWhere $sOrder $sLimit";
 						//print_r($results); exit();
 					break;
 					case 2:
+						
 						$baggage_offer = 1;
 						if ( $upgrade_offer) {
 							break;//HACK
@@ -1175,7 +1202,12 @@ $sWhere $sOrder $sLimit";
 			break;
 		}
 	}
-
+	if($maildata['template'])
+	{
+		$template=$maildata['template'];
+		
+	}
+	else{
 	if ( $baggage_offer && $upgrade_offer ) {
 			#echo "<br>UPGRADE & BAGGAGE COMBO OFFER";
 			$template = "upgrade_baggage_offer";    
@@ -1189,8 +1221,9 @@ $sWhere $sOrder $sLimit";
 			$template = "baggage_offer";    
 			$maildata['mail_subject'] .= " Baggage offer";    
 		}
-
+	}
 		$pax_names = $this->bid_m->getPaxNames($pnr_ref);
+	
 				$maildata['first_name']=$offer[0]->pax_names;
 				$maildata['pnr_ref'] =  $pnr_ref;
                 $maildata['offer_data'] = $offerdata;
@@ -1202,10 +1235,9 @@ $sWhere $sOrder $sLimit";
 		$dir = "assets/mail-temps";
 		$tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID']);
 		$tpl_file = $tpl->template_path;
-                $maildata['mail_subject'] = (!empty($tpl->mail_subject)) ? $tpl->mail_subject : "Congratulations! You got great deal ! Grab it..";
+    	 $maildata['mail_subject'] = (!empty($tpl->mail_subject)) ? $tpl->mail_subject : "Congratulations! You got great deal ! Grab it..";
 		$t = explode('.',$tpl_file);
 		$tpl_path = $t[0]. '-imgs';
-
 		if ( $upgrade_offer) {
                  $maildata['up_tpl_bnr'] = base_url("$dir/$tpl_path/banner.jpg");
                  $maildata['up_tpl_bnrtop'] = base_url("$dir/$tpl_path/bannerTop.png");	
@@ -1218,10 +1250,7 @@ $sWhere $sOrder $sLimit";
                  $maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/banner.png");	
                  $maildata['bg_tpl_bnrtop'] = base_url("$dir/$tpl_path/bannerTop.png");	
                  $maildata['bg_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");	
-                 #$maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/header.jpg");
-                 #$maildata['bg_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");	
-                 #$maildata['bg_tpl_contact_img'] = base_url("$dir/$tpl_path/contactUs.png");	
-                 #$maildata['bg_tpl_bnr'] = base_url("assets/mail-temps/bg_temp1_images/header.jpg');
+                
 		}
                  $maildata['open_browser'] = base_url("$dir/$tpl_path/openBrowser.png");
                  $maildata['facebook_icon'] = base_url("$dir/$tpl_path/facebook.png");		
@@ -1230,24 +1259,7 @@ $sWhere $sOrder $sLimit";
                  $maildata['pinterest_icon'] = base_url("$dir/$tpl_path/pinterest.png");	
                  $maildata['openbrowser_img'] = base_url("$dir/openBrowser.png");
             	 $maildata['airline_logo'] = base_url('uploads/images/'.$this->airline_m->getAirlineLogo($maildata['airlineID'])->logo);            
-                 //$maildata['bg_tpl1_bnr'] = base_url('assets/mail-temps/bg_temp1_images/header.jpg');
-                 //$maildata['bg_tpl1_bnrtop'] = base_url('assets/mail-temps/bg_temp1_images/bannerTop.png');	
-                 //$maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
-                 //$maildata['bg_tpl1_bnrbottom'] = base_url('assets/mail-temps/bg_temp1_images/bannerBottom.png');	
-                 //$maildata['bg_tpl2_contact_img'] = base_url('assets/mail-temps/bg_temp2_images/contactUs.png');	
-/*
-                 $maildata['bg_tpl2_twitter_icon'] = base_url('assets/mail-temps/bg_temp2_images/whiteTweet.png');	
-                 $maildata['bg_tpl2_fb_icon'] = base_url('assets/mail-temps/bg_temp2_images/whitebook.png');	
-                 $maildata['bg_tpl2_white_cam'] = base_url('assets/mail-temps/bg_temp2_images/whiteCam.png');	
-                 $maildata['bg_tpl2_line_img'] = base_url('assets/mail-temps/bg_temp2_images/line.png');	
-                 $maildata['upbg_tpl1_bag_img'] = base_url('assets/mail-temps/up_bg_temp1_images/bag.png');	
-                 $maildata['upbg_tpl1_fb_icon'] = base_url('assets/mail-temps/up_bg_temp1_images/facebook.png');	
-                 $maildata['upbg_tpl1_twitter_icon'] = base_url('assets/mail-temps/up_bg_temp1_images/twitter.png');	
-                 $maildata['upbg_tpl2_bg_img'] = base_url('assets/mail-temps/up_bg_temp2_images/bigImg.png');	
-                 $maildata['upbg_tpl2_bag_img'] = base_url('assets/mail-temps/up_bg_temp2_images/bag.jpg');	
-                 $maildata['upbg_tpl3_bigimg'] = base_url('assets/mail-temps/up_bg_temp3_images/bigImg.jpg');
-                 $maildata['upbg_tpl1_bnr'] = base_url('assets/mail-temps/up_bg_temp1_images/bg.jpg');
-*/
+                 
                  $maildata['domain'] = $primary_client->domain;
                  $maildata['primary_phone'] = $primary_client->phone;
                  $maildata['primary_mail'] = $primary_client->email;
@@ -1265,7 +1277,7 @@ $sWhere $sOrder $sLimit";
 		   foreach($template_images as $img){
 			   $maildata[$img->type] = base_url('uploads/images/'.$img->image);
 		   } 
-                   $airline_info = $this->bid_m->getAirlineLogoByPNR($pnr_ref);
+                 $airline_info = $this->bid_m->getAirlineLogoByPNR($pnr_ref);
 		   $maildata['mail_header_color'] = $airline_info->mail_header_color;
 		   if(empty($maildata['mail_header_color'])){
 			 $maildata['mail_header_color'] = '#333';  
@@ -1274,13 +1286,6 @@ $sWhere $sOrder $sLimit";
 		   if(isset($maildata['bid_value'])){
 			   $maildata['bid_value'] = number_format($maildata['bid_value']);
 		   }
-
-		   /* $data['upgrade_offer_mail_template1'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
-		   $data['upgrade_offer_mail_template3'] = $data['base_url'] .'assets/home/images/temp3-bnr.jpg';
-		    $data['upgrade_offer_mail_template2'] = $data['base_url'] .'assets/home/images/temp2-bnr.jpg';
-		    $data['logo'] =$data['base_url'] .'assets/home/images/emir.png';  */
-                //$this->sendMailTemplateParser('upgrade_offer',$maildata);
-                $this->sendMailTemplateParser($template,$maildata);
-	}		
-
+		$this->sendMailTemplateParser($template,$maildata);	
+		}
 }

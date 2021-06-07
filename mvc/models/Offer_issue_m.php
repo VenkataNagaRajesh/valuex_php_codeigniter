@@ -149,6 +149,7 @@ public function getBidInfoFromOfferID($offer_id, $flight_number,$carrier_code) {
 
 }
 public function getOfferDetailsById($id) {
+	
 //$sGroup = ' group by MainSet.flight_number';
 $sOrder = ' ORDER BY MainSet.productID ASC ';
 $sWhere = '  ';
@@ -204,8 +205,6 @@ $sWhere
 $sGroup
 $sOrder $sLimit";
 
-
-#echo $query; exit;
 
 $rResult = $this->install_m->run_query($query);
 return $rResult;
@@ -291,7 +290,35 @@ return $rResult;
 		return $rResult;
 	}
 
+	function getOfferDetailsByOfferId($id) {
+		
+			$sql = " SELECT  SQL_CALC_FOUND_ROWS MainSet.min, MainSet.max, MainSet.average, MainSet.slider_start, MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, SubSet.from_cabin, MainSet.to_cabin , MainSet.cash, MainSet.miles, MainSet.booking_status, SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number FROM (  select distinct oref.offer_id, tdef.desc as to_cabin , oref.create_date as offer_date ,pf.flight_number, bs.aln_data_value as booking_status, oref.pnr_ref,oref.cash_percentage, oref.cash, oref.miles, fc.min, fc.max, fc.average, fc.slider_start from  VX_offer oref ";
+			$sql .= " LEFT JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref) ";
+			$sql .= " INNER JOIN VX_offer_info pext on (pext.dtpf_id = pf.dtpf_id AND pext.active = 1) ";
+			$sql .= " LEFT JOIN UP_fare_control_range fc on (fc.fclr_id = pext.rule_id) ";
+			$sql .= " INNER JOIN  VX_airline_cabin_def tdef on (pf.carrier_code = tdef.carrier ) ";
+			$sql .= " LEFT  JOIN VX_data_defns tcab on (tcab.vx_aln_data_defnsID = fc.to_cabin AND tcab.aln_data_typeID = 13 AND tcab.alias = tdef.level) ";
+			$sql .= " LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20) ";
+			$sql .= " WHERE  oref.offer_id = '".$id."') as MainSet  ";
+			$sql .= " INNER JOIN (select  flight_number,  group_concat(distinct dep_date) as flight_date  , pnr_ref,group_concat(first_name, ' ' , last_name  ) as p_list ,  from_city as from_city_code, to_city as to_city_code, group_concat(distinct fdef.desc) as from_cabin  , fc.code as from_city, tc.code as to_city, car.code as carrier , pf1.carrier_code from VX_daily_tkt_pax_feed pf1 ";
+			$sql .= " LEFT JOIN VX_data_defns ptc on (ptc.vx_aln_data_defnsID = pf1.ptc AND ptc.aln_data_typeID = 18) ";
+			$sql .= " LEFT JOIN VX_data_defns fc on (fc.vx_aln_data_defnsID = pf1.from_city AND fc.aln_data_typeID = 1) ";
+			$sql .= " LEFT JOIN VX_data_defns tc on (tc.vx_aln_data_defnsID = pf1.to_city AND tc.aln_data_typeID = 1) ";
+			$sql .= " INNER JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf1.carrier_code) ";
+			$sql .= " INNER JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 AND cab.alias = fdef.level) ";
+			$sql .= " LEFT JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12) ";
+			$sql .= " WHERE pf1.is_up_offer_processed = 1  ";
+			$sql .= " group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.flight_number = SubSet.flight_number )";
+			
 
+
+
+//echo "<br><br>$sql";
+
+		$rResult = $this->install_m->run_query($sql);
+
+		return $rResult;
+	}
         public function delete_dtpf_tracker($id){
                 parent::delete($id);
         }
