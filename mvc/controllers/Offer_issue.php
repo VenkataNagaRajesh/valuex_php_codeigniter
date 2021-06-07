@@ -228,6 +228,7 @@ class Offer_issue extends Admin_Controller {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
 		}
 		$sQuery .= " group by tpf.pnr_ref,tpf.carrier_code, pfe.product_id ";
+//echo $sQuery;exit;
 		$rResult = $this->install_m->run_query($sQuery);
 		$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
 

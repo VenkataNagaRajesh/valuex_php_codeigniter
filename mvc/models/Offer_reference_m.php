@@ -44,15 +44,15 @@ class Offer_reference_m extends MY_Model {
                 $query = $this->db->get();
                 $check = $query->row();
                 if($check->offer_id) {
-                    return false ;
+                    return $check->offer_id ;
                 } else {
-                  return true;
+                  return 0;
                 }
         }
 
 	    function update_offer_ref($data, $id = NULL) {
                 parent::update($data, $id);
-	///		echo $this->db->last_query();
+		//	echo $this->db->last_query();
                 return $id;
         }
 
