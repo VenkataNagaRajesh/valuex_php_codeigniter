@@ -126,7 +126,7 @@
                         </div>
                  
                         <div class="col-sm-2 text-right">
-                            <button type="submit" class="btn btn-danger" data-toggle="tooltip" data-title="Filter" name="filter" id="filter" onclick="$('#rafeedtable').dataTable().fnDestroy();;loaddatatable();" ><i class="fa fa-filter"></i></button>
+                            <button type="button" class="btn btn-danger" data-toggle="tooltip" data-title="Filter" name="filter" id="filter" onclick="$('#rafeedtable').dataTable().fnDestroy();;loaddatatable();" ><i class="fa fa-filter"></i></button>
                             <button type="button" data-toggle="tooltip" data-title="Download" class="btn btn-danger" onclick="downloadRAFeed()"><i class="fa fa-download"></i></button>
                         </div>
                     </div>

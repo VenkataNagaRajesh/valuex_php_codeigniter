@@ -130,7 +130,7 @@ class Rafeed extends Admin_Controller
 		if (!empty($this->input->post('upg_status'))) {
 			$this->data['upg_status'] = $this->input->post('upg_status');
 		} else {
-			$this->data['upg_status'] = '';
+			$this->data['upg_status'] = 1;
 		}
 
 
@@ -1265,7 +1265,6 @@ echo "MISED,$cDocumentType";
 		$sWhere			
 		$sOrder
 		$sLimit	";
-//echo $sQuery;exit;
 		$rResult = $this->install_m->run_query($sQuery);
 		$sQuery = "SELECT FOUND_ROWS() as total";
 		$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;
