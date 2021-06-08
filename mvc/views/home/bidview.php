@@ -514,7 +514,7 @@ var cwtpoints<?=$ond?> = [];
 ?>
 	  
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-10" >
-		<p class="pull-right">Total Bid Amount  <strong style="margin-left:12px;"> <i class="fa fa-dollar"></i> <b id="total_bid_value_view1"></b></strong> </p>
+		<p class="pull-right">Total Bid Amount: $<strong style="margin-left:12px;"><i class="fa fa-dollar"></i><b id="total_bid_value_view1"></b></strong></p>
 	</div>
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
 		<a data-toggle="tab" href="#offer" class="btn btn-danger  pull-right btn btn-secondary sw-btn-next" type="button" style="background:<?=$mail_header_color?>">Continue</a>
@@ -530,7 +530,7 @@ var cwtpoints<?=$ond?> = [];
 						        <h2 class="pull-right" style="margin:5px 0px;"><b>Booking Ref No: <?php echo $pnr_ref; ?></b></h2>
 						</div>
 						    <div class="col-md-12">
-							<p class="pull-right">Total Bid Amount  <strong style="margin-left:12px;"> <i class="fa fa-dollar"></i> <b id="total_bid_value_view2"></b></strong></p>
+							<p class="pull-right">Total Bid Amount: $<strong style="margin-left:12px;"><i class="fa fa-dollar"></i><b id="total_bid_value_view2"></b></strong></p>
 							</div>
 <?php
 		if ( isset($last_bid_total_value) && $last_bid_total_value > 0) {

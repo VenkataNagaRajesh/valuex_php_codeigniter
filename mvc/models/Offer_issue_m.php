@@ -55,11 +55,11 @@ class Offer_issue_m extends MY_Model {
 	}
 	
 	function getPassengerDataByStatus($offerid,$flight_number = null,$status,$fclr_id = null,$fclr_true = 0, $product_id = 0) {
-		$this->db->select("oref.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name)  as passengers, group_concat(distinct pax_contact_email)  as emails, group_concat(distinct pext.dtpfext_id) as p_list")->from('VX_daily_tkt_pax_feed pf');
+		$this->db->select("oref.pnr_ref,group_concat(distinct oref.offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name)  as passengers, group_concat(distinct pax_contact_email)  as emails, group_concat(distinct pext.dtpfext_id) as p_list")->from('VX_daily_tkt_pax_feed pf');
 		$this->db->join('VX_offer oref', 'oref.pnr_ref =  pf.pnr_ref', 'LEFT');
 		$this->db->join('VX_offer_info pext', 'pext.dtpf_id =  pf.dtpf_id', 'LEFT');
 		$this->db->join('VX_data_defns dd', 'dd.vx_aln_data_defnsID = pext.booking_status AND dd.aln_data_typeID = 20', 'LEFT');
-		$this->db->where('offer_id',$offerid); 
+		$this->db->where('oref.offer_id',$offerid); 
 		$this->db->where('dd.alias',$status);
 		$this->db->where('pext.active',1);
 		$this->db->where('pext.product_id',$product_id);

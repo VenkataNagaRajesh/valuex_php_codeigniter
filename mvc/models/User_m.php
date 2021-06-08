@@ -163,6 +163,7 @@ class user_m extends MY_Model {
 			$this->db->where('u.roleID',$role);
 		 }
 		 $query = $this->db->get();
+			//echo $this->db->last_query();exit;
 		 return $query->result();
 	 }
 
