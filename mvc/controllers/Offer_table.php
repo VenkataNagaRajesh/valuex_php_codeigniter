@@ -169,13 +169,15 @@ $this->data['siteinfos'] = $this->reset_m->get_site();
   $passenger_data = $this->offer_issue_m->getPassengerData($offer_id,$flight_number);
  
  // get cabin from BID tablee
+if ( $passenger_data ) {
  $offer_data = $this->offer_issue_m->getBidInfoFromOfferID($offer_id,$flight_number,$passenger_data->carrier_code); 
-  $upgrade_cabin =  $offer_data->upgrade_type;
+$upgrade_cabin =  $offer_data->upgrade_type;
+$product_id =  $offer_data->product_id;
 
 $namelist = explode(',',$passenger_data->passengers);
-                        $emails_list =  explode(',',$passenger_data->emails);
+$emails_list =  explode(',',$passenger_data->emails);
 
-                        $passenger_cnt =  count($namelist);
+$passenger_cnt =  count($namelist);
 
 // update inv feed data about processed seats count
 
@@ -239,7 +241,7 @@ $namelist = explode(',',$passenger_data->passengers);
 		'bid_value' => $offer_data->bid_value
    );
 //var_dump($maildata);exit;
-                                                                                                 $message = '
+         $message = '
         <html>
         <body>
         <div style="max-width: 800px; margin: 0; padding: 30px 0;">
@@ -278,7 +280,8 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 					}	
 
                          $array = array();
-                        $array['offer_status'] = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
+                        $select_status = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
+                        $array['offer_status'] = $select_status; 
                         $array["modify_date"] = time();
                         $array["modify_userID"] = $this->session->userdata('loginuserID');
 
@@ -286,6 +289,12 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                         $p_list = explode(',',$passenger_data->p_list);
                         $this->offer_eligibility_m->update_dtpfext($array,$p_list);
 
+				$array = array();
+				$array['offer_status'] = $select_status;
+				$array['product_id'] = $product_id;
+				$array["modify_date"] = time();
+				$array["modify_userID"] = $this->session->userdata('loginuserID');
+				$this->offer_reference_m->update_offer_ref($array,$offer_id);
 	
 			 // update tracker about change in status
                         $tracker = array();
@@ -304,10 +313,13 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
                                 }
 
 
+	 $this->session->set_flashdata('success', $msg_txt);
+} else {
+	$msg_txt = "Could not find valid pax data or status for accepting the bid";
+	 $this->session->set_flashdata('fail', $msg_txt);
+}
 
-
-		 	 $this->session->set_flashdata('success', $msg_txt);
-                            redirect(base_url("offer_table/view/".$offer_id));
+         redirect(base_url("offer_table/view/".$offer_id));
 
 }
 
