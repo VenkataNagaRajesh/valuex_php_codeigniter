@@ -135,7 +135,7 @@ class bid_m extends MY_Model {
 	if(!empty($bidstatus)){
 		$this->db->where('dd.alias',$bidstatus);
 	} else {
-		$this->db->where('dd.alias','sent_offer_mail');
+		//$this->db->where('dd.alias','sent_offer_mail');
 	}
 	$this->db->where("tpf.pnr_ref",$pnr_ref);	
 	$this->db->where("tpf.active",1);	

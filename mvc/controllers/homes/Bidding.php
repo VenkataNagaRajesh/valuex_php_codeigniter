@@ -789,8 +789,6 @@ echo "AIM HERE";
 		
 		if($maildata['offer_id'])
 		{
-			
-
 			$offerdt = $this->offer_issue_m->getOfferDetailsByOfferId($maildata['offer_id']);
 			
 			$maildata['pnr_ref']=$offerdt[0]->pnr_ref;
@@ -849,9 +847,9 @@ echo "AIM HERE";
 								$paxdata['to_city_code'] = $result->to_city_code;
 								$paxdata['to_city'] = $result->to_city;
 								$paxdata['seat_no'] = $result->seat_no;
-								$paxdata['current_cabin'] = $result->from_cabin;
+								$paxdata['current_cabin'] = $result->cabin;
 								$paxdata['cabins'] = $result->tocabins;
-								$paxdata['time_diff'] = $result->time_diff;
+								$paxdata['time_diff'] = $dteDiff->format('%H hrs %i Min');
 								$offerdata[] = $paxdata;
 							}
 								$maildata['carrier_name'] = $result->carrier_name;
@@ -890,9 +888,9 @@ echo "AIM HERE";
 							$paxdata['to_city_code'] = $result->to_city_code;
 							$paxdata['to_city'] = $result->to_city;
 							$paxdata['seat_no'] = $result->seat_no;
-							$paxdata['current_cabin'] = $result->current_cabin;
+							$paxdata['current_cabin'] = $result->cabin;
 							$paxdata['cabins'] = $result->tocabins;
-							$paxdata['time_diff'] = $result->time_diff;
+							$paxdata['time_diff'] = $dteDiff->format('%H hrs %i Min');
 							$offerdata[] = $paxdata;
 							$maildata['carrier_name'] = $result->carrier_name;
 							break;
@@ -1024,7 +1022,7 @@ echo "AIM HERE";
 		  $message =html_entity_decode($message);
 		  $siteinfos = $this->reset_m->get_site();
 		  $this->mydebug->debug($data['tomail'].'----'.$template);		  
-//$data['tomail'] ='vamsi63@gmail.com';
+#$data['tomail'] ='vamsi63@gmail.com';
 		  if($data['tomail']) {                      
 			$subject = $data['mail_subject'];
 			$email = $data['tomail'];
