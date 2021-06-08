@@ -912,6 +912,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','mark
 		  if(permissionChecker('paxfeed_delete')){
 		   $feed->action .= btn_delete('paxfeed/delete/'.$feed->dtpf_id, $this->lang->line('delete'));			 
                    $feed->action .=  '<a target="_blank" href="' . base_url('paxfeed/process_fclr_matching_report/' . $feed->dtpf_id) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="CHECK FCLR MATCH"><i class="fa fa-check"></i></a>';
+                   $feed->action .=  '<a target="_blank" href="' . base_url('offer_eligibility/processOfferPerPnr/' . $feed->dtpf_id) . '" class="btn btn-primary btn-xs mrg" style="color:black" data-placement="top" data-toggle="tooltip" data-original-title="MANUAL OFFER PROCESS PER PNR"><i class="fa fa-check"></i></a>';
 		  }
 			$status = $feed->active;
 			$feed->active = "<div class='onoffswitch-small' id='".$feed->dtpf_id."'>";
