@@ -156,7 +156,7 @@
                                     <th class="col-lg-1"><?= $this->lang->line('office_id') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('channel') ?></th>
                                     <th class="col-lg-1"><?= $this->lang->line('pax_type') ?></th>
-                                    <th class="col-lg-1 noExport" style="display:none;"><?= $this->lang->line('active') ?></th>
+                                    <th class="col-lg-1 noExport"><?= $this->lang->line('active') ?></th>
                                     <?php if (permissionChecker('rafeed_delete') || permissionChecker('rafeed_view')) { ?>
                                         <th class="col-lg-1 noExport" style="display:none;"><?= $this->lang->line('action') ?></th>
                                     <?php } ?>
@@ -177,6 +177,12 @@
     $(document).ready(function() {
                     loaddatatable();
 
+    $("#filter").click(function(e){
+          e.preventDefault();
+             $('#rafeedtable').dataTable().fnDestroy();
+             loaddatatable(); 
+    });
+            
         $('#airline_code').change(function(event) {
             var carrier = $('#airline_code').val();
             $.ajax({
@@ -326,11 +332,11 @@ function loaddatatable()
                 },
                 {
                     "data": "pax_type"
-                }
-                /*{
-                    "data": "active"
                 },
                 {
+                    "data": "active"
+                },
+                /*{
                     "data": "action"
                 }*/
             ],
@@ -483,18 +489,24 @@ function loaddatatable()
         if ($(this).prop('checked')) {
             status = 'chacked';
             id = $(this).parent().attr("id");
+          //  alert(status);
         } else {
             status = 'unchacked';
             id = $(this).parent().attr("id");
+          //  alert(status);
         }
 
         if ((status != '' || status != null) && (id != '')) {
+            
+            var tname="BG_ra_feed";
+            //alert(status+"   "+tname);
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('rafeed/active') ?>",
-                data: "id=" + id + "&status=" + status,
+                url: "<?=base_url().'rafeed/active' ?>",
+                data: "id=" + id + "&status=" + status + "&table=" + tname,
                 dataType: "html",
                 success: function(data) {
+
                     if (data == 'Success') {
                         toastr["success"]("Success")
                         toastr.options = {
@@ -514,6 +526,7 @@ function loaddatatable()
                             "showMethod": "fadeIn",
                             "hideMethod": "fadeOut"
                         }
+
                     } else {
                         toastr["error"]("Error")
                         toastr.options = {

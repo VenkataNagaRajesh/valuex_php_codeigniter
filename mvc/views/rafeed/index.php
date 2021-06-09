@@ -195,24 +195,6 @@
 
         loaddatatable();
 
-
-        $('#upg_act_Inact').change(function(event) {    
-            var act_Inact = $('#upg_act_Inact').val();    
-            $.ajax({
-                url:"rafeed/server_processing",
-                method:"GET",
-                data:{inputVal:act_Inact},
-                success:function(data)
-                {
-                    $('#rafeedtable').DataTable().destroy();
-                    loaddatatable();
-                    $("li.paginate_button:nth-child(2) a").trigger('click');       
-                }
-            });
-            //$('#rafeedtable').DataTable();
-         });
-
-
         $('#airline_code').change(function(event) {
             var carrier = $('#airline_code').val();
             $.ajax({
@@ -362,11 +344,11 @@ function loaddatatable()
                 },
                 {
                     "data": "pax_type"
-                }
-                /*{
-                    "data": "active"
                 },
                 {
+                    "data": "active"
+                },
+               /* {
                     "data": "action"
                 }*/
             ],
@@ -453,7 +435,8 @@ function loaddatatable()
                                 "airLine": $("#airline_code").val(),
                                 "flight_range": $("#flight_range").val(),
                                 "start_date": $("#start_date").val(),
-                                "end_date": $("#end_date").val()
+                                "end_date": $("#end_date").val(),
+                                "upg_status":$("#upg_status").val(),
                             },
                             dataType: 'json'
                         }).done(function(data) {
@@ -491,7 +474,8 @@ function loaddatatable()
                 "airLine": $("#airline_code").val(),
                 "flight_range": $("#flight_range").val(),
                 "start_date": $("#start_date").val(),
-                "end_date": $("#end_date").val()
+                "end_date": $("#end_date").val(),
+                "upg_status":$("upg_status").val(),
             },
             dataType: 'json'
         }).done(function(data) {
@@ -524,10 +508,12 @@ function loaddatatable()
         }
 
         if ((status != '' || status != null) && (id != '')) {
+            var tname="UP_ra_feed";
+            
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('rafeed/active') ?>",
-                data: "id=" + id + "&status=" + status,
+                url: "<?= base_url().'rafeed/active' ?>",
+                data: "id=" + id + "&status=" + status + "&table=" +tname,
                 dataType: "html",
                 success: function(data) {
                     if (data == 'Success') {

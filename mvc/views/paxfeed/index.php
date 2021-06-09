@@ -138,7 +138,12 @@
 
                 </div>
 
-
+                <div class="col-sm-2">
+                    <select class="form-control select2"  name="paxfeed_status" id="paxfeed_status">
+                    <option value="1"<?=(($paxfeed_status == 1 )? "selected":"")?>>Active</option>
+                    <option value="0" <?=(($paxfeed_status==0)?"seleceted":"")?>>In active</option>
+                    </select>
+                </div>
                 <div class="col-sm-2">
                  <input type="text" class="form-control" placeholder='Dep End Date' id="end_date" name="end_date" value="<?=set_value('end_date')?>" >
 
@@ -159,12 +164,7 @@
 			</div>
 		<div class="col-md-12" style="padding:0;">
                         <div class="tab-content table-responsive px-feed" id="hide-table">
-                        <div class="col-md-2">
-                        <select class="form-control"  name="paxfeed_act_Inact" id="paxfeed_act_Inact">
-                                    <option value="1">Active</option>
-                                    <option value="0">In active</option>
-                                </select>
-                        </div>
+                        
                <table id="paxfeedtable" class="table table-bordered dataTable no-footer">
                  <thead>
                     <tr>
@@ -216,26 +216,17 @@
 </div>
 <script>
  $(document).ready(function() {	 
-
+   
     onloaddatatable();
+ });
 
-
-$('#paxfeed_act_Inact').change(function(event) {    
-    var act_Inact = $('#paxfeed_act_Inact').val();    
-    $.ajax({
-        url:"paxfeed/server_processing",
-        method:"GET",
-        data:{inputVal:act_Inact},
-        success:function(data)
-        {
-            $("li.paginate_button:nth-child(2) a").trigger('click');       
-        }
-    });
+$("#filter").click(function(e)
+{
+    e.preventDefault();
+    $('#paxfeedtable').dataTable().fnDestroy();
+    onloaddatatable();
 });
 
-
- });
-	
 function onloaddatatable()
 {
     $('#paxfeedtable').DataTable( {
@@ -259,7 +250,7 @@ function onloaddatatable()
 				   {"name": "frequency","value": $("#frequency").val()},
 				   {"name": "pf_id","value": $("#pf_id").val()},
 				   {"name": "carrierCode","value": $("#carrier_code").val()},
-                   {"name":"inputVal","value":$("#paxfeed_act_Inact").val()},
+                   {"name": "paxfeed_status","value":$("#paxfeed_status").val()},
 				   ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -350,7 +341,7 @@ function onloaddatatable()
                            $.ajax({
                                 url: "<?php echo base_url('paxfeed/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"bookingCountry":$("#booking_country").val(),"bookingCity":$("#booking_city").val(),"fromCity":$("#from_city").val(),"toCity":$("#to_city").val(),"pax_type":$("#pax_type").val(),"tier":$("#tier").val(),"flight_range":$("#flight_range").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"frequency":$("#frequency").val(),"pf_id": $("#pf_id").val(),"carrierCode":$("#carrier_code").val()},
+                                data: {sSearch: $("input[type=search]").val(),"bookingCountry":$("#booking_country").val(),"bookingCity":$("#booking_city").val(),"fromCity":$("#from_city").val(),"toCity":$("#to_city").val(),"pax_type":$("#pax_type").val(),"tier":$("#tier").val(),"flight_range":$("#flight_range").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"frequency":$("#frequency").val(),"pf_id": $("#pf_id").val(),"carrierCode":$("#carrier_code").val(),"paxfeed_status":$("#paxfeed_status").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -374,7 +365,7 @@ function onloaddatatable()
 	  $.ajax({
         url: "<?php echo base_url('paxfeed/server_processing'); ?>?page=all&&export=1",
         type: 'get',
-        data: {"bookingCountry":$("#booking_country").val(),"bookingCity":$("#booking_city").val(),"fromCity":$("#from_city").val(),"toCity":$("#to_city").val(),"pax_type":$("#pax_type").val(),"tier":$("#tier").val(),"flight_range":$("#flight_range").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"frequency":$("#frequency").val(),"pf_id": $("#pf_id").val(),"carrierCode":$("#carrier_code").val()},
+        data: {"bookingCountry":$("#booking_country").val(),"bookingCity":$("#booking_city").val(),"fromCity":$("#from_city").val(),"toCity":$("#to_city").val(),"pax_type":$("#pax_type").val(),"tier":$("#tier").val(),"flight_range":$("#flight_range").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"frequency":$("#frequency").val(),"pf_id": $("#pf_id").val(),"carrierCode":$("#carrier_code").val(),"paxfeed_status":$("#paxfeed_status").val()},
         dataType: 'json'
         }).done(function(data){
 		var $a = $("<a>");

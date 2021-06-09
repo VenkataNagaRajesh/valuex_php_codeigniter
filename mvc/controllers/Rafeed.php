@@ -425,7 +425,6 @@ echo "MISED,$cDocumentType";
 
 	public function upload()
 	{
-
 		if ($_FILES) {
 			if (empty($_FILES['file']['name'])) {
 				$this->session->set_flashdata('error', "Please select File");
@@ -434,7 +433,6 @@ echo "MISED,$cDocumentType";
 			} 
 			else {
 
-			
 				require(APPPATH . 'libraries/spreadsheet/php-excel-reader/Spreadsheet_Excel_Reader.php');
 				#require(APPPATH . 'libraries/spreadsheet/php-excel-reader/excel_reader2.php');
 				require(APPPATH . 'libraries/PHPExcel/Shared/Date.php');
@@ -540,6 +538,7 @@ echo "MISED,$cDocumentType";
 												break;
 
 											case 't': // ticketing rafeed
+
 												$bg_product = $this->contract_m->isProductActive($carrier_id,1);
 												if($bg_product == 0){
 													$this->mydebug->rafeed_log("This ".$carrier."  Upgrade Product in deactive mode - ROW:$i, COL:" . $column, 1);
@@ -1555,20 +1554,20 @@ echo "MISED,$cDocumentType";
 
 	function active()
 	{
-
 		if (permissionChecker('rafeed_edit')) {
 			$id = $this->input->post('id');
 			$status = $this->input->post('status');
+			$tname = $this->input->post('table');
 			if ($id != '' && $status != '') {
 				$data['modify_userID'] = $this->session->userdata('loginuserID');
 				$data['modify_date'] = time();
 				if ($status == 'chacked') {
 					$data['active'] = 1;
-					$this->rafeed_m->update_rafeed($data, $id);
-					echo 'Success';
-				} elseif ($status == 'unchacked') {
+					$this->rafeed_m->update_rafeed($data, $id,$tname);
+					echo "Success";
+				} else if ($status == 'unchacked') {
 					$data['active'] = 0;
-					$this->rafeed_m->update_rafeed($data, $id);
+					$this->rafeed_m->update_rafeed($data, $id,$tname);
 					echo 'Success';
 				} else {
 					echo "Error";

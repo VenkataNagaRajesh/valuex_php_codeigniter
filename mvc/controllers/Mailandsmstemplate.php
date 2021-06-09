@@ -204,9 +204,16 @@ class Mailandsmstemplate extends Admin_Controller {
 								'template' => $this->input->post('email_template',FALSE),				
 								'modify_userID' => $this->session->userdata('loginuserID'),
 								'modify_date' => time(),
+								'default'=>$this->input->post('default'),
 								'template_path' => $this->input->post('template_path')
-							);							 
-                            
+							);				
+							if(isset($array['default'])=='on')
+							{
+								$array['default']=1;
+							}
+							else{
+								$array['default']=0;
+							}
 							$this->mailandsmstemplate_m->update_mailandsmstemplate($array, $id);
 							if($this->input->post('default')){
 						     $this->mailandsmstemplate_m->setDefault($this->input->post('category'),$id, $this->input->post('airlineID'));
