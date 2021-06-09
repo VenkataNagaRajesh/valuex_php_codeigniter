@@ -54,7 +54,12 @@
 
                 </div>
 
-
+                <div class="col-sm-2">
+                                    <select class="form-control select2"  name="invfeed_status" id="invfeed_status">
+					    <option value="1" <?=(($invfeed_status == 1 )? "selected":"")?>>Active</option>
+					    <option value="0" <?=(($invfeed_status == 0 || $invfeed_status == '' )? "selected":"")?>>In active</option>
+                                    </select>
+                            </div>
 	    <div class="col-sm-2">
                <?php
                         $airports['0'] = ' Dest Airport';
@@ -96,12 +101,7 @@
 			 </form>
 			</div>
             <div id="hide-table">
-            <div class="col-md-2">
-                      <select class="form-control"  name="inv_act_Inact" id="inv_act_Inact">
-                                    <option value="1">Active</option>
-                                    <option value="0">In active</option>
-                                </select>
-            </div>
+          
                <table id="invfeedtable" class="table table-bordered dataTable no-footer">
                  <thead>
                     <tr>
@@ -137,21 +137,13 @@
 <script>
  $(document).ready(function() {	 
 	loaddatatable();
-    $('#inv_act_Inact').change(function(event) {    
-  var act_Inact = $('#inv_act_Inact').val();    
-  $.ajax({
-      url:"fclr/server_processing",
-      method:"GET",
-      data:{inputVal:act_Inact},
-      success:function(data)
-      {
-       // loaddatatable();
-        $("li.paginate_button:nth-child(1) a").trigger('click');       
-      }
-  });
- $('#invfeedtable').DataTable();
-});
 
+    $("#filter").click(function(e){
+          e.preventDefault();
+             $('#invfeedtable').dataTable().fnDestroy();
+             loaddatatable(); 
+    });
+   
 $('#airline_code').change(function(event) {    
   var carrier = $('#airline_code').val();                 
 $.ajax({     async: false,            
@@ -187,7 +179,7 @@ function loaddatatable()
                    {"name": "airLine","value": $("#airline_code").val()},
 		           {"name": "flight_range","value": $("#flight_range").val()},
 			       {"name": "start_date","value": $("#start_date").val()},
-                   {"name":"inputVal","value":$("#inv_act_Inact").val()}
+                   {"name":"invfeed_status","value":$("#invfeed_status").val()}
                    ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
