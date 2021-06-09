@@ -589,7 +589,7 @@ $sWhere $sOrder $sLimit";
 		// update is required if offer status is updated in VX_aln_offer_ref
 					// for now considering offer status is updated in  PF records
 			//
-		$sQuery = "select oref.offer_status, pf.dep_date , pf.flight_number , pf.carrier_code , group_concat(distinct offer_id) as offer_list  
+		$sQuery = "select oref.offer_status, pf.dep_date , pf.flight_number , pf.carrier_code , group_concat(distinct oref.offer_id) as offer_list  
 		from VX_offer oref 
 		INNER JOIN VX_daily_tkt_pax_feed pf on (pf.pnr_ref = oref.pnr_ref and (pf.is_up_offer_processed = 1 OR pf.is_bg_offer_processed = 1) and pf.active = 1)
 		INNER JOIN VX_offer_info pext on (pext.dtpf_id = pf.dtpf_id AND oref.product_id = pext.product_id)
@@ -598,7 +598,7 @@ $sWhere $sOrder $sLimit";
 		" AND dd.alias != 'excl' AND pext.exclusion_id = 0 AND 
 		dd.alias = 'bid_received'  group by pf.flight_number, pf.carrier_code, pf.dep_date  order by pf.flight_number"; 
 
-		///var_dump($sQuery);
+		//var_dump($sQuery);
 		$rResult = $this->install_m->run_query($sQuery);
 		  
 
