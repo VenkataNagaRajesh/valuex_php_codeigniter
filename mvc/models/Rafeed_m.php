@@ -148,10 +148,24 @@ class Rafeed_m extends MY_Model
 		}
 	}
 
-	function update_rafeed($data, $id = NULL)
+	function update_rafeed($data, $id = NULL,$tname)
 	{
-		parent::update($data, $id);
-		return $id;
+	
+		if($tname=="UP_ra_feed")
+		{
+			$this->db->where('rafeed_id', $id);
+			$this->db->update('UP_ra_feed', $data);
+
+		return $true;
+		}
+		else if($tname=="BG_ra_feed")
+		{
+			
+			$this->db->where('id', $id);
+			$this->db->update('BG_ra_feed', $data);
+			return $true;
+		}
+
 	}
 
 	public function delete_rafeed($id,$table_name)
