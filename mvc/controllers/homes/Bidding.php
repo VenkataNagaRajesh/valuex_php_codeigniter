@@ -542,24 +542,19 @@ echo "AIM HERE";
 		  		 	 $bid_array['from_cabin'] = $fly_data->cabin;
                   	 $this->offer_issue_m->calculateBidAvg($bid_array);
 
-					$mail_subject = "Your bid for upgrade has been Successfully";
-					if($maildata['type'] == 'resubmit'){
-						$mail_subject .= " Re-Submitted";
+					if($bid_id) {
 						$maildata['template'] = 'bid_resubmit';
 					} else {
-						$mail_subject .= " Submitted";
-						$maildata['template'] = 'bid_success';
+						$maildata['template'] = 'bid_received';
 					}
 					break;
 
 					Case 2:
-					$mail_subject = "Congratulations!. Your extra baggage offer has been confirmed";
 					$maildata['template'] = 'baggage_confirmed';
 					break;
 					default:
 					break;
 				}
-				$maildata['subject'] = $mail_subject;
 				$maildata['offer_id']=$offer_id;
 			   // $maildata['tomail'] = 'vamsi63@gmail.com';
 				$this->upgradeOfferMail($maildata);
@@ -936,7 +931,8 @@ echo "AIM HERE";
                 //$maildata = array_merge($maildata, $paxdata);
                 $maildata['airlineID'] = $offer[0]->carrier_code;
 		$tpl_file = $tpl->template_path;
-    	 	$maildata['mail_subject'] = (!empty($tpl->mail_subject)) ? $tpl->mail_subject : "Congratulations! You got great deal ! Grab it..";
+    	 	$maildata['mail_subject'] = (!empty($tpl->mail_subject)) ? $tpl->mail_subject  : "Congratulations! Update about your offer..!";
+		$maildata['mail_subject'] .= " for PNR#" . strtoupper($pnr_ref);
 		$t = explode('.',$tpl_file);
 		$tpl_path = $t[0]. '-imgs';
 		if ( $upgrade_offer) {
