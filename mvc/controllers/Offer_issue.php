@@ -708,56 +708,19 @@ $sWhere $sOrder $sLimit";
 							// send mail min bid value not met
 							// update pf entry status and VX_aln_offer_ref status as bid not accepted
 				//		echo "rejected ---<br>";
-													   $message = '
-				<html>
-				<body>
-				<div style="max-width: 800px; margin: 0; padding: 30px 0;">
-				<table width="80%" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-		<td width="5%"></td>
-				<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-		<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
-		 Your bid is rejected due to less bid price.<br />
-		<br />
-		<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-		<br />
-		PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+								$maildata = Array();
+							    $offer_data = $this->bid_m->get_offer_data($feed->offer_id);
+							    $maildata = (array)$offer_data;
+								$maildata['offer_id']=$feed->offer_id;
+								$maildata['template']='bid_reject';
+								$this->upgradeOfferMail($maildata);
 
-		<br />
-		<br />
-		<br />
-		</td>
-		</tr>
-		</table>
-
-		</div>
-		</body>
-		</html>
-		';
-
-
-								/*  $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-								 //$this->email->from('testsweken321@gmail.com', 'ADMIN');
-								 $this->email->to($emails_list[0]);
-								 $this->email->subject("Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point);
-								$this->email->message($message);
-								$this->email->send(); */					
-								
-								 $rejectmail = array(
-									'first_name'   => $namelist[0],
-									'last_name' => '',
-									'tomail' => $emails_list[0],
-									'pnr_ref' => $passenger_data->pnr_ref,
-									'airlineID' => $feed->carrier_code,							
-									'mail_subject' => "Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point		
-									); 
-								$this->sendMailTemplateParser('bid_reject',$rejectmail);
-						 $array = array();
 								$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
+						 		$array = array();
 								$array['booking_status'] = $offer_status;
 								$array["modify_date"] = time();
 								$array["modify_userID"] = $this->session->userdata('loginuserID');
-					$p_list = explode(',',$passenger_data->p_list);
+								$p_list = explode(',',$passenger_data->p_list);
 
 								// update extension table with new status
 
@@ -794,47 +757,20 @@ $sWhere $sOrder $sLimit";
 				} else { //Accept
 					  if (($cabin_seats - $passenger_cnt) < $acsr_data->memp) {
 
-							  $message = '
-								<html>
-								<body>
-								<div style="max-width: 800px; margin: 0; padding: 30px 0;">
-								<table width="80%" border="0" cellpadding="0" cellspacing="0">
-								<tr>
-						<td width="5%"></td>
-								<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-						<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
-						 Your bid is not processed due to non availability of seats.<br />
-						<br />
-						<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-						<br />
-						PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+								$maildata = Array();
+							    $offer_data = $this->bid_m->get_offer_data($feed->offer_id);
+							    $maildata = (array)$offer_data;
+								$maildata['offer_id']=$feed->offer_id;
+								$maildata['template']='bid_reject';
+								$maildata['reason']='due to non availability of seats';
+								$this->upgradeOfferMail($maildata);
 
-						<br />
-						<br />
-						<br />
-						</td>
-						</tr>
-						</table>
-
-						</div>
-						</body>
-						</html>
-						';
-
-
-						$this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-						//$this->email->from('testsweken321@gmail.com', 'ADMIN');
-						$this->email->to($emails_list[0]);
-						$this->email->subject("Bid is rejected, No seats avaiable  From " .$feed->src_point.' To ' . $feed->dest_point);
-						$this->email->message($message);
-						$this->email->send();
-
-						$array = array();
-						$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('no_seats','20');
-						$array['booking_status'] = $offer_status;
-						$array["modify_date"] = time();
-						$array["modify_userID"] = $this->session->userdata('loginuserID');
-						$p_list = explode(',',$passenger_data->p_list);
+								$array = array();
+								$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('no_seats','20');
+								$array['booking_status'] = $offer_status;
+								$array["modify_date"] = time();
+								$array["modify_userID"] = $this->session->userdata('loginuserID');
+								$p_list = explode(',',$passenger_data->p_list);
 
 
 						// update extension table with new status
@@ -877,65 +813,44 @@ $sWhere $sOrder $sLimit";
 
 						if( ($feed->dep_date - $current_time ) > $cutoff_time_in_secs ) {	
 						//update sold seats or allocated seats in inv feed
-											$update['sold_seats'] = $seats_data->sold_seats + $passenger_cnt;
-											$update['modify_date'] = time();
-																$update['modify_userID'] = $this->session->userdata('loginuserID');
-
-											$this->invfeed_m->update_entries($update,$inv);
+								$update['sold_seats'] = $seats_data->sold_seats + $passenger_cnt;
+								$update['modify_date'] = time();
+								$update['modify_userID'] = $this->session->userdata('loginuserID');
+								$this->invfeed_m->update_entries($update,$inv);
 										
-											// accept bid
-						 $message = '
-								<html>
-								<body>
-								<div style="max-width: 800px; margin: 0; padding: 30px 0;">
-								<table width="80%" border="0" cellpadding="0" cellspacing="0">
-								<tr>
-						<td width="5%"></td>
-								<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-						<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
-						 Your bid is accepted.<br />
-						<br />
-						<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-						<br />
-						PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+								// accept bid
+								$maildata = Array();
+							    $offer_data = $this->bid_m->get_offer_data($feed->offer_id);
+							    $maildata = (array)$offer_data;
+								$maildata['offer_id']=$feed->offer_id;
+								$maildata['template']='bid_accepted';
 
-						<br />
-						<br />
-						<br />
-		</td>
-		</tr>
-		</table>
+								 $card_data = $this->bid_m->getCardData($feed->orderID);
+								 $card_number = substr(trim($card_data->card_number), -4);
+								 $e_data = array(
+									'first_name'   => $namelist[0],
+									'last_name' => '',
+									'tomail' => $emails_list[0],
+									'pnr_ref' => $passenger_data->pnr_ref,						
+									'mail_subject' => "Bid is accepted From " .$feed->src_point." To " . $feed->dest_point,
+									'card_number' => $card_number,
+									'cash_paid' => number_format($feed->cash),
+									'miles_used' => number_format($feed->miles),
+									'flight_no' => $feed->carrier_name.$feed->flight_number,
+									'dep_date' => date('d-m-Y',$feed->dep_date),
+									'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
+									'origin' => $feed->src_point,
+									'destination' => $feed->dest_point, 
+									'upgrade_to' => $feed->upgrade_cabin,
+									'airlineID' => $feed->carrier_code,
+									'carrier_name' => $feed->car_name,
+									'bid_value' => $feed->bid_val,
+									'feedback_link' => base_url('home/feedback?pnr_ref='.$passenger_data->pnr_ref) 							
+								 ); 			 
+									$maildata = array_merge($maildata,$e_data);
+									$this->upgradeOfferMail($maildata);
 
-		</div>
-		</body>
-		</html>
-		';
-
-				 $card_data = $this->bid_m->getCardData($feed->orderID);
-				 $card_number = substr(trim($card_data->card_number), -4);
-				 $e_data = array(
-					'first_name'   => $namelist[0],
-					'last_name' => '',
-					'tomail' => $emails_list[0],
-					'pnr_ref' => $passenger_data->pnr_ref,						
-					'mail_subject' => "Bid is accepted From " .$feed->src_point." To " . $feed->dest_point,
-					'card_number' => $card_number,
-					'cash_paid' => number_format($feed->cash),
-					'miles_used' => number_format($feed->miles),
-					'flight_no' => $feed->carrier_name.$feed->flight_number,
-					'dep_date' => date('d-m-Y',$feed->dep_date),
-					'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
-					'origin' => $feed->src_point,
-					'destination' => $feed->dest_point, 
-					'upgrade_to' => $feed->upgrade_cabin,
-					'airlineID' => $feed->carrier_code,
-					'carrier_name' => $feed->car_name,
-					'bid_value' => $feed->bid_val,
-					'feedback_link' => base_url('home/feedback?pnr_ref='.$passenger_data->pnr_ref) 							
-				 ); 			 
-			  //$this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);
-			  	$this->sendMailTemplateParser('bid_accepted',$e_data);					  
-	 			$array = array();
+				$array = array();
 				$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
 				$array['booking_status'] = $offer_status;
 				$array["modify_date"] = time();
@@ -971,39 +886,12 @@ $sWhere $sOrder $sLimit";
 				}
 
 		  				} else {
-							$message = '
-								<html>
-								<body>
-								<div style="max-width: 800px; margin: 0; padding: 30px 0;">
-								<table width="80%" border="0" cellpadding="0" cellspacing="0">
-								<tr>
-								<td width="5%"></td>
-								<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-								<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
-								Your bid offer is expired.<br />
-								<br />
-								<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-								<br />
-								PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
-
-								<br />
-								<br />
-								<br />
-								</td>
-								</tr>
-								</table>
-
-								</div>
-								</body>
-								</html>
-								';
-
-								$this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-								//$this->email->from('testsweken321@gmail.com', 'ADMIN');
-								$this->email->to($emails_list[0]);
-								$this->email->subject("Bid Offer is expired  From " .$feed->src_point.'To ' . $feed->dest_point);
-								$this->email->message($message);
-								$this->email->send();
+								$maildata = Array();
+							    $offer_data = $this->bid_m->get_offer_data($feed->offer_id);
+							    $maildata = (array)$offer_data;
+								$maildata['offer_id']=$feed->offer_id;
+								$maildata['template']='offer_expire';
+								$this->upgradeOfferMail($maildata);
 
 								$array = array();
 								$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('offer_expire','20');
@@ -1083,210 +971,4 @@ $sWhere $sOrder $sLimit";
 		redirect(base_url("offer_table/index"));
 	}
 
-	public function upgradeOfferMail($maildata){
-		
-		if($maildata['offer_id'])
-		{
-			
-
-			$offerdt = $this->offer_issue_m->getOfferDetailsByOfferId($maildata['offer_id']);
-			
-			$maildata['pnr_ref']=$offerdt[0]->pnr_ref;
-		}
-			$pnr_ref=$maildata['pnr_ref'];
-			$offer = $this->bid_m->getPassengers($maildata['pnr_ref']);
-			
-			if (!$offer[0]->carrier_code) {
-				echo "<br>missing passenger deails for  $pnr_ref";
-				return;
-			}
-			
-			$prodlist = explode(',',$offer[0]->products);
-			$email_list = explode(',',$offer[0]->email_list);
-
-			$baggage_offer = 0;
-			$upgrade_offer = 0;
-			$exclude = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-		$cabins  = $this->airline_cabin_m->getAirlineCabins();
-		foreach ($prodlist as $prodId) {
-			switch ($prodId) {
-			case 1:
-				$upgrade_offer = 1;
-				$results = $this->bid_m->getUpgradeOffers($pnr_ref);
-				if(count($results)>0){
-					foreach($results as $result){
-					  $result->to_cabins = explode(',',$result->to_cabins);
-					  $dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
-					  $arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
-					  $dteStart = new DateTime($dept); 
-					  $dteEnd   = new DateTime($arrival); 
-					  $dteDiff  = $dteStart->diff($dteEnd);
-					  $result->time_diff = $dteDiff->format('%H hrs %i Min');
-					  $cdata = array();
-						  foreach($result->to_cabins as $value){
-								$cdata = explode('-',$value);              		
-								if($cdata[2] != $exclude){
-									$tocabins[$cdata[3]] = $cabins[$cdata[0]];
-									//$result->tocabins[] = array('cabin_name' => $cabins[$cdata[0]]); 
-								}              
-							}
-							ksort($tocabins);
-							foreach($tocabins as $c){
-								$result->tocabins[] = array('cabin_name' => $c);
-							}
-							if($result->fclr != null && !empty($result->tocabins)){			
-								$paxdata['dep_date'] = date('D d M Y',$result->dep_date);
-								$paxdata['dep_time'] = date('H:i',$result->dept_time);
-								$paxdata['arrival_date'] = date('D d M Y',$result->arrival_date);
-								$paxdata['arrival_time'] = date('H:i',$result->darrival_time);
-								$paxdata['carrier_code'] = $result->carrier_code;
-								$paxdata['carrier_name'] = $result->carrier_name;
-								$paxdata['flight_number'] = $result->flight_number;
-								$paxdata['from_city_code'] = $result->from_city_code;
-								$paxdata['from_city'] = $result->from_city;
-								$paxdata['to_city_code'] = $result->to_city_code;
-								$paxdata['to_city'] = $result->to_city;
-								$paxdata['seat_no'] = $result->seat_no;
-								$paxdata['current_cabin'] = $result->current_cabin;
-								$paxdata['cabins'] = $result->tocabins;
-								$paxdata['time_diff'] = $result->time_diff;
-								$offerdata[] = $paxdata;
-							}
-								$maildata['carrier_name'] = $result->carrier_name;
-								break;
-							}
-					  		$maildata['highest_upgrade_class'] = $result->tocabins[0]['cabin_name'];
-						}
-
-						//print_r($results); exit();
-					break;
-					case 2:
-						
-						$baggage_offer = 1;
-						if ( $upgrade_offer) {
-							break;//HACK
-						}
-						$results = $this->offer_issue_m->getBaggageOffer($pnr_ref);
-						if(count($results)>0){
-						foreach($results as $result){
-						  $dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
-						  $arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
-						  $dteStart = new DateTime($dept); 
-						  $dteEnd   = new DateTime($arrival); 
-						  $dteDiff  = $dteStart->diff($dteEnd);
-						  $result->time_diff = $dteDiff->format('%H hrs %i Min');
-						  $cdata = array();
-							$paxdata['dep_date'] = date('D d M Y',$result->dep_date);
-							$paxdata['dep_time'] = date('H:i',$result->dept_time);
-							$paxdata['arrival_date'] = date('D d M Y',$result->arrival_date);
-							$paxdata['arrival_time'] = date('H:i',$result->darrival_time);
-							$paxdata['carrier_code'] = $result->carrier_code;
-							$paxdata['carrier_name'] = $result->carrier_name;
-							$paxdata['flight_number'] = $result->flight_number;
-							$paxdata['from_city_code'] = $result->from_city_code;
-							$paxdata['from_city'] = $result->from_city;
-							$paxdata['to_city_code'] = $result->to_city_code;
-							$paxdata['to_city'] = $result->to_city;
-							$paxdata['seat_no'] = $result->seat_no;
-							$paxdata['current_cabin'] = $result->current_cabin;
-							$paxdata['cabins'] = $result->tocabins;
-							$paxdata['time_diff'] = $result->time_diff;
-							$offerdata[] = $paxdata;
-							$maildata['carrier_name'] = $result->carrier_name;
-							break;
-						}
-						}
-					//print_r($results); exit();
-				break;
-
-				default:
-			break;
-		}
-	}
-	if($maildata['template'])
-	{
-		$template=$maildata['template'];
-		
-	}
-	else{
-	if ( $baggage_offer && $upgrade_offer ) {
-			#echo "<br>UPGRADE & BAGGAGE COMBO OFFER";
-			$template = "upgrade_baggage_offer";    
-			$maildata['mail_subject'] .= " Upgrade & Baggage offer";    
-		} elseif( $upgrade_offer) {
-			#echo "<br>UPGRADE OFFER";
-			$template = "upgrade_offer";    
-			$maildata['mail_subject'] .= " Upgrade offer";    
-		} elseif( $baggage_offer) {
-			#echo "<br>BAGGAGE OFFER";
-			$template = "baggage_offer";    
-			$maildata['mail_subject'] .= " Baggage offer";    
-		}
-	}
-		$pax_names = $this->bid_m->getPaxNames($pnr_ref);
-	
-				$maildata['first_name']=$offer[0]->pax_names;
-				$maildata['pnr_ref'] =  $pnr_ref;
-                $maildata['offer_data'] = $offerdata;
-                $maildata['airlineID'] = $offer[0]->carrier_code;
-              //  $maildata['first_name'] = $offer[0]->pax_names;
-                $maildata['tomail'] = $email_list[0];
-                $primary_client = $this->user_m->getClientByAirline($maildata['airlineID'],6)[0];	   
-                $maildata = array_merge($maildata, $paxdata);
-		$dir = "assets/mail-temps";
-		$tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID']);
-		$tpl_file = $tpl->template_path;
-    	 $maildata['mail_subject'] = (!empty($tpl->mail_subject)) ? $tpl->mail_subject : "Congratulations! You got great deal ! Grab it..";
-		$t = explode('.',$tpl_file);
-		$tpl_path = $t[0]. '-imgs';
-		if ( $upgrade_offer) {
-                 $maildata['up_tpl_bnr'] = base_url("$dir/$tpl_path/banner.jpg");
-                 $maildata['up_tpl_bnrtop'] = base_url("$dir/$tpl_path/bannerTop.png");	
-                 $maildata['up_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");
-                 #$maildata['up_tpl_bnrbottom'] = base_url("assets/mail-temps/bg_temp1_images/bannerBottom.png");	
-                 #$maildata['up_tpl_contact_img'] = base_url("assets/mail-temps/bg_temp2_images/contactUs.png");	
-		}
-
-		if( $baggage_offer) {
-                 $maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/banner.png");	
-                 $maildata['bg_tpl_bnrtop'] = base_url("$dir/$tpl_path/bannerTop.png");	
-                 $maildata['bg_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");	
-                
-		}
-                 $maildata['open_browser'] = base_url("$dir/$tpl_path/openBrowser.png");
-                 $maildata['facebook_icon'] = base_url("$dir/$tpl_path/facebook.png");		
-                 $maildata['tag_img'] = base_url("$dir/$tpl_path/tag.png");		
-                 $maildata['twitter_icon'] = base_url("$dir/$tpl_path/twitter.png");	
-                 $maildata['pinterest_icon'] = base_url("$dir/$tpl_path/pinterest.png");	
-                 $maildata['openbrowser_img'] = base_url("$dir/openBrowser.png");
-            	 $maildata['airline_logo'] = base_url('uploads/images/'.$this->airline_m->getAirlineLogo($maildata['airlineID'])->logo);            
-                 
-                 $maildata['domain'] = $primary_client->domain;
-                 $maildata['primary_phone'] = $primary_client->phone;
-                 $maildata['primary_mail'] = $primary_client->email;
-                 $maildata['fb_link'] = "https://facebook.com";
-                 $maildata['twitter_link'] = "https://twitter.com";
-                 $maildata['pinterest_link'] = "https://pinterest.com";
-                 $maildata['unsubscribe_link'] = base_url('home/index');
-                 $maildata['forward_friend_link'] = base_url('home/index');
-                 $maildata['openbrowser_link'] = base_url('home/index');
-                 $maildata['not_intrested_link'] = base_url('home/index');
-                 
-		   $maildata['base_url'] = base_url(); 
-		   $maildata['bidnow_link'] = base_url('homes/bidding?pnr_ref='.$pnr_ref);
-		   $template_images = $this->airline_m->getImagesByType($maildata['airlineID']);
-		   foreach($template_images as $img){
-			   $maildata[$img->type] = base_url('uploads/images/'.$img->image);
-		   } 
-                 $airline_info = $this->bid_m->getAirlineLogoByPNR($pnr_ref);
-		   $maildata['mail_header_color'] = $airline_info->mail_header_color;
-		   if(empty($maildata['mail_header_color'])){
-			 $maildata['mail_header_color'] = '#333';  
-		   }
-		   
-		   if(isset($maildata['bid_value'])){
-			   $maildata['bid_value'] = number_format($maildata['bid_value']);
-		   }
-		$this->sendMailTemplateParser($template,$maildata);	
-		}
 }
