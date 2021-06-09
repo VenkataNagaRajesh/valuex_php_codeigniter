@@ -42,7 +42,13 @@ class Invfeed extends Admin_Controller {
 		} else {
 		  $this->data['dest_airport'] = 0;
 		}
-
+		if(!empty($this->input->post('invfeed_status')))
+		{
+			$this->data['invfeed_status']=$this->input->post('invfeed_status');
+		}
+		else{
+			$this->data['invfeed_status']=1;
+		}
 		if(!empty($this->input->post('airline_code'))){
                    $this->data['airline_code'] = $this->input->post('airline_code');
                 } else {
@@ -400,11 +406,11 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','cdef
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'inv.airline_id = '.$this->input->get('airLine');
                         }
-                        if(!empty($this->input->get('Cabin'))){
-                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-                                $sWhere .= 'inv.cabin = '.$this->input->get('Cabin');
-                        }
-
+            if(!empty($this->input->get('Cabin'))){
+                    $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                    $sWhere .= 'inv.cabin = '.$this->input->get('Cabin');
+            }
+			
 			if(!empty($this->input->get('flight_range'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $num_arr = explode('-',$this->input->get('flight_range'));
@@ -435,25 +441,24 @@ $aColumns = array('invfeed_id', 'da.code','flight_nbr','do.code','ds.code','cdef
                 }
 
 		$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-		$ac=$_GET['inputVal'];
+		$ac=$_GET['invfeed_status'];
 		$sWhere .= 'inv.active='. $ac;
-			
 		//$ac=;
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
-			invfeed_id, flight_nbr, departure_date, do.code as origin_airport, 
-		        departure_date, sold_seats, empty_seats,seat_capacity,sold_weight,
-			ds.code as dest_airport, cdef.cabin as cabin, 
-			da.code as airline_code ,act.aln_data_value as aircraft_type,
-			inv.active   FROM VX_daily_inv_feed inv  
-			LEFT JOIN VX_data_defns do on (do.vx_aln_data_defnsID = inv.origin_airport)
-			LEFT JOIN VX_data_defns ds on  (ds.vx_aln_data_defnsID = inv.dest_airport) 
-			LEFT JOIN  VX_data_defns da on (da.vx_aln_data_defnsID = inv.airline_id)
-			INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = inv.airline_id) 
-			INNER JOIN VX_data_defns act on (act.vx_aln_data_defnsID = inv.aircraft_typeID AND act.aln_data_typeID = 21)
-			INNER JOIN VX_data_defns dc on (dc.vx_aln_data_defnsID = inv.cabin and dc.aln_data_typeID = 13 and cdef.level = dc.alias)  
-		$sWhere			
-		$sOrder
-		$sLimit	"; 
+		invfeed_id, flight_nbr, departure_date, do.code as origin_airport, 
+			departure_date, sold_seats, empty_seats,seat_capacity,sold_weight,
+		ds.code as dest_airport, cdef.cabin as cabin, 
+		da.code as airline_code ,act.aln_data_value as aircraft_type,
+		inv.active   FROM VX_daily_inv_feed inv  
+		LEFT JOIN VX_data_defns do on (do.vx_aln_data_defnsID = inv.origin_airport)
+		LEFT JOIN VX_data_defns ds on  (ds.vx_aln_data_defnsID = inv.dest_airport) 
+		LEFT JOIN  VX_data_defns da on (da.vx_aln_data_defnsID = inv.airline_id)
+		INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = inv.airline_id) 
+		INNER JOIN VX_data_defns act on (act.vx_aln_data_defnsID = inv.aircraft_typeID AND act.aln_data_typeID = 21)
+		INNER JOIN VX_data_defns dc on (dc.vx_aln_data_defnsID = inv.cabin and dc.aln_data_typeID = 13 and cdef.level = dc.alias)  
+	$sWhere			
+	$sOrder
+	$sLimit	"; 
 	
 	$rResult = $this->install_m->run_query($sQuery);
 	#echo $this->db->last_query(); exit;
