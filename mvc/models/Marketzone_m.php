@@ -414,22 +414,24 @@ function getParentsofAirportByType($airportID,$id) {
 		return $query->row('count');
 	}	
 
-    	function getAirportsByLevelAndLevelID($levelIds, $level = 0) { 
+function getAirportsByLevelAndLevelID($levelIds, $level = 0) { 
 		//Level means level type ids Market, Country, City, Airport 
 		//Level IDs means  MarketID, CountryID, CityID, AirportID 
-		$session_key = "airport-leve-id-" . implode(":",$levelIds). "-$level";
 		#echo "<br>SEESIONKEU=" . $session_key;
-                if ( $this->session->has_userdata($session_key)) {
+
+		if (is_array($levelIds)){
+			$arr = $levelIds; 
+			$session_key = "airport-level-id-" . implode(",",$levelIds). "-$level";
+		} else {
+			$arr = explode(',', $levelIds); 
+			$session_key = "airport-level-id-" . trim($levelIds). "-$level";
+		}
+        if ( $this->session->has_userdata($session_key)) {
 		#echo "<br>GET FROM SEESION=" . $session_key;
 			
 			return $this->session->userdata($session_key);
 		}
 
-		if (!is_array($levelIds)){
-			$arr = explode(',', $levelIds); 
-		} else {
-			$arr = $levelIds; 
-		}
 		$ids = array_map('trim', $arr);//Removing any trailing spaces
 
 		$data = Array();
@@ -448,7 +450,7 @@ function getParentsofAirportByType($airportID,$id) {
 			}
 		}
 		#echo "<br>SEETTING SEESION=" . $session_key;
-                $this->session->set_userdata($session_key,$data);
+        $this->session->set_userdata($session_key,$data);
 		return $data;
 	}
 }
