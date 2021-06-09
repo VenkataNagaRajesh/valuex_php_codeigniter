@@ -75,7 +75,11 @@ class Paxfeed extends Admin_Controller {
                      $this->data['carrier_code'] = 0;
 				   }
                 }
-
+				if (!empty($this->input->post('paxfeed_status'))) {
+					$this->data['paxfeed_status'] = $this->input->post('paxfeed_status');
+			} else {
+					$this->data['paxfeed_status'] = 1; //Default
+					}			
 
 		$userID = $this->session->userdata('loginuserID');
                 $roleID = $this->session->userdata('roleID');
@@ -740,7 +744,10 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','mark
 					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
 				}
 			}
-
+			if (isset($_GET['paxfeed_status'])) {
+				$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+				$sWhere .= 'pax.active = ' .  $this->input->get('paxfeed_status');
+	   	}
 
 		 if(!empty($this->input->get('bookingCountry'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
@@ -859,7 +866,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','mark
                 }
 
 
-			$paxfeed_ac=$_GET['inputVal'];
+			
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS 
 
 			dtpf_id,first_name, last_name, pnr_ref,operating_carrier,marketing_carrier, pax_nbr,flight_number, pax.ptc ,ptc.code as ptc_code, fqtv, seg_nbr, dep_date, class ,dt.code as to_city, is_fclr_processed, fclr_data,
@@ -873,7 +880,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','mark
 			LEFT JOIN VX_data_defns cou  on (cou.vx_aln_data_defnsID = pax.booking_country) 
                         LEFT JOIN VX_data_defns cit on  (cit.vx_aln_data_defnsID = pax.booking_city) 
 			LEFT JOIN  VX_data_defns dca on (dca.vx_aln_data_defnsID = pax.carrier_code)	
-			INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = pax.carrier_code) and pax.active=$paxfeed_ac
+			INNER JOIN VX_airline_cabin_def cdef on (cdef.carrier = pax.carrier_code)
 			INNER JOIN  VX_data_defns dcab on (dcab.vx_aln_data_defnsID = pax.cabin and dcab.aln_data_typeID = 13 and dcab.alias = cdef.level)
 			LEFT JOIN  VX_data_defns ptc on (ptc.vx_aln_data_defnsID = pax.ptc)
 		$sWhere			
@@ -912,6 +919,7 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','mark
 		  if(permissionChecker('paxfeed_delete')){
 		   $feed->action .= btn_delete('paxfeed/delete/'.$feed->dtpf_id, $this->lang->line('delete'));			 
                    $feed->action .=  '<a target="_blank" href="' . base_url('paxfeed/process_fclr_matching_report/' . $feed->dtpf_id) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="CHECK FCLR MATCH"><i class="fa fa-check"></i></a>';
+                   $feed->action .=  '<a target="_blank" href="' . base_url('offer_eligibility/processOfferPerPnr/' . $feed->dtpf_id) . '" class="btn btn-primary btn-xs mrg" style="color:black" data-placement="top" data-toggle="tooltip" data-original-title="MANUAL OFFER PROCESS PER PNR"><i class="fa fa-check"></i></a>';
 		  }
 			$status = $feed->active;
 			$feed->active = "<div class='onoffswitch-small' id='".$feed->dtpf_id."'>";

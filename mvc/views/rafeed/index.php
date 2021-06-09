@@ -126,7 +126,7 @@
                         </div>
                  
                         <div class="col-sm-2 text-right">
-                            <button type="submit" class="btn btn-danger" data-toggle="tooltip" data-title="Filter" name="filter" id="filter" onclick="$('#rafeedtable').dataTable().fnDestroy();;loaddatatable();" ><i class="fa fa-filter"></i></button>
+                            <button type="button" class="btn btn-danger" data-toggle="tooltip" data-title="Filter" name="filter" id="filter" onclick="$('#rafeedtable').dataTable().fnDestroy();;loaddatatable();" ><i class="fa fa-filter"></i></button>
                             <button type="button" data-toggle="tooltip" data-title="Download" class="btn btn-danger" onclick="downloadRAFeed()"><i class="fa fa-download"></i></button>
                         </div>
                     </div>
@@ -194,24 +194,6 @@
     $(document).ready(function() {
 
         loaddatatable();
-
-
-        $('#upg_act_Inact').change(function(event) {    
-            var act_Inact = $('#upg_act_Inact').val();    
-            $.ajax({
-                url:"rafeed/server_processing",
-                method:"GET",
-                data:{inputVal:act_Inact},
-                success:function(data)
-                {
-                    $('#rafeedtable').DataTable().destroy();
-                    loaddatatable();
-                    $("li.paginate_button:nth-child(2) a").trigger('click');       
-                }
-            });
-            //$('#rafeedtable').DataTable();
-         });
-
 
         $('#airline_code').change(function(event) {
             var carrier = $('#airline_code').val();
@@ -362,11 +344,11 @@ function loaddatatable()
                 },
                 {
                     "data": "pax_type"
-                }
-                /*{
-                    "data": "active"
                 },
                 {
+                    "data": "active"
+                },
+               /* {
                     "data": "action"
                 }*/
             ],
@@ -453,7 +435,8 @@ function loaddatatable()
                                 "airLine": $("#airline_code").val(),
                                 "flight_range": $("#flight_range").val(),
                                 "start_date": $("#start_date").val(),
-                                "end_date": $("#end_date").val()
+                                "end_date": $("#end_date").val(),
+                                "upg_status":$("#upg_status").val(),
                             },
                             dataType: 'json'
                         }).done(function(data) {
@@ -491,7 +474,8 @@ function loaddatatable()
                 "airLine": $("#airline_code").val(),
                 "flight_range": $("#flight_range").val(),
                 "start_date": $("#start_date").val(),
-                "end_date": $("#end_date").val()
+                "end_date": $("#end_date").val(),
+                "upg_status":$("upg_status").val(),
             },
             dataType: 'json'
         }).done(function(data) {
@@ -524,10 +508,12 @@ function loaddatatable()
         }
 
         if ((status != '' || status != null) && (id != '')) {
+            var tname="UP_ra_feed";
+            
             $.ajax({
                 type: 'POST',
-                url: "<?= base_url('rafeed/active') ?>",
-                data: "id=" + id + "&status=" + status,
+                url: "<?= base_url().'rafeed/active' ?>",
+                data: "id=" + id + "&status=" + status + "&table=" +tname,
                 dataType: "html",
                 success: function(data) {
                     if (data == 'Success') {
