@@ -556,23 +556,23 @@ function loaddatatable() {
             },
 
       "columns": [{"data": "chkbox" },
-		  {"data": "ruleno" },
-		  {"data": "carrier_code" },
-                  {"data": "excl_reason_desc" },
-                                  {"data": "orig_level" },
-                                  {"data": "orig_level_value" },	
-				{"data": "dest_level" },
-                                  {"data": "dest_level_value" },
-                                  {"data": "flight_efec_date" }, 
-                  {"data": "flight_disc_date"},
-                                  {"data": "flight_dep_start" },
-                                  {"data": "flight_dep_end" },
-                                  {"data": "flight_nbr" },
-                                  {"data": "from_class"},
-                                         {"data": "to_class" },
-                                  {"data": "frequency"},
-				  {"data": "active"},
-                  {"data": "action"}
+		   {"data": "ruleno" },
+		   {"data": "carrier_code" },
+           {"data": "excl_reason_desc" },
+           {"data": "orig_level" },
+           {"data": "orig_level_value" },	
+		   {"data": "dest_level" },
+           {"data": "dest_level_value" },
+           {"data": "flight_efec_date" }, 
+           {"data": "flight_disc_date"},
+           {"data": "flight_dep_start" },
+           {"data": "flight_dep_end" },
+           {"data": "flight_nbr" },
+           {"data": "from_class"},
+           {"data": "to_class" },
+           {"data": "frequency"},
+		   {"data": "active"},
+           {"data": "action"}
 
                                   ],                       
         //"abuttons": ['copy', 'csv', 'excel', 'pdf', 'print']  
@@ -778,6 +778,7 @@ $("#sflight_efec_date").datepicker({
 
 
 function saverule() {
+    location.reload();
             var favorite = [];
 
             $.each($('input[type=checkbox][name=cabin_list]:checked'), function(){            
@@ -849,81 +850,96 @@ $.ajax({
           async: false,
           type: 'POST',
           url: "<?=base_url('eligibility_exclusion/getRuleData')?>",          
-                  data: {
-                           "excl_grp_id":excl_grp_id},
+          data: {"excl_grp_id":excl_grp_id},
           dataType: "html",                     
           success: function(data) {
                 var ruleinfo = jQuery.parseJSON(data);
-		form_reset();
+		       // form_reset();
                 $('#btn_txt').text('Update Rule');
-		$('#desc').val(ruleinfo['excl_reason_desc']);
-                $('#orig_level_id').val(ruleinfo['orig_level_id']);
+
+                var excl_reason_desc=ruleinfo['excl_reason_desc'];
+		        $('#desc').val(excl_reason_desc);
+                
+                var orig_level_id=ruleinfo['orig_level_id']
+                $('#orig_level_id').val(orig_level_id);
                 $('#orig_level_id').trigger('change');
 
-		if( ruleinfo['orig_level_value'] != '') {
-		var orig = ruleinfo['orig_level_value'].split(',');
-                $('#orig_level_value').val(orig).trigger('change');
-		}
+                if( ruleinfo['orig_level_value'] != '') {
+                var orig = ruleinfo['orig_level_value'].split(',');
+                        $('#orig_level_value').val(orig).trigger('change');
+                }
 
-                $('#dest_level_id').val(ruleinfo['dest_level_id']);
+                var dest_level_id=ruleinfo['dest_level_id']
+
+                $('#dest_level_id').val(dest_level_id);
                 $('#dest_level_id').trigger('change');
 
 
-		if( ruleinfo['dest_level_value'] != '' ) {
-		var dest = ruleinfo['dest_level_value'].split(',');
-                $('#dest_level_value').val(dest).trigger('change');
-		}
+                if( ruleinfo['dest_level_value'] != '' ) {
+                var dest = ruleinfo['dest_level_value'].split(',');
+                        $('#dest_level_value').val(dest).trigger('change');
+                }
 
-		$('#carrier').val(ruleinfo['carrier']);
+                var carrier=ruleinfo['carrier'];
+                $('#carrier').val(carrier);
                 $('#carrier').trigger('change');
 
-		
-                $('#flight_efec_date').val(ruleinfo['flight_efec_date']);
-		$('#flight_efec_date').trigger('change');
+                var flight_efec_date=ruleinfo['flight_efec_date']
+                $('#flight_efec_date').val(flight_efec_date);
+                $('#flight_efec_date').trigger('change');
 
-		$('#flight_disc_date').val(ruleinfo['flight_disc_date']);
-		 $('#flight_disc_date').trigger('change');
+                var flight_disc_date=ruleinfo['flight_disc_date'];
+                $('#flight_disc_date').val(flight_disc_date);
+                $('#flight_disc_date').trigger('change');
 
-		 $('#flight_dep_start_hrs').val(ruleinfo['flight_dep_start_hrs']);
-		$('#flight_dep_start_hrs').trigger('change');
-		$('#flight_dep_start_mins').val(ruleinfo['flight_dep_start_mins']);
+
+                var flight_dep_start_hrs=ruleinfo['flight_dep_start_hrs'];
+                $('#flight_dep_start_hrs').val(flight_dep_start_hrs);
+                $('#flight_dep_start_hrs').trigger('change');
+
+                var flight_dep_start_mins=ruleinfo['flight_dep_start_mins']
+                $('#flight_dep_start_mins').val(flight_dep_start_mins);
                 $('#flight_dep_start_mins').trigger('change');
 
 
-                 $('#flight_dep_end_hrs').val(ruleinfo['flight_dep_end_hrs']);
+                var flight_dep_end_hrs=ruleinfo['flight_dep_end_hrs']
+                $('#flight_dep_end_hrs').val(flight_dep_end_hrs);
                 $('#flight_dep_end_hrs').trigger('change');
-                $('#flight_dep_end_mins').val(ruleinfo['flight_dep_end_mins']);
+
+
+                var flight_dep_end_mins=ruleinfo['flight_dep_end_mins']
+                $('#flight_dep_end_mins').val(flight_dep_end_mins);
                 $('#flight_dep_end_mins').trigger('change');
 
-		if ( ruleinfo['flight_nbr_start'] == '0' ) {	
-			ruleinfo['flight_nbr_start'] = '';
-		}
-		$('#flight_nbr_start').val(ruleinfo['flight_nbr_start']);
-		
-	       if ( ruleinfo['flight_nbr_end'] == '0' ) {    
-                        ruleinfo['flight_nbr_end'] = '';
+
+                if ( ruleinfo['flight_nbr_start'] == '0' ) {	
+                    ruleinfo['flight_nbr_start'] = '';
                 }
 
-		$('#flight_nbr_end').val(ruleinfo['flight_nbr_end']);
+                var flight_nbr_start=ruleinfo['flight_nbr_start'];
+                $('#flight_nbr_start').val(flight_nbr_start);
+                $('#flight_nbr_start').trigger('change');
+                
+                if ( ruleinfo['flight_nbr_end'] == '0' ) {    
+                                ruleinfo['flight_nbr_end'] = '';
+                        }
 
-		if (ruleinfo['frequency'] == '0') {
-			ruleinfo['frequency'] = '';
-		}
+                $('#flight_nbr_end').val(ruleinfo['flight_nbr_end']);
 
-                $('#frequency').val(ruleinfo['frequency']);;
+                if (ruleinfo['frequency'] == '0') {
+                    ruleinfo['frequency'] = '';
+                }
 
-		var cab = ruleinfo['cabins'].split(',');
-		$.each(cab, function (index, value) {
-			$('input[type=checkbox][name="cabin_list"][value="' + value.toString() + '"]').prop("checked", true).parent().addClass("active");
-		});	
+                var frequency=ruleinfo['frequency'];
+                $('#frequency').val(frequency);
 
-		
+                var cab = ruleinfo['cabins'].split(',');
+                $.each(cab, function (index, value) {
+                    $('input[type=checkbox][name="cabin_list"][value="' + value.toString() + '"]').prop("checked", true).parent().addClass("active");
+                });	
 
                 var excl_id  = ruleinfo['excl_grp'];
                 $('#excl_id').val(excl_id);
-
-
-
 
         //      var info = JSON.stringify(zoneinfo);
 
@@ -948,18 +964,18 @@ function form_reset(){
 	  $('#flight_nbr_start').val("");
 	  $('#flight_nbr_end').val("");
 	  $('#flight_efec_date').val("");
-          $('#flight_disc_date').val("");
-	 $('#frequency').val('');
+      $('#flight_disc_date').val("");
+	  $('#frequency').val('');
           
-           $("#carrier").val(0).trigger('change');
-	   $("#orig_level_id").val(0).trigger('change');
-	   $("#dest_level_id").val(0).trigger('change');
-           $("#orig_level_value").val(0).trigger('change');
-	   $("#dest_level_value").val(0).trigger('change');
-	   $("#flight_dep_start_hrs").val('-1').trigger('change');
-	   $("#flight_dep_start_mins").val('-1').trigger('change');
-	   $("#flight_dep_end_hrs").val('-1').trigger('change');
-           $("#flight_dep_end_mins").val('-1').trigger('change');
+      $("#carrier").val(0).trigger('change');
+	  $("#orig_level_id").val(0).trigger('change');
+	  $("#dest_level_id").val(0).trigger('change');
+      $("#orig_level_value").val(0).trigger('change');
+	  $("#dest_level_value").val(0).trigger('change');
+	  $("#flight_dep_start_hrs").val('-1').trigger('change');
+	  $("#flight_dep_start_mins").val('-1').trigger('change');
+	  $("#flight_dep_end_hrs").val('-1').trigger('change');
+      $("#flight_dep_end_mins").val('-1').trigger('change');
 
 	 $.each($('input[type=checkbox][name=cabin_list]'), function(){            
 			$('input[type=checkbox][name="cabin_list"]').parent().removeClass("active");

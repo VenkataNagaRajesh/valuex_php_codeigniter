@@ -90,14 +90,15 @@ class Paxfeed_m extends MY_Model {
 	}
 
 	public function delete_paxfeed($id){
-		//parent::delete($id);
-		$data = [
+		parent::delete($id);
+		return $id;
+	/*	$data = [
 			'active' => 0,
 		];
 		$this->db->where('dtpf_id', $id);
 		$this->db->update('VX_daily_tkt_pax_feed', $data);
-	return true;
-
+		return true;
+		*/
 	}
 	
 }
