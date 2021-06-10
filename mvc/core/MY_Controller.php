@@ -209,7 +209,7 @@ class MY_Controller extends CI_Controller {
 								$paxdata['to_city_code'] = $result->to_city_code;
 								$paxdata['to_city'] = $result->to_city;
 								$paxdata['seat_no'] = $result->seat_no;
-								$paxdata['current_cabin'] = $result->cabin;
+								$paxdata['current_cabin'] = $result->current_cabin;
 								$paxdata['cabins'] = $result->tocabins;
 								$paxdata['time_diff'] = $dteDiff->format('%H hrs %i Min');
 								$offerdata[] = $paxdata;
@@ -250,7 +250,7 @@ class MY_Controller extends CI_Controller {
 							$paxdata['to_city_code'] = $result->to_city_code;
 							$paxdata['to_city'] = $result->to_city;
 							$paxdata['seat_no'] = $result->seat_no;
-							$paxdata['current_cabin'] = $result->cabin;
+							$paxdata['current_cabin'] = $result->current_cabin;
 							$paxdata['cabins'] = $result->tocabins;
 							$paxdata['time_diff'] = $dteDiff->format('%H hrs %i Min');
 							$offerdata[] = $paxdata;

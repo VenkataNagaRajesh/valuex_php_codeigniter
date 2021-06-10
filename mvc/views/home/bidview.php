@@ -826,6 +826,7 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 			var amount = $("#total_upg_value").val();
 			var cash = $("#upg_charges_cash").val();
 			var cash_miles = $("#upg_charges_miles_cash").val();
+			if ( cash > 0 || cash_miles > 0) { 
 			var miles = $("#upg_charges_miles").val();
 			 $.ajax({
 			  async: false,
@@ -876,15 +877,17 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 				}			
 			}
 		});
+		}
 <?php } ?>
 <?php if($baggage_offer){ ?>
 
 			var product_id = 2;
+			var cash = $("#bg_charges_cash").val();
+			var cash_miles = $("#bg_charges_miles_cash").val();
+			if ( cash > 0 || cash_miles > 0) { 
 			var offer_id=<?=$offer_id_2?>;
 			var pnr_ref='<?=$pnr_ref?>';
 			var amount = $("#total_bg_value").val();
-			var cash = $("#bg_charges_cash").val();
-			var cash_miles = $("#bg_charges_miles_cash").val();
 			var miles = $("#bg_charges_miles").val();
 			 $.ajax({
 			  async: false,
@@ -932,6 +935,7 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 					}
 				}
      		}); 
+		}
 <?php } ?>
 				paysuccess = 1;
 			} else {

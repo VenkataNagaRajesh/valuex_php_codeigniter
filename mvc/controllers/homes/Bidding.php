@@ -290,7 +290,6 @@ class Bidding extends MY_Controller {
 
 						continue;	
 					}
-echo "AIM HERE";
 
 					$piece = $this->data['piece'];
 
