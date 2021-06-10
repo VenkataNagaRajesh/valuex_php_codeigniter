@@ -299,7 +299,7 @@ td[class="spechide"]
 					<tr>
 						<td>
 						<div class="contentEditableContainer contentImageEditable">
-						<div align="left" class="contentEditable"><img alt="header" border="0" class="banner" data-default="placeholder" data-max-width="560" height="280" src="{bg_tpl_bnr}" width="100%" /></div>
+						<div align="left" class="contentEditable"></div>
 						</div>
 						</td>
 					</tr>
@@ -326,7 +326,7 @@ td[class="spechide"]
 												<td align="center">
 												<div class="contentEditableContainer contentTextEditable">
 												<div class="contentEditable">
-												<h1 style="font-size:32px;">Sorry {first_name} !!!</h1>
+												<h1 style="font-size:32px;">Hello {first_name} !!!</h1>
 												</div>
 												</div>
 												</td>
@@ -338,10 +338,11 @@ td[class="spechide"]
 												<td align="center">
 												<div class="contentEditableContainer contentTextEditable">
 												<div class="contentEditable">
-												<p style="color:#333;font-size:17px;"><b><i>Your bid for PNR#{pnr_ref} is accepted for upgrade class <u>{upgrade_type</u>}></i></b></p>
-												<p style="color:#333;font-size:17px;">Thank you for booking with our airlines. One or more of your flights are eligible for an upgrade to a business cabin</p>
-												<p style="color:#333;font-size:17px;">Your Flight has been Upgraded to <u>{upgrade_type}</u> at the Time of your Check-in, You will Receive a <u>{upgrade_type}</u> boarding pass</p>
-												<p style="color:#333;font-size:17px;">You will also Shortly Receive a new E-ticket via Email reflecting this Upgrade!</p>
+												<p style="color:#333;font-size:17px;"><b><i>Your bid for PNR#{pnr_ref} is accepted for upgrade class <u>{upgrade_to}</u></i></b></p>
+												<p style="color:#333;font-size:17px;">Thank you for booking with our airlines. One or more of your flights travelling class was upgraded to <u>{upgrade_to}</u> cabin</p>
+												<p style="color:#333;font-size:17px;">At the time of your Check-in, You will receive a <u>{upgrade_to}</u> boarding pass</p>
+												<p style="color:#333;font-size:17px;">You will also shortly receive a new E-ticket via email reflecting this upgrade!</p>
+												<p style="color:#333;font-size:17px;">Your card will be charged for  ${cash_paid}</p>
 												</div>
 												</div>
 												</td>

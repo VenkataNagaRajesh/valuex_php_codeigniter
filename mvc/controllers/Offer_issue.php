@@ -595,7 +595,7 @@ $sWhere $sOrder $sLimit";
 		INNER JOIN VX_offer_info pext on (pext.dtpf_id = pf.dtpf_id AND oref.product_id = pext.product_id)
 		INNER JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = oref.offer_status AND dd.aln_data_typeID = 20)
 		WHERE pf.dep_date >= ".$current_time. " AND pf.dep_date <= " . $tstamp  .
-		" AND dd.alias != 'excl' AND pext.exclusion_id = 0 AND pf.pnr_ref='TIP112' AND
+		" AND dd.alias != 'excl' AND pext.exclusion_id = 0 AND 
 		dd.alias = 'bid_received'  group by pf.flight_number, pf.carrier_code, pf.dep_date  order by pf.flight_number"; 
 
 		//var_dump($sQuery);

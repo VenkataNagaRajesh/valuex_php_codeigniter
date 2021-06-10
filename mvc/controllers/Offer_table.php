@@ -167,6 +167,7 @@ $status = htmlentities(escapeString($this->uri->segment(5)));
 
 $this->data['siteinfos'] = $this->reset_m->get_site();
   $passenger_data = $this->offer_issue_m->getPassengerData($offer_id,$flight_number);
+//print_r($passenger_data);exit;
  
  // get cabin from BID tablee
 if ( $passenger_data ) {
@@ -207,7 +208,7 @@ $passenger_cnt =  count($namelist);
 		$comment = 'Bid accepted manually';
 	} else if ( $status == 'reject' ) { 
 		$bid_status = 'bid_reject';	
-		$msg_txt = 'Bid is rejected';
+		$reason = 'due to quoted for less bid price';
 		//$template ="home/bidreject-temp";
 		$template = "bid_reject";
 		$comment = 'Bid rejected manually';
@@ -233,53 +234,24 @@ $passenger_cnt =  count($namelist);
         'flight_no' => $passenger_data->carrier_c.$passenger_data->flight_number,
         'dep_date' => date('d-m-Y',$passenger_data->dep_date),
         'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
-        'origin' => $passenger_data->from_city_name,
-        'destination' => $passenger_data->to_city_name,
+        'from_city_code' => $passenger_data->from_city_name,
+        'to_city_code' => $passenger_data->to_city_name,
         'upgrade_to' => $offer_data->upgrade_cabin_name,
 		'airlineID' => $passenger_data->carrier_code,
 		'carrier_name' => $passenger_data->carrier_name,
 		'bid_value' => $offer_data->bid_value
    );
 //var_dump($maildata);exit;
-         $message = '
-        <html>
-        <body>
-        <div style="max-width: 800px; margin: 0; padding: 30px 0;">
-        <table width="80%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-<td width="5%"></td>
-        <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
- ' .$msg_txt.'<br />
-<br />
-<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-<br />
-PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+		$maildata['offer_id']=$offer_id;
+		$maildata['template']= $template;
+		if ( $bid_status == 'bid_reject') {
+			$maildata['reason']= $reason;
+		}
 
-<br />
-<br />
-<br />
-</td>
-</tr>
-</table>
+		$this->upgradeOfferMail($maildata);
 
-</div>
-</body>
-</html>
-';
 
- /*  $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-//                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
-                         $this->email->to($emails_list[0]);
-                         $this->email->subject($msg_txt . " For Flight: " . $flight_number);
-                        $this->email->message($message);
-                        $this->email->send(); */
-				
-					if($template){
-					  $this->sendMailTemplateParser($template,$maildata);
-					}	
-
-                         $array = array();
+                        $array = array();
                         $select_status = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
                         $array['offer_status'] = $select_status; 
                         $array["modify_date"] = time();
@@ -316,165 +288,13 @@ PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
 	 $this->session->set_flashdata('success', $msg_txt);
 } else {
 	$msg_txt = "Could not find valid pax data or status for accepting the bid";
-	 $this->session->set_flashdata('fail', $msg_txt);
+	 $this->session->set_flashdata('error', $msg_txt);
 }
 
          redirect(base_url("offer_table/view/".$offer_id));
 
 }
 
-
-
-
-function processbid1() {
-        $offer_id = htmlentities(escapeString($this->uri->segment(3)));
-        $flight_number = htmlentities(escapeString($this->uri->segment(4)));
-        $status = htmlentities(escapeString($this->uri->segment(5)));
-        
-        $this->data['siteinfos'] = $this->reset_m->get_site();
-          $passenger_data = $this->offer_issue_m->getPassengerData($offer_id,$flight_number);
-         
-         // get cabin from BID table
-         $offer_data = $this->offer_issue_m->getBidInfoFromOfferID($offer_id,$flight_number,$passenger_data->carrier_code); 
-          $upgrade_cabin =  $offer_data->upgrade_type;
-        
-        $namelist = explode(',',$passenger_data->passengers);
-                                $emails_list =  explode(',',$passenger_data->emails);
-        
-                                $passenger_cnt =  count($namelist);
-        
-        // update inv feed data about processed seats count
-        
-                if ( $status == 'accept' ) {
-        
-                $inv = array();
-                $inv['flight_nbr'] = $flight_number;
-                $inv['airline_id'] = $passenger_data->carrier_code;
-                $inv['departure_date'] = $passenger_data->dep_date;
-                $inv['origin_airport'] = $passenger_data->from_city;
-                $inv['dest_airport'] = $passenger_data->to_city;
-                $inv['active'] = 1;
-                $seats_data = $this->invfeed_m->getSoldWeight($inv);
-                $sold_seats = $seats_data->sold_seats + $passenger_cnt;
-                $upd['sold_seats'] = $sold_seats;
-                 $upd["modify_userID"] = $this->session->userdata('loginuserID');
-                $upd['modify_date'] = time();
-                $this->invfeed_m->update_entries($upd,$inv);
-        
-        //accept 
-                        $bid_status = 'bid_accepted';
-                        $msg_txt = "Bid is accepted";
-                        //$template ="home/upgradeoffertmp";
-                        $template='bid_accepted';
-                        $comment = 'Bid accepted manually';
-                } else if ( $status == 'reject' ) { 
-                        $bid_status = 'bid_reject';	
-                        $msg_txt = 'Bid is rejected';
-                        //$template ="home/bidreject-temp";
-                        $template = "bid_reject";
-                        $comment = 'Bid rejected manually';
-                } else {
-                        $this->session->set_flashdata('error', 'No Action Status');
-                        redirect(base_url("offer_table/view/".$offer_id));
-        
-                }
-        
-        
-        // $offer_data = $this->bid_m->get_offer_data($offer_id);
-         $card_data = $this->bid_m->getCardData($offer_id);
-           $card_number = substr(trim($card_data->card_number), -4);
-           $maildata = array(
-                'first_name'   => $namelist[0],
-                'last_name' => '',
-                'tomail' => $emails_list[0],
-                'pnr_ref' => $passenger_data->pnr_ref,
-                'mail_subject' => $msg_txt . " For Flight: ". $passenger_data->carrier_c . $flight_number,
-                'card_number' => $card_number,
-                'cash_paid' => number_format($offer_data->cash),
-                'miles_used' => number_format($offer_data->miles),
-                'flight_no' => $passenger_data->carrier_c.$passenger_data->flight_number,
-                'dep_date' => date('d-m-Y',$passenger_data->dep_date),
-                'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
-                'origin' => $passenger_data->from_city_name,
-                'destination' => $passenger_data->to_city_name,
-                'upgrade_to' => $offer_data->upgrade_cabin_name,
-                        'airlineID' => $passenger_data->carrier_code,
-                        'carrier_name' => $passenger_data->carrier_name,
-                        'bid_value' => $offer_data->bid_value
-           );
-        //var_dump($maildata);exit;
-                                                                                                         $message = '
-                <html>
-                <body>
-                <div style="max-width: 800px; margin: 0; padding: 30px 0;">
-                <table width="80%" border="0" cellpadding="0" cellspacing="0">
-                <tr>
-        <td width="5%"></td>
-                <td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-        <h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
-         ' .$msg_txt.'<br />
-        <br />
-        <big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-        <br />
-        PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
-        
-        <br />
-        <br />
-        <br />
-        </td>
-        </tr>
-        </table>
-        
-        </div>
-        </body>
-        </html>
-        ';
-        
-         /*  $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-        //                         $this->email->from('testsweken321@gmail.com', 'ADMIN');
-                                 $this->email->to($emails_list[0]);
-                                 $this->email->subject($msg_txt . " For Flight: " . $flight_number);
-                                $this->email->message($message);
-                                $this->email->send(); */
-                                        
-                                                if($template){
-                                                  $this->sendMailTemplateParser($template,$maildata);
-                                                }	
-        
-                                 $array = array();
-                                $array['offer_status'] = $this->rafeed_m->getDefIdByTypeAndAlias($bid_status,'20');
-                                $array["modify_date"] = time();
-                                $array["modify_userID"] = $this->session->userdata('loginuserID');
-        
-                                // update extension table with new status
-                                $p_list = explode(',',$passenger_data->p_list);
-                                $this->offer_eligibility_m->update_dtpfext($array,$p_list);
-        
-                
-                                 // update tracker about change in status
-                                $tracker = array();
-                                        $tracker['booking_status_from'] = $passenger_data->offer_status;
-                                        $tracker['booking_status_to'] = $array['offer_status'];
-                                        $tracker['comment'] = $comment;
-                                        $tracker["create_date"] = time();
-                                        $tracker["modify_date"] = time();
-                                        $tracker["create_userID"] = $this->session->userdata('loginuserID');
-                                        $tracker["modify_userID"] = $this->session->userdata('loginuserID');
-                                //      var_dump($p_list);exit;
-        
-                                        foreach($p_list as $id) {
-                                                $tracker['dtpfext_id'] = $id;
-                                                $this->offer_issue_m->insert_dtpf_tracker($tracker);
-                                        }
-        
-        
-        
-        
-                                  $this->session->set_flashdata('success', $msg_txt);
-                                    redirect(base_url("offer_table/view/".$offer_id));
-        
-        }
-	
  function server_processing(){
                 $userID = $this->session->userdata('loginuserID');
                 $roleID = $this->session->userdata('roleID');
