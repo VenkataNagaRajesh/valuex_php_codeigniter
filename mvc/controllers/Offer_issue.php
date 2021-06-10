@@ -595,7 +595,7 @@ $sWhere $sOrder $sLimit";
 		INNER JOIN VX_offer_info pext on (pext.dtpf_id = pf.dtpf_id AND oref.product_id = pext.product_id)
 		INNER JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = oref.offer_status AND dd.aln_data_typeID = 20)
 		WHERE pf.dep_date >= ".$current_time. " AND pf.dep_date <= " . $tstamp  .
-		" AND dd.alias != 'excl' AND pext.exclusion_id = 0 AND 
+		" AND dd.alias != 'excl' AND pext.exclusion_id = 0 AND pf.pnr_ref='TIP112' AND
 		dd.alias = 'bid_received'  group by pf.flight_number, pf.carrier_code, pf.dep_date  order by pf.flight_number"; 
 
 		//var_dump($sQuery);
@@ -668,6 +668,9 @@ $sWhere $sOrder $sLimit";
 
 				if ( $excl_id == 0) {
 
+				       $day_of_week = date('w', $feed->dep_date);
+				       $day = ($day_of_week)?$day_of_week:7;
+				       $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
 					 // get list of acsr that are partially matching 
 					$acsr = array();
 					$acsr['from_city'] = $feed->from_city;
@@ -713,6 +716,9 @@ $sWhere $sOrder $sLimit";
 							    $maildata = (array)$offer_data;
 								$maildata['offer_id']=$feed->offer_id;
 								$maildata['template']='bid_reject';
+								$maildata['reason']='due to quoted for less bid price';
+							   $maildata['dep_date'] = date('d/m/Y',$feed->dep_date);
+							   $maildata['dep_time'] = gmdate('H:i A',$feed->dept_time);
 								$this->upgradeOfferMail($maildata);
 
 								$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
@@ -756,13 +762,14 @@ $sWhere $sOrder $sLimit";
 
 				} else { //Accept
 					  if (($cabin_seats - $passenger_cnt) < $acsr_data->memp) {
-
 								$maildata = Array();
 							    $offer_data = $this->bid_m->get_offer_data($feed->offer_id);
 							    $maildata = (array)$offer_data;
 								$maildata['offer_id']=$feed->offer_id;
 								$maildata['template']='bid_reject';
 								$maildata['reason']='due to non availability of seats';
+							   $maildata['dep_date'] = date('d/m/Y',$feed->dep_date);
+							   $maildata['dep_time'] = gmdate('H:i A',$feed->dept_time);
 								$this->upgradeOfferMail($maildata);
 
 								$array = array();
@@ -824,6 +831,8 @@ $sWhere $sOrder $sLimit";
 							    $maildata = (array)$offer_data;
 								$maildata['offer_id']=$feed->offer_id;
 								$maildata['template']='bid_accepted';
+							   $maildata['dep_date'] = date('d/m/Y',$feed->dep_date);
+							   $maildata['dep_time'] = gmdate('H:i A',$feed->dept_time);
 
 								 $card_data = $this->bid_m->getCardData($feed->orderID);
 								 $card_number = substr(trim($card_data->card_number), -4);
@@ -891,6 +900,8 @@ $sWhere $sOrder $sLimit";
 							    $maildata = (array)$offer_data;
 								$maildata['offer_id']=$feed->offer_id;
 								$maildata['template']='offer_expire';
+							   $maildata['dep_date'] = date('d/m/Y',$feed->dep_date);
+							   $maildata['dep_time'] = gmdate('H:i A',$feed->dept_time);
 								$this->upgradeOfferMail($maildata);
 
 								$array = array();
@@ -968,7 +979,7 @@ $sWhere $sOrder $sLimit";
 				}
 			}
 		}
-		redirect(base_url("offer_table/index"));
+		#redirect(base_url("offer_table/index"));
 	}
 
 }
