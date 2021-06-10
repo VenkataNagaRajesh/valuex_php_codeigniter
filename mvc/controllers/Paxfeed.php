@@ -75,12 +75,12 @@ class Paxfeed extends Admin_Controller {
                      $this->data['carrier_code'] = 0;
 				   }
                 }
-				if (!empty($this->input->post('paxfeed_status'))) {
+			/*	if (!empty($this->input->post('paxfeed_status'))) {
 					$this->data['paxfeed_status'] = $this->input->post('paxfeed_status');
 			} else {
 					$this->data['paxfeed_status'] = 1; //Default
 					}			
-
+*/
 		$userID = $this->session->userdata('loginuserID');
                 $roleID = $this->session->userdata('roleID');
                 if($roleID != 1){
@@ -744,11 +744,11 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','mark
 					$sWhere .= $aColumns[$i]." LIKE '%".$_GET['sSearch_'.$i]."%' ";
 				}
 			}
-			if (isset($_GET['paxfeed_status'])) {
+			/*if (isset($_GET['paxfeed_status'])) {
 				$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
 				$sWhere .= 'pax.active = ' .  $this->input->get('paxfeed_status');
-	   	}
-
+			}
+*/
 		 if(!empty($this->input->get('bookingCountry'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'pax.booking_country = '.$this->input->get('bookingCountry');

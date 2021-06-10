@@ -138,12 +138,12 @@
 
                 </div>
 
-                <div class="col-sm-2">
+             <!--   <div class="col-sm-2">
                     <select class="form-control select2"  name="paxfeed_status" id="paxfeed_status">
                     <option value="1"<?=(($paxfeed_status == 1 )? "selected":"")?>>Active</option>
                     <option value="0" <?=(($paxfeed_status==0)?"seleceted":"")?>>In active</option>
                     </select>
-                </div>
+                </div>  -->
                 <div class="col-sm-2">
                  <input type="text" class="form-control" placeholder='Dep End Date' id="end_date" name="end_date" value="<?=set_value('end_date')?>" >
 
@@ -185,24 +185,22 @@
 			<th class="col-lg-1"><?=$this->lang->line('arrival_time')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('class')?></th>
 			<th class="col-lg-1"><?=$this->lang->line('cabin')?></th>
-                        <th class="col-lg-1">Board Point</th>
-                        <th class="col-lg-1">Off Point</th>
+            <th class="col-lg-1">Board Point</th>
+            <th class="col-lg-1">Off Point</th>
 			<th class="col-lg-1">Tier</th>
 			<th class="col-lg-1">Frequency</th>
-                         <th class="col-lg-1"><?=$this->lang->line('pax_contact_email')?></th>
-			 <th class="col-lg-1"><?=$this->lang->line('phone')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('booking_country')?></th>
-                        <th class="col-lg-1"><?=$this->lang->line('booking_city')?></th>
-                         <th class="col-lg-1"><?=$this->lang->line('office_id')?></th>
-                         <th class="col-lg-1"><?=$this->lang->line('channel')?></th>
+            <th class="col-lg-1"><?=$this->lang->line('pax_contact_email')?></th>
+			<th class="col-lg-1"><?=$this->lang->line('phone')?></th>
+            <th class="col-lg-1"><?=$this->lang->line('booking_country')?></th>
+            <th class="col-lg-1"><?=$this->lang->line('booking_city')?></th>
+            <th class="col-lg-1"><?=$this->lang->line('office_id')?></th>
+            <th class="col-lg-1"><?=$this->lang->line('channel')?></th>
 			<th class="col-lg-1">FCLR Report</th>
 			<th class="col-lg-1">FCLR Data</th>
 			<th class="col-lg-1">Operating Carrier</th>
             <th class="col-lg-1">Marketing Carrier</th>
-			
-	<?php if(permissionChecker('paxfeed_delete')){?>
-                                <th class="col-lg-1 noExport" ><?=$this->lang->line('action')?></th>
-						<?php }?>
+			<th class="col-lg-1 noExport" ><?=$this->lang->line('action')?></th>
+						
                     </tr>
                  </thead>
                  <tbody>                          
@@ -250,7 +248,7 @@ function onloaddatatable()
 				   {"name": "frequency","value": $("#frequency").val()},
 				   {"name": "pf_id","value": $("#pf_id").val()},
 				   {"name": "carrierCode","value": $("#carrier_code").val()},
-                   {"name": "paxfeed_status","value":$("#paxfeed_status").val()},
+                  // {"name": "paxfeed_status","value":$("#paxfeed_status").val()},
 				   ) //pushing custom parameters
                 oSettings.jqXHR = $.ajax( {
                     "dataType": 'json',
@@ -274,38 +272,35 @@ function onloaddatatable()
                   {"data": "airline_code" },
 				  {"data": "pnr_ref" },
 				  {"data": "pax_nbr"},
-                                  {"data": "first_name" },
-				{"data": "last_name"},
-                                  {"data": "ptc_code" },
-                                {"data": "fqtv"},                              
-				{"data": "seg_nbr" },
-				{"data": "flight_number" },
-                                {"data": "dep_date" },
-				{"data": "dept_time" },
-				{"data": "arrival_date" },
-				{"data": "arrival_time" },
-				 {"data": "class" },
-				 {"data": "cabin" },
-				{"data": "from_city" },
-                                  {"data": "to_city" },
-				 {"data": "tier" },
-				{"data": "frequency" },
-                                  {"data": "pax_contact_email"},
-
-                                  {"data": "phone"},
-				 {"data": "booking_country" },
-				 {"data": "booking_city" },
-                                  {"data": "office_id"},
-				    {"data": "channel" },
-					{"data": "is_fclr_processed"},
-                                    {"data": "fclr_data" },
-                                    {"data": "operating_carrier" },
-                                    {"data": "marketing_carrier" },
+                  {"data": "first_name" },
+				  {"data": "last_name"},
+                  {"data": "ptc_code" },
+                  {"data": "fqtv"},                              
+				  {"data": "seg_nbr" },
+				  {"data": "flight_number" },
+                  {"data": "dep_date" },
+				  {"data": "dept_time" },
+				  {"data": "arrival_date" },
+				  {"data": "arrival_time" },
+				  {"data": "class" },
+				  {"data": "cabin" },
+				  {"data": "from_city" },
+                  {"data": "to_city" },
+				  {"data": "tier" },
+				  {"data": "frequency" },
+                  {"data": "pax_contact_email"},
+                  {"data": "phone"},
+				  {"data": "booking_country" },
+				  {"data": "booking_city" },
+                  {"data": "office_id"},
+				  {"data": "channel" },
+				  {"data": "is_fclr_processed"},
+                  {"data": "fclr_data" },
+                  {"data": "operating_carrier" },
+                  {"data": "marketing_carrier" },
 				  {"data": "action"}
-                                   
-				/*{"data": "active"},
-				  {"data": "action"}*/
-				  ],			     
+               //   {"data": "active"}
+		  ],			     
      dom: 'B<"clear">lfrtip',
     // buttons: [ 'copy', 'csv', 'excel','pdf' ]
         buttons: [
@@ -341,7 +336,7 @@ function onloaddatatable()
                            $.ajax({
                                 url: "<?php echo base_url('paxfeed/server_processing'); ?>?page=all&&export=1",
                                 type: 'get',
-                                data: {sSearch: $("input[type=search]").val(),"bookingCountry":$("#booking_country").val(),"bookingCity":$("#booking_city").val(),"fromCity":$("#from_city").val(),"toCity":$("#to_city").val(),"pax_type":$("#pax_type").val(),"tier":$("#tier").val(),"flight_range":$("#flight_range").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"frequency":$("#frequency").val(),"pf_id": $("#pf_id").val(),"carrierCode":$("#carrier_code").val(),"paxfeed_status":$("#paxfeed_status").val()},
+                                data: {sSearch: $("input[type=search]").val(),"bookingCountry":$("#booking_country").val(),"bookingCity":$("#booking_city").val(),"fromCity":$("#from_city").val(),"toCity":$("#to_city").val(),"pax_type":$("#pax_type").val(),"tier":$("#tier").val(),"flight_range":$("#flight_range").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"frequency":$("#frequency").val(),"pf_id": $("#pf_id").val(),"carrierCode":$("#carrier_code").val()},
                                 dataType: 'json'
                             }).done(function(data){
 							var $a = $("<a>");
@@ -365,7 +360,7 @@ function onloaddatatable()
 	  $.ajax({
         url: "<?php echo base_url('paxfeed/server_processing'); ?>?page=all&&export=1",
         type: 'get',
-        data: {"bookingCountry":$("#booking_country").val(),"bookingCity":$("#booking_city").val(),"fromCity":$("#from_city").val(),"toCity":$("#to_city").val(),"pax_type":$("#pax_type").val(),"tier":$("#tier").val(),"flight_range":$("#flight_range").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"frequency":$("#frequency").val(),"pf_id": $("#pf_id").val(),"carrierCode":$("#carrier_code").val(),"paxfeed_status":$("#paxfeed_status").val()},
+        data: {"bookingCountry":$("#booking_country").val(),"bookingCity":$("#booking_city").val(),"fromCity":$("#from_city").val(),"toCity":$("#to_city").val(),"pax_type":$("#pax_type").val(),"tier":$("#tier").val(),"flight_range":$("#flight_range").val(),"start_date":$("#start_date").val(),"end_date":$("#end_date").val(),"frequency":$("#frequency").val(),"pf_id": $("#pf_id").val(),"carrierCode":$("#carrier_code").val()},
         dataType: 'json'
         }).done(function(data){
 		var $a = $("<a>");
