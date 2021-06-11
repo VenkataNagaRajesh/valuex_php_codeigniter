@@ -374,14 +374,14 @@ function updateCabinMedia(flight_number){
 			
 ?>
 		<span class="col-sm-12" style='float:left'><h2>Baggage Offer: 
-			&nbsp;&nbsp;Status: Re-bidding,
-			&nbsp;Last Bid Total: $ <i><?=$last_bid_value_2?></i>
+			&nbsp;&nbsp;Status: Re-purchasing,
+			&nbsp;Last purchased extra baggage weight: <i><?=$last_weight_value_2?></i> KG
+			,&nbsp;Payed Cash: $ <i><?=$last_bid_value_2?></i>
 			</h2></span>
 <?php
 		} else {
 ?>
 			<span class="col-sm-12" style='float:left'><h2>Baggage Offer:
-			&nbsp;&nbsp;Status: Fresh Bidding
 			</h2></span>
 			</span>
 <?php
