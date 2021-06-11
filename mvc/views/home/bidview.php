@@ -373,11 +373,10 @@ function updateCabinMedia(flight_number){
 		if ( isset($bid_id_2) && $bid_id_2 > 0) {
 			
 ?>
-		<span class="col-sm-11" style='float:left'><h2>Baggage Offer: 
+		<span class="col-sm-12" style='float:left'><h2>Baggage Offer: 
 			&nbsp;&nbsp;Status: Re-bidding,
 			&nbsp;Last Bid Total: $ <i><?=$last_bid_value_2?></i>
 			</h2></span>
-        		<span class="col-sm-1"  style="float:right;color:#333;align:right"><a href='#' onclick="if ( confirm('Are you sure that you like to cancel the bid ?')) window.location='<?=base_url('homes/cancel/page/?pnr_ref='. $pnr_ref. '&offer_id=' . $offer_id_2 . '&type=2')?>';" type="button" class="btn btn-danger" >Cancel Bid</a></span>
 <?php
 		} else {
 ?>

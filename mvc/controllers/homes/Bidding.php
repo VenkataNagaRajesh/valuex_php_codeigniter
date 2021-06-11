@@ -45,12 +45,13 @@ class Bidding extends MY_Controller {
 
 				$this->data['pnr_ref'] = $pnr_ref; 
 				$offer_ref = $this->offer_reference_m->getOfferDataByRef($pnr_ref);
-			//	echo "<pre>OFFERS=" . print_r($offer_ref,1) . "</pre>"; exit;
+	//		echo "<pre>OFFERS=" . print_r($offer_ref,1) . "</pre>"; exit;
 				if ( !count($offer_ref) ) {
 					$this->data['error'] = "Sorry the offer for PNR $pnr_ref is not found! or no longer valid!"; 
 				} else {
 						$sent_offer_mail = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
 						$bid_received = $this->rafeed_m->getDefIdByTypeAndAlias('bid_received','20');
+						$bid_accepted = $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
 						$this->data['excluded_status'] =  $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
 						//$bid_confirmation = $this->preference_m->get_preference(array("pref_code" => 'BID_CONFIRMATION'))->pref_value;
 						//$bid_expire = $this->preference_m->get_preference(array("pref_code" => 'BID_EXPIRE'))->pref_value;
@@ -66,7 +67,7 @@ class Bidding extends MY_Controller {
 							}  
 
 							//echo "($sent_offer_mail == $offer_data->offer_status || $bid_received == $offer_data->offer_status)"; exit;
-							if($sent_offer_mail == $offer_data->offer_status || $bid_received == $offer_data->offer_status){
+							if($sent_offer_mail == $offer_data->offer_status || $bid_received == $offer_data->offer_status || $bid_accepted == $offer_data->offer_status){
 								switch($offer_data->product_id ) {
 									case 1: 
 										if ( $bid_received == $offer_data->offer_status ) {
@@ -174,7 +175,7 @@ class Bidding extends MY_Controller {
 					$airline = $this->bid_m->getAirlineLogoByPNR($pnr_ref);
 					$this->data['active_products'] = array_keys($this->offer_issue_m->getProductsforOffer($offerId));
 					$bgoffer = $this->offer_issue_m->getBaggageOffer($pnr_ref);
-			//	echo "<pre>" . print_r($bgoffer,1) . "</pre>"; exit;
+				//echo "<pre>" . print_r($bgoffer,1) . "</pre>"; exit;
 					if ( $bgoffer) {
 						$this->data['baggage_bag_type'] = $this->preference_m->get_preference_value_bycode('BAG_TYPE','24',$airline->airlineID);
 						$this->data['baggage_min_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MIN_VAL','24',$airline->airlineID);
@@ -529,7 +530,7 @@ class Bidding extends MY_Controller {
 			   $maildata['type'] = $this->input->post('type');
 			   $maildata['resubmit_link'] = base_url('homes/bidding?pnr_ref='.$maildata['pnr_ref']);
 			   $maildata['cancel_link'] = base_url('homes/bidding?pnr_ref='.$maildata['pnr_ref']);
-			   $maildata['bid_value'] = number_format($maildata['bid_value']);
+			   $maildata['bid_value'] = number_format($maildata['cash']);
 
 				switch ($product_id) {
 					Case 1:
@@ -552,6 +553,7 @@ class Bidding extends MY_Controller {
 					Case 2:
 					$maildata['template'] = 'baggage_confirmed';
 				    $maildata['bg_weight']= $data['weight'];
+				    $maildata['bg_bid_value']= number_format($data['cash']);
 					break;
 					default:
 					break;
