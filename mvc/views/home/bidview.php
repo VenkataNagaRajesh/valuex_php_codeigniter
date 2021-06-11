@@ -914,7 +914,7 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 								async: false,
 								type: 'POST',
 								url: "<?=base_url('homes/bidding/saveBidData')?>",       
-								data: {"ond":<?=$bslider['ond']?>,"flight_number":flight_number,"orderID":orderID,"dtpfext_id":dtpfext_id,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":bg_pay_cash,"product_id":product_id,"tot_miles":bg_miles,"tot_bid":bg_tot_bid, "bid_id":bid_id},
+								data: {"ond":<?=$bslider['ond']?>,"orderID":orderID,"dtpfext_id":dtpfext_id,"offer_id" :offer_id,"weight":bg_weight,"baggage_value":bg_value,"tot_cash":cash,"product_id":product_id,"tot_miles":miles,"tot_bid":amount, "bid_id":bid_id},
 								dataType: "html",			
 								success: function(data) {
 									var info = jQuery.parseJSON(data);              		

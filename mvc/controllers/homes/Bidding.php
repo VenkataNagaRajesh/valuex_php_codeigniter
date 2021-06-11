@@ -411,6 +411,7 @@ class Bidding extends MY_Controller {
 				$data['bid_value'] = $this->input->post("bid_value");	
 				$data['dtpfext_id'] = $this->input->post("dtpfext_id");
 				$data['flight_number'] = $this->input->post("flight_number");	
+				$data['orderID'] = $this->input->post("orderID");
 				$data['active'] = 1;
 				$data['productID'] = 1;
 				$id  = $this->bid_m->checkBidExists($data);
@@ -428,14 +429,15 @@ class Bidding extends MY_Controller {
 				break;
 			case 2:
 				$data['weight'] = $this->input->post("weight");	
-				$data['cash'] = ($this->input->post("baggage_value") / $this->input->post("tot_bid"))*$this->input->post("tot_cash");
+				$data['bid_value'] = $this->input->post("baggage_value");	
+				$data['cash'] = $this->input->post("tot_cash");
 				$data['active'] = 1;
-				$data['miles'] = ($this->input->post("baggage_value") / $this->input->post("tot_bid"))*$this->input->post("tot_miles");
+				$data['miles'] = $this->input->post("tot_miles");
 				$data["cash_percentage"] = round((($data['cash']/ $this->input->post("tot_bid"))*100),2);
 				$data['offer_id'] = $this->input->post('offer_id');			
-				$data['bid_value'] = $this->input->post("baggage_value");	
 				$data['dtpfext_id'] = $this->input->post("dtpfext_id");
-				$data['flight_number'] = $this->input->post("flight_number");
+				$data['ond'] = $this->input->post("ond");
+				$data['orderID'] = $this->input->post("orderID");
 				$data['productID'] = 2;
 				$id  = $this->bid_m->checkBidExists($data);
 				if ( $id) {  //Just inform bid submitted nothing to do
@@ -445,7 +447,6 @@ class Bidding extends MY_Controller {
 					return;
 				} else { //Create New one
 					$data['bid_submit_date'] = time();
-					$data['orderID'] = $this->input->post('orderID');
           				$id = $this->bid_m->insert_bid_data($data);		//Always allow excess baggage till offer expired
 					$bid_status = 'bid_accepted';
 				}
@@ -550,6 +551,7 @@ class Bidding extends MY_Controller {
 
 					Case 2:
 					$maildata['template'] = 'baggage_confirmed';
+				    $maildata['bg_weight']= $data['weight'];
 					break;
 					default:
 					break;
