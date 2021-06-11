@@ -41,6 +41,7 @@ class Offer_table extends Admin_Controller {
 			$this->data["return"] = $return;
                 if ((int)$id) {
                         $ofr = $this->offer_issue_m->getOfferDetailsById($id);
+                        
                         $this->data["ofr"] = $ofr;
 			foreach ($ofr as $data ) {
 				if($data->productID==1){
@@ -54,11 +55,11 @@ class Offer_table extends Admin_Controller {
                                 $this->data["subview"] = "offer_table/view";
                                 $this->load->view('_layout_main', $this->data);
                         } else {
-                                $this->data["subview"] = "error";
+                                $this->data["subview"] = "Offer_not_avaible";
                                 $this->load->view('_layout_main', $this->data);
                         }
                 } else {
-                        $this->data["subview"] = "error";
+                        $this->data["subview"] = "Offer_not_avaible";
                         $this->load->view('_layout_main', $this->data);
                 }
         }

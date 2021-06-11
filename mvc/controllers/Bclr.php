@@ -1076,7 +1076,7 @@ class Bclr extends Admin_Controller
                         $this->bclr_m->update_bclr($data, $id);
                         echo 'Success';
                     } else {
-                        echo "Error";
+                        echo "Success";
                     }
                 } else {
                     echo "Error";
