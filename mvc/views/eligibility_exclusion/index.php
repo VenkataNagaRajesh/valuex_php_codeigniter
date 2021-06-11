@@ -20,13 +20,7 @@
 
                         $airlinelist['0'] = ' Carrier';
                         ksort($airlinelist);
-
-		
-
-
-
-
-							echo form_dropdown("carrier", $airlinelist,set_value("carrier",$default_airlineID), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
+						echo form_dropdown("carrier", $airlinelist,set_value("carrier",$default_airlineID), "id='carrier' class='form-control hide-dropdown-icon select2'");?>
 
 					</div>
 					<div class="col-md-3 col-sm-3">
@@ -252,8 +246,8 @@
 			</div>
 			<div class="col-md-12">
 				<span class="col-md-3">
-					<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="saverule();">ADD Rule</a>
-					<a href="#" type="button" class="btn btn-danger"  data-toggle="collapse" data-target="#eerAdd" onclick="form_reset()">Cancel</a>
+					<a href="#" type="button"  id='btn_txt' class="btn btn-danger" onclick="saverule();">Add Rule</a>
+					<a href="#" type="button" class="btn btn-danger"  id="cancel"data-toggle="collapse" data-target="#eerAdd" onclick="form_reset()">Cancel</a>
 				</span>
 			</div>
 		</form>
@@ -429,7 +423,7 @@
 							<th class="col-lg-1"><?=$this->lang->line('upgrade_to')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('frequency')?></th>
 							<th class="col-lg-1 noExport"><?=$this->lang->line('rule_status')?></th> 
-                            				<th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
+                            <th class="col-lg-2 noExport"><?=$this->lang->line('action')?></th>
                        </tr>
                    </thead>
                     <tbody>                            
@@ -778,47 +772,48 @@ $("#sflight_efec_date").datepicker({
 
 
 function saverule() {
-    location.reload();
+   
             var favorite = [];
-
+            $("btn_txt").text("Add Rule");
             $.each($('input[type=checkbox][name=cabin_list]:checked'), function(){            
                 favorite.push($(this).val());
 
             });
-$.ajax({
+    $.ajax({
           async: false,
           type: 'POST',
           url: "<?=base_url('eligibility_exclusion/save')?>",          
                   data: {"orig_level_id" :$('#orig_level_id').val(),
                          "dest_level_id":$('#dest_level_id').val(),
-			 "orig_level_value" :$('#orig_level_value').val(),
+			             "orig_level_value" :$('#orig_level_value').val(),
                          "dest_level_value":$('#dest_level_value').val(),
-			 "desc":$('#desc').val(),
+			             "desc":$('#desc').val(),
                          "carrier":$('#carrier').val(),
                          "flight_efec_date":$('#flight_efec_date').val(),
                          "flight_disc_date":$('#flight_disc_date').val(),
                          "flight_dep_start_hrs":$('#flight_dep_start_hrs').val(),
-                          "flight_dep_start_mins":$('#flight_dep_start_mins').val(),
-                          "flight_dep_end_hrs":$('#flight_dep_end_hrs').val(),
-			 "flight_dep_end_mins":$('#flight_dep_end_mins').val(),
-                          "flight_nbr_start":$('#flight_nbr_start').val(),
-                          "flight_nbr_end":$('#flight_nbr_end').val(),
-                          "frequency":$('#frequency').val(),
-				"cabin_list":favorite,
-                           "excl_id":$('#excl_id').val(),
+                         "flight_dep_start_mins":$('#flight_dep_start_mins').val(),
+                         "flight_dep_end_hrs":$('#flight_dep_end_hrs').val(),
+			             "flight_dep_end_mins":$('#flight_dep_end_mins').val(),
+                         "flight_nbr_start":$('#flight_nbr_start').val(),
+                         "flight_nbr_end":$('#flight_nbr_end').val(),
+                         "frequency":$('#frequency').val(),
+				         "cabin_list":favorite,
+                         "excl_id":$('#excl_id').val(),
 			   },
 
           dataType: "html",                     
 
 
-success: function(data) {
-
+            success: function(data) {
+                    
                         var ruleinfo = jQuery.parseJSON(data);
                         var status = ruleinfo['status'];
                         newstatus = status.replace(/<p>(.*)<\/p>/g, "$1");
                         if (status == 'success' ) {
                                 alert(status);
-				form_reset();
+                                location.reload();
+				                form_reset();
                                 $("#ruleslist").dataTable().fnDestroy();
                                 loaddatatable();
                         } else {                                
@@ -840,6 +835,7 @@ success: function(data) {
 
 function editrule(excl_grp_id) {
 
+    $("btn_txt").text("update rule");
                var isVisible = $( "#eerAdd" ).is( ":visible" );
 
                 var isHidden = $( "#eerAdd" ).is( ":hidden" );
@@ -949,43 +945,41 @@ $.ajax({
 
 
 function form_reset(){    
+         $("#btn_txt").text("Add rule");
           var $inputs = $('#add_rule_form :input'); 
-
-        //for collpase the #eerAdd div
-    
+          $inputs.each(function (index)
+            {
+                $(this).val("");      
+            });
             var isVisible = $( "#eerAdd" ).isVisible();
             if( isVisible==true) {
-                    $( "#eerAdd" ).trigger( "click" );
-                    
+                    $( "#eerAdd" ).trigger( "click" );     
             } 
-
-
-          $('#desc').val("");  
 	  $('#flight_nbr_start').val("");
 	  $('#flight_nbr_end').val("");
 	  $('#flight_efec_date').val("");
       $('#flight_disc_date').val("");
 	  $('#frequency').val('');
-          
-      $("#carrier").val(0).trigger('change');
-	  $("#orig_level_id").val(0).trigger('change');
-	  $("#dest_level_id").val(0).trigger('change');
-      $("#orig_level_value").val(0).trigger('change');
-	  $("#dest_level_value").val(0).trigger('change');
-	  $("#flight_dep_start_hrs").val('-1').trigger('change');
-	  $("#flight_dep_start_mins").val('-1').trigger('change');
-	  $("#flight_dep_end_hrs").val('-1').trigger('change');
-      $("#flight_dep_end_mins").val('-1').trigger('change');
+}
 
-	 $.each($('input[type=checkbox][name=cabin_list]'), function(){            
+$("#cancel").click(function()
+{
+    $("#carrier").val(0).change();;  
+    $("#flight_dep_start_hrs").val(-1).trigger('change');
+    $("#flight_dep_start_mins").val(-1).trigger('change');
+    $("#flight_dep_end_hrs").val(-1).trigger('change');
+    $("#flight_dep_end_mins").val(-1).trigger('change');
+    $("#orig_level_id").val(-1).trigger('change');
+	$("#dest_level_id").val(-1).trigger('change');
+    $("#orig_level_value").val(-1).trigger('change');
+	$("#dest_level_value").val(-1).trigger('change');
+    $.each($('input[type=checkbox][name=cabin_list]'), function(){            
 			$('input[type=checkbox][name="cabin_list"]').parent().removeClass("active");
 			 $('input[type=checkbox][name="cabin_list"]').prop("checked", false);
 			
             });
 
-  }
-
-
+});
 </script>
 <script>
 $('#orig_level_id').change(function(event) {    
