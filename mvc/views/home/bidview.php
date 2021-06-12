@@ -677,7 +677,7 @@ function calcBaggageValue(slider_value_kg, soldout_kg, ond) {
 			var soldout_kg = 4;
 			var ond = <?=$bslider['ond']?>;
 			select_bg_val =  calcBaggageValue(value,soldout_kg,ond);
-		return value + ' <?=$bclr[$bslider['ond']]->bag_type?>' + ' = $'+select_bg_val;
+		return value + ' <?=$bclr[$bslider['ond']]->bag_type?>' + ' = $'+ Math.round(select_bg_val);
 	}
 	});
 <?php } ?>
