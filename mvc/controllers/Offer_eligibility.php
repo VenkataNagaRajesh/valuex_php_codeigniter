@@ -616,6 +616,8 @@ $sWhere $sOrder $sLimit";
 
    function generatedata() {
 
+	$carrier_id = htmlentities(escapeString($this->uri->segment(3)));
+
 	ob_start();
 	# Get Contracts to decide what carrier and what products offers to be generated
 	$contracts = $this->contract_m->getActiveContracts();
@@ -626,12 +628,20 @@ $sWhere $sOrder $sLimit";
 	foreach($contracts as $contract) {
 		$this->mydebug->debug(print_r($contract,1));
 		$product = $contract->productID;
-		$carrierId = $contract->airlineID;
+		if ($carrier_id) {
+			if ( $carrier_id  == $contract->airlineID) {
+				$carrierId = $contract->airlineID;
+			} else {
+				continue;
+			}
+		} else {
+			$carrierId = $contract->airlineID;
+		}
 
 		switch ($product) {
 			case 1:
 				 $this->mydebug->debug("OFFER GEN: PRODUCT UPGRADE : CARRIER ID: " . $carrierId);
-   			     	$this->processGenUpgradeOffers($carrierId);
+   			     $this->processGenUpgradeOffers($carrierId);
 				 break;
 			case 2:
 				$carriers[] = $carrierId;

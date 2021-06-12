@@ -7,7 +7,7 @@
 	</h2>
 	<div class="col-md-12 off-elg-filter-box">
 	<div class="col-md-12">
-		<a href="<?php echo base_url('offer_eligibility/generatedata') ?>" class="btn btn-danger">
+		<a href="<?php echo base_url('offer_eligibility/generatedata/'. $carrier) ?>" class="btn btn-danger">
                                 <i class="fa fa-upload"></i>
                                 <?=$this->lang->line('generate_offer_eligibility')?>
                         </a>
