@@ -290,6 +290,7 @@ class MY_Controller extends CI_Controller {
 				$maildata['first_name']=$offer[0]->pax_names;
 				$maildata['pnr_ref'] =  $pnr_ref;
                 $maildata['offer_data'] = $offerdata;
+                $maildata['airlineID'] = $offer[0]->carrier_code;
               //  $maildata['first_name'] = $offer[0]->pax_names;
                 $maildata['tomail'] = $email_list[0];
                 $primary_client = $this->user_m->getClientByAirline($maildata['airlineID'],6)[0];	   
@@ -385,7 +386,7 @@ class MY_Controller extends CI_Controller {
 		  $message =html_entity_decode($message);
 		  $siteinfos = $this->reset_m->get_site();
 		  $this->mydebug->debug($data['tomail'].'----'.$template);		  
-#$data['tomail'] ='vamsi63@gmail.com';
+$data['tomail'] ='vamsi63@gmail.com';
 		  if($data['tomail']) {                      
 			$subject = $data['mail_subject'];
 			$email = $data['tomail'];
