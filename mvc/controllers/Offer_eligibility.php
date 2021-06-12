@@ -308,19 +308,19 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as pro
 		dbp.code as source_point , dop.code as dest_point, bs.aln_data_value as booking_status, pext.exclusion_id, 
 		pf.pnr_ref , bc.min_unit, bc.max_capacity, bc.min_price, bc.max_price,  os.aln_data_value as offer_status
 		     from VX_offer_info pext 
-		     LEFT JOIN VX_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id and pf.active = 1)
-		     LEFT JOIN UP_fare_control_range fc on  (pext.rule_id = fc.fclr_id AND pext.product_id = 1)
-		     LEFT JOIN BG_baggage_control_rule bc on  (pext.rule_id = bc.bclr_id AND pext.product_id = 2)
+		     LEFT JOIN VX_daily_tkt_pax_feed pf  on  (pf.dtpf_id = pext.dtpf_id)
+		     LEFT JOIN UP_fare_control_range fc on  (pext.rule_id = fc.fclr_id AND fc.carrier_code = pf.carrier_code AND pext.product_id = 1)
+		     LEFT JOIN BG_baggage_control_rule bc on  (pext.rule_id = bc.bclr_id AND bc.carrierID = pf.carrier_code AND pext.product_id = 2)
 		     LEFT JOIN VX_season sea on (sea.VX_aln_seasonID = fc.season_id )
 		     LEFT JOIN VX_offer of on (of.pnr_ref = pf.pnr_ref AND pext.product_id = of.product_id )
 		     LEFT JOIN VX_products vp on (vp.productID = pext.product_id )
-                     LEFT JOIN VX_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
+             LEFT JOIN VX_data_defns dbp on (dbp.vx_aln_data_defnsID = pf.from_city AND dbp.aln_data_typeID = 1)  
 		     LEFT JOIN VX_data_defns dop on (dop.vx_aln_data_defnsID = pf.to_city AND dop.aln_data_typeID = 1)    
 		     LEFT JOIN VX_data_defns dai on (dai.vx_aln_data_defnsID = pf.carrier_code AND dai.aln_data_typeID = 12)
 		     LEFT JOIN VX_data_defns dfre on (dfre.vx_aln_data_defnsID = pf.frequency AND dfre.aln_data_typeID = 14)
 		     LEFT JOIN VX_data_defns fca on (fca.vx_aln_data_defnsID = pf.cabin AND fca.aln_data_typeID = 13 )
 		     LEFT JOIN VX_airline_cabin_def fdef on (fdef.carrier = pf.carrier_code  AND fca.alias = fdef.level)
-                     LEFT JOIN VX_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13 )
+             LEFT JOIN VX_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin AND tca.aln_data_typeID = 13 )
 		     LEFT JOIN VX_airline_cabin_def tdef on (tdef.carrier = pf.carrier_code AND tca.alias = tdef.level)
 		     LEFT JOIN VX_data_defns bs on (bs.vx_aln_data_defnsID = pext.booking_status AND bs.aln_data_typeID = 20)
 		     LEFT JOIN VX_data_defns os on (os.vx_aln_data_defnsID = of.offer_status AND bs.aln_data_typeID = 20)
@@ -372,7 +372,7 @@ $sWhere $sOrder $sLimit";
 			$feed->offer_id = '<a target="_new" style="color:blue;" href="'.base_url('offer_issue/view/'.$feed->pnr_ref).'"  >'.$feed->offer_id.'</a>';
 			$feed->dtpf_id = '<a target="_new" style="color:blue;" href="'.base_url('paxfeed/index/'.$feed->dtpf_id).'"  >'.$feed->dtpf_id.'</a>';
 
-			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : "default";
+			$feed->season_id = ($feed->season_id) ? $this->season_m->getSeasonNameByID($feed->season_id) : (($feed->product_id == 1) ? "default" : "");
 			$feed->departure_date = date('d-m-Y',$feed->departure_date);
                                 $output['aaData'][] = $feed;
 
@@ -646,6 +646,7 @@ $sWhere $sOrder $sLimit";
 	$debug = ob_get_contents();
 	$this->mydebug->offer_eligibility_log($debug, 0);
 	ob_end_clean();
+//echo $debug;
 	$this->session->set_flashdata('success', $this->lang->line('menu_success'));
 	redirect(base_url("offer_eligibility/index"));
 
@@ -904,7 +905,9 @@ $sWhere $sOrder $sLimit";
 					$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
 					echo ("<br>OFFER GEN: PROCESS BAGGAGE : INSERT MATCHED " . print_r($ext,1) );
 					$this->offer_eligibility_m->insert_dtpfext_bclr($ext);
-					$this->paxfeed_m->update_paxfeed(array('is_bg_offer_processed' => '1'), $dtpfId);
+					if (is_int($ext['ond'])) {
+						$this->paxfeed_m->update_paxfeed(array('is_bg_offer_processed' => '1'), $dtpfId);
+					}
 					
 				}
 			}
@@ -1123,89 +1126,84 @@ $sWhere $sOrder $sLimit";
 		$sQuery .= " ORDER by dtpf_id";
 		echo ("<br>OFFER GEN: PRODUCT UPGRADE :  QUERY PAX DATA FOR CARRIER ID: " . $sQuery);
 		$rResult = $this->install_m->run_query($sQuery);
-		echo ("<br>OFFER GEN: PRODUCT UPGRADE :  PAX DATA FOR CARRIER ID: " . print_r($rResult,1));
 
-		/*$exclQuery = "SELECT * from VX_aln_eligibility_excl_rules ";
-		$excl = $this->install_m->run_query($exclQuery);*/
-/*
-		$fclrQuery = " SELECT  boarding_point, off_point,flight_number,  group_concat(price SEPARATOR ';') as code_price           FROM (                select boarding_point, off_point , flight_number , group_concat(fca.code,' ' , tca.code ,' min ', min, ' max ' , max,' average ', average ,' slider_start ' , slider_start) as price from VX_aln_fare_control_range fc LEFT JOIN vx_aln_data_defns fca on (fca.vx_aln_data_defnsID = fc.from_cabin)  LEFT JOIN vx_aln_data_defns tca on (tca.vx_aln_data_defnsID = fc.to_cabin) group by boarding_point ,off_point,flight_number,from_cabin,to_cabin)  as MainSet                  group by  boarding_point, off_point, flight_number
- " ;
-		$fclr = $this->install_m->run_query($fclrQuery);*/
+	if ( $rResult ) {
+		echo ("<br>OFFER GEN: PRODUCT UPGRADE :  PAX DATA FOUND FOR CARRIER ID: " . print_r($rResult,1));
+		$rules = $this->eligibility_exclusion_m->apply_exclusion_rules(0,$carrierId);
+		if ($rules) {
+			echo ("<br>OFFER GEN: PRODUCT UPGRADE :  FOUND SOME EXCLUSION RULES FOR CARRIER ID: " . print_r($rules,1));
+		}
+	} else {
+		echo ("<br>OFFER GEN: PRODUCT UPGRADE :  PAX DATA NOT FOUND FOUND  FOR CARRIER ID: " . print_r($carrierId,1));
+	}
 
 	foreach ($rResult as $feed ) {
 
+		echo ("<br>OFFER GEN: PRODUCT UPGRADE :  INSIDE FOR LOOP FOR PAX ID: " . print_r($feed->dtpf_id,1));
 		//update record it is processed
 
 		$this->paxfeed_m->update_paxfeed(array('is_up_offer_processed' => '1'), $feed->dtpf_id);
 		$cabin = $this->airline_cabin_class_m->getCabinFromClassForCarrier($feed->carrier_code,$feed->class);
+		
+		$upgrade = array();
+		$upgrade['boarding_point'] = $feed->from_city;
+		$upgrade['off_point'] = $feed->to_city;
+		$upgrade['flight_number'] = $feed->flight_number;
+		$upgrade['carrier_code'] = $feed->carrier_code;
 
-		/*
-		$array = array();
-		$array['from_city'] = $feed->from_city;
-		$array['to_city'] = $feed->to_city;
-		$array['flight_number'] = $feed->flight_number;
-		$array['dep_date'] = $feed->dep_date;
-		$array['carrier'] = $feed->carrier_code;
-		//$array['dept_time'] = $feed->dept_time;*/
-		//$rules = $this->eligibility_exclusion_m->apply_exclusion_rules($array);
-			
-			$upgrade = array();
-			$upgrade['boarding_point'] = $feed->from_city;
-                        $upgrade['off_point'] = $feed->to_city;
-                        $upgrade['flight_number'] = $feed->flight_number;
-                        $upgrade['carrier_code'] = $feed->carrier_code;
+		$day_of_week = date('w', $feed->dep_date); 
+        $day = ($day_of_week)?$day_of_week:7;
+     	$p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
+        $upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
+		$upgrade['from_cabin'] = $feed->cabin;
+        $data = array();
+		if($upgrade['season_id'] > 0) {
+				$data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+		}
 
-			$day_of_week = date('w', $feed->dep_date); 
-                        $day = ($day_of_week)?$day_of_week:7;
+		 if((count($data) == 0 && $upgrade['season_id'] > 0) || $upgrade['season_id'] == 0) {
+				$upgrade['season_id'] = 0;
+				 $upgrade['frequency'] = $p_freq;
+				$data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+		  }
 
-                        $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
-                        $upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
-			
-
-			 $upgrade['from_cabin'] = $feed->cabin;
-                        $data = array();
-                        if($upgrade['season_id'] > 0) {
-                                $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
-                        }
-
-                         if((count($data) == 0 && $upgrade['season_id'] > 0) || $upgrade['season_id'] == 0) {
-                                $upgrade['season_id'] = 0;
-                                 $upgrade['frequency'] = $p_freq;
-                                $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
-
-                          }
-
-                         //$data = $this->fclr_m->getUpgradeCabinsData($upgrade);
-			$rules = $this->eligibility_exclusion_m->apply_exclusion_rules();
-			 foreach($data as $f) {
-				 #Deactive old records of any
+		if ($data) {
+			echo ("<br>OFFER GEN: PRODUCT UPGRADE :  FOUND UPGRADE CABINS  DATA FOR CARRIER ID: " . print_r($data,1));
+		} else {
+			echo ("<br>OFFER GEN: PRODUCT UPGRADE :   UPGRADE CABINS  DATA NOT FOUND FOR PAX ID: " . $feed->dtpf_id);
+		}
+		 //$data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+		foreach($data as $f) {
+		 #Deactive old records of any
 				 $q = "UPDATE VX_offer_info SET active = 0 WHERE dtpf_id = ".$feed->dtpf_id." and product_id = 1 ";	
 				 $this->db->query($q);
 				 $ext = array();
-                                                $ext['dtpf_id'] = $feed->dtpf_id;
-                                                $ext['rule_id'] = $f->fclr_id;
-                                                $ext['product_id'] = 1;//UPGRADE PRODUCT
-                                                $ext["create_date"] = time();
-                                                $ext["modify_date"] = time();
-                                                $ext["create_userID"] = $this->session->userdata('loginuserID');
-                                                $ext["modify_userID"] = $this->session->userdata('loginuserID');
+				$ext['dtpf_id'] = $feed->dtpf_id;
+				$ext['rule_id'] = $f->fclr_id;
+				$ext['product_id'] = 1;//UPGRADE PRODUCT
+				$ext["create_date"] = time();
+				$ext["modify_date"] = time();
+				$ext["create_userID"] = $this->session->userdata('loginuserID');
+				$ext["modify_userID"] = $this->session->userdata('loginuserID');
 				$matched = 0;
 				if(count($rules) > 0 ) {
+					echo ("<br>OFFER GEN: PRODUCT UPGRADE :  APPLYING EXCLUSING RULES  FOR CARRIER ID: " . print_r($rules,1));
 					foreach ( $rules  as $rule ) {
-						$query = $this->eligibility_exclusion_m->apply_exclusion_rules(1);
+					echo ("<br>OFFER GEN: PRODUCT UPGRADE :  APPLYING EXCLUSING RULE  ID: " . print_r($rule->eexcl_id,1));
+						$query = $this->eligibility_exclusion_m->apply_exclusion_rules(1, $carrierId);
 						$query .= ' AND eexcl_id = ' .$rule->eexcl_id;
 	
 						if ($rule->orig_level != NULL) {
-							$query .= ' AND  (FIND_IN_SET('.$feed->from_city.', orig_level))';
+							$query .= " AND  ('".$feed->from_city."' IN (orig_level))";
 						}
 						if ($rule->dest_level != NULL) {
-							$query .= ' AND  (FIND_IN_SET('.$feed->to_city.',dest_level))';
+							$query .= " AND  ('".$feed->to_city."' IN (est_level))";
 
 						}
 
 						if($rule->frequency != '0' ) {
 
-							$query .= ' AND (FIND_IN_SET('.$p_freq.',frequency))';
+							$query .= " AND ('".$p_freq."' IN (frequency))";
 
 						}
 
@@ -1243,25 +1241,28 @@ $sWhere $sOrder $sLimit";
 
 							$result = $this->install_m->run_query($query);
 							if(count($result) > 0 ) {	
+								echo ("<br>OFFER GEN: PRODUCT UPGRADE :   EXCLUSION RULE MATCHED  FOR RULE GRP ID: " . $result[0]->excl_grp);
 								$matched = $result[0]->excl_grp;
 								break;
 							  }
 					}
 
 					if($matched > 0 ) {
+						echo ("<br>OFFER GEN: PRODUCT UPGRADE :   ADDING OFFER ELIGIBLITY WITH EXCLUTION FOR CARRIER ID: " .$feed->dtpf_id);
 						$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-                                                $ext['exclusion_id'] = $matched;
-                                                $this->offer_eligibility_m->insert_dtpfext_fclr($ext);
+                        $ext['exclusion_id'] = $matched;
+                        $this->offer_eligibility_m->insert_dtpfext_fclr($ext);
 
-					}else {
+					} else {
+						echo ("<br>OFFER GEN: PRODUCT UPGRADE :   ADDING OFFER ELIGIBLITY FOR CARRIER ID: " . $feed->dtpf_id);
 							$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
-                                                                $this->offer_eligibility_m->insert_dtpfext_fclr($ext);
-
+                            $this->offer_eligibility_m->insert_dtpfext_fclr($ext);
 					}
 
 				}else {
+						echo ("<br>OFFER GEN: PRODUCT UPGRADE :   ADDING OFFER ELIGIBLITY DUE TO RULES FOR PAX ID: " . $feed->dtpf_id);
 			        	$ext['booking_status'] = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
-					$this->offer_eligibility_m->insert_dtpfext_fclr($ext);
+						$this->offer_eligibility_m->insert_dtpfext_fclr($ext);
 				}
 			 }
 		}

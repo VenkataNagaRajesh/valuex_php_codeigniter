@@ -82,7 +82,7 @@ class Eligibility_exclusion_m extends MY_Model {
 */
 
 
-	function apply_exclusion_rules($param = 0) {
+	function apply_exclusion_rules($param = 0,$carrierID) {
 /*
 	$date_format =  date('d-m', $array['dep_date']);
                 $current_year =  date("Y");
@@ -102,17 +102,20 @@ class Eligibility_exclusion_m extends MY_Model {
 		}
 
 		$query .= "  from (SELECT        ex.*, IFNULL(group_concat(distinct cc.airportID) , group_concat(distinct mapo.airport_id))  as orig_level, IFNULL(group_concat(distinct c.airportID) ,group_concat(distinct map.airport_id)) as dest_level FROM UP_eligibility_excl_rules ex LEFT OUTER JOIN  VX_master_data c ON (
-(find_in_set(c.countryID, ex.dest_level_value) AND ex.dest_level_id  = 2) OR
-(find_in_set(c.cityID, ex.dest_level_value) AND ex.dest_level_id  = 3) OR
-(find_in_set(c.airportID, ex.dest_level_value) AND ex.dest_level_id  = 1) OR
-(find_in_set(c.regionID, ex.dest_level_value) AND ex.dest_level_id  = 4) OR
-(find_in_set(c.areaID, ex.dest_level_value) AND ex.dest_level_id  = 5) 
-  ) LEFT OUTER JOIN VX_market_airport_map map on (find_in_set(map.market_id, ex.dest_level_value) AND ex.dest_level_id  = 17) LEFT OUTER JOIN  VX_master_data cc ON ((find_in_set(cc.countryID, ex.orig_level_value) AND ex.orig_level_id  = 2) OR
-(find_in_set(cc.cityID, ex.orig_level_value) AND ex.orig_level_id  = 3) OR
-(find_in_set(cc.airportID, ex.orig_level_value) AND ex.orig_level_id  = 1) OR
-(find_in_set(cc.regionID, ex.orig_level_value) AND ex.orig_level_id  = 4) OR
-(find_in_set(cc.areaID, ex.orig_level_value) AND ex.orig_level_id  = 5) )
-LEFT OUTER JOIN VX_market_airport_map mapo on (find_in_set(mapo.market_id, ex.orig_level_value) AND ex.orig_level_id  = 17) group by ex.eexcl_id) as SubSet  WHERE active = 1  ";
+((c.countryID IN ( ex.dest_level_value)) AND ex.dest_level_id  = 2) OR
+((c.cityID IN (ex.dest_level_value)) AND ex.dest_level_id  = 3) OR
+((c.airportID  IN (ex.dest_level_value)) AND ex.dest_level_id  = 1) OR
+((c.regionID  IN (ex.dest_level_value)) AND ex.dest_level_id  = 4) OR
+((c.areaID IN (ex.dest_level_value)) AND ex.dest_level_id  = 5) 
+  ) LEFT OUTER JOIN VX_market_airport_map map on 
+((map.market_id IN (ex.dest_level_value)) AND ex.dest_level_id  = 17) LEFT OUTER JOIN  VX_master_data cc ON (
+((cc.countryID IN (ex.orig_level_value)) AND ex.orig_level_id  = 2) OR
+((cc.cityID IN ( ex.orig_level_value)) AND ex.orig_level_id  = 3) OR
+((cc.airportID IN ( ex.orig_level_value)) AND ex.orig_level_id  = 1) OR
+((cc.regionID IN ( ex.orig_level_value)) AND ex.orig_level_id  = 4) OR
+((cc.areaID IN ( ex.orig_level_value)) AND ex.orig_level_id  = 5) )
+LEFT OUTER JOIN VX_market_airport_map mapo on 
+((mapo.market_id IN ( ex.orig_level_value)) AND ex.orig_level_id  = 17) WHERE ex.carrier = $carrierID AND c.countryID is NOT NULL AND c.airportID is NOT NULL AND c.areaID  is NOT NULL AND c.cityID is NOT NULL AND c.regionID is NOT NULL group by ex.eexcl_id) as SubSet  WHERE active = 1  ";
 
 /*
 
