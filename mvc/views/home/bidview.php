@@ -648,6 +648,18 @@ $('#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>')
 <?php } } }?>
 
 <?php if ($baggage_offer) {?>
+function calcBaggageValue(slider_value_kg, soldout_kg, ond) {
+		select_bg_val = 0;
+			var scale = eval('cwtpoints' + ond);
+			for ( i = soldout_kg; i <= scale.length;i++) {
+				var bgm = soldout_kg +  slider_value_kg;
+				if ( i > soldout_kg && i <= bgm ) {
+					select_bg_val = select_bg_val + scale[i];
+				}
+			}
+	return select_bg_val;
+		//WORKI
+}
 <?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
 	$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>').slider({
 	tooltip: 'always',
@@ -662,7 +674,10 @@ $('#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>')
 		}else{
 			total=price+per_total*value;
 		}
-		return value + ' <?=$bclr[$bslider['ond']]->bag_type?>' + ' = $'+total.toFixed(2);
+			var soldout_kg = 4;
+			var ond = <?=$bslider['ond']?>;
+			select_bg_val =  calcBaggageValue(value,soldout_kg,ond);
+		return value + ' <?=$bclr[$bslider['ond']]->bag_type?>' + ' = $'+select_bg_val;
 	}
 	});
 <?php } ?>
@@ -682,13 +697,14 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 		
 		   total_upg += parseFloat($("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>").slider('getValue')*<?=$passengers_count?>);
 		<?php } } ?>
-		console.log('total_upg=' + total_upg);
 		var total_bg = 0;
 		var tmp_bg = 0;
 		<?php foreach($baggage as $pax => $paxval){ $bslider = $baggage[$pax]['pax']; ?> 
 
 			if($('input[type=checkbox][name=<?=$mobile_view?>bid_bag_<?=$bslider['flight_number']?>]').prop("checked") == false){
-				total_bg += parseFloat($("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>").slider('getValue'));
+				bg_val = parseFloat($("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>").slider('getValue'));
+				soldout_kg = 4;
+				total_bg = total_bg + calcBaggageValue(bg_val,soldout_kg,<?=$bslider['ond']?>);
 			  	//var bg_val = bg_val + cwtpoints<?=$bslider['ond']?>[$("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>").slider('getValue')];
 			}
 			var price = <?=$bslider['price'] ?>;
@@ -702,22 +718,18 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 				total=price+per_total*total_bg;
 			}
 		<?php }?>
-		console.log('total_bg=' + total_bg);
 <?php if ($upgrade_offer) {?>
 		tmp_upg = total_upg.toFixed(2);
 		total_value += tmp_upg;
-		console.log('total_value_upg=' + total_value);
 		$("#total_upg_value").val(Math.round(tmp_upg)).trigger('change');
 		$("#total_bid_value").val(Math.round(total_value)).trigger('change');
 <?php }?>
 <?php if ($baggage_offer) {?>
 		tmp_bg = total_bg.toFixed(2);
 		total_value = parseFloat(total_value) + parseFloat(tmp_bg);
-		console.log('total_value_bg=' + total_value);
 		$("#total_bg_value").val(Math.round(tmp_bg)).trigger('change');
 		$("#total_bid_value").val(Math.round(total_value)).trigger('change');
 <?php }?>
-		console.log('total_bid_value=' + $("#total_bid_value").val());
 		mileSliderUpdate();
 	      return $("#total_bid_value").val();
 	}
@@ -726,9 +738,6 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 		var bidvalue = $("#total_bid_value").val();
 		var cash_miles_allowed_value = bidvalue*mile_proportion; 
 		var miles = Math.round(cash_miles_allowed_value/mile_value);
-		console.log('miles=',miles);
-		console.log('prop=',mile_proportion);
-		console.log('milesp=',Math.round(miles)* mile_proportion);
 		$("#mile-min").text(0+' Miles');  
 		$("#mile-max").text(numformat(miles)+' Miles');
 		$("#miles").slider('setAttribute', 'max', miles);	  
@@ -998,12 +1007,10 @@ $(document).ready(function () {
 <?php foreach($upgrade as $upg){  if($upg->fclr != null){ ?>
 $("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>").on("slide", function(slideEvt) {
 	var tot_avg = getTotal().toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-	//console.log(tot_avg);
 	changeColors('<?=$upg->product_id . '_' . $upg->flight_number?>');
 });
 $("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>").on("click", function(slideEvt) {
 	var tot_avg = getTotal().toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-	//console.log(tot_avg);
 	changeColors('<?=$upg->product_id . '_' . $upg->flight_number?>');
 });
 	$('input[type=radio][name=<?=$mobile_view?>bid_cabin_<?=$upg->flight_number?>]').change(function(){
