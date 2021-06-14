@@ -1071,7 +1071,7 @@ class Bclr extends Admin_Controller
                         $data['active'] = 1;
                         $this->bclr_m->update_bclr($data, $id);
                         echo 'Success';
-                    } elseif ($status == 'unchacked') {
+                    } elseif ($status == 'unchecked') {
                         $data['active'] = 0;
                         $this->bclr_m->update_bclr($data, $id);
                         echo 'Success';

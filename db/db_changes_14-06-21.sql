@@ -1,0 +1,1 @@
+update Vx_menu set menuID=41 where menuName='configuration'
