@@ -386,7 +386,7 @@ class MY_Controller extends CI_Controller {
 		  $message =html_entity_decode($message);
 		  $siteinfos = $this->reset_m->get_site();
 		  $this->mydebug->debug($data['tomail'].'----'.$template);		  
-$data['tomail'] ='vamsi63@gmail.com';
+#$data['tomail'] ='vamsi63@gmail.com';
 		  if($data['tomail']) {                      
 			$subject = $data['mail_subject'];
 			$email = $data['tomail'];
