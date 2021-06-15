@@ -141,6 +141,7 @@ public function getBidInfoFromOfferID($offer_id, $flight_number,$carrier_code) {
 	$this->db->join('VX_data_defns dd', 'dd.vx_aln_data_defnsID = bid.upgrade_type AND dd.aln_data_typeID = 13 AND cdef.level = dd.alias', 'INNER');
 	$this->db->where('bid.offer_id',$offer_id);
 	$this->db->where('bid.flight_number',$flight_number);
+	$this->db->or_where('bid.ond',$flight_number);
 	$this->db->limit(1);
 	$query = $this->db->get();
 //echo $this->db->last_query();exit;
@@ -157,13 +158,13 @@ $sOrder = ' ORDER BY MainSet.productID ASC ';
 $sWhere = '  ';
 $mainsetWhere = "WHERE bid.active =1 AND pf.active = 1 AND  oref.active = 1 AND pe.active = 1 ";
 $query = " select  SQL_CALC_FOUND_ROWS  
-MainSet.offer_id, MainSet.dtpf_id,  MainSet.upgrade_type,MainSet.offer_date, MainSet.name,MainSet.flight_date , SubSet.carrier , MainSet.flight_number , 
+MainSet.offer_id,  MainSet.ond,MainSet.dtpf_id,  MainSet.upgrade_type,MainSet.offer_date, MainSet.name,MainSet.flight_date , SubSet.carrier , MainSet.flight_number , 
 SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.p_list, MainSet.from_cabin, MainSet.cash_percentage,
 MainSet.to_cabin, MainSet.bid_value  ,MainSet.min,MainSet.max,  MainSet.cash, MainSet.miles, MainSet.offer_status,
 SubSet.from_cabin_id,MainSet.weight, MainSet.upgrade_type, SubSet.boarding_point, SubSet.off_point, MainSet.bid_submit_date, MainSet.booking_status, SubSet.from_city_name, SubSet.to_city_name,MainSet.bid_avg, MainSet.rank, MainSet.bid_markup_val,SubSet.carrier_code, MainSet.name, MainSet.bid_id,MainSet.product_id,MainSet.productID,MainSet.flight,SubSet.from_city_code,SubSet.to_city_code,SubSet.to_cabin_code
 
 FROM ( 
-		select bid.bid_id,bid.weight ,pf.dtpf_id,  oref.offer_id,oref.create_date as offer_date , prq.name as name,bid_value, bid_avg,bid_markup_val,
+		select bid.bid_id,bid.weight ,pf.dtpf_id,pe.ond,  oref.offer_id,oref.create_date as offer_date , prq.name as name,bid_value, bid_avg,bid_markup_val,
 		tdef.cabin as to_cabin, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, pe.product_id, pf.dep_date as flight_date,fcc.min,fcc.max,bid.productID,pf.flight_number as flight, pf.cabin, fcd.cabin as from_cabin, oref.cash_percentage
 		from  
 				UP_bid bid 
