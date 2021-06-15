@@ -123,7 +123,7 @@
                     </div>                     
                     <div class="col-md-2 col-sm-3">
                      <?php                         
-                          $unittypes[0] = "All";                           
+                        //  $unittypes[0] = "All";                           
                           $unittypes[1] = "KG";                           
                           $unittypes[2] = "Piece";                           
                         echo form_dropdown("bag_type", $unittypes, set_value("bag_type"), "id='bag_type' class='form-control select2'");
@@ -239,7 +239,7 @@
                         
 						<div class="col-md-12">
                             <?php                         
-                                $flt_unittypes[0] = "All";                           
+                              //  $flt_unittypes[0] = "All";                           
                                 $flt_unittypes[1] = "KG";                           
                                 $flt_unittypes[2] = "Piece";                           
                                 echo form_dropdown("flt_bag_type", $flt_unittypes, set_value("flt_bag_type",$flt_bag_type), "id='flt_bag_type' class='form-control select2'");

@@ -68,11 +68,14 @@ class Offer_issue extends Admin_Controller {
         );			       
 		if ($mailto) {
 			$data['tomail'] =  $mailto;
-		}	
-		$this->send_offer_mail($pnr_ref);
+		}
+			
+		if(!($this->send_offer_mail($pnr_ref)))
+		{
         $this->upgradeOfferMail($data);		 
+		}
 		$this->session->set_flashdata('success', 'Offer Mail sent to PAX successfully');
-		//redirect(base_url("offer_issue/index"));		
+		redirect(base_url("offer_issue/index"));		
 	}
 	//newly added fumction for test mail
 	function sendOfferConfirmation()
@@ -293,7 +296,7 @@ class Offer_issue extends Admin_Controller {
 
 		$rResult = $this->install_m->run_query($sQuery);
 		$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
-
+		
 	 	foreach($rResult as $offer) {
 
 			$emails_list = explode(',', $offer->email_list);
@@ -336,7 +339,9 @@ class Offer_issue extends Admin_Controller {
 				);			       
 				if ( ! empty($data['pnr_ref']) ){
 
-					$msg .= $this->upgradeOfferMail($data);		 
+					$msg .= $this->upgradeOfferMail($data);
+					return true;
+
 				}
 
 			}
