@@ -566,6 +566,4 @@ $sOrder $sLimit";
 		}
 
 	}
-
-
 }
