@@ -164,7 +164,12 @@ class Definition_data extends Admin_Controller
 				'assets/fselect/fSelect.js',
 			)
 		);
-		$this->data['types'] = $this->airports_m->getDefdataTypes(null, array(1, 2, 3, 4, 5, 6, 12, 25,26,27));
+		$d=array();
+		foreach (range(1,28) as $number) {
+			$d[]=$number;
+		}
+		
+		$this->data['types'] = $this->airports_m->getDefdataTypes(null, $d);
 		$roleID = $this->session->userdata('roleID');
 		if($roleID != 1){
 			$this->data['airlinelist'] = $this->user_m->getUserAirlines($userID);	   

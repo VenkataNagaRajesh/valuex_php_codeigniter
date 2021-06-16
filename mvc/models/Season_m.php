@@ -213,7 +213,12 @@ class season_m extends MY_Model {
 	}
 
 	public function delete_season($id){
-		parent::delete($id);
+		$data = [
+			'active' => 0,
+		];
+		$this->db->where('VX_aln_seasonID', $id);
+		$this->db->update('VX_season', $data);
+	   return true;
 	}
 	
 	public function searchAirlineCode($string){

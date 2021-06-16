@@ -68,11 +68,13 @@ class Offer_issue extends Admin_Controller {
         );			       
 		if ($mailto) {
 			$data['tomail'] =  $mailto;
-		}	
-		$this->send_offer_mail($pnr_ref);
-        $this->upgradeOfferMail($data);		 
+		}
+		if(!($this->send_offer_mail($pnr_ref)))
+		{
+        	$this->upgradeOfferMail($data);	
+		}	 
 		$this->session->set_flashdata('success', 'Offer Mail sent to PAX successfully');
-		//redirect(base_url("offer_issue/index"));		
+		redirect(base_url("offer_issue/index"));		
 	}
 	//newly added fumction for test mail
 	function sendOfferConfirmation()

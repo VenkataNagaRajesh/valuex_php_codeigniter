@@ -22,10 +22,11 @@
      <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">		   
 			<div class='form-group'>
                 <div class="col-sm-2 col-xs-6">			   
-                 <?php $typelist = array("0" => " Type");               
+                 <?php $typelist = array("0" => " Type");          
                   		foreach($types as $type){
 						  $typelist[$type->vx_aln_data_typeID] = $type->alias;	
-						}				
+						}	
+                        sort($typelist);
 				   echo form_dropdown("aln_data_typeID", $typelist,set_value("aln_data_typeID",$aln_data_typeID), "id='aln_data_typeID' class='form-control hide-dropdown-icon select2'");    ?>
                 </div>	
 				<div class="col-sm-10 text-right col-xs-6">
