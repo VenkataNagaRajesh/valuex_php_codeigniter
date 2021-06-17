@@ -69,11 +69,18 @@ class Offer_issue extends Admin_Controller {
 		if ($mailto) {
 			$data['tomail'] =  $mailto;
 		}
+<<<<<<< HEAD
 			
 		if(!($this->send_offer_mail($pnr_ref)))
 		{
         $this->upgradeOfferMail($data);		 
 		}
+=======
+		if(!($this->send_offer_mail($pnr_ref)))
+		{
+        	$this->upgradeOfferMail($data);	
+		}	 
+>>>>>>> rajesh
 		$this->session->set_flashdata('success', 'Offer Mail sent to PAX successfully');
 		redirect(base_url("offer_issue/index"));		
 	}
