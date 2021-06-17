@@ -246,7 +246,7 @@ class Bidding extends MY_Controller {
 				}
 				// var_dump($tr);
 				// die();
-				$sum_query="SELECT b.bid_id, b.bid_value, v.product_id, vxx.min_unit, vxx.max_price, vxx.min_price ,vxx.max_capacity,v.ond,v.dtpfext_id FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2 AND b.active = 1 )  LEFT JOIN VX_offer o ON (v.product_id = v.product_id AND o.product_id = 2 AND vx.pnr_ref = o.pnr_ref) WHERE o.active = 1 AND v.active = 1 AND vx.active = 1 AND v.ond>=1 AND vx.pnr_ref = '$pnr_ref' ORDER BY v.ond ASC";
+				$sum_query="SELECT vxx.bclr_id, b.bid_id, b.bid_value, v.product_id, vxx.min_unit, vxx.max_price, vxx.min_price ,vxx.max_capacity,v.ond,v.dtpfext_id FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2 AND b.active = 1 )  LEFT JOIN VX_offer o ON (v.product_id = v.product_id AND o.product_id = 2 AND vx.pnr_ref = o.pnr_ref) WHERE o.active = 1 AND v.active = 1 AND vx.active = 1 AND v.ond>=1 AND vx.pnr_ref = '$pnr_ref' ORDER BY v.ond ASC";
 				$sum_res = $this->install_m->run_query($sum_query);
 		//	echo $sum_query;
 				// var_dump($sum_res);
@@ -261,7 +261,7 @@ class Bidding extends MY_Controller {
 					$last_ond =  $res->ond;
 					if ( $res->min_unit ) {
 						if ( $per_min ) {
-							$per_min = ($per_min > $res->min_unit ) ? $per_min : $res->min_unit; 
+							$per_min = ($per_min < $res->min_unit ) ? $per_min : $res->min_unit; 
 						} else {
 							$per_min = $res->min_unit;
 						}
@@ -281,70 +281,60 @@ class Bidding extends MY_Controller {
 					$inv['active'] = 1;
 					$wt_sold = $this->invfeed_m->getSoldWeight($inv);
 
-					$per_max=$this->data['baggage_max_val'];//Max KG  user user can buy
 					if ( $res->max_capacity ) {
 						$max_diff = $res->max_capacity - $wt_sold;
-						$per_max  = ( $max_diff > $per_max ) ?  $per_max : $max_diff;
+						if ( $per_max ) {
+							$per_max = ($per_max < $max_diff ) ? $per_max : $max_diff; 
+						} else {
+							$per_max  = $max_diff;
+						}
+					} else {
+						if (!$per_max) {
+							$per_max=$this->data['baggage_max_val'];//Max KG  user user can buy
+						}
 					}
 
 					if ( $per_max < $per_min ) {
 						//Don't allow to buy at all
-
 						continue;	
 					}
+					$per_min = 5;
+					$per_max = 51;
 
 					$piece = $this->data['piece'];
-
 					$price=$res->min_price;
-					$total_weight=$res->max_capacity;
-					$min=$per_max-$per_min;
-					$per_total=$min/$total_weight;
-					
-					$total_piece=$per_max/$piece;
-					$final = $per_min*$per_total;
-					$piece_com_tot=$total_piece*$per_total;
 
 					$tr[$res->ond]['per_min']=$per_min;
 					$tr[$res->ond]['piece']=$piece;
 					$tr[$res->ond]['per_max']=$per_max;
-					$tr[$res->ond]['price']=$price;
-					$tr[$res->ond]['total_weight']=$total_weight;
-					$tr[$res->ond]['total_piece']=$total_piece;
-					$tr[$res->ond]['per_total']=$per_total;
-					$tr[$res->ond]['piece_com_tot']=$piece_com_tot;
-					// $tr[$res->ond]['dtpfext_id']=$dtpfext_id;
+					$tr[$res->ond]['sold_out_wt']= $wt_sold ? $wt_sold : 0;
+					$tr[$res->ond]['bclrids'][]=$res->bclr_id;
 				}
 
 #print_r($tr);
-				// var_dump($tr);
-				// die();
 				if ( count($tr) ) {
 					$this->data['baggage_offer'] = 1;
 				}
+
 				foreach($tr as $bg ) {
-					// var_dump(json_encode($bg,JSON_FORCE_OBJECT),"<br>");
-/*
-					if ( $bg->bid_id) {
-						$this->data['last_bid']['last_bid_'. $bg->product_id . '_'. $bg->flight_number] = $bg->bid_value;
-						$this->data['last_bid_value_'. $bg->product_id] += $bg->bid_value;
-						$this->data['bid_id_'. $bg->product_id] = $bg->bid_id;
-					} else {
-						$this->data['bid_id_'. $bg->product_id] =  0;
-					}
-*/
-					//reducing duplicate names for multi cabins case
-				
-					$cwtdata = $this->bclr_m->getActiveCWT($bg['rule_id']);
 					$bclrdata = $this->bclr_m->get_bclr($bg['rule_id']);
-					$bclrdata->bag_type = $bclrdata->bag_type == 1 ? 'KG' : 'PC';
 					$this->data['baggage'][$bg['dtpf_id']]['pax'] = $bg;
-					$this->data['cwtdata'][$bg['ond']] = $cwtdata;
 					$this->data['bclr'][$bg['ond']] = $bclrdata;
 				}
-				// $this->data['baggage'][$bg->dtpf_id]['pax'] = $bg;
-				// 	$this->data['cwtdata'][$bg->ond] = $cwtdata;
-				// 	$this->data['bclr'][$bg->ond] = $bclrdata;
 
+				foreach($tr as $ond => $bg ) {
+					$cwtdata = Array();
+					foreach($bg['bclrids'] as $bclrID ) {
+						$tmp_cwtdata = $this->bclr_m->getActiveCWT($bclrID,$bg['sold_out_wt'],$bg['per_max'] + $bg['per_min']);
+						$i = 1;
+						foreach($tmp_cwtdata as $key => $item ) {
+								$cwtdata[$i] += $item['price_per_kg'];
+								$i++;
+						}
+					}
+					$this->data['cwtdata'][$ond] = $cwtdata;
+				}
+				#print_r($this->data['cwtdata']);exit;
 			}
 		} else {
 				$this->data['error'] .= '<br>OOPS! PNR FOR UPGRADE OFFER MISSING';
@@ -784,4 +774,10 @@ class Bidding extends MY_Controller {
         $this->output->set_output(json_encode($json));	
 	}
 
+	public function getBgSliderValue(){
+		$json['status'] = "success";
+		$json['value'] = rand();
+		$this->output->set_content_type('application/json');
+        	$this->output->set_output(json_encode($json));
+	}
 }

@@ -126,11 +126,19 @@ class Bclr_m extends MY_Model {
             return TRUE;
         }
 
-        public function getActiveCWT($bclr_id){
+        public function getActiveCWT($bclr_id, $wt_start = 0, $wt_end  = 0){
             $this->db->select('cum_wt, price_per_kg');
             $this->db->from('BG_cwt');
             $this->db->where(array("active" => 1,"bclr_id" => $bclr_id));
+			if ($wt_start ) {
+            	$this->db->where("cum_wt > $wt_start");
+			}
+			if ($wt_end ) {
+            	$this->db->where("cum_wt <= $wt_end");
+			}
+            $this->db->order_by('cum_wt ASC');
 	    $query = $this->db->get();
+        //echo $this->db->last_query();
             return $query->result_array();
         }
 

@@ -326,7 +326,7 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as pro
 		     LEFT JOIN VX_data_defns os on (os.vx_aln_data_defnsID = of.offer_status AND bs.aln_data_typeID = 20)
 
 $sWhere $sOrder $sLimit";
-#print_r($sQuery) ;exit;
+//print_r($sQuery) ;exit;
 
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
@@ -350,9 +350,9 @@ $sWhere $sOrder $sLimit";
 			$dest_markets = implode(',',$this->marketzone_m->getMarketsForAirportID($feed->off_point));
                         $feed->dest_point = '<a href="#" data-placement="top" data-toggle="tooltip" class="btn btn-custom btn-xs mrg" data-original-title="'.$dest_markets.'">'.$feed->dest_point.'</a>';
                		$feed->bstatus = $feed->offer_status;			  
-			if($feed->offer_status == 'Excluded') {
+			if($feed->booking_status == 'Excluded') {
 				$excl_id = $this->eligibility_exclusion_m->getexclIdForGrpANDCabins($feed->exclusion_id,$feed->from_cabin,$feed->to_cabin);
-				$feed->offer_status = '<a href="'.base_url('eligibility_exclusion/index/'.$excl_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->exclusion_id.'">'.$feed->offer_status.'</a>';
+				$feed->offer_status = '<a href="'.base_url('eligibility_exclusion/index/'.$excl_id).'" data-placement="top" data-toggle="tooltip" class="btn btn-success btn-xs mrg" data-original-title="Rule#'.$feed->exclusion_id.'">'.$feed->booking_status.'</a>';
 
 			}
             $feed->fclrID = $feed->rule_id;
@@ -1121,7 +1121,6 @@ $sWhere $sOrder $sLimit";
 
    function processGenUpgradeOffers($carrierId, $pnr = 0) {
 
-
 		echo ("<br>OFFER GEN: PRODUCT UPGRADE :  CARRIER ID: " . $carrierId);
 		$days = $this->preference_m->get_application_preference_value('OFFER_ISSUE_WINDOW','7');
 
@@ -1197,7 +1196,6 @@ $sWhere $sOrder $sLimit";
 				$ext["modify_userID"] = $this->session->userdata('loginuserID');
 				$matched = 0;
 				if(count($rules) > 0 ) {
-					echo ("<br>OFFER GEN: PRODUCT UPGRADE :  APPLYING EXCLUSING RULES  FOR CARRIER ID: " . print_r($rules,1));
 					foreach ( $rules  as $rule ) {
 					echo ("<br>OFFER GEN: PRODUCT UPGRADE :  APPLYING EXCLUSING RULE  ID: " . print_r($rule->eexcl_id,1));
 						$query = $this->eligibility_exclusion_m->apply_exclusion_rules(1, $carrierId);
@@ -1207,7 +1205,7 @@ $sWhere $sOrder $sLimit";
 							$query .= " AND  ('".$feed->from_city."' IN (orig_level))";
 						}
 						if ($rule->dest_level != NULL) {
-							$query .= " AND  ('".$feed->to_city."' IN (est_level))";
+							$query .= " AND  ('".$feed->to_city."' IN (dest_level))";
 
 						}
 
@@ -1249,6 +1247,7 @@ $sWhere $sOrder $sLimit";
 							$query .= " AND (flight_dep_start <= ".$feed->dept_time." and flight_dep_end >= ".$feed->dept_time.")";
 						}
 
+								echo "<br>OFFER GEN: EXCLUSION MATCH QUERY :  FOR RULE GRP ID: " . $query ;
 							$result = $this->install_m->run_query($query);
 							if(count($result) > 0 ) {	
 								echo ("<br>OFFER GEN: PRODUCT UPGRADE :   EXCLUSION RULE MATCHED  FOR RULE GRP ID: " . $result[0]->excl_grp);

@@ -862,6 +862,10 @@ function time_dropdown($val) {
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.flight_nbr_start <= '.$this->input->get('nbrStart');
                         }
+		        if(!empty($this->input->get('sexcl_id'))){
+                                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                                $sWhere .= 'MainSet.eexcl_id = '.$this->input->get('sexcl_id');
+                        }
 
 
 			if(!empty($this->input->get('nbrEnd'))){
@@ -1003,7 +1007,7 @@ LEFT JOIN (
 		$sOrder
 		$sLimit	"; 
 
-//	print_r($sQuery); exit;
+#	print_r($sQuery); exit;
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
 	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	

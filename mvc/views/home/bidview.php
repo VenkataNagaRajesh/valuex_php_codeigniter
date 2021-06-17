@@ -417,7 +417,7 @@ function updateCabinMedia(flight_number){
                                 <p style="color:<?=$mail_header_color?>"><?php echo $bslider['from_city_name']; ?> <span class="time-bid"><?=date('H:i A',$bslider['dep_date']+$bslider['dept_time']);?></span></p>
 								<ul>
 									<li><?php echo date('d M Y',$bslider['dep_date']); ?></li>
-									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['flight_number'];?></li>
+									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['airline_id']""."".$bslider['flight_number'];?></li>
 								</ul>
 								<small><?php echo substr($bslider['from_airport'],0,25) . ".."; ?></small>                       
                             </div>
@@ -426,7 +426,7 @@ function updateCabinMedia(flight_number){
                                 <p style="color:<?=$mail_header_color?>"><?php echo $bslider['to_city_name']; ?> <span class="time-bid"><?=date('H:i A',$bslider['arrival_date']+$bslider['arrival_time']);?></span></p>
 								<ul>
 									<li><?php echo date('d M Y',$bslider['arrival_date']); ?></li>
-									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['flight_number'];?></li>
+									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['airline_id']""."".$bslider['flight_number'];?></li>
 								</ul>
 								<small><?php echo substr($bslider['to_airport'],0,25) . ".."; ?></small>
                         </div>
@@ -434,16 +434,16 @@ function updateCabinMedia(flight_number){
                     <div class="col-xs-12 col-sm-5 col-md-2 col-lg-2 lft-gap">
                         <div class="col-sm-12">
     						<label class="checkbox-inline">
-								<input type="checkbox" name="bid_bag_<?=$bslider['flight_number']?>" id="bid_bag_<?=$bslider['flight_number']?>" value="" >Check this box if not Interested
+								<input type="checkbox" name="bid_bag_<?=$bslider['ond']?>" id="bid_bag_<?=$bslider['ond']?>" value="" >Check this box if not Interested
 							</label>
                         
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 lft-gap">
                        
-						<?php if($bclr[$bslider['ond']]->bag_type=='PC'){ 
-							$item_title = 'Piece';
-							$item_unit = $bslider['piece'];
+						<?php if($bclr[$bslider['ond']]->bag_type==2){ //PC 
+							$item_title = 'PC';
+							$item_unit = $bslider['per_max'];
 						} else {
 							$item_title = 'KG';
 							$item_unit = $bslider['per_max'];
@@ -451,10 +451,10 @@ function updateCabinMedia(flight_number){
 						?>	
 							<div id="slider">
 								<div class="price-range col-md-12">	
-									<b> Min&nbsp;&nbsp;<?=$bslider['per_min']?>  <?=$bclr[$bslider['ond']]->bag_type?>&nbsp;&nbsp;</b>
-									<input id="bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>"
+									<b> Min&nbsp;&nbsp;<?=$bslider['per_min']?>  <?=$item_title?>&nbsp;&nbsp;</b>
+									<input id="bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>"
 									 
-									data-slider-id='bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>Slider' 
+									data-slider-id='bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>Slider' 
 									 
 									 type="text" data-slider-min="<?=$bslider['per_min']?>" data-slider-max="<?=$item_unit?>" 
 									 
@@ -489,11 +489,12 @@ function updateCabinMedia(flight_number){
 });
 <?php
 if ( $baggage_offer ) { 
-foreach($cwtdata as $ond => $cwtpoints){ ?>
+foreach($cwtdata as $ond => $cwtpoints){  ?>
 var cwtpoints<?=$ond?> = [];
-<?php foreach($cwtpoints as $cwt){ ?>
+<?php foreach($cwtpoints as $key => $value){ ?>
+
 	
-	cwtpoints<?=$ond?>[<?=$cwt['cum_wt']?>] = <?=$cwt['price_per_kg']?>;
+	cwtpoints<?=$ond?>[<?=$key?>] = <?=$value?>;
 <?php } ?>
 <?php } ?>
 <?php } ?>
@@ -660,24 +661,32 @@ function calcBaggageValue(slider_value_kg, soldout_kg, ond) {
 	return select_bg_val;
 		//WORKI
 }
+
+
+function calcBaggageValueAjax(slider_value_kg, soldout_kg, ond) {
+		var bgval =0;
+		$.ajax({
+		  async: false,
+		  type: 'POST',
+		  url: "<?=base_url('homes/bidding/getBgSliderValue')?>",          
+			  data: {"slider_value_kg" :slider_value_kg,"soldout_kg":soldout_kg,"ond":ond},
+		  dataType: "html",	         		  
+		  success: function(data) {
+			var bginfo = jQuery.parseJSON(data);
+			if(bginfo['status'] == "success"){
+				bgval = bginfo['value'];
+			}
+		}
+		});
+		return bgval;
+}
+
 <?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
-	$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>').slider({
+	$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>').slider({
 	tooltip: 'always',
 	formatter: function(value) {
-		var price = <?=$bslider['price'] ?>;
-		var total_piece = <?=$bslider['total_piece'] ?>;
-		var per_total = <?=$bslider['per_total'] ?>;
-		var bag_type = '<?=$bclr[$bslider['ond']]->bag_type?>';
-		var total;
-		if(bag_type=='PC'){
-			total=price+per_total*total_piece*value;
-		}else{
-			total=price+per_total*value;
-		}
-			var soldout_kg = 4;
-			var ond = <?=$bslider['ond']?>;
-			select_bg_val =  calcBaggageValue(value,soldout_kg,ond);
-		return value + ' <?=$bclr[$bslider['ond']]->bag_type?>' + ' = $'+ Math.round(select_bg_val);
+			select_bg_val = calcBaggageValue(value,<?=$bslider['per_min']?>,<?=$bslider['ond']?>);
+		return value + ' <?=($bclr[$bslider['ond']]->bag_type == 2 ? 'PC' : 'KG')?>' + ' = $'+ Math.round(select_bg_val);
 	}
 	});
 <?php } ?>
@@ -701,21 +710,9 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 		var tmp_bg = 0;
 		<?php foreach($baggage as $pax => $paxval){ $bslider = $baggage[$pax]['pax']; ?> 
 
-			if($('input[type=checkbox][name=<?=$mobile_view?>bid_bag_<?=$bslider['flight_number']?>]').prop("checked") == false){
-				bg_val = parseFloat($("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>").slider('getValue'));
-				soldout_kg = 4;
-				total_bg = total_bg + calcBaggageValue(bg_val,soldout_kg,<?=$bslider['ond']?>);
-			  	//var bg_val = bg_val + cwtpoints<?=$bslider['ond']?>[$("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>").slider('getValue')];
-			}
-			var price = <?=$bslider['price'] ?>;
-			var total_piece = <?=$bslider['total_piece'] ?>;
-			var per_total = <?=$bslider['per_total'] ?>;
-			var bag_type = '<?=$bclr[$bslider['ond']]->bag_type?>';
-			var total=0;
-			if(bag_type=='PC'){
-				total=price+per_total*total_piece*total_bg;
-			}else{
-				total=price+per_total*total_bg;
+			if($('input[type=checkbox][name=<?=$mobile_view?>bid_bag_<?=$bslider['ond']?>]').prop("checked") == false){
+				bg_val = parseFloat($("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>").slider('getValue'));
+				total_bg = total_bg + calcBaggageValue(bg_val,<?=$bslider['per_min']?>,<?=$bslider['ond']?>);
 			}
 		<?php }?>
 <?php if ($upgrade_offer) {?>
@@ -907,7 +904,7 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 				var info = jQuery.parseJSON(data);              		
 				if(info['status'] == "success"){
 					<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
-						var bg_weight_obj = $("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>");
+						var bg_weight_obj = $("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>");
 						var bg_weight = 0;
 						if ( bg_weight_obj ) {
 							 bg_weight = bg_weight_obj.slider('getValue');
@@ -1005,11 +1002,11 @@ $(document).ready(function () {
 
 
 <?php foreach($upgrade as $upg){  if($upg->fclr != null){ ?>
-$("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>").on("slide", function(slideEvt) {
+$("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>Slider").on("slide", function(slideEvt) {
 	var tot_avg = getTotal().toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
 	changeColors('<?=$upg->product_id . '_' . $upg->flight_number?>');
 });
-$("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>").on("click", function(slideEvt) {
+$("#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>Slider").on("click", function(slideEvt) {
 	var tot_avg = getTotal().toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
 	changeColors('<?=$upg->product_id . '_' . $upg->flight_number?>');
 });
@@ -1062,19 +1059,19 @@ if ( $baggage_offer ) {
 	$(document).ready(function () {
 <?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
 
-		$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>Slider .slider-selection').css({"background":"<?=$mail_header_color?>"});
-    		$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>Slider .slider-handle').css({"background":"<?=$mail_header_color?>"});
-		$('input[type=checkbox][name=<?=$mobile_view?>bid_bag_<?=$bslider['flight_number']?>]').change(function(){
+		$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>Slider .slider-selection').css({"background":"<?=$mail_header_color?>"});
+    		$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>Slider .slider-handle').css({"background":"<?=$mail_header_color?>"});
+		$('input[type=checkbox][name=<?=$mobile_view?>bid_bag_<?=$bslider['ond']?>]').change(function(){
 			var total = getTotal();
 		});
-		$('input[type=checkbox][name=<?=$mobile_view?>bid_bag_<?=$bslider['flight_number']?>]:checked').trigger('change'); 
+		$('input[type=checkbox][name=<?=$mobile_view?>bid_bag_<?=$bslider['ond']?>]:checked').trigger('change'); 
 
 
-$("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>").on("slide", function(slideEvt) {
+$("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>Slider").on("slide", function(slideEvt) {
 	var tot_avg = getTotal().toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 });
 
-$("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['flight_number']?>").on("click", function(slideEvt) { 
+$("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>Slider").on("click", function(slideEvt) { 
 	//var tot_avg = getTotal();
 	var tot_avg = getTotal().toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
 });

@@ -201,15 +201,16 @@
                             <input type="number" class="form-control" name="flt_min_price" id="flt_min_price" placeholder="Min Price" value="<?=set_value('flt_min_price',$flt_min_price)?>" />                       
                         </div>
                         <div class="col-md-12">
-                                    <select class="form-control select2"  name="bclr_status" id="bclr_status">
-					    <option value="1" <?=(($bclr_status == 1 )? "selected":"")?>>Active</option>
-					    <option value="0" <?=(($bclr_status == 0 || $bclr_status == '' )? "selected":"")?>>In active</option>
-                                    </select>
+                                <select class="form-control select2"  name="bclr_status" id="bclr_status">    
+                                    <option value="2" <?=(($bclr_status == 2 )? "selected":"")?>>All</option>      
+                                    <option value="1" <?=(($bclr_status == 1 )? "selected":"")?>>Active</option>
+                                    <option value="0" <?=(($bclr_status == 0 || $bclr_status == '' )? "selected":"")?>>In active</option>
+                                </select>
                             </div>
-					</div>
+					    </div>
 					<div class="col-md-2 col-sm-3 select-form">
 						<div class="col-md-12">
-                            <?php 
+                            <?php
                                 $fallowance[1] = 'Whitelist';
                                 $fallowance[2] = 'Blacklist';
                                 echo form_dropdown("flt_allowance", $allowance,set_value("flt_allowance",$flt_allowance), "id='flt_allowance' class='form-control hide-dropdown-icon select2'");
@@ -225,8 +226,7 @@
 						</div>
                         <div class="col-md-12">
                             <input type="number" class="form-control" name="flt_max_price" id="flt_max_price" placeholder="Max Price" value="<?=set_value('flt_max_price',$flt_max_price)?>" />                       
-                        </div>
-                                                
+                        </div>                         
 					</div>
 					<div class="col-md-2 col-sm-3 select-form">
                         <div class="col-md-12">
