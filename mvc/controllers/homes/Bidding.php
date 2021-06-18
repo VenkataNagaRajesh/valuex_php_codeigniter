@@ -132,7 +132,7 @@ class Bidding extends MY_Controller {
 					$this->data['upgrade_offer'] = 1;
 					if ( $result->bid_id) {
 						$this->data['bid_id_'. $result->product_id] = $result->bid_id;
-						$this->data['last_bid_value_'. $result->product_id] += $result->bid_value;
+						$this->data['last_bid_value_'. $result->product_id]= $result->bid_value;
 						$this->data['last_bid_total_value'] += $result->bid_value;
 					}
 					//reducing duplicate names for multi cabins case
@@ -379,10 +379,10 @@ class Bidding extends MY_Controller {
 				$product_id = $this->input->post("product_id");
             	$bid_id  = $this->input->post('bid_id');
             	$offer_id  = $this->input->post('offer_id');
-		if($this->input->post('offer_id')){ 		
-            if($bid_id && $product_id){//Bid  Resubmit case
-               $this->saveBiddingHistory($this->input->post('offer_id'));
-	    }          
+				if($this->input->post('offer_id')){ 		
+					if($bid_id && $product_id){//Bid  Resubmit case
+					$this->saveBiddingHistory($this->input->post('offer_id'));
+				}          
 			
 		$data = Array();
 		    $id = 0;
@@ -445,6 +445,7 @@ class Bidding extends MY_Controller {
 				break;
 				default:
 				break;
+				
 			}
 		
           if($id){

@@ -165,7 +165,7 @@
                                     <th class="col-lg-1"><?= $this->lang->line('pax_type') ?></th>
 
 
-                                    <th class="col-lg-1 noExport" style="display:none;"><?= $this->lang->line('active') ?></th>
+                                    <th class="col-lg-1 noExport"><?= $this->lang->line('active') ?></th>
 
                                     <?php if (permissionChecker('rafeed_delete') || permissionChecker('rafeed_view')) { ?>
                                         <th class="col-lg-1 noExport" style="display:none;"><?= $this->lang->line('action') ?></th>
