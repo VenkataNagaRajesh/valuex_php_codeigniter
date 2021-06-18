@@ -652,33 +652,12 @@ $('#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>')
 function calcBaggageValue(slider_value_kg, soldout_kg, ond) {
 		select_bg_val = 0;
 			var scale = eval('cwtpoints' + ond);
-			for ( i = soldout_kg; i <= scale.length;i++) {
-				var bgm = soldout_kg +  slider_value_kg;
-				if ( i > soldout_kg && i <= bgm ) {
+			for ( i = 1; i <= slider_value_kg;i++) {
 					select_bg_val = select_bg_val + scale[i];
 				}
-			}
-	return select_bg_val;
+	//return select_bg_val;
+	return parseFloat(select_bg_val).toFixed(2);
 		//WORKI
-}
-
-
-function calcBaggageValueAjax(slider_value_kg, soldout_kg, ond) {
-		var bgval =0;
-		$.ajax({
-		  async: false,
-		  type: 'POST',
-		  url: "<?=base_url('homes/bidding/getBgSliderValue')?>",          
-			  data: {"slider_value_kg" :slider_value_kg,"soldout_kg":soldout_kg,"ond":ond},
-		  dataType: "html",	         		  
-		  success: function(data) {
-			var bginfo = jQuery.parseJSON(data);
-			if(bginfo['status'] == "success"){
-				bgval = bginfo['value'];
-			}
-		}
-		});
-		return bgval;
 }
 
 <?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
@@ -686,7 +665,7 @@ function calcBaggageValueAjax(slider_value_kg, soldout_kg, ond) {
 	tooltip: 'always',
 	formatter: function(value) {
 			select_bg_val = calcBaggageValue(value,<?=$bslider['per_min']?>,<?=$bslider['ond']?>);
-		return value + ' <?=($bclr[$bslider['ond']]->bag_type == 2 ? 'PC' : 'KG')?>' + ' = $'+ Math.round(select_bg_val);
+		return value + ' <?=($bclr[$bslider['ond']]->bag_type == 2 ? 'PC' : 'KG')?>' + ' = $'+ select_bg_val;
 	}
 	});
 <?php } ?>
@@ -712,7 +691,7 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 
 			if($('input[type=checkbox][name=<?=$mobile_view?>bid_bag_<?=$bslider['ond']?>]').prop("checked") == false){
 				bg_val = parseFloat($("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>").slider('getValue'));
-				total_bg = total_bg + calcBaggageValue(bg_val,<?=$bslider['per_min']?>,<?=$bslider['ond']?>);
+				total_bg = parseFloat(total_bg) + calcBaggageValue(bg_val,<?=$bslider['per_min']?>,<?=$bslider['ond']?>);
 			}
 		<?php }?>
 <?php if ($upgrade_offer) {?>
@@ -722,10 +701,10 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 		$("#total_bid_value").val(Math.round(total_value)).trigger('change');
 <?php }?>
 <?php if ($baggage_offer) {?>
-		tmp_bg = total_bg.toFixed(2);
+		tmp_bg = total_bg;
 		total_value = parseFloat(total_value) + parseFloat(tmp_bg);
-		$("#total_bg_value").val(Math.round(tmp_bg)).trigger('change');
-		$("#total_bid_value").val(Math.round(total_value)).trigger('change');
+		$("#total_bg_value").val(tmp_bg).trigger('change');
+		$("#total_bid_value").val(total_value).trigger('change');
 <?php }?>
 		mileSliderUpdate();
 	      return $("#total_bid_value").val();
