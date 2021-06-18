@@ -417,7 +417,7 @@ function updateCabinMedia(flight_number){
                                 <p style="color:<?=$mail_header_color?>"><?php echo $bslider['from_city_name']; ?> <span class="time-bid"><?=date('H:i A',$bslider['dep_date']+$bslider['dept_time']);?></span></p>
 								<ul>
 									<li><?php echo date('d M Y',$bslider['dep_date']); ?></li>
-									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['flight_number'];?></li>
+									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['airline_id']""."".$bslider['flight_number'];?></li>
 								</ul>
 								<small><?php echo substr($bslider['from_airport'],0,25) . ".."; ?></small>                       
                             </div>
@@ -426,7 +426,7 @@ function updateCabinMedia(flight_number){
                                 <p style="color:<?=$mail_header_color?>"><?php echo $bslider['to_city_name']; ?> <span class="time-bid"><?=date('H:i A',$bslider['arrival_date']+$bslider['arrival_time']);?></span></p>
 								<ul>
 									<li><?php echo date('d M Y',$bslider['arrival_date']); ?></li>
-									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['flight_number'];?></li>
+									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['airline_id']""."".$bslider['flight_number'];?></li>
 								</ul>
 								<small><?php echo substr($bslider['to_airport'],0,25) . ".."; ?></small>
                         </div>

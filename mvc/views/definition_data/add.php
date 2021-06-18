@@ -23,9 +23,11 @@
                         <div class="col-sm-6">
                             <?php
 							   $dtype[0] = 'Select Type';
-						     foreach($types as $type){
-								 $dtype[$type->vx_aln_data_typeID] = $type->alias;
-							 }							
+                               
+                                foreach($types as $type){
+                                    $dtype[$type->vx_aln_data_typeID] = $type->alias;
+							 }		
+                           sort($dtype);					
 						   echo form_dropdown("aln_data_typeID", $dtype,set_value("aln_data_typeID"), "id='aln_data_typeID' class='form-control hide-dropdown-icon select2'"); 
 						   ?>							
                         </div>
