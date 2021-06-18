@@ -183,9 +183,9 @@ class Bidding extends MY_Controller {
 						$this->data['baggage_max_val'] = $this->preference_m->get_preference_value_bycode('BAGGAGE_MAX_VAL','24',$airline->airlineID);
 						$this->data['piece'] = $this->preference_m->get_preference_value_bycode('PIECE','24',$airline->airlineID);
 						// var_dump($pnr_ref);
-						$test="SELECT vx.carrier_code, b.bid_id, SUM(b.bid_value) as bid_value, SUM(b.weight) as weight, o.offer_id, v.product_id, v.dtpfext_id,v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2 AND b.active = 1) LEFT JOIN VX_offer o ON ( o.pnr_ref = vx.pnr_ref ) WHERE v.active =1 AND vx.active =1 AND vxxx.active = 1 AND o.active = 1  AND v.ond>=1 AND vx.pnr_ref = '$pnr_ref' GROUP BY v.dtpfext_id";
+						$test="SELECT vx.carrier_code, b.bid_id, SUM(b.bid_value) as bid_value, SUM(b.weight) as weight, o.offer_id, v.product_id, v.dtpfext_id,v.dtpf_id,v.rule_id,v.ond,vx.pnr_ref,vx.from_city,vx.to_city,vxx.min_unit,vxx.max_capacity,vxx.min_price,vxx.max_price,vxxx.flight_number,vx.dep_date,vx.arrival_date,vx.dept_time,vx.arrival_time FROM VX_offer_info v LEFT JOIN VX_daily_tkt_pax_feed vx ON v.dtpf_id = vx.dtpf_id LEFT JOIN BG_baggage_control_rule vxx ON v.rule_id = vxx.bclr_id LEFT JOIN VX_daily_tkt_pax_feed vxxx ON vx.dtpfraw_id = vxxx.dtpfraw_id LEFT JOIN UP_bid b ON (b.dtpfext_id = v.dtpfext_id AND b.productID = v.product_id AND v.product_id = 2 AND b.active = 1) LEFT JOIN VX_offer o ON ( o.pnr_ref = vx.pnr_ref  and o.product_id = 2 and o.offer_id = v.offer_id) WHERE v.active =1 AND vx.active =1 AND vxxx.active = 1 AND o.active = 1  AND v.ond>=1 AND vx.pnr_ref = '$pnr_ref' AND v.product_id = 2 GROUP BY v.dtpfext_id";
 						$rquery = $this->install_m->run_query($test);
-						// var_dump($rquery);
+					//	echo $test;exit;
 						$mr=[];
 						$yy=[];
 						foreach($rquery as $rq){
@@ -350,6 +350,7 @@ class Bidding extends MY_Controller {
 					$this->data['cwtdata'][$ond] = $cwtdata;
 				}
 				//print_r($this->data['cwtdata']);exit;
+			//	print_r($this->data);exit;
 			}
 		} else {
 				$this->data['error'] .= '<br>OOPS! PNR FOR UPGRADE OFFER MISSING';
@@ -394,6 +395,7 @@ class Bidding extends MY_Controller {
 				$product_id = $this->input->post("product_id");
             	$bid_id  = $this->input->post('bid_id');
             	$offer_id  = $this->input->post('offer_id');
+//print_r($this->input->post());
 		if($this->input->post('offer_id')){ 		
             if($bid_id && $product_id){//Bid  Resubmit case
                $this->saveBiddingHistory($this->input->post('offer_id'));
@@ -559,8 +561,9 @@ class Bidding extends MY_Controller {
 					Case 2:
 					$maildata['template'] = 'baggage_confirmed';
 				    $maildata['bg_weight']= $data['weight'];
-				    $maildata['bg_bid_value']= number_format($data['cash']);
+				    $maildata['bg_bid_value']= number_format($data['cash']); 
 					break;
+
 					default:
 					break;
 				}
@@ -579,11 +582,6 @@ class Bidding extends MY_Controller {
              } else {
         		 $extention_data = $this->offer_issue_m->getPassengerDataByStatus($this->input->post('offer_id'),$this->input->post('flight_number'),'sent_offer_mail'); 
              }
-			 $no_bid_Status = $this->rafeed_m->getDefIdByTypeAndAlias('no_bid','20');
-			// $this->mydebug->debug("extension list");
-			  $p_list = explode(',',$extention_data->p_list);
-			 // $this->mydebug->debug($extention_data->p_list);		 
-              $this->offer_eligibility_m->update_dtpfext(array("booking_status" => $no_bid_Status,"modify_date"=>time()),$p_list);
 			  $json['status'] = "success";
 		}else{
 			$json['status'] = "send offer_id";

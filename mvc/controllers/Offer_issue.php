@@ -225,11 +225,11 @@ class Offer_issue extends Admin_Controller {
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
-		$sQuery = " select pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat( distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) AND tpf.active = 1 AND pfe.active = 1 AND pfe.rule_id > 0 AND tpf.active = 1  ";
+		$sQuery = " select pfe.product_id, group_concat(distinct pfe.dtpf_id) as dtpf_list ,tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat( distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) AND tpf.active = 1 AND pfe.active = 1 AND pfe.rule_id > 0 AND tpf.active = 1  ";
 		if ($pnr) {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
 		}
-		$sQuery .= " group by tpf.pnr_ref ,  booking_status,tpf.carrier_code, pfe.product_id ";
+		$sQuery .= " group by tpf.pnr_ref , tpf.carrier_code, pfe.product_id ";
 		$rResult = $this->install_m->run_query($sQuery);
 		$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('new','20');
 
@@ -239,7 +239,7 @@ class Offer_issue extends Admin_Controller {
 			$namelist = explode(';',$offer->pax_names);
 			$emails_list = explode(',', $offer->email_list);
 			$coupon_code = $this->generateRandomString(6);
-
+				$ref = Array();
 				$ref['pnr_ref'] = $offer->pnr_ref;
 				$ref['coupon_code'] = $this->offer_eligibility_m->hash($coupon_code);
 				$ref['offer_status'] = $offer_status; 
@@ -248,7 +248,13 @@ class Offer_issue extends Admin_Controller {
 				$ref["modify_date"] = time();
 				$ref["create_userID"] = $this->session->userdata('loginuserID');
 				$ref["modify_userID"] = $this->session->userdata('loginuserID');
-				$this->offer_reference_m->insert_offer_ref($ref);//offer update ref table
+				$offer_id = $this->offer_reference_m->insert_offer_ref($ref);//offer update ref table
+
+				$ref = Array();
+				$ref["offer_id"] = $offer_id;
+				$ref["modify_date"] = time();
+				$ref["modify_userID"] = $this->session->userdata('loginuserID');
+				$offer_id = $this->offer_eligibility_m->update_dtpfext($ref,$p_list);//offer update ref table
 		}
 		$this->session->set_flashdata('success', 'Generated Offers all New PAX successfully');
 		redirect(base_url("offer_issue/index"));
@@ -273,13 +279,15 @@ class Offer_issue extends Admin_Controller {
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
 	
-		$sQuery = " select o.offer_status, o.offer_id, pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe  LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id ) LEFT JOIN VX_offer o on (o.pnr_ref = tpf.pnr_ref AND pfe.product_id = o.product_id AND o.active = 1)  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1 AND pfe.active = 1 AND o.active = 1  ";
+		$sQuery = " select o.offer_status, group_concat(distinct pfe.offer_id) as offer_list,  pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe  LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id ) LEFT JOIN VX_offer o on (o.pnr_ref = tpf.pnr_ref AND pfe.product_id = o.product_id AND o.active = 1)  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1 AND pfe.active = 1 AND o.active = 1  ";
 		if ($pnr) {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
 		} else {
 			$sQuery .= " AND (dd.alias = 'new' OR o.offer_status = 1970)";
 		}
-		$sQuery .= " group by tpf.pnr_ref ,  booking_status,tpf.carrier_code, pfe.product_id";
+		$sQuery .= " group by tpf.pnr_ref ,  tpf.carrier_code";
+
+#echo $sQuery;
 
 		$rResult = $this->install_m->run_query($sQuery);
 		$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('sent_offer_mail','20');
@@ -297,12 +305,16 @@ class Offer_issue extends Admin_Controller {
 			// update extension table with new status
 			$this->offer_eligibility_m->update_dtpfext($array,$p_list);
 
-			$array = array();
-			$array['offer_status'] = $offer_status;
-			$array['product_id'] = $offer->product_id;
-			$array["modify_date"] = time();
-			$array["modify_userID"] = $this->session->userdata('loginuserID');
-			$this->offer_reference_m->update_offer_ref($array,$offer->offer_id);
+			$offer_list = explode(',', $offer->offer_list);
+			#echo "<br>" .  print_r($offer_list,1);
+				
+			foreach($offer_list as $offerId) {
+					$array = array();
+					$array['offer_status'] = $offer_status;
+					$array["modify_date"] = time();
+					$array["modify_userID"] = $this->session->userdata('loginuserID');
+					$this->offer_reference_m->update_offer_ref($array,$offerId);
+			}
 
 				// update tracker about change in status
 				$tracker = array();
@@ -327,7 +339,6 @@ class Offer_issue extends Admin_Controller {
 				if ( ! empty($data['pnr_ref']) ){
 
 					$msg .= $this->upgradeOfferMail($data);		 
-					return true;
 				}
 
 			}
@@ -336,8 +347,8 @@ class Offer_issue extends Admin_Controller {
 			$fmsg .= "<br>But have some errors.. " . $msg;
 		}
 		$this->session->set_flashdata('success', $fmsg);
-		if(!($pnr)){
-		redirect(base_url("offer_issue/index"));
+		if(!$pnr){
+			redirect(base_url("offer_issue/index"));
 		}
 }
 
@@ -1074,210 +1085,4 @@ $sWhere $sOrder $sLimit";
 		redirect(base_url("offer_table/index"));
 	}
 
-	public function upgradeOfferMail($maildata){
-		
-		if($maildata['offer_id'])
-		{
-			
-
-			$offerdt = $this->offer_issue_m->getOfferDetailsByOfferId($maildata['offer_id']);
-			
-			$maildata['pnr_ref']=$offerdt[0]->pnr_ref;
-		}
-			$pnr_ref=$maildata['pnr_ref'];
-			$offer = $this->bid_m->getPassengers($maildata['pnr_ref']);
-			
-			if (!$offer[0]->carrier_code) {
-				echo "<br>missing passenger deails for  $pnr_ref";
-				return;
-			}
-			
-			$prodlist = explode(',',$offer[0]->products);
-			$email_list = explode(',',$offer[0]->email_list);
-
-			$baggage_offer = 0;
-			$upgrade_offer = 0;
-			$exclude = $this->rafeed_m->getDefIdByTypeAndAlias('excl','20');
-		$cabins  = $this->airline_cabin_m->getAirlineCabins();
-		foreach ($prodlist as $prodId) {
-			switch ($prodId) {
-			case 1:
-				$upgrade_offer = 1;
-				$results = $this->bid_m->getUpgradeOffers($pnr_ref);
-				if(count($results)>0){
-					foreach($results as $result){
-					  $result->to_cabins = explode(',',$result->to_cabins);
-					  $dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
-					  $arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
-					  $dteStart = new DateTime($dept); 
-					  $dteEnd   = new DateTime($arrival); 
-					  $dteDiff  = $dteStart->diff($dteEnd);
-					  $result->time_diff = $dteDiff->format('%H hrs %i Min');
-					  $cdata = array();
-						  foreach($result->to_cabins as $value){
-								$cdata = explode('-',$value);              		
-								if($cdata[2] != $exclude){
-									$tocabins[$cdata[3]] = $cabins[$cdata[0]];
-									//$result->tocabins[] = array('cabin_name' => $cabins[$cdata[0]]); 
-								}              
-							}
-							ksort($tocabins);
-							foreach($tocabins as $c){
-								$result->tocabins[] = array('cabin_name' => $c);
-							}
-							if($result->fclr != null && !empty($result->tocabins)){			
-								$paxdata['dep_date'] = date('D d M Y',$result->dep_date);
-								$paxdata['dep_time'] = date('H:i',$result->dept_time);
-								$paxdata['arrival_date'] = date('D d M Y',$result->arrival_date);
-								$paxdata['arrival_time'] = date('H:i',$result->darrival_time);
-								$paxdata['carrier_code'] = $result->carrier_code;
-								$paxdata['carrier_name'] = $result->carrier_name;
-								$paxdata['flight_number'] = $result->flight_number;
-								$paxdata['from_city_code'] = $result->from_city_code;
-								$paxdata['from_city'] = $result->from_city;
-								$paxdata['to_city_code'] = $result->to_city_code;
-								$paxdata['to_city'] = $result->to_city;
-								$paxdata['seat_no'] = $result->seat_no;
-								$paxdata['current_cabin'] = $result->current_cabin;
-								$paxdata['cabins'] = $result->tocabins;
-								$paxdata['time_diff'] = $result->time_diff;
-								$offerdata[] = $paxdata;
-							}
-								$maildata['carrier_name'] = $result->carrier_name;
-								break;
-							}
-					  		$maildata['highest_upgrade_class'] = $result->tocabins[0]['cabin_name'];
-						}
-
-						//print_r($results); exit();
-					break;
-					case 2:
-						
-						$baggage_offer = 1;
-						if ( $upgrade_offer) {
-							break;//HACK
-						}
-						$results = $this->offer_issue_m->getBaggageOffer($pnr_ref);
-						if(count($results)>0){
-						foreach($results as $result){
-						  $dept = date('d-m-Y H:i:s',$result->dep_date+$result->dept_time);
-						  $arrival =  date('d-m-Y H:i:s',$result->arrival_date+$result->arrival_time);
-						  $dteStart = new DateTime($dept); 
-						  $dteEnd   = new DateTime($arrival); 
-						  $dteDiff  = $dteStart->diff($dteEnd);
-						  $result->time_diff = $dteDiff->format('%H hrs %i Min');
-						  $cdata = array();
-							$paxdata['dep_date'] = date('D d M Y',$result->dep_date);
-							$paxdata['dep_time'] = date('H:i',$result->dept_time);
-							$paxdata['arrival_date'] = date('D d M Y',$result->arrival_date);
-							$paxdata['arrival_time'] = date('H:i',$result->darrival_time);
-							$paxdata['carrier_code'] = $result->carrier_code;
-							$paxdata['carrier_name'] = $result->carrier_name;
-							$paxdata['flight_number'] = $result->flight_number;
-							$paxdata['from_city_code'] = $result->from_city_code;
-							$paxdata['from_city'] = $result->from_city;
-							$paxdata['to_city_code'] = $result->to_city_code;
-							$paxdata['to_city'] = $result->to_city;
-							$paxdata['seat_no'] = $result->seat_no;
-							$paxdata['current_cabin'] = $result->current_cabin;
-							$paxdata['cabins'] = $result->tocabins;
-							$paxdata['time_diff'] = $result->time_diff;
-							$offerdata[] = $paxdata;
-							$maildata['carrier_name'] = $result->carrier_name;
-							break;
-						}
-						}
-					//print_r($results); exit();
-				break;
-
-				default:
-			break;
-		}
-	}
-	if($maildata['template'])
-	{
-		$template=$maildata['template'];
-		
-	}
-	else{
-	if ( $baggage_offer && $upgrade_offer ) {
-			#echo "<br>UPGRADE & BAGGAGE COMBO OFFER";
-			$template = "upgrade_baggage_offer";    
-			$maildata['mail_subject'] .= " Upgrade & Baggage offer";    
-		} elseif( $upgrade_offer) {
-			#echo "<br>UPGRADE OFFER";
-			$template = "upgrade_offer";    
-			$maildata['mail_subject'] .= " Upgrade offer";    
-		} elseif( $baggage_offer) {
-			#echo "<br>BAGGAGE OFFER";
-			$template = "baggage_offer";    
-			$maildata['mail_subject'] .= " Baggage offer";    
-		}
-	}
-		$pax_names = $this->bid_m->getPaxNames($pnr_ref);
-	
-				$maildata['first_name']=$offer[0]->pax_names;
-				$maildata['pnr_ref'] =  $pnr_ref;
-                $maildata['offer_data'] = $offerdata;
-                $maildata['airlineID'] = $offer[0]->carrier_code;
-              //  $maildata['first_name'] = $offer[0]->pax_names;
-                $maildata['tomail'] = $email_list[0];
-                $primary_client = $this->user_m->getClientByAirline($maildata['airlineID'],6)[0];	   
-                $maildata = array_merge($maildata, $paxdata);
-		$dir = "assets/mail-temps";
-		$tpl = $this->mailandsmstemplate_m->getDefaultMailTemplateByCat($template,$maildata['airlineID']);
-		$tpl_file = $tpl->template_path;
-    	 $maildata['mail_subject'] = (!empty($tpl->mail_subject)) ? $tpl->mail_subject : "Congratulations! You got great deal ! Grab it..";
-		$t = explode('.',$tpl_file);
-		$tpl_path = $t[0]. '-imgs';
-		if ( $upgrade_offer) {
-                 $maildata['up_tpl_bnr'] = base_url("$dir/$tpl_path/banner.jpg");
-                 $maildata['up_tpl_bnrtop'] = base_url("$dir/$tpl_path/bannerTop.png");	
-                 $maildata['up_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");
-                 #$maildata['up_tpl_bnrbottom'] = base_url("assets/mail-temps/bg_temp1_images/bannerBottom.png");	
-                 #$maildata['up_tpl_contact_img'] = base_url("assets/mail-temps/bg_temp2_images/contactUs.png");	
-		}
-
-		if( $baggage_offer) {
-                 $maildata['bg_tpl_bnr'] = base_url("$dir/$tpl_path/banner.png");	
-                 $maildata['bg_tpl_bnrtop'] = base_url("$dir/$tpl_path/bannerTop.png");	
-                 $maildata['bg_tpl_bnrbottom'] = base_url("$dir/$tpl_path/bannerBottom.png");	
-                
-		}
-                 $maildata['open_browser'] = base_url("$dir/$tpl_path/openBrowser.png");
-                 $maildata['facebook_icon'] = base_url("$dir/$tpl_path/facebook.png");		
-                 $maildata['tag_img'] = base_url("$dir/$tpl_path/tag.png");		
-                 $maildata['twitter_icon'] = base_url("$dir/$tpl_path/twitter.png");	
-                 $maildata['pinterest_icon'] = base_url("$dir/$tpl_path/pinterest.png");	
-                 $maildata['openbrowser_img'] = base_url("$dir/openBrowser.png");
-            	 $maildata['airline_logo'] = base_url('uploads/images/'.$this->airline_m->getAirlineLogo($maildata['airlineID'])->logo);            
-                 
-                 $maildata['domain'] = $primary_client->domain;
-                 $maildata['primary_phone'] = $primary_client->phone;
-                 $maildata['primary_mail'] = $primary_client->email;
-                 $maildata['fb_link'] = "https://facebook.com";
-                 $maildata['twitter_link'] = "https://twitter.com";
-                 $maildata['pinterest_link'] = "https://pinterest.com";
-                 $maildata['unsubscribe_link'] = base_url('home/index');
-                 $maildata['forward_friend_link'] = base_url('home/index');
-                 $maildata['openbrowser_link'] = base_url('home/index');
-                 $maildata['not_intrested_link'] = base_url('home/index');
-                 
-		   $maildata['base_url'] = base_url(); 
-		   $maildata['bidnow_link'] = base_url('homes/bidding?pnr_ref='.$pnr_ref);
-		   $template_images = $this->airline_m->getImagesByType($maildata['airlineID']);
-		   foreach($template_images as $img){
-			   $maildata[$img->type] = base_url('uploads/images/'.$img->image);
-		   } 
-                 $airline_info = $this->bid_m->getAirlineLogoByPNR($pnr_ref);
-		   $maildata['mail_header_color'] = $airline_info->mail_header_color;
-		   if(empty($maildata['mail_header_color'])){
-			 $maildata['mail_header_color'] = '#333';  
-		   }
-		   
-		   if(isset($maildata['bid_value'])){
-			   $maildata['bid_value'] = number_format($maildata['bid_value']);
-		   }
-		$this->sendMailTemplateParser($template,$maildata);	
-		}
 }
