@@ -311,11 +311,6 @@ class Bidding extends MY_Controller {
 
 					$piece = $this->data['piece'];
 					$price=$res->min_price;
-					if ( $res->bclr_id == 87 ) {
-						$wt_sold = 4;
-					} else {
-						$wt_sold = 17;
-					}
 
 					$tr[$res->ond]['per_min']=$per_min;
 					$tr[$res->ond]['wt_purchased']=$wt_purchased;
