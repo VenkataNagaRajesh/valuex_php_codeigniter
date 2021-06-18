@@ -69,6 +69,7 @@ class Invfeed_m extends MY_Model {
 		$this->db->where('active','1');
 		$this->db->limit(1);
 				$query = $this->db->get();
+		//echo ($this->db->last_query());exit;
 				$data = $query->row();
 				
 		return  $data;

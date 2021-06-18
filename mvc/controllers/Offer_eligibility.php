@@ -298,6 +298,8 @@ class Offer_eligibility extends Admin_Controller {
                 }
                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                 $sWhere .= " pext.active = 1 ";
+                $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+                $sWhere .= " of.active = 1 ";
 	
 
 
@@ -326,7 +328,6 @@ $sQuery = " SELECT SQL_CALC_FOUND_ROWS pext.rule_id, of.offer_id, vp.name as pro
 		     LEFT JOIN VX_data_defns os on (os.vx_aln_data_defnsID = of.offer_status AND bs.aln_data_typeID = 20)
 
 $sWhere $sOrder $sLimit";
-//print_r($sQuery) ;exit;
 
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
