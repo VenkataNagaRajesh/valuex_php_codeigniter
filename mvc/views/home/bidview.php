@@ -664,7 +664,7 @@ function calcBaggageValue(slider_value_kg, soldout_kg, ond) {
 		//WORKI
 }
 
-<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
+<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; if ( $bslider['reason'] ) { continue;}  ?> 
 	$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>').slider({
 	tooltip: 'always',
 	formatter: function(value) {
@@ -691,7 +691,7 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 		<?php } } ?>
 		var total_bg = 0;
 		var tmp_bg = 0;
-		<?php foreach($baggage as $pax => $paxval){ $bslider = $baggage[$pax]['pax']; ?> 
+		<?php foreach($baggage as $pax => $paxval){ $bslider = $baggage[$pax]['pax']; if ( $bslider['reason'] ) { continue;} ?> 
 
 			if($('input[type=checkbox][name=<?=$mobile_view?>bid_bag_<?=$bslider['ond']?>]').prop("checked") == false){
 				bg_val = parseFloat($("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>").slider('getValue'));
@@ -886,7 +886,7 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 			  success: function(data) {
 				var info = jQuery.parseJSON(data);              		
 				if(info['status'] == "success"){
-					<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
+					<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; if ( $bslider['reason'] ) { continue;}  ?>
 						var bg_weight_obj = $("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>");
 						var bg_weight = 0;
 						if ( bg_weight_obj ) {
@@ -1040,7 +1040,7 @@ if ( $baggage_offer ) {
 ?>
 //baggage slider jquery
 	$(document).ready(function () {
-<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
+<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax'];  if ( $bslider['reason'] ) { continue;} ?> 
 
 		$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>Slider .slider-selection').css({"background":"<?=$mail_header_color?>"});
     		$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>Slider .slider-handle').css({"background":"<?=$mail_header_color?>"});
