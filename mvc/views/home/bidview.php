@@ -934,7 +934,7 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
     		}); 
 
 		if(paysuccess == 1){
-			   //window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
+			   window.location = "<?=base_url('home/paysuccess')?>/"+pnr_ref;
 		} else {
 		   alert($(status).text());
 		}
