@@ -300,9 +300,9 @@ class Bidding extends MY_Controller {
 
 					if ( $per_max < $per_min ) {
 						//Don't allow to buy at all
-						$bg['reason'] = "You have exceeded your offer max purchase weight or sold out";
-						$per_max = 0;
-						$per_min = 0;
+						 $tr[$res->ond]['reason'] = "You have exceeded your offer max purchase weight or sold out";
+						#$per_max = 0;
+						#$per_min = 0;
 						#continue;	
 					}
 
@@ -334,8 +334,8 @@ class Bidding extends MY_Controller {
 					if ( $bg['per_max'] < $bg['per_min'] ) {
 						//Don't allow to buy at all
 						$bg['reason'] = "You have exceeded your offer max purchase weight";
-						$bg['per_max'] = 0;
-						$bg['per_min'] = 0;
+						#$bg['per_max'] = 0;
+						#$bg['per_min'] = 0;
 						#continue;	
 					}
 					$bclrdata = $this->bclr_m->get_bclr($bg['rule_id']);
