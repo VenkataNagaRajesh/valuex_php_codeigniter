@@ -66,21 +66,18 @@ class Bidding extends MY_Controller {
 								$this->data['error_'. $offer_data->product_id] = $offer->product_name . " Offer Expired"; 
 							}  
 
-							//echo "($sent_offer_mail == $offer_data->offer_status || $bid_received == $offer_data->offer_status)"; exit;
-							if($sent_offer_mail == $offer_data->offer_status || $bid_received == $offer_data->offer_status || $bid_accepted == $offer_data->offer_status){
 								switch($offer_data->product_id ) {
 									case 1: 
-										if ( $bid_received == $offer_data->offer_status ) {
-											$this->showUpgradeOffer($pnr_ref,'bid_received');
-										} else {
+										if($sent_offer_mail == $offer_data->offer_status || $bid_received == $offer_data->offer_status ){
 											$this->showUpgradeOffer($pnr_ref);
 										}
 										break;
 									case 2: 
-										$this->showBaggageOffer($pnr_ref);
+										if($sent_offer_mail == $offer_data->offer_status || $bid_received == $offer_data->offer_status || $bid_accepted == $offer_data->offer_status){
+											$this->showBaggageOffer($pnr_ref);
+										}
 									break;
 								}
-							}
 						} 
 
 						$offer = $this->bid_m->getPassengers($pnr_ref);
@@ -303,7 +300,10 @@ class Bidding extends MY_Controller {
 
 					if ( $per_max < $per_min ) {
 						//Don't allow to buy at all
-						continue;	
+						$bg['reason'] = "You have exceeded your offer max purchase weight or sold out";
+						$per_max = 0;
+						$per_min = 0;
+						#continue;	
 					}
 
 					#$per_min = 5;
@@ -316,31 +316,37 @@ class Bidding extends MY_Controller {
 					$tr[$res->ond]['wt_purchased']=$wt_purchased;
 					$tr[$res->ond]['piece']=$piece;
 					$tr[$res->ond]['per_max']=$per_max;
-					$tr[$res->ond]['sold_out'][$res->bclr_id]= $wt_sold ? $wt_sold : 0;
+					$tr[$res->ond]['sold_out']= $wt_sold ? $wt_sold : 0;
 					if ( !in_array($res->bclr_id,$tr[$res->ond]['bclrids'])) {
 						$tr[$res->ond]['bclrids'][]=$res->bclr_id;
 					}
 					#$tr[$res->ond]['bclrids'][]=74;
 				}
 
-#print_r($tr);
 				if ( count($tr) ) {
 					$this->data['baggage_offer'] = 1;
 				}
 
 				foreach($tr as $bg ) {
-					$bclrdata = $this->bclr_m->get_bclr($bg['rule_id']);
-					$this->data['bclr'][$bg['ond']] = $bclrdata;
 					if ( $tr[$bg['ond']]['wt_purchased'] ) {
 						$bg['per_max'] =  $tr[$bg['ond']]['per_max'] - $tr[$bg['ond']]['wt_purchased'];//Dont allow to buy over weight
 					}
+					if ( $bg['per_max'] < $bg['per_min'] ) {
+						//Don't allow to buy at all
+						$bg['reason'] = "You have exceeded your offer max purchase weight";
+						$bg['per_max'] = 0;
+						$bg['per_min'] = 0;
+						#continue;	
+					}
+					$bclrdata = $this->bclr_m->get_bclr($bg['rule_id']);
+					$this->data['bclr'][$bg['ond']] = $bclrdata;
 					$this->data['baggage'][$bg['dtpf_id']]['pax'] = $bg;
 				}
 
 				foreach($tr as $ond => $bg ) {
 					$cwtdata = Array();
 					foreach($bg['bclrids'] as $bclrID ) {
-						$tmp_cwtdata = $this->bclr_m->getActiveCWT($bclrID,($bg['sold_out'][$bclrID] ? $bg['sold_out'][$bclrID] : 0),($bg['per_max'] + $bg['per_min']));
+						$tmp_cwtdata = $this->bclr_m->getActiveCWT($bclrID,($bg['sold_out'] ? $bg['sold_out'] : 0),($bg['per_max'] + $bg['per_min']));
 						$i = 1;
 						foreach($tmp_cwtdata as $key => $item ) {
 								$cwtdata[$i] += $item['price_per_kg'];

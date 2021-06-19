@@ -464,6 +464,10 @@ function updateCabinMedia(flight_number){
 
 									 
 									<b> Max&nbsp;&nbsp;<?=$item_unit?> <?=$item_title?> </b>
+									<?php if ( $bslider['reason'] ) {
+									?>
+									<br><span style="background-color:yellow"><?=$bslider['reason']?></span>
+									<?php } ?>
 								</div>
 							</div>
 							

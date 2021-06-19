@@ -71,8 +71,7 @@ class Invfeed_m extends MY_Model {
 				$query = $this->db->get();
 		//echo ($this->db->last_query());exit;
 				$data = $query->row();
-				
-		return  $data;
+		return  $data->sold_weight;
 	}
 		
 	function update_entries($update,$where) {
