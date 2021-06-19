@@ -109,6 +109,16 @@ class Offer_eligibility_m extends MY_Model {
                 return  $result;
 	}
 
+	function getFlightsByOnd($offer_id, $ond) {
+		$sQuery = "SELECT * FROM ";
+		$sQuery .= "VX_offer_info pext , VX_daily_tkt_pax_feed pf  where pf.dtpf_id = pext.dtpf_id AND pext.product_id = 2";
+		$sQuery .= " AND `pext`.`offer_id` = $offer_id"; 
+		$sQuery .= " AND `pext`.`ond` = $ond"; 
+		$result = $this->install_m->run_query($sQuery);
+		//print_r($this->db->last_query());
+                return  $result;
+	}
+
 	function getBaggagePaxDataForAllCarriers($carriers, $timestamp, $pnr = 0) {
 		$sQuery = "SELECT carrier_code, pnr_ref, first_name, last_name FROM ";
 		$sQuery .= " (SELECT DISTINCT dtpf.carrier_code, dtpf.pnr_ref, dtpf.first_name,dtpf.last_name FROM `VX_daily_tkt_pax_feed` `dtpf` ";

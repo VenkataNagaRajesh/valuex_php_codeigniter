@@ -255,6 +255,7 @@ class Bidding extends MY_Controller {
 				foreach($sum_res as $res){
 					if ( $res->ond != $last_ond ) {
 						$per_min = 0;
+						$wt_sold = 0;
 						$wt_purchased = 0;
 						$per_max=$this->data['baggage_max_val'];//Max KG  user user can buy
 					} 
@@ -280,7 +281,7 @@ class Bidding extends MY_Controller {
 					$inv['origin_airport'] = $tr[$res->ond]['from_city'];
 					$inv['dest_airport'] = $tr[$res->ond]['to_city'];
 					$inv['active'] = 1;
-					$wt_sold = $this->invfeed_m->getSoldWeight($inv);
+					$wt_sold += $this->invfeed_m->getSoldWeight($inv);
 
 					if ( $res->max_capacity ) {
 						$max_diff = $res->max_capacity - $wt_sold;
@@ -300,7 +301,7 @@ class Bidding extends MY_Controller {
 
 					if ( $per_max < $per_min ) {
 						//Don't allow to buy at all
-						 $tr[$res->ond]['reason'] = "You have exceeded your offer max purchase weight or sold out";
+						 $tr[$res->ond]['reason'] = "Sorry, Baggage Sold out, Better luck next time!";
 						#$per_max = 0;
 						#$per_min = 0;
 						#continue;	
@@ -330,13 +331,15 @@ class Bidding extends MY_Controller {
 				foreach($tr as $bg ) {
 					if ( $tr[$bg['ond']]['wt_purchased'] ) {
 						$bg['per_max'] =  $tr[$bg['ond']]['per_max'] - $tr[$bg['ond']]['wt_purchased'];//Dont allow to buy over weight
-					}
-					if ( $bg['per_max'] < $bg['per_min'] ) {
-						//Don't allow to buy at all
-						$bg['reason'] = "You have exceeded your offer max purchase weight";
-						#$bg['per_max'] = 0;
-						#$bg['per_min'] = 0;
-						#continue;	
+							if ( ($bg['per_max'] < $bg['per_min']) ) {
+								//Don't allow to buy at all
+								if ( !$bg['reason'] ) {
+									$bg['reason'] = "You have exceeded your offer max purchase weight";
+								}
+								#$bg['per_max'] = 0;
+								#$bg['per_min'] = 0;
+								#continue;	
+							}
 					}
 					$bclrdata = $this->bclr_m->get_bclr($bg['rule_id']);
 					$this->data['bclr'][$bg['ond']] = $bclrdata;
@@ -565,6 +568,27 @@ class Bidding extends MY_Controller {
 					break;
 
 					Case 2:
+						
+                 	 	$fly_ond_data = $this->offer_eligibility_m->getFlightsByOnd($data['offer_id'],$data['ond']);
+
+						foreach($fly_ond_data as $fly_ond ) {
+								$inv = array();
+								$inv['flight_nbr'] = $fly_ond->flight_number;
+								$inv['airline_id'] = $fly_ond->carrier_code;
+								$inv['departure_date'] = $fly_ond->dep_date;
+								$inv['origin_airport'] = $fly_ond->from_city;
+								$inv['dest_airport'] = $fly_ond->to_city;
+								$inv['cabin'] = $fly_ond->cabin;
+								$inv['active'] = 1;
+								$wt_sold_old = $this->invfeed_m->getSoldWeight($inv);
+								$total_sold_wt = $wt_sold_old + $data['weight'];
+								$upd = Array();
+								$upd['sold_weight'] = $total_sold_wt;
+								$upd["modify_userID"] = $this->session->userdata('loginuserID');
+								$upd['modify_date'] = time();
+								$this->invfeed_m->update_entries($upd,$inv);
+						}
+
 					$maildata['template'] = 'baggage_confirmed';
 				    $maildata['bg_weight']= $data['weight'];
 				    $maildata['bg_bid_value']= number_format($data['cash']); 

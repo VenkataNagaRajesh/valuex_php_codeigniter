@@ -433,13 +433,20 @@ function updateCabinMedia(flight_number){
                     </div>
                     <div class="col-xs-12 col-sm-5 col-md-2 col-lg-2 lft-gap">
                         <div class="col-sm-12">
+							<?php if ( !$bslider['reason'] ) {
+							?>
     						<label class="checkbox-inline">
 								<input type="checkbox" name="bid_bag_<?=$bslider['ond']?>" id="bid_bag_<?=$bslider['ond']?>" value="" >Check this box if not Interested
 							</label>
+							<?php } ?>
                         
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 lft-gap">
+							<?php if ( $bslider['reason'] ) {
+							?>
+							<br><span style="background-color:yellow"><?=$bslider['reason']?></span>
+							<?php } else {  ?>
                        
 						<?php if($bclr[$bslider['ond']]->bag_type==2){ //PC 
 							$item_title = 'PC';
@@ -464,13 +471,10 @@ function updateCabinMedia(flight_number){
 
 									 
 									<b> Max&nbsp;&nbsp;<?=$item_unit?> <?=$item_title?> </b>
-									<?php if ( $bslider['reason'] ) {
-									?>
-									<br><span style="background-color:yellow"><?=$bslider['reason']?></span>
-									<?php } ?>
 								</div>
 							</div>
 							
+							<?php } ?>
 						</div>
 					<div class="col-xs-12 col-sm-3 col-md-2 col-lg-2" style="margin:10px 0;">
 
