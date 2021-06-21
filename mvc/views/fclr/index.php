@@ -1,11 +1,11 @@
 <?php if(!empty($check_product) && $this->session->userdata('roleID') != 1) { ?>
-<div id="notice-danger" class="col-md-12">
+<!-- <div id="notice-danger" class="col-md-12">
     <div class="alert alert-danger" style="margin-top:20px;">
         <i class="fa fa-check-circle"></i>
         Sorry Your Upgrade Product Expired 
         <button type="button" class="close" data-dismiss="alert">×</button>
     </div>
-</div>
+</div> -->
 <?php } ?>
 <div class="fclr-bar">
 <?php  if(permissionChecker('fclr_add')) {  ?>
