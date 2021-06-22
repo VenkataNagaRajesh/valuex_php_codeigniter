@@ -68,12 +68,12 @@ class Pref_setting extends Admin_Controller {
 
 
 
-
-	                $userID = $this->session->userdata('loginuserID');
+        
+	        $userID = $this->session->userdata('loginuserID');
                 $roleID = $this->session->userdata('roleID');
              if($roleID != 1){
-                                                 $this->data['airlines'] = $this->user_m->getUserAirlines($userID);
-                                                   } else {
+                      $this->data['airlines'] = $this->user_m->getUserAirlines($userID);
+                } else {
                    $this->data['airlines'] = $this->airline_m->getAirlinesData();
                 }
 
@@ -83,18 +83,16 @@ class Pref_setting extends Admin_Controller {
 			  if(!empty($this->input->post('airline_id'))){
 	        	          $this->data['airlineID'] = $this->input->post('airline_id');
         	        }
-
-			//$is_default_values =  $this->input->post('pref_default_values');
-			$airline_id = $this->input->post('airline_id');
+	//$is_default_values =  $this->input->post('pref_default_values');
+			$airline_id = $this->input->post('airline_id');            
            foreach($_POST as $key => $value){
 			if (preg_match("/prefvalue-/", $key))  {
 	                     $info = explode('-',$key);
-             		 $array['pref_value'] = $value;
-                         $array['modify_userID'] = $this->session->userdata('loginuserID');
-                         $array['modify_date'] = time();
+             		         $array['pref_value'] = $value;
+                                 $array['modify_userID'] = $this->session->userdata('loginuserID');
+                                 $array['modify_date'] = time();
 			$is_default_value = $this->input->post('pref_default-'.$info[1]);
-			 if($is_default_value == 0) {
-				
+			 if($is_default_value != 0) {
 			 $pref = $this->preference_m->get_preference(array('VX_aln_preferenceID'=>$info[1]));
 				$insert = array(
                                     "categoryID" => $pref->categoryID,
@@ -110,12 +108,10 @@ class Pref_setting extends Admin_Controller {
                                         "create_userID" => $this->session->userdata('loginuserID'),
                     			"modify_userID" => $this->session->userdata('loginuserID'),
                                 );
-
-                         	$this->preference_m->insert_preference($insert);
-			} else {	
+                                $this->preference_m->insert_preference($insert);
+			} else {
 			$this->preference_m->update_preference($array,$info[1]);
 			}
-
 			}
                    }
                   $this->session->set_flashdata('success', $this->lang->line('menu_success'));
