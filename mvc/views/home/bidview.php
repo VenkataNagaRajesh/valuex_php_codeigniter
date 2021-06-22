@@ -872,7 +872,6 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 		}
 <?php } ?>
 <?php if($baggage_offer){ ?>
-
 			var product_id = 2;
 			var cash = $("#bg_charges_cash").val();
 			var cash_miles = $("#bg_charges_miles_cash").val();

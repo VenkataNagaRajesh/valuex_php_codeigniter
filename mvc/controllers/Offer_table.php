@@ -65,6 +65,7 @@ class Offer_table extends Admin_Controller {
 				$this->data["subview"] = "Offer_not_avaible";
 				$this->load->view('_layout_main', $this->data);
 		}
+
 	}
 
 	

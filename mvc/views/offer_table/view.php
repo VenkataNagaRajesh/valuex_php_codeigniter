@@ -119,6 +119,7 @@
 				<?php foreach ($offer_dt as $dt ) {
 					if($dt->productID==1){
 					  $inv = array();
+
 					$inv['flight_nbr'] = $dt->flight_number;
 					$inv['airline_id'] = $dt->carrier_code;
 					$inv['departure_date'] = $dt->flight_date;

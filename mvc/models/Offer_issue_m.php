@@ -216,7 +216,6 @@ return $rResult;
 
 public function getOfferDetailsByPnr($pnr_ref, $totals = 0, $group_totals = 0) {
 	
-//$sGroup = ' group by MainSet.flight_number';
 $sOrder = ' ORDER BY MainSet.productID ASC ';
 if ($group_totals) {
 	$sWhere = ' GROUP BY MainSet.productID ';
