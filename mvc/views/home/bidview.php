@@ -896,8 +896,8 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 						if ( bg_weight_obj ) {
 							 bg_weight = bg_weight_obj.slider('getValue');
 						}
+						var bg_value = calcBaggageValue(bg_weight,<?=$bslider['per_min']?>,<?=$bslider['ond']?>);
 						var flight_number = <?=$bslider['flight_number']?>;				
-						var bg_value = cwtpoints<?=$bslider['ond']?>[bg_weight];
 						var dtpfext_id=<?=$bslider['dtpfext_id']?>;
 						var product_id=<?=$bslider['product_id']?>;
 						var offer_id=<?=$bslider['offer_id']?>;

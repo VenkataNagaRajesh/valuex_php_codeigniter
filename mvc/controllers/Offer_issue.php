@@ -558,7 +558,7 @@ $sWhere $sOrder $sLimit";
 			$bid_cnt = $this->bid_m->getBidByOfferID($feed->offer_id);	
 			$return_url = 'offer_issue';
 			if($bid_cnt > 0 ) {
-				$feed->bid_info = btn_view('offer_table/view/'.$feed->offer_id.'/return/'.$return_url, $this->lang->line('view'));
+				$feed->bid_info = btn_view('offer_table/view/'.$feed->pnr_ref.'/return/'.$return_url, $this->lang->line('view'));
 			} else{
 				$feed->bid_info = 'No Bid';
 			}

@@ -29,40 +29,43 @@ class Offer_table extends Admin_Controller {
 	}	
 	
 
-        public function view() {
-                $id = htmlentities(escapeString($this->uri->segment(3)));
-		$return = htmlentities(escapeString($this->uri->segment(4)));
-		if($return == 'return'){
-			 $return = htmlentities(escapeString($this->uri->segment(5)));
-		} else {
-			$return = 'offer_table';
-		}
+    public function view() {
+            $pnr_ref = htmlentities(escapeString($this->uri->segment(3)));
+            $return = htmlentities(escapeString($this->uri->segment(4)));
+            if($return == 'return'){
+                  $return = htmlentities(escapeString($this->uri->segment(5)));
+            } else {
+                 $return = 'offer_table';
+            }
 
 			$this->data["return"] = $return;
-                if ((int)$id) {
-                        $ofr = $this->offer_issue_m->getOfferDetailsById($id);
+			$this->data["pnr_ref"] = $pnr_ref;
+            $this->data['offer_dt'] = $this->offer_issue_m->getOfferDetailsByPnr($pnr_ref);
+            $this->data['offer_dt_full_total'] = $this->offer_issue_m->getOfferDetailsByPnr($pnr_ref,1)[0];
+            $this->data['offer_dt_sub_total'] = $this->offer_issue_m->getOfferDetailsByPnr($pnr_ref,1,1);
+			$p_cnt = count(explode('<br>',$this->data['offer_dt'][0]->p_list));
+			$this->data["paassenger_cnt"] = $p_cnt;
+			$ps_data = explode('<br>',$this->data['offer_dt'][0]->p_list);
+			$this->data["ps_data"] = $ps_data;
+			$tier_array = array('1' => 'Platinum', '2' => 'Gold', '3' => 'Silver','4' => 'Bronze');
+			$this->data["tier_array"] = $tier_array;
                         
-                        $this->data["ofr"] = $ofr;
-			foreach ($ofr as $data ) {
+			foreach ($this->data['offer_dt_sub_total'] as $data ) {
 				if($data->productID==1){
-                        		$this->data["upgrade_offer"] = 1;
+                    $this->data["upgrade_offer"] = 1;
 				} else if($data->productID==2){
-                        		$this->data["baggage_offer"] = 1;
+                    $this->data["baggage_offer"] = 1;
 				}
 			}
 
-                        if($this->data["ofr"]) {
-                                $this->data["subview"] = "offer_table/view";
-                                $this->load->view('_layout_main', $this->data);
-                        } else {
-                                $this->data["subview"] = "Offer_not_avaible";
-                                $this->load->view('_layout_main', $this->data);
-                        }
-                } else {
-                        $this->data["subview"] = "Offer_not_avaible";
-                        $this->load->view('_layout_main', $this->data);
-                }
-        }
+		if($this->data["offer_dt"]) {
+				$this->data["subview"] = "offer_table/view";
+				$this->load->view('_layout_main', $this->data);
+		} else {
+				$this->data["subview"] = "Offer_not_avaible";
+				$this->load->view('_layout_main', $this->data);
+		}
+	}
 
 	
 	public function index() {
@@ -551,7 +554,7 @@ $sOrder $sLimit";
 			$feed->pp_list = str_replace('<br>',',' ,$feed->p_list);
 			$feed->p_list = '<a href="#" style="color:blue;"  data-placement="top" data-toggle="tooltip" data-original-title="'.$feed->p_list.'">'.$feed->p_count.'</a>';
 
-			$feed->action = btn_view('offer_table/view/'.$feed->offer_id, $this->lang->line('view'));
+			$feed->action = btn_view('offer_table/view/'.$feed->pnr_ref, $this->lang->line('view'));
                         $output['aaData'][] = $feed;
                         $feed->id = $i;
 			 $i++;
