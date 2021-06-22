@@ -25,7 +25,6 @@
 			<ul>
 
 			<?php  
-				
 				foreach ($ps_data as $pp ) {
 					$p = explode(':', $pp);
 					?>
