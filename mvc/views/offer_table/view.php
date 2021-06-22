@@ -69,7 +69,7 @@
 
 			<p><b>Offer Payment summary </b><br>
 				<span>Order #: </span>  <?php echo $offer_dt_full_total->orders;?><br>
-				<span>Toal Payment: </span> $ <?php echo $offer_dt_full_total->bid_value;?><br>
+				<span>Total Payment: </span> $ <?php echo $offer_dt_full_total->bid_value;?><br>
 				<span>Cash: </span> $ <?php echo $offer_dt_full_total->cash;?><br>
 				<span>Miles: </span> <?php echo $offer_dt_full_total->miles;?><br>
 <?php
@@ -134,7 +134,7 @@
 			
 						<td><?=$dt->bid_id?></td>
 						<td><?=$dt->carrier.$dt->flight_number?></td>
-						<td><?php echo date('d/m/Y',$data->flight_date)?></td>
+						<td><?php echo date('d/m/Y',$dt->flight_date)?></td>
 						<td><?php echo $dt->from_city;?></td>
 						<td><?php echo $dt->to_city;?></td>
 						<td><?php echo $dt->from_cabin;?></td>
@@ -151,9 +151,9 @@
 						<?php
 							if ($dt->offer_status == 'Bid Received' ) { 
 						?>
-				<a href="<?php echo base_url('offer_table/processbid/'.$dt->offer_id.'/'.$data->flight_number.'/accept'); ?>" onclick="<?php if( $empty_seats < $p_cnt) {?> alert('Insufficient seats'); return false; <?php } ?> ; var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"><i class="fa fa-check-circle" aria-hidden="true"></i> </a>
+				<a href="<?php echo base_url('offer_table/processbid/'.$dt->offer_id.'/'.$dt->flight_number.'/accept'); ?>" onclick="<?php if( $empty_seats < $p_cnt) {?> alert('Insufficient seats'); return false; <?php } ?> ; var status = '<?php echo $dt->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"><i class="fa fa-check-circle" aria-hidden="true"></i> </a>
 
-					<a href="<?php echo base_url('offer_table/processbid/'.$dt->offer_id.'/'.$data->flight_number.'/reject'); ?>"  onclick="var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"  ><i class="fa fa-times-circle-o" aria-hidden="true"></i></a></td>
+					<a href="<?php echo base_url('offer_table/processbid/'.$dt->offer_id.'/'.$dt->flight_number.'/reject'); ?>"  onclick="var status = '<?php echo $dt->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"  ><i class="fa fa-times-circle-o" aria-hidden="true"></i></a></td>
 
 							<?php } else {
 								echo $dt->offer_status;
@@ -218,9 +218,9 @@
 						<?php
 							if ($dt->offer_status == 'Bid Received' ) { 
 						?>
-				<a href="<?php echo base_url('offer_table/processbid/'.$dt->offer_id.'/'.$data->ond.'/accept'); ?>" onclick="<?php if( $empty_seats < $p_cnt) {?> alert('Insufficient seats'); return false; <?php } ?> ; var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"><i class="fa fa-check-circle" aria-hidden="true"></i> </a>
+				<a href="<?php echo base_url('offer_table/processbid/'.$dt->offer_id.'/'.$dt->ond.'/accept'); ?>" onclick="<?php if( $empty_seats < $p_cnt) {?> alert('Insufficient seats'); return false; <?php } ?> ; var status = '<?php echo $dt->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"><i class="fa fa-check-circle" aria-hidden="true"></i> </a>
 &nbsp;&nbsp;&nbsp;
-					<a href="<?php echo base_url('offer_table/processbid/'.$dt->offer_id.'/'.$data->ond.'/reject'); ?>"  onclick="var status = '<?php echo $data->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"  ><i class="fa fa-times-circle-o" aria-hidden="true"></i></a></td>
+					<a href="<?php echo base_url('offer_table/processbid/'.$dt->offer_id.'/'.$dt->ond.'/reject'); ?>"  onclick="var status = '<?php echo $dt->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"  ><i class="fa fa-times-circle-o" aria-hidden="true"></i></a></td>
 
 							<?php } else {
 								echo $dt->offer_status;
