@@ -557,6 +557,7 @@ $sWhere $sOrder $sLimit";
                         $feed->departure_date = date('d-m-Y',$feed->flight_date);
 			$bid_cnt = $this->bid_m->getBidByOfferID($feed->offer_id);	
 			$return_url = 'offer_issue';
+
 			if($bid_cnt > 0 ) {
 				$feed->bid_info = btn_view('offer_table/view/'.$feed->pnr_ref.'/return/'.$return_url, $this->lang->line('view'));
 			} else{
