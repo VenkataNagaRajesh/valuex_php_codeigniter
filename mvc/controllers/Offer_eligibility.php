@@ -169,11 +169,12 @@ class Offer_eligibility extends Admin_Controller {
 				
 				if ( $sOrder == "ORDER BY  " )
 				{
-					$sOrder .= " dtpf_id ";
+					$sOrder .= " pext.create_date DESC, pext.product_id ASC, pext.dtpf_id ASC,  pext.ond ASC ";
 
 				}
 			} else {
-				$sOrder .= "  of.offer_id DESC, pf.pnr_ref ASC, pext.product_id ASC, pext.ond ASC ";
+				#$sOrder .= " pext.create_date DESC, pext.dtpf_id ASC, of.offer_id DESC, pf.pnr_ref ASC, pext.product_id ASC, pext.ond ASC ";
+				$sOrder .= " pext.create_date DESC, pext.product_id ASC, pext.dtpf_id ASC,  pext.ond ASC ";
 			}
 			$sWhere = "";
 			if ( $_GET['sSearch'] != "" )
