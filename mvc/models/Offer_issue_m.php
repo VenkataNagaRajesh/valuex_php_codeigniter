@@ -289,6 +289,21 @@ return $rResult;
 }
 
 
+public function getOffersByPnr($pnr_ref,$subtotal= 0)  {
+	
+
+	$query = "select  create_date as offer_date, offer_id, product_id,group_concat(distinct orderID SEPARATOR ',') as orders , SUM(amount) as amount, SUM(cash) as cash, SUM(miles) as miles  from VX_offer  where active = 1 AND pnr_ref = '$pnr_ref' ";
+		if ( $subtotal) {
+				$query .= " GROUP BY product_id";
+		}
+#echo "<br><br>" .$query;
+#echo "<br><br>";
+$rResult = $this->install_m->run_query($query);
+#echo $this->db->last_query();
+return $rResult;
+
+}
+
 
 
 	function get_flight_date($offer_id,$flight_number){

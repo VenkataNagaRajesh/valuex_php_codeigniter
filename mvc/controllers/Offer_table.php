@@ -41,8 +41,8 @@ class Offer_table extends Admin_Controller {
 			$this->data["return"] = $return;
 			$this->data["pnr_ref"] = $pnr_ref;
             $this->data['offer_dt'] = $this->offer_issue_m->getOfferDetailsByPnr($pnr_ref);
-            $this->data['offer_dt_full_total'] = $this->offer_issue_m->getOfferDetailsByPnr($pnr_ref,1)[0];
-            $this->data['offer_dt_sub_total'] = $this->offer_issue_m->getOfferDetailsByPnr($pnr_ref,1,1);
+            $this->data['offer_dt_full_total'] = $this->offer_issue_m->getOffersByPnr($pnr_ref)[0];
+            $this->data['offer_dt_sub_total'] = $this->offer_issue_m->getOffersByPnr($pnr_ref,1);
 			$p_cnt = count(explode('<br>',$this->data['offer_dt'][0]->p_list));
 			$this->data["paassenger_cnt"] = $p_cnt;
 			$ps_data = explode('<br>',$this->data['offer_dt'][0]->p_list);
@@ -51,9 +51,9 @@ class Offer_table extends Admin_Controller {
 			$this->data["tier_array"] = $tier_array;
                         
 			foreach ($this->data['offer_dt_sub_total'] as $data ) {
-				if($data->productID==1){
+				if($data->product_id==1){
                     $this->data["upgrade_offer"] = 1;
-				} else if($data->productID==2){
+				} else if($data->product_id==2){
                     $this->data["baggage_offer"] = 1;
 				}
 			}
