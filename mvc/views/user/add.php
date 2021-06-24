@@ -277,7 +277,7 @@
                             <?=$this->lang->line("user_password")?> <span class="text-red">*</span>
                         </label>
                         <div class="col-sm-6">
-                            <input type="password"  id="password" name="password" value="<?=set_value('password')?>" >
+                            <input type="password" class="form-control" id="password" name="password" value="<?=set_value('password')?>" >
                         </div>
                          <span class="col-sm-4 control-label">
                             <?php echo form_error('password'); ?>
@@ -295,10 +295,9 @@
                             <?php echo form_error('retype_password'); ?>
                         </span>
                     </div>
-
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-8">
-                            <input type="submit" class="btn btn-danger" value="<?=$this->lang->line("add_user")?>" >
+                            <input type="submit" class="btn btn-success" value="<?=$this->lang->line("add_user")?>" >
                         </div>
                     </div>
 
