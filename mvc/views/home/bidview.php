@@ -821,7 +821,7 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 			var product_id = 1;
 			var offer_id=<?=$offer_id_1?>;
 			var pnr_ref='<?=$pnr_ref?>';
-			var amount = $("#total_upg_value").val();
+			var amount = Math.round($("#total_upg_value").val());
 			var cash = $("#upg_charges_cash").val();
 			var cash_miles = $("#upg_charges_miles_cash").val();
 			if ( cash > 0 || cash_miles > 0) { 
@@ -884,7 +884,7 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 			if ( cash > 0 || cash_miles > 0) { 
 			var offer_id=<?=$offer_id_2?>;
 			var pnr_ref='<?=$pnr_ref?>';
-			var amount = $("#total_bg_value").val();
+			var amount = Math.round($("#total_bg_value").val());
 			var miles = $("#bg_charges_miles").val();
 			 $.ajax({
 			  async: false,

@@ -47,8 +47,8 @@
 				<span>Cash: </span> $ <?php echo $offer_dt_full_total->cash;?><br>
 				<span>Miles: </span> <?php echo $offer_dt_full_total->miles;?><br>
 <?php
-				$cash_percentage = round(($offer_dt_full_total->cash*100)/$offer_dt_full_total->amount,2);
-				$miles_percentage = 100 - $cash_percentage; 
+				$cash_percentage = round(($offer_dt_full_total->cash*100)/$offer_dt_full_total->amount);
+				$miles_percentage = round(100 - $cash_percentage); 
 ?>
 				<span><nobr>Payment Mode:&nbsp;&nbsp; </span> <?php echo $cash_percentage . "%  Cash, " . $miles_percentage . "% Miles</nobr>";?>
 			</p>
@@ -66,8 +66,8 @@
 	<h4>Upgrade Details</h4>
 			<p>
 				<span><b>Offer Id:&nbsp; </b><?php echo $ofr->offer_id?></span>
-				<span><b>Offer Date:&nbsp; </b><?php echo date('d/m/Y',$ofr->offer_date)?></span>
-				<span><b>Bid Value:&nbsp;$ </b><?php echo $ofr->amount?></span>
+				&nbsp;&nbsp;<span><b>Offer Date:&nbsp; </b><?php echo date('d/m/Y',$ofr->offer_date)?></span>
+				&nbsp;&nbsp;<span><b>Bid Value:&nbsp;$ </b><?php echo $ofr->bid_value?></span>
 			</p>
 		<div class="table-responsive">
 			<table class="table-hover">
@@ -152,7 +152,7 @@
 			<p>
 				<span><b>Offer Id:&nbsp; </b><?php echo $ofr->offer_id?></span>
 				&nbsp;&nbsp;<span><b>Offer Date:&nbsp; </b><?php echo date('d/m/Y',$ofr->offer_date)?></span>
-				&nbsp;&nbsp;<span><b>Purchase Value:&nbsp;$ </b><?php echo $ofr->amount?></span>
+				&nbsp;&nbsp;<span><b>Purchase Value:&nbsp;$ </b><?php echo $ofr->bid_value?></span>
 			</p>
 		<div class="table-responsive">
 		
