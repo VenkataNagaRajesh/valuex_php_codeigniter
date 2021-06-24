@@ -143,8 +143,6 @@
 							<th class="col-lg-1"><?=$this->lang->line('pnr_ref')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('avg_p')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('rank')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('cash')?></th>
-							<th class="col-lg-1"><?=$this->lang->line('miles')?></th>
                             <th class="col-lg-1"><?=$this->lang->line('product_type')?></th>
 							<th class="col-lg-1"><?=$this->lang->line('offer_status')?></th>
 							<th class="col-lg-1 noExport"><?=$this->lang->line('details')?></th>
@@ -298,8 +296,6 @@ $("#dep_from_date").datepicker({
                    {"data": "pnr_ref" },
 		 {"data": "bid_avg" },
 		{"data": "rank" },
-                {"data": "cash" },
-        {"data": "miles" },
         {"data": "name" },
 		{"data": "offer_status" },
 		{"data": "action" }

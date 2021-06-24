@@ -41,8 +41,8 @@ class Offer_table extends Admin_Controller {
 			$this->data["return"] = $return;
 			$this->data["pnr_ref"] = $pnr_ref;
             $this->data['offer_dt'] = $this->offer_issue_m->getOfferDetailsByPnr($pnr_ref);
-            $this->data['offer_dt_full_total'] = $this->offer_issue_m->getOffersByPnr($pnr_ref)[0];
-            $this->data['offer_dt_sub_total'] = $this->offer_issue_m->getOffersByPnr($pnr_ref,1);
+            $this->data['offer_dt_full_total'] = $this->offer_issue_m->getOrderSummaryByPnr($pnr_ref)[0];
+            $this->data['offer_dt_sub_total'] = $this->offer_issue_m->getOfferDetailsByPnr($pnr_ref,1,1);
 			$p_cnt = count(explode('<br>',$this->data['offer_dt'][0]->p_list));
 			$this->data["paassenger_cnt"] = $p_cnt;
 			$ps_data = explode('<br>',$this->data['offer_dt'][0]->p_list);
@@ -51,9 +51,9 @@ class Offer_table extends Admin_Controller {
 			$this->data["tier_array"] = $tier_array;
                         
 			foreach ($this->data['offer_dt_sub_total'] as $data ) {
-				if($data->product_id==1){
+				if($data->productID==1){
                     $this->data["upgrade_offer"] = 1;
-				} else if($data->product_id==2){
+				} else if($data->productID==2){
                     $this->data["baggage_offer"] = 1;
 				}
 			}
@@ -562,8 +562,8 @@ $sOrder $sLimit";
                 }
 
            if(isset($_REQUEST['export'])){
-		  $columns = array("id","Offer Date","Product Type","Carrier","Flight Number","Flight Date","Board Point","Off Point","Current cabin","Bid Cabin","Bid Amount","Submit Date","PAX Names","PNR Reference","Number In Party","Average Fare","Markup Value","Rank","cash","miles","offer status");
-		  $rows = array("id","offer_date","name","carrier","flight_number","flight_date","from_city","to_city","from_cabin","to_cabin","bid_value","bid_submit_date","pp_list","pnr_ref","p_count","bid_avg","bid_markup_val","rank","cash","miles","offer_status");
+		  $columns = array("id","Offer Date","Product Type","Carrier","Flight Number","Flight Date","Board Point","Off Point","Current cabin","Bid Cabin","Bid Amount","Submit Date","PAX Names","PNR Reference","Number In Party","Average Fare","Markup Value","Rank","offer status");
+		  $rows = array("id","offer_date","name","carrier","flight_number","flight_date","from_city","to_city","from_cabin","to_cabin","bid_value","bid_submit_date","pp_list","pnr_ref","p_count","bid_avg","bid_markup_val","rank","offer_status");
 		  $this->exportall($output['aaData'],$columns,$rows);		
 		} else {	
 		  echo json_encode( $output );

@@ -793,7 +793,13 @@ $(document).ready(function () {
 	});
 });
 
+	var clickonce  = 0;
 	function saveBid(pnr_ref) {	 
+		if ( clickonce ) {
+			alert("Please wait, we are processing your request!");
+			return;
+		}
+		clickonce = 1;
 		var miles = $("#paid_miles_miles").val(); 
 		var cash_miles =  $("#paid_miles_cash").val();
 		var pay_cash =  $("#paid_cash").val();

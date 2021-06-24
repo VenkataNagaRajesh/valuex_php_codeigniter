@@ -57,7 +57,7 @@
 	<div class="col-md-12">
 <?php if ( isset($upgrade_offer) && $upgrade_offer) {
 				foreach ($offer_dt_sub_total as $dt ) {
-					if($dt->product_id==1){
+					if($dt->productID==1){
 						$ofr = $dt;
 					break;
 					}
@@ -142,7 +142,7 @@
 	<div class="col-md-12">
 <?php if ( isset($baggage_offer) && $baggage_offer) {
 				foreach ($offer_dt_sub_total as $dt ) {
-					if($dt->product_id==2){
+					if($dt->productID==2){
 						$ofr = $dt;
 					break;
 					}

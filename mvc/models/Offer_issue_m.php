@@ -304,6 +304,17 @@ return $rResult;
 
 }
 
+public function getOrderSummaryByPnr($pnr_ref)  {
+	
+
+	$query = "select  date_added as order_date, group_concat(distinct orderID SEPARATOR ',') as orders , SUM(amount) as amount, SUM(cash) as cash, SUM(miles) as miles,  SUM(cash_miles) as cash_miles  from VX_card_data  where pnr_ref = '$pnr_ref' order by orderID ";
+#echo "<br><br>" .$query;
+#echo "<br><br>";
+$rResult = $this->install_m->run_query($query);
+#echo $this->db->last_query();
+return $rResult;
+
+}
 
 
 	function get_flight_date($offer_id,$flight_number){
