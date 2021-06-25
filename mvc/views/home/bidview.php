@@ -264,7 +264,7 @@ if ($any_product ) {
 								 $i = array_search($key, explode(',',$upg->fclr)); 	?>       
 							
 								<div class="price-range col-md-12">		
-								<span style="float:left;width:60px !important;"><b>Min: $</b> <i class="fa fa-dollar"></i> <b id="bid_min_<?=$upg->flight_number?>"></b></span>
+								<span style="float:left;width:70px !important;"><b>Min: $</b> <i class="fa fa-dollar"></i> <b id="bid_min_<?=$upg->flight_number?>"></b></span>
 									<input id="bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>" data-slider-id='bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$upg->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$upg->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$upg->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
 								<span style="float:right"><b>Max: $</b> <i class="fa fa-dollar"></i> <b id="bid_max_<?=$upg->flight_number?>"></b></span>
 <?php
@@ -458,7 +458,7 @@ function updateCabinMedia(flight_number){
 						?>	
 							<div id="slider">
 								<div class="price-range col-md-12">	
-									<b> Min&nbsp;&nbsp;<?=$bslider['per_min']?>  <?=$item_title?>&nbsp;&nbsp;</b>
+									<span style="float:left;width:70px !important;"><b>Min: <?=$bslider['per_min']?>  <?=$item_title?></b></span>
 									<input id="bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>"
 									 
 									data-slider-id='bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>Slider' 
@@ -469,8 +469,7 @@ function updateCabinMedia(flight_number){
 									 
 									 min-slider-handle="50"/>
 
-									 
-									<b> Max&nbsp;&nbsp;<?=$item_unit?> <?=$item_title?> </b>
+									<span><nobr><b>Max: <?=$item_unit?>  <?=$item_title?></b></nobr></span>
 								</div>
 							</div>
 							
@@ -711,8 +710,8 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 <?php if ($baggage_offer) {?>
 		tmp_bg = total_bg;
 		total_value = parseFloat(total_value) + parseFloat(tmp_bg);
-		$("#total_bg_value").val(tmp_bg).trigger('change');
-		$("#total_bid_value").val(total_value).trigger('change');
+		$("#total_bg_value").val(Math.round(tmp_bg)).trigger('change');
+		$("#total_bid_value").val(Math.round(total_value)).trigger('change');
 <?php }?>
 		mileSliderUpdate();
 	      return $("#total_bid_value").val();
