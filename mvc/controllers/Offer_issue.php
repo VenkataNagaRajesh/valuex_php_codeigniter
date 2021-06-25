@@ -278,8 +278,8 @@ class Offer_issue extends Admin_Controller {
 	    	$tstamp = $current_time + ($days * 86400);
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
-		$sQuery = " select pfe.product_id, group_concat(distinct pfe.dtpf_id) as dtpf_list ,tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat( distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) AND tpf.active = 1 AND pfe.active = 1 AND pfe.rule_id > 0 AND tpf.active = 1  ";
 	
+		$sQuery = " select o.offer_status, group_concat(distinct pfe.offer_id) as offer_list,  pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe  LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id ) LEFT JOIN VX_offer o on (o.pnr_ref = tpf.pnr_ref AND pfe.product_id = o.product_id AND o.active = 1)  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1 AND pfe.active = 1 AND o.active = 1  ";
 		if ($pnr) {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
 		} else {
@@ -294,6 +294,7 @@ class Offer_issue extends Admin_Controller {
 
 	 	foreach($rResult as $offer) {
 
+			$p_list = explode(',',$offer->pf_list);
 			$emails_list = explode(',', $offer->email_list);
 			$coupon_code = $this->generateRandomString(6);
 
@@ -351,7 +352,6 @@ class Offer_issue extends Admin_Controller {
 			redirect(base_url("offer_issue/index"));
 		}
 }
-
 	
  public  function generateRandomString($length = 20) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
