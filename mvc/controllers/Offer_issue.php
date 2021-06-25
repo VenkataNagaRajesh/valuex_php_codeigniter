@@ -278,8 +278,8 @@ class Offer_issue extends Admin_Controller {
 	    	$tstamp = $current_time + ($days * 86400);
 
 		$this->data['siteinfos'] = $this->reset_m->get_site();
+		$sQuery = " select pfe.product_id, group_concat(distinct pfe.dtpf_id) as dtpf_list ,tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat( distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id )  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) AND tpf.active = 1 AND pfe.active = 1 AND pfe.rule_id > 0 AND tpf.active = 1  ";
 	
-		$sQuery = " select o.offer_status, group_concat(distinct pfe.offer_id) as offer_list,  pfe.product_id, tpf.pnr_ref,tpf.carrier_code, booking_status,group_concat(distinct pfe.dtpfext_id) as pf_list,group_concat(distinct pax_contact_email) as email_list, group_concat(distinct first_name,' ', last_name SEPARATOR ';') as pax_names from VX_offer_info pfe  LEFT JOIN VX_data_defns dd on (dd.vx_aln_data_defnsID = pfe.booking_status AND dd.aln_data_typeID = 20) LEFT JOIN  VX_daily_tkt_pax_feed tpf on (tpf.dtpf_id = pfe.dtpf_id ) LEFT JOIN VX_offer o on (o.pnr_ref = tpf.pnr_ref AND pfe.product_id = o.product_id AND o.active = 1)  LEFT JOIN VX_data_defns fci on (fci.vx_aln_data_defnsID = tpf.from_city AND fci.aln_data_typeID = 1)  LEFT JOIN VX_data_defns  tci on (tci.vx_aln_data_defnsID = tpf.to_city AND tci.aln_data_typeID = 1)  where   tpf.dep_date >= ".$tstamp."  AND (tpf.is_up_offer_processed = 1 OR tpf.is_bg_offer_processed = 1) and tpf.active = 1 AND pfe.active = 1 AND o.active = 1  ";
 		if ($pnr) {
 			$sQuery .= " AND tpf.pnr_ref = '$pnr' ";
 		} else {
@@ -579,7 +579,7 @@ $sWhere $sOrder $sLimit";
 
 	}
 
-	function auto_acsr() {
+function auto_acsr() {
 
 		$this->load->model('preference_m');
 
@@ -671,6 +671,9 @@ $sWhere $sOrder $sLimit";
 
 				if ( $excl_id == 0) {
 
+				       $day_of_week = date('w', $feed->dep_date);
+				       $day = ($day_of_week)?$day_of_week:7;
+				       $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
 					 // get list of acsr that are partially matching 
 					$acsr = array();
 					$acsr['from_city'] = $feed->from_city;
@@ -711,56 +714,22 @@ $sWhere $sOrder $sLimit";
 							// send mail min bid value not met
 							// update pf entry status and VX_aln_offer_ref status as bid not accepted
 				//		echo "rejected ---<br>";
-													   $message = '
-				<html>
-				<body>
-				<div style="max-width: 800px; margin: 0; padding: 30px 0;">
-				<table width="80%" border="0" cellpadding="0" cellspacing="0">
-				<tr>
-		<td width="5%"></td>
-				<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-		<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
-		 Your bid is rejected due to less bid price.<br />
-		<br />
-		<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-		<br />
-		PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+								$maildata = Array();
+							    $offer_data = $this->bid_m->get_offer_data($feed->offer_id);
+							    $maildata = (array)$offer_data;
+								$maildata['offer_id']=$feed->offer_id;
+								$maildata['template']='bid_reject';
+								$maildata['reason']='due to quoted for less bid price';
+							   $maildata['dep_date'] = date('d/m/Y',$feed->dep_date);
+							   $maildata['dep_time'] = gmdate('H:i A',$feed->dept_time);
+								$this->upgradeOfferMail($maildata);
 
-		<br />
-		<br />
-		<br />
-		</td>
-		</tr>
-		</table>
-
-		</div>
-		</body>
-		</html>
-		';
-
-
-								/*  $this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-								 //$this->email->from('testsweken321@gmail.com', 'ADMIN');
-								 $this->email->to($emails_list[0]);
-								 $this->email->subject("Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point);
-								$this->email->message($message);
-								$this->email->send(); */					
-								
-								 $rejectmail = array(
-									'first_name'   => $namelist[0],
-									'last_name' => '',
-									'tomail' => $emails_list[0],
-									'pnr_ref' => $passenger_data->pnr_ref,
-									'airlineID' => $feed->carrier_code,							
-									'mail_subject' => "Bid is rejected From " .$feed->src_point.' To ' . $feed->dest_point		
-									); 
-								$this->sendMailTemplateParser('bid_reject',$rejectmail);
-						 $array = array();
 								$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
+						 		$array = array();
 								$array['booking_status'] = $offer_status;
 								$array["modify_date"] = time();
 								$array["modify_userID"] = $this->session->userdata('loginuserID');
-					$p_list = explode(',',$passenger_data->p_list);
+								$p_list = explode(',',$passenger_data->p_list);
 
 								// update extension table with new status
 
@@ -796,48 +765,22 @@ $sWhere $sOrder $sLimit";
 
 				} else { //Accept
 					  if (($cabin_seats - $passenger_cnt) < $acsr_data->memp) {
+								$maildata = Array();
+							    $offer_data = $this->bid_m->get_offer_data($feed->offer_id);
+							    $maildata = (array)$offer_data;
+								$maildata['offer_id']=$feed->offer_id;
+								$maildata['template']='bid_reject';
+								$maildata['reason']='due to non availability of seats';
+							   $maildata['dep_date'] = date('d/m/Y',$feed->dep_date);
+							   $maildata['dep_time'] = gmdate('H:i A',$feed->dept_time);
+								$this->upgradeOfferMail($maildata);
 
-							  $message = '
-								<html>
-								<body>
-								<div style="max-width: 800px; margin: 0; padding: 30px 0;">
-								<table width="80%" border="0" cellpadding="0" cellspacing="0">
-								<tr>
-						<td width="5%"></td>
-								<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-						<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
-						 Your bid is not processed due to non availability of seats.<br />
-						<br />
-						<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-						<br />
-						PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
-
-						<br />
-						<br />
-						<br />
-						</td>
-						</tr>
-						</table>
-
-						</div>
-						</body>
-						</html>
-						';
-
-
-						$this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-						//$this->email->from('testsweken321@gmail.com', 'ADMIN');
-						$this->email->to($emails_list[0]);
-						$this->email->subject("Bid is rejected, No seats avaiable  From " .$feed->src_point.' To ' . $feed->dest_point);
-						$this->email->message($message);
-						$this->email->send();
-
-						$array = array();
-						$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('no_seats','20');
-						$array['booking_status'] = $offer_status;
-						$array["modify_date"] = time();
-						$array["modify_userID"] = $this->session->userdata('loginuserID');
-						$p_list = explode(',',$passenger_data->p_list);
+								$array = array();
+								$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('no_seats','20');
+								$array['booking_status'] = $offer_status;
+								$array["modify_date"] = time();
+								$array["modify_userID"] = $this->session->userdata('loginuserID');
+								$p_list = explode(',',$passenger_data->p_list);
 
 
 						// update extension table with new status
@@ -880,65 +823,46 @@ $sWhere $sOrder $sLimit";
 
 						if( ($feed->dep_date - $current_time ) > $cutoff_time_in_secs ) {	
 						//update sold seats or allocated seats in inv feed
-											$update['sold_seats'] = $seats_data->sold_seats + $passenger_cnt;
-											$update['modify_date'] = time();
-																$update['modify_userID'] = $this->session->userdata('loginuserID');
-
-											$this->invfeed_m->update_entries($update,$inv);
+								$update['sold_seats'] = $seats_data->sold_seats + $passenger_cnt;
+								$update['modify_date'] = time();
+								$update['modify_userID'] = $this->session->userdata('loginuserID');
+								$this->invfeed_m->update_entries($update,$inv);
 										
-											// accept bid
-						 $message = '
-								<html>
-								<body>
-								<div style="max-width: 800px; margin: 0; padding: 30px 0;">
-								<table width="80%" border="0" cellpadding="0" cellspacing="0">
-								<tr>
-						<td width="5%"></td>
-								<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-						<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
-						 Your bid is accepted.<br />
-						<br />
-						<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-						<br />
-						PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
+								// accept bid
+								$maildata = Array();
+							    $offer_data = $this->bid_m->get_offer_data($feed->offer_id);
+							    $maildata = (array)$offer_data;
+								$maildata['offer_id']=$feed->offer_id;
+								$maildata['template']='bid_accepted';
+							   $maildata['dep_date'] = date('d/m/Y',$feed->dep_date);
+							   $maildata['dep_time'] = gmdate('H:i A',$feed->dept_time);
 
-						<br />
-						<br />
-						<br />
-		</td>
-		</tr>
-		</table>
+								 $card_data = $this->bid_m->getCardData($feed->orderID);
+								 $card_number = substr(trim($card_data->card_number), -4);
+								 $e_data = array(
+									'first_name'   => $namelist[0],
+									'last_name' => '',
+									'tomail' => $emails_list[0],
+									'pnr_ref' => $passenger_data->pnr_ref,						
+									'mail_subject' => "Bid is accepted From " .$feed->src_point." To " . $feed->dest_point,
+									'card_number' => $card_number,
+									'cash_paid' => number_format($feed->cash),
+									'miles_used' => number_format($feed->miles),
+									'flight_no' => $feed->carrier_name.$feed->flight_number,
+									'dep_date' => date('d-m-Y',$feed->dep_date),
+									'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
+									'origin' => $feed->src_point,
+									'destination' => $feed->dest_point, 
+									'upgrade_to' => $feed->upgrade_cabin,
+									'airlineID' => $feed->carrier_code,
+									'carrier_name' => $feed->car_name,
+									'bid_value' => $feed->bid_val,
+									'feedback_link' => base_url('home/feedback?pnr_ref='.$passenger_data->pnr_ref) 							
+								 ); 			 
+									$maildata = array_merge($maildata,$e_data);
+									$this->upgradeOfferMail($maildata);
 
-		</div>
-		</body>
-		</html>
-		';
-
-				 $card_data = $this->bid_m->getCardData($feed->orderID);
-				 $card_number = substr(trim($card_data->card_number), -4);
-				 $e_data = array(
-					'first_name'   => $namelist[0],
-					'last_name' => '',
-					'tomail' => $emails_list[0],
-					'pnr_ref' => $passenger_data->pnr_ref,						
-					'mail_subject' => "Bid is accepted From " .$feed->src_point." To " . $feed->dest_point,
-					'card_number' => $card_number,
-					'cash_paid' => number_format($feed->cash),
-					'miles_used' => number_format($feed->miles),
-					'flight_no' => $feed->carrier_name.$feed->flight_number,
-					'dep_date' => date('d-m-Y',$feed->dep_date),
-					'dep_time' => gmdate('H:i A',$passenger_data->dept_time),
-					'origin' => $feed->src_point,
-					'destination' => $feed->dest_point, 
-					'upgrade_to' => $feed->upgrade_cabin,
-					'airlineID' => $feed->carrier_code,
-					'carrier_name' => $feed->car_name,
-					'bid_value' => $feed->bid_val,
-					'feedback_link' => base_url('home/feedback?pnr_ref='.$passenger_data->pnr_ref) 							
-				 ); 			 
-			  //$this->sendMailTemplateParser('home/upgradeoffertmp',$e_data);
-			  	$this->sendMailTemplateParser('bid_accepted',$e_data);					  
-	 			$array = array();
+				$array = array();
 				$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
 				$array['booking_status'] = $offer_status;
 				$array["modify_date"] = time();
@@ -974,39 +898,14 @@ $sWhere $sOrder $sLimit";
 				}
 
 		  				} else {
-							$message = '
-								<html>
-								<body>
-								<div style="max-width: 800px; margin: 0; padding: 30px 0;">
-								<table width="80%" border="0" cellpadding="0" cellspacing="0">
-								<tr>
-								<td width="5%"></td>
-								<td align="left" width="95%" style="font: 13px/18px Arial, Helvetica, sans-serif;">
-								<h2 style="font: normal 20px/23px Arial, Helvetica, sans-serif; margin: 0; padding: 0 0 18px; color: orange;">Hello '.$namelist[0].'!</h2>
-								Your bid offer is expired.<br />
-								<br />
-								<big style="font: 16px/18px Arial, Helvetica, sans-serif;"><b style="color: orange;">Details:</b></big><br />
-								<br />
-								PNR Reference : <b style="color: blue;">'.$passenger_data->pnr_ref.'</b> <br />
-
-								<br />
-								<br />
-								<br />
-								</td>
-								</tr>
-								</table>
-
-								</div>
-								</body>
-								</html>
-								';
-
-								$this->email->from($this->data['siteinfos']->email, $this->data['siteinfos']->sname);
-								//$this->email->from('testsweken321@gmail.com', 'ADMIN');
-								$this->email->to($emails_list[0]);
-								$this->email->subject("Bid Offer is expired  From " .$feed->src_point.'To ' . $feed->dest_point);
-								$this->email->message($message);
-								$this->email->send();
+								$maildata = Array();
+							    $offer_data = $this->bid_m->get_offer_data($feed->offer_id);
+							    $maildata = (array)$offer_data;
+								$maildata['offer_id']=$feed->offer_id;
+								$maildata['template']='offer_expire';
+							   $maildata['dep_date'] = date('d/m/Y',$feed->dep_date);
+							   $maildata['dep_time'] = gmdate('H:i A',$feed->dept_time);
+								$this->upgradeOfferMail($maildata);
 
 								$array = array();
 								$offer_status = $this->rafeed_m->getDefIdByTypeAndAlias('offer_expire','20');
@@ -1085,5 +984,5 @@ $sWhere $sOrder $sLimit";
 		}
 		redirect(base_url("offer_table/index"));
 	}
-
 }
+
