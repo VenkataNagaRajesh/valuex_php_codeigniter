@@ -1,6 +1,9 @@
 <style>
     /*09-02-2021 style sheet*/
-
+.side-video {
+    width: 100%;
+    float: left;
+}
 .subs-hdng{ width:100%; margin:0; padding:0; background:#f4f4f4; font-size:18px; font-weight:500; color:#000;}
 .top-tbl-bar{ width:100%; margin:20px 0; padding:0; background:<?=$mail_header_color?>; float:left; border:0px;}
 .top-tbl-bar h2{ width:100%; margin:0; padding: 10px 0; font-size:20px; font-weight:500; color: #fff;}
@@ -29,7 +32,7 @@
 }
 .lst-box{width:100%; margin:0px; padding:0px;}
 .lst-box ul{width:100%; margin:0px; padding:0px; list-type:none;}
-.lst-box li{width:100%; margin:10px; padding:0px;}
+.lst-box li{width:100%; margin:0px 10px; padding:0px;}
 .bid-tab .tab-content .tab-pane p{margin-top:0px;}
 #offer .price-range{padding:10px 15px ;}
 .badge{width:20px; height:20px;padding:0px; border-radius:50%; line-height:17px !important; text-align:center;}
@@ -52,18 +55,25 @@
 
 @media (min-width: 480px) and (max-width: 680px) {
     
-  .lst-box li{width:32%; margin:0px !important; }
+  .lst-box li{width:auto; margin: 0px 10px 0 0 !important; padding: 0 10px !important; }
   .bid-tab li{padding:0px;}
 #offer .price-range{padding:20px 15px 0px 15px ;}
   .payment-box .card-exp input{width:60px;}
+  .price-range .slider-horizontal {
+    width: 65% !important;
+}
+  .sub-tbl-bar h2{font-size:18px;line-height: 22px;}
+.payment-box{margin-bottom:30px;}
+
 
 }
 @media (min-width: 320px) and (max-width: 479px) {
     
-  .lst-box li{width:45%; margin:0px !important; }
+  .lst-box li{width:auto; margin: 0px 10px 0 0 !important; padding: 0 10px !important; }
   .bid-tab li{padding:0px;}
   .payment-box .card-exp input{width:55px;}
-
+  .sub-tbl-bar h2{font-size:18px;line-height: 22px;}
+.payment-box{margin-bottom:30px;}
 }
 
 
@@ -171,7 +181,7 @@ if ($any_product ) {
 <?php
 		} else {
 ?>
-			<span class="col-sm-12" style='float:left'><h2>Upgrade Offer:
+			<span class="col-xs-12  col-sm-12" style='float:left'><h2>Upgrade Offer:
 			&nbsp;&nbsp;Status: Fresh Bidding
 			</h2></span>
 			</span>
@@ -381,7 +391,7 @@ function updateCabinMedia(flight_number){
 <?php
 		} else {
 ?>
-			<span class="col-sm-12" style='float:left'><h2>Baggage Offer:
+			<span class="col-xs-12  col-sm-12" style='float:left'><h2>Baggage Offer:
 			</h2></span>
 			</span>
 <?php
@@ -572,19 +582,28 @@ var cwtpoints<?=$ond?> = [];
 										</div>
 									</div>                            
 									<div class="form-group card-exp col-xs-12 col-sm-12 col-lg-12">
-										<div class="col-xs-6 col-sm-8 col-lg-6">
+										<div class="col-xs-8 col-sm-8 col-lg-6">
 											<label for="cardExpiry">Expiry Date</label>
 											<input type="number" class="form-control" name="month_expiry" id="month_expiry" placeholder="MM" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2"/>
 											/ <input type="number" class="form-control" name="year_expiry" id="year_expiry" placeholder="YY" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2"/>
 										</div>
-										<div class="col-xs-6 col-sm-4 col-lg-6">
+										<div class="col-xs-4 col-sm-4 col-lg-6">
 											<label for="cardCVC" >CVV</label>
 											<input type="number" class="form-control " name="cvv" id="cvv" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="3" />
 										</div>
+										
+										
+										
 									</div>
-								
+									<div class="col-md-12">
+									<div class="pay-info">
+										<p style="color:<?=$mail_header_color?>">Your card will be saved for future usage upon BID Confirmation</p>
+										<p style="color:<?=$mail_header_color?>">Bid Participation Charges  <b>(1$ Non Refundable)</b></p>
+									</div>
 								</div>
-								<div class="col-md-4 actual-cash">
+								</div>`
+								<div class="col-md-4">
+								<div class="actual-cash">
 								<?php if($upgrade_offer){ ?>
 									<p>Upgrade Total: <strong><i class="fa fa-dollar"></i>$ <b id="total_upg_value_view"></b></strong></p>
 								<?php }?>
@@ -592,23 +611,21 @@ var cwtpoints<?=$ond?> = [];
 									<p>Baggage Total: <strong><i class="fa fa-dollar"></i>$ <b id="total_bg_value_view"></b></strong></p>
 								<?php }?>
 								</div>
-								<div class="col-md-4 actual-cash">
+								<div class="actual-cash">
 								<?php if($upgrade_offer && $baggage_offer){ ?>
 									<p>Upgrade Charges: <strong><i class="fa fa-dollar"></i>$ <b id="total_upg_charges_view"></b></strong></p>
 									<p>Baggage Charges: <strong><i class="fa fa-dollar"></i>$ <b id="total_bg_charges_view"></b></strong></p>
 								<?php }?>
 								</div>
-								<div class="col-md-4 actual-cash">
+								<div class="actual-cash">
 									<p>Total Cash: <strong><i class="fa fa-dollar"></i>$ <b id="paid_cash_view"></b></strong></p>
 									<p>Miles Cash: <strong><i class="fa fa-dollar"></i>$ <b id="paid_miles_view"></b></strong></p>
 									<a href="#" type="button" class="btn btn-danger" onclick="saveBid('<?=$pnr_ref?>')" style="background:<?=$mail_header_color?>">Pay Now</a>	
 								</div>
-								<div class="col-md-12">
-									<div class="pay-info">
-										<p style="color:<?=$mail_header_color?>">Your card will be saved for future usage upon BID Confirmation</p>
-										<p style="color:<?=$mail_header_color?>">Bid Participation Charges  <b>(1$ Non Refundable)</b></p>
-									</div>
+								
 								</div>
+								
+			
 							</form>
 						</div>
 					</div>
