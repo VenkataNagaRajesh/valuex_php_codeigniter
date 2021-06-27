@@ -29,12 +29,12 @@ class Fclr extends Admin_Controller
                         array(
                                 'field' => 'board_point',
                                 'label' => $this->lang->line("board_point"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valEndPoints'
                         ),
                         array(
                                 'field' => 'off_point',
                                 'label' => $this->lang->line("off_point"),
-                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valMarket'
+                                'rules' => 'trim|required|max_length[200]|xss_clean|callback_valEndPoints'
                         ),
 
                         array(
@@ -102,8 +102,25 @@ class Fclr extends Admin_Controller
                 return $rules;
         }
 
+		function valEndPoints($post_string)
+		{
+				$season = $this->input->post("season_id");
+					if ($season) { //If season defined ignore mandatory check
+						return TRUE;
+					}
+					
+				if ($post_string == '0') {
+						$this->form_validation->set_message("valEndPoints", "%s is required");
+						return FALSE;
+				} else {
+						return TRUE;
+				}
+		}
+
+
         function valMarket($post_string)
         {
+					
                 if ($post_string == '0') {
                         $this->form_validation->set_message("valMarket", "%s is required");
                         return FALSE;

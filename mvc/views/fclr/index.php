@@ -49,10 +49,12 @@
 							echo form_dropdown("season_id", $seasons,set_value("season_id"), "id='season_id' class='form-control hide-dropdown-icon select2'");?>
 					</div>
 
+					<?php $board_point = ($board_point == '' || $board_point == 0) ? 0 : $board_point;?>
                     <div class="col-md-2 col-sm-3">
                       <input id="board_point_name" name="board_point_name" class="form-control" placeholder="Type & Select Board Point"/> <input type="hidden" id="board_point" name="board_point" class="form-control" value="<?=set_value('board_point',$board_point)?>" /> 
                     </div>
 
+					<?php $off_point = ($off_point == '' || $off_point == 0) ? 0 : $off_point;?>
                     <div class="col-md-2 col-sm-3">
                       <input id="off_point_name" name="off_point_name" class="form-control" placeholder="Type & Select Off Point"/> <input type="hidden" id="off_point" name="off_point" class="form-control" value="<?=set_value('off_point',$off_point)?>" /> 
                     </div>

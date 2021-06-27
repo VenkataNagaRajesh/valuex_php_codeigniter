@@ -71,6 +71,8 @@ figure {
   background: url(../images/hourglass.svg) center no-repeat #222222;
 }
 /*custom styles*/
+
+
 .fh5co-hero .container{
 	padding:0;
 }
@@ -385,6 +387,7 @@ figure {
 	padding: 9px 13px;
 	margin-bottom:20px;
 }
+
 .bid-tab .sw-toolbar-top , .bid-tab .sw-toolbar-bottom{
 	display:none;
 }
@@ -691,7 +694,7 @@ figure {
 	margin-right:10px;
 }
 .price-range .slider-horizontal{
-	width:55% !important;
+	width:50% !important;
 	margin: 0 8px;
 }
 .price-range b{
