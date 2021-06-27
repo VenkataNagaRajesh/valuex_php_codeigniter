@@ -82,7 +82,7 @@ class BidcalReport extends Admin_Controller {
 		
 		$bid_accepted_status =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_accepted','20');
 		$bid_rejected_status =  $this->rafeed_m->getDefIdByTypeAndAlias('bid_reject','20');
-		#$from_date = time();
+		$from_date = time();
 
 		$this->data['products'] = $this->product_m->productName();
         
@@ -90,16 +90,16 @@ class BidcalReport extends Admin_Controller {
 		$sQuery = "SELECT count(*) as bid_count, SUM(bid.bid_value) as bid_revenue, DATE_FORMAT(FROM_UNIXTIME(pf.dep_date),'%m/%d/%Y') AS  bid_date from UP_bid bid ";
  		$sQuery .=  "INNER JOIN VX_offer_info oi ON ( oi.dtpfext_id = bid.dtpfext_id) ";
 		$sQuery .= " INNER JOIN VX_daily_tkt_pax_feed  pf ON ( pf.dtpf_id = oi.dtpf_id) ";
-		$sQuery .= " INNER JOIN VX_offer of  ON ( of.pnr_ref = pf.pnr_ref AND oi.product_id = of.product_id) ";
+ 		$sQuery .=  "INNER JOIN VX_offer of ON ( of.pnr_ref = pf.pnr_ref AND oi.offer_id = of.offer_id) ";
 		$sQuery .= " WHERE bid.bid_id is NOT NULL ";
 		if ( $this->data['product_id'] ) {
 			$sQuery .= " AND bid.productID =  ". $this->data['product_id']; 
 		}
 		$sQuery .= " AND  of.offer_status = $bid_accepted_status "; 
 		if ( $this->data['to_date'] ) {
-			$sQuery .= " AND  pf.dep_date > " . $this->data['from_date'] .  " AND pf.dep_date <= " . $this->data['to_date'] ; 
+			$sQuery .= " AND  pf.dep_date > " . $from_date .  " AND pf.dep_date <= " . $this->data['to_date'] ; 
 		} else {
-			$sQuery .= " AND  pf.dep_date > " . $this->data['from_date']; 
+			$sQuery .= " AND  pf.dep_date > " . $from_date; 
 		}
 		if ( $this->data['airlineID'] ) {
 			$sQuery .= " AND  pf.carrier_code = " .  $this->data['airlineID'];
@@ -125,12 +125,12 @@ class BidcalReport extends Admin_Controller {
 		$sQuery = "SELECT count(*) as bid_count, SUM(bid.bid_value) as bid_revenue, DATE_FORMAT(FROM_UNIXTIME(pf.dep_date),'%m/%d/%Y') AS  bid_date from UP_bid bid ";
  		$sQuery .=  "INNER JOIN VX_offer_info oi ON ( oi.dtpfext_id = bid.dtpfext_id) ";
 		$sQuery .= " INNER JOIN VX_daily_tkt_pax_feed  pf ON ( pf.dtpf_id = oi.dtpf_id) ";
-		$sQuery .= " INNER JOIN VX_offer of  ON ( of.pnr_ref = pf.pnr_ref AND oi.product_id = of.product_id) ";
+ 		$sQuery .=  "INNER JOIN VX_offer of ON ( of.pnr_ref = pf.pnr_ref AND oi.offer_id = of.offer_id) ";
 		$sQuery .= " WHERE bid.bid_id is NOT NULL ";
 		if ( $this->data['product_id'] ) {
 			$sQuery .= " AND bid.productID =  ". $this->data['product_id']; 
 		}
-		$sQuery .= " AND  oi.offer_status = $bid_accepted_status "; 
+		$sQuery .= " AND  of.offer_status = $bid_accepted_status "; 
 		$sQuery .= " AND  pf.dep_date > " . $month1_from_date .  " AND pf.dep_date <= " . $month1_to_date;
 		if ( $this->data['airlineID'] ) {
 			$sQuery .= " AND  pf.carrier_code = " .  $this->data['airlineID'];
@@ -157,12 +157,12 @@ class BidcalReport extends Admin_Controller {
 		$sQuery = "SELECT count(*) as bid_count, SUM(bid.bid_value) as bid_revenue, DATE_FORMAT(FROM_UNIXTIME(pf.dep_date),'%m/%d/%Y') AS  bid_date from UP_bid bid ";
  		$sQuery .=  "INNER JOIN VX_offer_info oi ON ( oi.dtpfext_id = bid.dtpfext_id) ";
 		$sQuery .= " INNER JOIN VX_daily_tkt_pax_feed  pf ON ( pf.dtpf_id = oi.dtpf_id) ";
-		$sQuery .= " INNER JOIN VX_offer of  ON ( of.pnr_ref = pf.pnr_ref AND oi.product_id = of.product_id) ";
+ 		$sQuery .=  "INNER JOIN VX_offer of ON ( of.pnr_ref = pf.pnr_ref AND oi.offer_id = of.offer_id) ";
 		$sQuery .= " WHERE bid.bid_id is NOT NULL ";
 		if ( $this->data['product_id'] ) {
 			$sQuery .= " AND bid.productID =  ". $this->data['product_id']; 
 		}
-		$sQuery .= " AND  oi.offer_status = $bid_accepted_status "; 
+		$sQuery .= " AND  of.offer_status = $bid_accepted_status "; 
 		$sQuery .= " AND  pf.dep_date > " . $month2_from_date .  " AND pf.dep_date <= " . $month2_to_date;
 		if ( $this->data['airlineID'] ) {
 			$sQuery .= " AND  pf.carrier_code = " .  $this->data['airlineID'];
