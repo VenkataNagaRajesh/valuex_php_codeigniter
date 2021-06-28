@@ -929,7 +929,7 @@ function time_dropdown($val) {
 
                   $roleID = $this->session->userdata('roleID');
                 $userID = $this->session->userdata('loginuserID');
-                if($roleID == 2){
+                if($roleID != 1){
                          $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                         $sWhere .= 'MainSet.carrier IN ('.implode(',',$this->session->userdata('login_user_airlineID')) . ')';
                 }

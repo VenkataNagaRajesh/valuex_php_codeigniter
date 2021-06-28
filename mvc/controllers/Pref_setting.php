@@ -92,26 +92,31 @@ class Pref_setting extends Admin_Controller {
                                  $array['modify_userID'] = $this->session->userdata('loginuserID');
                                  $array['modify_date'] = time();
 			$is_default_value = $this->input->post('pref_default-'.$info[1]);
-			 if($is_default_value != 0) {
-			 $pref = $this->preference_m->get_preference(array('VX_aln_preferenceID'=>$info[1]));
-				$insert = array(
-                                    "categoryID" => $pref->categoryID,
-                                        "pref_type" => $pref->pref_type,
-					"pref_type_value" => $airline_id,
-                                        "pref_code" => $pref->pref_code,
-                                        "pref_display_name" => $pref->pref_display_name,
-                                        "pref_get_value_type" => $pref->pref_get_value_type,
-                                        "pref_get_value" => $pref->pref_get_value,
-                                        "pref_value" => $value,
-                                        "create_date" => time(),
-                                        "modify_date" => time(),
-                                        "create_userID" => $this->session->userdata('loginuserID'),
-                    			"modify_userID" => $this->session->userdata('loginuserID'),
-                                );
-                                $this->preference_m->insert_preference($insert);
-			} else {
-			$this->preference_m->update_preference($array,$info[1]);
-			}
+                        // print_r($is_default_value);exit;
+			//  if($is_default_value != 0) {
+
+                               
+			//  $pref = $this->preference_m->get_preference(array('VX_aln_preferenceID'=>$info[1]));
+			// 	$insert = array(
+                        //             "categoryID" => $pref->categoryID,
+                        //                 "pref_type" => $pref->pref_type,
+			// 		"pref_type_value" => $airline_id,
+                        //                 "pref_code" => $pref->pref_code,
+                        //                 "pref_display_name" => $pref->pref_display_name,
+                        //                 "pref_get_value_type" => $pref->pref_get_value_type,
+                        //                 "pref_get_value" => $pref->pref_get_value,
+                        //                 "pref_value" => $value,
+                        //                 "create_date" => time(),
+                        //                 "modify_date" => time(),
+                        //                 "create_userID" => $this->session->userdata('loginuserID'),
+                    	// 		"modify_userID" => $this->session->userdata('loginuserID'),
+                        //         );
+                        //         $this->preference_m->update_preference($insert);
+			// } else {
+
+
+			                $this->preference_m->update_preference($array,$info[1]);
+			//}
 			}
                    }
                   $this->session->set_flashdata('success', $this->lang->line('menu_success'));
