@@ -1,6 +1,22 @@
 <?php 
 ?> 
 <style>
+.ui-datepicker td {
+    border: 1px solid #ccc;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 0px;
+}
+#calendar1 .ui-datepicker {
+    width: 728px !important;
+}
+
+#calendar1 .ui-datepicker p {
+    
+ margin:-50px 0 0 0;   
+}
+
+
 .bidnormal {
 	background: #008000;
 }
@@ -246,8 +262,8 @@ function bidcalender1 (bidlist = '[]', bid_average, bid_avg_rev_percent = 10)
 	}); 
 	$(".ui-datepicker-prev, .ui-datepicker-next").remove();
 	for (var dayclass in dtpoints) { 
-		$('#calendar1 .' + dayclass).append('<p>' + dtpoints[dayclass] + '</p>');
-	}
+    $('#calendar1 .' + dayclass).append('<p>' + dtpoints[dayclass] + '</p>');
+}
 	//$("#calendar1 .ui-datepicker").css('font-size', '20px');
 	//$("#calendar1 .ui-datepicker").css('height', '450px');
 //	$("#calendar1 .ui-datepicker").css('width', '722px');
