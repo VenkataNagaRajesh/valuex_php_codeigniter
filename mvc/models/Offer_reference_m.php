@@ -25,15 +25,15 @@ class Offer_reference_m extends MY_Model {
 
 
         function insert_offer_ref($array) {
-		$arr['pnr_ref'] = $array['pnr_ref'];
-		$arr['product_id'] = $array['product_id'];
-		$arr['active'] = 1;
-		$id = $this->checkOfferRefEntry($arr);
-		if (!$id){
-                  $id = parent::insert($array);
-                }
-                return $id;
-        }
+				$arr['pnr_ref'] = $array['pnr_ref'];
+				$arr['product_id'] = $array['product_id'];
+				$arr['active'] = 1;
+				$id = $this->checkOfferRefEntry($arr);
+				if (!$id){
+					 $id = parent::insert($array);
+				}
+						return $id;
+		}
 
 
        function checkOfferRefEntry($array){
@@ -52,7 +52,7 @@ class Offer_reference_m extends MY_Model {
 
 	    function update_offer_ref($data, $id = NULL) {
                 parent::update($data, $id);
-		//	echo $this->db->last_query();
+			//echo $this->db->last_query();
                 return $id;
         }
 

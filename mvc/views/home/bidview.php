@@ -1,6 +1,9 @@
 <style>
     /*09-02-2021 style sheet*/
-
+.side-video {
+    width: 100%;
+    float: left;
+}
 .subs-hdng{ width:100%; margin:0; padding:0; background:#f4f4f4; font-size:18px; font-weight:500; color:#000;}
 .top-tbl-bar{ width:100%; margin:20px 0; padding:0; background:<?=$mail_header_color?>; float:left; border:0px;}
 .top-tbl-bar h2{ width:100%; margin:0; padding: 10px 0; font-size:20px; font-weight:500; color: #fff;}
@@ -29,7 +32,7 @@
 }
 .lst-box{width:100%; margin:0px; padding:0px;}
 .lst-box ul{width:100%; margin:0px; padding:0px; list-type:none;}
-.lst-box li{width:100%; margin:10px; padding:0px;}
+.lst-box li{width:100%; margin:0px 10px; padding:0px;}
 .bid-tab .tab-content .tab-pane p{margin-top:0px;}
 #offer .price-range{padding:10px 15px ;}
 .badge{width:20px; height:20px;padding:0px; border-radius:50%; line-height:17px !important; text-align:center;}
@@ -52,18 +55,25 @@
 
 @media (min-width: 480px) and (max-width: 680px) {
     
-  .lst-box li{width:32%; margin:0px !important; }
+  .lst-box li{width:auto; margin: 0px 10px 0 0 !important; padding: 0 10px !important; }
   .bid-tab li{padding:0px;}
 #offer .price-range{padding:20px 15px 0px 15px ;}
   .payment-box .card-exp input{width:60px;}
+  .price-range .slider-horizontal {
+    width: 65% !important;
+}
+  .sub-tbl-bar h2{font-size:18px;line-height: 22px;}
+.payment-box{margin-bottom:30px;}
+
 
 }
 @media (min-width: 320px) and (max-width: 479px) {
     
-  .lst-box li{width:45%; margin:0px !important; }
+  .lst-box li{width:auto; margin: 0px 10px 0 0 !important; padding: 0 10px !important; }
   .bid-tab li{padding:0px;}
   .payment-box .card-exp input{width:55px;}
-
+  .sub-tbl-bar h2{font-size:18px;line-height: 22px;}
+.payment-box{margin-bottom:30px;}
 }
 
 
@@ -171,7 +181,7 @@ if ($any_product ) {
 <?php
 		} else {
 ?>
-			<span class="col-sm-12" style='float:left'><h2>Upgrade Offer:
+			<span class="col-xs-12  col-sm-12" style='float:left'><h2>Upgrade Offer:
 			&nbsp;&nbsp;Status: Fresh Bidding
 			</h2></span>
 			</span>
@@ -264,7 +274,7 @@ if ($any_product ) {
 								 $i = array_search($key, explode(',',$upg->fclr)); 	?>       
 							
 								<div class="price-range col-md-12">		
-								<span style="float:left;width:60px !important;"><b>Min: $</b> <i class="fa fa-dollar"></i> <b id="bid_min_<?=$upg->flight_number?>"></b></span>
+								<span style="float:left;width:70px !important;"><b>Min: $</b> <i class="fa fa-dollar"></i> <b id="bid_min_<?=$upg->flight_number?>"></b></span>
 									<input id="bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>" data-slider-id='bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>Slider' type="text" data-slider-min="<?php echo explode(',',$upg->min)[$i]; ?>" data-slider-max="<?php echo explode(',',$upg->max)[$i]; ?>" data-slider-step="1" data-slider-value="<?php echo explode(',',$upg->slider_position)[$i]; ?>" data-slider-handle="round"min-slider-handle="200"/>
 								<span style="float:right"><b>Max: $</b> <i class="fa fa-dollar"></i> <b id="bid_max_<?=$upg->flight_number?>"></b></span>
 <?php
@@ -381,7 +391,7 @@ function updateCabinMedia(flight_number){
 <?php
 		} else {
 ?>
-			<span class="col-sm-12" style='float:left'><h2>Baggage Offer:
+			<span class="col-xs-12  col-sm-12" style='float:left'><h2>Baggage Offer:
 			</h2></span>
 			</span>
 <?php
@@ -417,7 +427,7 @@ function updateCabinMedia(flight_number){
                                 <p style="color:<?=$mail_header_color?>"><?php echo $bslider['from_city_name']; ?> <span class="time-bid"><?=date('H:i A',$bslider['dep_date']+$bslider['dept_time']);?></span></p>
 								<ul>
 									<li><?php echo date('d M Y',$bslider['dep_date']); ?></li>
-									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['airline_id']""."".$bslider['flight_number'];?></li>
+									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['airline_id'].$bslider['flight_number'];?></li>
 								</ul>
 								<small><?php echo substr($bslider['from_airport'],0,25) . ".."; ?></small>                       
                             </div>
@@ -426,20 +436,27 @@ function updateCabinMedia(flight_number){
                                 <p style="color:<?=$mail_header_color?>"><?php echo $bslider['to_city_name']; ?> <span class="time-bid"><?=date('H:i A',$bslider['arrival_date']+$bslider['arrival_time']);?></span></p>
 								<ul>
 									<li><?php echo date('d M Y',$bslider['arrival_date']); ?></li>
-									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['airline_id']""."".$bslider['flight_number'];?></li>
+									<li style="color:<?=$mail_header_color?>"><?php echo $bslider['airline_id'].$bslider['flight_number'];?></li>
 								</ul>
 								<small><?php echo substr($bslider['to_airport'],0,25) . ".."; ?></small>
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-5 col-md-2 col-lg-2 lft-gap">
                         <div class="col-sm-12">
+							<?php if ( !$bslider['reason'] ) {
+							?>
     						<label class="checkbox-inline">
 								<input type="checkbox" name="bid_bag_<?=$bslider['ond']?>" id="bid_bag_<?=$bslider['ond']?>" value="" >Check this box if not Interested
 							</label>
+							<?php } ?>
                         
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 lft-gap">
+							<?php if ( $bslider['reason'] ) {
+							?>
+							<br><span style="background-color:yellow"><?=$bslider['reason']?></span>
+							<?php } else {  ?>
                        
 						<?php if($bclr[$bslider['ond']]->bag_type==2){ //PC 
 							$item_title = 'PC';
@@ -451,7 +468,7 @@ function updateCabinMedia(flight_number){
 						?>	
 							<div id="slider">
 								<div class="price-range col-md-12">	
-									<b> Min&nbsp;&nbsp;<?=$bslider['per_min']?>  <?=$item_title?>&nbsp;&nbsp;</b>
+									<span style="float:left;width:70px !important;"><b>Min: <?=$bslider['per_min']?>  <?=$item_title?></b></span>
 									<input id="bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>"
 									 
 									data-slider-id='bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>Slider' 
@@ -462,11 +479,11 @@ function updateCabinMedia(flight_number){
 									 
 									 min-slider-handle="50"/>
 
-									 
-									<b> Max&nbsp;&nbsp;<?=$item_unit?> <?=$item_title?> </b>
+									<span><nobr><b>Max: <?=$item_unit?>  <?=$item_title?></b></nobr></span>
 								</div>
 							</div>
 							
+							<?php } ?>
 						</div>
 					<div class="col-xs-12 col-sm-3 col-md-2 col-lg-2" style="margin:10px 0;">
 
@@ -565,19 +582,28 @@ var cwtpoints<?=$ond?> = [];
 										</div>
 									</div>                            
 									<div class="form-group card-exp col-xs-12 col-sm-12 col-lg-12">
-										<div class="col-xs-6 col-sm-8 col-lg-6">
+										<div class="col-xs-8 col-sm-8 col-lg-6">
 											<label for="cardExpiry">Expiry Date</label>
 											<input type="number" class="form-control" name="month_expiry" id="month_expiry" placeholder="MM" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2"/>
 											/ <input type="number" class="form-control" name="year_expiry" id="year_expiry" placeholder="YY" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2"/>
 										</div>
-										<div class="col-xs-6 col-sm-4 col-lg-6">
+										<div class="col-xs-4 col-sm-4 col-lg-6">
 											<label for="cardCVC" >CVV</label>
 											<input type="number" class="form-control " name="cvv" id="cvv" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="3" />
 										</div>
+										
+										
+										
 									</div>
-								
+									<div class="col-md-12">
+									<div class="pay-info">
+										<p style="color:<?=$mail_header_color?>">Your card will be saved for future usage upon BID Confirmation</p>
+										<p style="color:<?=$mail_header_color?>">Bid Participation Charges  <b>(1$ Non Refundable)</b></p>
+									</div>
 								</div>
-								<div class="col-md-4 actual-cash">
+								</div>`
+								<div class="col-md-4">
+								<div class="actual-cash">
 								<?php if($upgrade_offer){ ?>
 									<p>Upgrade Total: <strong><i class="fa fa-dollar"></i>$ <b id="total_upg_value_view"></b></strong></p>
 								<?php }?>
@@ -585,23 +611,21 @@ var cwtpoints<?=$ond?> = [];
 									<p>Baggage Total: <strong><i class="fa fa-dollar"></i>$ <b id="total_bg_value_view"></b></strong></p>
 								<?php }?>
 								</div>
-								<div class="col-md-4 actual-cash">
+								<div class="actual-cash">
 								<?php if($upgrade_offer && $baggage_offer){ ?>
 									<p>Upgrade Charges: <strong><i class="fa fa-dollar"></i>$ <b id="total_upg_charges_view"></b></strong></p>
 									<p>Baggage Charges: <strong><i class="fa fa-dollar"></i>$ <b id="total_bg_charges_view"></b></strong></p>
 								<?php }?>
 								</div>
-								<div class="col-md-4 actual-cash">
+								<div class="actual-cash">
 									<p>Total Cash: <strong><i class="fa fa-dollar"></i>$ <b id="paid_cash_view"></b></strong></p>
 									<p>Miles Cash: <strong><i class="fa fa-dollar"></i>$ <b id="paid_miles_view"></b></strong></p>
 									<a href="#" type="button" class="btn btn-danger" onclick="saveBid('<?=$pnr_ref?>')" style="background:<?=$mail_header_color?>">Pay Now</a>	
 								</div>
-								<div class="col-md-12">
-									<div class="pay-info">
-										<p style="color:<?=$mail_header_color?>">Your card will be saved for future usage upon BID Confirmation</p>
-										<p style="color:<?=$mail_header_color?>">Bid Participation Charges  <b>(1$ Non Refundable)</b></p>
-									</div>
+								
 								</div>
+								
+			
 							</form>
 						</div>
 					</div>
@@ -652,41 +676,20 @@ $('#<?=$mobile_view?>bid_slider_<?=$upg->product_id?>_<?=$upg->flight_number?>')
 function calcBaggageValue(slider_value_kg, soldout_kg, ond) {
 		select_bg_val = 0;
 			var scale = eval('cwtpoints' + ond);
-			for ( i = soldout_kg; i <= scale.length;i++) {
-				var bgm = soldout_kg +  slider_value_kg;
-				if ( i > soldout_kg && i <= bgm ) {
+			for ( i = 1; i <= slider_value_kg;i++) {
 					select_bg_val = select_bg_val + scale[i];
 				}
-			}
-	return select_bg_val;
+	//return select_bg_val;
+	return parseFloat(select_bg_val).toFixed(2);
 		//WORKI
 }
 
-
-function calcBaggageValueAjax(slider_value_kg, soldout_kg, ond) {
-		var bgval =0;
-		$.ajax({
-		  async: false,
-		  type: 'POST',
-		  url: "<?=base_url('homes/bidding/getBgSliderValue')?>",          
-			  data: {"slider_value_kg" :slider_value_kg,"soldout_kg":soldout_kg,"ond":ond},
-		  dataType: "html",	         		  
-		  success: function(data) {
-			var bginfo = jQuery.parseJSON(data);
-			if(bginfo['status'] == "success"){
-				bgval = bginfo['value'];
-			}
-		}
-		});
-		return bgval;
-}
-
-<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
+<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; if ( $bslider['reason'] ) { continue;}  ?> 
 	$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>').slider({
 	tooltip: 'always',
 	formatter: function(value) {
 			select_bg_val = calcBaggageValue(value,<?=$bslider['per_min']?>,<?=$bslider['ond']?>);
-		return value + ' <?=($bclr[$bslider['ond']]->bag_type == 2 ? 'PC' : 'KG')?>' + ' = $'+ Math.round(select_bg_val);
+		return value + ' <?=($bclr[$bslider['ond']]->bag_type == 2 ? 'PC' : 'KG')?>' + ' = $'+ select_bg_val;
 	}
 	});
 <?php } ?>
@@ -708,11 +711,11 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 		<?php } } ?>
 		var total_bg = 0;
 		var tmp_bg = 0;
-		<?php foreach($baggage as $pax => $paxval){ $bslider = $baggage[$pax]['pax']; ?> 
+		<?php foreach($baggage as $pax => $paxval){ $bslider = $baggage[$pax]['pax']; if ( $bslider['reason'] ) { continue;} ?> 
 
 			if($('input[type=checkbox][name=<?=$mobile_view?>bid_bag_<?=$bslider['ond']?>]').prop("checked") == false){
 				bg_val = parseFloat($("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>").slider('getValue'));
-				total_bg = total_bg + calcBaggageValue(bg_val,<?=$bslider['per_min']?>,<?=$bslider['ond']?>);
+				total_bg = parseFloat(total_bg) + calcBaggageValue(bg_val,<?=$bslider['per_min']?>,<?=$bslider['ond']?>);
 			}
 		<?php }?>
 <?php if ($upgrade_offer) {?>
@@ -722,7 +725,7 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 		$("#total_bid_value").val(Math.round(total_value)).trigger('change');
 <?php }?>
 <?php if ($baggage_offer) {?>
-		tmp_bg = total_bg.toFixed(2);
+		tmp_bg = total_bg;
 		total_value = parseFloat(total_value) + parseFloat(tmp_bg);
 		$("#total_bg_value").val(Math.round(tmp_bg)).trigger('change');
 		$("#total_bid_value").val(Math.round(total_value)).trigger('change');
@@ -806,7 +809,13 @@ $(document).ready(function () {
 	});
 });
 
+	var clickonce  = 0;
 	function saveBid(pnr_ref) {	 
+		if ( clickonce ) {
+			alert("Please wait, we are processing your request!");
+			return;
+		}
+		clickonce = 1;
 		var miles = $("#paid_miles_miles").val(); 
 		var cash_miles =  $("#paid_miles_cash").val();
 		var pay_cash =  $("#paid_cash").val();
@@ -828,7 +837,7 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 			var product_id = 1;
 			var offer_id=<?=$offer_id_1?>;
 			var pnr_ref='<?=$pnr_ref?>';
-			var amount = $("#total_upg_value").val();
+			var amount = Math.round($("#total_upg_value").val());
 			var cash = $("#upg_charges_cash").val();
 			var cash_miles = $("#upg_charges_miles_cash").val();
 			if ( cash > 0 || cash_miles > 0) { 
@@ -885,14 +894,13 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 		}
 <?php } ?>
 <?php if($baggage_offer){ ?>
-
 			var product_id = 2;
 			var cash = $("#bg_charges_cash").val();
 			var cash_miles = $("#bg_charges_miles_cash").val();
 			if ( cash > 0 || cash_miles > 0) { 
 			var offer_id=<?=$offer_id_2?>;
 			var pnr_ref='<?=$pnr_ref?>';
-			var amount = $("#total_bg_value").val();
+			var amount = Math.round($("#total_bg_value").val());
 			var miles = $("#bg_charges_miles").val();
 			 $.ajax({
 			  async: false,
@@ -903,14 +911,14 @@ if ($upgrade_offer) {// 1 - UPGRADE PRODUCT ?>
 			  success: function(data) {
 				var info = jQuery.parseJSON(data);              		
 				if(info['status'] == "success"){
-					<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?>
+					<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; if ( $bslider['reason'] ) { continue;}  ?>
 						var bg_weight_obj = $("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>");
 						var bg_weight = 0;
 						if ( bg_weight_obj ) {
 							 bg_weight = bg_weight_obj.slider('getValue');
 						}
+						var bg_value = calcBaggageValue(bg_weight,<?=$bslider['per_min']?>,<?=$bslider['ond']?>);
 						var flight_number = <?=$bslider['flight_number']?>;				
-						var bg_value = cwtpoints<?=$bslider['ond']?>[bg_weight];
 						var dtpfext_id=<?=$bslider['dtpfext_id']?>;
 						var product_id=<?=$bslider['product_id']?>;
 						var offer_id=<?=$bslider['offer_id']?>;
@@ -1057,7 +1065,7 @@ if ( $baggage_offer ) {
 ?>
 //baggage slider jquery
 	$(document).ready(function () {
-<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax']; ?> 
+<?php foreach($baggage as $pax => $paxval){ $bslider =$baggage[$pax]['pax'];  if ( $bslider['reason'] ) { continue;} ?> 
 
 		$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>Slider .slider-selection').css({"background":"<?=$mail_header_color?>"});
     		$('#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>Slider .slider-handle').css({"background":"<?=$mail_header_color?>"});

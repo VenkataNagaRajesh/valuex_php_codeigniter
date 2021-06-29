@@ -131,10 +131,10 @@ class Bclr_m extends MY_Model {
             $this->db->from('BG_cwt');
             $this->db->where(array("active" => 1,"bclr_id" => $bclr_id));
 			if ($wt_start ) {
-            	$this->db->where("cum_wt > $wt_start");
+            	$this->db->where("cum_wt > '$wt_start'");
 			}
 			if ($wt_end ) {
-            	$this->db->where("cum_wt <= $wt_end");
+            	$this->db->where("cum_wt <= '$wt_end'");
 			}
             $this->db->order_by('cum_wt ASC');
 	    $query = $this->db->get();

@@ -56,7 +56,7 @@ class Rafeed_m extends MY_Model
 		$query = $this->db->get();
 		$check = $query->row();
 
-//	echo $this->db->last_query();
+	//echo $this->db->last_query();
 		if ($check->rafeed_id) {
 //	echo "<br>FEEDID-" . $check->rafeed_id;
 			return false;

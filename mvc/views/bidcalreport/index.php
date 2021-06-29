@@ -1,78 +1,14 @@
 <?php 
 ?> 
 <style>
-.off-elg .ui-datepicker-calendar thead{
-	background: #333366;
-    color: #fff;
-    font-family: calibri;
-    font-weight: bold;
-    font-size: 14px;
-    line-height: 8px;
-}
-.off-elg .ui-datepicker-header{
-	background:none;
-	border: solid 1px #ddd;
-    border-bottom: none;
-    border-radius: 0;
-}
-.off-elg .ui-datepicker-title{
-	text-align:left;
-	margin:0 12px;
-}
-.off-elg .ui-datepicker tr td a {
-	border:none;
-}
-.off-elg .ui-datepicker tr td{
-	border:solid 1px #ddd;
-}
-.off-elg #calendar1 .ui-datepicker-month{
-	font-weight: bold;
-    font-size: 22px;
-    color: #336699;
-    font-family: calibri;
-}
-.off-elg #calendar1 .ui-datepicker-year{
-	font-weight: normal;
-    font-size: 22px;
-    color: #336699;
-    font-family: calibri;
-}
-.off-elg #calendar2 .ui-datepicker-month ,.off-elg #calendar3 .ui-datepicker-month{
-	font-weight: bold;
-    font-size: 14px;
-    font-family: calibri;
-}
-.off-elg #calendar2 .ui-datepicker-year ,.off-elg #calendar3 .ui-datepicker-year{
-	font-weight: bold;
-    font-size:14px;
-    font-family: calibri;
-}
-.bidnormal p{
-	background: #008000 !important;
-	margin-top:-39px;
-    position: relative;
-    line-height: 16px;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 3px 0;
-    margin-bottom: 0;
-    text-align: center;
-    font-family: calibri;
+.bidnormal {
+	background: #008000;
 }
 .bidnormal a {
 	color: white !important;
 }
-.bidwarning p{
-	margin-top:-39px;
-	background: #FFFF00 !important;
-    position: relative;
-    line-height: 16px;
-    font-size: 12px;
-    font-weight: bold;
-    padding: 3px 0;
-    margin-bottom: 0;
-    text-align: center;
-    font-family: calibri;
+.bidwarning {
+	background: #FFFF00;
 }
 .bidwarning a {
 	color: black !important;
@@ -84,23 +20,18 @@
 	color: black !important;
 }
 #calendar1 .ui-datepicker {
-    width: auto;
-	padding: 0;
-	border:none;
+    width: 722px;
 }
-#calendar1 .ui-datepicker tr td{
-    border: solid 1px #ddd;
-}
+
 #calendar1 .ui-datepicker tr td a {
-    font-size: 16px;
-	width: 75px;
-    height: 75px;
-    border: none;
-    font-weight: bold;
+    width: 100px;
+    height: 60px;
+    font-size: 17px;
+    font-weight: 500;
     text-align: left;
-    font-family: calibri;
-	color:#000;
+	
 }
+
 #calendar1 .ui-datepicker tr td a p {
     background: yellow;
     margin-top: 16px;
@@ -108,24 +39,11 @@
     text-align: center;
     padding: 4px 0;
 }
-#calendar2 .ui-datepicker ,#calendar3 .ui-datepicker{
-	width: auto;
-	margin-bottom:16px;
-	padding: 0;
-    border: none;
-}
-#calendar2 tbody , #calendar3 tbody{
-	line-height:23px;
-}
+
 </style>
 
 <div class="off-elg">
-	<h2 class="title-tool-bar" style="color:#fff;float:left;width:100%;"><i class="fa fa-calendar"></i> Bid Calendar Report
-		<ol class="breadcrumb pull-right">
-            <li><a href="<?=base_url("dashboard/index")?>"><i class="fa fa-laptop"></i> <?=$this->lang->line('menu_dashboard')?></a></li>
-            <li class="active">Bid Calendar Report</li>
-        </ol>
-	</h2>
+	<h2 class="title-tool-bar">Bid Calendar Report</h2>
 	<div class="col-md-12 off-elg-filter-box">
 	   <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
 	     <div class="form-group"><br>	   		
@@ -167,21 +85,27 @@
 	</div>
 <div class="col-md-12 report-box">
 	 <div class="row">		
-		<div class="col-md-7 col-md-offset-1">
-		  <h3><strong><b>Bid Calendar <?=$products[$product_id]?> Report for <?= $airlineID ? $list[$airlineID] : " all Carriers" ;?> <?=$this->data['to_date'] ?  " &nbsp;" . date('M - Y', $this->data['to_date']) : "" ; ?></b></strong></h3>
+		<div class="col-md-8">
+		  <h3><strong><b>Advanced Bid <?=$products[$product_id]?> Report for <?= $airlineID ? $list[$airlineID] : " all Carriers" ;?> <?=$this->data['to_date'] ?  "upto &nbsp;" . date('m-d-Y', $this->data['to_date']) : "" ; ?></b></strong></h3>
 		</div>
-		<div class="col-md-3">
+		<div class="col-md-3" style="padding:0;">
 		  <h3><b>Future Months</b></h3>
 		</div>
 	  </div>
 	 <div class="row">
-		<div class="col-md-7 col-md-offset-1">
-			<div id="calendar1" class="cal-box"></div>
-		</div> 
-		<div class="col-md-3">
-			<div id="calendar2" class="cal-box"></div>
-			<div id="calendar3" class="cal-box"></div>
-		</div>  
+	 	<div class="col-md-11" style="border-left:solid 1px #ddd;text-align:center;">			
+			<div>
+				<div class="col-md-9">
+					<div id="calendar1" class="cal-box"></div>
+				</div> 
+
+				<div class="col-md-3">
+					<div id="calendar2" class="cal-box"></div>
+					<br>
+					<div id="calendar3" class="cal-box"></div>
+				</div>  
+			</div>
+		</div>
 	</div>
  </div>
 	<form id="reportform" action="<?=base_url('offer_table')?>" style="display:none;" method="post" target='_blank'>
@@ -256,7 +180,7 @@ function progressReport(from_date, to_date) {
 		$('#carrier').val('<?=$airlineID?>');
 		$('#flight_from_dep_date').val(from_date);
 		$('#flight_to_dep_date').val(to_date);
-		$('#offer_status').val(1988);//Accpeted builds
+		//$('#offer_status').val(booking_status);
 		$('#product_id').val('<?=$product_id?>');
 	 	$("#reportform").submit();	
 }
@@ -267,7 +191,8 @@ function bidcalender1 (bidlist = '[]', bid_average, bid_avg_rev_percent = 10)
         // An array of bid_date
      var eventDates = {}; var bidcolor = {}; var name = {};
 	 //var datecal = new Date().getFullYear();
-	 var datecal = '<?=$from_date?>';
+	 //var datecal = '<?=$from_date?>';
+	 var datecal = new Date(<?=$from_date*1000?>);
 	 //$_POST['color_bid']=10; 
 	     //  var html = '';
 	dtpoints = [];
@@ -301,20 +226,11 @@ function bidcalender1 (bidlist = '[]', bid_average, bid_avg_rev_percent = 10)
 		height: '550px',
 		//numberOfMonths: [3,4],  
 		stepMonths: 0,
-		defaultDate: new Date(datecal, 0, 1),			
+		//defaultDate: new Date(datecal, 0, 1),			
+		defaultDate: new Date(datecal.getFullYear(), datecal.getMonth(), 1),			
 		onSelect: function (date) {
-
-			var d = new Date(date);
-			//var d = date;
-			 var year = d.getUTCFullYear();
-			 var month = d.getUTCMonth();
-			 var day = d.getUTCDate();
-
-			 var startHour =Date.UTC(year,month,day+1,0,0,0,0);
-			 var endHour = startHour + 86400000-1;
 		    //defined your own method here
-			//progressReport('<?=$from_date?>','<?=$to_date?>');
-			progressReport(startHour/1000, endHour/1000);
+			progressReport('<?=$from_date?>','<?=$to_date?>');
 		},
 		beforeShowDay: function( date ) {					
 			var highlight = eventDates[date];
@@ -445,4 +361,3 @@ function bidcalender3 (bidlist = '[]', bid_average, bid_avg_rev_percent = 10)
 }
 
 </script>
-

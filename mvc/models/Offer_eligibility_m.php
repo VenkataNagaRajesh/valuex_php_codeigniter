@@ -46,8 +46,11 @@ class Offer_eligibility_m extends MY_Model {
 		}
         }
 
-	function update_dtpfext($data, $list1) {
+	function update_dtpfext($data, $list1, $condition = Array()) {
 		$this->db->where_in('dtpfext_id', $list1);
+		if ( $condition ) {
+			$this->db->where_in($condition);
+		}
                 $this->db->update('VX_offer_info', $data);
         	$this->mydebug->debug($this->db->last_query());
        // 	echo $this->db->last_query(); exit;
@@ -101,6 +104,16 @@ class Offer_eligibility_m extends MY_Model {
 		$sQuery .= " AND `dd`.`code` != 'UNN' AND `cc`.`is_revenue` = 1 ";
 		$sQuery .= " AND `dtpf`.`carrier_code` = $carrierId"; 
 		$sQuery .= " AND `dep_date` > $timestamp ORDER BY `pnr_ref`) t1 GROUP BY pnr_ref";
+		$result = $this->install_m->run_query($sQuery);
+		//print_r($this->db->last_query());
+                return  $result;
+	}
+
+	function getFlightsByOnd($offer_id, $ond) {
+		$sQuery = "SELECT * FROM ";
+		$sQuery .= "VX_offer_info pext , VX_daily_tkt_pax_feed pf  where pf.dtpf_id = pext.dtpf_id AND pext.product_id = 2";
+		$sQuery .= " AND `pext`.`offer_id` = $offer_id"; 
+		$sQuery .= " AND `pext`.`ond` = $ond"; 
 		$result = $this->install_m->run_query($sQuery);
 		//print_r($this->db->last_query());
                 return  $result;

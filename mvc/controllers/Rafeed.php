@@ -1058,6 +1058,7 @@ echo "MISED,$cDocumentType";
 // 		var_dump($rafeed);
 // 		exit;
 		if ($this->rafeed_m->checkRaFeed($rafeed)) {
+			$this->mydebug->rafeed_log("Inserting  data for row " . $column, 1);
 			$rafeed['create_date'] = time();
 			$rafeed['modify_date'] = time();
 			$rafeed['create_userID'] = $this->session->userdata('loginuserID');
@@ -1082,7 +1083,7 @@ echo "MISED,$cDocumentType";
 				$insert_id = $this->rafeed_m->insert_rafeed($rafeed);
 			}
 			if ($insert_id) {
-				#$this->mydebug->rafeed_log("uploaded row " . $column, 0);
+				$this->mydebug->rafeed_log("uploaded row ; INSERT ID : $insert_id for " . $column, 0);
 				return;
 			} else {
 
@@ -1174,6 +1175,9 @@ echo "MISED,$cDocumentType";
 		if (isset($_GET['upg_status'])) {
 			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
 			$sWhere .= 'rf.active= ' . $this->input->get('upg_status');
+		} else {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'rf.active= 1';
 		}
 		
 		if (!empty($this->input->get('airLine'))) {
@@ -1233,8 +1237,8 @@ echo "MISED,$cDocumentType";
 		}
 
 		//$ac=$_GET['inputVal'];
-		#$sWhere .=  ($sWhere == '') ? ' WHERE ' : ' AND ';
-		#$sWhere .=  " rf.sub_season_record = 0 ";
+		$sWhere .=  ($sWhere == '') ? ' WHERE ' : ' AND ';
+		$sWhere .=  " rf.sub_season_record = 0 ";
 		$sQuery = " SELECT SQL_CALC_FOUND_ROWS rafeed_id,ticket_number, coupon_number, dc.code as booking_country , 
 				dfre.code as day_of_week,  dfre.aln_data_value , dc.aln_data_value, dci.aln_data_value, dico.aln_data_value,
 				dici.aln_data_value, dai.aln_data_value, dam.aln_data_value, dcar.aln_data_value, dbp.aln_data_value,

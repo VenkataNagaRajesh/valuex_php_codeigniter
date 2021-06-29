@@ -106,7 +106,7 @@ class Report extends Admin_Controller {
 			$filter_date = 'bid_submit_date';
 		}
 		/*  To get previous year report by monthly */
-		$pre_where = array('carrier'=>$this->data['airlineID'],'type'=>$this->data['type'],'year'=>$this->data['year']-1,'month >='.$this->data['from_month'],'month <='=>$this->data['to_month']);
+		$pre_where = array('carrier'=>$this->data['airlineID'],'type'=>$this->data['type'],'year'=>$this->data['to_year']-1,'month >=' => $this->data['from_month'],'month <='=>$this->data['to_month']);
 		$this->data['previous_report'] = $this->reportdata_m->getReportdata($pre_where);
 		if(count($this->data['previous_report'])){
 			foreach($this->data['previous_report'] as $feed){
@@ -141,7 +141,7 @@ class Report extends Admin_Controller {
 		}
 
 		/* To get current year Report By monthly */
-		$where_filter = array('carrier'=>$this->data['airlineID'],'type'=>$this->data['type'],'year'=>$this->data['year'],'month >='.$this->data['from_month'],'month <='=>$this->data['to_month']);
+		$where_filter = array('carrier'=>$this->data['airlineID'],'type'=>$this->data['type'],'year'=>$this->data['to_year'],'month >=' => $this->data['from_month'],'month <='=>$this->data['to_month']);
 		$report = $this->reportdata_m->getReportdata($where_filter);
 		$this->data['current_report'] = $report;
 		foreach($report as $rep){

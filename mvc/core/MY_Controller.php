@@ -205,6 +205,7 @@ class MY_Controller extends CI_Controller {
 								$paxdata['carrier_name'] = $result->carrier_name;
 								$paxdata['flight_number'] = $result->flight_number;
 								$paxdata['from_city_code'] = $result->from_city_code;
+								$paxdata['pnr_ref'] = $result->pnr_ref;
 								$paxdata['from_city'] = $result->from_city;
 								$paxdata['to_city_code'] = $result->to_city_code;
 								$paxdata['to_city'] = $result->to_city;
@@ -246,6 +247,7 @@ class MY_Controller extends CI_Controller {
 							$paxdata['carrier_name'] = $result->carrier_name;
 							$paxdata['flight_number'] = $result->flight_number;
 							$paxdata['from_city_code'] = $result->from_city_code;
+							$paxdata['pnr_ref'] = $result->pnr_ref;
 							$paxdata['from_city'] = $result->from_city;
 							$paxdata['to_city_code'] = $result->to_city_code;
 							$paxdata['to_city'] = $result->to_city;
@@ -386,6 +388,7 @@ class MY_Controller extends CI_Controller {
 		  $message =html_entity_decode($message);
 		  $siteinfos = $this->reset_m->get_site();
 		  $this->mydebug->debug($data['tomail'].'----'.$template);		  
+
 #$data['tomail'] ='vamsi63@gmail.com';
 		  if($data['tomail']) {                      
 			$subject = $data['mail_subject'];
