@@ -191,7 +191,7 @@ class Bgreport extends Admin_Controller {
 			foreach($this->data['report'] as $feed){
 					$feed->p_count = count(explode('<br>',$feed->p_list));
 					$feed->dep_date = date('Y-m-d',$feed->flight_date);
-					if ($feed->offer_status == $bid_accepted) {
+					if ($feed->booking_status == $bid_accepted) {
 					$this->data['current'][date('M',$feed->$filter_date)] +=  $feed->bid_value;
 					}
 			}		
@@ -207,13 +207,13 @@ class Bgreport extends Admin_Controller {
 				});
 				if(count($this->data[$cab_name]['report']) > 0){			 
 					$accepted_list = array_filter($this->data[$cab_name]['report'],function ($item) use ($bid_accepted) {
-						if ($item->offer_status == $bid_accepted) {
+						if ($item->booking_status == $bid_accepted) {
 							return true;
 						}
 						return false;
 					});
 					$rejected_list = array_filter($this->data[$cab_name]['report'],function ($item) use ($bid_rejected) {
-						if ($item->offer_status == $bid_rejected) {
+						if ($item->booking_status == $bid_rejected) {
 							return true;
 						}
 						return false;
@@ -362,14 +362,14 @@ class Bgreport extends Admin_Controller {
 		foreach($this->data['report'] as $feed){
 				$feed->p_count = count(explode('<br>',$feed->p_list));
 				$feed->dep_date = date('Y-m-d',$feed->flight_date);
-				if ($feed->offer_status == $bid_accepted) {
+				if ($feed->booking_status == $bid_accepted) {
 				 $this->data['current'][date('M',$feed->$filter_date)] +=  $feed->bid_value;
 				}
 		}
 		foreach($this->data['previous_report'] as $feed){
 				$feed->p_count = count(explode('<br>',$feed->p_list));
 				$feed->dep_date = date('Y-m-d',$feed->flight_date);
-				if ($feed->offer_status == $bid_accepted) {
+				if ($feed->booking_status == $bid_accepted) {
 				 $this->data['previous'][date('M',$feed->$filter_date)] +=  $feed->bid_value;
 				}
 		}        
@@ -385,13 +385,13 @@ class Bgreport extends Admin_Controller {
 				return false;
 			});			 
 			$accepted_list = array_filter($this->data[$cab_name]['report'],function ($item) use ($bid_accepted) {
-				if ($item->offer_status == $bid_accepted) {
+				if ($item->booking_status == $bid_accepted) {
 					return true;
 				}
 				return false;
 			});
 			$rejected_list = array_filter($this->data[$cab_name]['report'],function ($item) use ($bid_rejected) {
-				if ($item->offer_status == $bid_rejected) {
+				if ($item->booking_status == $bid_rejected) {
 					return true;
 				}
 				return false;

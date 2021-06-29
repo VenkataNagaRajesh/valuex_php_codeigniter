@@ -124,7 +124,7 @@ class Reportdata_m extends MY_Model {
 		    		$query .= " ";
 		}
                  $query .= " ) WHERE SubSet.carrier_code = ".$airlineID;
-                 $query .= " AND SubSet.dtpf_id = MainSet.dtpf_id AND  (MainSet.booking_status =".$bid_accepted." OR MainSet.booking_status =".$bid_rejected.")".$order;
+                 $query .= " AND SubSet.dtpf_id = MainSet.dtpf_id AND  (MainSet.offer_status =".$bid_accepted." OR MainSet.offer_status =".$bid_rejected.")".$order;
                 
          //print_r($query); echo "<br>"; echo "<br>"; exit;
           $result =   $this->db->query($query);

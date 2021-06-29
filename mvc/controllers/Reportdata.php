@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-    class Reportdata extends CI_Controller {
+    class Reportdata extends Admin_Controller {
 
     public function __construct() {
         parent::__construct(); 
@@ -65,6 +65,7 @@
 
           } else {
               $date = date("Y-n-j", strtotime("last day of previous month"));                           
+              $date = date("Y-n-j");                           
               $dep_report = $this->reportdata_m->get_report($car->vx_aln_data_defnsID,null,$date,1, $product_id);
               $sale_report = $this->reportdata_m->get_report($car->vx_aln_data_defnsID,null,$date,2, $product_id);
              
@@ -81,6 +82,10 @@
           }        
        	 }       
 	}
+				$message = "Data report created successfully!";
+				$status = 'success';
+				$this->session->set_flashdata($status, $message);
+				redirect(base_url("report/index"));
     }
 
     function addReport($carrier,$report_list,$type, $product_id){
@@ -118,13 +123,13 @@
             $data['to_cabin'] = explode('-',$cabkey)[3];
             $dataID = $this->reportdata_m->checkdata($data);
           $accepted_list = array_filter($cablist,function ($item) use ($bid_accepted) {
-              if ($item->offer_status == $bid_accepted) {
+              if ($item->booking_status == $bid_accepted) {
                   return true;
               }
               return false;
           });
           $rejected_list = array_filter($cablist,function ($item) use ($bid_rejected) {
-              if ($item->offer_status == $bid_rejected) {
+              if ($item->booking_status == $bid_rejected) {
                   return true;
               }
               return false;
