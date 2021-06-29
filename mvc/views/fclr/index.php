@@ -48,8 +48,7 @@
 							ksort($seasons);
 							echo form_dropdown("season_id", $seasons,set_value("season_id"), "id='season_id' class='form-control hide-dropdown-icon select2'");?>
 					</div>
-
-                    <div class="col-md-2 col-sm-3">
+                        <div class="col-md-2 col-sm-3">
                       <input id="board_point_name" name="board_point_name" class="form-control" placeholder="Type & Select Board Point"/> <input type="hidden" id="board_point" name="board_point" class="form-control" value="<?=set_value('board_point',$board_point)?>" /> 
                     </div>
 
@@ -136,8 +135,9 @@
 
                             <div class="col-md-12">
                                     <select class="form-control select2"  name="fclr_status" id="fclr_status">
-					    <option value="1" <?=(($fclr_status == 1 )? "selected":"")?>>Active</option>
-					    <option value="0" <?=(($fclr_status == 0 || $fclr_status == '' )? "selected":"")?>>In active</option>
+                                        <option value="1" <?=(($fclr_status == 1 )? "selected":"")?>>Active</option>
+                                        <option value="0" <?=(($fclr_status == 0 || $fclr_status == '' )? "selected":"")?>>In active</option>
+                                        <option value="2"  <?=(($fclr_status == 2 || $fclr_status == '' )? "selected":"")?>>All</option>
                                     </select>
                             </div>
                             			

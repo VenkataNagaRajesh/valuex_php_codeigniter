@@ -122,6 +122,14 @@
 <script>
  $(document).ready(function() {	 
 	
+    onloaddatatable();
+$("#filter").click(function(e)
+{
+    e.preventDefault();
+    $('#offertable').dataTable().fnDestroy();
+    onloaddatatable();
+});
+
 $("#dep_from_date").datepicker();
 $("#dep_to_date").datepicker();
 
@@ -151,7 +159,8 @@ $("#dep_from_date").datepicker({
             $('#dep_from_date').datepicker('setEndDate', maxDate);
         });
 
-
+ });
+ function onloaddatatable(){
 
     $('#offertable').DataTable( {
       "bProcessing": true,
@@ -231,10 +240,8 @@ $("#dep_from_date").datepicker({
             ] ,
      "autoWidth": false,
      "columnDefs": [ { "width": "20px", "targets": 0 } ]	
-    });
-	
-	
-  });
+    });	
+  }
  
   function downloadOfferData(){
 	  $.ajax({
