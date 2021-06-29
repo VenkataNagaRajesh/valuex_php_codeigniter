@@ -538,7 +538,8 @@ class Contract extends Admin_Controller {
 			       	$product->start_date = date_format(date_create($product->start_date),'d-m-Y');
 				$product->end_date = date_format(date_create($product->end_date),'d-m-Y');
 			   }
-			   $this->data['users'] = $this->user_m->getClientByAirline($this->data['contract']->airlineID,6);					   
+			   $this->data['users'] = $this->user_m->getClientByAirline($this->data['contract']->airlineID,6);
+			  
 			if($_POST){  
 				$rules = $this->rules();
 				unset($rules[0]);
@@ -572,23 +573,26 @@ class Contract extends Admin_Controller {
 
 					// Update product data of contract
 					$i =1;
-					while($i <= count($this->data['products']) && !empty($this->input->post('pmod'.$i.'-productID'))){
+					while($i <= count($this->data['products'])){
 					$link['contractID'] = $this->data['contractID'];
-					$link["modify_date"] = time();				 
+					$link["modify_date"] =  date('Y-m-d h:i:s');				 
 					$link["modify_userID"] = $this->session->userdata('loginuserID');			
 					$link['productID'] = $this->input->post('pmod'.$i.'-productID');
 					$link['start_date'] = date_format(date_create($this->input->post('pmod'.$i.'-start-date')),'Y-m-d');
 					$link['end_date'] = date_format(date_create($this->input->post('pmod'.$i.'-end-date')),'Y-m-d');
 					$link['no_users'] = $this->input->post('pmod'.$i.'-no-users');
-									
-					if($this->input->post('pmod'.$i.'-contract_productID')){
-					    $this->contract_m->update_contract_product($this->input->post('pmod'.$i.'-contract_productID'),$link);
-					} else {
-						$link['create_date'] = time();
-						$link["create_userID"] = $this->session->userdata('loginuserID');	
-					    $this->contract_m->insert_contract_product($link);	
+
+					if(($link['no_users']=='')|| empty($link))		
+					{
+						$link['no_users']=' ';
+						$link['start_date'] = NULL;
+						$link['end_date'] = NULL;
 					}
+			
+					    $this->contract_m->update_contract_product($this->input->post('pmod'.$i.'-contract_productID'),$link);
+					
 					$i++;
+					
 							  //add product to user
 					foreach($this->data['users'] as $user) {
 						$userID = $user->userID;
@@ -600,11 +604,14 @@ class Contract extends Admin_Controller {
 							$product["modify_date"] = time();
 							$product["create_userID"] = $this->session->userdata('loginuserID');
 							$product["modify_userID"] = $this->session->userdata('loginuserID');					
-							$product['productID'] = $this->input->post('pmod'.$i.'-productID');
+							if(empty($this->input->post('pmod'.$i.'-productID')))
+							{
+								$product["productID"]='0';
+							}
 							$this->user_m->insert_user_product($product);					
 						}
 					}
-					} 
+					} #exit;
 					/* Uploading Attachment  Files */
 					if(!empty($_FILES['attachments']['name'][0])){ 
 						$attach['contractID'] =  $this->data['contractID'];
@@ -796,7 +803,7 @@ class Contract extends Admin_Controller {
 				   $sOrder		
 				   $sLimit";					
 		
-	//print_r($sQuery); exit;
+//	print_r($sQuery); exit;
 	$rResult = $this->install_m->run_query($sQuery);
 	$sQuery = "SELECT FOUND_ROWS() as total";
 	$rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;	

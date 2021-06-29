@@ -66,7 +66,7 @@
 		<br>
                  
                 <div class="col-sm-12 text-right" style="align: right">
-                  <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter"></i></button>
+                  <button type="submit" class="btn btn-danger" name="filter" id="filter" data-title="Filter" data-toggle="tooltip"><i class="fa fa-filter" onclick="$('#master').dataTable().fnDestroy();;onloadDataTable();"></i></button>
 				  <button type="button" class="btn btn-danger" onclick="downloadMasterData()" data-title="Download" data-toggle="tooltip"><i class="fa fa-download"></i></button>
                 </div>	             				
 			  </div>
@@ -116,9 +116,15 @@
 <script>
 $( ".select2" ).select2({closeOnSelect:false, placeholder:'Value'});
 
-
+$("#filter").click(function(e)
+{
+    e.preventDefault();
+    $("#master").dataTable().fnDestroy();
+    onloadDataTable();
+});
 
  $(document).ready(function() {	 
+    onloadDataTable();
 	 var countryID = <?=$countryID?>;	
 	 var regionID =<?=$regionID?>;
 	 var areaID = <?=$areaID?>; 
@@ -245,7 +251,9 @@ $( "#city" ).autocomplete({
     },
  }).val('<?php echo $city_name; ?>').data('autocomplete');
 
-
+ });
+ function onloadDataTable()
+ {
 
     $('#master').DataTable( {
       "bProcessing": true,
@@ -336,7 +344,7 @@ $( "#city" ).autocomplete({
     }); 
   
     
-  });
+  }
   
   function downloadMasterData(){
 	     $.ajax({

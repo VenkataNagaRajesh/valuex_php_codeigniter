@@ -684,10 +684,11 @@ class Fclr extends Admin_Controller
                         $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
                         $sWhere .= 'dmap.market_id = ' .  $this->input->get('dmarket');
                 }
-                if (isset($_GET['fclr_status'])) {
+                if (isset($_GET['fclr_status']) &&  $this->input->get('fclr_status') != 2) {
                          $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
                          $sWhere .= 'fc.active = ' .  $this->input->get('fclr_status');
                 }
+                
                 if (!empty($_GET['fclr_edit_status'])) {
                         $sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
                         $sWhere .= 'fc.manual_edit = ' .  $this->input->get('fclr_edit_status');

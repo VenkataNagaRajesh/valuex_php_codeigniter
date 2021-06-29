@@ -126,9 +126,14 @@
                         </td>
                         <?php } ?>
                     </tr>
-                    <?php } else { ?>
+                    <?php } else  if(empty($product->product_name)){ ?>
                     
-                    <tr>
+                                <tr>
+                                    
+                                </tr>
+                    <?php } else{?>
+
+                        <tr>
                         <td><?=$product->product_name?></td>
                         <td><?=date_format(date_create($product->start_date),'d-m-Y')?></td>
                         <td><?=date_format(date_create($product->end_date),'d-m-Y')?></td>
@@ -144,8 +149,8 @@
                             </div>  
                         </td>
                     </tr>
-                    <?php } ?>
-                     <?php $j++; } //products end
+
+                     <?php }  $j++; } //products end
                       $i++; } //contract end ?>                                      
                  </tbody>
               </table>

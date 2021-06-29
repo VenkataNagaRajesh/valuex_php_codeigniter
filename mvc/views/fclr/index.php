@@ -138,8 +138,9 @@
 
                             <div class="col-md-12">
                                     <select class="form-control select2"  name="fclr_status" id="fclr_status">
-					    <option value="1" <?=(($fclr_status == 1 )? "selected":"")?>>Active</option>
-					    <option value="0" <?=(($fclr_status == 0 || $fclr_status == '' )? "selected":"")?>>In active</option>
+                                        <option value="1" <?=(($fclr_status == 1 )? "selected":"")?>>Active</option>
+                                        <option value="0" <?=(($fclr_status == 0 || $fclr_status == '' )? "selected":"")?>>In active</option>
+                                        <option value="2"  <?=(($fclr_status == 2 || $fclr_status == '' )? "selected":"")?>>All</option>
                                     </select>
                             </div>
                             			
