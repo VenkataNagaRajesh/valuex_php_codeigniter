@@ -8,9 +8,16 @@ class Reportdata_m extends MY_Model {
     }
     
     function getReportdata($where){
+		if (!$where['carrier']) {
+			unset($where['carrier']);
+		}
+		if (!$where['type']) {
+			unset($where['type']);
+		}
        $this->db->select("*")->from('VX_reportdata');
        $this->db->where($where);
        $query = $this->db->get();       
+//echo $this->db->last_query();
        return $query->result();
     }
 
@@ -40,8 +47,10 @@ class Reportdata_m extends MY_Model {
 	if ($product_id ) {
 		$swhere .= "  AND pe.product_id = $product_id  ";
 	}
+		 if ($airlineID ) {
          $swhere .= " AND pf.carrier_code = ".$airlineID;
          $dwhere .= " AND pf1.carrier_code = ".$airlineID;
+		}
         
     $query = "  select  SQL_CALC_FOUND_ROWS  
                       MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , MainSet.flight_number , 
@@ -51,7 +60,7 @@ class Reportdata_m extends MY_Model {
 
               FROM ( 
                               select distinct bid.bid_id, pe.dtpfext_id, pe.dtpf_id,oref.offer_id, oref.create_date as offer_date ,bid_value, bid_avg,bid_markup_val,
-                              tdef.cabin as to_cabin, tcab.vx_aln_data_defnsID as to_cabin_id, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,bs.aln_data_value as offer_status, bid_submit_date, pe.booking_status, rank, fcab.code as from_cabin
+                              tdef.cabin as to_cabin, tcab.vx_aln_data_defnsID as to_cabin_id, oref.pnr_ref, bid.flight_number,bid.cash, bid.miles  , bid.upgrade_type,oref.offer_status, bid_submit_date, pe.booking_status, rank, fcab.code as from_cabin
                               from  
                                       VX_offer oref 
                                       INNER JOIN UP_bid bid on (bid.offer_id = oref.offer_id) 
@@ -123,8 +132,11 @@ class Reportdata_m extends MY_Model {
 			default:
 		    		$query .= " ";
 		}
-                 $query .= " ) WHERE SubSet.carrier_code = ".$airlineID;
-                 $query .= " AND SubSet.dtpf_id = MainSet.dtpf_id AND  (MainSet.offer_status =".$bid_accepted." OR MainSet.offer_status =".$bid_rejected.")".$order;
+                 $query .= " ) WHERE ";
+				if ( $airlineID ) {
+					$query .= " SubSet.carrier_code = ".$airlineID . " AND ";
+				}
+                 $query .= "  SubSet.dtpf_id = MainSet.dtpf_id AND  (MainSet.offer_status =".$bid_accepted." OR MainSet.offer_status =".$bid_rejected.")".$order;
                 
          //print_r($query); echo "<br>"; echo "<br>"; exit;
           $result =   $this->db->query($query);
@@ -133,6 +145,7 @@ class Reportdata_m extends MY_Model {
 
   function checkdata($data){
      $query = $this->db->get_where('VX_reportdata',$data);
+//		echo $this->db->last_query();
      return $query->row('dataID');
   }
 

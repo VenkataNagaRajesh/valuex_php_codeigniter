@@ -152,7 +152,10 @@
               }
           }
           if(count($accepted_list) > 0){
-            $ldf_value = (array_sum(array_column($accepted_list,'p_count'))/array_sum($tot_cap))*100;
+            $total_cap_sum = array_sum($tot_cap);
+			if( $total_cap_sum ) {
+            	$ldf_value = (array_sum(array_column($accepted_list,'p_count'))/$total_cap_sum)*100;
+			}
           }
              $data['accept_revenue'] = array_sum(array_column($accepted_list,'bid_value'));
              $data['reject_revenue'] = array_sum(array_column($rejected_list,'bid_value'));
