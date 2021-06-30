@@ -1,0 +1,1 @@
+ALTER TABLE `VX_contract_products` CHANGE modify_date modify_date DATETIME DEFAULT NULL;
