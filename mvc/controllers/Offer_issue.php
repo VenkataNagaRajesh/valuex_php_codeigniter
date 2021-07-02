@@ -382,9 +382,9 @@ class Offer_issue extends Admin_Controller {
                         {
                           $sLimit = "LIMIT ".$_GET['iDisplayStart'].",".$_GET['iDisplayLength'];
                         }
-                        if ( isset( $_GET['iSortCol_0'] ) )
+                        $sOrder = "ORDER BY  ";
+                        if ( isset( $_GET['iSortCol_0']) &&  $_GET['iSortCol_0'] !=0  )
                         {
-                                $sOrder = "ORDER BY  ";
                                 for ( $i=0 ; $i<intval( $_GET['iSortingCols'] ) ; $i++ )
                                 {
                                         if ( $_GET[ 'bSortable_'.intval($_GET['iSortCol_'.$i]) ] == "true" )
@@ -399,11 +399,13 @@ class Offer_issue extends Admin_Controller {
                                 }
                                   $sOrder = substr_replace( $sOrder, "", -2 );
 
-                                if ( $sOrder == "ORDER BY" )
+                                if ( $sOrder == "ORDER BY  " )
                                 {
-                                        $sOrder = "";
+										$sOrder .= "   MainSet.offer_id DESC, MainSet.pnr_ref ASC, SubSet.product_id ASC, SubSet.seg_nbr ASC,  SubSet.ond ASC ";
                                 }
-                        }
+                        } else {
+							$sOrder .= "   MainSet.offer_id DESC, MainSet.pnr_ref ASC, SubSet.product_id ASC, SubSet.seg_nbr ASC,  SubSet.ond ASC ";
+						}
                         $sWhere = "";
                         if ( $_GET['sSearch'] != "" )
                         {
@@ -498,12 +500,12 @@ $sQuery = "
  select  SQL_CALC_FOUND_ROWS  
                         MainSet.offer_id, MainSet.offer_date, SubSet.flight_date , SubSet.carrier , 
                         SubSet.from_city, SubSet.to_city, MainSet.pnr_ref, SubSet.passenger_list,SubSet.product_id, SubSet.from_cabin,
-                          MainSet.cash, MainSet.miles,  SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number, SubSet.from_city_name, SubSet.to_city_name, SubSet.name, SubSet.offer_status
+                          MainSet.cash, MainSet.miles,  SubSet.carrier_code,  SubSet.from_city_code, SubSet.to_city_code, MainSet.cash_percentage, SubSet.flight_number, SubSet.from_city_name, SubSet.to_city_name, SubSet.name, SubSet.offer_status, SubSet.ond
 
                 FROM (  select distinct oref.offer_id, oref.create_date as offer_date , oref.pnr_ref,oref.cash_percentage, oref.cash, oref.miles from  VX_offer oref  
                      ) as MainSet 
                         INNER JOIN (
-                                        select  pext.offer_id,flight_number,  os.aln_data_value as offer_status,
+                                        select  prq.ond, pf1.seg_nbr, pext.offer_id,flight_number,  os.aln_data_value as offer_status,
                                                 group_concat(distinct dep_date) as flight_date  ,
                                                 pext.pnr_ref,group_concat(distinct first_name, ' ' , last_name SEPARATOR '<br>' ) as passenger_list ,  from_city as from_city_code, to_city as to_city_code, 
                                                 group_concat(distinct cdef.desc) as from_cabin  , fc.aln_data_value as from_city_name, fc.code as from_city, tc.code as to_city, tc.aln_data_value as to_city_name,
@@ -524,7 +526,7 @@ $sQuery = "
                    ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND SubSet.offer_id = MainSet.offer_id ) 
 $sWhere $sOrder $sLimit";
 
-
+//echo $sQuery;exit;
         $rResult = $this->install_m->run_query($sQuery);
         $sQuery = "SELECT FOUND_ROWS() as total";
         $rResultFilterTotal = $this->install_m->run_query($sQuery)[0]->total;
