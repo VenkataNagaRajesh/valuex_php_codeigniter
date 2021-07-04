@@ -47,7 +47,7 @@ class Fclr extends Admin_Controller
                         array(
                                 'field' => 'flight_number',
                                 'label' => $this->lang->line("flight_number"),
-                                'rules' => 'trim|required|integer|max_length[200]|xss_clean|callback_valEndPoints'
+                                'rules' => 'trim|integer|max_length[200]|xss_clean|callback_valEndPoints'
                         ),
                         array(
                                 'field' => 'season_id',
