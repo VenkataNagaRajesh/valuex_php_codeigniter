@@ -57,7 +57,7 @@ class Fclr extends Admin_Controller
                         array(
                                 'field' => 'frequency',
                                 'label' => $this->lang->line("frequency"),
-                                'rules' => 'trim|max_length[200]|xss_clean'
+                                'rules' => 'trim|max_length[200]|xss_clean|callback_valEndPoints'
                         ),
                         array(
                                 'field' => 'upgrade_from_cabin_type',
