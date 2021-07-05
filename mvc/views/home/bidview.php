@@ -715,7 +715,7 @@ if ( $any_product ) { //ANY PRODUCTS EXISTS
 
 			if($('input[type=checkbox][name=<?=$mobile_view?>bid_bag_<?=$bslider['ond']?>]').prop("checked") == false){
 				bg_val = parseFloat($("#bid_slider_<?=$bslider['product_id']?>_<?=$bslider['ond']?>").slider('getValue'));
-				total_bg = parseFloat(total_bg) + calcBaggageValue(bg_val,<?=$bslider['per_min']?>,<?=$bslider['ond']?>);
+				total_bg = parseFloat(total_bg) + parseFloat(calcBaggageValue(bg_val,<?=$bslider['per_min']?>,<?=$bslider['ond']?>));
 			}
 		<?php }?>
 <?php if ($upgrade_offer) {?>
