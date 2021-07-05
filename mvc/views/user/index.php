@@ -8,7 +8,8 @@
         </ol>
     </div><!-- /.box-header -->
 	 <?php 
-           if(permissionChecker('user_add')) {  ?>
+      $userID = $this->session->userdata('loginuserID');
+           if(permissionChecker('user_add') && $userID==1) {  ?>
            <h5 class="page-header">
                <a href="<?php echo base_url('user/add') ?>" data-toggle="tooltip" data-title="Add User" data-placement="left" class="btn btn-danger">
                    <i class="fa fa-plus"></i> 

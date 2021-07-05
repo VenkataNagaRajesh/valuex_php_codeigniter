@@ -1,6 +1,22 @@
 <?php 
 ?> 
 <style>
+.ui-datepicker td {
+    border: 1px solid #ccc;
+}
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 0px;
+}
+#calendar1 .ui-datepicker {
+    width: 728px !important;
+}
+
+#calendar1 .ui-datepicker p {
+    
+ margin:-50px 0 0 0;   
+}
+
+
 .bidnormal {
 	background: #008000;
 }
@@ -108,7 +124,7 @@
 		</div>
 	</div>
  </div>
-	<form id="reportform" action="<?=base_url('offer_table')?>" style="display:none;" method="post" target='_blank'>
+	<form id="reportform" action="<?=base_url('offer_table')?>" style="display:none;" method="post" target="_blank">
 		<input type="hidden" name="flight_from_dep_date" id="flight_from_dep_date" value="">
 		<input type="hidden" name="flight_to_dep_date" id="flight_to_dep_date" value="">
 		<input type="hidden" name="carrier" id="carrier" value="">
@@ -170,17 +186,16 @@ $('#filter_year_to').change(function(){
 		value = i+1;
 		to_selected = ('<?=$to_month?>'==value)?'selected':'';		
 		to_html += '<option value="'+value+'" '+to_selected+'>'+new Date($(this).val(),i).toLocaleString("default", { month: "long" })+'</option>';
-	}	
-	
-	
+	}
 	$('#filter_to_month').html(to_html);	
 });
 
-function progressReport(from_date, to_date) {	
+function progressReport(to_date) {	
 		$('#carrier').val('<?=$airlineID?>');
-		$('#flight_from_dep_date').val(from_date);
+	//	$('#flight_from_dep_date').val(from_date);
 		$('#flight_to_dep_date').val(to_date);
 		//$('#offer_status').val(booking_status);
+		//alert(from_date);
 		$('#product_id').val('<?=$product_id?>');
 	 	$("#reportform").submit();	
 }
@@ -230,8 +245,9 @@ function bidcalender1 (bidlist = '[]', bid_average, bid_avg_rev_percent = 10)
 		defaultDate: new Date(datecal.getFullYear(), datecal.getMonth(), 1),			
 		onSelect: function (date) {
 		    //defined your own method here
-			progressReport('<?=$from_date?>','<?=$to_date?>');
+			progressReport(date);
 		},
+
 		beforeShowDay: function( date ) {					
 			var highlight = eventDates[date];
 			var bid_color = bidcolor[highlight];
@@ -244,11 +260,12 @@ function bidcalender1 (bidlist = '[]', bid_average, bid_avg_rev_percent = 10)
 			}  
 		}
 	}); 
+	
 	$(".ui-datepicker-prev, .ui-datepicker-next").remove();
 	for (var dayclass in dtpoints) { 
-		$('#calendar1 .' + dayclass).append('<p>' + dtpoints[dayclass] + '</p>');
-	}
-	//$("#calendar1 .ui-datepicker").css('font-size', '20px');
+    $('#calendar1 .' + dayclass).append('<p>' + dtpoints[dayclass] + '</p>');
+}
+//$("#calendar1 .ui-datepicker").css('font-size', '20px');
 	//$("#calendar1 .ui-datepicker").css('height', '450px');
 //	$("#calendar1 .ui-datepicker").css('width', '722px');
 //	$("#calendar1 .ui-datepicker").css('font-size', '60px');

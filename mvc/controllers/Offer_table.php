@@ -81,10 +81,6 @@ class Offer_table extends Admin_Controller {
                                                 'assets/datepicker/datepicker.js'
                 )
         );
-
-      
-
-
 	if(!empty($this->input->post('from_cabin'))){
                    $this->data['from_cabin'] = $this->input->post('from_cabin');
                 } else {
@@ -136,6 +132,9 @@ class Offer_table extends Admin_Controller {
           if(($this->input->post('flight_to_dep_date'))){
                $this->data['flight_to_dep_date'] =$this->input->post('flight_to_dep_date');
 		}
+                if(($this->input->get('flight_to_dep_date'))){
+                        $this->data['flight_to_dep_date'] =$this->input->get('flight_to_dep_date');
+                         }
 
 
 	$userID = $this->session->userdata('loginuserID');
@@ -331,7 +330,7 @@ $passenger_cnt =  count($namelist);
                                 {
                                         $sOrder = "";
                                 }
-                        }
+                        }                       
                         $sWhere = "";
                         if ( $_GET['sSearch'] != "" )
                         {
@@ -374,10 +373,10 @@ $passenger_cnt =  count($namelist);
                         }
                         // var_dump($this->input->get('name'));
 						// die();
-						if(!empty($this->input->get('name'))){
-							$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-							$sWhere .= 'product_id = '.$this->input->get('name');
-					}
+			if(!empty($this->input->get('name'))){
+				$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
+				$sWhere .= 'product_id = '.$this->input->get('name');
+			}
 
 			if(!empty($this->input->get('flightNbr'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
@@ -449,6 +448,26 @@ $passenger_cnt =  count($namelist);
                 }
 
                $mainsetWhere = "";
+               
+            if(!empty($this->input->post('flight_from_dep_date'))){
+                    $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
+                    $mainsetWhere .= "  pf.dep_date > " . $this->input->post('flight_from_dep_date');
+                }
+                if(!empty($this->input->post("flight_to_dep_date"))){
+                    $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
+                    $mainsetWhere .= "  pf.dep_date <= ".$this->input->post('flight_to_dep_date'); 
+                }
+                if(!empty($this->input->post('product_id'))){
+                    $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
+                    $mainsetWhere .= '  pe.product_id = bid.productID  AND  bid.productID = '.  $this->input->post('product_id');
+                }
+
+                if(!empty($this->input->get("flight_to_dep_date"))){
+                      //  $from_date=;
+                        $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
+                        $mainsetWhere .= "  pf.dep_date = ".strtotime($this->input->get('flight_to_dep_date')); 
+                    }
+
                if(!empty($this->input->get('bid_from_date'))){
                    $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
                    $mainsetWhere .= "  bid.bid_submit_date >= ".strtotime($this->input->get('bid_from_date'));
@@ -457,19 +476,6 @@ $passenger_cnt =  count($namelist);
                    $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
                    $mainsetWhere .= "  bid.bid_submit_date <= ".strtotime($this->input->get('bid_to_date')); 
                }
-               if(!empty($this->input->get('flight_from_dep_date'))){
-                   $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
-                   $mainsetWhere .= "  pf.dep_date > " . $this->input->get('flight_from_dep_date');
-               }
-               if(!empty($this->input->get("flight_to_dep_date"))){
-                   $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
-                   $mainsetWhere .= "  pf.dep_date <= ".$this->input->get('flight_to_dep_date'); 
-               }
-               if(!empty($this->input->get('product_id'))){
-                   $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
-                   $mainsetWhere .= '  pe.product_id = bid.productID  AND  bid.productID = '.  $this->input->get('product_id');
-	       }
-
                    $mainsetWhere .= ($mainsetWhere == '')?' WHERE ':' AND ';
                    $mainsetWhere .= '  bid.active = 1';
 
@@ -522,14 +528,17 @@ $sQuery .= " INNER JOIN UP_fare_control_range fclr on (pe.rule_id = fclr.fclr_id
                                         INNER JOIN VX_data_defns cab on (cab.vx_aln_data_defnsID = pf1.cabin AND cab.aln_data_typeID = 13 and cab.alias = fdef.level)
                                        INNER JOIN VX_data_defns car on (car.vx_aln_data_defnsID = pf1.carrier_code AND car.aln_data_typeID = 12)
                                         group by pnr_ref, pf1.from_city, pf1.to_city,flight_number,carrier_code
-                   ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.dtpf_id = SubSet.dtpf_id) 
+                   ) as SubSet on (SubSet.pnr_ref = MainSet.pnr_ref AND MainSet.dtpf_id = SubSet.dtpf_id)
+                   
+                  
+                   
  $sWhere 
 $sOrder $sLimit";
 
 
 /*$sQuery = "   select ofr.pnr_ref,group_concat(distinct offer_id) as offer_id, group_concat(distinct first_name , ' ' , last_name SEPARATOR '<br>')  as list from VX_aln_offer_ref ofr  LEFT JOIN  VX_daily_tkt_pax_feed pf on (pf.pnr_ref = ofr.pnr_ref)  group by ofr.pnr_ref";
 */
-//print_r($sQuery);exit;
+#print_r($sQuery);exit;
 
         $rResult = $this->install_m->run_query($sQuery);
         $sQuery = "SELECT FOUND_ROWS() as total";
