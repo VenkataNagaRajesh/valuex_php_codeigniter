@@ -34,6 +34,7 @@ class Fclr_m extends MY_Model {
                         $this->db->where('manual_edit == 0 OR manual_edit == 2');
                 }
                 parent::update($data,$id);
+	//	echo $this->db->last_query();exit;
                 return $id;
         }
        
