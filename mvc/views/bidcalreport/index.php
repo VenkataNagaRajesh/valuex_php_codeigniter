@@ -265,7 +265,7 @@ function bidcalender1 (bidlist = '[]', bid_average, bid_avg_rev_percent = 10)
 	for (var dayclass in dtpoints) { 
     $('#calendar1 .' + dayclass).append('<p>' + dtpoints[dayclass] + '</p>');
 }
-//$("#calendar1 .ui-datepicker").css('font-size', '20px');
+	//$("#calendar1 .ui-datepicker").css('font-size', '20px');
 	//$("#calendar1 .ui-datepicker").css('height', '450px');
 //	$("#calendar1 .ui-datepicker").css('width', '722px');
 //	$("#calendar1 .ui-datepicker").css('font-size', '60px');

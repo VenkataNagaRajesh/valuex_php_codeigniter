@@ -651,7 +651,6 @@ class Paxfeed extends Admin_Controller {
 		#}
 
 					   } else {
-						   print_r("mismatch");
 						   $fail_count++;
 						   $this->mydebug->paxfeed_log("Columns count didn't match for row ". $column . " skipping ..", 1);
 					   }

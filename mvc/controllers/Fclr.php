@@ -47,7 +47,7 @@ class Fclr extends Admin_Controller
                         array(
                                 'field' => 'flight_number',
                                 'label' => $this->lang->line("flight_number"),
-                                'rules' => 'trim|required|integer|max_length[200]|xss_clean'
+                                'rules' => 'trim|integer|max_length[200]|xss_clean|callback_valEndPoints'
                         ),
                         array(
                                 'field' => 'season_id',
@@ -57,7 +57,7 @@ class Fclr extends Admin_Controller
                         array(
                                 'field' => 'frequency',
                                 'label' => $this->lang->line("frequency"),
-                                'rules' => 'trim|max_length[200]|xss_clean'
+                                'rules' => 'trim|max_length[200]|xss_clean|callback_valEndPoints'
                         ),
                         array(
                                 'field' => 'upgrade_from_cabin_type',
@@ -210,8 +210,13 @@ class Fclr extends Admin_Controller
                                 $array["boarding_point"] = $this->input->post("board_point");
                                 $array["off_point"] = $this->input->post("off_point");
                                 $array["carrier_code"] = $this->input->post("carrier_code");
-                                $array["flight_number"] = $this->input->post("flight_number");
+								if ( $this->input->post("flight_number") == '' ) {
+									$array["flight_number"] =  null;
+								} else {
+									$array["flight_number"] = $this->input->post("flight_number");
+								}
                                 $array['frequency'] = $this->input->post("frequency");
+
                                 $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
                                 $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
                                 $array['season_id'] = $this->input->post("season_id");
@@ -359,7 +364,11 @@ class Fclr extends Admin_Controller
                                                 $array["boarding_point"] = $this->input->post("board_point");
                                                 $array["off_point"] = $this->input->post("off_point");
                                                 $array["carrier_code"] = $this->input->post("carrier_code");
-                                                $array["flight_number"] = $this->input->post("flight_number");
+												if ( $this->input->post("flight_number") == '' ) {
+                                                	$array["flight_number"] =  null;
+												} else {
+													$array["flight_number"] = $this->input->post("flight_number");
+												}
                                                 $array['frequency'] = $this->input->post("frequency");
                                                 $array['from_cabin'] = $this->input->post("upgrade_from_cabin_type");
                                                 $array['to_cabin'] = $this->input->post("upgrade_to_cabin_type");
