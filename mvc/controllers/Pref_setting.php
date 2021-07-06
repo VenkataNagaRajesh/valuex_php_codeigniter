@@ -202,19 +202,20 @@ class Pref_setting extends Admin_Controller {
 
 			// get airline specific preferences any exist
                         $preferences1 = $this->preference_m->get_preferenceslist(array('pref_type' => $pref_type_id, 'pref_type_value' => $id));
-                        $preferences1=array_unique($preferences1);
+                      
 			if(count($preferences1) > 0){
 				// check and get default ones other than airline specific;
 				$list = array_column($preferences1,'pref_code');
 				$preference2  = $this->preference_m->get_preferenceslist_not_in('pref_code',$list, array('pref_type' => $pref_type_id, 'pref_type_value' => '0'));
+                               
 				$preferences = array_merge($preferences1,$preference2);
                                
 			} else {
 				$preferences = $this->preference_m->get_preferenceslist(array('pref_type' => $pref_type_id, 'pref_type_value' => '0'));
                          //       print_r($preferences);exit;
 			}
-
-
+                        
+                        
 			/*
 			if(count($preferences1) == 0) {
 			 	$preferences2 = $this->preference_m->get_preferenceslist(array('pref_type' => $this->input->post('pref_type_id'), 'pref_type_value' => '0'));			
