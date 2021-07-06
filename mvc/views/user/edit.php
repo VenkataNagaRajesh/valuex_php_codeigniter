@@ -237,7 +237,7 @@
                                             set_value("roleID", $user->roleID), "id='roleID' class='form-control hide-dropdown-icon'"
                                         );
                                     ?>
-                                    <span class="input-group-addon btn btn-danger">
+                                    <span class="input-group-addon btn btn-success">
                                         <a  href="<?=base_url('role/add')?>">
                                             <i class="fa fa-plus"></i> 
                                             <?=$this->lang->line('user_quick_add')?>
