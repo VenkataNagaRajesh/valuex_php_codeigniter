@@ -32,18 +32,22 @@ class season_m extends MY_Model {
         }
 	
 
-	function get_seasons_for_airline($id){
+	function get_seasons_for_airline($id = 0, $year = 0){
 
-		 $this->db->select('s.*,ds.aln_data_value as global_season,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level')->from('VX_season s');
+		 $this->db->select('FROM_UNIXTIME(ams_season_start_date, "%Y") as year, s.*,ds.aln_data_value as global_season,dd.aln_data_value airline_name,dd.code airline_code,dt1.vx_aln_data_typeID orig_type,dt1.alias orig_level,dt2.vx_aln_data_typeID dest_type,dt2.alias dest_level')->from('VX_season s');
 			$this->db->join('VX_data_types dt1','dt1.vx_aln_data_typeID = s.ams_orig_levelID','LEFT');
 			$this->db->join('VX_data_types dt2','dt2.vx_aln_data_typeID = s.ams_dest_levelID','LEFT');
 			$this->db->join('VX_data_defns dd','dd.vx_aln_data_defnsID = s.airlineID','LEFT');
 			$this->db->join('VX_data_defns ds','ds.vx_aln_data_defnsID = s.global_seasonID  AND ds.aln_data_typeID = 27','LEFT');
 		if($id != 0){ $this->db->where('s.airlineID',$id); }
+		if($year != 0){ $this->db->where("(FROM_UNIXTIME(ams_season_start_date, '%Y') = $year OR FROM_UNIXTIME(ams_season_start_date, '%Y') = " . ($year-1) . ")"); }
 		if($this->session->userdata('roleID') != 1){
 		   $this->db->where_in('s.airlineID',$this->session->userdata('login_user_airlineID'));
 		}
+		$this->db->order_by('global_seasonID asc, ams_season_start_date asc');
 		$query = $this->db->get();
+//echo $this->db->last_query();
+//echo "<br>";
             return $query->result();
 
 	}
