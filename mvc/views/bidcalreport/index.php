@@ -228,7 +228,7 @@ function bidcalender1 (bidlist = '[]', bid_average, bid_avg_rev_percent = 10)
 		    			bidcolor[ new Date( bid_data[i]['bid_date'] )] = 'bidnormal' + ' ' + bidclass; 
 				}
 			}
-		    name[ new Date( bid_data[i]['bid_date'] )] = bid_data[i]['bid_date'] +  '\n' + 'Bid Count: '+bid_data[i]['bid_count'] +  '\n' + 'Bid Current Date Average Revenue: '+ Math.round(cdate_avg_value) + '(' + Math.round(100-cdate_avg_value*100/bid_average) + '%)' +  '\n' + 'Bid Current Month Average Revenue: '+ Math.round(bid_average); 
+		    name[ new Date( bid_data[i]['bid_date'] )] = bid_data[i]['bid_date'] +  '\n' + 'Bid Accepted Count: '+bid_data[i]['bid_count'] +  '\n' + 'Bid Current Date Average Revenue: '+ Math.round(cdate_avg_value) + '(' + Math.round(100-cdate_avg_value*100/bid_average) + '%)' +  '\n' + 'Bid Current Month Average Revenue: '+ Math.round(bid_average); 
 		    dtpoints[bidclass] =  bid_data[i]['bid_count'] +  '<br>' + '$' + Math.round(cdate_avg_value)
                  			
 	    //$("<style> .bid"+bid_data[i]['bid_date'] + " { color:#ffffff !important;  background-color:"+bid_data[i]['bid_color'] + " !important;} </style>").appendTo("head");			
@@ -246,6 +246,7 @@ function bidcalender1 (bidlist = '[]', bid_average, bid_avg_rev_percent = 10)
 		onSelect: function (date) {
 		    //defined your own method here
 			progressReport(date);
+			alert(biddata);
 		},
 
 		beforeShowDay: function( date ) {					
