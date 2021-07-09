@@ -122,7 +122,14 @@
 
 						<td>
 						<?php
-							if ($dt->offer_status == 'Bid Received' ) { 
+							if(count($empty_seats)==0 || empty($empty_seats) || $empty_seats=='' || $empty_seats== NULL)
+							{ ?>
+						
+								<a href="<?php echo base_url('offer_table/processbid/'.$dt->offer_id.'/'.$dt->flight_number.'/accept'); ?>" onclick="function(e){e.preventDefault();return false;}"><i class="fa fa-check-circle" aria-hidden="true"></i> </a>
+						<?php	}
+						
+						
+							else if ($dt->offer_status == 'Bid Received' ) { 
 						?>
 				<a href="<?php echo base_url('offer_table/processbid/'.$dt->offer_id.'/'.$dt->flight_number.'/accept'); ?>" onclick="<?php if( $empty_seats < $p_cnt) {?> alert('Insufficient seats'); return false; <?php } ?> ; var status = '<?php echo $dt->offer_status; ?>'; if( status != 'Bid Received' )  {alert('Bid Status should be in Complete state but the Bid Status ' + status  ); return false;}"><i class="fa fa-check-circle" aria-hidden="true"></i> </a>
 

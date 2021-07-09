@@ -401,9 +401,9 @@ class Airline_cabin extends Admin_Controller {
 
                 		} else {
 					$msg .= $this->upload->display_errors();
-
 				}
-            		}            
+            		} 
+                        $msg="file is not availble";
 	     }
            }
 

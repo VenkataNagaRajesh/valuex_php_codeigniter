@@ -176,8 +176,8 @@ class MY_Controller extends CI_Controller {
 				$upgrade_offer = 1;
 				$results = $this->bid_m->getUpgradeOffers($pnr_ref);
 				if(count($results)>0){
-					foreach($results as $result){
-					  $result->to_cabins = explode(',',$result->to_cabins);
+					foreach($results as $result){			
+					  $result->to_cabins = explode(',',$result->to_cabins);		  
 					  $cdata = array();
 						  foreach($result->to_cabins as $value){
 								$cdata = explode('-',$value);              		
@@ -216,17 +216,15 @@ class MY_Controller extends CI_Controller {
 								$offerdata[] = $paxdata;
 							}
 								$maildata['carrier_name'] = $result->carrier_name;
-								break;
 							}
 					  		$maildata['highest_upgrade_class'] = $result->tocabins[0]['cabin_name'];
 						}
-
-						//print_r($results); exit();
+					
 					break;
 					case 2:
 						
 						$baggage_offer = 1;
-						if ( $upgrade_offer) {
+						if ( $upgrade_offer) {			
 							break;//HACK
 						}
 						$results = $this->offer_issue_m->getBaggageOffer($pnr_ref);
@@ -256,10 +254,10 @@ class MY_Controller extends CI_Controller {
 							$paxdata['cabins'] = $result->tocabins;
 							$paxdata['time_diff'] = $dteDiff->format('%H hrs %i Min');
 							$offerdata[] = $paxdata;
-							$maildata['carrier_name'] = $result->carrier_name;
-							break;
+							$maildata['carrier_name'] = $result->carrier_name;	
+
 						}
-						}
+					}
 					//print_r($results); exit();
 				break;
 
@@ -379,7 +377,7 @@ class MY_Controller extends CI_Controller {
 			$this->mydebug->debug("Mail Template is empty, can't send offer email!");
 			return;
 		   }
-
+		  
 		   #$tpl = str_replace(array('<!--{','}-->'),array('{','}'),$tpl);		   
 		   $message = $this->parser->parse_string($tpl, $data,true);
 		  //$this->mydebug->debug($tpl); exit;
