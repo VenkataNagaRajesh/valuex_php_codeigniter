@@ -795,7 +795,7 @@ function time_dropdown($val) {
                         }
 
 
-                        if(!empty($this->input->get('active')) && $this->input->get('active') != '-1'){
+                        if(!empty($this->input->get('active')) && $this->input->get('active') != '2'){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.active = '.$this->input->get('active');
                         }else if ($this->input->get('active') == '0') {
@@ -803,8 +803,7 @@ function time_dropdown($val) {
                                 $sWhere .= 'MainSet.active = '.$this->input->get('active');
                         }
 
-			
-			if(!empty($this->input->get('fromCabin'))){
+					if(!empty($this->input->get('fromCabin'))){
                                  $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.upgrade_from_cabin_type = '.$this->input->get('fromCabin');
                         }
@@ -815,13 +814,13 @@ function time_dropdown($val) {
 
 
 
-		        if(!empty($this->input->get('nbrStart'))){
+		      		  if(!empty($this->input->get('nbrStart'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.flight_nbr_start <= '.$this->input->get('nbrStart');
                         }
 
 
-			if(!empty($this->input->get('nbrEnd'))){
+					if(!empty($this->input->get('nbrEnd'))){
                                 $sWhere .= ($sWhere == '')?' WHERE ':' AND ';
                                 $sWhere .= 'MainSet.flight_nbr_end >= '.$this->input->get('nbrEnd');
                         }

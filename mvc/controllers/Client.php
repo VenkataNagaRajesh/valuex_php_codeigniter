@@ -281,9 +281,10 @@ class Client extends Admin_Controller {
 		
 		if(!empty($this->input->post('active'))){	
 		   $this->data['active'] = $this->input->post('active');
-		} else {
-		  $this->data['active'] = 2;
-		}
+			} else {
+			$this->data['active'] = 1;
+			}
+			
 		$this->data["subview"] = "client/index";
 		$this->load->view('_layout_main', $this->data);
 	}
@@ -831,17 +832,13 @@ class Client extends Admin_Controller {
               $sWhere .= 'ca.airlineID = '.$this->input->get('airlineID');		 
 	        }
 			
-		if($this->input->get('active') < 2 ){
-			$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-			$sWhere .= 'c.active = '.$this->input->get('active');		 
-	        } else {
-			//Default show Active users
-			$sWhere .= ($sWhere == '')?' WHERE ':' AND ';
-			$ac=$_GET['active'];
-			echo $ac; exit;
-			$sWhere .= 'c.active ='.$ac;
-		}
+		
 			
+		if (isset($_GET['active']) &&  $this->input->get('active') != 2) {
+			$sWhere .= ($sWhere == '') ? ' WHERE ' : ' AND ';
+			$sWhere .= 'c.active = ' .  $this->input->get('active');
+   			}
+		
 		    $sGroupby = " GROUP BY c.userID";
 		   $sQuery = "SELECT SQL_CALC_FOUND_ROWS c.*,r.role,ut.usertype,group_concat(dd.code) airline_code,group_concat(dd.aln_data_value) airline_name FROM VX_user c LEFT JOIN VX_usertype ut ON ut.usertypeID = c.usertypeID LEFT JOIN VX_role r ON r.roleID = c.roleID LEFT JOIN VX_user_airline ca ON ca.userID = c.userID LEFT JOIN VX_data_defns dd ON dd.vx_aln_data_defnsID = ca.airlineID
 			$sWhere	

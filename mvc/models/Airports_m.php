@@ -316,6 +316,7 @@ class Airports_m extends MY_Model
 	public function TotalAirports()
 	{
 		$this->db->select('count(*) count')->from('VX_master_data');
+		$this->db->where('active',1);
 		$query = $this->db->get();
 		return $query->row('count');
 	}

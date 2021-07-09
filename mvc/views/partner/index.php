@@ -8,10 +8,10 @@
     </div><!-- /.box-header -->
 	<?php 
          $usertype = $this->session->userdata("usertype");
-         if(permissionChecker('partner_add')) {?>
+         $roleID = $this->session->userdata('roleID');
+         if(permissionChecker('partner_add') &&  $roleID==1) {?>
          <h5 class="page-header">
-             <a href="<?php echo base_url('partner/add') ?>" data-toggle="tooltip" data-title="Add Partner" data-placement="left" class="btn btn-danger">
-                 <i class="fa fa-plus"></i> 
+             <a href="<?php echo base_url('partner/add') ?>" data-toggle="tooltip" data-title="Add Partner" data-placement="left" class="btn btn-danger"><i class="fa fa-plus"></i> 
              </a>
          </h5>
      <?php } ?>

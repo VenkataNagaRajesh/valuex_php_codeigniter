@@ -25,7 +25,7 @@
 					   echo form_dropdown("airlineID", $list,set_value("airlineID",$airlineID), "id='airlineID' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>	
 					<div class="col-sm-4 col-md-3">			   
-					 <?php $status = array("1"=>"Active","0"=>"InActive");               
+					 <?php $status = array("2"=>"status","1"=>"Active","0"=>"InActive");               
 											
 					   echo form_dropdown("active", $status,set_value("active",$active), "id='active' class='form-control hide-dropdown-icon select2'");    ?>
 					</div>
@@ -75,27 +75,8 @@
 
 <script>
   $(document).ready(function() {
-
+  //  $('#fclrtable').DataTable();
     loaddatatable();
-      $('#active').change(function(event) {    
-  var act_Inact = $('#active').val();    
-  $.ajax({
-      url:"client/server_processing",
-      method:"GET",
-      data:{active:act_Inact},
-      success:function(data)
-      {
-        
-        $("li.paginate_button:nth-child(1) a").trigger('click');       
-      }
-  });
- $('#fclrtable').DataTable();
-});
-
-$act_Inact = $('#active').val();
-
-//$('#active').trigger('change');     
-//$('#active').val('<?=$act_Inact?>').trigger('change');
   });
   function loaddatatable()
   {
