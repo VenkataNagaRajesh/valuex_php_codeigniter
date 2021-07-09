@@ -956,7 +956,8 @@ class Fclr extends Admin_Controller
                 	$where_date = " year(FROM_UNIXTIME(rf.departure_date)) = " . $year;
                 } else {
 					$lastday = mktime(23, 59, 59, date("m"), date("d")-1, date("Y"));
-                	$where_date = " rf.departure_date BETWEEN UNIX_TIMESTAMP(DATE_SUB(FROM_UNIXTIME($lastday),INTERVAL 1 YEAR)) AND  rf.departure_date <= " . $lastday;
+                	#$where_date = " rf.departure_date BETWEEN UNIX_TIMESTAMP(DATE_SUB(FROM_UNIXTIME($lastday),INTERVAL 1 YEAR)) AND  rf.departure_date <= " . $lastday;
+                	$where_date = " rf.departure_date BETWEEN UNIX_TIMESTAMP(DATE_SUB(FROM_UNIXTIME($lastday),INTERVAL 1 YEAR)) AND  " . $lastday;
                 }
 
 		$carriers = Array();
@@ -976,7 +977,7 @@ class Fclr extends Admin_Controller
 
 
 		foreach($carriers as $carrier_id => $airline_code) {
-               	$where = $where_date . " AND rf.carrier = " . $carrier_id;
+               	$where = $where_date . " AND rf.active = 1 AND rf.carrier = " . $carrier_id;
 
                 $list = $this->airline_cabin_def_m->getDummyCabinsList($carrier_id);
 				$min=$this->preference_m->get_preference_value_bycode('fclr_min',24,$carrier_id);
@@ -996,7 +997,7 @@ class Fclr extends Admin_Controller
         		$seasons = $this->season_m->get_seasons_for_airline($carrier_id,$current_year);
 				$myseasons = Array();
 				foreach($seasons as $season) {
-					if ( $season->year == $current_year) { //Take the curent Year season ID
+					if ( date("Y" , $season->ams_season_start_date) == $current_year) { //Take the curent Year season ID
 						$myseasons[$season->global_seasonID]['season_id'] = $season->VX_aln_seasonID;
 					}
 					if ( ! isset( $myseasons[$season->global_seasonID]['season_start'] )) { //Take the last Year Start and end dates if last year seasons defined

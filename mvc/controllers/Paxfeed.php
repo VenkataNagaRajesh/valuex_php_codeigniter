@@ -910,7 +910,12 @@ $aColumns = array('dtpf_id', 'airline_code' ,'pnr_ref','operating_carrier','mark
 		$feed->arrival_time = gmdate("H:i:s", $feed->arrival_time);
 		$feed->is_fclr_processed = $feed->is_fclr_processed ? 'Yes': 'No';
 		if ($feed->is_fclr_processed)  {
-			$feed->fclr_data = $feed->fclr_data ? 'Matched' : 'No Data';
+			$fclrs = explode(',', $feed->fclr_data);
+			$fclr_link = '';
+			foreach($fclrs as  $fclr_id) {
+                   $fclr_link .=  '<a target="_new" href="' . base_url('fclr/index/' . $fclr_id) . '" class="btn btn-primary btn-xs mrg"  data-placement="top" data-toggle="tooltip" data-original-title="MATCHED FCLR"><i class="fa fa-check"></i>&nbsp;' . $fclr_id . '</a> ';
+			}
+			$feed->fclr_data = $feed->fclr_data ? $fclr_link : 'No Data';
 		} else {
 			$feed->fclr_data = 'NA';
 		}
@@ -1009,8 +1014,7 @@ if(!empty($data_id_array)) {
 		}
 		$sQuery .= " order by dtpf_id";
 				
-                $rResult = $this->install_m->run_query($sQuery);
-
+        $rResult = $this->install_m->run_query($sQuery);
 		if ( $paxfeed_id ) {
 			echo "<br>PAXFEED ID  = " . $paxfeed_id;
 			if ( $rResult ) {
@@ -1021,65 +1025,60 @@ if(!empty($data_id_array)) {
 		}
 
 		foreach ($rResult as $feed ) {
-			$upgrade = array();
-                        $upgrade['boarding_point'] = $feed->from_city;
-                        $upgrade['off_point'] = $feed->to_city;
-                        $upgrade['flight_number'] = $feed->flight_number;
-                        $upgrade['carrier_code'] = $feed->carrier_code;
+				$upgrade = array();
+				$upgrade['boarding_point'] = $feed->from_city;
+				$upgrade['off_point'] = $feed->to_city;
+				$upgrade['flight_number'] = $feed->flight_number;
+				$upgrade['carrier_code'] = $feed->carrier_code;
 
-                        $day_of_week = date('w', $feed->dep_date);
-                        $day = ($day_of_week)?$day_of_week:7;
-
-                        $p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
-			
-                        $upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
-
-			if ( $paxfeed_id ) {
-				if ($upgrade['season_id'] ) {
-					echo "<br>MATCHED SEASONID FOR GIVEN PAX FEED  = " . $upgrade['season_id'];
-				} else {
-					echo "<br>SEASON NOT MATCHED FOR GIVEN PAX ID";
-				}
-			}
-
-
-                        $upgrade['from_cabin'] = $feed->cabin;
-                        $data = array();
-                        if($upgrade['season_id'] > 0) {
-				if ( $paxfeed_id) {
-					echo "<br>CHECKING WITH SEASON ID FOR PAX = " .  $paxfeed_id;
-				}
-                                $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
-                        }
-			if ( $paxfeed_id  && $data) {
-				echo "<br>MATCHED CABIN DATA FOR SEASON = " . print_r($data,1);
-			}
-
-			 if((count($data) == 0 && $upgrade['season_id'] > 0) || $upgrade['season_id'] == 0) {
-				if ( $paxfeed_id) {
-					echo "<br>CHECKING WITH FREQUENCY = " .  $p_freq; 
-				}
-                                $upgrade['season_id'] = 0;
-                                $upgrade['frequency'] = $p_freq;
-                                $data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+				$day_of_week = date('w', $feed->dep_date);
+				$day = ($day_of_week)?$day_of_week:7;
+				$p_freq =  $this->rafeed_m->getDefIdByTypeAndCode($day,'14'); //507;
+				$upgrade['season_id'] =  $this->season_m->getSeasonForDateANDAirlineID($feed->dep_date,$feed->carrier_code,$feed->from_city,$feed->to_city); //0;
 				if ( $paxfeed_id ) {
-					if (  $data) {
-						echo "<br>MATCHED  DATA WITH FREQUENCY $p_freq = " . print_r($data,1);
+					if ($upgrade['season_id'] ) {
+						echo "<br>MATCHED SEASONID FOR GIVEN PAX FEED  = " . $upgrade['season_id'];
 					} else {
-						echo "<br>DATA NOT MATCHED WITH FREQUENCY - $p_freq";
+						echo "<br>SEASON NOT MATCHED FOR GIVEN PAX ID";
 					}
 				}
-
-                          }
-
-			if(count($data) > 0 ) {
-				$fclr_data = implode(',',array_column($data,'fclr_id'));
-				$this->paxfeed_m->update_paxfeed(array('fclr_data' => $fclr_data), $feed->dtpf_id);
-				if ( $paxfeed_id ) {
-					echo "<br>UPDATAING  PAX MATCH STATUS  " . $fclr_data;
+                $upgrade['from_cabin'] = $feed->cabin;
+                $data = array();
+                if($upgrade['season_id'] > 0) {
+					if ( $paxfeed_id) {
+						echo "<br>CHECKING WITH SEASON ID FOR PAX = " .  $paxfeed_id;
+					}
+                    $data = $this->fclr_m->getUpgradeCabinsData($upgrade, $feed->dep_date);
+                }
+				if ( $paxfeed_id  && $data) {
+					echo "<br>MATCHED CABIN DATA FOR SEASON = " . print_r($data,1);
 				}
-			}
-			$this->paxfeed_m->update_paxfeed(array('is_fclr_processed' => '1'), $feed->dtpf_id);
+
+			 	if((count($data) == 0 && $upgrade['season_id'] > 0) || $upgrade['season_id'] == 0) {
+					if ( $paxfeed_id) {
+						echo "<br>CHECKING WITH FREQUENCY = " .  $p_freq; 
+					}
+					$upgrade['season_id'] = 0;
+					$upgrade['frequency'] = $p_freq;
+                    $data = $this->fclr_m->getUpgradeCabinsData($upgrade, $feed->dep_date);
+					if ( $paxfeed_id ) {
+						if (  $data) {
+							echo "<br>MATCHED  DATA WITH FREQUENCY $p_freq = " . print_r($data,1);
+						} else {
+							echo "<br>DATA NOT MATCHED WITH FREQUENCY - $p_freq";
+						}
+					}
+
+                }
+
+				if(count($data) > 0 ) {
+					$fclr_data = implode(',',array_column($data,'fclr_id'));
+					$this->paxfeed_m->update_paxfeed(array('fclr_data' => $fclr_data), $feed->dtpf_id);
+					if ( $paxfeed_id ) {
+						echo "<br>UPDATAING  PAX MATCH STATUS  " . $fclr_data;
+					}
+				}
+				$this->paxfeed_m->update_paxfeed(array('is_fclr_processed' => '1'), $feed->dtpf_id);
 		}
 		if ( !$paxfeed_id ) {
 			redirect(base_url("paxfeed/index"));	
