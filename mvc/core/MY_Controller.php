@@ -385,15 +385,14 @@ class MY_Controller extends CI_Controller {
 		   //$message = $this->parser->parse($template, $data);
 		  $message =html_entity_decode($message);
 		  $siteinfos = $this->reset_m->get_site();
-		  $this->mydebug->debug($data['tomail'].'----'.$template);		  
-
-#$data['tomail'] ='vamsi63@gmail.com';
+		  $this->mydebug->debug($data['tomail'].'----'.$template);		 
+		#$data['tomail'] ='vamsi63@gmail.com';
 		  if($data['tomail']) {                      
 			$subject = $data['mail_subject'];
 			$email = $data['tomail'];
 			$config['protocol']='smtp';
 			$config['smtp_host']='mail.sweken.com';
-			$config['smtp_port']='26';
+			$config['smtp_port']='26';  
 			$config['smtp_timeout']='30';
 			$config['smtp_user']='info@sweken.com';
 			$config['smtp_pass']='Infoinfo-1!';
