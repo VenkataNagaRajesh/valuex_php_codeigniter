@@ -1167,13 +1167,13 @@ $sWhere $sOrder $sLimit";
 		$upgrade['from_cabin'] = $feed->cabin;
         $data = array();
 		if($upgrade['season_id'] > 0) {
-				$data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+                    $data = $this->fclr_m->getUpgradeCabinsData($upgrade, $feed->dep_date);
 		}
 
 		 if((count($data) == 0 && $upgrade['season_id'] > 0) || $upgrade['season_id'] == 0) {
 				$upgrade['season_id'] = 0;
 				 $upgrade['frequency'] = $p_freq;
-				$data = $this->fclr_m->getUpgradeCabinsData($upgrade);
+                 $data = $this->fclr_m->getUpgradeCabinsData($upgrade, $feed->dep_date);
 		  }
 
 		if ($data) {

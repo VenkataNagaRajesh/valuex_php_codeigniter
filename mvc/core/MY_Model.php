@@ -11,6 +11,7 @@ class MY_Model extends CI_Model {
 	function __construct() {
 		parent::__construct();
 		$this->load->database();
+		$this->db->query("SET time_zone='+5:30'");
 	}
 
 	public function get($id = NULL, $single = FALSE){

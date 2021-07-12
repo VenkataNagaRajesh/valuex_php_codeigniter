@@ -68,7 +68,7 @@ class Fclr_m extends MY_Model {
                   $array["modify_userID"] = $this->session->userdata('loginuserID');
                  $this->fclr_m->insert_fclr($array);
             }
-	//	echo $this->db->last_query();
+		//echo $this->db->last_query();
 	//	echo "<br>";
 	}
 
@@ -115,12 +115,17 @@ function Stand_Deviation($arr)
     } 
 
 
-	function getUpgradeCabinsData($array){
+	function getUpgradeCabinsData($array, $dep_date = ''){
+		$year = 0;
+		if ($dep_date) {
+			 $year = date($dep_date, '%Y');
+		}
 		$this->db->select('fc.fclr_id,fc.carrier_code,fc.frequency, fc.season_id,fc.flight_number,fc.from_cabin, fc.to_cabin, fc.min, fc.max, fc.average, fc.slider_start');
                 $this->db->from('UP_fare_control_range fc');
 		$this->db->join('VX_data_defns fca','fca.vx_aln_data_defnsID = fc.from_cabin','LEFT');
 		$this->db->join('VX_data_defns tca','tca.vx_aln_data_defnsID = fc.to_cabin','LEFT');
 		$this->db->where($array);
+		if($year != 0){ $this->db->where("(FROM_UNIXTIME(fc.create_date, '%Y') = $year )"); }
 		 $this->db->where('fc.active','1');
 		
                 $query = $this->db->get();
