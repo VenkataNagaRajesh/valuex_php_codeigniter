@@ -403,7 +403,7 @@ function getParentsofAirportByType($airportID,$id) {
 
     function marketzoneTotalCount(){
 		$this->db->select('count(*) count')->from('VX_market_zone');
-		
+		$this->db->where('active',1);
 		if(!empty($this->session->userdata('default_airline'))){
 			$this->db->where('airline_id',$this->session->userdata('default_airline'));
 		}elseif($this->session->userdata('roleID') != 1){		

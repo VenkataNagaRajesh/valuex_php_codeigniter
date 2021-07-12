@@ -101,6 +101,7 @@ class user_m extends MY_Model {
 
     function userTotalCount(){
 		$this->db->select('count(*) count')->from('VX_user');
+		$this->db->where('active',1);
 		$this->db->where('usertypeID !=',2);
 		$query = $this->db->get();		
 		return $query->row('count');

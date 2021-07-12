@@ -372,3 +372,17 @@ $(function() {
 
 
 </script>
+<style>
+    /* for remove the arrow buttons for input type="number" */
+    /*For chrome, Safari, Edge, Opera :*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/*For firefox :*/
+input[type=number]{
+    -moz-appearance: textfield;
+}
+</style>

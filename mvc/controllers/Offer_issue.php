@@ -339,7 +339,8 @@ class Offer_issue extends Admin_Controller {
 				);			       
 				if ( ! empty($data['pnr_ref']) ){
 
-					$msg .= $this->upgradeOfferMail($data);		 
+					$msg .= $this->upgradeOfferMail($data);
+					return true;	 
 				}
 
 			}

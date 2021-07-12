@@ -23,6 +23,7 @@ class client_m extends MY_Model {
 		$this->db->select('count(*) count')->from('VX_user u');
 		$this->db->join('VX_user_airline ua','ua.userID = u.userID','LEFT');
 		$this->db->where('u.usertypeID',2);
+		$this->db->where('active',1);
 		if($this->session->userdata('roleID') != 1){
 			$this->db->where_in('ua.airlineID',$this->session->userdata('login_user_airlineID'));
 		}
