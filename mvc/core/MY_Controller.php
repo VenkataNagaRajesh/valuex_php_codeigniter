@@ -217,7 +217,7 @@ class MY_Controller extends CI_Controller {
 							}
 								$maildata['carrier_name'] = $result->carrier_name;
 							}
-					  		$maildata['highest_upgrade_class'] = $result->tocabins[0]['cabin_name'];
+					  		$maildata['highest_upgrade_class'] = $result->tocabins[0]['cabin_name'];						 
 						}
 					
 					break;
@@ -241,7 +241,7 @@ class MY_Controller extends CI_Controller {
 							$paxdata['dep_time'] = date('H:i',$result->dept_time);
 							$paxdata['arrival_date'] = date('D d M Y',$result->arrival_date);
 							$paxdata['arrival_time'] = date('H:i',$result->darrival_time);
-							$paxdata['carrier_code'] = $result->carrier_code;
+							$paxdata['carrier_code'] = $result->operating_carrier;
 							$paxdata['carrier_name'] = $result->carrier_name;
 							$paxdata['flight_number'] = $result->flight_number;
 							$paxdata['from_city_code'] = $result->from_city_code;
@@ -257,8 +257,8 @@ class MY_Controller extends CI_Controller {
 							$maildata['carrier_name'] = $result->carrier_name;	
 
 						}
+						$maildata['highest_upgrade_class'] = $result->current_cabin;
 					}
-					//print_r($results); exit();
 				break;
 
 				default:

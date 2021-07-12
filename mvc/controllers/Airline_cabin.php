@@ -366,7 +366,7 @@ class Airline_cabin extends Admin_Controller {
                 		$makeRandom = hash('sha512', $random.$airline_cabin->cabin_map_id . config_item("encryption_key"));
                         	$file_name_rename = $makeRandom;
             			$explode = explode('.', $file_name);
-            		if(count($explode) >= 2) {
+            		if(count($explode) >= 1) {
 				$new_file = $file_name_rename.'.'.end($explode);
 					$_FILES['image']['name'] = $_FILES['images']['name'][$i];
 			 		$_FILES['image']['type'] = $_FILES['images']['type'][$i]; 
@@ -402,8 +402,10 @@ class Airline_cabin extends Admin_Controller {
                 		} else {
 					$msg .= $this->upload->display_errors();
 				}
-            		} 
+            		}
+                        else{ 
                         $msg="file is not availble";
+                        }
 	     }
            }
 
